@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>dnt</groupId>
+        <artifactId>itsnow</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <groupId>dnt.itsnow</groupId>
+    <artifactId>prototype</artifactId>
+    <name>Technical Prototype</name>
+    <description>
+        A technical prototype for webapp stack:
+        Browser Side:
+          View: ACE@Twitter Bootstrap
+          CSS: Less
+          Controller: Angular JS + JQuery
+        Server Side:
+          View: Scalate Template Engine with Jade Template
+          Controller: Spring MVC
+          Service: Spring MVC
+          Persistence: MyBatis
+    </description>
+
+    <properties>
+        <release.dir>${release.root}/prototype-${project.version}</release.dir>
+        <port.debug>1081</port.debug>
+        <port.jmx>1082</port.jmx>
+        <port.rmi>1083</port.rmi>
+    </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.happyonroad</groupId>
+            <artifactId>spring-component-framework</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dnt.components</groupId>
+            <artifactId>config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dnt.components</groupId>
+            <artifactId>infrastructure</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlet</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-webapp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlets</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-compiler</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.fusesource.scalate</groupId>
+            <artifactId>scalate-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.fusesource.scalate</groupId>
+            <artifactId>scalate-spring-mvc</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <App-Config>dnt.itsnow.prototype.config.SpringAppConfig</App-Config>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>release-itsnow</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>net.happyonroad</groupId>
+                        <artifactId>spring-component-builder</artifactId>
+                        <version>${version.component-framework}</version>
+                        <executions>
+                            <execution>
+                                <id>package-app</id>
+                                <goals><goal>package</goal></goals>
+                                <configuration>
+                                    <output>${release.dir}</output>
+                                    <appName>ItsNow</appName>
+                                    <appPort>${port.rmi}</appPort>
+                                    <jmx>${port.jmx}</jmx>
+                                    <debug>${port.debug}</debug>
+                                    <jvmOptions>-Xms750m -Xmx750m -XX:MaxPermSize=270m -Djava.awt.headless=true</jvmOptions>
+                                    <propertiesFile>${project.basedir}/config/now.properties</propertiesFile>
+                                    <logbackFile>${project.basedir}/config/logback.xml</logbackFile>
+                                    <folders>${project.basedir}/webapp</folders>
+                                </configuration>
+                            </execution>
+
+                            <execution>
+                                <id>clean-app</id>
+                                <goals><goal>clean</goal></goals>
+                                <configuration>
+                                    <output>${release.dir}</output>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                </plugins>
+            </build>
+
+        </profile>
+    </profiles>
+</project>
