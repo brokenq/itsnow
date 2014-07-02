@@ -62,7 +62,8 @@
         <profile>
             <id>with-children</id>
             <modules>
-                <module>prototype</module>
+                <module>backend</module>
+                <module>frontend</module>
             </modules>
         </profile>
 

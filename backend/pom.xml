@@ -10,14 +10,10 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <groupId>dnt.itsnow</groupId>
-    <artifactId>prototype</artifactId>
-    <name>Technical Prototype</name>
+    <artifactId>backend</artifactId>
+    <name>Itsnow Backend</name>
     <description>
         A technical prototype for webapp stack:
-        Browser Side:
-          View: ACE@Twitter Bootstrap
-          CSS: Less
-          Controller: Angular JS + JQuery
         Server Side:
           View: Scalate Template Engine with Jade Template
           Controller: Spring MVC
