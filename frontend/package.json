@@ -2,6 +2,8 @@
   "author": "Josh David Miller",
   "name": "now",
   "version": "0.0.1",
+  "app": "now-0.0.1",
+  "login": "now-login-0.0.1",
   "homepage": "https://dev.itsnow.com/",
   "licenses": {
     "type": "MIT",

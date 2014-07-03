@@ -38,5 +38,6 @@ public class SpringMvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/public/**").addResourceLocations("/public/");
+        registry.addResourceHandler("/favicon.ico").addResourceLocations("/public/images/favicon.ico");
     }
 }

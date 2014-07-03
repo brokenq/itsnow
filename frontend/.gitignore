@@ -1,6 +1,8 @@
 *.sw*
 *~
+.build/
 build/
 bin/
+.deploy/
 node_modules/
 vendor/
