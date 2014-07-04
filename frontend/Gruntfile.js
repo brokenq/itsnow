@@ -213,8 +213,8 @@ module.exports = function ( grunt ) {
       },
       compile_app_css: {
         src: [
-          '<%= vendor_files.css %>',
-          '<%= build_dir %>/assets/<%= pkg.app %>.css'
+          '<%= build_dir %>/assets/<%= pkg.app %>.css',
+          '<%= vendor_files.css %>'
         ],
         dest: '<%= compile_dir %>/assets/<%= pkg.app %>.css'
       },
@@ -231,8 +231,8 @@ module.exports = function ( grunt ) {
       },
       compile_login_css: {
         src: [
-         '<%= vendor_files.css %>',
-         '<%= build_dir %>/assets/<%= pkg.login %>.css'
+          '<%= build_dir %>/assets/<%= pkg.login %>.css',
+          '<%= vendor_files.css %>'
         ],
         dest: '<%= compile_dir %>/assets/<%= pkg.login %>.css'
       }
@@ -439,8 +439,8 @@ module.exports = function ( grunt ) {
           '<%= build_dir %>/src/**/*.js',
           '<%= html2js.common.dest %>',
           '<%= html2js.app.dest %>',
-          '<%= vendor_files.css %>',
-          '<%= build_dir %>/assets/<%= pkg.app %>.css'
+          '<%= build_dir %>/assets/<%= pkg.app %>.css',
+          '<%= vendor_files.css %>'
         ]
       },
 
@@ -473,8 +473,8 @@ module.exports = function ( grunt ) {
           '<%= build_dir %>/src/login/**/*.js',
           '<%= html2js.common.dest %>',
           '<%= html2js.login.dest %>',
-          '<%= vendor_files.css %>',
-          '<%= build_dir %>/assets/<%= pkg.login %>.css'
+          '<%= build_dir %>/assets/<%= pkg.login %>.css',
+          '<%= vendor_files.css %>'
         ]
       },
 

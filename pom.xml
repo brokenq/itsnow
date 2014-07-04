@@ -29,6 +29,8 @@
 
         <version.slf4j>1.7.7</version.slf4j>
         <version.springframework>4.0.5.RELEASE</version.springframework>
+        <version.mybatis>3.2.7</version.mybatis>
+        <version.mybatis-spring>1.2.2</version.mybatis-spring>
         <version.logback>1.0.13</version.logback>
         <version.jcl-core>2.4</version.jcl-core>
         <version.xstream>1.4.4</version.xstream>
@@ -45,6 +47,7 @@
         <version.jetty>9.1.0.RC2</version.jetty>
         <version.scala>2.8.2</version.scala>
         <version.scalate>1.5.3-scala_2.8.2</version.scalate>
+        <version.mysql>5.1.27</version.mysql>
 
         <version.component-framework>0.0.8-SNAPSHOT</version.component-framework>
         <version.components>0.1.5-SNAPSHOT</version.components>
@@ -325,6 +328,28 @@
                 <artifactId>scala-library</artifactId>
                 <version>${version.scala}</version>
             </dependency>
+            <!--ORM 依赖-->
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis</artifactId>
+                <version>${version.mybatis}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis-spring</artifactId>
+                <version>${version.mybatis-spring}</version>
+            </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${version.mysql}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jdbc</artifactId>
+                <version>${version.springframework}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 </project>

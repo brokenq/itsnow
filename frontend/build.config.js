@@ -85,12 +85,11 @@ module.exports = {
       'vendor/angular-ui-utils/modules/route/route.js',
       'vendor/ace-bootstrap/js/ace.js',
       'vendor/ace-bootstrap/js/ace-elements.js',
-      'vendor/ace-bootstrap/js/ace-extra.js'
+      'vendor/ace-bootstrap/js/ace-extra.js',
+      'vendor/typehead.js/bs2/typeahead-bs2.min.js'
     ],
     css: [
         'vendor/angular/angular-csp.css',
-//        'vendor/font-awesome/css/font-awesome.min.css',
-//        'vendor/bootstrap/dist/css/bootstrap.min.css',
         'vendor/bootstrap/dist/css/bootstrap-theme.min.css',
         'vendor/ace-bootstrap/css/*.css'
     ],

@@ -4,7 +4,6 @@
  * the Grunt configuration that is automatically processed.
  */
 
-
 /**
  * First, we include the Twitter Bootstrap LESS files. Only the ones used in the
  * project should be imported as the rest are just wasting space.
@@ -13,15 +12,15 @@
 @import '../../vendor/bootstrap/less/bootstrap.less';
 
 
+@import '../../vendor/font-awesome/less/font-awesome.less';
+
 /**
  * This is our main variables file. We must include it last so we can overwrite any variable
  * definitions in our imported stylesheets.
  */
 
+
 @import 'variables.less';
-
-
-@import '../../vendor/font-awesome/less/font-awesome.less';
 
 /**
  * Typography
@@ -31,7 +30,7 @@
   font-family: 'Roboto';
   font-style: normal;
   font-weight: 400;
-  src: local('Roboto Regular'), local('Roboto-Regular'), url(fonts/Roboto-Regular.woff) format('woff');
+  src: local('Roboto Regular'), local('Roboto-Regular'), url('Roboto-Regular.woff') format('woff');
 }
 
 code, pre, .pre {

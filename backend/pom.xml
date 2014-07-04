@@ -82,6 +82,24 @@
             <groupId>org.fusesource.scalate</groupId>
             <artifactId>scalate-spring-mvc</artifactId>
         </dependency>
+        <!--MyBatis-->
+        <dependency>
+          <groupId>org.mybatis</groupId>
+          <artifactId>mybatis</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.mybatis</groupId>
+          <artifactId>mybatis-spring</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -122,7 +140,7 @@
                                     <jvmOptions>-Xms750m -Xmx750m -XX:MaxPermSize=270m -Djava.awt.headless=true</jvmOptions>
                                     <propertiesFile>${project.basedir}/config/now.properties</propertiesFile>
                                     <logbackFile>${project.basedir}/config/logback.xml</logbackFile>
-                                    <folders>${project.basedir}/webapp</folders>
+                                    <folders>${project.basedir}/webapp,${project.basedir}/db</folders>
                                 </configuration>
                             </execution>
 

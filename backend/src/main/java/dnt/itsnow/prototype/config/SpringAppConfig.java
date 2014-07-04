@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Import;
  * </pre>
  */
 @Configuration
-@Import(DefaultAppConfig.class)
+@Import({DefaultAppConfig.class, DatabaseConfig.class})
 public class SpringAppConfig {
     @Bean
     public JettyServer jettyServer(){
