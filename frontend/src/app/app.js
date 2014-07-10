@@ -1,8 +1,8 @@
 angular.module( 'ItsNow', [
   'templates-app',
   'templates-common',
-  'ItsNow.home',
-  'ItsNow.about',
+  'ItsNow.Home',
+  'ItsNow.About',
   'ui.router'
 ])
 

@@ -1,6 +1,6 @@
-angular.module( 'ItsNow.about', [
+angular.module( 'ItsNow.About', [
   'ui.router',
-  'placeholders',
+//  'placeholders',
   'ui.bootstrap'
 ])
 

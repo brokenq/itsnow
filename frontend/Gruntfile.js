@@ -108,16 +108,6 @@ module.exports = function ( grunt ) {
           }
        ]   
       },
-      build_vendor_css: {
-        files: [
-          { 
-            src: [ '<%= vendor_files.css %>' ],
-            dest: '<%= build_dir %>/',
-            cwd: '.',
-            expand: true
-          }
-       ]   
-      },
       build_vendor_assets: {
         files: [
           {
@@ -213,8 +203,7 @@ module.exports = function ( grunt ) {
       },
       compile_app_css: {
         src: [
-          '<%= build_dir %>/assets/<%= pkg.app %>.css',
-          '<%= vendor_files.css %>'
+          '<%= build_dir %>/assets/<%= pkg.app %>.css'
         ],
         dest: '<%= compile_dir %>/assets/<%= pkg.app %>.css'
       },
@@ -231,8 +220,7 @@ module.exports = function ( grunt ) {
       },
       compile_login_css: {
         src: [
-          '<%= build_dir %>/assets/<%= pkg.login %>.css',
-          '<%= vendor_files.css %>'
+          '<%= build_dir %>/assets/<%= pkg.login %>.css'
         ],
         dest: '<%= compile_dir %>/assets/<%= pkg.login %>.css'
       }
@@ -428,7 +416,7 @@ module.exports = function ( grunt ) {
 
       /**
        * During development, we don't want to have wait for compilation,
-       * concatenation, minification, etc. So to avoid these steps, we simply
+       * js concatenation, minification, etc. So to avoid these steps, we simply
        * add all script files directly to the `<head>` of `index.html`. The
        * `src` property contains the list of included files.
        */
@@ -439,8 +427,7 @@ module.exports = function ( grunt ) {
           '<%= build_dir %>/src/**/*.js',
           '<%= html2js.common.dest %>',
           '<%= html2js.app.dest %>',
-          '<%= build_dir %>/assets/<%= pkg.app %>.css',
-          '<%= vendor_files.css %>'
+          '<%= build_dir %>/assets/<%= pkg.app %>.css'
         ]
       },
 
@@ -473,8 +460,7 @@ module.exports = function ( grunt ) {
           '<%= build_dir %>/src/login/**/*.js',
           '<%= html2js.common.dest %>',
           '<%= html2js.login.dest %>',
-          '<%= build_dir %>/assets/<%= pkg.login %>.css',
-          '<%= vendor_files.css %>'
+          '<%= build_dir %>/assets/<%= pkg.login %>.css'
         ]
       },
 
@@ -660,9 +646,10 @@ module.exports = function ( grunt ) {
    * The `build` task gets your app ready to run for development and testing.
    */
   grunt.registerTask( 'build', [
-    'clean', 'html2js', 'jshint', 'coffeelint', 'coffee', 'less:build',
-    'copy:build_assets', 'copy:build_vendor_css', 'copy:build_vendor_assets',
+    'clean', 'html2js', 'jshint', 'coffeelint', 'coffee',
+    'less:build', 'copy:build_assets', 'copy:build_vendor_assets',
     'copy:build_appjs', 'copy:build_loginjs', 'copy:build_vendorjs',
+    'concat:build_app_css', 'concat:build_login_css',
     'login:build', 'index:build',
     'karmaconfig', 'karma:continuous'
   ]);
@@ -673,7 +660,6 @@ module.exports = function ( grunt ) {
    */
   grunt.registerTask( 'compile', [
     'less:compile', 'copy:compile_assets', 'ngmin',
-    'concat:build_app_css', 'concat:build_login_css',
     'concat:compile_app_css', 'concat:compile_login_css',
     'concat:compile_app_js', 'concat:compile_login_js',
     'uglify', 'login:compile', 'index:compile'
