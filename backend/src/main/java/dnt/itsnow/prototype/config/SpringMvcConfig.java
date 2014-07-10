@@ -37,7 +37,8 @@ public class SpringMvcConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/public/**").addResourceLocations("/public/");
+        //资源先在 frontend中找(这是前端项目集成过来的)，而后到public里面找(这是后端项目的deploy|build过来的静态资源)
+        registry.addResourceHandler("/**").addResourceLocations("/frontend/","/public/");
         registry.addResourceHandler("/favicon.ico").addResourceLocations("/public/images/favicon.ico");
     }
 }

@@ -22,7 +22,7 @@
     </description>
 
     <properties>
-        <release.dir>${release.root}/prototype-${project.version}</release.dir>
+        <release.dir>${release.root}/backend-${project.version}</release.dir>
         <port.debug>1081</port.debug>
         <port.jmx>1082</port.jmx>
         <port.rmi>1083</port.rmi>
