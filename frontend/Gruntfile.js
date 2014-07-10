@@ -12,6 +12,7 @@ module.exports = function ( grunt ) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-coffee');
   grunt.loadNpmTasks('grunt-contrib-less');
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-conventional-changelog');
   grunt.loadNpmTasks('grunt-bump');
   grunt.loadNpmTasks('grunt-coffeelint');
@@ -194,35 +195,23 @@ module.exports = function ( grunt ) {
         src: [
           '<%= vendor_files.js %>', 
           'module.prefix', 
-          '<%= build_dir %>/src/**/*.js', 
+          '<%= build_dir %>/src/app/**/*.js',
           '<%= html2js.app.dest %>', 
           '<%= html2js.common.dest %>', 
           'module.suffix' 
         ],
         dest: '<%= compile_dir %>/assets/<%= pkg.app %>.js'
       },
-      compile_app_css: {
-        src: [
-          '<%= build_dir %>/assets/<%= pkg.app %>.css'
-        ],
-        dest: '<%= compile_dir %>/assets/<%= pkg.app %>.css'
-      },
       compile_login_js: {
         src: [
           '<%= vendor_files.js %>',
           'module.prefix',
-          '<%= build_dir %>/src/**/*.js',
+          '<%= build_dir %>/src/login/**/*.js',
           '<%= html2js.login.dest %>',
           '<%= html2js.common.dest %>',
           'module.suffix'
         ],
         dest: '<%= compile_dir %>/assets/<%= pkg.login %>.js'
-      },
-      compile_login_css: {
-        src: [
-          '<%= build_dir %>/assets/<%= pkg.login %>.css'
-        ],
-        dest: '<%= compile_dir %>/assets/<%= pkg.login %>.css'
       }
     },
 
@@ -254,7 +243,7 @@ module.exports = function ( grunt ) {
       compile: {
         files: [
           {
-            src: [ '<%= app_files.js %>',  '<%= test_files.js %>' ],
+            src: [ '<%= app_files.js %>', '<%= login_files.js %>',  '<%= test_files.js %>' ],
             cwd: '<%= build_dir %>',
             dest: '<%= build_dir %>',
             expand: true
@@ -278,6 +267,17 @@ module.exports = function ( grunt ) {
       }
     },
 
+    cssmin: {
+      app: {
+        src: '<%= compile_dir %>/assets/<%= pkg.app %>.css',
+        dest: '<%= compile_dir %>/assets/<%= pkg.app %>.css'
+      },
+      login: {
+        src: '<%= compile_dir %>/assets/<%= pkg.login %>.css',
+        dest: '<%= compile_dir %>/assets/<%= pkg.login %>.css'
+      }
+    },
+
     /**
      * `grunt-contrib-less` handles our LESS compilation and uglification automatically.
      * Only our `main.less` file is included in compilation;
@@ -292,8 +292,8 @@ module.exports = function ( grunt ) {
       },
       compile: {
         files: {
-          '<%= build_dir %>/assets/<%= pkg.app %>.css': '<%= app_files.less %>',
-          '<%= build_dir %>/assets/<%= pkg.login %>.css': '<%= login_files.less %>'
+          '<%= compile_dir %>/assets/<%= pkg.app %>.css': '<%= app_files.less %>',
+          '<%= compile_dir %>/assets/<%= pkg.login %>.css': '<%= login_files.less %>'
         },
         options: {
           cleancss: true,
@@ -440,8 +440,7 @@ module.exports = function ( grunt ) {
         dir: '<%= compile_dir %>',
         src: [
           '<%= concat.compile_app_js.dest %>',
-          '<%= concat.compile_app_css.dest %>'
-//          '<%= build_dir %>/assets/<%= pkg.app %>.css'
+          '<%= compile_dir %>/assets/<%= pkg.app %>.css'
         ]
       }
     },
@@ -473,8 +472,7 @@ module.exports = function ( grunt ) {
         dir: '<%= compile_dir %>',
         src: [
           '<%= concat.compile_login_js.dest %>',
-          '<%= concat.compile_login_css.dest %>'
-//          '<%= build_dir %>/assets/<%= pkg.login %>.css'
+          '<%= compile_dir %>/assets/<%= pkg.login %>.css'
         ]
       }
     },
@@ -659,10 +657,10 @@ module.exports = function ( grunt ) {
    * minifying your code.
    */
   grunt.registerTask( 'compile', [
-    'less:compile', 'copy:compile_assets', 'ngmin',
-    'concat:compile_app_css', 'concat:compile_login_css',
+    'copy:compile_assets', /*这里包括了两个主CSS文件*/
+    'ngmin',
     'concat:compile_app_js', 'concat:compile_login_js',
-    'uglify', 'login:compile', 'index:compile'
+    'uglify', 'cssmin:app', 'cssmin:login', 'login:compile', 'index:compile'
   ]);
 
   /**
