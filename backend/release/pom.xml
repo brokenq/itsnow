@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>dnt.itsnow</groupId>
+        <artifactId>backend</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+    <groupId>dnt.itsnow.backend</groupId>
+    <artifactId>release</artifactId>
+    <name>Itsnow Backend Release</name>
+    <description>
+        The backend release
+    </description>
+
+    <properties>
+        <release.dir>${release.root}/backend-${project.version}</release.dir>
+        <port.debug>1081</port.debug>
+        <port.jmx>1082</port.jmx>
+        <port.rmi>1083</port.rmi>
+    </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>dnt.itsnow.backend</groupId>
+            <artifactId>webapp</artifactId>
+        </dependency>
+ 
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>release-itsnow</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>net.happyonroad</groupId>
+                        <artifactId>spring-component-builder</artifactId>
+                        <version>${version.component-framework}</version>
+                        <executions>
+                            <execution>
+                                <id>package-app</id>
+                                <goals><goal>package</goal></goals>
+                                <configuration>
+                                    <output>${release.dir}</output>
+                                    <appName>ItsNow</appName>
+                                    <appPort>${port.rmi}</appPort>
+                                    <jmx>${port.jmx}</jmx>
+                                    <debug>${port.debug}</debug>
+                                    <jvmOptions>-Xms750m -Xmx750m -XX:MaxPermSize=270m -Djava.awt.headless=true</jvmOptions>
+                                    <propertiesFile>${project.basedir}/config/now.properties</propertiesFile>
+                                    <logbackFile>${project.basedir}/config/logback.xml</logbackFile>
+                                    <folders>${project.basedir}/webapp,${project.basedir}/db</folders>
+                                </configuration>
+                            </execution>
+
+                            <execution>
+                                <id>clean-app</id>
+                                <goals><goal>clean</goal></goals>
+                                <configuration>
+                                    <output>${release.dir}</output>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                </plugins>
+            </build>
+
+        </profile>
+    </profiles>
+</project>

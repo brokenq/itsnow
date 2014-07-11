@@ -27,7 +27,7 @@ var securityService = angular.module('SecurityService', []);
 
 securityService.factory('Session', ['$resource',
   function($resource){
-    return $resource("session", {}, {
+    return $resource("v1/session", {}, {
       create: {method: 'POST'},/* login */
       destroy: {method: 'DELETE'},/* logout */
       current: {method: 'GET'}, /* current session */
@@ -38,7 +38,7 @@ securityService.factory('Session', ['$resource',
 
 securityService.factory('Password', ['$resource'],
   function($resource){
-    return $resource("password", {}, {
+    return $resource("v1/password", {}, {
       forgot: {method: 'POST'},
       reset: {method: 'PUT'}
     });
@@ -47,7 +47,7 @@ securityService.factory('Password', ['$resource'],
 
 securityService.factory('User', ['$resource'],
   function($resource){
-    return $resource('users/:userId.json', {}, {
+    return $resource('v1/users/:userId.json', {}, {
       signup: {url: 'users', method: 'POST'}
     });
   }

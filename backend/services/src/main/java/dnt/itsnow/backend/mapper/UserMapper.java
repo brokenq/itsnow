@@ -1,7 +1,7 @@
 /**
  * Developer: Kadvin Date: 14-7-4 上午9:26
  */
-package dnt.itsnow.prototype.mapper;
+package dnt.itsnow.backend.mapper;
 
 /**
  * 映射用户

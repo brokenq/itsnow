@@ -21,7 +21,6 @@ angular.module( 'ItsNow.Login.Signup', [
   })
 
   .controller( 'SignupCtrl', function SignupCtrl( $scope, User ) {
-    // This is simple a demo for UI Boostrap.
   })
 
 ;

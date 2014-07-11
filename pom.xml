@@ -217,6 +217,7 @@
 
     <dependencyManagement>
         <dependencies>
+
             <!-- 3rd DEPENDENCIES -->
             <dependency>
                 <groupId>org.springframework</groupId>

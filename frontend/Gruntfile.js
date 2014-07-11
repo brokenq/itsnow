@@ -175,15 +175,15 @@ module.exports = function ( grunt ) {
        */
       build_app_css: {
         src: [
-          '<%= vendor_files.css %>',
-          '<%= build_dir %>/assets/<%= pkg.app %>.css'
+          '<%= build_dir %>/assets/<%= pkg.app %>.css',
+          '<%= vendor_files.css %>'
         ],
         dest: '<%= build_dir %>/assets/<%= pkg.app %>.css'
       },
       build_login_css: {
         src: [
-          '<%= vendor_files.css %>',
-          '<%= build_dir %>/assets/<%= pkg.login %>.css'
+          '<%= build_dir %>/assets/<%= pkg.login %>.css',
+          '<%= vendor_files.css %>'
         ],
         dest: '<%= build_dir %>/assets/<%= pkg.login %>.css'
       },

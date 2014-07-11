@@ -1,7 +1,7 @@
 /**
  * Developer: Kadvin Date: 14-7-4 上午9:14
  */
-package dnt.itsnow.prototype.config;
+package dnt.itsnow.backend.config;
 
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;

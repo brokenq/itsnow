@@ -21,7 +21,6 @@ angular.module( 'ItsNow.Login.Forgot', [
   })
 
   .controller( 'ForgotCtrl', function ForgotCtrl( $scope, Password ) {
-    // This is simple a demo for UI Boostrap.
   })
 
 ;

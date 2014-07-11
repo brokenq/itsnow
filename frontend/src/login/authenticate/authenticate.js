@@ -20,17 +20,16 @@ angular.module('ItsNow.Login.Authenticate', [
     });
   })
 
-  .controller('AuthenticateCtrl', ['$scope', '$location', 'Session',
-    function ($scope, $location, Session) {
-      // This is simple a demo for UI Bootstrap.
-      $scope.challenger = {username: 'admin', password: 'secret', remember: true};
+  .controller('AuthenticateCtrl', ['$scope', 'Session',
+    function ($scope, Session) {
+      $scope.credential = {username: 'admin', password: 'secret', remember: true};
       $scope.error = null;
 
       $scope.challenge = function (input) {
         Session.create(input, function (value, header) {
-          $location.path("/index.html");
+          window.location.href = '/index.html';
         }, function (response) {
-          $scope.error = response.data;
+          $scope.error = response.statusText;
         });
       };
       //有了这个成员，模板中才能写成: authenticate.challenge(input)
