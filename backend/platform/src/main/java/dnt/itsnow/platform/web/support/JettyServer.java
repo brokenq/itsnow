@@ -13,11 +13,13 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.RequestLogHandler;
+import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
+import org.springframework.scripting.support.RefreshableScriptTargetSource;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletContainerInitializer;
@@ -68,6 +70,9 @@ public class JettyServer extends Bean {
     private HandlerCollection createHandlers() {
         WebAppContext context = new WebAppContext();
         context.setContextPath("/");
+        File webapp = new File(System.getProperty("app.home"), "webapp");
+        context.setBaseResource(Resource.newResource(webapp));
+
         context.setClassLoader(applicationContext.getClassLoader());
         context.getServletContext().setAttribute("application", applicationContext);
         context.setConfigurations(new Configuration[]{new JettyAnnotationConfiguration()});
