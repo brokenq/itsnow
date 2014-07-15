@@ -9,15 +9,14 @@
         <artifactId>backend</artifactId>
         <version>0.1.0-SNAPSHOT</version>
     </parent>
-    <groupId>dnt.itsnow.backend</groupId>
     <artifactId>release</artifactId>
-    <name>Itsnow Backend Release</name>
+    <name>Itsnow Release</name>
     <description>
-        The backend release
+        The itsnow release project
     </description>
 
     <properties>
-        <release.dir>${release.root}/backend-${project.version}</release.dir>
+        <release.dir>${release.root}/itsnow-${project.version}</release.dir>
         <port.debug>1081</port.debug>
         <port.jmx>1082</port.jmx>
         <port.rmi>1083</port.rmi>
@@ -26,8 +25,19 @@
     <dependencies>
 
         <dependency>
-            <groupId>dnt.itsnow.backend</groupId>
-            <artifactId>webapp</artifactId>
+            <groupId>dnt.itsnow</groupId>
+            <artifactId>platform</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-migrations</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.happyonroad</groupId>
+            <artifactId>spring-component-framework</artifactId>
+            <scope>runtime</scope>
         </dependency>
  
     </dependencies>
@@ -51,7 +61,8 @@
                                     <appPort>${port.rmi}</appPort>
                                     <jmx>${port.jmx}</jmx>
                                     <debug>${port.debug}</debug>
-                                    <jvmOptions>-Xms750m -Xmx750m -XX:MaxPermSize=270m -Djava.awt.headless=true</jvmOptions>
+                                    <jvmOptions>-Dcomponent.feature.resolvers=dnt.itsnow.platform.services.ServicePackageResolver \\
+                                        -Xms750m -Xmx750m -XX:MaxPermSize=270m -Djava.awt.headless=true</jvmOptions>
                                     <propertiesFile>${project.basedir}/config/now.properties</propertiesFile>
                                     <logbackFile>${project.basedir}/config/logback.xml</logbackFile>
                                     <folders>${project.basedir}/webapp,${project.basedir}/db</folders>

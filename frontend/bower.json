@@ -17,7 +17,7 @@
     "font-awesome": "~4.1.0",
     "typehead.js": "~0.10.2"
   },
-  "dependencies": {
-    "ace-bootstrap": "git@github.com:Kadvin/ace-bootstrap.git"
+  "depeacendencies": {
+    "-bootstrap": "git@github.com:Kadvin/ace-bootstrap.git"
   }
 }

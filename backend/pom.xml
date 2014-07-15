@@ -22,27 +22,22 @@
         Persistence: MyBatis
     </description>
 
-    <profiles>
-        <profile>
-            <id>with-children</id>
-            <modules>
-                <module>services</module>
-                <module>webapp</module>
-                <module>release</module>
-            </modules>
-        </profile>
-    </profiles>
+    <modules>
+        <module>services</module>
+        <module>platform</module>
+        <module>release</module>
+    </modules>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>dnt.itsnow.backend</groupId>
+                <groupId>dnt.itsnow</groupId>
                 <artifactId>services</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>dnt.itsnow.backend</groupId>
-                <artifactId>webapp</artifactId>
+                <groupId>dnt.itsnow</groupId>
+                <artifactId>platform</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
