@@ -51,7 +51,7 @@ public class DatabaseConfig {
     @Bean
     public MapperScannerConfigurer mapperScannerConfigurer(){
         MapperScannerConfigurer scanner = new MapperScannerConfigurer();
-        scanner.setBasePackage("dnt.itsnow.prototype.mapper");
+        scanner.setBasePackage("dnt.itsnow.platform.repository");
         return scanner;
     }
 }

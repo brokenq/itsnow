@@ -21,6 +21,11 @@
             <groupId>dnt.itsnow.session_service</groupId>
             <artifactId>session_api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>dnt.itsnow.user_service</groupId>
+            <artifactId>user_app</artifactId>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -32,7 +37,7 @@
                     <archive>
                         <manifestEntries>
                             <App-Config>dnt.itsnow.platform.services.DefaultServiceAppConfig</App-Config>
-                            <Service-Config>dnt.itsnow.platform.services.DefaultServiceConfig</Service-Config>
+                            <Service-Config>dnt.itsnow.config.ServiceConfig</Service-Config>
                         </manifestEntries>
                     </archive>
                 </configuration>

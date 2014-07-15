@@ -53,6 +53,7 @@
 
     <dependencyManagement>
         <dependencies>
+            <!--API for static dependencies-->
             <dependency>
                 <groupId>dnt.itsnow.user_service</groupId>
                 <artifactId>user_api</artifactId>
@@ -61,6 +62,18 @@
             <dependency>
                 <groupId>dnt.itsnow.session_service</groupId>
                 <artifactId>session_api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!--APP for runtime dependencies-->
+            <dependency>
+                <groupId>dnt.itsnow.user_service</groupId>
+                <artifactId>user_app</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dnt.itsnow.session_service</groupId>
+                <artifactId>session_app</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

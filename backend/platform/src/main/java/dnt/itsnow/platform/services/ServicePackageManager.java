@@ -4,7 +4,6 @@
 package dnt.itsnow.platform.services;
 
 import dnt.spring.ApplicationSupportBean;
-import dnt.util.FilenameFilterBySuffix;
 import net.happyonroad.component.classworld.PomClassRealm;
 import net.happyonroad.component.container.ComponentLoader;
 import net.happyonroad.component.container.ComponentRepository;
@@ -34,7 +33,8 @@ import java.util.List;
 /**
  * The service package manager
  */
-public class ServicePackageManager extends ApplicationSupportBean implements ApplicationListener<ContainerEvent> {
+public class ServicePackageManager extends ApplicationSupportBean
+        implements ApplicationListener<ContainerEvent>, FilenameFilter {
     @Autowired
     private ComponentLoader     componentLoader;
     @Autowired
@@ -67,8 +67,7 @@ public class ServicePackageManager extends ApplicationSupportBean implements App
 
     void loadServicePackages() throws Exception {
         File repository = new File(System.getProperty("app.home"), "repository");
-        FilenameFilter jarFilter = new FilenameFilterBySuffix(".jar");
-        File[] packageJars = repository.listFiles(jarFilter);
+        File[] packageJars = repository.listFiles(this);
         if (packageJars == null)
             packageJars = new File[0]; /*也可能在目录下没有jar*/
         logger.debug("Loading {} service packages from: {}", packageJars.length, repository.getAbsolutePath());
@@ -138,4 +137,15 @@ public class ServicePackageManager extends ApplicationSupportBean implements App
         }
     }
 
+    @Override
+    public boolean accept(File dir, String name) {
+        if( !name.endsWith(".jar") )return false;
+        Dependency dependency;
+        try {
+            dependency = Dependency.parse(name);
+        } catch (InvalidComponentNameException e) {
+            return false;
+        }
+        return dependency.getArtifactId().toLowerCase().endsWith("_app");
+    }
 }
