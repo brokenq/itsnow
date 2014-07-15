@@ -3,8 +3,11 @@
  */
 package dnt.itsnow.services.api;
 
+import dnt.itsnow.services.model.User;
+
 /**
  * the Sample User service
  */
 public interface UserService {
+    User find(String username, String password);
 }

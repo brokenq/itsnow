@@ -3,15 +3,17 @@
  */
 package dnt.itsnow.services.support;
 
+import dnt.itsnow.services.api.UserService;
 import dnt.itsnow.services.exception.SessionException;
 import dnt.itsnow.services.model.Session;
 import dnt.itsnow.services.api.SessionService;
+import dnt.itsnow.services.model.User;
+import dnt.itsnow.services.repository.SessionRepository;
 import dnt.spring.Bean;
 import dnt.util.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -19,29 +21,31 @@ import java.util.UUID;
  */
 @Service
 public class SessionManager extends Bean implements SessionService{
+    @Autowired
+    private UserService userService;
     //
     // TODO Session Store 应该被一个 SessionRepository 代替
     // Session Repository 可以有
     //   MemorySessionStore
     //   DatabaseSessionStore
     //   RedisSessionStore 等
-    private Map<String, Session> sessionStore = new LinkedHashMap<String, Session>();
+    //private Map<String, Session> sessionStore = new LinkedHashMap<String, Session>();
+    SessionRepository repository;
 
     @Override
     public Session challenge(String requestedSessionId, String username, String password) throws SessionException {
-        if ("admin".equalsIgnoreCase(username)) {
-            if (!"secret".equals(password)) {
-                throw new SessionException("The password is invalid");
-            }
+        User user = userService.find(username, password );
+
+        if ( user != null ) {
             Session session = new Session();
             if(StringUtils.isBlank(requestedSessionId)){
                 session.setSessionId(UUID.randomUUID().toString());
             }else{
                 session.setSessionId(requestedSessionId);
             }
-            session.setNickName("超级管理员");
-            session.setUsername("Admin");
-            sessionStore.put(session.getSessionId(), session);
+            session.setNickName(user.getNickName());
+            session.setUsername(user.getName());
+            repository.save(session);
             return session;
         } else{
             throw new SessionException("The username is invalid");
@@ -55,16 +59,16 @@ public class SessionManager extends Bean implements SessionService{
 
     @Override
     public Session find(String sessionId) {
-        return sessionStore.get(sessionId);
+        return repository.findById(sessionId);
     }
 
     @Override
     public void destroy(Session session) {
-        sessionStore.remove(session.getSessionId());
+        repository.destroy(session.getSessionId());
     }
 
     @Override
     public void destroy(String requestSessionId) {
-        sessionStore.remove(requestSessionId);
+        repository.destroy(requestSessionId);
     }
 }

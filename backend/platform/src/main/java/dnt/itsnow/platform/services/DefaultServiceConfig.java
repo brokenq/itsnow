@@ -5,7 +5,6 @@ package dnt.itsnow.platform.services;
 
 import net.happyonroad.spring.service.AbstractServiceConfig;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.SqlSessionTemplate;
 
 import javax.sql.DataSource;
 
@@ -20,8 +19,7 @@ public class DefaultServiceConfig extends AbstractServiceConfig {
     public void defineServices() {
         //数据库相关服务
         importService(DataSource.class);
-        importService(SqlSessionFactory.class, "*", "sqlSessionFactory");
-        importService(SqlSessionTemplate.class, "*", "sqlSessionTemplate");
+        importService(SqlSessionFactory.class);
         //Spring MVC相关服务
         //工作流相关服务
     }

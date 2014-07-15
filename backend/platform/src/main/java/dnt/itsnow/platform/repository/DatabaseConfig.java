@@ -3,9 +3,7 @@
  */
 package dnt.itsnow.platform.repository;
 
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
-import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -42,11 +40,6 @@ public class DatabaseConfig {
         SqlSessionFactoryBean factory = new SqlSessionFactoryBean();
         factory.setDataSource(dataSource);
         return factory;
-    }
-
-    @Bean
-    public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory factory){
-        return new SqlSessionTemplate(factory);
     }
 
     @Bean
