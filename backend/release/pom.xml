@@ -56,7 +56,7 @@
                                     <appPort>${port.rmi}</appPort>
                                     <jmx>${port.jmx}</jmx>
                                     <debug>${port.debug}</debug>
-                                    <jvmOptions>-Dcomponent.feature.resolvers=dnt.itsnow.platform.services.ServicePackageResolver \\
+                                    <jvmOptions>-Dcomponent.feature.resolvers=dnt.itsnow.platform.services.MybatisFeatureResolver,dnt.itsnow.platform.services.SpringMvcFeatureResolver \\
                                         -Xms750m -Xmx750m -XX:MaxPermSize=270m -Djava.awt.headless=true</jvmOptions>
                                     <propertiesFile>${project.basedir}/config/now.properties</propertiesFile>
                                     <logbackFile>${project.basedir}/config/logback.xml</logbackFile>

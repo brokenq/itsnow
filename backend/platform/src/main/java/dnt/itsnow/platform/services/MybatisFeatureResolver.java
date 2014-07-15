@@ -20,7 +20,6 @@ import static org.springframework.context.ConfigurableApplicationContext.CONFIG_
  *
  * <ol>
  * <li>DB {Repository | Mapper}类扩展</li>
- * <li>Spring Controller/Views等扩展</li>
  * </ol>
  *
  * 主要扩展原理是：
@@ -30,12 +29,11 @@ import static org.springframework.context.ConfigurableApplicationContext.CONFIG_
  * 这样，他们就可以被业务包中的beans访问到
  * </pre>
  */
-public class ServicePackageResolver extends AbstractFeatureResolver {
-    public static final String FEATURE        = "service-package";
+public class MybatisFeatureResolver extends AbstractFeatureResolver {
+    public static final String FEATURE        = "mybatis";
     public static final String APP_REPOSITORY = "App-Repository";
-    public static final String WEB_REPOSITORY = "Web-Repository";
 
-    public ServicePackageResolver() {
+    public MybatisFeatureResolver() {
         //28： 在Spring Service Context之后(25)， Spring Application Context之前(30)，加载
         // 这样可以为相应的context准备好
         //  1. repository(mybatis mapper)
@@ -53,23 +51,17 @@ public class ServicePackageResolver extends AbstractFeatureResolver {
     @Override
     public boolean hasFeature(Component component) {
         //暂时仅根据组件的artifact id判断，也不根据内容判断
-        return component.getArtifactId().endsWith("_app");
+        return StringUtils.isNotBlank(component.getManifestAttribute(APP_REPOSITORY));
     }
 
     @Override
     public void resolve(Component component) throws Exception {
         String appRepository = component.getManifestAttribute(APP_REPOSITORY);
-        if (StringUtils.isNotBlank(appRepository)) {
-            scanMyBatisRepository(component.getServiceApplication(), appRepository);
-        }
-        String webRepository = component.getManifestAttribute(WEB_REPOSITORY);
-        if (StringUtils.isNotBlank(webRepository)) {
-            scanSpringControllers(component.getServiceApplication(), webRepository);
-        }
-        logger.info("The {} is resolved for service feature", component);
+        scanMyBatisRepository(component.getServiceApplication(), appRepository);
+        logger.info("The {} is resolved for mybatis feature", component);
     }
 
-    void scanMyBatisRepository(ApplicationContext application, String repository) {
+    void scanMyBatisRepository(ApplicationContext application, String appRepository) {
         ClassPathMapperScanner scanner = new ClassPathMapperScanner((BeanDefinitionRegistry) application);
 
         SqlSessionFactory sqlSessionFactory = application.getBean(SqlSessionFactory.class);
@@ -80,12 +72,8 @@ public class ServicePackageResolver extends AbstractFeatureResolver {
         scanner.setResourceLoader(application);
         scanner.setIncludeAnnotationConfig(false);
         scanner.registerFilters();
-        int count = scanner.scan(StringUtils.split(repository, CONFIG_LOCATION_DELIMITERS));
+        int count = scanner.scan(StringUtils.split(appRepository, CONFIG_LOCATION_DELIMITERS));
         logger.debug("Scanned {} mybatis repositories", count);
     }
 
-    private void scanSpringControllers(ApplicationContext application, String webRepository) {
-
-
-    }
 }
