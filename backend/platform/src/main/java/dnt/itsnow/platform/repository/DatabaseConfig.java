@@ -3,8 +3,9 @@
  */
 package dnt.itsnow.platform.repository;
 
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
-import org.mybatis.spring.mapper.MapperScannerConfigurer;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -44,14 +45,12 @@ public class DatabaseConfig {
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager(DataSource dataSource){
-        return new DataSourceTransactionManager(dataSource);
+    public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory factory){
+        return new SqlSessionTemplate(factory);
     }
 
     @Bean
-    public MapperScannerConfigurer mapperScannerConfigurer(){
-        MapperScannerConfigurer scanner = new MapperScannerConfigurer();
-        scanner.setBasePackage("dnt.itsnow.platform.repository");
-        return scanner;
+    public PlatformTransactionManager transactionManager(DataSource dataSource){
+        return new DataSourceTransactionManager(dataSource);
     }
 }
