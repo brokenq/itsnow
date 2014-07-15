@@ -30,11 +30,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis-migrations</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>net.happyonroad</groupId>
             <artifactId>spring-component-framework</artifactId>
             <scope>runtime</scope>
