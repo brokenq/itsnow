@@ -146,6 +146,7 @@ public class ServicePackageManager extends ApplicationSupportBean
         } catch (InvalidComponentNameException e) {
             return false;
         }
-        return dependency.getArtifactId().toLowerCase().endsWith("_app");
+        String id = dependency.getArtifactId().toLowerCase();
+        return id.endsWith("_app") || id.endsWith("_service");
     }
 }

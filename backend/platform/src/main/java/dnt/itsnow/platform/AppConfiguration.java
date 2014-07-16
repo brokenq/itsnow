@@ -5,7 +5,7 @@ package dnt.itsnow.platform;
 
 import dnt.itsnow.platform.repository.DatabaseConfig;
 import dnt.itsnow.platform.services.ServicePackageManager;
-import dnt.itsnow.platform.support.ApplicationEventForwarder;
+import dnt.itsnow.platform.support.ServicePackageEventForwarder;
 import dnt.itsnow.platform.support.JettyServer;
 import dnt.spring.DefaultAppConfig;
 import org.springframework.context.annotation.Bean;
@@ -47,8 +47,8 @@ public class AppConfiguration {
 
     //用于把平台context中的事件转发给 躲在dispatcher servlet 中的 Spring Mvc Context
     @Bean
-    public ApplicationEventForwarder eventForwarder(){
-        return new ApplicationEventForwarder();
+    public ServicePackageEventForwarder eventForwarder(){
+        return new ServicePackageEventForwarder();
     }
 
 }

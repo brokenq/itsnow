@@ -11,7 +11,7 @@ import org.springframework.context.ApplicationListener;
 /**
  * Forward service package event from platform context to spring mvc context
  */
-public class ApplicationEventForwarder extends Bean implements ApplicationListener<ServicePackageEvent> {
+public class ServicePackageEventForwarder extends Bean implements ApplicationListener<ServicePackageEvent> {
     ApplicationContext target;
 
     @Override

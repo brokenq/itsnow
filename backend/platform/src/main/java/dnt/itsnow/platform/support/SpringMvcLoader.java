@@ -36,7 +36,7 @@ public class SpringMvcLoader extends AbstractAnnotationConfigDispatcherServletIn
                 (AnnotationConfigWebApplicationContext) super.createServletApplicationContext();
         if( applicationContext != null ){
             servletAppContext.setParent(applicationContext);
-            ApplicationEventForwarder forwarder = applicationContext.getBean(ApplicationEventForwarder.class);
+            ServicePackageEventForwarder forwarder = applicationContext.getBean(ServicePackageEventForwarder.class);
             forwarder.bind(servletAppContext);
         }
 
