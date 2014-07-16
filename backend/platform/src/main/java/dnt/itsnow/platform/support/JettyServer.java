@@ -4,6 +4,7 @@
 package dnt.itsnow.platform.support;
 
 import dnt.spring.Bean;
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.jetty.annotations.AnnotationConfiguration;
 import org.eclipse.jetty.plus.annotation.ContainerInitializer;
 import org.eclipse.jetty.server.Handler;
@@ -68,7 +69,8 @@ public class JettyServer extends Bean {
         WebAppContext context = new WebAppContext();
         context.setContextPath("/");
         File webapp = new File(System.getProperty("app.home"), "webapp");
-        context.setBaseResource(Resource.newResource(webapp));
+        String path = FilenameUtils.normalize(webapp.getAbsolutePath());
+        context.setBaseResource(Resource.newResource(new File(path)));
 
         context.setClassLoader(applicationContext.getClassLoader());
         context.getServletContext().setAttribute("application", applicationContext);
