@@ -29,7 +29,7 @@ angular.module('ItsNow.Login.Authenticate', [
         Session.create(input, function (value, header) {
           window.location.href = '/index.html';
         }, function (response) {
-          $scope.error = response.statusText;
+          $scope.error = response.data;//后端现在处理了异常，返回的是简要的错误信息
         });
       };
       //有了这个成员，模板中才能写成: authenticate.challenge(input)

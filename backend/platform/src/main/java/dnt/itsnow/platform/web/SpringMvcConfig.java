@@ -70,4 +70,5 @@ public class SpringMvcConfig extends WebMvcConfigurationSupport {
         registry.addResourceHandler("/favicon.ico").addResourceLocations("/public/images/favicon.ico");
     }
 
+
 }

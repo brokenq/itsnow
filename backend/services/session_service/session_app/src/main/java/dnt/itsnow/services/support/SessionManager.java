@@ -30,6 +30,7 @@ public class SessionManager extends Bean implements SessionService{
     //   DatabaseSessionStore
     //   RedisSessionStore 等
     //private Map<String, Session> sessionStore = new LinkedHashMap<String, Session>();
+    @Autowired
     SessionRepository repository;
 
     @Override
@@ -44,7 +45,7 @@ public class SessionManager extends Bean implements SessionService{
                 session.setSessionId(requestedSessionId);
             }
             session.setNickName(user.getNickName());
-            session.setUsername(user.getName());
+            session.setUserName(user.getName());
             repository.save(session);
             return session;
         } else{

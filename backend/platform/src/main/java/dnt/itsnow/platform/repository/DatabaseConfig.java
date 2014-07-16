@@ -4,6 +4,8 @@
 package dnt.itsnow.platform.repository;
 
 import org.mybatis.spring.SqlSessionFactoryBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -18,6 +20,9 @@ import javax.sql.DataSource;
  */
 @Configuration
 public class DatabaseConfig {
+    @Autowired
+    ApplicationContext application;
+
     @Bean
     @Profile("production")
     public DataSource dataSource() {
@@ -38,6 +43,7 @@ public class DatabaseConfig {
     @Bean
     public SqlSessionFactoryBean sqlSessionFactory(DataSource dataSource){
         SqlSessionFactoryBean factory = new SqlSessionFactoryBean();
+        factory.setConfigLocation(application.getResource("classpath:META-INF/mybatis.xml"));
         factory.setDataSource(dataSource);
         return factory;
     }

@@ -4,21 +4,32 @@
 package dnt.itsnow.services.repository;
 
 import dnt.itsnow.services.model.Session;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 /**
- * 映射用户会话
+ * <h1>映射用户会话</h1>
+ *
+ * 默认的做法（无需自己指定SQL）:
+ * <pre>
+ *     selectSession(int):Session;
+ *     selectSessions():List&lt;Session&gt;
+ *       or
+ *     <code>@MapKey("session_id")</code>
+ *     selectSessions():Map&lt;String,Session&gt;
+ *     insertSession(Session):int
+ *     updateSession(Session):int
+ *     deleteSession(int):int
+ * </pre>
  */
 public interface SessionRepository {
-    @Select("select * from sessions where session_id = {sessionId}")
-    Session findById(String sessionId);
+    @Select("select * from sessions where session_id = #{sessionId}")
+    Session findById(@Param("sessionId") String sessionId);
 
-    @Delete("delete from sessions where session_id = {sessionId")
-    void destroy(String sessionId);
+    @Delete("delete from sessions where session_id = #{sessionId")
+    void destroy(@Param("sessionId") String sessionId);
 
-    @Insert("insert into sessions(id, data, created_at, updated_at) " +
-            "values({session.sessionId, session.toBinary(), now(), now())")
+    @Options(useGeneratedKeys = true,keyColumn = "id")
+    @Insert("insert into sessions(session_id, data, created_at, updated_at) " +
+            "values(#{sessionId}, #{data}, #{createdAt}, #{updatedAt})")
     void save(Session session);
 }

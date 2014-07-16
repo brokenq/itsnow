@@ -5,14 +5,12 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.platform.web.controller.ApplicationController;
 import dnt.itsnow.services.exception.*;
+import dnt.itsnow.web.exception.*;
 import dnt.itsnow.web.model.LoginCredential;
 import dnt.itsnow.services.model.Session;
 import dnt.itsnow.services.api.SessionService;
-import dnt.itsnow.web.exception.CaptchaException;
-import dnt.itsnow.web.exception.InvalidCredentialException;
-import dnt.itsnow.web.exception.InvalidSessionException;
-import dnt.itsnow.web.exception.SessionExpiredException;
 import dnt.util.StringUtils;
+import org.apache.http.auth.BasicUserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.security.Principal;
 
 /**
  * The Session Controller
@@ -49,6 +48,12 @@ public class SessionController extends ApplicationController {
     public Session create(@RequestBody LoginCredential credential,
                           HttpServletRequest request,
                           HttpServletResponse response) {
+        //TODO 应该用 interceptor来实现已经登录不能重复登录
+        // 未登录的不能访问受保护资源
+        Principal principal = (Principal) request.getSession().getAttribute("principal");
+        if( principal != null ){
+            throw new DuplicateAuthenticateException("You have been authenticated as " + principal.getName());
+        }
         // captcha 验证失败
         if(StringUtils.isNotBlank(currentCaptcha)){
             if(StringUtils.isBlank(credential.getCaptcha())){
@@ -73,8 +78,9 @@ public class SessionController extends ApplicationController {
         int age = 60 * 60 * 24 * 30;
         // 记录会话标记
         request.getSession().setAttribute("sessionId", session.getSessionId());
+        request.getSession().setAttribute("principal", new BasicUserPrincipal(session.getUserName()));
         // 记录用户名，以免下次输入
-        Cookie username = new Cookie("username", session.getUsername());
+        Cookie username = new Cookie("username", session.getUserName());
         username.setMaxAge(age); // 30 days
         response.addCookie(username);
 
@@ -121,6 +127,8 @@ public class SessionController extends ApplicationController {
         try {
             Session currentSession = current(request);
             sessionService.destroy(currentSession);
+            request.getSession().removeAttribute("sessionId");
+            request.getSession().removeAttribute("principal");
         } catch (Exception e) {
             if( StringUtils.isNotBlank(request.getRequestedSessionId()))
                 sessionService.destroy(request.getRequestedSessionId());
