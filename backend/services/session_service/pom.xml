@@ -7,7 +7,7 @@
     <parent>
         <groupId>dnt.itsnow</groupId>
         <artifactId>services</artifactId>
-        <version>0.1.0</version>
+        <version>0.1.2-SNAPSHOT</version>
     </parent>
     <packaging>pom</packaging>
     <artifactId>session_service</artifactId>
