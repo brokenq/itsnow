@@ -3,21 +3,24 @@
  */
 package dnt.itsnow.platform.web;
 
+import dnt.itsnow.platform.web.support.ExtendedRequestMappingHandlerMapping;
 import org.fusesource.scalate.spring.view.ScalateViewResolver;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
-import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 /**
  * 代替一般WebApp中的web-context-xml 以Annotation方式定义Spring MVC
  */
 @Configuration
-@EnableWebMvc
-public class SpringMvcConfig extends WebMvcConfigurerAdapter {
+//@EnableWebMvc
+@EnableTransactionManagement
+@ComponentScan("dnt.itsnow.platform.web.controller")
+public class SpringMvcConfig extends WebMvcConfigurationSupport {
     @Override
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
         super.configureContentNegotiation(configurer);
@@ -32,6 +35,33 @@ public class SpringMvcConfig extends WebMvcConfigurerAdapter {
         resolver.setOrder(1);
         return resolver;
     }
+
+    @Bean
+   	public RequestMappingHandlerMapping requestMappingHandlerMapping() {
+   		PathMatchConfigurer configurer = new PathMatchConfigurer();
+   		configurePathMatch(configurer);
+        ExtendedRequestMappingHandlerMapping handlerMapping = new ExtendedRequestMappingHandlerMapping();
+   		handlerMapping.setOrder(0);
+   		handlerMapping.setInterceptors(getInterceptors());
+   		handlerMapping.setContentNegotiationManager(mvcContentNegotiationManager());
+   		if(configurer.isUseSuffixPatternMatch() != null) {
+   			handlerMapping.setUseSuffixPatternMatch(configurer.isUseSuffixPatternMatch());
+   		}
+   		if(configurer.isUseRegisteredSuffixPatternMatch() != null) {
+   			handlerMapping.setUseRegisteredSuffixPatternMatch(configurer.isUseRegisteredSuffixPatternMatch());
+   		}
+   		if(configurer.isUseTrailingSlashMatch() != null) {
+   			handlerMapping.setUseTrailingSlashMatch(configurer.isUseTrailingSlashMatch());
+   		}
+   		if(configurer.getPathMatcher() != null) {
+   			handlerMapping.setPathMatcher(configurer.getPathMatcher());
+   		}
+   		if(configurer.getUrlPathHelper() != null) {
+   			handlerMapping.setUrlPathHelper(configurer.getUrlPathHelper());
+   		}
+   		return handlerMapping;
+   	}
+
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

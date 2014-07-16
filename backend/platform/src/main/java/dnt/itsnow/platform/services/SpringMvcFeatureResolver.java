@@ -51,7 +51,7 @@ public class SpringMvcFeatureResolver extends AbstractFeatureResolver {
     @Override
     public void resolve(Component component) throws Exception {
         String webRepository = component.getManifestAttribute(WEB_REPOSITORY);
-        scanSpringControllers(component.getServiceApplication(), webRepository);
+        scanSpringControllers(component.getApplication(), webRepository);
         logger.info("The {} is resolved for spring mvc feature", component);
     }
 

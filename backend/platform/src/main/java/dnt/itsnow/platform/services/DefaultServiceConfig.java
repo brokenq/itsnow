@@ -3,6 +3,7 @@
  */
 package dnt.itsnow.platform.services;
 
+import dnt.itsnow.platform.web.support.ExtendedRequestMappingHandlerMapping;
 import net.happyonroad.spring.service.AbstractServiceConfig;
 import org.apache.ibatis.session.SqlSessionFactory;
 
@@ -21,6 +22,7 @@ public class DefaultServiceConfig extends AbstractServiceConfig {
         importService(DataSource.class);
         importService(SqlSessionFactory.class);
         //Spring MVC相关服务
+        importService(ExtendedRequestMappingHandlerMapping.class);
         //工作流相关服务
     }
 }

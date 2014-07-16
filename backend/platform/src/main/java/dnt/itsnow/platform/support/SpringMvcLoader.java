@@ -1,7 +1,7 @@
 /**
  * Developer: Kadvin Date: 14-6-26 上午10:58
  */
-package dnt.itsnow.platform.web.support;
+package dnt.itsnow.platform.support;
 
 import dnt.itsnow.platform.web.SpringMvcConfig;
 import org.fusesource.scalate.servlet.TemplateEngineFilter;
@@ -20,7 +20,7 @@ import java.util.EnumSet;
  * 代替WEB-INF/web.xml以程序方式初始化WEB APP的对象
  */
 
-public class WebAppLoader extends AbstractAnnotationConfigDispatcherServletInitializer {
+public class SpringMvcLoader extends AbstractAnnotationConfigDispatcherServletInitializer {
     public static final String SERVLET_VIEW_NAME = "ItsNow View";
     ApplicationContext applicationContext;
 
@@ -34,8 +34,12 @@ public class WebAppLoader extends AbstractAnnotationConfigDispatcherServletIniti
     protected WebApplicationContext createServletApplicationContext() {
 		AnnotationConfigWebApplicationContext servletAppContext =
                 (AnnotationConfigWebApplicationContext) super.createServletApplicationContext();
-        if( applicationContext != null )
+        if( applicationContext != null ){
             servletAppContext.setParent(applicationContext);
+            ApplicationEventForwarder forwarder = applicationContext.getBean(ApplicationEventForwarder.class);
+            forwarder.bind(servletAppContext);
+        }
+
         return servletAppContext;
 	}
 

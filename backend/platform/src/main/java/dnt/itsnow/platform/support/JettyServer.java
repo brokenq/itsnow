@@ -1,7 +1,7 @@
 /**
  * Developer: Kadvin Date: 14-7-14 下午4:05
  */
-package dnt.itsnow.platform.web.support;
+package dnt.itsnow.platform.support;
 
 import dnt.spring.Bean;
 import org.eclipse.jetty.annotations.AnnotationConfiguration;
@@ -19,8 +19,6 @@ import org.eclipse.jetty.webapp.WebAppContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
-import org.springframework.scripting.support.RefreshableScriptTargetSource;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletContainerInitializer;
 import java.io.File;
@@ -29,18 +27,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /** The Jetty Server Instance */
-@Component
 public class JettyServer extends Bean {
     private static final String LOG_PATH = "logs/jetty_access.log";
 
     @Autowired
-    private ApplicationContext          applicationContext;
+    private ApplicationContext applicationContext;
     @Value("${app.host}")
-    private String                      host;
+    private String             host;
     @Value("${http.port}")
-    private Integer                     port;
+    private Integer            port;
     // the jetty server
-    private Server                      server;
+    private Server             server;
 
     public void performStart() {
         //don't bind at local ip, unless you specify 127.0.0.1
@@ -119,7 +116,7 @@ public class JettyServer extends Bean {
             List<ContainerInitializer> initializers =
                     (List<ContainerInitializer>) context.getAttribute(CONTAINER_INITIALIZERS);
             ContainerInitializer initializer = initializers.get(0);
-            initializer.addApplicableTypeName(WebAppLoader.class.getName());
+            initializer.addApplicableTypeName(SpringMvcLoader.class.getName());
 
         }
     }

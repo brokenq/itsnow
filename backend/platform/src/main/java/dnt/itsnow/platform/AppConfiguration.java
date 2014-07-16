@@ -5,7 +5,8 @@ package dnt.itsnow.platform;
 
 import dnt.itsnow.platform.repository.DatabaseConfig;
 import dnt.itsnow.platform.services.ServicePackageManager;
-import dnt.itsnow.platform.web.support.JettyServer;
+import dnt.itsnow.platform.support.ApplicationEventForwarder;
+import dnt.itsnow.platform.support.JettyServer;
 import dnt.spring.DefaultAppConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
@@ -22,7 +23,7 @@ import org.springframework.context.annotation.Import;
  *   |   |- Database module
  *   |   |- JettyServer
  *   |   |    |- AnnotationConfiguration
- *   |   |    |    |- WebAppLoader
+ *   |   |    |    |- SpringMvcLoader
  *   |   |    |    |    |- SpringMvcConfig
  *   |   |- ServicePackageManager
  *   |   |    | - All kinds of service app in repository folder
@@ -42,6 +43,12 @@ public class AppConfiguration {
     @Bean
     public ServicePackageManager pkgManager(){
         return new ServicePackageManager();
+    }
+
+    //用于把平台context中的事件转发给 躲在dispatcher servlet 中的 Spring Mvc Context
+    @Bean
+    public ApplicationEventForwarder eventForwarder(){
+        return new ApplicationEventForwarder();
     }
 
 }
