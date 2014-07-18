@@ -35,7 +35,7 @@ public class SessionManager extends Bean implements SessionService{
 
     @Override
     public Session challenge(String requestedSessionId, String username, String password) throws SessionException {
-        User user = userService.find(username, password );
+        User user = userService.find(username, password);
 
         if ( user != null ) {
             Session session = new Session();

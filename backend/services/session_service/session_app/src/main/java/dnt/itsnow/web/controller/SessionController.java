@@ -26,7 +26,7 @@ import java.security.Principal;
  * The Session Controller
  */
 @RestController
-@RequestMapping("/app/session")
+@RequestMapping("/api/session")
 public class SessionController extends ApplicationController {
     @Autowired
     private SessionService sessionService;
@@ -37,7 +37,7 @@ public class SessionController extends ApplicationController {
     private String         currentCaptcha = null;
 
     /**
-     * POST /v1/session
+     * POST /api/session
      *
      * Try to login
      *
@@ -100,7 +100,7 @@ public class SessionController extends ApplicationController {
     }
 
     /**
-     * GET /v1/session
+     * GET /api/session
      *
      * GET current session information
      *
@@ -118,7 +118,7 @@ public class SessionController extends ApplicationController {
     }
 
     /**
-     * DELETE /v1/session
+     * DELETE /api/session
      *
      * Try to logout
      *

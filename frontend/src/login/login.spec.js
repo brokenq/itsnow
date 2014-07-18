@@ -13,7 +13,6 @@ describe( 'LoginCtrl', function() {
       $location = _$location_;
       $scope = $rootScope.$new();
       $http = {};
-      CSRF = $factory('CSRF', {$http: $http});
       LoginCtrl = $controller( 'LoginCtrl', {
           $location: $location,
           $scope: $scope,

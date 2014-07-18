@@ -3,10 +3,12 @@
  */
 package dnt.itsnow.services.model;
 
+import dnt.itsnow.platform.model.Record;
+
 /**
  * the sample User
  */
-public class User {
+public class User extends Record {
     private String name, nickName;
 
     public String getName() {

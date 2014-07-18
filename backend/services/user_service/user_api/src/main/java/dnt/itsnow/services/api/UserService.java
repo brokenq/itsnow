@@ -3,6 +3,8 @@
  */
 package dnt.itsnow.services.api;
 
+import dnt.itsnow.platform.service.Pageable;
+import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.services.model.User;
 
 /**
@@ -10,4 +12,8 @@ import dnt.itsnow.services.model.User;
  */
 public interface UserService {
     User find(String username, String password);
+
+    User find(String username);
+
+    Page<User> findAll(String keyword, Pageable pageable);
 }

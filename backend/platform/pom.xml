@@ -10,9 +10,9 @@
         <version>0.1.2-SNAPSHOT</version>
     </parent>
     <artifactId>platform</artifactId>
-    <name>Itsnow Web Platform</name>
+    <name>Itsnow Platform</name>
     <description>
-        The itsnow web platform
+        The itsnow platform
     </description>
 
     <dependencies>

@@ -4,21 +4,18 @@
 package dnt.itsnow.services.model;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import dnt.itsnow.platform.model.Record;
 
-import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * The user session
  */
-public class Session {
-    protected static ObjectMapper mapper = new ObjectMapper();
+public class Session extends Record{
     private String    sessionId;
     private String    userName;
     private String    nickName;
-    private Timestamp createdAt, updatedAt;
 
     public String getSessionId() {
         return sessionId;
@@ -44,21 +41,6 @@ public class Session {
         this.nickName = nickName;
     }
 
-    public Timestamp getCreatedAt() {
-        return createdAt == null ? new Timestamp(System.currentTimeMillis()) : createdAt;
-    }
-
-    public Timestamp getUpdatedAt() {
-        return updatedAt == null ? new Timestamp(System.currentTimeMillis()) : updatedAt;
-    }
-
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public void setUpdatedAt(Timestamp updatedAt) {
-        this.updatedAt = updatedAt;
-    }
 
     public String getData(){
         Map<String, Object> map = new HashMap<String, Object>();
