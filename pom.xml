@@ -52,6 +52,7 @@
         <version.scalate>1.5.3-scala_2.8.2</version.scalate>
         <version.mysql>5.1.27</version.mysql>
 
+        <version.activiti.engine>5.15.1</version.activiti.engine>
 
         <version.component-framework>0.0.9-SNAPSHOT</version.component-framework>
         <version.components>0.1.5</version.components>
@@ -227,15 +228,15 @@
             譬如下面 spring-security 对 spring-beans 3.2.8.RELEASE的依赖在组件解析时已然存在
             虽然IDEA 已经支持，但我们支持尚需额外的工作
             -->
-<!--
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-framework-bom</artifactId>
-                <version>${version.springframework}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
--->
+            <!--
+                        <dependency>
+                            <groupId>org.springframework</groupId>
+                            <artifactId>spring-framework-bom</artifactId>
+                            <version>${version.springframework}</version>
+                            <type>pom</type>
+                            <scope>import</scope>
+                        </dependency>
+            -->
             <!-- 3rd DEPENDENCIES -->
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -433,6 +434,59 @@
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-jdbc</artifactId>
                 <version>${version.springframework}</version>
+            </dependency>
+
+            <!--activiti dependency-->
+            <dependency>
+                <groupId>org.activiti</groupId>
+                <artifactId>activiti-spring</artifactId>
+                <version>${version.activiti.engine}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>jcl-over-slf4j</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.mybatis</groupId>
+                        <artifactId>mybatis</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-beans</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-context</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-aop</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-tx</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-jdbc</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-expression</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>commons-pool</groupId>
+                        <artifactId>commons-pool</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
         </dependencies>
