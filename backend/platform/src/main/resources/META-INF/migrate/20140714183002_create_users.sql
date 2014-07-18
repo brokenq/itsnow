@@ -1,0 +1,10 @@
+CREATE TABLE users (
+  id INT(4) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(25) NOT NULL,
+  nick_name VARCHAR(50),
+  password VARCHAR(255) NOT NULL
+);
+
+-- //@UNDO
+
+DROP TABLE users;
