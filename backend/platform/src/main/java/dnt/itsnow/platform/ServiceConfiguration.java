@@ -5,6 +5,7 @@ package dnt.itsnow.platform;
 
 import dnt.itsnow.platform.web.support.ExtendedRequestMappingHandlerMapping;
 import net.happyonroad.spring.service.AbstractServiceConfig;
+import org.activiti.engine.ProcessEngineConfiguration;
 import org.apache.ibatis.session.SqlSessionFactory;
 
 import javax.sql.DataSource;
@@ -21,5 +22,8 @@ public class ServiceConfiguration extends AbstractServiceConfig {
         //Spring MVC相关服务
         exportService(ExtendedRequestMappingHandlerMapping.class);
         //工作流相关服务
+        exportService(ProcessEngineConfiguration.class);
+
+
     }
 }
