@@ -11,6 +11,16 @@ var app = angular.module("ItsNow.Login", [
   'ui.router'
 ]);
 
+
+app.run(['$http', function($http) {
+    $http.get('security/csrf').success(function(data) {
+        console.log("CSRF Success: " + data);
+        $http.defaults.headers.common[data.headerName] = data.token;
+    }).error(function(data) {
+        console.log("CSRF ERROR: " + data);
+    });
+}]);
+
 app.config(function($stateProvider, $urlRouterProvider){
   $urlRouterProvider.otherwise("/authenticate");
 });
@@ -52,3 +62,4 @@ securityService.factory('User', ['$resource'],
     });
   }
 );
+

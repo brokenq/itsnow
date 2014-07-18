@@ -3,14 +3,23 @@
  */
 describe( 'LoginCtrl', function() {
   describe( 'isCurrentUrl', function() {
-    var LoginCtrl, $location, $scope;
+    var LoginCtrl, $location, $http, $scope, CSRF;
 
-    beforeEach( module( 'ItsNow.Login' ) );
+    beforeEach(
+      module( 'ItsNow.Login' )
+    );
 
     beforeEach( inject( function( $controller, _$location_, $rootScope, $resource ) {
       $location = _$location_;
       $scope = $rootScope.$new();
-      LoginCtrl = $controller( 'LoginCtrl', { $location: $location, $scope: $scope, $resource: $resource });
+      $http = {};
+      CSRF = $factory('CSRF', {$http: $http});
+      LoginCtrl = $controller( 'LoginCtrl', {
+          $location: $location,
+          $scope: $scope,
+          $resource: $resource,
+          CSRF: CSRF
+      });
     }));
 
     it( 'should pass a dummy test', inject( function() {

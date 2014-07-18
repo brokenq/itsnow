@@ -1,3 +1,10 @@
+var csrfValue = function(req) {
+  return (req.body && req.body._csrf)
+    || (req.query && req.query._csrf)
+    || (req.headers['X-CSRF-TOKEN'])
+    || (req.headers['X-XSRF-TOKEN']);
+};
+
 angular.module( 'ItsNow', [
   'templates-app',
   'templates-common',
@@ -6,11 +13,8 @@ angular.module( 'ItsNow', [
   'ui.router'
 ])
 
-.config( function myAppConfig ( $stateProvider, $urlRouterProvider ) {
+.config( function ( $stateProvider, $urlRouterProvider ) {
   $urlRouterProvider.otherwise( '/home' );
-})
-
-.run( function run () {
 })
 
 .controller( 'AppCtrl', function AppCtrl ( $scope, $location ) {
@@ -21,5 +25,12 @@ angular.module( 'ItsNow', [
   });
 })
 
-;
+.config(function($httpProvider, $http){
+    $httpProvider.defaults.headers.post['X-CSRF-TOKEN '] = csrfValue;
+    $http.defaults.headers.post['X-CSRF-TOKEN '] = csrfValue;
+})
 
+.run( function run () {
+})
+
+;
