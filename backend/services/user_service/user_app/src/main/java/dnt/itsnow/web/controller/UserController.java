@@ -11,6 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
  * The user controller
  */
 @RestController
-@RequestMapping("/v1/users")
+@RequestMapping("/app/users")
 public class UserController extends ApplicationController {
 }

@@ -26,7 +26,7 @@ import java.security.Principal;
  * The Session Controller
  */
 @RestController
-@RequestMapping("/v1/session")
+@RequestMapping("/app/session")
 public class SessionController extends ApplicationController {
     @Autowired
     private SessionService sessionService;
@@ -48,6 +48,7 @@ public class SessionController extends ApplicationController {
     public Session create(@RequestBody LoginCredential credential,
                           HttpServletRequest request,
                           HttpServletResponse response) {
+
         //TODO 应该用 interceptor来实现已经登录不能重复登录
         // 未登录的不能访问受保护资源
         Principal principal = (Principal) request.getSession().getAttribute("principal");

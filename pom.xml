@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
 
@@ -29,6 +30,7 @@
 
         <version.slf4j>1.7.7</version.slf4j>
         <version.springframework>4.0.5.RELEASE</version.springframework>
+        <version.spring-security>3.2.4.RELEASE</version.spring-security>
         <version.mybatis>3.2.7</version.mybatis>
         <version.mybatis-spring>1.2.2</version.mybatis-spring>
         <version.mybatis-migrations>3.2.0</version.mybatis-migrations>
@@ -50,7 +52,7 @@
         <version.scalate>1.5.3-scala_2.8.2</version.scalate>
         <version.mysql>5.1.27</version.mysql>
 
-        <version.component-framework>0.0.8</version.component-framework>
+        <version.component-framework>0.0.9-SNAPSHOT</version.component-framework>
         <version.components>0.1.5</version.components>
         <release.root>/opt/releases/itsnow</release.root>
     </properties>
@@ -83,7 +85,6 @@
                     <id>dnt-snapshots</id>
                     <url>http://nexus.dnt.com.cn/nexus/content/groups/public-snapshots/</url>
                 </repository>
-
             </repositories>
 
             <pluginRepositories>
@@ -218,13 +219,89 @@
 
     <dependencyManagement>
         <dependencies>
-
+            <!--尚未完全支持scope = import，虽然已经可以merge 相应的dependencyManagement了
+            但还存在两个问题没解决：
+            1. build的时候，这种pom没有被copy过去
+            2. 存在这个之后，其他依赖没有被其替换
+            譬如下面 spring-security 对 spring-beans 3.2.8.RELEASE的依赖在组件解析时已然存在
+            虽然IDEA 已经支持，但我们支持尚需额外的工作
+            -->
+<!--
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-framework-bom</artifactId>
+                <version>${version.springframework}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+-->
             <!-- 3rd DEPENDENCIES -->
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-webmvc</artifactId>
                 <version>${version.springframework}</version>
             </dependency>
+
+            <!-- Spring Security DEPENDENCIES -->
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-web</artifactId>
+                <version>${version.spring-security}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-web</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-aop</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-beans</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-context</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-expression</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-config</artifactId>
+                <version>${version.spring-security}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-aop</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-beans</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-context</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-expression</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
 
             <!-- Framework DEPENDENCIES -->
             <dependency>

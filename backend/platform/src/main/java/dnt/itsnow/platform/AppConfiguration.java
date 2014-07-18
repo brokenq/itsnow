@@ -24,7 +24,8 @@ import org.springframework.context.annotation.Import;
  *   |   |- JettyServer
  *   |   |    |- AnnotationConfiguration
  *   |   |    |    |- SpringMvcLoader
- *   |   |    |    |    |- SpringMvcConfig
+ *   |   |    |    |    |- SpringSecurityConfig
+ *   |   |    |    |    |   |- SpringMvcConfig
  *   |   |- ServicePackageManager
  *   |   |    | - All kinds of service app in repository folder
  * </pre>

@@ -4,31 +4,38 @@
 package dnt.itsnow.platform.support;
 
 import dnt.itsnow.platform.web.SpringMvcConfig;
+import dnt.itsnow.platform.web.security.SpringSecurityConfig;
 import org.fusesource.scalate.servlet.TemplateEngineFilter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
-import javax.servlet.DispatcherType;
-import javax.servlet.FilterRegistration;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
+import javax.servlet.*;
 import java.util.EnumSet;
+import java.util.Set;
 
 /**
- * 代替WEB-INF/web.xml以程序方式初始化WEB APP的对象
+ * <h1>代替WEB-INF/web.xml以程序方式初始化WEB APP的对象</h1>
+ *
+ * <ul>
+ * <li> /*        ->  springSecurityFilterChain
+ * <li> /*        ->  ItsNow.Dispatcher
+ * <li> /views/*  ->  ItsNow.ScalateView
+ * </ul>
  */
 
 public class SpringMvcLoader extends AbstractAnnotationConfigDispatcherServletInitializer {
-    public static final String SERVLET_VIEW_NAME = "ItsNow View";
+    public static final String SERVLET_VIEW_NAME = "ItsNow.ScalateView";
     ApplicationContext applicationContext;
 
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         applicationContext = (ApplicationContext) servletContext.getAttribute("application");
         super.onStartup(servletContext);
-        registerScalateServlet(servletContext);
+        registerSecurityFilter(servletContext);
+        registerScalateFilter(servletContext);
     }
 
     protected WebApplicationContext createServletApplicationContext() {
@@ -45,7 +52,7 @@ public class SpringMvcLoader extends AbstractAnnotationConfigDispatcherServletIn
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class<?>[0];
+        return new Class<?>[]{SpringSecurityConfig.class};
     }
 
     @Override
@@ -55,7 +62,7 @@ public class SpringMvcLoader extends AbstractAnnotationConfigDispatcherServletIn
 
     @Override
     protected String getServletName() {
-        return "ItsNow Platform";
+        return "ItsNow.Dispatcher";
     }
 
     @Override
@@ -63,7 +70,7 @@ public class SpringMvcLoader extends AbstractAnnotationConfigDispatcherServletIn
         return new String[]{"/"};
     }
 
-    protected void registerScalateServlet(ServletContext servletContext) {
+    protected void registerScalateFilter(ServletContext servletContext) {
         FilterRegistration.Dynamic registration = servletContext.addFilter(SERVLET_VIEW_NAME, TemplateEngineFilter.class);
         registration.addMappingForUrlPatterns(getDispatcherTypes(), false, "/views/*");
     }
@@ -73,5 +80,74 @@ public class SpringMvcLoader extends AbstractAnnotationConfigDispatcherServletIn
    			EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE, DispatcherType.ASYNC) :
    			EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE);
    	}
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    // Copied from AbstractSecurityWebApplicationInitializer
+    ////////////////////////////////////////////////////////////////////////////////////
+
+    protected void registerSecurityFilter(ServletContext servletContext) {
+        //Below copied from AbstractSecurityWebApplicationInitializer
+        if(enableHttpSessionEventPublisher()) {
+            servletContext.addListener("org.springframework.security.web.session.HttpSessionEventPublisher");
+        }
+        servletContext.setSessionTrackingModes(getSessionTrackingModes());
+        insertSpringSecurityFilterChain(servletContext);
+    }
+
+    protected boolean enableHttpSessionEventPublisher() {
+        return false;
+    }
+
+    protected Set<SessionTrackingMode> getSessionTrackingModes() {
+        return EnumSet.of(SessionTrackingMode.COOKIE);
+    }
+
+    /**
+     * Registers the springSecurityFilterChain
+     * @param servletContext the {@link ServletContext}
+     */
+    private void insertSpringSecurityFilterChain(ServletContext servletContext) {
+        String filterName = "springSecurityFilterChain";
+        DelegatingFilterProxy springSecurityFilterChain = new DelegatingFilterProxy(filterName);
+        registerFilter(servletContext, true, filterName, springSecurityFilterChain);
+    }
+
+    /**
+     * Registers the provided filter using the {@link #isAsyncSupported()} and {@link #getSecurityDispatcherTypes()}.
+     *
+     * @param servletContext the {@link ServletContext}
+     * @param insertBeforeOtherFilters should this Filter be inserted before or after other {@link Filter}
+     * @param filterName the filter name
+     * @param filter the filter
+     */
+    private void registerFilter(ServletContext servletContext, boolean insertBeforeOtherFilters, String filterName, Filter filter) {
+        FilterRegistration.Dynamic registration = servletContext.addFilter(filterName, filter);
+        if(registration == null) {
+            throw new IllegalStateException("Duplicate Filter registration for '" + filterName +"'. Check to ensure the Filter is only configured once.");
+        }
+        registration.setAsyncSupported(isAsyncSecuritySupported());
+        EnumSet<DispatcherType> dispatcherTypes = getSecurityDispatcherTypes();
+        registration.addMappingForUrlPatterns(dispatcherTypes, !insertBeforeOtherFilters, "/*");
+    }
+
+    /**
+     * Get the {@link DispatcherType} for the springSecurityFilterChain.
+     * @return  dispatcher types
+     */
+    protected EnumSet<DispatcherType> getSecurityDispatcherTypes() {
+        return EnumSet.of(DispatcherType.REQUEST, DispatcherType.ERROR, DispatcherType.ASYNC);
+    }
+
+    /**
+     * Determine if the springSecurityFilterChain should be marked as supporting
+     * asynchronous. Default is true.
+     *
+     * @return true if springSecurityFilterChain should be marked as supporting asynchronous
+     */
+    protected boolean isAsyncSecuritySupported() {
+        return true;
+    }
+
+
 
 }

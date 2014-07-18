@@ -20,7 +20,15 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
         </dependency>
-       <dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
         </dependency>
@@ -56,7 +64,7 @@
             <groupId>org.fusesource.scalate</groupId>
             <artifactId>scalate-spring-mvc</artifactId>
         </dependency>
- 
+
         <!--ORM Related-->
         <dependency>
             <groupId>org.mybatis</groupId>

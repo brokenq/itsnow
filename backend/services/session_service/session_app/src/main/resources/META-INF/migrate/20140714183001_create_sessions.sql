@@ -1,6 +1,6 @@
 CREATE TABLE sessions(
   id INT(4) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  session_id VARCHAR(25) NOT NULL,
+  session_id VARCHAR(255) NOT NULL,
   data VARCHAR(2000) ,
   created_at TIMESTAMP NOT NULL,
   updated_at TIMESTAMP NOT NULL
