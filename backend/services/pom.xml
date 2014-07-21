@@ -49,6 +49,8 @@
     <modules>
         <module>session_service</module>
         <module>user_service</module>
+        <module>servicecatalog_service</module>
+        <!--<module>activitiengine_service</module>-->
     </modules>
 
     <dependencyManagement>
@@ -64,6 +66,17 @@
                 <artifactId>session_api</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>dnt.itsnow.servicecatalog_service</groupId>
+                <artifactId>servicecatalog_api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>dnt.itsnow.activitiengine_service</groupId>
+                <artifactId>activitiengine_api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <!--APP for runtime dependencies-->
             <dependency>
@@ -74,6 +87,17 @@
             <dependency>
                 <groupId>dnt.itsnow.session_service</groupId>
                 <artifactId>session_app</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dnt.itsnow.servicecatalog_service</groupId>
+                <artifactId>servicecatalog_app</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>dnt.itsnow.activitiengine_service</groupId>
+                <artifactId>activitiengine_app</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
