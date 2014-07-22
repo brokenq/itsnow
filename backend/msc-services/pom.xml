@@ -26,6 +26,37 @@
         <module>mutable-contract-service</module>
         <module>mutable-sla-service</module>
     </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>dnt.itsnow</groupId>
+                <artifactId>mutable-account-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dnt.itsnow</groupId>
+                <artifactId>mutable-user-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dnt.itsnow</groupId>
+                <artifactId>mutable-contract-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dnt.itsnow</groupId>
+                <artifactId>mutable-sla-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dnt.itsnow</groupId>
+                <artifactId>mutable-service_catalog-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <build>
         <plugins>
             <plugin>

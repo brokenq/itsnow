@@ -30,7 +30,7 @@ public class DatabaseConfig {
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
         String dbHost = System.getProperty("db.host", "localhost");
         String dbPort = System.getProperty("db.port", "3306");
-        String dbName = System.getProperty("db.name", "itsnow_dev");
+        String dbName = System.getProperty("db.name", "itsnow");
         String dbUser = System.getProperty("db.user", "itsnow");
         String dbPass = System.getProperty("db.password", "secret");
         String dbUrl = String.format("jdbc:mysql://%s:%s/%s", dbHost, dbPort, dbName);

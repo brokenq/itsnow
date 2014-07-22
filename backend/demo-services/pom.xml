@@ -39,7 +39,6 @@
         <dependency>
             <groupId>dnt.itsnow</groupId>
             <artifactId>release</artifactId>
-            <version>${project.version}</version>
             <scope>runtime</scope>
         </dependency>
     </dependencies>

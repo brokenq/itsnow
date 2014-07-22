@@ -69,7 +69,7 @@ if "%JAVACMD%"=="" set JAVACMD=java
 
 if "%REPO%"=="" set REPO=%BASEDIR%\lib
 
-set CLASSPATH="%BASEDIR%"\etc;"%REPO%"\mybatis-3.2.7.jar;"%REPO%"\mybatis-migrations-4.1.0.jar
+set CLASSPATH="%BASEDIR%"\etc;"%REPO%"\mybatis-3.2.7.jar;"%REPO%"\mybatis-migrations-4.1.1.jar
 set EXTRA_JVM_ARGUMENTS=-Xms500m -Xmx500m -XX:PermSize=128m -XX:-UseGCOverheadLimit
 goto endInit
 

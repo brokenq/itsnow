@@ -3,8 +3,8 @@
  */
 package dnt.itsnow.services.api;
 
-import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.platform.service.Page;
+import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.services.model.User;
 
 /**

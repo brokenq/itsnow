@@ -22,14 +22,14 @@ import org.apache.ibatis.annotations.*;
  * </pre>
  */
 public interface SessionRepository {
-    @Select("select * from sessions where session_id = #{sessionId}")
+    @Select("select * from demo_sessions where session_id = #{sessionId}")
     Session findById(@Param("sessionId") String sessionId);
 
-    @Delete("delete from sessions where session_id = #{sessionId")
+    @Delete("delete from demo_sessions where session_id = #{sessionId")
     void destroy(@Param("sessionId") String sessionId);
 
     @Options(useGeneratedKeys = true,keyColumn = "id")
-    @Insert("insert into sessions(session_id, data, created_at, updated_at) " +
+    @Insert("insert into demo_sessions(session_id, data, created_at, updated_at) " +
             "values(#{sessionId}, #{data}, #{createdAt}, #{updatedAt})")
     void save(Session session);
 }

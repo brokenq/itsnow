@@ -14,5 +14,18 @@
     <name>General Staff Service</name>
     <description>
         The general staff service shared between MSU and MSP
+
+        本模块本来应该被归在 general-account-service中，但考虑到这块未来可能比较庞大，所以独立出来
     </description>
+
+    <dependencies>
+        <dependency>
+            <groupId>dnt.itsnow</groupId>
+            <artifactId>general-account-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dnt.itsnow</groupId>
+            <artifactId>common-user-service</artifactId>
+        </dependency>
+    </dependencies>
 </project>

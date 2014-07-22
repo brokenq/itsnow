@@ -63,16 +63,76 @@
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>dnt.itsnow.demo</groupId>
-                <artifactId>services</artifactId>
-                <version>${project.version}</version>
-            </dependency>
+            <!--Platform -->
             <dependency>
                 <groupId>dnt.itsnow</groupId>
                 <artifactId>platform</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>dnt.itsnow</groupId>
+                <artifactId>release</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!--Demo-->
+            <dependency>
+                <groupId>dnt.itsnow.demo</groupId>
+                <artifactId>services</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!--Common Services-->
+            <dependency>
+                <groupId>dnt.itsnow</groupId>
+                <artifactId>common-account-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dnt.itsnow</groupId>
+                <artifactId>common-user-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dnt.itsnow</groupId>
+                <artifactId>common-contract-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dnt.itsnow</groupId>
+                <artifactId>common-service_catalog-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dnt.itsnow</groupId>
+                <artifactId>common-sla-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!--General Services-->
+            <dependency>
+                <groupId>dnt.itsnow</groupId>
+                <artifactId>general-account-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dnt.itsnow</groupId>
+                <artifactId>general-staff-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dnt.itsnow</groupId>
+                <artifactId>general-acl-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dnt.itsnow</groupId>
+                <artifactId>general-service_catalog-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!--由于msc,msu,msp的服务都是独立部署在各自对应的单元中，
+            一般不会被另外的单元直接通过API依赖，所以他们的依赖被定义在相应的模块内部-->
         </dependencies>
     </dependencyManagement>
 </project>

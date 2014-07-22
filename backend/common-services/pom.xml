@@ -16,6 +16,9 @@
         三个部署实体都会复用的通用服务（基本上，所有子模块都是必选的）
         虽然它们均不是必选的，但也未将它们合并到平台中，这是因为这些通用服务是具有“业务性”的，而平台不具有业务性（纯技术）
         备注：建议以下子模块暂时不进行 api/app 拆分，如果app的部分，采用 package visible control
+        另外，虽然以下模块均定义了system schema中的模型，但由于system schema的实际维护者是msc模块
+        而部署在所有的单元中的common模块后面的数据是通过mysql replication过来的
+        所以这些模块中不应该有相应模型的migrate脚本
     </description>
 
     <modules>
@@ -25,6 +28,22 @@
         <module>common-contract-service</module>
         <module>common-sla-service</module>
     </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>dnt.components</groupId>
+            <artifactId>infrastructure</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dnt.itsnow</groupId>
+            <artifactId>platform</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dnt.itsnow</groupId>
+            <artifactId>release</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
