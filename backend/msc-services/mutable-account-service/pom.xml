@@ -6,14 +6,14 @@
 
     <parent>
         <groupId>dnt.itsnow</groupId>
-        <artifactId>user_service</artifactId>
+        <artifactId>msc-services</artifactId>
         <version>0.1.2-SNAPSHOT</version>
     </parent>
-    <groupId>dnt.itsnow.user_service</groupId>
-    <artifactId>user_api</artifactId>
-    <name>Itsnow User Service API</name>
+
+    <artifactId>mutable-account-service</artifactId>
+    <name>Mutable Account Service</name>
     <description>
-        The itsnow user service API
+        The mutable account service implemented by MSC, and provide SPI to other deployment builds.
     </description>
 
 </project>

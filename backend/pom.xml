@@ -3,13 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
+    <packaging>pom</packaging>
     <parent>
         <groupId>dnt</groupId>
         <artifactId>itsnow</artifactId>
         <version>0.1.2-SNAPSHOT</version>
     </parent>
-    <packaging>pom</packaging>
+
     <groupId>dnt.itsnow</groupId>
     <artifactId>backend</artifactId>
     <name>Itsnow Backend</name>
@@ -23,15 +23,48 @@
     </description>
 
     <modules>
-        <module>services</module>
         <module>platform</module>
         <module>release</module>
+        <module>common-services</module>
     </modules>
+
+    <profiles>
+        <profile>
+            <id>with-itsnow-general</id>
+            <modules>
+                <module>general-services</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>with-itsnow-msc</id>
+            <modules>
+                <module>msc-services</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>with-itsnow-msu</id>
+            <modules>
+                <module>msu-services</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>with-itsnow-msp</id>
+            <modules>
+                <module>msp-services</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>with-itsnow-demo</id>
+            <modules>
+                <module>demo-services</module>
+            </modules>
+        </profile>
+    </profiles>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>dnt.itsnow</groupId>
+                <groupId>dnt.itsnow.demo</groupId>
                 <artifactId>services</artifactId>
                 <version>${project.version}</version>
             </dependency>

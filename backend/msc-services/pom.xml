@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
+    <parent>
+        <groupId>dnt.itsnow</groupId>
+        <artifactId>backend</artifactId>
+        <version>0.1.2-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>msc-services</artifactId>
+    <name>Managed Service Carrier</name>
+    <description>
+        运营商的业务系统
+        主要通过REST API的方式提供system schema中数据的有损操作服务
+        而对system schema的查询等访问，由各个部署单元通过自行加载的 common-xxx-service直接访问对应的数据库，
+        备注：由于本子系统中的各个模块都是通过REST API提供服务，所以其中的子模块一般不需要进行 api/app 拆分
+    </description>
+
+    <modules>
+        <module>mutable-account-service</module>
+        <module>mutable-user-service</module>
+        <module>mutable-service_catalog-service</module>
+        <module>mutable-contract-service</module>
+        <module>mutable-sla-service</module>
+    </modules>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>net.happyonroad</groupId>
+                <artifactId>spring-component-builder</artifactId>
+                <version>${version.component-framework}</version>
+                <executions>
+                    <execution>
+                        <id>extend-app</id>
+                        <goals><goal>extend</goal></goals>
+                        <configuration>
+                            <targetRelease>${release.dir}</targetRelease>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+</project>

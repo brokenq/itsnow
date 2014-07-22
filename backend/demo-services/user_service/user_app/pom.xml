@@ -5,26 +5,21 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>dnt.itsnow</groupId>
-        <artifactId>session_service</artifactId>
+        <groupId>dnt.itsnow.demo</groupId>
+        <artifactId>user_service</artifactId>
         <version>0.1.2-SNAPSHOT</version>
     </parent>
-    <groupId>dnt.itsnow.session_service</groupId>
-    <artifactId>session_app</artifactId>
-    <name>Itsnow Session Service App</name>
+
+    <artifactId>user_app</artifactId>
+    <name>Itsnow User Service App</name>
     <description>
-        The itsnow session service App
+        The itsnow user service App
     </description>
 
     <dependencies>
         <dependency>
-            <groupId>dnt.itsnow.session_service</groupId>
-            <artifactId>session_api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>dnt.itsnow.user_service</groupId>
-            <artifactId>user_app</artifactId>
-            <scope>runtime</scope>
+            <groupId>dnt.itsnow.demo</groupId>
+            <artifactId>user_api</artifactId>
         </dependency>
     </dependencies>
 
@@ -36,8 +31,8 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Service-Config>dnt.itsnow.config.ServiceConfig</Service-Config>
                             <App-Config>dnt.itsnow.platform.services.DefaultServiceAppConfig</App-Config>
+                            <Service-Config>dnt.itsnow.config.ServiceConfig</Service-Config>
                             <App-Repository>dnt.itsnow.services.repository</App-Repository>
                             <Web-Repository>dnt.itsnow.web.controller</Web-Repository>
                         </manifestEntries>

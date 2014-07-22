@@ -57,6 +57,7 @@
         <version.component-framework>0.0.9-SNAPSHOT</version.component-framework>
         <version.components>0.1.5</version.components>
         <release.root>/opt/releases/itsnow</release.root>
+        <release.dir>${release.root}/itsnow-${project.version}</release.dir>
     </properties>
 
 
@@ -66,15 +67,12 @@
         <developerConnection>scm:git:git@happyonroad.net:insight/bsm.git</developerConnection>
     </scm>
 
-    <profiles>
-        <profile>
-            <id>with-children</id>
-            <modules>
-                <module>backend</module>
-                <module>frontend</module>
-            </modules>
-        </profile>
+    <modules>
+        <module>backend</module>
+        <module>frontend</module>
+    </modules>
 
+    <profiles>
         <profile>
             <id>dnt</id>
             <repositories>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
+    <parent>
+        <groupId>dnt.itsnow</groupId>
+        <artifactId>backend</artifactId>
+        <version>0.1.2-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>common-services</artifactId>
+    <name>Common Managed Services</name>
+    <description>
+        三个部署实体都会复用的通用服务（基本上，所有子模块都是必选的）
+        虽然它们均不是必选的，但也未将它们合并到平台中，这是因为这些通用服务是具有“业务性”的，而平台不具有业务性（纯技术）
+        备注：建议以下子模块暂时不进行 api/app 拆分，如果app的部分，采用 package visible control
+    </description>
+
+    <modules>
+        <module>common-account-service</module>
+        <module>common-user-service</module>
+        <module>common-service_catalog-service</module>
+        <module>common-contract-service</module>
+        <module>common-sla-service</module>
+    </modules>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>net.happyonroad</groupId>
+                <artifactId>spring-component-builder</artifactId>
+                <version>${version.component-framework}</version>
+                <executions>
+                    <execution>
+                        <id>extend-app</id>
+                        <goals><goal>extend</goal></goals>
+                        <configuration>
+                            <targetRelease>${release.dir}</targetRelease>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+</project>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>dnt.itsnow</groupId>
+        <artifactId>backend</artifactId>
+        <version>0.1.2-SNAPSHOT</version>
+    </parent>
+    <packaging>pom</packaging>
+
+    <groupId>dnt.itsnow.demo</groupId>
+    <artifactId>demo-services</artifactId>
+    <name>Itsnow Demo Services</name>
+    <description>
+        The backend demo services
+    </description>
+
+    <dependencies>
+       <dependency>
+            <groupId>net.happyonroad</groupId>
+            <artifactId>spring-component-framework</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dnt.components</groupId>
+            <artifactId>config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dnt.components</groupId>
+            <artifactId>infrastructure</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dnt.itsnow</groupId>
+            <artifactId>platform</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>dnt.itsnow</groupId>
+            <artifactId>release</artifactId>
+            <version>${project.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
+
+    <modules>
+        <module>session_service</module>
+        <module>user_service</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <!--API for static dependencies-->
+            <dependency>
+                <groupId>dnt.itsnow.demo</groupId>
+                <artifactId>user_api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dnt.itsnow.demo</groupId>
+                <artifactId>session_api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!--APP for runtime dependencies-->
+            <dependency>
+                <groupId>dnt.itsnow.demo</groupId>
+                <artifactId>user_app</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dnt.itsnow.demo</groupId>
+                <artifactId>session_app</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>net.happyonroad</groupId>
+                <artifactId>spring-component-builder</artifactId>
+                <version>${version.component-framework}</version>
+                <executions>
+                    <execution>
+                        <id>extend-app</id>
+                        <goals><goal>extend</goal></goals>
+                        <configuration>
+                            <targetRelease>${release.dir}</targetRelease>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+</project>

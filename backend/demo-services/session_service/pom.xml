@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
+    <parent>
+        <groupId>dnt.itsnow.demo</groupId>
+        <artifactId>demo-services</artifactId>
+        <version>0.1.2-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>session_service</artifactId>
+    <name>Itsnow Demo Session Service</name>
+    <description>
+        The itsnow demo session service
+    </description>
+
+    <dependencies>
+        <dependency>
+            <groupId>dnt.itsnow.demo</groupId>
+            <artifactId>user_api</artifactId>
+        </dependency>
+    </dependencies>
+
+    <modules>
+        <module>session_api</module>
+        <module>session_app</module>
+    </modules>
+
+</project>

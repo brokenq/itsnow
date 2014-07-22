@@ -16,7 +16,6 @@
     </description>
 
     <properties>
-        <release.dir>${release.root}/itsnow-${project.version}</release.dir>
         <port.debug>1081</port.debug>
         <port.jmx>1082</port.jmx>
         <port.rmi>1083</port.rmi>
@@ -37,45 +36,38 @@
  
     </dependencies>
 
-    <profiles>
-        <profile>
-            <id>release-itsnow</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>net.happyonroad</groupId>
-                        <artifactId>spring-component-builder</artifactId>
-                        <version>${version.component-framework}</version>
-                        <executions>
-                            <execution>
-                                <id>package-app</id>
-                                <goals><goal>package</goal></goals>
-                                <configuration>
-                                    <output>${release.dir}</output>
-                                    <appName>ItsNow</appName>
-                                    <appPort>${port.rmi}</appPort>
-                                    <jmx>${port.jmx}</jmx>
-                                    <debug>${port.debug}</debug>
-                                    <jvmOptions>-Dcomponent.feature.resolvers=dnt.itsnow.platform.services.MybatisFeatureResolver,dnt.itsnow.platform.services.SpringMvcFeatureResolver -Xms750m -Xmx750m -XX:MaxPermSize=270m -Djava.awt.headless=true</jvmOptions>
-                                    <propertiesFile>${project.basedir}/config/now.properties</propertiesFile>
-                                    <logbackFile>${project.basedir}/config/logback.xml</logbackFile>
-                                    <folders>${project.basedir}/webapp,${project.basedir}/db</folders>
-                                </configuration>
-                            </execution>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>net.happyonroad</groupId>
+                <artifactId>spring-component-builder</artifactId>
+                <version>${version.component-framework}</version>
+                <executions>
+                    <execution>
+                        <id>package-app</id>
+                        <goals><goal>package</goal></goals>
+                        <configuration>
+                            <output>${release.dir}</output>
+                            <appName>ItsNow</appName>
+                            <appPort>${port.rmi}</appPort>
+                            <jmx>${port.jmx}</jmx>
+                            <debug>${port.debug}</debug>
+                            <jvmOptions>-Dcomponent.feature.resolvers=dnt.itsnow.platform.services.MybatisFeatureResolver,dnt.itsnow.platform.services.SpringMvcFeatureResolver -Xms750m -Xmx750m -XX:MaxPermSize=270m -Djava.awt.headless=true</jvmOptions>
+                            <propertiesFile>${project.basedir}/config/now.properties</propertiesFile>
+                            <logbackFile>${project.basedir}/config/logback.xml</logbackFile>
+                            <folders>${project.basedir}/webapp,${project.basedir}/db</folders>
+                        </configuration>
+                    </execution>
 
-                            <execution>
-                                <id>clean-app</id>
-                                <goals><goal>clean</goal></goals>
-                                <configuration>
-                                    <output>${release.dir}</output>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-                </plugins>
-            </build>
-
-        </profile>
-    </profiles>
+                    <execution>
+                        <id>clean-app</id>
+                        <goals><goal>clean</goal></goals>
+                        <configuration>
+                            <output>${release.dir}</output>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

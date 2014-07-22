@@ -6,14 +6,15 @@
 
     <parent>
         <groupId>dnt.itsnow</groupId>
-        <artifactId>session_service</artifactId>
+        <artifactId>msc-services</artifactId>
         <version>0.1.2-SNAPSHOT</version>
     </parent>
-    <groupId>dnt.itsnow.session_service</groupId>
-    <artifactId>session_api</artifactId>
-    <name>Itsnow Session Service API</name>
+
+    <artifactId>mutable-sla-service</artifactId>
+    <version>0.1.2-SNAPSHOT</version>
+    <name>Mutable SLA Service</name>
     <description>
-        The itsnow session service API
+        The mutable SLA service implemented by MSC, and provide SPI to other deployment builds.
     </description>
 
 </project>
