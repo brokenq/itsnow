@@ -5,15 +5,20 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>dnt.itsnow</groupId>
-        <artifactId>servicecatalog_service</artifactId>
+        <groupId>dnt.itsnow.demo</groupId>
+        <artifactId>demo-services</artifactId>
         <version>0.1.2-SNAPSHOT</version>
     </parent>
-    <groupId>dnt.itsnow.servicecatalog_service</groupId>
-    <artifactId>servicecatalog_api</artifactId>
-    <name>Itsnow ServiceCatalog Service API</name>
+    <packaging>pom</packaging>
+    <artifactId>service_catalog_service</artifactId>
+    <name>Itsnow ServiceCatalog Service</name>
     <description>
-        The itsnow ServiceCatalog service API
+        The itsnow ServiceCatalog service
     </description>
+
+    <modules>
+        <module>service_catalog_api</module>
+        <module>service_catalog_app</module>
+    </modules>
 
 </project>

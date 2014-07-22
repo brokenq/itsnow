@@ -5,15 +5,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>dnt.itsnow</groupId>
-        <artifactId>activitiengine_service</artifactId>
+        <groupId>dnt.itsnow.demo</groupId>
+        <artifactId>activiti_engine_service</artifactId>
         <version>0.1.2-SNAPSHOT</version>
     </parent>
-    <groupId>dnt.itsnow.activitiengine_service</groupId>
-    <artifactId>activitiengine_api</artifactId>
-    <name>Itsnow activitiengine Service API</name>
+
+    <artifactId>activiti_engine_api</artifactId>
+    <name>Itsnow activiti engine Service API</name>
     <description>
-        The itsnow activitiengine service API
+        The itsnow activiti engine service API
     </description>
 
 </project>

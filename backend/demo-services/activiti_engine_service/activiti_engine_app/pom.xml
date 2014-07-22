@@ -5,21 +5,21 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>dnt.itsnow</groupId>
-        <artifactId>activitiengine_service</artifactId>
+        <groupId>dnt.itsnow.demo</groupId>
+        <artifactId>activiti_engine_service</artifactId>
         <version>0.1.2-SNAPSHOT</version>
     </parent>
-    <groupId>dnt.itsnow.activitiengine_service</groupId>
-    <artifactId>activitiengine_app</artifactId>
-    <name>Itsnow activitiengine Service App</name>
+
+    <artifactId>activiti_engine_app</artifactId>
+    <name>Itsnow activiti_engine Service App</name>
     <description>
-        The itsnow activitiengine service App
+        The itsnow activiti engine service App
     </description>
 
     <dependencies>
         <dependency>
-            <groupId>dnt.itsnow.activitiengine_service</groupId>
-            <artifactId>activitiengine_api</artifactId>
+            <groupId>dnt.itsnow.demo</groupId>
+            <artifactId>activiti_engine_api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.activiti</groupId>

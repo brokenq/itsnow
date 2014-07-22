@@ -3,22 +3,22 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
+    <packaging>pom</packaging>
     <parent>
-        <groupId>dnt.itsnow</groupId>
-        <artifactId>services</artifactId>
+        <groupId>dnt.itsnow.demo</groupId>
+        <artifactId>demo-services</artifactId>
         <version>0.1.2-SNAPSHOT</version>
     </parent>
-    <packaging>pom</packaging>
-    <artifactId>servicecatalog_service</artifactId>
-    <name>Itsnow ServiceCatalog Service</name>
+
+    <artifactId>activiti_engine_service</artifactId>
+    <name>Itsnow Activiti Engine Service</name>
     <description>
-        The itsnow ServiceCatalog service
+        The itsnow Activiti Engine service
     </description>
 
     <modules>
-        <module>servicecatalog_api</module>
-        <module>servicecatalog_app</module>
+        <module>activiti_engine_api</module>
+        <module>activiti_engine_app</module>
     </modules>
 
 </project>

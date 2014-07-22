@@ -5,20 +5,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>dnt.itsnow</groupId>
-        <artifactId>services</artifactId>
+        <groupId>dnt.itsnow.demo</groupId>
+        <artifactId>service_catalog_service</artifactId>
         <version>0.1.2-SNAPSHOT</version>
     </parent>
-    <packaging>pom</packaging>
-    <artifactId>activitiengine_service</artifactId>
-    <name>Itsnow Activiti Engine Service</name>
-    <description>
-        The itsnow Activiti Engine service
-    </description>
 
-    <modules>
-        <module>activitiengine_api</module>
-        <module>activitiengine_app</module>
-    </modules>
+    <artifactId>service_catalog_api</artifactId>
+    <name>Itsnow ServiceCatalog Service API</name>
+    <description>
+        The itsnow ServiceCatalog service API
+    </description>
 
 </project>

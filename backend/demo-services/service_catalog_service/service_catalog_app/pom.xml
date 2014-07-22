@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>dnt.itsnow</groupId>
-        <artifactId>servicecatalog_service</artifactId>
+        <groupId>dnt.itsnow.demo</groupId>
+        <artifactId>service_catalog_service</artifactId>
         <version>0.1.2-SNAPSHOT</version>
     </parent>
-    <groupId>dnt.itsnow.servicecatalog_service</groupId>
-    <artifactId>servicecatalog_app</artifactId>
+
+    <artifactId>service_catalog_app</artifactId>
     <name>Itsnow ServiceCatalog Service App</name>
     <description>
         The itsnow ServiceCatalog service App
@@ -18,8 +18,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>dnt.itsnow.servicecatalog_service</groupId>
-            <artifactId>servicecatalog_api</artifactId>
+            <groupId>dnt.itsnow.demo</groupId>
+            <artifactId>service_catalog_api</artifactId>
         </dependency>
     </dependencies>
 
