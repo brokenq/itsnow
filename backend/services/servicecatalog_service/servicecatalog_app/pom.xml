@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>dnt.itsnow</groupId>
+        <artifactId>servicecatalog_service</artifactId>
+        <version>0.1.2-SNAPSHOT</version>
+    </parent>
+    <groupId>dnt.itsnow.servicecatalog_service</groupId>
+    <artifactId>servicecatalog_app</artifactId>
+    <name>Itsnow ServiceCatalog Service App</name>
+    <description>
+        The itsnow ServiceCatalog service App
+    </description>
+
+    <dependencies>
+        <dependency>
+            <groupId>dnt.itsnow.servicecatalog_service</groupId>
+            <artifactId>servicecatalog_api</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Service-Config>dnt.itsnow.config.ServiceConfig</Service-Config>
+                            <App-Config>dnt.itsnow.platform.services.DefaultServiceAppConfig</App-Config>
+                            <App-Repository>dnt.itsnow.services.repository</App-Repository>
+                            <Web-Repository>dnt.itsnow.web.controller</Web-Repository>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

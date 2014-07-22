@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>dnt.itsnow</groupId>
+        <artifactId>servicecatalog_service</artifactId>
+        <version>0.1.2-SNAPSHOT</version>
+    </parent>
+    <groupId>dnt.itsnow.servicecatalog_service</groupId>
+    <artifactId>servicecatalog_api</artifactId>
+    <name>Itsnow ServiceCatalog Service API</name>
+    <description>
+        The itsnow ServiceCatalog service API
+    </description>
+
+</project>
