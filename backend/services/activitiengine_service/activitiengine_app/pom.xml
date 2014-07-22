@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>dnt.itsnow</groupId>
+        <artifactId>activitiengine_service</artifactId>
+        <version>0.1.2-SNAPSHOT</version>
+    </parent>
+    <groupId>dnt.itsnow.activitiengine_service</groupId>
+    <artifactId>activitiengine_app</artifactId>
+    <name>Itsnow activitiengine Service App</name>
+    <description>
+        The itsnow activitiengine service App
+    </description>
+
+    <dependencies>
+        <dependency>
+            <groupId>dnt.itsnow.activitiengine_service</groupId>
+            <artifactId>activitiengine_api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-spring</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Service-Config>dnt.itsnow.config.ServiceConfig</Service-Config>
+                            <App-Config>dnt.itsnow.platform.services.DefaultServiceAppConfig</App-Config>
+                            <App-Repository>dnt.itsnow.services.repository</App-Repository>
+                            <Web-Repository>dnt.itsnow.web.controller</Web-Repository>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
