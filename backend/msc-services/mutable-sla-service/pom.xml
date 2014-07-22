@@ -7,11 +7,11 @@
     <parent>
         <groupId>dnt.itsnow</groupId>
         <artifactId>msc-services</artifactId>
-        <version>0.1.2-SNAPSHOT</version>
+        <version>0.1.2</version>
     </parent>
 
     <artifactId>mutable-sla-service</artifactId>
-    <version>0.1.2-SNAPSHOT</version>
+    <version>0.1.2</version>
     <name>Mutable SLA Service</name>
     <description>
         The mutable SLA service implemented by MSC, and provide SPI to other deployment builds.
