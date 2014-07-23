@@ -13,6 +13,6 @@ import org.springframework.context.annotation.Import;
  */
 @Configuration
 @Import({DefaultAppConfig.class})
-@ComponentScan("dnt.itsnow.services")
+@ComponentScan("dnt.itsnow.support")
 public class DefaultServiceAppConfig {
 }

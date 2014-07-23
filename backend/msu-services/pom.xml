@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>msu-services</artifactId>
-    <name>Managed Service User</name>
+    <name>MSU Services</name>
     <description>
         面向甲方/采购方的业务系统
     </description>

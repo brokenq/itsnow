@@ -3,9 +3,12 @@
  */
 package dnt.itsnow.platform.repository;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.plugin.Interceptor;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -16,13 +19,19 @@ import org.springframework.transaction.PlatformTransactionManager;
 import javax.sql.DataSource;
 
 /**
- * 关于数据库的配置
+ * <h1>关于数据库的配置</h1>
  */
 @Configuration
 public class DatabaseConfig {
     @Autowired
     ApplicationContext application;
 
+    /**
+     * <h2>给定的数据源未指定schema，需要应用程序在SQL执行时自行指定schema</h2>
+     *
+     * 备注：实际是mybatis根据不同的业务模型指定
+     * @return 数据源
+     */
     @Bean
     @Profile("production")
     public DataSource dataSource() {
@@ -30,9 +39,14 @@ public class DatabaseConfig {
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
         String dbHost = System.getProperty("db.host", "localhost");
         String dbPort = System.getProperty("db.port", "3306");
-        String dbName = System.getProperty("db.name", "itsnow");
         String dbUser = System.getProperty("db.user", "itsnow");
         String dbPass = System.getProperty("db.password", "secret");
+        String appId = System.getProperty("app.id");
+        if(StringUtils.isBlank(appId) || "<undefined>".equalsIgnoreCase(appId)){
+            throw new ApplicationContextException("the app id is not defined or changed from <undefined>");
+        }
+        String dbName = "itsnow_" + appId;
+        System.setProperty("app.db", dbName);
         String dbUrl = String.format("jdbc:mysql://%s:%s/%s", dbHost, dbPort, dbName);
         dataSource.setUrl(dbUrl);
         dataSource.setUsername(dbUser);
@@ -45,11 +59,17 @@ public class DatabaseConfig {
         SqlSessionFactoryBean factory = new SqlSessionFactoryBean();
         factory.setConfigLocation(application.getResource("classpath:META-INF/mybatis.xml"));
         factory.setDataSource(dataSource);
+        factory.setPlugins(new Interceptor[]{statementInterceptor()});
         return factory;
     }
 
     @Bean
     public PlatformTransactionManager transactionManager(DataSource dataSource){
         return new DataSourceTransactionManager(dataSource);
+    }
+
+    @Bean
+    public StatementInterceptor statementInterceptor(){
+        return new StatementInterceptor();
     }
 }
