@@ -24,6 +24,7 @@
     <modules>
         <module>common-account-service</module>
         <module>common-user-service</module>
+        <module>common-acl-service</module>
         <module>common-service_catalog-service</module>
         <module>common-contract-service</module>
         <module>common-sla-service</module>

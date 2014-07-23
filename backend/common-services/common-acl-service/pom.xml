@@ -6,14 +6,14 @@
 
     <parent>
         <groupId>dnt.itsnow</groupId>
-        <artifactId>general-services</artifactId>
+        <artifactId>common-services</artifactId>
         <version>0.1.3-SNAPSHOT</version>
     </parent>
 
-    <artifactId>general-acl-service</artifactId>
-    <name>General ACL Service</name>
+    <artifactId>common-acl-service</artifactId>
+    <name>Common ACL Service</name>
     <description>
-        The general ACL service shared between MSP and MSU
+        The common ACL service shared by all deployment units.
     </description>
     
 </project>

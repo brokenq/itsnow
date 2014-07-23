@@ -2,11 +2,11 @@
 -- Migration SQL that makes the change goes here.
 
 CREATE TABLE acl_entries (
-  id                  INT(4) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  acl_object_identity INT(4) UNSIGNED NOT NULL,
-  ace_order           INT(4) NOT NULL,
-  sid                 INT(4) UNSIGNED NOT NULL,
-  mask                INT(4) UNSIGNED NOT NULL,
+  id                  INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  acl_object_identity INT(10) UNSIGNED NOT NULL,
+  ace_order           INT(10) NOT NULL,
+  sid                 INT(10) UNSIGNED NOT NULL,
+  mask                INT(10) UNSIGNED NOT NULL,
   granting            BOOLEAN NOT NULL,
   audit_success       BOOLEAN NOT NULL,
   audit_failure       BOOLEAN NOT NULL,

@@ -90,6 +90,11 @@
             </dependency>
             <dependency>
                 <groupId>dnt.itsnow</groupId>
+                <artifactId>common-acl-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dnt.itsnow</groupId>
                 <artifactId>common-user-service</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -118,11 +123,6 @@
             <dependency>
                 <groupId>dnt.itsnow</groupId>
                 <artifactId>general-staff-service</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>dnt.itsnow</groupId>
-                <artifactId>general-acl-service</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
