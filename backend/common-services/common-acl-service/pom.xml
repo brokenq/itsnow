@@ -15,5 +15,23 @@
     <description>
         The common ACL service shared by all deployment units.
     </description>
-    
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Service-Config>dnt.itsnow.config.ServiceConfig</Service-Config>
+                            <App-Config>dnt.itsnow.platform.services.DefaultServiceAppConfig</App-Config>
+                            <App-Repository>dnt.itsnow.repository</App-Repository>
+                            <Web-Repository>dnt.itsnow.web.controller</Web-Repository>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

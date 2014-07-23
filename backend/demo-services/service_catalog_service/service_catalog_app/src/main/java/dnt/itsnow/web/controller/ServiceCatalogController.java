@@ -7,8 +7,8 @@ import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.PageRequest;
 import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.platform.web.controller.ApplicationController;
-import dnt.itsnow.services.api.ServiceCatalogService;
-import dnt.itsnow.services.model.ServiceCatalog;
+import dnt.itsnow.api.ServiceCatalogService;
+import dnt.itsnow.model.ServiceCatalog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

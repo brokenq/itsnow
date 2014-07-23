@@ -13,7 +13,7 @@
 
     <groupId>dnt.itsnow.demo</groupId>
     <artifactId>demo-services</artifactId>
-    <name>Itsnow Demo Services</name>
+    <name>Demo Services</name>
     <description>
         The backend demo services
     </description>

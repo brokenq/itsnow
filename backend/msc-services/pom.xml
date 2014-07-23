@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>msc-services</artifactId>
-    <name>Managed Service Carrier</name>
+    <name>MSC Services</name>
     <description>
         运营商的业务系统
         主要通过REST API的方式提供system schema中数据的有损操作服务

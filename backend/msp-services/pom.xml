@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>msp-services</artifactId>
-    <name>Managed Service Provider</name>
+    <name>MSP Services</name>
     <description>
         面向乙方/供应方的业务系统
     </description>
