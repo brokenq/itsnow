@@ -40,18 +40,27 @@
             <modules>
                 <module>msc-services</module>
             </modules>
+            <properties>
+                <release.dir>${release.root}/msc-${project.version}</release.dir>
+            </properties>
         </profile>
         <profile>
             <id>with-itsnow-msu</id>
             <modules>
                 <module>msu-services</module>
             </modules>
+            <properties>
+                <release.dir>${release.root}/msu-${project.version}</release.dir>
+            </properties>
         </profile>
         <profile>
             <id>with-itsnow-msp</id>
             <modules>
                 <module>msp-services</module>
             </modules>
+            <properties>
+                <release.dir>${release.root}/msp-${project.version}</release.dir>
+            </properties>
         </profile>
         <profile>
             <id>with-itsnow-demo</id>
