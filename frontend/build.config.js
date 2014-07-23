@@ -87,6 +87,7 @@ module.exports = {
 //      'vendor/placeholders/angular-placeholders-0.0.1-SNAPSHOT.min.js',
       'vendor/angular-ui-router/release/angular-ui-router.js',
       'vendor/angular-ui-utils/modules/route/route.js',
+      'vendor/ng-grid/ng-grid-2.0.11.debug.js',
       'vendor/ace-bootstrap/js/ace.js',
       'vendor/ace-bootstrap/js/ace-elements.js',
       'vendor/ace-bootstrap/js/ace-extra.js',
@@ -94,6 +95,7 @@ module.exports = {
     ],
     css: [
 //      'vendor/angular/angular-csp.css',
+      'vendor/ng-grid/ng-grid.css',
       'vendor/bootstrap/dist/css/bootstrap-theme.css',
       'vendor/ace-bootstrap/css/*.css'
     ],

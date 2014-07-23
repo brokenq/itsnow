@@ -695,7 +695,10 @@
     <div class="row">
       <div class="col-xs-12">
         <!-- PAGE CONTENT BEGINS -->
-
+          <div ng-app="userList" ng-controller="userListCtrl">
+              <div class="gridStyle" ng-grid="gridUserList"></div>
+              <div class="selectedItems">{{mySelections}}</div>
+          </div>
         <!-- PAGE CONTENT ENDS -->
       </div>
       <!-- /.col -->
