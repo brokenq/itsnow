@@ -29,7 +29,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry authenticated =
                 (ExpressionUrlAuthorizationConfigurer.ExpressionInterceptUrlRegistry)
                         http.authorizeRequests()
-                           // .antMatchers("/api/**").authenticated()//谁在前，谁优先级高
+                            //.antMatchers("/api/**").authenticated()//谁在前，谁优先级高
                             .antMatchers("/**").permitAll();
         authenticated.and().formLogin().loginPage("/login.html")
                      .and().httpBasic().realmName("ItsNow Platform");
