@@ -5,9 +5,11 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.platform.web.controller.ApplicationController;
 import dnt.itsnow.services.api.ActivitiEngineService;
+import dnt.util.StringUtils;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -116,20 +118,153 @@ public class ActivitiEngineController extends ApplicationController {
         return "{'result':'true','size':" + size + "}";
     }
 
-    @RequestMapping(value = "/start/{id}")
+    @RequestMapping(value = "/tasksInstanceId")
     @ResponseBody
-    public Object startProcessInstance(@PathVariable("id") String id){
-        String key = "vacationRequest";
-        Map<String, Object> variables = new HashMap<String, Object>();
-        variables.put("employeeName", "Kermit");
-        variables.put("numberOfDays", new Integer(4));
-        variables.put("vacationMotivation", "I'm really tired!");
+    public Object queryTasksByInstanceId(@RequestParam("instanceId") String instanceId){
+        List<Map<String, Object>> resultLs = new ArrayList<Map<String, Object>>();
+        if(StringUtils.isNotEmpty(instanceId)){
+            List<Task> ls = activitiEngineService.queryTasksByInstanceId(instanceId);
+            for(Task task:ls){
+                Map<String,Object> map = new HashMap<String, Object>();
+                map.put("taskId",task.getId());
+                map.put("instanceId",task.getProcessInstanceId());
+                map.put("taskName",task.getName());
+                map.put("taskAssignee",task.getAssignee());
+                map.put("taskDesc",task.getDescription());
+                map.put("taskOwner",task.getOwner());
+                //map.put("parentTaskId",task.getParentTaskId());
+                //map.put("processVariables",task.getProcessVariables());
+                //map.put("localVariables",task.getTaskLocalVariables());
+                map.put("createTime",task.getCreateTime());
 
-        ProcessInstance processInstance = activitiEngineService.startProcessInstanceByKey(key,variables);
-        Map<String,String> result = new HashMap<String, String>();
+                resultLs.add(map);
+            }
+        }
+
+        return resultLs;
+    }
+
+    @RequestMapping(value = "/tasksAssignee")
+    @ResponseBody
+    public Object queryTasksByAssignee(@RequestParam("userName") String userName){
+        List<Map<String, Object>> resultLs = new ArrayList<Map<String, Object>>();
+        if(StringUtils.isNotEmpty(userName)){
+            List<Task> ls = activitiEngineService.queryTasksAssignee(userName);
+            for(Task task:ls){
+                Map<String,Object> map = new HashMap<String, Object>();
+                map.put("taskId",task.getId());
+                map.put("instanceId",task.getProcessInstanceId());
+                map.put("taskName",task.getName());
+                map.put("taskAssignee",task.getAssignee());
+                map.put("taskDesc",task.getDescription());
+                map.put("taskOwner",task.getOwner());
+                //map.put("parentTaskId",task.getParentTaskId());
+                //map.put("processVariables",task.getProcessVariables());
+                //map.put("localVariables",task.getTaskLocalVariables());
+                map.put("createTime",task.getCreateTime());
+
+                resultLs.add(map);
+            }
+        }
+
+        return resultLs;
+    }
+
+    @RequestMapping(value = "/tasksCandidateUser")
+    @ResponseBody
+    public Object queryTasksByCandidateUser(@RequestParam("userName") String userName){
+        List<Map<String, Object>> resultLs = new ArrayList<Map<String, Object>>();
+        if(StringUtils.isNotEmpty(userName)){
+            List<Task> ls = activitiEngineService.queryTasksCandidateUser(userName);
+            for(Task task:ls){
+                Map<String,Object> map = new HashMap<String, Object>();
+                map.put("taskId",task.getId());
+                map.put("instanceId",task.getProcessInstanceId());
+                map.put("taskName",task.getName());
+                map.put("taskAssignee",task.getAssignee());
+                map.put("taskDesc",task.getDescription());
+                map.put("taskOwner",task.getOwner());
+                //map.put("parentTaskId",task.getParentTaskId());
+                //map.put("processVariables",task.getProcessVariables());
+                //map.put("localVariables",task.getTaskLocalVariables());
+                map.put("createTime", task.getCreateTime());
+                resultLs.add(map);
+            }
+        }
+
+        return resultLs;
+    }
+
+    @RequestMapping(value = "/tasksCandidateGroup")
+    @ResponseBody
+    public Object queryTasksByUser(@RequestParam("groupName") String groupName){
+        List<Map<String, Object>> resultLs = new ArrayList<Map<String, Object>>();
+        if(StringUtils.isNotEmpty(groupName)){
+            List<Task> ls = activitiEngineService.queryTasksCandidateGroup(groupName);
+            for(Task task:ls){
+                Map<String,Object> map = new HashMap<String, Object>();
+                map.put("taskId",task.getId());
+                map.put("instanceId",task.getProcessInstanceId());
+                map.put("taskName",task.getName());
+                map.put("taskAssignee",task.getAssignee());
+                map.put("taskDesc",task.getDescription());
+                map.put("taskOwner",task.getOwner());
+                //map.put("parentTaskId",task.getParentTaskId());
+                //map.put("processVariables",task.getProcessVariables());
+                //map.put("localVariables",task.getTaskLocalVariables());
+                map.put("createTime",task.getCreateTime());
+                resultLs.add(map);
+            }
+        }
+
+        return resultLs;
+    }
+
+    @RequestMapping(value = "/start/{key}")
+    @ResponseBody
+    public Object startProcessInstance(@PathVariable("key") String key,@RequestParam("name") String name,HttpServletRequest request){
+        //String key = "vacationRequest";
+        Map<String, Object> variables = new HashMap<String, Object>();
+        variables.putAll(request.getParameterMap());
+        //variables.put("employeeName", "kermit");
+        //variables.put("numberOfDays", new Integer(4));
+        //variables.put("vacationMotivation", "I'm really tired!");
+
+        ProcessInstance processInstance = activitiEngineService.startProcessInstanceByKey(key,variables,name);
+
+        List<Map<String, Object>> l = null;
+        try {
+             l = activitiEngineService.traceProcess(processInstance.getProcessInstanceId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Map<String,Object> result = new HashMap<String, Object>();
         result.put("instanceId",processInstance.getId());
         result.put("activityId",processInstance.getActivityId());
         result.put("defineId",processInstance.getProcessDefinitionId());
+
         return result;
+    }
+
+    @RequestMapping(value = "/tasks/{id}")
+    @ResponseBody
+    public Object completeTasksByUser(@PathVariable("id") String taskId,@RequestParam("userName") String userName,HttpServletRequest request){
+        List<Map<String, Object>> resultLs = new ArrayList<Map<String, Object>>();
+        if(StringUtils.isNotEmpty(userName)){
+            Map<String, Object> taskVariables = new HashMap<String, Object>();
+            /*String value = request.getParameter("approve");
+            if(value!=null && value.equals("true"))
+                taskVariables.put("vacationApproved", "true");
+            else
+                taskVariables.put("vacationApproved","false");
+            taskVariables.put("managerMotivation", "We have a tight deadline!");
+            */
+            taskVariables.putAll(request.getParameterMap());
+
+            activitiEngineService.completeTask(taskId,taskVariables,userName);
+        }
+
+        return resultLs;
     }
 }

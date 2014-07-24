@@ -1,9 +1,9 @@
 /**
  * Developer: Kadvin Date: 14-7-10 下午9:06
  */
-package dnt.itsnow.api;
+package dnt.itsnow.services.api;
 
-import dnt.itsnow.model.ServiceCatalog;
+import dnt.itsnow.services.model.ServiceCatalog;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 
