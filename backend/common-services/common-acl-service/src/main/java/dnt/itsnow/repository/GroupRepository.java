@@ -4,10 +4,12 @@
 package dnt.itsnow.repository;
 
 import dnt.itsnow.model.Group;
+import dnt.itsnow.model.GroupAuthority;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * <h1>Group Repository</h1>
@@ -16,9 +18,18 @@ import java.util.List;
  */
 public interface GroupRepository {
 
-    @Select("SELECT * FROM groups WHERE name = #{name}")
+    @Select("SELECT * FROM groups WHERE UPPER(name) = UPPER(#{name})")
     Group findByName(@Param("name") String name);
 
-    @Select("SELECT * FROM groups WHERE name LIKE '%#{keyword}%'")
+    @Select("SELECT * FROM groups WHERE UPPER(name) LIKE UPPER('%#{keyword}%')")
     List<Group> findAllByKeyword(@Param("keyword") String keyword);
+
+    @Select(" SELECT ga.authority, g.group_name" +
+            " FROM group_authorities ga " +
+            " INNER JOIN groups g ON ga.group_id = g.id " +
+            " INNER JOIN group_members gm ON gm.group_id = g.id" +
+            " WHERE UPPER(gm.username) = UPPER(#{username})" +
+            " GROUP BY ga.authority, g.group_name"
+    )
+    Set<GroupAuthority> findUserAuthorities(@Param("username") String username);
 }

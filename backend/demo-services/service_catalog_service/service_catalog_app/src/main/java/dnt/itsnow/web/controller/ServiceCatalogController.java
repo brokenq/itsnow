@@ -19,7 +19,7 @@ import java.util.List;
  * The user controller
  */
 @RestController
-@RequestMapping("/api/servicecatalog")
+@RequestMapping("/demo/service_catalogs")
 public class ServiceCatalogController extends ApplicationController {
 
     @Autowired

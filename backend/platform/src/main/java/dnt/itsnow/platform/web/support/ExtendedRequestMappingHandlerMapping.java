@@ -35,6 +35,7 @@ public class ExtendedRequestMappingHandlerMapping extends RequestMappingHandlerM
             Component component = event.getSource();
             ApplicationContext application = component.getApplication();
             theApplicationContext = application;
+            if( application == null ) return;// it's not a component with application
             // controllers 是注册在parent中的
             String[] controllerNames = application.getBeanNamesForType(ApplicationController.class);
             for (String controllerName : controllerNames) {

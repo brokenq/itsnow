@@ -31,7 +31,7 @@ import static org.springframework.context.ConfigurableApplicationContext.CONFIG_
  */
 public class MybatisFeatureResolver extends AbstractFeatureResolver {
     public static final String FEATURE        = "mybatis";
-    public static final String APP_REPOSITORY = "App-Repository";
+    public static final String APP_REPOSITORY = "DB-Repository";
 
     public MybatisFeatureResolver() {
         //28： 在Spring Service Context之后(25)， Spring Application Context之前(30)，加载

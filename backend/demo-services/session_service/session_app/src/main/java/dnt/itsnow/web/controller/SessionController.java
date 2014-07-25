@@ -26,7 +26,7 @@ import java.security.Principal;
  * The Session Controller
  */
 @RestController
-@RequestMapping("/api/session")
+@RequestMapping("/demo/session")
 public class SessionController extends ApplicationController {
     @Autowired
     private SessionService sessionService;

@@ -34,7 +34,7 @@ import org.springframework.context.annotation.ImportResource;
 @org.springframework.context.annotation.Configuration
 @Import({DefaultAppConfig.class, DatabaseConfig.class})
 @ImportResource( "classpath:META-INF/activiti.xml")
-public class AppConfiguration {
+public class PlatformConfiguration {
 
     // 用于启动WEB应用
     @Bean

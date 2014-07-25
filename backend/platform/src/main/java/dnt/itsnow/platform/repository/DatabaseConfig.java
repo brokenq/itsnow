@@ -43,7 +43,7 @@ public class DatabaseConfig {
         String dbPass = System.getProperty("db.password", "secret");
         String appId = System.getProperty("app.id");
         if(StringUtils.isBlank(appId) || "<undefined>".equalsIgnoreCase(appId)){
-            throw new ApplicationContextException("the app id is not defined or changed from <undefined>");
+            throw new ApplicationContextException("the app id is not defined");
         }
         String dbName = "itsnow_" + appId;
         System.setProperty("app.db", dbName);

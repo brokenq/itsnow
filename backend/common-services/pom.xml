@@ -63,6 +63,21 @@
                 </executions>
             </plugin>
 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Service-Config>dnt.itsnow.platform.config.DefaultServiceConfig</Service-Config>
+                            <App-Config>dnt.itsnow.platform.config.DefaultAppConfig</App-Config>
+                            <DB-Repository>dnt.itsnow.repository</DB-Repository>
+                            <Web-Repository>dnt.itsnow.web.controller</Web-Repository>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 </project>

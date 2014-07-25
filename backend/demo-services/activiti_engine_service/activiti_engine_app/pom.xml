@@ -35,9 +35,8 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Service-Config>dnt.itsnow.config.ServiceConfig</Service-Config>
-                            <App-Config>dnt.itsnow.platform.services.DefaultServiceAppConfig</App-Config>
-                            <App-Repository>dnt.itsnow.services.repository</App-Repository>
+                            <Service-Config>dnt.itsnow.platform.config.DefaultServiceConfig</Service-Config>
+                            <App-Config>dnt.itsnow.platform.config.DefaultAppConfig</App-Config>
                             <Web-Repository>dnt.itsnow.web.controller</Web-Repository>
                         </manifestEntries>
                     </archive>

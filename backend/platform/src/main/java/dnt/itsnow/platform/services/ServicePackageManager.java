@@ -147,6 +147,6 @@ public class ServicePackageManager extends ApplicationSupportBean
             return false;
         }
         String id = dependency.getArtifactId().toLowerCase();
-        return id.endsWith("_app") || id.endsWith("_service");
+        return !id.endsWith("_api");
     }
 }

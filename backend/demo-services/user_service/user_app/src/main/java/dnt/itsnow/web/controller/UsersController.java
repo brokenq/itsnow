@@ -21,7 +21,7 @@ import java.util.List;
  * The user controller
  */
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/demo/users")
 public class UsersController extends ApplicationController {
 
     @Autowired
