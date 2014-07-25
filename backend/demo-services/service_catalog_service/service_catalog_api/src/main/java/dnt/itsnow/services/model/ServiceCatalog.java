@@ -1,4 +1,4 @@
-package dnt.itsnow.model;
+package dnt.itsnow.services.model;
 
 import dnt.itsnow.platform.model.Record;
 

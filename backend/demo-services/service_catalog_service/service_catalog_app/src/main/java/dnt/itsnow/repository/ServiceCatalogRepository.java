@@ -1,6 +1,6 @@
 package dnt.itsnow.repository;
 
-import dnt.itsnow.model.ServiceCatalog;
+import dnt.itsnow.services.model.ServiceCatalog;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

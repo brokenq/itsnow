@@ -6,6 +6,7 @@ package dnt.itsnow.services.api;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.Task;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,7 +23,6 @@ public interface ActivitiEngineService {
      *
      * @param processKey     流程名称
      * @param processCategory 流程分类
-     * @throws java.io.IOException 找不到zip文件时
      */
     boolean deploySingleProcess(String processKey,String processCategory);
 
@@ -40,7 +40,19 @@ public interface ActivitiEngineService {
 
     int deleteAllProcessDeploys();
 
-    ProcessInstance startProcessInstanceByKey(String key,Map<String, Object> variables);
+    ProcessInstance startProcessInstanceByKey(String key,Map<String, Object> variables,String assignee);
+
+    List<Task> queryTasksByInstanceId(String instanceId);
+
+    List<Task> queryTasksAssignee(String userName);
+
+    List<Task> queryTasksCandidateUser(String userName);
+
+    List<Task> queryTasksCandidateGroup(String groupName);
+
+    void completeTask(String id,Map<String, Object> taskVariables,String assignee);
+
+    List<Map<String, Object>> traceProcess(String processInstanceId) throws Exception;
 
     void test(String name);
 }
