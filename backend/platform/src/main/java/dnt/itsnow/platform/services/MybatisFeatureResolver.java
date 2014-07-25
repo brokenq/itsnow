@@ -30,8 +30,8 @@ import static org.springframework.context.ConfigurableApplicationContext.CONFIG_
  * </pre>
  */
 public class MybatisFeatureResolver extends AbstractFeatureResolver {
-    public static final String FEATURE        = "mybatis";
-    public static final String APP_REPOSITORY = "DB-Repository";
+    public static final String FEATURE       = "mybatis";
+    public static final String DB_REPOSITORY = "DB-Repository";
 
     public MybatisFeatureResolver() {
         //28： 在Spring Service Context之后(25)， Spring Application Context之前(30)，加载
@@ -51,12 +51,12 @@ public class MybatisFeatureResolver extends AbstractFeatureResolver {
     @Override
     public boolean hasFeature(Component component) {
         //暂时仅根据组件的artifact id判断，也不根据内容判断
-        return StringUtils.isNotBlank(component.getManifestAttribute(APP_REPOSITORY));
+        return StringUtils.isNotBlank(component.getManifestAttribute(DB_REPOSITORY));
     }
 
     @Override
     public void resolve(Component component) throws Exception {
-        String appRepository = component.getManifestAttribute(APP_REPOSITORY);
+        String appRepository = component.getManifestAttribute(DB_REPOSITORY);
         scanMyBatisRepository(component.getServiceApplication(), appRepository);
         logger.info("The {} is resolved for mybatis feature", component);
     }

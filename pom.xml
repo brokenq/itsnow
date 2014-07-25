@@ -54,7 +54,7 @@
 
         <version.activiti.engine>5.15.1</version.activiti.engine>
 
-        <version.component-framework>0.0.9</version.component-framework>
+        <version.component-framework>0.1.0-SNAPSHOT</version.component-framework>
         <version.components>0.1.5</version.components>
         <release.root>/opt/releases/itsnow</release.root>
         <release.dir>${release.root}/itsnow-${project.version}</release.dir>

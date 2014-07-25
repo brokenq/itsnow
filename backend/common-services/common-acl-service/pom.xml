@@ -32,9 +32,6 @@
                     <archive>
                         <manifestEntries>
                             <Service-Config>dnt.itsnow.config.AclServiceConfig</Service-Config>
-                            <App-Config>dnt.itsnow.config.AclAppConfig</App-Config>
-                            <DB-Repository>dnt.itsnow.repository</DB-Repository>
-                            <Web-Repository>dnt.itsnow.web.controller</Web-Repository>
                         </manifestEntries>
                     </archive>
                 </configuration>
