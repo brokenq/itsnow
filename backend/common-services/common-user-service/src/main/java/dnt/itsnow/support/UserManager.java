@@ -8,10 +8,12 @@ import dnt.itsnow.repository.UserRepository;
 import dnt.itsnow.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
 /**
  * Basic User Service
  */
+@Service
 public class UserManager implements UserService {
     @Autowired
     UserRepository  userRepository;

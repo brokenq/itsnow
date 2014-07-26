@@ -31,6 +31,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
+                            <App-Config>dnt.itsnow.config.AclAppConfig</App-Config>
                             <Service-Config>dnt.itsnow.config.AclServiceConfig</Service-Config>
                         </manifestEntries>
                     </archive>
