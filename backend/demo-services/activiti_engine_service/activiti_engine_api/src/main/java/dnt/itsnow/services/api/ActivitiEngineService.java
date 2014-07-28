@@ -40,8 +40,6 @@ public interface ActivitiEngineService {
 
     int deleteAllProcessDeploys();
 
-    ProcessInstance startProcessInstanceByKey(String key,Map<String, Object> variables,String assignee);
-
     List<Task> queryTasksByInstanceId(String instanceId);
 
     List<Task> queryTasksAssignee(String userName);
@@ -49,6 +47,10 @@ public interface ActivitiEngineService {
     List<Task> queryTasksCandidateUser(String userName);
 
     List<Task> queryTasksCandidateGroup(String groupName);
+
+    ProcessInstance startProcessInstanceByKey(String key,Map<String, Object> variables,String assignee);
+
+    Task claimTask(String taskId,String userId);
 
     void completeTask(String id,Map<String, Object> taskVariables,String assignee);
 

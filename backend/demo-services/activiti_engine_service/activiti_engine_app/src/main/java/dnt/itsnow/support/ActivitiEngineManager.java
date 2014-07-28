@@ -161,9 +161,17 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
         return processEngine.getTaskService().createTaskQuery().taskCandidateGroup(groupName).list();
     }
 
-    public void completeTask(String id,Map<String, Object> taskVariables,String assignee){
-        processEngine.getTaskService().setAssignee(id,assignee);
+    public Task claimTask(String taskId,String userId){
+        processEngine.getTaskService().claim(taskId,userId);
+        log.info("task:"+taskId+" has claimed by "+userId);
+        Task task = processEngine.getTaskService().createTaskQuery().taskId(taskId).singleResult();
+        return task;
+    }
+
+    public void completeTask(String id,Map<String, Object> taskVariables,String userId){
+        //processEngine.getTaskService().setAssignee(id,userId);
         processEngine.getTaskService().complete(id,taskVariables);
+        //processEngine.getFormService().submitTaskFormData(id,taskVariables);
     }
 
     /**
