@@ -4,6 +4,9 @@
 package dnt.itsnow.model;
 
 import dnt.itsnow.platform.model.Record;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.SpringSecurityCoreVersion;
@@ -19,7 +22,14 @@ import java.util.*;
 public class User extends Record implements UserDetails, CredentialsContainer {
 
     //~ Instance fields ================================================================================================
-    private String username, email, phone;
+    @NotBlank
+    @Length(min = 4, max = 20)
+    private String username;
+    @Email
+    @NotBlank
+    private String email;
+    @NotBlank
+    private String phone;
     private String password;
     private Set<GrantedAuthority> authorities;
     private boolean accountNonExpired; //

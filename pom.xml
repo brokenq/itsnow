@@ -51,6 +51,7 @@
         <version.scala>2.8.2</version.scala>
         <version.scalate>1.5.3-scala_2.8.2</version.scalate>
         <version.mysql>5.1.27</version.mysql>
+        <version.hibernate-validator>5.0.1.Final</version.hibernate-validator>
 
         <version.activiti.engine>5.15.1</version.activiti.engine>
 
@@ -311,6 +312,11 @@
                 </exclusions>
             </dependency>
 
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>${version.hibernate-validator}</version>
+            </dependency>
 
             <!-- Framework DEPENDENCIES -->
             <dependency>

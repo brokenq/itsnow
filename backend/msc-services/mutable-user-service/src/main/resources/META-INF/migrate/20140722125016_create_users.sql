@@ -7,8 +7,8 @@ CREATE TABLE users (
   email      VARCHAR(255),
   phone      VARCHAR(50),
   password   VARCHAR(255)     NOT NULL,
-  enabled    BOOLEAN          NOT NULL,
-  expired    BOOLEAN          NOT NULL,
+  enabled    BOOLEAN          NOT NULL DEFAULT TRUE,
+  expired    BOOLEAN          NOT NULL DEFAULT FALSE,
   created_at TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

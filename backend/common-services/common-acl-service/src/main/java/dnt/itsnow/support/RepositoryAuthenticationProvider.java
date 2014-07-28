@@ -25,6 +25,8 @@ import org.springframework.util.Assert;
 public class RepositoryAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
 
     private PasswordEncoder passwordEncoder = new StandardPasswordEncoder();
+    @Autowired
+    @Qualifier("grouped")
     private UserDetailsService userDetailsService;
 
     @Override
@@ -48,7 +50,7 @@ public class RepositoryAuthenticationProvider extends AbstractUserDetailsAuthent
         UserDetails loadedUser;
 
         try {
-            loadedUser = this.getUserDetailsService().loadUserByUsername(username);
+            loadedUser = userDetailsService.loadUserByUsername(username);
         } catch (UsernameNotFoundException notFound) {
             throw notFound;
         } catch (Exception repositoryProblem) {
@@ -64,13 +66,4 @@ public class RepositoryAuthenticationProvider extends AbstractUserDetailsAuthent
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Autowired
-    @Qualifier("grouped")
-    public void setUserDetailsService(UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
-
-    protected UserDetailsService getUserDetailsService() {
-        return userDetailsService;
-    }
 }
