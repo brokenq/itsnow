@@ -24,6 +24,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
+                            <Default-Config>D,W</Default-Config>
                             <Service-Config>dnt.itsnow.config.ActivitiServiceConfig</Service-Config>
                             <App-Config>dnt.itsnow.config.ActivitiAppConfig</App-Config>
                         </manifestEntries>
@@ -54,7 +55,6 @@
         <dependency>
             <groupId>dnt.itsnow.demo</groupId>
             <artifactId>activiti_engine_api</artifactId>
-            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>

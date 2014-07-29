@@ -220,7 +220,7 @@ public class ActivitiEngineController extends ApplicationController {
         return resultLs;
     }
 
-    @RequestMapping(value = "/start/{key}")
+    @RequestMapping(value = "/tasks/start/{key}")
     @ResponseBody
     public Object startProcessInstance(@PathVariable("key") String key,@RequestParam("name") String name,HttpServletRequest request){
         //String key = "vacationRequest";
@@ -247,7 +247,7 @@ public class ActivitiEngineController extends ApplicationController {
         return result;
     }
 
-    @RequestMapping(value = "/tasks/{id}")
+    @RequestMapping(value = "/tasks/complete/{id}")
     @ResponseBody
     public Object completeTasksByUser(@PathVariable("id") String taskId,@RequestParam("userName") String userName,HttpServletRequest request){
         List<Map<String, Object>> resultLs = new ArrayList<Map<String, Object>>();
@@ -266,5 +266,15 @@ public class ActivitiEngineController extends ApplicationController {
         }
 
         return resultLs;
+    }
+
+    @RequestMapping(value = "/tasks/claim/{id}")
+    @ResponseBody
+    public Object claimTasksByUser(@PathVariable("id") String taskId,@RequestParam("userId") String userId,HttpServletRequest request){
+        Task task = null;
+        if(StringUtils.isNotEmpty(userId)) {
+            task = activitiEngineService.claimTask(taskId, userId);
+        }
+        return task;
     }
 }

@@ -31,6 +31,8 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
+                            <Default-Config>true</Default-Config>
+                            <!--true means A,S,D,W-->
                             <Service-Config>dnt.itsnow.config.ServiceCatalogServiceConfig</Service-Config>
                         </manifestEntries>
                     </archive>
