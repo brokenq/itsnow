@@ -140,6 +140,16 @@ public class User extends Record implements UserDetails, CredentialsContainer {
         return sortedAuthorities;
     }
 
+    public void apply(User another) {
+        this.username = another.username;
+        this.email = another.email;
+        this.phone = another.phone;
+        this.enabled = another.enabled;
+        this.accountNonExpired = another.accountNonExpired;
+        this.accountNonLocked = another.accountNonLocked;
+        this.credentialsNonExpired = another.credentialsNonExpired;
+    }
+
     private static class AuthorityComparator implements Comparator<GrantedAuthority>, Serializable {
         private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;
 

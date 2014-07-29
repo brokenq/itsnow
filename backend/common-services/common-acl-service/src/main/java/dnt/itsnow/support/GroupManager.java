@@ -8,15 +8,15 @@ import dnt.itsnow.repository.GroupRepository;
 import dnt.itsnow.service.GroupService;
 import dnt.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * <h1>Group Manager</h1>
  */
-@Component
-class GroupManager extends Bean implements GroupService {
+@Service
+public class GroupManager extends Bean implements GroupService {
     @Autowired
     private GroupRepository repository;
 

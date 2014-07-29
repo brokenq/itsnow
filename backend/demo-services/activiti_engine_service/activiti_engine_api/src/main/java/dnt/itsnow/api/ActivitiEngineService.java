@@ -1,7 +1,7 @@
 /**
  * Developer: Kadvin Date: 14-7-10 下午9:06
  */
-package dnt.itsnow.services.api;
+package dnt.itsnow.api;
 
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;

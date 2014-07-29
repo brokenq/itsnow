@@ -4,7 +4,8 @@
 	xsi:schemaLocation="
         http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
-	<bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
+
+    <bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
 		<property name="dataSource" ref="dataSource" />
 		<property name="databaseType" value="mysql"/>
 		<property name="databaseSchemaUpdate" value="true"/>
@@ -14,7 +15,7 @@
 		<property name="processDefinitionCacheLimit" value="10" />
 		<property name="activityFontName" value="宋体" />
 		<property name="labelFontName" value="宋体" />
-        <property name="deploymentResources" value="classpath*:/activiti/*.bpmn20.xml" />
+        <property name="deploymentResources" value="classpath*:/activiti/VacationRequest.bpmn20.xml" />
 
     </bean>
 

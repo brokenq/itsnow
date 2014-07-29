@@ -38,9 +38,13 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
         //noinspection unchecked
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry authenticated =
                 (ExpressionUrlAuthorizationConfigurer.ExpressionInterceptUrlRegistry)
+                        //谁在前，谁优先级高
                         http.authorizeRequests()
-                            .antMatchers("/api/**").authenticated()//谁在前，谁优先级高
-                                .antMatchers("/**").permitAll();
+                            .antMatchers("/api/**").hasAnyRole("ADMIN","MONITOR","REPORTER","USER")
+                            .antMatchers("/admin/api/**").hasAnyRole("ADMIN")
+                            .antMatchers("/monitor/api/**").hasAnyRole("MONITOR")
+                            .antMatchers("/reporter/api/**").hasAnyRole("REPORTER")
+                            .antMatchers("/**").permitAll();
         authenticated.and().formLogin().loginPage("/login.html")
                      .and().httpBasic().realmName("ItsNow Platform");
     }

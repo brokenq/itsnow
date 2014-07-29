@@ -10,7 +10,7 @@ import dnt.itsnow.services.api.UserService;
 import dnt.itsnow.services.model.User;
 import dnt.itsnow.repository.UserRepository;
 import dnt.spring.Bean;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

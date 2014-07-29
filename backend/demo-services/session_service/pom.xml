@@ -3,7 +3,6 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <packaging>pom</packaging>
     <parent>
         <groupId>dnt.itsnow.demo</groupId>
         <artifactId>demo-services</artifactId>
@@ -14,6 +13,7 @@
     <name>Itsnow Demo Session Service</name>
     <description>
         The itsnow demo session service
+        这个模块演示了，如果一个模块，它的服务没有被其他模块直接引用依赖，那么不必要拆解成为api/app
     </description>
 
     <dependencies>
@@ -22,10 +22,5 @@
             <artifactId>user_api</artifactId>
         </dependency>
     </dependencies>
-
-    <modules>
-        <module>session_api</module>
-        <module>session_app</module>
-    </modules>
 
 </project>

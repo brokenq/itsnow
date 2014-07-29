@@ -7,6 +7,7 @@ INSERT INTO authorities(username, authority) VALUES
 ('monitor', 'ROLE_MONITOR'),
 ('reporter', 'ROLE_REPORTER'),
 ('demo', 'ROLE_GUEST'),
+('demo', 'ROLE_USER'),
 ('guest', 'ROLE_GUEST');
 
 -- //@UNDO

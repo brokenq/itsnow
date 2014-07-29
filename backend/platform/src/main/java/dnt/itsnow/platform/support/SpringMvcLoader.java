@@ -32,13 +32,14 @@ public class SpringMvcLoader extends AbstractAnnotationConfigDispatcherServletIn
         implements ServletContextListener{
     public static final String SERVLET_VIEW_NAME = "ItsNow.ScalateView";
     ApplicationContext applicationContext;
-    private WebApplicationContext webAppContext;
+    private AnnotationConfigWebApplicationContext webAppContext;
 
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         // 本函数是在 web container start the servlet context 的 lifecycle里面执行的
         // 但 root web context 的构建却是在 context listener 在listen到 context initialized 事件之后
         applicationContext = (ApplicationContext) servletContext.getAttribute("application");
+
         super.onStartup(servletContext);
         registerSecurityFilter(servletContext);
         registerScalateFilter(servletContext);
@@ -46,7 +47,9 @@ public class SpringMvcLoader extends AbstractAnnotationConfigDispatcherServletIn
 
     @Override
     protected WebApplicationContext createRootApplicationContext() {
-        return webAppContext = super.createRootApplicationContext();
+        webAppContext = (AnnotationConfigWebApplicationContext) super.createRootApplicationContext();
+        webAppContext.setClassLoader(applicationContext.getClassLoader());
+        return webAppContext;
     }
 
     @Override
@@ -73,6 +76,7 @@ public class SpringMvcLoader extends AbstractAnnotationConfigDispatcherServletIn
     protected WebApplicationContext createServletApplicationContext() {
         AnnotationConfigWebApplicationContext servletAppContext =
                 (AnnotationConfigWebApplicationContext) super.createServletApplicationContext();
+        servletAppContext.setClassLoader(applicationContext.getClassLoader());
         if( applicationContext != null ){
             servletAppContext.setParent(applicationContext);
             ServicePackageEventForwarder forwarder = applicationContext.getBean(ServicePackageEventForwarder.class);

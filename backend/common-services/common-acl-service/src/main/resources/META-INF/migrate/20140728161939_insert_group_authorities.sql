@@ -8,9 +8,12 @@ SET @reporter_gid = (SELECT id from groups where group_name = 'reporters');
 
 INSERT INTO group_authorities(group_id, authority) VALUES
 (@administrator_gid, 'ROLE_ADMIN'),
-(@guest_gid, 'ROLE_GUEST'),
+(@administrator_gid, 'ROLE_USER'),
 (@monitor_gid, 'ROLE_MONITOR'),
-(@reporter_gid, 'ROLE_REPORTER');
+(@monitor_gid, 'ROLE_USER'),
+(@reporter_gid, 'ROLE_REPORTER'),
+(@reporter_gid, 'ROLE_USER'),
+(@guest_gid, 'ROLE_GUEST');
 
 -- //@UNDO
 -- SQL to undo the change goes here.

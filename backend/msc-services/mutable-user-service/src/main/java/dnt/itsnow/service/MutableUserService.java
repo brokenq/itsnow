@@ -13,7 +13,7 @@ public interface MutableUserService extends UserService {
      *
      * @param user 待创建的用户，其密码为明文，需要进行加密
      */
-    void createUser(User user);
+    User createUser(User user);
 
     /**
      * 更新用户
@@ -25,8 +25,8 @@ public interface MutableUserService extends UserService {
     /**
      * 修改特定用户的密码
      *
-     * @param user        待修改密码的用户
+     * @param username    待修改密码的用户名称
      * @param newPassword 新的密码，明文
      */
-    void changePassword(User user, String newPassword);
+    void changePassword(String username, String newPassword);
 }
