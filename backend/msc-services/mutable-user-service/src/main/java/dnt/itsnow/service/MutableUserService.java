@@ -4,9 +4,24 @@
 package dnt.itsnow.service;
 
 import dnt.itsnow.model.User;
+import dnt.itsnow.platform.service.Page;
+import dnt.itsnow.platform.service.Pageable;
 
-/** 可以进行修改的用户服务 */
+/**
+ * <h1>可以进行修改的用户服务 </h1>
+ * <p/>
+ * 继承了UserService，是为了能够兼容
+ */
 public interface MutableUserService extends UserService {
+
+    /**
+     * <h2>根据关键词查询用户</h2>
+     *
+     * @param keyword  关键词
+     * @param pageable 分页需求
+     * @return 组织在分页容器中的用户数据
+     */
+    Page<User> findAll(String keyword, Pageable pageable);
 
     /**
      * 创建用户

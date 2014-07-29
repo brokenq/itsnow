@@ -118,7 +118,7 @@ public class ServicePackageManager extends ApplicationSupportBean
             publish(new ServicePackageEvent.LoadedEvent(component));
             logger.info("Loaded  service package: {}", component);
         } catch (Exception e) {
-            throw new ServicePackageException("Error while work on " + component, e);
+            logger.error("Can't load service package: " + component + ", ignore it and going on", e);
         }
     }
 

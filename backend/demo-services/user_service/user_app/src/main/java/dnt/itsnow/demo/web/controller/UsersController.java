@@ -28,7 +28,7 @@ public class UsersController extends ApplicationController {
     UserService userService;
 
     /**
-     * <h2>查询用例列表</h2>
+     * <h2>查询用户列表</h2>
      *
      * GET /api/users?keyword=theKeyWord&page=1
      *

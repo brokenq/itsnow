@@ -50,7 +50,7 @@
         <version.jetty>9.1.0.RC2</version.jetty>
         <version.scala>2.8.2</version.scala>
         <version.scalate>1.5.3-scala_2.8.2</version.scalate>
-        <version.mysql>5.1.27</version.mysql>
+        <version.mysql>5.1.31</version.mysql>
         <version.validation-api>1.1.0.Final</version.validation-api>
         <version.hibernate-validator>5.0.1.Final</version.hibernate-validator>
 

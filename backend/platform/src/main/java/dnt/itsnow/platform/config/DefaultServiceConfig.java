@@ -4,6 +4,7 @@
 package dnt.itsnow.platform.config;
 
 import net.happyonroad.spring.service.AbstractServiceConfig;
+import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.transaction.PlatformTransactionManager;
 
@@ -22,6 +23,7 @@ public class DefaultServiceConfig extends AbstractServiceConfig {
         importService(DataSource.class);
         importService(PlatformTransactionManager.class, "*", "transactionManager");
         importService(SqlSessionFactory.class);
+        importService(Configuration.class);
         //Spring MVC相关服务
     }
 }

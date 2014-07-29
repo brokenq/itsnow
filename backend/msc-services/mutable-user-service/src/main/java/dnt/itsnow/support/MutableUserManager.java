@@ -4,6 +4,9 @@
 package dnt.itsnow.support;
 
 import dnt.itsnow.model.User;
+import dnt.itsnow.platform.service.DefaultPage;
+import dnt.itsnow.platform.service.Page;
+import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.repository.MutableUserRepository;
 import dnt.itsnow.service.MutableUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.validation.Validation;
 import javax.validation.ValidatorFactory;
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * Mutable User Management
@@ -28,6 +32,13 @@ public class MutableUserManager extends UserManager
 
     @Autowired
     MutableUserRepository mutableRepository;
+
+    @Override
+    public Page<User> findAll(String keyword, Pageable pageable) {
+        int total = mutableRepository.count();
+        List<User> users = mutableRepository.findUsers(keyword, pageable);
+        return new DefaultPage<User>(users, pageable, total);
+    }
 
     @Override
     public User createUser(User user) {

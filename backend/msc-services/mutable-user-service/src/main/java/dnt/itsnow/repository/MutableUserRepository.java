@@ -4,15 +4,28 @@
 package dnt.itsnow.repository;
 
 import dnt.itsnow.model.User;
+import dnt.itsnow.platform.service.Pageable;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import java.util.List;
+
 /**
- * Mutable User Repository
+ * <h1>Mutable User Repository</h1>
+ * 为了使MutableUserManager的父类UserManager能找到userRepository，
+ * 所以本repository应该继承UserRepository
  */
-public interface MutableUserRepository extends UserRepository
-/*为了使MutableUserManager的父类UserManager能找到userRepository， 所以本repository应该继承UserRepository*/{
+public interface MutableUserRepository extends UserRepository {
+
+    @Select("SELECT count(0) FROM users")
+    int count();
+
+    // 采用 Mybatis XML Mapper
+    List<User> findUsers(@Param("keyword") String keyword,
+                         @Param("pageable") Pageable pageable);
+
     /**
      * Return the created user id
      *
@@ -25,6 +38,7 @@ public interface MutableUserRepository extends UserRepository
 
     /**
      * 只更新用户的用户名，email，电话, enabled, expired
+     *
      * @param user 被更新的用户信息
      */
     @Update("UPDATE users SET " +
@@ -38,7 +52,8 @@ public interface MutableUserRepository extends UserRepository
 
     /**
      * 更新用户的密码
-     * @param username 被更新的用户
+     *
+     * @param username    被更新的用户
      * @param newPassword 密码
      */
     @Update("UPDATE users SET " +
