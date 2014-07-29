@@ -48,7 +48,7 @@ public class UsersController extends ApplicationController{
      * @param user 需要更新的用户对象，通过HTTP BODY POST上来
      * @return 更新之后的用户信息，不包括密码等敏感信息
      */
-    @RequestMapping(value = "#{username}", method = RequestMethod.PUT)
+    @RequestMapping(value = "{username}", method = RequestMethod.PUT)
     public User update( @PathVariable("username") String username,
                         @RequestBody User user){
         logger.info("Updating {}", username);
@@ -74,7 +74,7 @@ public class UsersController extends ApplicationController{
      * @param username 需要更新的用户原始用户名
      * @param newPassword 需要更新的用户密码，通过HTTP BODY POST上来
      */
-    @RequestMapping(value = "#{username}/reset_password", method = RequestMethod.PUT)
+    @RequestMapping(value = "{username}/reset_password", method = RequestMethod.PUT)
     public void resetPassword(@PathVariable("username") String username,
                               @RequestBody String newPassword){
         logger.info("Reset password for {}", username);

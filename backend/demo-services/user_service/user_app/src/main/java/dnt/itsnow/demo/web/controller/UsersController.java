@@ -56,7 +56,7 @@ public class UsersController extends ApplicationController {
      * @param username 用户名称
      * @return 用户信息
      */
-    @RequestMapping("{username}")
+    @RequestMapping("${username}")
     public User find(@PathVariable("username") String username ){
         return userService.find(username);
     }

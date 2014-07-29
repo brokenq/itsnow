@@ -12,6 +12,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.filter.DelegatingFilterProxy;
+import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.servlet.*;
@@ -23,6 +24,7 @@ import java.util.Set;
  *
  * <ul>
  * <li> /*        ->  springSecurityFilterChain
+ * <li> /*        ->  ItsNow.httpMethodFilter
  * <li> /*        ->  ItsNow.Dispatcher
  * <li> /views/*  ->  ItsNow.ScalateView
  * </ul>
@@ -31,6 +33,8 @@ import java.util.Set;
 public class SpringMvcLoader extends AbstractAnnotationConfigDispatcherServletInitializer
         implements ServletContextListener{
     public static final String SERVLET_VIEW_NAME = "ItsNow.ScalateView";
+    public static final String METHOD_FILTER_NAME = "ItsNow.httpMethodFilter";
+
     ApplicationContext applicationContext;
     private AnnotationConfigWebApplicationContext webAppContext;
 
@@ -42,14 +46,13 @@ public class SpringMvcLoader extends AbstractAnnotationConfigDispatcherServletIn
 
         super.onStartup(servletContext);
         registerSecurityFilter(servletContext);
+        registerHttpMethodFilter(servletContext);
         registerScalateFilter(servletContext);
     }
 
     @Override
     protected WebApplicationContext createRootApplicationContext() {
-        webAppContext = (AnnotationConfigWebApplicationContext) super.createRootApplicationContext();
-        webAppContext.setClassLoader(applicationContext.getClassLoader());
-        return webAppContext;
+        return webAppContext = (AnnotationConfigWebApplicationContext) super.createRootApplicationContext();
     }
 
     @Override
@@ -76,7 +79,6 @@ public class SpringMvcLoader extends AbstractAnnotationConfigDispatcherServletIn
     protected WebApplicationContext createServletApplicationContext() {
         AnnotationConfigWebApplicationContext servletAppContext =
                 (AnnotationConfigWebApplicationContext) super.createServletApplicationContext();
-        servletAppContext.setClassLoader(applicationContext.getClassLoader());
         if( applicationContext != null ){
             servletAppContext.setParent(applicationContext);
             ServicePackageEventForwarder forwarder = applicationContext.getBean(ServicePackageEventForwarder.class);
@@ -104,6 +106,11 @@ public class SpringMvcLoader extends AbstractAnnotationConfigDispatcherServletIn
     @Override
     protected String[] getServletMappings() {
         return new String[]{"/"};
+    }
+
+    private void registerHttpMethodFilter(ServletContext servletContext) {
+        FilterRegistration.Dynamic registration = servletContext.addFilter(METHOD_FILTER_NAME, HiddenHttpMethodFilter.class);
+        registration.addMappingForServletNames(getDispatcherTypes(), false, getServletName());
     }
 
     protected void registerScalateFilter(ServletContext servletContext) {

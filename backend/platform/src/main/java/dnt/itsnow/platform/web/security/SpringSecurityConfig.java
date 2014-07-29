@@ -33,7 +33,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
                 /* 配置登出服务 */
                 .and().logout().invalidateHttpSession(true).logoutSuccessUrl("/login.html").logoutUrl("/logout")
                 /* 配置会话服务 */
-                .and().sessionManagement().enableSessionUrlRewriting(true);
+                .and().sessionManagement().enableSessionUrlRewriting(true).sessionFixation().none();
         // 若以后支持手机客户端访问，那个时候可能就需要基于Digest-Authentication
         //noinspection unchecked
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry authenticated =
