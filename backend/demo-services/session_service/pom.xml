@@ -21,6 +21,30 @@
             <groupId>dnt.itsnow.demo</groupId>
             <artifactId>user_api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>dnt.itsnow.demo</groupId>
+            <artifactId>user_app</artifactId>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <App-Config>dnt.itsnow.demo.config.SessionAppConfig</App-Config>
+                            <Service-Config>dnt.itsnow.demo.config.SessionServiceConfig</Service-Config>
+                            <DB-Repository>dnt.itsnow.demo.repository</DB-Repository>
+                            <Web-Repository>dnt.itsnow.demo.web.controller</Web-Repository>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

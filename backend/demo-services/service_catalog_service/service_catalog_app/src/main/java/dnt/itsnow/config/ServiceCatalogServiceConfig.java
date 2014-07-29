@@ -4,7 +4,7 @@
 package dnt.itsnow.config;
 
 import dnt.itsnow.platform.config.DefaultServiceConfig;
-import dnt.itsnow.services.api.ServiceCatalogService;
+import dnt.itsnow.api.ServiceCatalogService;
 
 /**
  * 服务目录模块的服务配置

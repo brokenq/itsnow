@@ -5,20 +5,19 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.User;
 import dnt.itsnow.platform.web.controller.ApplicationController;
-import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.service.MutableUserService;
-import dnt.itsnow.web.model.ChangePasswordRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
-
 /**
- * 对用户的管理
+ * <h1>具备一定权限的管理者对用户的管理</h1>
+ *
+ * 因为站在管理者的角度看来，有许多个用户，所以该控制器取名为复数
+ *
+ * <br/>用户注册等业务功能留待以后进行业务分析之后再实际开发
  */
-@RestController("/admin/api/users")
+@RestController
+@RequestMapping("/admin/api/users")
 public class UsersController extends ApplicationController{
     @Autowired
     MutableUserService userService;
@@ -66,35 +65,22 @@ public class UsersController extends ApplicationController{
         return updated;
     }
 
+
     /**
-     * <h2>某个用户修改自己的密码</h2>
+     * <h2>管理员更新一个用户的密码</h2>
      *
-     * PUT /change_password
+     * PUT /admin/api/users/#{username}/reset_password
      *
-     * @param changeRequest  修改密码的请求作为http body提交
+     * @param username 需要更新的用户原始用户名
+     * @param newPassword 需要更新的用户密码，通过HTTP BODY POST上来
      */
-    @RequestMapping(value = "/change_password", method =  RequestMethod.PUT)
-    public void changePassword(HttpServletRequest request,
-                               @RequestBody ChangePasswordRequest changeRequest){
-        Principal principal = request.getUserPrincipal(); // 等价方法： request.getRemoteUser()
-        String username = principal.getName();
-        logger.info("Changing password for {}", username);
+    @RequestMapping(value = "#{username}/reset_password", method = RequestMethod.PUT)
+    public void resetPassword(@PathVariable("username") String username,
+                              @RequestBody String newPassword){
+        logger.info("Reset password for {}", username);
+        userService.changePassword(username, newPassword);
+        logger.info("Reset password for {} (done!)", username);
 
-/*
-        if(StringUtils.isBlank(newPassword))
-            throw new WebClientSideException(HttpStatus.BAD_REQUEST, "The new password can't be null");
-        if(!StringUtils.equals(newPassword, repeat))
-            throw new WebClientSideException(HttpStatus.BAD_REQUEST, "The new password is not consistent");
-*/
-        //与上述代码基本等价，只是异常不一样，实现机制不太一样
-        validatorFactory.getValidator().validate(changeRequest);
-        // 这些逻辑原本应该放在 User 模型上，或者change password模型上
-        // 这一段应该是服务的功能
-        if(!userService.challenge(username, changeRequest.getOldPassword()))
-            throw new WebClientSideException(HttpStatus.BAD_REQUEST, "The old password is not valid!");
-
-        userService.changePassword(username, changeRequest.getNewPassword());
-        logger.info("Changed  password for {}", username);
     }
 
     private void cleanSensitive(User user) {
