@@ -44,7 +44,7 @@ public class UsersController extends ApplicationController {
     @RequestMapping
     public List<User> all(
             HttpServletResponse response,
-            @RequestParam(required = false, value="keyword") String keyword,
+            @RequestParam(required = false, value="keyword", defaultValue = "") String keyword,
             @RequestParam(required = false, value="page", defaultValue = "0") int page,
             @RequestParam(required = false, value="size", defaultValue = "40") int size) {
         Pageable pageable = new PageRequest(page, size);

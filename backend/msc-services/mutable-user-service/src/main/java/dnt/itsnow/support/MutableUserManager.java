@@ -35,7 +35,7 @@ public class MutableUserManager extends UserManager
 
     @Override
     public Page<User> findAll(String keyword, Pageable pageable) {
-        int total = mutableRepository.count();
+        int total = mutableRepository.count(keyword);
         List<User> users = mutableRepository.findUsers(keyword, pageable);
         return new DefaultPage<User>(users, pageable, total);
     }

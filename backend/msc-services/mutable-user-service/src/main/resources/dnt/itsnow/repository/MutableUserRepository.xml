@@ -3,12 +3,23 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="dnt.itsnow.repository.MutableUserRepository">
+    <select id="count" resultType="int">
+        <bind name="pattern" value="'%' + keyword + '%' "/>
+        SELECT count(0) FROM users
+        <where>
+            <if test="keyword != ''">
+                (username LIKE #{pattern})
+                OR (email LIKE #{pattern})
+                OR (phone LIKE #{pattern})
+            </if>
+        </where>
+    </select>
 
     <select id="findUsers" resultType="User">
         <bind name="pattern" value="'%' + keyword + '%' "/>
         SELECT * FROM users
         <where>
-            <if test="keyword != null">
+            <if test="keyword != ''">
                    (username LIKE #{pattern})
                 OR (email LIKE #{pattern})
                 OR (phone LIKE #{pattern})
@@ -17,9 +28,9 @@
         <if test="pageable.sort != null">
             ORDER BY #{pageable.sort}
         </if>
-        <trim prefix="LIMIT" prefixOverrides=", ">
+        <trim prefix="LIMIT" prefixOverrides=",">
             <if test="pageable.offset > 0">#{pageable.offset}</if>
-            <if test="pageable.pageSize > 0">#{pageable.pageSize}</if>
+            <if test="pageable.pageSize > 0">, #{pageable.pageSize}</if>
         </trim>
 
     </select>

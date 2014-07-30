@@ -21,6 +21,7 @@
         <rmi.port>1083</rmi.port>
         <http.port>8070</http.port>
         <app.db>itsnow_${app.id}</app.db>
+        <app.name>Itsnow-${app.id}</app.name>
     </properties>
 
     <dependencies>
@@ -50,7 +51,7 @@
                         <goals><goal>package</goal></goals>
                         <configuration>
                             <output>${release.dir}</output>
-                            <appName>ItsNow</appName>
+                            <appName>${app.name}</appName>
                             <appPort>${rmi.port}</appPort>
                             <jmx>${jmx.port}</jmx>
                             <debug>${debug.port}</debug>
