@@ -9,7 +9,8 @@ var menuCtrl = menuApp.controller('menuCtrl', function ($scope) {
 
     $scope.menuList = [
         {id: '001', title: '用户', url: 'index.user', subMenu: ''},
-        {id: '002', title: '任务单', url: 'task'},
+        {id: '002', title: 'SLA', url: 'index.sla'},
+        {id: '002', title: '合同', url: 'index.contract'},
         {id: '003', title: 'UI Elements', url: 'ui-elements', subMenu: [
             {id: '003001', title: 'Elements', url: 'ui-elements.elements'},
             {id: '003002', title: 'treeview', url: 'ui-elements.treeview'}

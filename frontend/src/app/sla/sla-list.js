@@ -1,10 +1,9 @@
 /**
  * Created by User on 2014/7/21.
  */
-var userApp = angular.module('userApp', ['ngGrid','ngResource']);
+var slaApp = angular.module('slaApp', ['ngGrid','ngResource']);
 
-var UserListCtrl = ['$scope', '$http', 'UserService', function ($scope, $http, UserService) {
-    $scope.mySelections = [];
+var SlaListCtrl = ['$scope', '$http', 'SlaService', function ($scope, $http, SlaService) {
     $scope.filterOptions = {
         filterText: "",
         useExternalFilter: true
@@ -15,17 +14,9 @@ var UserListCtrl = ['$scope', '$http', 'UserService', function ($scope, $http, U
         pageSize: 10,
         currentPage: 1
     };
-
-    // 编辑按钮
-    $scope.editableInPopup = '<button id="editBtn" type="button" ng-click="edit(row)" >Edit</button> ';
-
-    $scope.edit = function edit(row){
-        console.log("Here I need to know which button was selected " + row.entity.name)
-    }
-
     $scope.setPagingData = function (data, page, pageSize) {
         var pagedData = data.slice((page - 1) * pageSize, page * pageSize);
-        $scope.users = pagedData;
+        $scope.datas = pagedData;
         $scope.totalServerItems = data.length;
         if (!$scope.$$phase) {
             $scope.$apply();
@@ -33,19 +24,27 @@ var UserListCtrl = ['$scope', '$http', 'UserService', function ($scope, $http, U
     };
     $scope.getPagedDataAsync = function (pageSize, page, searchText) {
         setTimeout(function () {
-            var data;
+            var data = [
+                {id: '001', name: '协议1', resolutionTime: '201407211258', responseTime: '201407211258'},
+                {id: '002', name: '协议2',  resolutionTime: '201407211258', responseTime: '201407211258'},
+                {id: '003', name: '协议3',  resolutionTime: '201407211258', responseTime: '201407211258'},
+                {id: '004', name: '协议4',  resolutionTime: '201407211258', responseTime: '201407211258'},
+                {id: '005', name: '协议5',  resolutionTime: '201407211258', responseTime: '201407211258'}
+            ];
             if (searchText) {
-                var ft = searchText.toLowerCase();
-                UserService.list(function(largeLoad){
-                    data = largeLoad.filter(function (item) {
-                        return JSON.stringify(item).toLowerCase().indexOf(ft) != -1;
-                    });
+//                var ft = searchText.toLowerCase();
+//                SlaService.list(function(largeLoad){
+//                    data = largeLoad.filter(function (item) {
+//                        return JSON.stringify(item).toLowerCase().indexOf(ft) != -1;
+//                    });
+//                    $scope.setPagingData(data, page, pageSize);
+//                });
                     $scope.setPagingData(data, page, pageSize);
-                });
             } else {
-                UserService.list(function(largeLoad){
-                    $scope.setPagingData(largeLoad, page, pageSize);
-                });
+//                SlaService.list(function(largeLoad){
+//                    $scope.setPagingData(largeLoad, page, pageSize);
+//                });
+                    $scope.setPagingData(data, page, pageSize);
             }
         }, 100);
     };
@@ -63,31 +62,27 @@ var UserListCtrl = ['$scope', '$http', 'UserService', function ($scope, $http, U
         }
     }, true);
 
-    // 用户列表
-    $scope.gridUserList = {
-        data: 'users',
+    $scope.gridSlaList = {
+        data: 'datas',
         enablePaging: true,
         showFooter: true,
         totalServerItems: 'totalServerItems',
         pagingOptions: $scope.pagingOptions,
         filterOptions: $scope.filterOptions,
         multiSelect: false,
-        selectedItems: $scope.mySelections,
         columnDefs: [
             {field: 'id', displayName: 'ID'},
-            {field: 'name', displayName: 'Name'},
-            {field: 'nickName', displayName: 'NickName'},
-            {displayName:'操作',cellTemplate:$scope.editableInPopup}
+            {field: 'name', displayName: '协议名称'},
+            {field: 'resolutionTime', displayName: '解决时间'}
         ]
     };
-
 }];
 
-userApp.controller('UserListCtrl', UserListCtrl);
+slaApp.controller('SlaListCtrl', SlaListCtrl);
 
 // 封装$http
-userApp.factory('UserService', ['$resource', function ($resource) {
-    return $resource('/api/users', null, {
+slaApp.factory('SlaService', ['$resource', function ($resource) {
+    return $resource('/api/sla', null, {
         list: {
             method: 'GET',
             isArray: true
