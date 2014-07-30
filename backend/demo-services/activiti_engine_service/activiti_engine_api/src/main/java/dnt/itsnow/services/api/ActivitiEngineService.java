@@ -52,7 +52,7 @@ public interface ActivitiEngineService {
 
     Task claimTask(String taskId,String userId);
 
-    void completeTask(String id,Map<String, Object> taskVariables,String assignee);
+    void completeTask(String id,Map<String, String> taskVariables,String assignee);
 
     List<Map<String, Object>> traceProcess(String processInstanceId) throws Exception;
 

@@ -16,10 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * The user controller
@@ -252,15 +249,16 @@ public class ActivitiEngineController extends ApplicationController {
     public Object completeTasksByUser(@PathVariable("id") String taskId,@RequestParam("userName") String userName,HttpServletRequest request){
         List<Map<String, Object>> resultLs = new ArrayList<Map<String, Object>>();
         if(StringUtils.isNotEmpty(userName)){
-            Map<String, Object> taskVariables = new HashMap<String, Object>();
-            /*String value = request.getParameter("approve");
-            if(value!=null && value.equals("true"))
-                taskVariables.put("vacationApproved", "true");
-            else
-                taskVariables.put("vacationApproved","false");
-            taskVariables.put("managerMotivation", "We have a tight deadline!");
-            */
-            taskVariables.putAll(request.getParameterMap());
+            Map<String, String> taskVariables = new HashMap<String, String>();
+            Map<String, String[]> parameterMap = request.getParameterMap();
+            Set<Map.Entry<String, String[]>> entrySet = parameterMap.entrySet();
+            for (Map.Entry<String, String[]> entry : entrySet) {
+                //String key = entry.getKey();
+                taskVariables.put(entry.getKey(),entry.getValue()[0]);
+                //ormProperties.put(key.split("_")[1], entry.getValue()[0]);
+
+            }
+            //taskVariables.putAll(request.getParameterMap());
 
             activitiEngineService.completeTask(taskId,taskVariables,userName);
         }

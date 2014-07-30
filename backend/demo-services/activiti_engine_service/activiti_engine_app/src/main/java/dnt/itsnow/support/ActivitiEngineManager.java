@@ -168,9 +168,15 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
         return task;
     }
 
-    public void completeTask(String id,Map<String, Object> taskVariables,String userId){
+    public void completeTask(String id,Map<String, String> taskVariables,String userId){
+        try {
+            processEngine.getIdentityService().setAuthenticatedUserId(userId);
+            processEngine.getFormService().submitTaskFormData(id, taskVariables);
+        } finally {
+            processEngine.getIdentityService().setAuthenticatedUserId(null);
+        }
         //processEngine.getTaskService().setAssignee(id,userId);
-        processEngine.getTaskService().complete(id,taskVariables);
+        //processEngine.getTaskService().complete(id,taskVariables);
         //processEngine.getFormService().submitTaskFormData(id,taskVariables);
     }
 
