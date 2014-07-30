@@ -5,14 +5,13 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.User;
 import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.service.PageRequest;
-import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.platform.web.controller.ApplicationController;
 import dnt.itsnow.service.MutableUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -20,7 +19,8 @@ import java.util.List;
  * <p/>
  * 因为站在管理者的角度看来，有许多个用户，所以该控制器取名为复数
  * <p/>
- * <br/>用户注册等业务功能留待以后进行业务分析之后再实际开发
+ * <p>用户注册等业务功能留待以后进行业务分析之后再实际开发</p>
+ * <p>虽然mutable-xx-services仅仅会部署在msc实体中，但为了统一的权限规划，其相应的SPI均以admin开头</p>
  */
 @RestController
 @RequestMapping("/admin/api/users")
@@ -34,21 +34,13 @@ public class UsersController extends ApplicationController {
      * GET /admin/api/users?keyword=theKeyWord&page=1
      *
      * @param keyword 用户特征词，可能没有
-     * @param page    第几页
-     * @param size    分页参数
-     *                即便这个值被放到用户profile,或者session里面
-     *                那也是前端程序读取到这个值，而后传递过来，而不是这里去读取
      * @return 查询结果
      * 提供给前端的分页信息放在response头中
      */
     @RequestMapping
-    public List<User> all(
-            HttpServletResponse response,
-            @RequestParam(required = false, value="keyword", defaultValue = "") String keyword,
-            @RequestParam(required = false, value="page", defaultValue = "0") int page,
-            @RequestParam(required = false, value="size", defaultValue = "40") int size) {
-        Pageable pageable = new PageRequest(page, size);
-        Page<User> thePage = userService.findAll(keyword, pageable);
+    public List<User> index( HttpServletResponse response,
+                             @RequestParam(required = false, value="keyword", defaultValue = "") String keyword ) {
+        Page<User> thePage = userService.findAll(keyword, pageRequest);
         //把分页的整体信息放在http头中
         renderHeader(response, thePage);
         //把数据放在http的body中
@@ -65,9 +57,9 @@ public class UsersController extends ApplicationController {
      * @return 创建之后的用户信息，不包括密码等敏感信息
      */
     @RequestMapping(method = RequestMethod.POST)
-    public User create(User user) {
+    public User create(@Valid User user) {
         logger.info("Creating {}", user.getUsername());
-        User created = userService.createUser(user);
+        User created = userService.create(user);
         cleanSensitive(created);
         logger.info("Created  {} with id {}", created.getUsername(), created.getId());
         return created;
@@ -84,12 +76,12 @@ public class UsersController extends ApplicationController {
      */
     @RequestMapping(value = "{username}", method = RequestMethod.PUT)
     public User update(@PathVariable("username") String username,
-                       @RequestBody User user) {
+                       @RequestBody @Valid  User user) {
         logger.info("Updating {}", username);
-        User exist = userService.findUser(username);
+        User exist = userService.findByUsername(username);
         exist.apply(user);
-        userService.updateUser(exist);
-        User updated = userService.findUser(exist.getUsername());
+        userService.update(exist);
+        User updated = userService.findByUsername(exist.getUsername());
         cleanSensitive(updated);
         if (updated.getUsername().equalsIgnoreCase(username)) {
             logger.info("Updated  {}", username);

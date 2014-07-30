@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dnt.itsnow.repository.MutableAccountRepository">
+    <select id="countByType" resultType="long">
+        SELECT count(0) FROM itsnow_msc.accounts
+        <where>
+#             不要用 type != '*' 这种， mybatis 会根据 '*' 认为 type 为 long类型，而后无法解析
+            <if test="type != null">
+                type = #{type}
+            </if>
+        </where>
+    </select>
+
+    <select id="findAllByType" resultMap="accountResult">
+        SELECT * FROM itsnow_msc.accounts
+        <where>
+            <if test="type != null">
+                (type = #{type})
+            </if>
+        </where>
+        <if test="pageable.sort != null">
+            ORDER BY #{pageable.sort}
+        </if>
+        <trim prefix="LIMIT" prefixOverrides=",">
+            <if test="pageable.offset > 0">#{pageable.offset}</if>
+            <if test="pageable.pageSize > 0">, #{pageable.pageSize}</if>
+        </trim>
+
+    </select>
+
+    <resultMap id="accountResult" type="Account" autoMapping="true">
+        <discriminator column="type" javaType="string">
+            <case value="msc" resultType="MscAccount"/>
+            <case value="msu" resultType="MsuAccount"/>
+            <case value="msp" resultType="MspAccount"/>
+        </discriminator>
+    </resultMap>
+</mapper>

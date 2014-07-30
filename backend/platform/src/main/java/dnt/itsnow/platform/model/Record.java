@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 
 /**
  * <h1>一般的业务对象</h1>
- *
+ * <p/>
  * 在数据库中以主表的形式出现（而不是关联表）
  */
 public class Record {
@@ -40,5 +40,14 @@ public class Record {
 
     public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    /**
+     * 将另外一个对象的属性设置到本对象上来
+     *
+     * @param another 另外一个对象
+     */
+    public void apply(Record another) {
+        // do nothing
     }
 }

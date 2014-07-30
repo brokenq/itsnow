@@ -3,9 +3,11 @@
  */
 package dnt.itsnow.support;
 
+import dnt.itsnow.model.Account;
 import dnt.itsnow.model.User;
 import dnt.itsnow.repository.UserRepository;
 import dnt.itsnow.service.UserService;
+import dnt.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,14 +18,14 @@ import org.springframework.stereotype.Service;
  * Basic User Service
  */
 @Service
-public class UserManager implements UserService {
+public class UserManager extends Bean implements UserService {
     @Autowired
     UserRepository repository;
 
     PasswordEncoder passwordEncoder = new StandardPasswordEncoder();
 
     @Override
-    public User findUser(String username) {
+    public User findByUsername(String username) {
         return repository.findByUsername(username);
     }
 
@@ -40,6 +42,12 @@ public class UserManager implements UserService {
         User user = repository.findByUsername(username);
         if (user == null) throw new UsernameNotFoundException("Can't find user " + username);
         return passwordEncoder.matches(password, user.getPassword());
+    }
+
+    @Override
+    public Account findMainAccount(User user) {
+        //TODO FIND MAIN ACCOUNT FOR THE USER
+        return null;
     }
 
     /**

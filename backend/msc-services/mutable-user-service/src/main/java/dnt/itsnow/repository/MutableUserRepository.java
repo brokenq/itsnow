@@ -18,11 +18,12 @@ import java.util.List;
  */
 public interface MutableUserRepository extends UserRepository {
 
-    int count(@Param("keyword") String keyword);
+    // 采用 Mybatis XML Mapper
+    long countByKeyword(@Param("keyword") String keyword);
 
     // 采用 Mybatis XML Mapper
-    List<User> findUsers(@Param("keyword") String keyword,
-                         @Param("pageable") Pageable pageable);
+    List<User> findAllByKeyword(@Param("keyword") String keyword,
+                                @Param("pageable") Pageable pageable);
 
     /**
      * Return the created user id

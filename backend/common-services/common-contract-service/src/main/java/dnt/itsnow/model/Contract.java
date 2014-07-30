@@ -41,4 +41,12 @@ public class Contract extends Record {
     public void setDetails(List<ContractDetail> details) {
         this.details = details;
     }
+
+    public ContractDetail getDetail(Long id) {
+        if(details == null ) return null;
+        for (ContractDetail detail : details) {
+            if(detail.getId().equals(id)) return detail;
+        }
+        return null;
+    }
 }

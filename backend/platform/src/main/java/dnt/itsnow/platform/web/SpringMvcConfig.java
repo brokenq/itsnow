@@ -3,6 +3,8 @@
  */
 package dnt.itsnow.platform.web;
 
+import dnt.itsnow.platform.web.interceptor.AfterFilterInterceptor;
+import dnt.itsnow.platform.web.interceptor.BeforeFilterInterceptor;
 import dnt.itsnow.platform.web.support.ExtendedRequestMappingHandlerMapping;
 import org.fusesource.scalate.spring.view.ScalateViewResolver;
 import org.springframework.context.annotation.Bean;
@@ -10,10 +12,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
-import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 /**
@@ -65,6 +65,13 @@ public class SpringMvcConfig extends WebMvcConfigurationSupport {
    		return handlerMapping;
    	}
 
+    @Override
+    protected void addInterceptors(InterceptorRegistry registry) {
+        super.addInterceptors(registry);
+        RequestMappingHandlerAdapter adapter = requestMappingHandlerAdapter();
+        registry.addInterceptor(new BeforeFilterInterceptor(adapter));
+        registry.addInterceptor(new AfterFilterInterceptor(adapter));
+    }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

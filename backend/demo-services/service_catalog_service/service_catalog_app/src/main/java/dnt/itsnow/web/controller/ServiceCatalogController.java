@@ -3,12 +3,10 @@
  */
 package dnt.itsnow.web.controller;
 
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.service.PageRequest;
-import dnt.itsnow.platform.service.Pageable;
-import dnt.itsnow.platform.web.controller.ApplicationController;
 import dnt.itsnow.api.ServiceCatalogService;
 import dnt.itsnow.model.ServiceCatalog;
+import dnt.itsnow.platform.service.Page;
+import dnt.itsnow.platform.web.controller.ApplicationController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,18 +29,11 @@ public class ServiceCatalogController extends ApplicationController {
      * GET /api/servicecatalog?keyword=theKeyWord&page=1
      *
      * @param keyword 服务目录特征词，可能没有
-     * @param page 第几页
-     * @param size 分页参数
-     *             即便这个值被放到用户profile,或者session里面
-     *             那也是前端程序读取到这个值，而后传递过来，而不是这里去读取
      * @return 查询结果
      */
     @RequestMapping(method = RequestMethod.GET)
-    public List<ServiceCatalog> all(@RequestParam(required = false, defaultValue = "") String keyword,
-                          @RequestParam(required = false, defaultValue = "0") int page,
-                          @RequestParam(required = false, defaultValue = "40") int size) {
-        Pageable pageable = new PageRequest(page, size);
-        Page<ServiceCatalog> thePage = scService.findAll(keyword, pageable);
+    public List<ServiceCatalog> all(@RequestParam(required = false, defaultValue = "") String keyword) {
+        Page<ServiceCatalog> thePage = scService.findAll(keyword, pageRequest);
         return thePage.getContent();
     }
 
@@ -66,7 +57,7 @@ public class ServiceCatalogController extends ApplicationController {
      */
     @RequestMapping( method = RequestMethod.POST)
     @ResponseBody
-    public Object save(@RequestBody ServiceCatalog sc,HttpServletRequest request)throws Exception {
+    public Object save(@RequestBody ServiceCatalog sc)throws Exception {
         scService.save(sc);
         return sc;
     }
@@ -74,13 +65,12 @@ public class ServiceCatalogController extends ApplicationController {
     /**
      * PUT /api/servicecatalog/
      * @param sc 服务目录
-     * @param request
      * @return 服务目录
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.PUT)
     @ResponseBody
-    public Object update(@RequestBody ServiceCatalog sc,HttpServletRequest request)throws Exception{
+    public Object update(@RequestBody ServiceCatalog sc)throws Exception{
         scService.update(sc);
         return sc;
     }

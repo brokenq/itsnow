@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.security.Principal;
 
 /**
@@ -36,7 +37,7 @@ public class PasswordController extends ApplicationController {
      */
     @RequestMapping(value = "forget", method = RequestMethod.POST)
     public void forgetPassword(HttpServletRequest request,
-                               @RequestBody ChangePasswordRequest forgetRequest){
+                               @RequestBody @Valid ChangePasswordRequest forgetRequest){
 
     }
 
@@ -49,7 +50,7 @@ public class PasswordController extends ApplicationController {
      */
     @RequestMapping(value = "change", method = RequestMethod.PUT)
     public void changePassword(HttpServletRequest request,
-                               @RequestBody ChangePasswordRequest changeRequest) {
+                               @RequestBody @Valid ChangePasswordRequest changeRequest) {
         Principal principal = request.getUserPrincipal(); // 等价方法： request.getRemoteUser()
         String username = principal.getName();
         logger.info("Changing password for {}", username);
@@ -61,7 +62,7 @@ public class PasswordController extends ApplicationController {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, "The new password is not consistent");
 */
         //与上述代码基本等价，只是异常不一样，实现机制不太一样
-        validatorFactory.getValidator().validate(changeRequest);
+        //validatorFactory.getValidator().validate(changeRequest);
         // 这些逻辑原本应该放在 User 模型上，或者change password模型上
         // 这一段应该是服务的功能
         if(!userService.challenge(username, changeRequest.getOldPassword()))

@@ -3,6 +3,7 @@
  */
 package dnt.itsnow.support;
 
+import dnt.itsnow.model.Account;
 import dnt.itsnow.model.User;
 import dnt.itsnow.repository.GroupRepository;
 import dnt.itsnow.service.UserService;
@@ -14,6 +15,12 @@ import org.springframework.stereotype.Service;
 
 /**
  * <h1>根据UserRepository加载用户的UserDetailsService</h1>
+ * 有两种方式实现这个 grouped 扩展
+ * <ul>
+ * <li>一种是继承</li>
+ * <li>一种是委托</li>
+ * </ul>
+ * 当前采用了委托的方式
  */
 @Service("groupedUserService")
 public class GroupedUserDetailsService implements UserService, UserDetailsService {
@@ -24,8 +31,8 @@ public class GroupedUserDetailsService implements UserService, UserDetailsServic
     GroupRepository groupRepository;
 
     @Override
-    public User findUser(String username) {
-        return userService.findUser(username);
+    public User findByUsername(String username) {
+        return userService.findByUsername(username);
     }
 
     @Override
@@ -38,5 +45,10 @@ public class GroupedUserDetailsService implements UserService, UserDetailsServic
         User user = userService.loadUserByUsername(username);
         user.addAuthorities(groupRepository.findUserAuthorities(username));
         return user;
+    }
+
+    @Override
+    public Account findMainAccount(User user) {
+        return userService.findMainAccount(user);
     }
 }

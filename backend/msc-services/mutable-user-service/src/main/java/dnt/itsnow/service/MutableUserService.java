@@ -28,14 +28,14 @@ public interface MutableUserService extends UserService {
      *
      * @param user 待创建的用户，其密码为明文，需要进行加密
      */
-    User createUser(User user);
+    User create(User user);
 
     /**
      * 更新用户
      *
      * @param user 待更新的用户，忽略其密码，密码的修改应该走另外的接口
      */
-    void updateUser(User user);
+    void update(User user);
 
     /**
      * 修改特定用户的密码

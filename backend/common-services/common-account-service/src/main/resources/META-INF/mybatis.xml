@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <typeAliases>
+        <typeAlias type="dnt.itsnow.model.Account" alias="Account"/>
+        <typeAlias type="dnt.itsnow.model.MscAccount" alias="MscAccount"/>
+        <typeAlias type="dnt.itsnow.model.MsuAccount" alias="MsuAccount"/>
+        <typeAlias type="dnt.itsnow.model.MspAccount" alias="MspAccount"/>
+    </typeAliases>
+</configuration>

@@ -12,8 +12,6 @@ import dnt.itsnow.service.MutableUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Validation;
-import javax.validation.ValidatorFactory;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -28,32 +26,32 @@ public class MutableUserManager extends UserManager
            但继承时依然会抛出 IllegalAccessException，
            这是底层component-framework的class loading机制需要解决的一个典型问题*/
         implements MutableUserService{
-    private ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
 
     @Autowired
     MutableUserRepository mutableRepository;
 
     @Override
     public Page<User> findAll(String keyword, Pageable pageable) {
-        int total = mutableRepository.count(keyword);
-        List<User> users = mutableRepository.findUsers(keyword, pageable);
+        long total = mutableRepository.countByKeyword(keyword);
+        List<User> users = mutableRepository.findAllByKeyword(keyword, pageable);
         return new DefaultPage<User>(users, pageable, total);
     }
 
     @Override
-    public User createUser(User user) {
-        validatorFactory.getValidator().validate(user);
+    public User create(User user) {
+        logger.info("Creating {}", user);
         user.setPassword(encode(user.getPassword()));
         user.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         user.setUpdatedAt(user.getCreatedAt());
         long id = mutableRepository.create(user);
         user.setId(id);
+        logger.info("Created  {}", user);
         return user;
     }
 
     @Override
-    public void updateUser(User user) {
-        validatorFactory.getValidator().validate(user);
+    public void update(User user) {
+        logger.info("Updating {}", user);
         mutableRepository.update(user);
     }
 

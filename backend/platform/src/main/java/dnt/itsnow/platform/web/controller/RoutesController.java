@@ -31,12 +31,15 @@ public class RoutesController extends ApplicationController{
      * GET /routes
      *
      * @param method  请求方法
-     * @param pattern  url特征
+     * @param pattern url特征
+     * @param detail  是否显示映射的方法，默认不显示
      * @return 请求路由表 格式化好的字符串
      */
     @RequestMapping
     public String list(@RequestParam(value = "method", required = false, defaultValue = "") String method,
-                       @RequestParam(value = "pattern", required = false, defaultValue = "") String pattern) {
+                       @RequestParam(value = "pattern", required = false, defaultValue = "") String pattern,
+                       @RequestParam(value = "detail", required = false, defaultValue = "false") boolean detail
+                       ) {
         Map<RequestMappingInfo, HandlerMethod> methods = mappings.getHandlerMethods();
         List<RouteItem> routeItems = new ArrayList<RouteItem>(methods.size());
         for( RequestMappingInfo mapping : methods.keySet()){
@@ -53,7 +56,9 @@ public class RoutesController extends ApplicationController{
                 RequestParam requestParam = parameter.getParameterAnnotation(RequestParam.class);
                 if(requestParam != null) requestParams.put(requestParam, parameter.getParameterType().getSimpleName());
             }
-            routeItems.add(new RouteItem(httpMethods, url, handler.toString(), requestParams));
+            RouteItem item = new RouteItem(httpMethods, url, handler.toString(), requestParams);
+            item.showDetail(detail);
+            routeItems.add(item);
         }
         Collections.sort(routeItems);
         return StringUtils.join(routeItems, "\r\n");
