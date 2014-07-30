@@ -10,7 +10,7 @@ import dnt.itsnow.platform.support.JettyServer;
 import dnt.spring.DefaultAppConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.ImportResource;
+
 
 /**
  * 平台启动配置
@@ -33,7 +33,6 @@ import org.springframework.context.annotation.ImportResource;
  */
 @org.springframework.context.annotation.Configuration
 @Import({DefaultAppConfig.class, DatabaseConfig.class})
-@ImportResource( "classpath:META-INF/activiti.xml")
 public class PlatformConfiguration {
 
     // 用于启动WEB应用

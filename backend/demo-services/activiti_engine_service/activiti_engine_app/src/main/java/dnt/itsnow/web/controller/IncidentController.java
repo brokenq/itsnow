@@ -2,7 +2,7 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.Incident;
 import dnt.itsnow.platform.web.controller.ApplicationController;
-import dnt.itsnow.services.api.ActivitiEngineService;
+import dnt.itsnow.api.ActivitiEngineService;
 import dnt.itsnow.support.IncidentManager;
 import dnt.util.StringUtils;
 import org.activiti.engine.runtime.ProcessInstance;

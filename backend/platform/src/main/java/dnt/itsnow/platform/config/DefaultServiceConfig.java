@@ -4,8 +4,9 @@
 package dnt.itsnow.platform.config;
 
 import net.happyonroad.spring.service.AbstractServiceConfig;
-import org.activiti.spring.ProcessEngineFactoryBean;
+import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 
@@ -20,9 +21,9 @@ public class DefaultServiceConfig extends AbstractServiceConfig {
     public void defineServices() {
         //数据库相关服务
         importService(DataSource.class);
+        importService(PlatformTransactionManager.class, "*", "transactionManager");
         importService(SqlSessionFactory.class);
+        importService(Configuration.class);
         //Spring MVC相关服务
-        //工作流相关服务
-        importService(ProcessEngineFactoryBean.class);
     }
 }

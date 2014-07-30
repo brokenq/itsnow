@@ -4,7 +4,7 @@
 package dnt.itsnow.platform.web.security;
 
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.core.userdetails.UserDetailsService;
+//import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 /**
@@ -17,5 +17,5 @@ public interface DelegateSecurityConfigurer {
 
     DelegateSecurityConfigurer delegate(PersistentTokenRepository delegate);
 
-    DelegateSecurityConfigurer delegate(UserDetailsService delegate);
+//    DelegateSecurityConfigurer delegate(UserDetailsService delegate);
 }

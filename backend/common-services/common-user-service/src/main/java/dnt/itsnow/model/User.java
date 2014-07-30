@@ -4,6 +4,9 @@
 package dnt.itsnow.model;
 
 import dnt.itsnow.platform.model.Record;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.SpringSecurityCoreVersion;
@@ -19,13 +22,20 @@ import java.util.*;
 public class User extends Record implements UserDetails, CredentialsContainer {
 
     //~ Instance fields ================================================================================================
-    private String username, email, phone;
+    @NotBlank
+    @Length(min = 4, max = 20)
+    private String username;
+    @Email
+    @NotBlank
+    private String email;
+    @NotBlank
+    private String phone;
     private String password;
     private Set<GrantedAuthority> authorities;
-    private boolean accountNonExpired; //
-    private boolean accountNonLocked;  // 由多次尝试登录导致的临时锁定，该信息并不存储在user上
-    private boolean credentialsNonExpired;// 由密码策略设置的密码是否过期，该信息也不存储在user上
-    private boolean enabled;// 由一般注册流程或者管理员设置，该信息存储在user上
+    private boolean enabled = true;   // 由一般注册流程或者管理员设置，该信息存储在user上
+    private boolean expired = false;  //帐号过期
+    private boolean locked =  false;  // 由多次尝试登录导致的临时锁定，该信息并不存储在user上
+    private boolean passwordExpired = false;// 由密码策略设置的密码是否过期，该信息也不存储在user上
 
     //~ Constructors ===================================================================================================
 
@@ -51,15 +61,15 @@ public class User extends Record implements UserDetails, CredentialsContainer {
     }
 
     public boolean isAccountNonExpired() {
-        return accountNonExpired;
+        return !expired;
     }
 
     public boolean isAccountNonLocked() {
-        return accountNonLocked;
+        return !locked;
     }
 
     public boolean isCredentialsNonExpired() {
-        return credentialsNonExpired;
+        return !passwordExpired;
     }
 
     public void eraseCredentials() {
@@ -90,6 +100,30 @@ public class User extends Record implements UserDetails, CredentialsContainer {
         this.password = password;
     }
 
+    public boolean isExpired() {
+        return expired;
+    }
+
+    public void setExpired(boolean expired) {
+        this.expired = expired;
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+
+    public boolean isPasswordExpired() {
+        return passwordExpired;
+    }
+
+    public void setPasswordExpired(boolean passwordExpired) {
+        this.passwordExpired = passwordExpired;
+    }
+
     public void setAuthorities(Set<? extends GrantedAuthority> authorities) {
         Assert.notNull(authorities);
         this.authorities = sortAuthorities(authorities);
@@ -99,18 +133,6 @@ public class User extends Record implements UserDetails, CredentialsContainer {
         Assert.notNull(authorities);
         this.authorities.addAll(authorities);
         this.authorities = sortAuthorities(this.authorities);
-    }
-
-    public void setAccountNonExpired(boolean accountNonExpired) {
-        this.accountNonExpired = accountNonExpired;
-    }
-
-    public void setAccountNonLocked(boolean accountNonLocked) {
-        this.accountNonLocked = accountNonLocked;
-    }
-
-    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
-        this.credentialsNonExpired = credentialsNonExpired;
     }
 
     public void setEnabled(boolean enabled) {
@@ -128,6 +150,16 @@ public class User extends Record implements UserDetails, CredentialsContainer {
         }
 
         return sortedAuthorities;
+    }
+
+    public void apply(User another) {
+        this.username = another.username;
+        this.email = another.email;
+        this.phone = another.phone;
+        this.enabled = another.enabled;
+        this.expired = another.expired;
+        this.locked = another.locked;
+        this.passwordExpired = another.passwordExpired;
     }
 
     private static class AuthorityComparator implements Comparator<GrantedAuthority>, Serializable {
@@ -178,9 +210,9 @@ public class User extends Record implements UserDetails, CredentialsContainer {
         sb.append("Username: ").append(this.username).append("; ");
         sb.append("Password: [PROTECTED]; ");
         sb.append("Enabled: ").append(this.enabled).append("; ");
-        sb.append("AccountNonExpired: ").append(this.accountNonExpired).append("; ");
-        sb.append("credentialsNonExpired: ").append(this.credentialsNonExpired).append("; ");
-        sb.append("AccountNonLocked: ").append(this.accountNonLocked).append("; ");
+        sb.append("AccountNonExpired: ").append(this.isAccountNonExpired()).append("; ");
+        sb.append("credentialsNonExpired: ").append(this.isCredentialsNonExpired()).append("; ");
+        sb.append("AccountNonLocked: ").append(this.isAccountNonLocked()).append("; ");
 
         if (!authorities.isEmpty()) {
             sb.append("Granted Authorities: ");

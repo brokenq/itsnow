@@ -21,4 +21,10 @@
         <module>activiti_engine_app</module>
     </modules>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-spring</artifactId>
+        </dependency>
+    </dependencies>
 </project>

@@ -1,6 +1,6 @@
 package dnt.itsnow.support;
 
-import dnt.itsnow.services.api.ActivitiEngineService;
+import dnt.itsnow.api.ActivitiEngineService;
 import dnt.spring.Bean;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.delegate.Expression;
@@ -43,7 +43,7 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
             log.info("process engine:" + processEngine.toString());
             String path = "bpmn/"+name+".bpmn20.xml";
             URL url =  this.getClass().getClassLoader().getResource(path);
-            InputStream is = null;
+            InputStream is;
             if (url != null) {
                 is = url.openStream();
                 DeploymentBuilder db = processEngine.getRepositoryService().createDeployment();
@@ -58,7 +58,6 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
         }catch(Exception e){
             e.printStackTrace();
         }
-        return ;
     }
 
     /**
@@ -66,7 +65,6 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
      *
      * @param processKey     流程名称
      * @param processCategory 流程分类
-     * @throws java.io.IOException 找不到bpmn20.xml文件时
      */
     public boolean deploySingleProcess(String processKey,String processCategory) {
         try {

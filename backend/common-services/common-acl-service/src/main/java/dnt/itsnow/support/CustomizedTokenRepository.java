@@ -7,14 +7,14 @@ import dnt.itsnow.repository.TokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
 /**
  * 基于Mybatis Repository的持久化Token Repository
  */
-@Service
+@Component
 public class CustomizedTokenRepository implements PersistentTokenRepository {
     @Autowired
     private TokenRepository tokenRepository;

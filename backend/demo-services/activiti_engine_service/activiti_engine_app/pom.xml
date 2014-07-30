@@ -16,17 +16,6 @@
         The itsnow activiti engine service App
     </description>
 
-    <dependencies>
-        <dependency>
-            <groupId>dnt.itsnow.demo</groupId>
-            <artifactId>activiti_engine_api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.activiti</groupId>
-            <artifactId>activiti-spring</artifactId>
-        </dependency>
-    </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -35,15 +24,37 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Service-Config>dnt.itsnow.platform.config.DefaultServiceConfig</Service-Config>
-                            <App-Config>dnt.itsnow.platform.config.DefaultAppConfig</App-Config>
-                            <DB-Repository>dnt.itsnow.repository</DB-Repository>
-                            <Web-Repository>dnt.itsnow.web.controller</Web-Repository>
+                            <Default-Config>D,W</Default-Config>
+                            <Service-Config>dnt.itsnow.config.ActivitiServiceConfig</Service-Config>
+                            <App-Config>dnt.itsnow.config.ActivitiAppConfig</App-Config>
                         </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>net.happyonroad</groupId>
+                <artifactId>spring-component-builder</artifactId>
+                <version>${version.component-framework}</version>
+                <executions>
+                    <execution>
+                        <id>extend-app</id>
+                        <goals><goal>extend</goal></goals>
+                        <configuration>
+                            <targetRelease>${release.dir}</targetRelease>
+                            <copyDependencies>true</copyDependencies>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 
+    <dependencies>
+        <dependency>
+            <groupId>dnt.itsnow.demo</groupId>
+            <artifactId>activiti_engine_api</artifactId>
+        </dependency>
+    </dependencies>
 </project>
