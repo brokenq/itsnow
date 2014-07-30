@@ -20,6 +20,7 @@ import org.eclipse.jetty.webapp.WebAppContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextException;
 
 import javax.servlet.ServletContainerInitializer;
 import java.io.File;
@@ -53,7 +54,7 @@ public class JettyServer extends Bean {
             server.start();
             logger.info("Jetty bind at {}:{}", host, port);
         } catch (Exception e) {
-            throw new RuntimeException("Can't start the jetty server", e);
+            throw new ApplicationContextException("Can't start the jetty server", e);
         }
     }
 
@@ -61,7 +62,7 @@ public class JettyServer extends Bean {
         try {
             server.stop();
         } catch (Exception e) {
-            throw new RuntimeException("Can't stop the jetty server", e);
+            throw new ApplicationContextException("Can't stop the jetty server", e);
         }
     }
 

@@ -16,5 +16,10 @@
         The common service_catalog service shared by all deployment builds to access(read) system schema by DBI.
     </description>
 
-    
+    <dependencies>
+        <dependency>
+            <groupId>dnt.itsnow</groupId>
+            <artifactId>common-user-service</artifactId>
+        </dependency>
+    </dependencies>
 </project>

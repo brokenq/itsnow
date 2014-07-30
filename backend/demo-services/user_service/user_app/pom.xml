@@ -31,10 +31,10 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <App-Config>dnt.itsnow.platform.services.DefaultServiceAppConfig</App-Config>
-                            <Service-Config>dnt.itsnow.config.ServiceConfig</Service-Config>
-                            <App-Repository>dnt.itsnow.repository</App-Repository>
-                            <Web-Repository>dnt.itsnow.web.controller</Web-Repository>
+                            <App-Config>dnt.itsnow.demo.config.UserAppConfig</App-Config>
+                            <Service-Config>dnt.itsnow.demo.config.UserServiceConfig</Service-Config>
+                            <DB-Repository>dnt.itsnow.demo.repository</DB-Repository>
+                            <Web-Repository>dnt.itsnow.demo.web.controller</Web-Repository>
                         </manifestEntries>
                     </archive>
                 </configuration>

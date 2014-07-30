@@ -1,6 +1,6 @@
 package dnt.itsnow.support;
 
-import dnt.itsnow.services.api.ActivitiEngineService;
+import dnt.itsnow.api.ActivitiEngineService;
 import dnt.spring.Bean;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.delegate.Expression;
@@ -43,7 +43,7 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
             log.info("process engine:" + processEngine.toString());
             String path = "bpmn/"+name+".bpmn20.xml";
             URL url =  this.getClass().getClassLoader().getResource(path);
-            InputStream is = null;
+            InputStream is;
             if (url != null) {
                 is = url.openStream();
                 DeploymentBuilder db = processEngine.getRepositoryService().createDeployment();
@@ -58,7 +58,6 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
         }catch(Exception e){
             e.printStackTrace();
         }
-        return ;
     }
 
     /**
@@ -66,7 +65,6 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
      *
      * @param processKey     流程名称
      * @param processCategory 流程分类
-     * @throws java.io.IOException 找不到bpmn20.xml文件时
      */
     public boolean deploySingleProcess(String processKey,String processCategory) {
         try {
@@ -161,9 +159,23 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
         return processEngine.getTaskService().createTaskQuery().taskCandidateGroup(groupName).list();
     }
 
-    public void completeTask(String id,Map<String, Object> taskVariables,String assignee){
-        processEngine.getTaskService().setAssignee(id,assignee);
-        processEngine.getTaskService().complete(id,taskVariables);
+    public Task claimTask(String taskId,String userId){
+        processEngine.getTaskService().claim(taskId,userId);
+        log.info("task:"+taskId+" has claimed by "+userId);
+        Task task = processEngine.getTaskService().createTaskQuery().taskId(taskId).singleResult();
+        return task;
+    }
+
+    public void completeTask(String id,Map<String, String> taskVariables,String userId){
+        try {
+            processEngine.getIdentityService().setAuthenticatedUserId(userId);
+            processEngine.getFormService().submitTaskFormData(id, taskVariables);
+        } finally {
+            processEngine.getIdentityService().setAuthenticatedUserId(null);
+        }
+        //processEngine.getTaskService().setAssignee(id,userId);
+        //processEngine.getTaskService().complete(id,taskVariables);
+        //processEngine.getFormService().submitTaskFormData(id,taskVariables);
     }
 
     /**

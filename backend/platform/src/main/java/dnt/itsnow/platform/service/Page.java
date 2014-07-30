@@ -12,6 +12,11 @@ package dnt.itsnow.platform.service;
  * 从JPA中copy过来的
  */
 public interface Page<T> extends Slice<T> {
+    final String TOTAL = "total";
+    final String PAGES = "pages";
+    final String NUMBER = "number";
+    final String REAL = "real";
+    final String SORT = "sort";
 
 	/**
 	 * Returns the number of total pages.

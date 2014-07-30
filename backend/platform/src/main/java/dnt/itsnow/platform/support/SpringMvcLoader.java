@@ -4,12 +4,15 @@
 package dnt.itsnow.platform.support;
 
 import dnt.itsnow.platform.web.SpringMvcConfig;
+import dnt.itsnow.platform.web.security.DelegateSecurityConfigurer;
 import dnt.itsnow.platform.web.security.SpringSecurityConfig;
 import org.fusesource.scalate.servlet.TemplateEngineFilter;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.filter.DelegatingFilterProxy;
+import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.servlet.*;
@@ -21,25 +24,60 @@ import java.util.Set;
  *
  * <ul>
  * <li> /*        ->  springSecurityFilterChain
+ * <li> /*        ->  ItsNow.httpMethodFilter
  * <li> /*        ->  ItsNow.Dispatcher
  * <li> /views/*  ->  ItsNow.ScalateView
  * </ul>
  */
 
-public class SpringMvcLoader extends AbstractAnnotationConfigDispatcherServletInitializer {
+public class SpringMvcLoader extends AbstractAnnotationConfigDispatcherServletInitializer
+        implements ServletContextListener{
     public static final String SERVLET_VIEW_NAME = "ItsNow.ScalateView";
+    public static final String METHOD_FILTER_NAME = "ItsNow.httpMethodFilter";
+
     ApplicationContext applicationContext;
+    private AnnotationConfigWebApplicationContext webAppContext;
 
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
+        // 本函数是在 web container start the servlet context 的 lifecycle里面执行的
+        // 但 root web context 的构建却是在 context listener 在listen到 context initialized 事件之后
         applicationContext = (ApplicationContext) servletContext.getAttribute("application");
+
         super.onStartup(servletContext);
         registerSecurityFilter(servletContext);
+        registerHttpMethodFilter(servletContext);
         registerScalateFilter(servletContext);
     }
 
+    @Override
+    protected WebApplicationContext createRootApplicationContext() {
+        return webAppContext = (AnnotationConfigWebApplicationContext) super.createRootApplicationContext();
+    }
+
+    @Override
+    protected void registerContextLoaderListener(ServletContext servletContext) {
+        super.registerContextLoaderListener(servletContext);
+        //这里也监听 Servlet Context 事件
+        servletContext.addListener(this);
+    }
+
+    @Override
+    public void contextInitialized(ServletContextEvent sce) {
+        //将Root　Web Context 里面的 DelegateSecurityConfigurer 注册到 对外的applicationContext里面
+        // 以便将其以服务的形式暴露出来
+        DelegateSecurityConfigurer configurer = webAppContext.getBean(DelegateSecurityConfigurer.class);
+        ConfigurableApplicationContext cac = (ConfigurableApplicationContext) applicationContext;
+        cac.getBeanFactory().registerSingleton("publicDelegateSecurityConfigurer", configurer);
+    }
+
+    @Override
+    public void contextDestroyed(ServletContextEvent sce) {
+        // need do nothing
+    }
+
     protected WebApplicationContext createServletApplicationContext() {
-		AnnotationConfigWebApplicationContext servletAppContext =
+        AnnotationConfigWebApplicationContext servletAppContext =
                 (AnnotationConfigWebApplicationContext) super.createServletApplicationContext();
         if( applicationContext != null ){
             servletAppContext.setParent(applicationContext);
@@ -68,6 +106,11 @@ public class SpringMvcLoader extends AbstractAnnotationConfigDispatcherServletIn
     @Override
     protected String[] getServletMappings() {
         return new String[]{"/"};
+    }
+
+    private void registerHttpMethodFilter(ServletContext servletContext) {
+        FilterRegistration.Dynamic registration = servletContext.addFilter(METHOD_FILTER_NAME, HiddenHttpMethodFilter.class);
+        registration.addMappingForServletNames(getDispatcherTypes(), false, getServletName());
     }
 
     protected void registerScalateFilter(ServletContext servletContext) {
@@ -116,18 +159,19 @@ public class SpringMvcLoader extends AbstractAnnotationConfigDispatcherServletIn
      * Registers the provided filter using the {@link #isAsyncSupported()} and {@link #getSecurityDispatcherTypes()}.
      *
      * @param servletContext the {@link ServletContext}
-     * @param insertBeforeOtherFilters should this Filter be inserted before or after other {@link Filter}
+     * @param prepend should this Filter be inserted before or after other {@link Filter}
      * @param filterName the filter name
      * @param filter the filter
      */
-    private void registerFilter(ServletContext servletContext, boolean insertBeforeOtherFilters, String filterName, Filter filter) {
+    private void registerFilter(ServletContext servletContext, boolean prepend, String filterName, Filter filter) {
         FilterRegistration.Dynamic registration = servletContext.addFilter(filterName, filter);
         if(registration == null) {
-            throw new IllegalStateException("Duplicate Filter registration for '" + filterName +"'. Check to ensure the Filter is only configured once.");
+            throw new IllegalStateException("Duplicate Filter registration for '" + filterName
+                    + "'. Check to ensure the Filter is only configured once.");
         }
         registration.setAsyncSupported(isAsyncSecuritySupported());
         EnumSet<DispatcherType> dispatcherTypes = getSecurityDispatcherTypes();
-        registration.addMappingForUrlPatterns(dispatcherTypes, !insertBeforeOtherFilters, "/*");
+        registration.addMappingForUrlPatterns(dispatcherTypes, !prepend, "/*");
     }
 
     /**

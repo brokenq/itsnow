@@ -30,9 +30,27 @@
                             <targetRelease>${release.dir}</targetRelease>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>un_extend-app</id>
+                        <goals><goal>un_extend</goal></goals>
+                        <configuration>
+                            <targetRelease>${release.dir}</targetRelease>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Default-Config>S,A,D,W</Default-Config>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>

@@ -94,8 +94,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.activiti</groupId>
-            <artifactId>activiti-spring</artifactId>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
         </dependency>
     </dependencies>
 
@@ -107,7 +107,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <App-Config>dnt.itsnow.platform.AppConfiguration</App-Config>
+                            <App-Config>dnt.itsnow.platform.PlatformConfiguration</App-Config>
                             <Service-Config>dnt.itsnow.platform.ServiceConfiguration</Service-Config>
                         </manifestEntries>
                     </archive>

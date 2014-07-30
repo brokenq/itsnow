@@ -31,10 +31,9 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Service-Config>dnt.itsnow.config.ServiceConfig</Service-Config>
-                            <App-Config>dnt.itsnow.platform.services.DefaultServiceAppConfig</App-Config>
-                            <App-Repository>dnt.itsnow.repository</App-Repository>
-                            <Web-Repository>dnt.itsnow.web.controller</Web-Repository>
+                            <Default-Config>true</Default-Config>
+                            <!--true means A,S,D,W-->
+                            <Service-Config>dnt.itsnow.config.ServiceCatalogServiceConfig</Service-Config>
                         </manifestEntries>
                     </archive>
                 </configuration>

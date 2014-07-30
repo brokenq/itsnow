@@ -4,7 +4,7 @@
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.platform.web.controller.ApplicationController;
-import dnt.itsnow.services.api.ActivitiEngineService;
+import dnt.itsnow.api.ActivitiEngineService;
 import dnt.util.StringUtils;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
@@ -16,10 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * The user controller
@@ -220,7 +217,7 @@ public class ActivitiEngineController extends ApplicationController {
         return resultLs;
     }
 
-    @RequestMapping(value = "/start/{key}")
+    @RequestMapping(value = "/tasks/start/{key}")
     @ResponseBody
     public Object startProcessInstance(@PathVariable("key") String key,@RequestParam("name") String name,HttpServletRequest request){
         //String key = "vacationRequest";
@@ -247,24 +244,35 @@ public class ActivitiEngineController extends ApplicationController {
         return result;
     }
 
-    @RequestMapping(value = "/tasks/{id}")
+    @RequestMapping(value = "/tasks/complete/{id}")
     @ResponseBody
     public Object completeTasksByUser(@PathVariable("id") String taskId,@RequestParam("userName") String userName,HttpServletRequest request){
         List<Map<String, Object>> resultLs = new ArrayList<Map<String, Object>>();
         if(StringUtils.isNotEmpty(userName)){
-            Map<String, Object> taskVariables = new HashMap<String, Object>();
-            /*String value = request.getParameter("approve");
-            if(value!=null && value.equals("true"))
-                taskVariables.put("vacationApproved", "true");
-            else
-                taskVariables.put("vacationApproved","false");
-            taskVariables.put("managerMotivation", "We have a tight deadline!");
-            */
-            taskVariables.putAll(request.getParameterMap());
+            Map<String, String> taskVariables = new HashMap<String, String>();
+            Map<String, String[]> parameterMap = request.getParameterMap();
+            Set<Map.Entry<String, String[]>> entrySet = parameterMap.entrySet();
+            for (Map.Entry<String, String[]> entry : entrySet) {
+                //String key = entry.getKey();
+                taskVariables.put(entry.getKey(),entry.getValue()[0]);
+                //ormProperties.put(key.split("_")[1], entry.getValue()[0]);
+
+            }
+            //taskVariables.putAll(request.getParameterMap());
 
             activitiEngineService.completeTask(taskId,taskVariables,userName);
         }
 
         return resultLs;
+    }
+
+    @RequestMapping(value = "/tasks/claim/{id}")
+    @ResponseBody
+    public Object claimTasksByUser(@PathVariable("id") String taskId,@RequestParam("userId") String userId,HttpServletRequest request){
+        Task task = null;
+        if(StringUtils.isNotEmpty(userId)) {
+            task = activitiEngineService.claimTask(taskId, userId);
+        }
+        return task;
     }
 }

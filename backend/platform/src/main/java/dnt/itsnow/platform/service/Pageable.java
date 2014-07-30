@@ -35,28 +35,28 @@ public interface Pageable {
 	/**
 	 * Returns the sorting parameters.
 	 *
-	 * @return
+	 * @return 排序方式
 	 */
 	Sort getSort();
 
 	/**
 	 * Returns the {@link Pageable} requesting the next {@link Page}.
 	 *
-	 * @return
+	 * @return next pageable
 	 */
 	Pageable next();
 
 	/**
 	 * Returns the previous {@link Pageable} or the first {@link Pageable} if the current one already is the first one.
 	 *
-	 * @return
+	 * @return  previous pageable
 	 */
 	Pageable previousOrFirst();
 
 	/**
 	 * Returns the {@link Pageable} requesting the first page.
 	 *
-	 * @return
+	 * @return  first pageable
 	 */
 	Pageable first();
 
@@ -64,7 +64,7 @@ public interface Pageable {
 	 * Returns whether there's a previous {@link Pageable} we can access from the current one. Will return
 	 * {@literal false} in case the current {@link Pageable} already refers to the first page.
 	 *
-	 * @return
+	 * @return  previous pageable
 	 */
 	boolean hasPrevious();
 }

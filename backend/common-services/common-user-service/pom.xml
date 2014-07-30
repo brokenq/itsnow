@@ -16,5 +16,21 @@
         The common user service shared by all deployment builds to access(read) system schema by DBI.
     </description>
 
-    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <!--继承了上级的Default-Config，这里只需要对扩展的项目进行定义即可-->
+                            <Service-Config>dnt.itsnow.config.UserServiceConfig</Service-Config>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>

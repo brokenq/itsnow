@@ -29,6 +29,7 @@
 
     <logger name="dnt.itsnow" level="DEBUG" />
     <logger name="dnt.itsnow.platform.web.support.ExtendedRequestMappingHandlerMapping" level="INFO" />
-    <logger name="dnt.itsnow.services.repository" level="INFO" />
+    <logger name="dnt.itsnow.demo.repository" level="INFO" />
+    <logger name="net.happyonroad.spring.service.SpringServicePackage" level="INFO" />
 
 </configuration>

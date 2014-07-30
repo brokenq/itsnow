@@ -16,9 +16,11 @@
     </description>
 
     <properties>
-        <port.debug>1081</port.debug>
-        <port.jmx>1082</port.jmx>
-        <port.rmi>1083</port.rmi>
+        <debug.port>1081</debug.port>
+        <jmx.port>1082</jmx.port>
+        <rmi.port>1083</rmi.port>
+        <http.port>8070</http.port>
+        <app.db>itsnow_${app.id}</app.db>
     </properties>
 
     <dependencies>
@@ -49,9 +51,9 @@
                         <configuration>
                             <output>${release.dir}</output>
                             <appName>ItsNow</appName>
-                            <appPort>${port.rmi}</appPort>
-                            <jmx>${port.jmx}</jmx>
-                            <debug>${port.debug}</debug>
+                            <appPort>${rmi.port}</appPort>
+                            <jmx>${jmx.port}</jmx>
+                            <debug>${debug.port}</debug>
                             <jvmOptions>-Dcomponent.feature.resolvers=dnt.itsnow.platform.services.MybatisFeatureResolver,dnt.itsnow.platform.services.SpringMvcFeatureResolver -Xms750m -Xmx750m -XX:MaxPermSize=270m -Djava.awt.headless=true</jvmOptions>
                             <propertiesFile>${project.basedir}/config/now.properties</propertiesFile>
                             <logbackFile>${project.basedir}/config/logback.xml</logbackFile>
@@ -68,7 +70,39 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>with-itsnow-msc</id>
+            <properties>
+                <app.id>msc</app.id>
+                <debug.port>1071</debug.port>
+                <jmx.port>1072</jmx.port>
+                <rmi.port>1073</rmi.port>
+                <http.port>8071</http.port>
+            </properties>
+        </profile>
+        <profile>
+            <id>with-itsnow-msu</id>
+            <properties>
+                <app.id>msu_001</app.id>
+                <debug.port>1074</debug.port>
+                <jmx.port>1075</jmx.port>
+                <rmi.port>1076</rmi.port>
+                <http.port>8072</http.port>
+            </properties>
+        </profile>
+        <profile>
+            <id>with-itsnow-msp</id>
+            <properties>
+                <app.id>msp_001</app.id>
+                <debug.port>1077</debug.port>
+                <jmx.port>1078</jmx.port>
+                <rmi.port>1079</rmi.port>
+                <http.port>8073</http.port>
+            </properties>
+        </profile>
+    </profiles>
 </project>

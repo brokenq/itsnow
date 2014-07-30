@@ -50,11 +50,13 @@
         <version.jetty>9.1.0.RC2</version.jetty>
         <version.scala>2.8.2</version.scala>
         <version.scalate>1.5.3-scala_2.8.2</version.scalate>
-        <version.mysql>5.1.27</version.mysql>
+        <version.mysql>5.1.31</version.mysql>
+        <version.validation-api>1.1.0.Final</version.validation-api>
+        <version.hibernate-validator>5.0.1.Final</version.hibernate-validator>
 
         <version.activiti.engine>5.15.1</version.activiti.engine>
 
-        <version.component-framework>0.0.9</version.component-framework>
+        <version.component-framework>0.1.0-SNAPSHOT</version.component-framework>
         <version.components>0.1.5</version.components>
         <release.root>/opt/releases/itsnow</release.root>
         <release.dir>${release.root}/itsnow-${project.version}</release.dir>
@@ -73,6 +75,25 @@
     </modules>
 
     <profiles>
+        <profile>
+            <id>with-itsnow-msc</id>
+            <properties>
+                <release.dir>${release.root}/msc-${project.version}</release.dir>
+            </properties>
+        </profile>
+        <profile>
+            <id>with-itsnow-msu</id>
+            <properties>
+                <release.dir>${release.root}/msu-${project.version}</release.dir>
+            </properties>
+        </profile>
+        <profile>
+            <id>with-itsnow-msp</id>
+            <properties>
+                <release.dir>${release.root}/msp-${project.version}</release.dir>
+            </properties>
+        </profile>
+
         <profile>
             <id>dnt</id>
             <repositories>
@@ -151,17 +172,6 @@
 
         <plugins>
             <plugin>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>${version.maven.source}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${version.maven.compiler}</version>
                 <configuration>
@@ -191,6 +201,7 @@
                         </goals>
                         <configuration>
                             <jarName>${project.groupId}.${project.artifactId}-${project.version}</jarName>
+                            <skipIfEmpty>true</skipIfEmpty>
                         </configuration>
                     </execution>
                 </executions>
@@ -302,6 +313,16 @@
                 </exclusions>
             </dependency>
 
+            <dependency>
+                <groupId>javax.validation</groupId>
+                <artifactId>validation-api</artifactId>
+                <version>${version.validation-api}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>${version.hibernate-validator}</version>
+            </dependency>
 
             <!-- Framework DEPENDENCIES -->
             <dependency>
@@ -479,6 +500,10 @@
                     <exclusion>
                         <groupId>org.springframework</groupId>
                         <artifactId>spring-expression</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-orm</artifactId>
                     </exclusion>
                     <exclusion>
                         <groupId>commons-pool</groupId>
