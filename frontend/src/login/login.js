@@ -30,8 +30,8 @@ app.factory('csrf', function ($http) {
     return {
         load: function () {
             $http.get('security/csrf').then(function (response) {
-                console.log("CSRF Success: " + response);
-                $http.defaults.headers.common[response.headerName] = response.token;
+                console.log("CSRF Success. headerName:" + response.data.headerName + " token:" + response.data.token);
+                $http.defaults.headers.common[response.data.headerName] = response.data.token;
             });
         }
     };
@@ -73,9 +73,28 @@ securityService.factory('Password', ['$resource'],
 
 securityService.factory('User', ['$resource'],
     function($resource){
-        return $resource('api/users/:userId.json', {}, {
-            signup: {url: 'users', method: 'POST'}
+        return $resource('api/users/:userId', {}, {
+            signup: {url: 'users', method: 'POST', params:{userId:'@userId'}}
         });
     }
 );
 
+// 拦截器（只拦截POST请求）
+app.factory('sessionInjector', ['$injector',
+    function ($injector) {
+        return {
+            response: function (response) {
+                console.log("response.config.method: " + response.config.method);
+                if (response.config.method === "POST") {
+                    var csrf = $injector.get('csrf');
+                    csrf.load();
+                }
+                return response;
+            }
+        };
+    }]);
+
+// 注入拦截器
+app.config(['$httpProvider', function ($httpProvider) {
+    $httpProvider.interceptors.push('sessionInjector');
+}]);
