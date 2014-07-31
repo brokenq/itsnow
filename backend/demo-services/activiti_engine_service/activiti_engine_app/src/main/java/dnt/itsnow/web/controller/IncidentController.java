@@ -11,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * The Incident Process controller
@@ -68,8 +65,18 @@ public class IncidentController extends ApplicationController {
     public Object completeTasksByUser(@PathVariable("id") String taskId,@RequestParam("userId") String userId,HttpServletRequest request){
         List<Map<String, Object>> resultLs = new ArrayList<Map<String, Object>>();
         if(StringUtils.isNotEmpty(userId)){
-            Map<String, Object> taskVariables = new HashMap<String, Object>();
-            taskVariables.putAll(request.getParameterMap());
+            Map<String, String> taskVariables = new HashMap<String, String>();
+            // 从request中读取参数然后转换
+            Map<String, String[]> parameterMap = request.getParameterMap();
+            Set<Map.Entry<String, String[]>> entrySet = parameterMap.entrySet();
+            for (Map.Entry<String, String[]> entry : entrySet) {
+                //String key = entry.getKey();
+                taskVariables.put(entry.getKey(),entry.getValue()[0]);
+                //ormProperties.put(key.split("_")[1], entry.getValue()[0]);
+
+            }
+
+            //taskVariables.putAll(request.getParameterMap());
 
             // update incident object status and persist it
 

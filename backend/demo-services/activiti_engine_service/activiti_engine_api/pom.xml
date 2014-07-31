@@ -16,4 +16,15 @@
         The itsnow activiti engine service API
     </description>
 
+    <dependencies>
+        <dependency>
+            <groupId>dnt.itsnow</groupId>
+            <artifactId>common-user-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dnt.itsnow</groupId>
+            <artifactId>common-acl-service</artifactId>
+        </dependency>
+    </dependencies>
+
 </project>
