@@ -4,10 +4,9 @@
 package dnt.itsnow.service;
 
 import dnt.itsnow.model.Account;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 
 public interface AccountService {
-    @Select("SELECT * FROM itsnow_msc.accounts where name = #{name}")
-    Account findByName(@Param("name") String name);
+    Account findByName(String name);
+
+    Account findBySn(String sn);
 }

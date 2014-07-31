@@ -10,6 +10,10 @@ import dnt.itsnow.platform.model.Record;
  */
 public class ContractDetail extends Record{
     private Contract contract;
+    private String title;
+    private String brief;
+    private String description;
+    private String icon;
 
     public Contract getContract() {
         return contract;
@@ -17,5 +21,37 @@ public class ContractDetail extends Record{
 
     public void setContract(Contract contract) {
         this.contract = contract;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getBrief() {
+        return brief;
+    }
+
+    public void setBrief(String brief) {
+        this.brief = brief;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 }

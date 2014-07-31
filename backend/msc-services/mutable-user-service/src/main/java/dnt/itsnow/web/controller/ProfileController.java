@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 /**
  * <h1>用户对自身的管理</h1>
@@ -34,13 +35,13 @@ public class ProfileController extends ApplicationController {
      */
     @RequestMapping(method = RequestMethod.PUT)
     public User update(HttpServletRequest request,
-                       @RequestBody User user){
+                       @RequestBody @Valid User user){
         String username = request.getRemoteUser();
         logger.info("Updating {}", username);
-        User exist = userService.findUser(username);
+        User exist = userService.findByUsername(username);
         exist.apply(user);
-        userService.updateUser(exist);
-        User updated = userService.findUser(exist.getUsername());
+        userService.update(exist);
+        User updated = userService.findByUsername(exist.getUsername());
         updated.setPassword(null);
         if( updated.getUsername().equalsIgnoreCase(username)){
             logger.info("Updated  {}", username);

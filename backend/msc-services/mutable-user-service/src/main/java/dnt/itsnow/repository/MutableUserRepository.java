@@ -7,7 +7,6 @@ import dnt.itsnow.model.User;
 import dnt.itsnow.platform.service.Pageable;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
@@ -19,12 +18,12 @@ import java.util.List;
  */
 public interface MutableUserRepository extends UserRepository {
 
-    @Select("SELECT count(0) FROM users")
-    int count();
+    // 采用 Mybatis XML Mapper
+    long countByKeyword(@Param("keyword") String keyword);
 
     // 采用 Mybatis XML Mapper
-    List<User> findUsers(@Param("keyword") String keyword,
-                         @Param("pageable") Pageable pageable);
+    List<User> findAllByKeyword(@Param("keyword") String keyword,
+                                @Param("pageable") Pageable pageable);
 
     /**
      * Return the created user id

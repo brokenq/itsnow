@@ -3,11 +3,11 @@
 
 INSERT accounts(sn, name, type, status)
 VALUES
- ('msc',     'Itsnow Carrier', 'MscAccount', 'Valid'),
- ('msu_001', 'Itsnow Carrier', 'MsuAccount', 'Valid'),
- ('msu_002', 'Itsnow Carrier', 'MsuAccount', 'New'),
- ('msp_001', 'Itsnow Carrier', 'MspAccount', 'Valid'),
- ('msp_002', 'Itsnow Carrier', 'MspAccount', 'Expired');
+ ('msc',     'Itsnow Carrier', 'msc', 'Valid'),
+ ('msu_001', 'Itsnow Carrier', 'msu', 'Valid'),
+ ('msu_002', 'Itsnow Carrier', 'msu', 'New'),
+ ('msp_001', 'Itsnow Carrier', 'msp', 'Valid'),
+ ('msp_002', 'Itsnow Carrier', 'msp', 'Expired');
 
 
 -- //@UNDO
