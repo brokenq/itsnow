@@ -2,11 +2,11 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--不要用 type != '*' 这种， mybatis 会根据 '*' 认为 type 为 long类型，而后无法解析-->
 <mapper namespace="dnt.itsnow.repository.MutableAccountRepository">
     <select id="countByType" resultType="long">
         SELECT count(0) FROM itsnow_msc.accounts
         <where>
-#             不要用 type != '*' 这种， mybatis 会根据 '*' 认为 type 为 long类型，而后无法解析
             <if test="type != null">
                 type = #{type}
             </if>

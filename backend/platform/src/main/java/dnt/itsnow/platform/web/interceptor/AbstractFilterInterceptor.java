@@ -3,7 +3,7 @@
  */
 package dnt.itsnow.platform.web.interceptor;
 
-import org.apache.commons.beanutils.MethodUtils;
+import org.apache.commons.lang.reflect.MethodUtils;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -57,9 +57,12 @@ public class AbstractFilterInterceptor extends HandlerInterceptorAdapter {
 
         // 以下均 参考/借助RequestMappingHandlerAdapter#invokeHandleMethod的实现
         ServletWebRequest webRequest = new ServletWebRequest(request, response);
-        WebDataBinderFactory binderFactory = invokeAdapterMethod("getDataBinderFactory",filterMethod);
-        ModelFactory modelFactory = invokeAdapterMethod("getModelFactory", filterMethod, binderFactory);
+        WebDataBinderFactory binderFactory = invokeAdapterMethod("getDataBinderFactory",
+                                                                 new Class[]{HandlerMethod.class}, filterMethod);
+        Class[] parameterTypes = {HandlerMethod.class, WebDataBinderFactory.class};
+        ModelFactory modelFactory = invokeAdapterMethod("getModelFactory", parameterTypes, filterMethod, binderFactory);
         ServletInvocableHandlerMethod requestMappingMethod = invokeAdapterMethod("createRequestMappingMethod",
+                                                                                 parameterTypes,
                                                                                  filterMethod, binderFactory);
         ModelAndViewContainer mavContainer = new ModelAndViewContainer();
         mavContainer.addAllAttributes(RequestContextUtils.getInputFlashMap(request));
@@ -67,9 +70,11 @@ public class AbstractFilterInterceptor extends HandlerInterceptorAdapter {
         requestMappingMethod.invokeAndHandle(webRequest, mavContainer);
     }
 
-    protected <T> T invokeAdapterMethod(String methodName, Object... args) throws Exception{
+    protected <T> T invokeAdapterMethod(String methodName, Class[] parameterTypes, Object... args) throws Exception{
+        Method method = adapter.getClass().getDeclaredMethod(methodName, parameterTypes );
+        method.setAccessible(true);
         //noinspection unchecked
-        return (T)MethodUtils.invokeMethod(adapter, methodName, args);
+        return (T) method.invoke(adapter, args);
     }
 
     protected Method findHandleMethod(Object handler) {
