@@ -48,4 +48,12 @@ public class ServiceCatalog extends Record{
     public void setItems(List<ServiceItem> items) {
         this.items = items;
     }
+
+    public ServiceItem getItemBySn(Long id) {
+        if( items == null ) return null;
+        for (ServiceItem item : items) {
+            if( item.getId().equals(id) ) return item;
+        }
+        return null;
+    }
 }

@@ -31,9 +31,8 @@ public class User extends Record implements UserDetails, CredentialsContainer {
     @NotBlank
     private String phone;
     private String password;
-    // 用户的当前所服务的主账户SN，可以为空，可以变化
     private Long accountId;
-    // 用户的当前主账户
+    // 用户的当前主账户，可以为空，可以变化
     private Account account;
 
     private Set<GrantedAuthority> authorities;
@@ -129,20 +128,20 @@ public class User extends Record implements UserDetails, CredentialsContainer {
         this.passwordExpired = passwordExpired;
     }
 
-    public Long getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(Long accountId) {
-        this.accountId = accountId;
-    }
-
     public Account getAccount() {
         return account;
     }
 
     public void setAccount(Account account) {
         this.account = account;
+    }
+
+    public Long getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(Long accountId) {
+        this.accountId = accountId;
     }
 
     public void setAuthorities(Set<? extends GrantedAuthority> authorities) {
@@ -235,7 +234,7 @@ public class User extends Record implements UserDetails, CredentialsContainer {
         sb.append("credentialsNonExpired: ").append(this.isCredentialsNonExpired()).append("; ");
         sb.append("AccountNonLocked: ").append(this.isAccountNonLocked()).append("; ");
 
-        if (!authorities.isEmpty()) {
+        if (authorities != null && !authorities.isEmpty()) {
             sb.append("Granted Authorities: ");
 
             boolean first = true;
