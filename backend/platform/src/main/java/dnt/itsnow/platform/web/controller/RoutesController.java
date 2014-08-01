@@ -51,10 +51,18 @@ public class RoutesController extends ApplicationController{
             url = StringUtils.substringBetween(url, "[", "]");
             if( !StringUtils.containsIgnoreCase(url, pattern) ) continue;
             HandlerMethod handler = methods.get(mapping);
-            Map<RequestParam,String> requestParams = new HashMap<RequestParam,String>();
+            Map<String,String> requestParams = new HashMap<String,String>();
             for (MethodParameter parameter : handler.getMethodParameters()) {
                 RequestParam requestParam = parameter.getParameterAnnotation(RequestParam.class);
-                if(requestParam != null) requestParams.put(requestParam, parameter.getParameterType().getSimpleName());
+                if(requestParam != null) requestParams.put(requestParam.value(), parameter.getParameterType().getSimpleName());
+            }
+            //固定的把 Application Controller 对 index 的 before filter增强加入到路由表达里面
+            // 照理来说，应该根据每个handler的method，找到其所有before/after filter，将相关filter的request params加入展示
+            // 现在先采用这个权宜之计
+            if( httpMethods.contains("GET") && handler.toString().contains("index") ){
+                requestParams.put("page", "int");
+                requestParams.put("size", "int");
+                requestParams.put("sort", "string");
             }
             RouteItem item = new RouteItem(httpMethods, url, handler.toString(), requestParams);
             item.showDetail(detail);

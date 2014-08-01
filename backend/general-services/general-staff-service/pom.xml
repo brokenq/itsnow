@@ -23,9 +23,6 @@
             <groupId>dnt.itsnow</groupId>
             <artifactId>general-account-service</artifactId>
         </dependency>
-        <dependency>
-            <groupId>dnt.itsnow</groupId>
-            <artifactId>common-user-service</artifactId>
-        </dependency>
     </dependencies>
+
 </project>

@@ -16,5 +16,10 @@
         The mutable service_catalog service implemented by MSC, and provide SPI to other deployment builds.
     </description>
 
-    
+    <dependencies>
+        <dependency>
+            <groupId>dnt.itsnow</groupId>
+            <artifactId>common-service_catalog-service</artifactId>
+        </dependency>
+    </dependencies>
 </project>

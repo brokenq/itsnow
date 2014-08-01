@@ -5,6 +5,7 @@ package dnt.itsnow.config;
 
 import dnt.itsnow.platform.config.DefaultAppConfig;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
 
 /**
@@ -12,5 +13,6 @@ import org.springframework.context.annotation.ImportResource;
  */
 @Configuration
 @ImportResource( "classpath:META-INF/activiti.xml")
-public class ActivitiAppConfig extends DefaultAppConfig {
+@Import(DefaultAppConfig.class)
+public class ActivitiAppConfig {
 }

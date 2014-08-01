@@ -6,6 +6,8 @@ CREATE TABLE contracts (
   msu_account_id INT(10) UNSIGNED NOT NULL,
   msp_account_id INT(10) UNSIGNED NOT NULL,
   sn             VARCHAR(20)      NOT NULL,
+  msu_status     VARCHAR(20)      NOT NULL DEFAULT 'Draft',
+  msp_status     VARCHAR(20)      NOT NULL DEFAULT 'Draft',
   created_at     TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at     TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (msu_account_id)    REFERENCES accounts(id),

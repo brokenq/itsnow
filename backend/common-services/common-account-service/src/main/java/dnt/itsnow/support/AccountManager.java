@@ -30,4 +30,9 @@ public class AccountManager extends Bean implements AccountService {
     public Account findBySn(String sn) {
         return repository.findBySn(sn);
     }
+
+    @Override
+    public Account findById(Long id) {
+        return repository.findById(id);
+    }
 }
