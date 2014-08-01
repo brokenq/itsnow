@@ -37,11 +37,5 @@ public interface UserService extends UserDetailsService {
      */
     boolean challenge(String username, String password);
 
-    /**
-     * <h2>找到某个用户当前所服务的主账户</h2>
-     *
-     * @param user 用户
-     * @return 相应的主账户，可能为空
-     */
-    Account findMainAccount(User user);
+    Account findAccountById(Long accountId);
 }

@@ -9,7 +9,6 @@ import dnt.itsnow.platform.service.Pageable;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -30,7 +29,4 @@ public interface MutableAccountRepository extends AccountRepository{
 
     @Delete("DELETE FROM itsnow_msc.accounts WHERE sn = #{sn}")
     void deleteBySn(@Param("sn") String sn);
-
-    @Select("SELECT * FROM itsnow_msc.accounts WHERE  id = #{id}")
-    Account findById(@Param("id") long id);
 }

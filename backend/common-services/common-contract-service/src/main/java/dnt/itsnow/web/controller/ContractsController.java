@@ -3,16 +3,19 @@
  */
 package dnt.itsnow.web.controller;
 
+import dnt.itsnow.exception.AccountException;
+import dnt.itsnow.exception.ContractException;
 import dnt.itsnow.model.Contract;
-import dnt.itsnow.platform.service.Page;
+import dnt.itsnow.platform.service.ServiceException;
+import dnt.itsnow.platform.web.exception.WebClientSideException;
+import dnt.itsnow.platform.web.exception.WebServerSideException;
 import dnt.itsnow.service.ContractService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -22,39 +25,32 @@ import java.util.List;
  * <b>HTTP     URI                        方法       含义  </b>
  * # GET      /api/contracts              index     列出所有相关合同，支持过滤，分页，排序等
  * # GET      /api/contracts/{sn}         show      列出特定的合同
- * # PUT      /api/contracts/{sn}/approve approve   签订合同
- * # PUT      /api/contracts/{sn}/reject  reject    拒签合同
  * </pre>
- * 以上有损操作，并非是本系统直接执行（没有条件，没有权限）
- * 而是向msc发起请求执行(ContractService实现者)
- *
- * <p>
- * TODO 以下代码，显然发现了共性: 控制器层面的 before/after filter
- * 不过，如果全局层面通过Servlet Filter实现了当前用户主账户的查找
- * 这里的控制器的before/after filter的作用就弱化为一种代码精简(Code Reduce)
- * </p>
  */
 @RestController
 @RequestMapping("/api/contracts")
-public class ContractsController extends SessionSupportController {
+public class ContractsController extends SessionSupportController<Contract> {
     @Autowired
     ContractService contractService;
 
     /**
      * <h2>查看当前用户所服务的企业所有合同</h2>
      * <p/>
-     * GET /api/contracts?page={int}&size={int}
+     * GET /api/contracts?page={int}&size={int}&order={string}
      *
-     * @param response HTTP 应答
      * @return 合同列表，其中的合同信息不包括Contract Detail
      */
     @RequestMapping
-    public List<Contract> index( HttpServletResponse response ) {
+    public List<Contract> index( ) {
         logger.debug("Listing contracts");
-        Page<Contract> contracts = contractService.findAllByAccount(mainAccount, pageRequest);
-        renderHeader(response, contracts);
-        logger.debug("Found   contracts {}", contracts.getTotalElements());
-        return contracts.getContent();
+        try {
+            indexPage = contractService.findAllByAccount(mainAccount, pageRequest);
+        } catch (ServiceException e) {
+            throw new WebClientSideException(HttpStatus.BAD_REQUEST,
+                    "Your main account can't list contracts: " + e.getMessage());
+        }
+        logger.debug("Found   contracts {}", indexPage.getTotalElements());
+        return indexPage.getContent();
     }
 
     /**
@@ -69,37 +65,19 @@ public class ContractsController extends SessionSupportController {
         logger.debug("Viewing contract {}", sn);
         //如果找不到，应该抛出异常
         // 如果试图查看其主账户之外的合同，那会抛出额外的异常
-        Contract contract = contractService.findByAccountAndSn(mainAccount, sn, true);
+        Contract contract;
+        try {
+            contract = contractService.findByAccountAndSn(mainAccount, sn, true);
+        } catch (AccountException e) {
+            throw new WebClientSideException(HttpStatus.BAD_REQUEST,
+                    "Your main account can't view contract: " + e.getMessage());
+        } catch (ContractException e) {
+            throw new WebClientSideException(HttpStatus.UNAUTHORIZED,
+                    "You are viewing a contract not belongs to your main account: " + e.getMessage());
+        } catch (ServiceException e){
+            throw new WebServerSideException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
         logger.debug("Found   contract {}", contract);
-        return contract;
-    }
-
-    /**
-     * <h2>批准当前用户所服务的企业特定合同</h2>
-     * <p/>
-     * PUT /api/contracts/{sn}/approve
-     *
-     * @return 合同信息，不包括了Contract Detail 信息
-     */
-    @RequestMapping(value = "/{sn}/approve", method = RequestMethod.PUT)
-    public Contract approve(@PathVariable("sn") String sn) {
-        logger.info("Approving contract {}", sn);
-        Contract contract = contractService.approve(mainAccount, sn);
-        logger.debug("Approved  contract {}", contract);
-        return contract;
-    }
-    /**
-     * <h2>拒绝当前用户所服务的企业特定合同</h2>
-     * <p/>
-     * PUT /api/contracts/{sn}/reject
-     *
-     * @return 合同信息，不包括了Contract Detail 信息
-     */
-    @RequestMapping(value = "/{sn}/reject", method = RequestMethod.PUT)
-    public Contract reject( @PathVariable("sn") String sn) {
-        logger.info("Approving contract {}", sn);
-        Contract contract = contractService.reject(mainAccount, sn);
-        logger.debug("Approved  contract {}", contract);
         return contract;
     }
 

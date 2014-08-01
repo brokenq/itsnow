@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>user_api</artifactId>
-    <name>Itsnow User Service API</name>
+    <name>Itsnow Demo User Service API</name>
     <description>
         The itsnow user service API
     </description>

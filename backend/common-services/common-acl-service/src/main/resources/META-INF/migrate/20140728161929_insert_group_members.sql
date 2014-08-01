@@ -10,14 +10,16 @@ INSERT INTO group_members(username, group_id) VALUES
 ('admin', @administrator_gid),
 ('admin', @monitor_gid),
 ('admin', @reporter_gid),
-('root', @administrator_gid),
-('root', @monitor_gid),
-('root', @reporter_gid),
-('monitor', @monitor_gid),
-('monitor', @reporter_gid),
-('reporter', @reporter_gid),
-('demo', @guest_gid),
-('guest', @guest_gid);
+('root',  @administrator_gid),
+('root',  @monitor_gid),
+('root',  @reporter_gid),
+('steve.li',   @reporter_gid),
+('jason.wang', @monitor_gid),
+('stone.xin',  @reporter_gid),
+('jacky.cao',  @monitor_gid),
+('smile.tian', @monitor_gid),
+('sharp.liu',  @reporter_gid),
+('mike.wei',   @monitor_gid);
 
 -- //@UNDO
 -- SQL to undo the change goes here.

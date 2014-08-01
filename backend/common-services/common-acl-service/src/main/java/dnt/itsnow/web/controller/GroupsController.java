@@ -4,7 +4,6 @@
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.Group;
-import dnt.itsnow.platform.web.controller.ApplicationController;
 import dnt.itsnow.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,12 +18,13 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/groups")
-public class GroupsController extends ApplicationController{
+public class GroupsController extends SessionSupportController<Group>{
     @Autowired
     GroupService groupService;
 
+    // 虽然也是index，但这里不需要分页，application controller 也不会错
     @RequestMapping
-    public List<Group> groups(@RequestParam("q") String q){
+    public List<Group> index(@RequestParam("q") String q){
         return groupService.search(q);
     }
 

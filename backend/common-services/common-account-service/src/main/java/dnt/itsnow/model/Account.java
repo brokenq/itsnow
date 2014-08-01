@@ -13,6 +13,10 @@ import javax.validation.constraints.Min;
  * <h1>>服务采购方(MSU)或者服务供应方(MSP)在系统数据库中的账户</h1
  */
 public abstract class Account extends Record {
+    public static final String MSC = "msc";
+    public static final String MSU = "msu";
+    public static final String MSP = "msp";
+
     private String        sn;
     @NotBlank
     // 帐户名称
@@ -54,5 +58,21 @@ public abstract class Account extends Record {
         return this.status == AccountStatus.Valid;
     }
 
-    public abstract String getType();
+    public String getType(){
+        if(getSn().startsWith(MSU))return MSU;
+        if(getSn().startsWith(MSP))return MSP;
+        return MSC;
+    }
+
+    public boolean isMsc(){
+        return MSC.equals(getType());
+    }
+
+    public boolean isMsu(){
+        return MSU.equals(getType());
+    }
+
+    public boolean isMsp(){
+        return MSP.equals(getType());
+    }
 }

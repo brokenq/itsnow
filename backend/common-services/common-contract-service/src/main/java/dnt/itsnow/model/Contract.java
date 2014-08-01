@@ -11,12 +11,42 @@ import java.util.List;
  * <h1>MSU和MSP之间关于服务的合同契约</h1>
  */
 public class Contract extends Record {
+    private String sn;
     //合同甲方，服务采购方
     private MsuAccount msuAccount;
     //合同乙方，服务供应方
     private MspAccount mspAccount;
+    // MSU 是否批准
+    private ContractStatus msuStatus;
+    // MSP 是否批准
+    private ContractStatus mspStatus;
+
     //合同明细
     private List<ContractDetail> details;
+
+    public String getSn() {
+        return sn;
+    }
+
+    public void setSn(String sn) {
+        this.sn = sn;
+    }
+
+    public ContractStatus getMsuStatus() {
+        return msuStatus;
+    }
+
+    public void setMsuStatus(ContractStatus msuStatus) {
+        this.msuStatus = msuStatus;
+    }
+
+    public ContractStatus getMspStatus() {
+        return mspStatus;
+    }
+
+    public void setMspStatus(ContractStatus mspStatus) {
+        this.mspStatus = mspStatus;
+    }
 
     public MsuAccount getMsuAccount() {
         return msuAccount;
@@ -48,5 +78,13 @@ public class Contract extends Record {
             if(detail.getId().equals(id)) return detail;
         }
         return null;
+    }
+
+    public boolean isApprovedByMsu() {
+        return msuStatus.isApproved();
+    }
+
+    public boolean isApprovedByMsp(){
+        return mspStatus.isApproved();
     }
 }

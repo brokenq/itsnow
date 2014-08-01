@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>user_app</artifactId>
-    <name>Itsnow User Service App</name>
+    <name>Itsnow Demo User Service App</name>
     <description>
         The itsnow user service App
     </description>

@@ -31,6 +31,11 @@ public class User extends Record implements UserDetails, CredentialsContainer {
     @NotBlank
     private String phone;
     private String password;
+    // 用户的当前所服务的主账户SN，可以为空，可以变化
+    private Long accountId;
+    // 用户的当前主账户
+    private Account account;
+
     private Set<GrantedAuthority> authorities;
     private boolean enabled = true;   // 由一般注册流程或者管理员设置，该信息存储在user上
     private boolean expired = false;  //帐号过期
@@ -122,6 +127,22 @@ public class User extends Record implements UserDetails, CredentialsContainer {
 
     public void setPasswordExpired(boolean passwordExpired) {
         this.passwordExpired = passwordExpired;
+    }
+
+    public Long getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(Long accountId) {
+        this.accountId = accountId;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     public void setAuthorities(Set<? extends GrantedAuthority> authorities) {

@@ -5,8 +5,8 @@ package dnt.itsnow.platform;
 
 import dnt.itsnow.platform.repository.DatabaseConfig;
 import dnt.itsnow.platform.services.ServicePackageManager;
-import dnt.itsnow.platform.support.ServicePackageEventForwarder;
 import dnt.itsnow.platform.support.JettyServer;
+import dnt.itsnow.platform.support.ServicePackageEventForwarder;
 import dnt.spring.DefaultAppConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;

@@ -3,14 +3,13 @@
  */
 package dnt.itsnow.config;
 
-import dnt.itsnow.platform.config.DefaultServiceConfig;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import dnt.itsnow.service.AccountService;
 
-/** Description */
-public class MutableUserServiceConfig extends DefaultServiceConfig{
+/** The mutable user service manager */
+public class MutableUserServiceConfig extends DefaultMutableServiceConfig{
     @Override
     public void defineServices() {
         super.defineServices();
-        importService(PasswordEncoder.class);
+        importService(AccountService.class);
     }
 }
