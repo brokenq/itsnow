@@ -140,7 +140,7 @@ public class AbstractFilterInterceptor extends HandlerInterceptorAdapter {
         }
 
         @Override
-        public int compareTo(AnnotatedMethod<T> other) {
+        public int compareTo(@SuppressWarnings("NullableProblems") AnnotatedMethod<T> other) {
             return getOrder(annotation) - getOrder(other.annotation);
         }
 
@@ -150,6 +150,11 @@ public class AbstractFilterInterceptor extends HandlerInterceptorAdapter {
             } catch (Exception ex) {
                 return 0;
             }
+        }
+
+        @Override
+        public String toString() {
+            return "@" + annotation.getClass().getSimpleName() + " -> " + method.getName();
         }
     }
 }

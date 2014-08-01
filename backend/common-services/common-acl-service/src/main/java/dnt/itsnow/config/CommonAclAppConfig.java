@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
  */
 @Configuration
 @Import({DefaultAppConfig.class})
-public class AclAppConfig implements InitializingBean {
+public class CommonAclAppConfig implements InitializingBean {
     @Autowired
     DelegateSecurityConfigurer configurer;
     @Autowired

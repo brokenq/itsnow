@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 @Service("groupedUserService")
 public class GroupedUserDetailsService implements UserService, UserDetailsService {
     @Autowired
-    @Qualifier("origin") // 代码中的qualifier 就是 context 中的bean名称或id
+    @Qualifier("plainUserService") // 代码中的qualifier 就是 context 中的bean名称或id
     UserService     userService;
     @Autowired
     GroupRepository groupRepository;
@@ -48,7 +48,7 @@ public class GroupedUserDetailsService implements UserService, UserDetailsServic
     }
 
     @Override
-    public Account findMainAccount(User user) {
-        return userService.findMainAccount(user);
+    public Account findAccountById(Long accountId) {
+        return userService.findAccountById(accountId);
     }
 }

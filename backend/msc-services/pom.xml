@@ -31,7 +31,11 @@
         <dependency>
             <groupId>dnt.itsnow</groupId>
             <artifactId>platform</artifactId>
-        </dependency>       
+        </dependency>
+        <dependency>
+            <groupId>dnt.itsnow</groupId>
+            <artifactId>common-user-service</artifactId>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
@@ -94,7 +98,8 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Default-Config>S,A,D,W</Default-Config>
+                            <Default-Config>A,D,W</Default-Config>
+                            <Service-Config>dnt.itsnow.config.DefaultMutableServiceConfig</Service-Config>
                         </manifestEntries>
                     </archive>
                 </configuration>

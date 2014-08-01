@@ -5,16 +5,12 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.exception.AccountException;
 import dnt.itsnow.model.Account;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.service.Pageable;
-import dnt.itsnow.platform.web.controller.ApplicationController;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.service.MutableAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -39,7 +35,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/admin/api/accounts")
-public class AccountsController extends ApplicationController {
+public class AccountsController extends SessionSupportController<Account> {
     @Autowired
     MutableAccountService accountService;
 
@@ -48,17 +44,15 @@ public class AccountsController extends ApplicationController {
      * <p/>
      * GET /admin/api/accounts?type={msc|msu|msp|*}&page={int}&size={int}
      *
-     * @param response HTTP 应答
      * @param type 账户类型，取值可以为 msc, msu, msp
      * @return 账户列表
      */
     @RequestMapping
-    public List<Account> index( HttpServletResponse response, @RequestParam(value = "type", required = false) String type ) {
+    public List<Account> index( @RequestParam(value = "type", required = false) String type ) {
         logger.debug("Listing accounts");
-        Page<Account> accounts = accountService.findAll(type, pageRequest);
-        renderHeader(response, accounts);
-        logger.debug("Found   accounts {}", accounts.getTotalElements());
-        return accounts.getContent();
+        indexPage = accountService.findAll(type, pageRequest);
+        logger.debug("Found   accounts {}", indexPage.getTotalElements());
+        return indexPage.getContent();
     }
 
     /**
@@ -105,7 +99,7 @@ public class AccountsController extends ApplicationController {
         logger.info("Updating {}", sn);
         Account exist = accountService.findBySn(sn);
         exist.apply(account);
-        Account updated = null;
+        Account updated;
         try {
             updated = accountService.update(exist);
         } catch (AccountException e) {

@@ -9,4 +9,6 @@ public interface AccountService {
     Account findByName(String name);
 
     Account findBySn(String sn);
+
+    Account findById(Long id);
 }

@@ -3,9 +3,11 @@
  */
 package dnt.itsnow.platform.web.controller;
 
+import dnt.itsnow.platform.model.Record;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.PageRequest;
 import dnt.itsnow.platform.service.Sort;
+import dnt.itsnow.platform.web.annotation.AfterFilter;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.platform.web.exception.WebServerSideException;
@@ -25,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /** The Rest Controller */
 @Scope(WebApplicationContext.SCOPE_REQUEST)
-public class ApplicationController {
+public class ApplicationController<T extends Record> {
     // 父类内部使用的headers
     private static   HttpHeaders      headers          = new HttpHeaders();
     // 提供给子类使用的通用的日志
@@ -33,6 +35,7 @@ public class ApplicationController {
 
     // 通过 Before Filter 自动创建的page request对象
     protected PageRequest pageRequest;
+    protected Page<T> indexPage;
 
     @ExceptionHandler(WebClientSideException.class)
     public ResponseEntity<Object> handleWebClientSideException(WebClientSideException ex, WebRequest request) {
@@ -79,16 +82,18 @@ public class ApplicationController {
         pageRequest = new PageRequest(page, size, theSort);
     }
 
+    @AfterFilter(method =  RequestMethod.GET, value = "index")
+    public void renderPageToHeader(HttpServletResponse response){
+        if( indexPage == null ) return;
+        response.setHeader(Page.TOTAL, String.valueOf(indexPage.getTotalElements()));
+        response.setHeader(Page.PAGES, String.valueOf(indexPage.getTotalPages()));
+        response.setHeader(Page.NUMBER, String.valueOf(indexPage.getNumber()));
+        response.setHeader(Page.REAL, String.valueOf(indexPage.getNumberOfElements()));
+        response.setHeader(Page.SORT, String.valueOf(indexPage.getSort()));
+    }
+
     private Sort parseSort(String sort) {
         // TODO PARSE SORT correctly
         return null;// new Sort(sort);
-    }
-
-    protected void renderHeader(HttpServletResponse response, Page page) {
-        response.setHeader(Page.TOTAL, String.valueOf(page.getTotalElements()));
-        response.setHeader(Page.PAGES, String.valueOf(page.getTotalPages()));
-        response.setHeader(Page.NUMBER, String.valueOf(page.getNumber()));
-        response.setHeader(Page.REAL, String.valueOf(page.getNumberOfElements()));
-        response.setHeader(Page.SORT, String.valueOf(page.getSort()));
     }
 }

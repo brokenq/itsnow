@@ -6,6 +6,7 @@ package dnt.itsnow.support;
 import dnt.itsnow.model.Account;
 import dnt.itsnow.model.User;
 import dnt.itsnow.repository.UserRepository;
+import dnt.itsnow.service.AccountService;
 import dnt.itsnow.service.UserService;
 import dnt.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ import org.springframework.stereotype.Service;
 public class UserManager extends Bean implements UserService {
     @Autowired
     UserRepository repository;
+    @Autowired
+    AccountService accountService;
 
     PasswordEncoder passwordEncoder = new StandardPasswordEncoder();
 
@@ -45,9 +48,8 @@ public class UserManager extends Bean implements UserService {
     }
 
     @Override
-    public Account findMainAccount(User user) {
-        //TODO FIND MAIN ACCOUNT FOR THE USER
-        return null;
+    public Account findAccountById(Long accountId) {
+        return accountService.findById(accountId);
     }
 
     /**
@@ -55,6 +57,7 @@ public class UserManager extends Bean implements UserService {
      * @param rawPassword 原始密码
      * @return 被加密的密码
      */
+    @SuppressWarnings("UnusedDeclaration")
     protected String encode(String rawPassword){
         return passwordEncoder.encode(rawPassword);
     }

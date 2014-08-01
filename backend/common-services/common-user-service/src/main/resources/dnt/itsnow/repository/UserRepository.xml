@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dnt.itsnow.repository.UserRepository">
+    <select id="findByUsername" resultMap="userWithAccount">
+        SELECT u.*,
+               a.id         AS account_id,
+               a.sn         AS account_sn,
+               a.name       AS account_name,
+               a.type       AS account_type,
+               a.status     AS account_status,
+               a.created_at AS account_created_at,
+               a.updated_at AS account_updated_at
+        FROM itsnow_msc.users u
+        LEFT JOIN itsnow_msc.accounts a ON u.account_id = a.id
+        WHERE UPPER(u.username) = UPPER(#{username})
+
+    </select>
+
+    <resultMap id="userWithAccount" type="User" autoMapping="true">
+        <association property="account" resultMap="accountResult" columnPrefix="account_"/>
+    </resultMap>
+
+    <resultMap id="accountResult" type="Account" autoMapping="true">
+        <discriminator column="type" javaType="string">
+            <case value="msc" resultType="MscAccount"/>
+            <case value="msu" resultType="MsuAccount"/>
+            <case value="msp" resultType="MspAccount"/>
+        </discriminator>
+    </resultMap>
+
+</mapper>

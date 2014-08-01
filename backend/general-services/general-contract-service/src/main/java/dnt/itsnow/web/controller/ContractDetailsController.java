@@ -5,10 +5,15 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.Contract;
 import dnt.itsnow.model.ContractDetail;
+import dnt.itsnow.platform.service.ServiceException;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
-import dnt.itsnow.service.ContractService;
+import dnt.itsnow.platform.web.exception.WebClientSideException;
+import dnt.itsnow.platform.web.exception.WebServerSideException;
+import dnt.itsnow.service.GeneralContractService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestClientException;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -25,10 +30,10 @@ import java.util.List;
  * 而是向msc发起请求执行
  */
 @RestController
-@RequestMapping("/api/contracts/{contract_sn}")
+@RequestMapping("/api/contracts/{contract_sn}/details")
 public class ContractDetailsController extends SessionSupportController{
     @Autowired
-    ContractService contractService;
+    GeneralContractService contractService;
 
     private Contract currentContract;
 
@@ -50,17 +55,23 @@ public class ContractDetailsController extends SessionSupportController{
     @RequestMapping(value = "{id}", method = RequestMethod.PUT)
     public ContractDetail update(@PathVariable("id") Long id,
                                  @RequestBody @Valid ContractDetail detail){
-        logger.info("Updating contract details {}", detail.getTitle());
+        logger.info("Updating contract details {}: {}", id, detail.getTitle());
         // 因为这个contract被加载时已经load了所有的明细
-        ContractDetail exist = currentContract.getDetail(id);
-        exist.apply(detail);
-        contractService.updateDetail(exist);
-        logger.info("Updated  contract details {}", exist.getTitle());
-        return exist;
+        ContractDetail updated;
+        try {
+            updated = contractService.updateDetail(detail);
+        } catch (ServiceException e) {
+            throw new WebClientSideException(HttpStatus.NOT_ACCEPTABLE,
+                    "the contract detail can't be updated:" + e.getMessage());
+        } catch (RestClientException e) {
+            throw new WebServerSideException(HttpStatus.BAD_GATEWAY, e.getMessage());
+        }
+        logger.info("Updated  contract details {}", updated.getTitle());
+        return updated;
     }
 
     @BeforeFilter(order = 30)
-    void initContract(@PathVariable("contract_sn") String contractSn) {
+    void initContract(@PathVariable("contract_sn") String contractSn) throws ServiceException {
         currentContract = contractService.findByAccountAndSn(mainAccount, contractSn, true);
     }
 }

@@ -8,7 +8,8 @@ CREATE TABLE accounts (
   type       VARCHAR(100)     NOT NULL,
   status     VARCHAR(50)               DEFAULT 'New',
   created_at TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP
+  updated_at TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY (sn)
 );
 
 

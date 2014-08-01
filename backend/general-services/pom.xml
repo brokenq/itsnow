@@ -22,7 +22,15 @@
         <module>general-account-service</module>
         <module>general-staff-service</module>
         <module>general-service_catalog-service</module>
+        <module>general-contract-service</module>
     </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>dnt.itsnow</groupId>
+            <artifactId>platform</artifactId>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
@@ -54,11 +62,14 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Default-Config>S,A,D,W</Default-Config>
+                            <Default-Config>A,D,W</Default-Config>
+                            <Service-Config>dnt.itsnow.config.DefaultGeneralServiceConfig</Service-Config>
                         </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+
+
 </project>

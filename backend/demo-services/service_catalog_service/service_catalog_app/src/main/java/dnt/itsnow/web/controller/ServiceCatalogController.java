@@ -5,12 +5,10 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.api.ServiceCatalogService;
 import dnt.itsnow.model.ServiceCatalog;
-import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.web.controller.ApplicationController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -18,7 +16,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/demo/service_catalogs")
-public class ServiceCatalogController extends ApplicationController {
+public class ServiceCatalogController extends ApplicationController<ServiceCatalog> {
 
     @Autowired
     ServiceCatalogService scService;
@@ -32,9 +30,9 @@ public class ServiceCatalogController extends ApplicationController {
      * @return 查询结果
      */
     @RequestMapping(method = RequestMethod.GET)
-    public List<ServiceCatalog> all(@RequestParam(required = false, defaultValue = "") String keyword) {
-        Page<ServiceCatalog> thePage = scService.findAll(keyword, pageRequest);
-        return thePage.getContent();
+    public List<ServiceCatalog> index(@RequestParam(required = false, defaultValue = "") String keyword) {
+        indexPage = scService.findAll(keyword, pageRequest);
+        return indexPage.getContent();
     }
 
     /**
