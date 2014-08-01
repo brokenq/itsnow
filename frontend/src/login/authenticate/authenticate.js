@@ -20,6 +20,8 @@ angular.module('ItsNow.Login.Authenticate', [
     });
   })
 
+//  .controller('AuthenticateCtrl', ['$scope', 'Session', 'LoginService',
+//    function ($scope, Session, LoginService) {
   .controller('AuthenticateCtrl', ['$scope', 'Session',
     function ($scope, Session) {
       $scope.credential = {username: 'admin', password: 'secret', remember: true};
@@ -27,6 +29,9 @@ angular.module('ItsNow.Login.Authenticate', [
 
       $scope.challenge = function (input) {
         Session.create(input, function (value, header) {
+
+//        var user = LoginService.query({userId:value.credential.username});
+
           window.location.href = '/index.html';
         }, function (response) {
           $scope.error = response.data;//后端现在处理了异常，返回的是简要的错误信息
@@ -35,4 +40,11 @@ angular.module('ItsNow.Login.Authenticate', [
       //有了这个成员，模板中才能写成: authenticate.challenge(input)
       //this.challenge = $scope.challenge;
     }])
+
+//.factory('LoginService', function($resource){
+//    return $resource('/api/users/:userId', {}, {
+//        query: {method:'POST', params:{userId:'@userId'}, isArray:true}
+//    });
+//});
+
 ;

@@ -26,8 +26,9 @@ angular.module('ItsNow', [
 
 ;
 
-var indexApp = angular.module('indexApp', ['menuApp', 'userApp', 'slaApp', 'contractApp', 'ui.router', 'templates-app']);
+var indexApp = angular.module('ItsNow.Index', ['menuApp', 'userApp', 'slaApp', 'contractApp', 'ui.router', 'templates-app']);
 
+// 菜单路由设定
 indexApp.config(function ($stateProvider, $urlRouterProvider) {
 
     $urlRouterProvider.otherwise('/index');
@@ -35,7 +36,7 @@ indexApp.config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider
         .state('index', {
             url: '/index',
-            templateUrl: 'index/main-container.tpl.html'
+            templateUrl: 'main/main-container.tpl.html'
         })
         .state('index.user', {
             url: '/user',
@@ -51,3 +52,4 @@ indexApp.config(function ($stateProvider, $urlRouterProvider) {
         });
 
 });
+
