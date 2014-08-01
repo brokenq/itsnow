@@ -20,8 +20,10 @@ angular.module('ItsNow.Login.Authenticate', [
     });
   })
 
-  .controller('AuthenticateCtrl', ['$scope', 'Session', 'LoginService',
-    function ($scope, Session, LoginService) {
+//  .controller('AuthenticateCtrl', ['$scope', 'Session', 'LoginService',
+//    function ($scope, Session, LoginService) {
+  .controller('AuthenticateCtrl', ['$scope', 'Session',
+    function ($scope, Session) {
       $scope.credential = {username: 'admin', password: 'secret', remember: true};
       $scope.error = null;
 

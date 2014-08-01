@@ -89,7 +89,7 @@ userApp.controller('UserListCtrl', UserListCtrl);
 userApp.factory('UserService', ['$resource', function ($resource) {
     return $resource('/api/users', null, {
         list: {
-            method: 'POST',
+            method: 'GET',
             isArray: true
         }
     });
