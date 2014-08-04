@@ -10,6 +10,7 @@ import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.controller.ApplicationController;
 import dnt.itsnow.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
@@ -21,6 +22,7 @@ import java.security.Principal;
  */
 public class SessionSupportController<T extends Record> extends ApplicationController<T> {
     @Autowired
+    @Qualifier("plainUserService")
     UserService    userService;
 
     // 用于before filter与实际方法之间的信息共享
