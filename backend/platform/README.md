@@ -349,13 +349,13 @@ mysql> grant select,execute on itsnow_msp_001.* to 'itsnow_msp_001'@'localhost';
 
 ### 5.1 CRSF保护
 
-  通过`GET /security/csrf` 可以获取当前的CSRF信息，如下：
+通过`GET /security/csrf` 可以获取当前的CSRF信息，如下：
 
 ```json
 {"headerName":"X-CSRF-TOKEN","parameterName":"_csrf","token":"541ac4a0-36d2-41eb-a073-962e163c3219"}
 ```
 
-  每次POST请求之后，CSRF Token都会变化，请在客户端及时`GET /security/csrf`更新。
+每次POST请求之后，CSRF Token都会变化，请在客户端及时`GET /security/csrf`更新。
 
 ### 5.2 用户认证
 
