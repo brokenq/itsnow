@@ -3,13 +3,14 @@
  */
 package dnt.itsnow.platform.web.security;
 
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.*;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
@@ -31,7 +32,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
                 /* 配置匿名服务 */
                 .and().anonymous().authorities("ROLE_ANONYMOUS").principal("ANONYMOUS")
                 /* 配置登出服务 */
-                .and().logout().invalidateHttpSession(true).logoutSuccessUrl("/login.html").logoutUrl("/logout")
+                .and().logout().invalidateHttpSession(true).logoutSuccessUrl("/login.html").logoutUrl("/api/logout")
                 /* 配置会话服务 */
                 .and().sessionManagement().enableSessionUrlRewriting(true).sessionFixation().none();
         // 若以后支持手机客户端访问，那个时候可能就需要基于Digest-Authentication
@@ -40,6 +41,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
                 (ExpressionUrlAuthorizationConfigurer.ExpressionInterceptUrlRegistry)
                         //谁在前，谁优先级高
                         http.authorizeRequests()
+                            .antMatchers(HttpMethod.POST, "api/session").anonymous()
                             .antMatchers("/api/**").hasAnyRole("ADMIN","MONITOR","REPORTER","USER")
                             .antMatchers("/admin/api/**").hasAnyRole("ADMIN")
                             .antMatchers("/monitor/api/**").hasAnyRole("MONITOR")
