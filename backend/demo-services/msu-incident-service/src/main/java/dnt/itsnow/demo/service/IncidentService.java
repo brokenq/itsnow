@@ -1,6 +1,6 @@
-package dnt.itsnow.service;
+package dnt.itsnow.demo.service;
 
-import dnt.itsnow.model.Incident;
+import dnt.itsnow.demo.model.Incident;
 
 import java.util.List;
 
@@ -12,4 +12,8 @@ public interface IncidentService {
     void newIncident(Incident incident);
 
     List<Incident> findIncidents(String orderBy, int offset, int size);
+
+    void updateIncident(Incident incident);
+
+    void closeIncident(Incident incident);
 }
