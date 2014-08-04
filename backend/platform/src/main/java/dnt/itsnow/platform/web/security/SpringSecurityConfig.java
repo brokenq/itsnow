@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /** Work as parent of SpringMvcConfig */
 @Configuration
@@ -32,7 +33,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
                 /* 配置匿名服务 */
                 .and().anonymous().authorities("ROLE_ANONYMOUS").principal("ANONYMOUS")
                 /* 配置登出服务 */
-                .and().logout().invalidateHttpSession(true).logoutSuccessUrl("/login.html").logoutUrl("/api/logout")
+                .and().logout().invalidateHttpSession(true).logoutSuccessUrl("/login.html")
+                .logoutRequestMatcher(new AntPathRequestMatcher("/api/session", "DELETE"))
                 /* 配置会话服务 */
                 .and().sessionManagement().enableSessionUrlRewriting(true).sessionFixation().none();
         // 若以后支持手机客户端访问，那个时候可能就需要基于Digest-Authentication
@@ -47,7 +49,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
                             .antMatchers("/monitor/api/**").hasAnyRole("MONITOR")
                             .antMatchers("/reporter/api/**").hasAnyRole("REPORTER")
                             .antMatchers("/**").permitAll();
-        authenticated.and().formLogin().loginPage("/login.html")
+        authenticated.and().formLogin().loginPage("/login.html").loginProcessingUrl("/api/session")
                      .and().httpBasic().realmName("ItsNow Platform");
     }
 
