@@ -1,9 +1,9 @@
-package dnt.itsnow.web.controller;
+package dnt.itsnow.demo.web.controller;
 
-import dnt.itsnow.model.Incident;
+import dnt.itsnow.demo.model.Incident;
 import dnt.itsnow.platform.web.controller.ApplicationController;
 import dnt.itsnow.api.ActivitiEngineService;
-import dnt.itsnow.support.IncidentManager;
+import dnt.itsnow.demo.support.IncidentManager;
 import dnt.util.StringUtils;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
@@ -17,7 +17,7 @@ import java.util.*;
  * The Incident Process controller
  */
 @RestController
-@RequestMapping("/api/workflow/incident")
+@RequestMapping("/api/incidents")
 public class IncidentController extends ApplicationController {
 
     @Autowired
@@ -26,22 +26,19 @@ public class IncidentController extends ApplicationController {
     @Autowired
     IncidentManager incidentManager;
 
-
-
-
-    @RequestMapping(value = "/tasks/start")
+    @RequestMapping(value = "/start")
     @ResponseBody
     public Object startProcessInstance(@RequestParam("userId") String userId,HttpServletRequest request){
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.putAll(request.getParameterMap());
 
         //start incident process
-        ProcessInstance processInstance = activitiEngineService.startProcessInstanceByKey("incident",variables,userId);
+        ProcessInstance processInstance = activitiEngineService.startProcessInstanceByKey("msu_incident",variables,userId);
 
         //save incident object and persist it
         Incident incident = new Incident();
-        incident.setOwner(userId);
-        incident.setTopic(request.getParameter("question"));
+        incident.setCreatedBy(userId);
+        incident.setRequestDescription(request.getParameter("description"));
         incident.setInstanceId(processInstance.getProcessInstanceId());
         incidentManager.newIncident(incident);
 
@@ -60,7 +57,7 @@ public class IncidentController extends ApplicationController {
         return result;
     }
 
-    @RequestMapping(value = "/tasks/complete/{id}")
+    @RequestMapping(value = "/{id}")
     @ResponseBody
     public Object completeTasksByUser(@PathVariable("id") String taskId,@RequestParam("userId") String userId,HttpServletRequest request){
         List<Map<String, Object>> resultLs = new ArrayList<Map<String, Object>>();
@@ -87,13 +84,15 @@ public class IncidentController extends ApplicationController {
         return resultLs;
     }
 
-    @RequestMapping(value = "/tasks/claim/{id}")
+    @RequestMapping(value = "/{id}/claim")
     @ResponseBody
     public Object claimTasksByUser(@PathVariable("id") String taskId,@RequestParam("userId") String userId,HttpServletRequest request){
         Task task = null;
         if(StringUtils.isNotEmpty(userId)) {
             task = activitiEngineService.claimTask(taskId, userId);
         }
+
+        //update incident object status and persist it.
         return "result:success";
     }
 }

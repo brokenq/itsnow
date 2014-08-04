@@ -3,6 +3,7 @@
  */
 package dnt.itsnow.config;
 
+import dnt.itsnow.api.ActivitiEngineService;
 import dnt.itsnow.platform.config.DefaultServiceConfig;
 import org.activiti.engine.ProcessEngine;
 
@@ -15,6 +16,6 @@ public class ActivitiServiceConfig extends DefaultServiceConfig {
         super.defineServices();
         //工作流相关服务
         exportService(ProcessEngine.class);
-
+        exportService(ActivitiEngineService.class);
     }
 }
