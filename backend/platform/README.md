@@ -2,7 +2,7 @@
 
 ## 1. 前言 Preface
 
-**Itnsow backend platform** 基于 [spring component framework](http://git.happyonroad.net/happyonroad/component-framework/blob/master/sustain/README-cn.md) 开发，在平台部分主要提供了部分基础特性：
+**Itnsow backend platform** 基于 [spring component framework](http://git.happyonroad.net/happyonroad/component-framework/blob/master/sustain/README-cn.md) 开发，平台主要提供了部分基础特性：
 
 1. Spring MVC 容器
 2. Mybatis ORM 机制（包括migrate机制）
@@ -23,23 +23,23 @@
 ```
               +-----------------------+ 
               |instance-01            |
-              |   msc-schema(master)--|----
+              |   itsnow_msc(master)--|----
               +-----------------------+ | |
                                         | |
               +-----------------------+ | |
               |instance-02            | | |
               |   msc-schema(slave) <-|-+ |
-              |   msu_001-schema      |   |       
-              |   msp_001-schema      |   | 复制(replicate)
+              |   itsnow_msu_001      |   |       
+              |   itsnow_msp_001      |   | 复制(replicate)
               +-----------------------+   |
                                           |
               +-----------------------+   |
-              |instance-02            |   |
-              |   msc-schema(slave) <-|---+
-              |   msu_002-schema      |
-              |   msp_002-schema      |
-              |   msu_003-schema      |
-              |   msp_004-schema      |
+              |instance-03            |   |
+              |   itsnow_msc(slave) <-|---+
+              |   itsnow_msu_002      |
+              |   itsnow_msp_002      |
+              |   itsnow_msu_003      |
+              |   itsnow_msp_004      |
               +-----------------------+
 
 ```
@@ -51,23 +51,23 @@
 ```
                                       +-----------------------+
     +-----+                           |instance-01            |
-    | msc |---------------------------|   msc-schema(master)--|----
+    | msc |---------------------------|   itsnow_msc(master)--|----
     +-----+                           +-----------------------+ | |
                                                                 | |
                                       +-----------------------+ | |
     +---------+                       |instance-02            | | |
-    | msu_001 |-----------------------|   msc-schema(slave) <-|-+ |
-    +---------+                      /|   msu_001-schema      |   |
-                                    / |   msp_001-schema      |   | 复制(replicate)
+    | msu_001 |-----------------------|   itsnow_msc(slave) <-|-+ |
+    +---------+                      /|   itsnow_msu_001      |   |
+                                    / |   itsnow_msp_001      |   | 复制(replicate)
     +---------+                    /  +-----------------------+   |
     | msp_001 |-------------------/                               |
     +---------+                       +-----------------------+   |
-                                      |instance-02            |   |
-                                  /---|   msc-schema(slave) <-|---+
-    +---------+                  /    |   msu_002-schema      |
-    | msu_002 |-----------------/  ---|   msp_002-schema      |
-    +---------+                   /   |   msu_003-schema      |
-                                 /  --|   msp_004-schema      |
+                                      |instance-03            |   |
+                                  /---|   itsnow_msc(slave) <-|---+
+    +---------+                  /    |   itsnow_msu_002      |
+    | msu_002 |-----------------/  ---|   itsnow_msp_002      |
+    +---------+                   /   |   itsnow_msu_003      |
+                                 /  --|   itsnow_msp_004      |
     +---------+                 /  /  +-----------------------+
     | msu_003 |----------------/  /
     +---------+                  /
@@ -83,7 +83,7 @@
 我们在项目组织上，将他们分解为如下模块构成：
 
 | 模块               | 说明         |   建议  |
-| ---------------------------------|------------| 
+| ------------------|--------------|------------| 
 | release           | 任意部署单元的部署模板项目 | - |
 | platform          | 提供平台特性，被 release 项目所依赖 | - |
 | common services   | 提供任意部署单元都会用到的通用服务 |关于 msc-schema的直接读服务, 关于每个部署单元的主schema均有的模型的管理服务（如 groups, acls, 工作流） |
@@ -98,7 +98,7 @@
 
 首先，由于项目进度问题(2014/08/04)，平台还处于快速开发，尚未稳定的阶段，其不稳定主要表现在：
 
-1. 平台的内容可能有所增加（在spring mvc, mybatis 之外，可能会随项目开发深入增加）
+1. 平台的内容可能有所增加（在spring mvc, mybatis 之外，可能会随项目开发深入增加新的平台特性，相应业务模块也可以增加新的约束）
 2. 平台的组织结构可能调整（即便是已有的特性，如mybatis，也可能被被抽取为单独的组件，成为平台的可选特性）
 3. 平台本身也可能被从 itsnow 提取到 components中，作为bsm/dss 等其他子系统的的开发环境
 4. 平台的标准范式和API等也可能需要继续深入开发，整理
@@ -147,6 +147,7 @@
 2. 基本工具类(Rest Facade)
 3. 基本配置类(DefaultAppConfig, Default ServiceConfig)
 4. 基本Web控制机制
+
    A. Application Controller 作为一般控制器父类
    B. Before|After Filter作为一般控制器编程支撑
    C. 基本异常机制
@@ -154,9 +155,9 @@
 
 ## 4. 平台扩展能力
 
-平台启动后会扫描 release 目录， 加载其中artifact id 不以apid结尾的jar包，一般这些jar包（我们称其为业务模块/service package）都是面向某个数据库业务表，并实现相应的从WEB Controller到业务bean，以及数据库操作的一系列功能。
+平台启动后会扫描 release 目录， 加载其中artifact id 不以api结尾的jar包，一般这些jar包（我们称其为业务模块/service package）都是面向某个数据库业务表，并实现相应的从WEB Controller到业务bean，以及数据库操作的一系列功能。
 
-为了支撑业务模块的端到端开发，平台(通过Service Package Manager)支持，支持用户通过一个Default-Config属性的设置，将任意一个service package 默认视为一个拥有如下配置的服务组件：
+为了支撑业务模块的端到端开发，平台(通过Service Package Manager)支持用户通过设置一个Manifest/Default-Config指令，将任意一个service package 转换为一个拥有如下配置的服务组件：
 
 ```
             <plugin>
@@ -181,7 +182,7 @@ Default Config 中的值，S = Service, A = App, D = DB, W = Web，也可以写�
      <Web-Repository>dnt.itsnow.web.controller</Web-Repository>
 ```
 
-1. Default Service Config
+1、 Default Service Config
 
 ```java
     public void defineServices() {
@@ -195,7 +196,7 @@ Default Config 中的值，S = Service, A = App, D = DB, W = Web，也可以写�
 
 ```
 
-2. Default App Config
+2、 Default App Config
 
 ```java
 @Configuration
@@ -205,16 +206,20 @@ Default Config 中的值，S = Service, A = App, D = DB, W = Web，也可以写�
 
 一般业务模块的服务bean，应该将放到 dnt.itsnow.support 包下，这样，他们只要有了 `@Component`, `@Service` , `@Configuration` 等Spring标记，就会被默认加载
 
-备注： 控制器代码不建议放到这个目录，而是 `dnt.itsnow.web.controller`下
+备注： 控制器代码不建议放到这个目录，而是放到 `dnt.itsnow.web.controller`下
 
-DB和Web两个扩展特性是平台在spring-component-frame之外额外扩展的：
+----------
+
+DB和Web两个扩展特性是平台在spring-component-frame的application/service之外额外扩展特性：
+
+-----------
 
 ### 4.1. Mybatis扩展
 
 #### 1. 数据库模型migrate
 
    开发者需要在jar包的/META-INF/migrate目录增加相应的migrate脚本
-   migrate脚本的生成方式，需由开发者在 msc|msu|msp 任意部署实体中：
+   migrate脚本需由开发者在 msc|msu|msp 任意部署实体中：
    
 ```
   cd /path/to/msc
@@ -223,8 +228,8 @@ DB和Web两个扩展特性是平台在spring-component-frame之外额外扩展�
   chmod u+x bin/migrate
   bin/migrate new <the description>    
 ```
-  生成完毕之后，migrate脚本文件应该从 /path/to/msc/db/migrate/scripts/xxxx_yyy.sql移动到实际项目resoures目录中，并在被相应模块打包到最终jar包中，部署到/path/to/msc/repository中
-  系统部署后，工程师应该先讲msc部署单元的数据库schema准备就绪，具体步骤为：
+  新生成的migrate脚本文件应该从 /path/to/msc/db/migrate/scripts/xxxx_yyy.sql移动到实际项目resoures目录中，并在被相应模块打包到最终jar包中，部署到/path/to/msc/repository中
+  系统部署后，工程师应该先将msc部署单元的数据库schema准备就绪，具体步骤为：
 
 ```
  # 登录到mysql控制台 
@@ -243,6 +248,20 @@ mysql> grant select,execute on itsnow_msu_001.* to 'itsnow_msu_001'@'localhost';
 mysql> create user 'itsnow_msp_001'@'localhost' identified by 'secret';
 mysql> grant select,execute on itsnow_msp_001.* to 'itsnow_msp_001'@'localhost';
 ```  
+而后返回命令行 
+
+```
+ # 保证 db/migrate/environments/development.properties 文件中数据库，用户名，密码设置正确
+ cd /path/to/msc/db
+ bin/migrate up
+ 
+ cd /path/to/msu/db
+ bin/migrate up
+ 
+ cd /path/to/msp/db
+ bin/migrate up
+```
+
 #### 2. 数据库模型映射 
 
 平台默认会扫描每个service package的 dnt/itsnow/repository目录，寻找其中Mybatis的Mapper类以及Mapper XML
@@ -294,4 +313,53 @@ mysql> grant select,execute on itsnow_msp_001.* to 'itsnow_msp_001'@'localhost';
 
 而这些控制器，可以 如一般的spring mvc controller一样， `@Autowire`依赖的bean和服务，通过`@RequestMapping`处理特定路由。 
 
-## 5. 标准扩展模板
+如果需要定义额外的Web控制器扫描路径：
+
+```xml
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Web-Repository>
+                              dnt.itsnow.web.conroller,dnt.itsnow.controller
+                            </Web-Repository>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+```
+
+
+## 5. Spring Security 整合
+
+### 5.1 CRSF保护
+
+`GET /security/csrf` 可以获取当前的CSRF信息，如下：
+
+```json
+{"headerName":"X-CSRF-TOKEN","parameterName":"_csrf","token":"541ac4a0-36d2-41eb-a073-962e163c3219"}
+```
+
+每次POST请求之后，CSRF Token都会变化，请在客户端及时更新。
+
+### 5.2 用户认证
+
+默认支持两种认证方式
+
+1. Form认证
+   登录：`POST /api/session` 其中带上 username, password 等认证信息
+   登出：`DELETE /api/session`  
+2. Basic Authentication认证
+   curl -u user:password http://host:port
+   
+认证成功之后，当前用户名可以根据Servlet规范，从 `request.getRemoteUser()` 获得， 当前用户身份可以从 `request.getUserPrincipal()` 获得   
+
+### 5.3 用户授权
+
+请参考 [Spring Security](http://docs.spring.io/spring-security/site/docs/3.2.4.RELEASE/reference/htmlsingle/#authorization)
