@@ -156,11 +156,63 @@
 
 平台启动后会扫描 release 目录， 加载其中artifact id 不以apid结尾的jar包，一般这些jar包（我们称其为业务模块/service package）都是面向某个数据库业务表，并实现相应的从WEB Controller到业务bean，以及数据库操作的一系列功能。
 
-为了支撑业务模块的端到端开发，平台(通过Service Package Manager)支持以下两个扩展特性：
+为了支撑业务模块的端到端开发，平台(通过Service Package Manager)支持，支持用户通过一个Default-Config属性的设置，将任意一个service package 默认视为一个拥有如下配置的服务组件：
+
+```
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Default-Config>S,A,D,W</Default-Config>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+```  
+
+Default Config 中的值，S = Service, A = App, D = DB, W = Web，也可以写作: <code><Default-Config>true</Default-Config></code>
+
+```xml
+     <Service-Config>dnt.itsnow.platform.config.DefaultServiceConfig</Service-Config>
+     <App-Config>dnt.itsnow.platform.config.DefaultAppConfig</App-Config>
+     <DB-Repository>dnt.itsnow.repository</DB-Repository>
+     <Web-Repository>dnt.itsnow.web.controller</Web-Repository>
+```
+
+1. Default Service Config
+
+```java
+    public void defineServices() {
+        //数据库相关服务
+        importService(DataSource.class);
+        importService(PlatformTransactionManager.class, "*", "transactionManager");
+        importService(SqlSessionFactory.class);
+        importService(Configuration.class);
+        //Spring MVC相关服务
+    }
+
+```
+
+2. Default App Config
+
+```java
+@Configuration
+@Import({dnt.spring.DefaultAppConfig.class})
+@ComponentScan("dnt.itsnow.support")
+```
+
+一般业务模块的服务bean，应该将放到 dnt.itsnow.support 包下，这样，他们只要有了 `@Component`, `@Service` , `@Configuration` 等Spring标记，就会被默认加载
+
+备注： 控制器代码不建议放到这个目录，而是 `dnt.itsnow.web.controller`下
+
+DB和Web两个扩展特性是平台在spring-component-frame之外额外扩展的：
 
 ### 4.1. Mybatis扩展
 
-1. 数据库模型migrate
+#### 1. 数据库模型migrate
+
    开发者需要在jar包的/META-INF/migrate目录增加相应的migrate脚本
    migrate脚本的生成方式，需由开发者在 msc|msu|msp 任意部署实体中：
    
@@ -181,13 +233,65 @@ mysql> create database itsnow_msc default character set utf8;
 mysql> create database itsnow_msu_001 default character set utf8;
 mysql> create database itsnow_msp_001 default character set utf8;
 mysql> create database <other schemas> default character set utf8;
+
 mysql> create user 'itsnow_msc'@'localhost' identified by 'secret';
 mysql> grant all privileges on itsnow_msc.* to 'itsnow_msc'@'localhost';
 
 mysql> create user 'itsnow_msu_001'@'localhost' identified by 'secret';
 mysql> grant select,execute on itsnow_msu_001.* to 'itsnow_msu_001'@'localhost';
+
+mysql> create user 'itsnow_msp_001'@'localhost' identified by 'secret';
+mysql> grant select,execute on itsnow_msp_001.* to 'itsnow_msp_001'@'localhost';
 ```  
+#### 2. 数据库模型映射 
+
+平台默认会扫描每个service package的 dnt/itsnow/repository目录，寻找其中Mybatis的Mapper类以及Mapper XML
+具体mybatis mapper如何 撰写，请参考 [mybatis 文档](http://mybatis.github.io/mybatis-3/)
+
+开发者也可以通过设置在相应模块的输出jar包的Manifest.mf文件的 **DB-Repository** 指令来修改默认的包路径，如果需要扫描多个包路径，请用逗号分割；
+
+通过pom.xml进行配置的示例如下：
+
+```xml
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <DB-Repository>
+                              dnt.itsnow.db.repository,dnt.itsnow.repository
+                            </DB-Repository>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+```
+
+#### 3. Mybatis 配置
+
+很多模块扩展时，除了增加Mapper(Repository)之外，还需要对mybatis的配置进行修改，最典型的就是为实体模型增加别名（以及注册新的type handlers）
+
+此时，开发者只需要在其输出jar包中增加META-INF/mybatis.xml 平台会自动加载，如：
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <typeAliases>
+        <typeAlias type="dnt.itsnow.model.User" alias="User"/>
+    </typeAliases>
+</configuration>
+```
 
 ### 4.2. Spring Mvc扩展
+
+在平台已经将service-package加载，并为其构建好相应的application context后，本扩展将会默认扫描 `dnt.itsnow.web.controller` 目录，寻找所有的 `@Controller`, `@RestController` 等Spring MVC标准标记（包括 `@Component, @Service, @Configuration` 等，但不建议放这里）
+
+而这些控制器，可以 如一般的spring mvc controller一样， `@Autowire`依赖的bean和服务，通过`@RequestMapping`处理特定路由。 
 
 ## 5. 标准扩展模板
