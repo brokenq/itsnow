@@ -77,7 +77,7 @@
     +---------+   
 ```
 
-其中， 仅有 msc 部署单元对 instance-01的msc-schema具有写权限，其他部署单元对msc-schama的slave均只有只读权限，这样可以保证我们只需要从instance01向其他instance单向复制msc-schema。
+其中， 仅有 msc 部署单元对 instance-01的itsnow_msc schema具有写权限，其他部署单元对itsnow_msc的slave均只有只读权限，这样可以保证我们只需要从instance-01向其他instance单向复制。
 
 
 我们在项目组织上，将他们分解为如下模块构成：
@@ -86,9 +86,9 @@
 | ------------------|--------------|------------| 
 | release           | 任意部署单元的部署模板项目 | - |
 | platform          | 提供平台特性，被 release 项目所依赖 | - |
-| common services   | 提供任意部署单元都会用到的通用服务 |关于 msc-schema的直接读服务, 关于每个部署单元的主schema均有的模型的管理服务（如 groups, acls, 工作流） |
+| common services   | 提供任意部署单元都会用到的通用服务 |关于 itsnow_msc的直接读服务, 关于每个部署单元的主schema均有的模型的管理服务（如 groups, acls, 工作流） |
 | general services  | 提供 msu,msp 部署单元公用的一般服务 | 关于 msu, msp的主schema中均有的模型的管理服务，指向msc的远程服务 |
-| msc services      | msc部署单元才用到的服务 | 面向 msc schema的管理服务，并以SPI的形式暴露给 general, msc, msp services 使用 |
+| msc services      | msc部署单元才用到的服务 | 面向 itsnow_msc 的管理服务，并以SPI的形式暴露给 general, msc, msp services 使用 |
 | msu services      | msu部署单元才用到的服务 | msu 独有的业务模型的管理服务 |
 | msp services      | msp部署单元才用到的服务 | msp 独有的业务模型的管理服务 |
 
@@ -127,7 +127,6 @@
 参考 `PlatformConfiguration` 类的javadoc说明，平台的主要加载顺序为：
 
 ```
- * 加载的逻辑顺序为:
  * Spring Component AppLauncher
  *   |- Platform Configuration
  *   |   |- Config module
@@ -155,9 +154,9 @@
 
 ## 4. 平台扩展能力
 
-平台启动后会扫描 release 目录， 加载其中artifact id 不以api结尾的jar包，一般这些jar包（我们称其为业务模块/service package）都是面向某个数据库业务表，并实现相应的从WEB Controller到业务bean，以及数据库操作的一系列功能。
+平台启动后会扫描 $release/repository 目录， 加载其中artifact id不以api结尾的jar包，一般这些jar包（我们称其为业务模块/service package）都是面向某个数据库业务表，并实现相应的从WEB Controller到业务bean，以及数据库操作的一系列功能。
 
-为了支撑业务模块的端到端开发，平台(通过Service Package Manager)支持用户通过设置一个Manifest/Default-Config指令，将任意一个service package 转换为一个拥有如下配置的服务组件：
+为了支撑业务模块的端到端开发，平台(通过Service Package Manager)支持用户设置一个Manifest/Default-Config指令
 
 ```
             <plugin>
@@ -173,16 +172,23 @@
             </plugin>
 ```  
 
-Default Config 中的值，S = Service, A = App, D = DB, W = Web，也可以写作: <code><Default-Config>true</Default-Config></code>
+Default Config 中的值，S = Service, A = App, D = DB, W = Web，也可以写作: `<Default-Config>true</Default-Config>`
+等价于如下配置：
 
 ```xml
+<configuration>
+  <archive>
+    <manifestEntries>
      <Service-Config>dnt.itsnow.platform.config.DefaultServiceConfig</Service-Config>
      <App-Config>dnt.itsnow.platform.config.DefaultAppConfig</App-Config>
      <DB-Repository>dnt.itsnow.repository</DB-Repository>
      <Web-Repository>dnt.itsnow.web.controller</Web-Repository>
+    </manifestEntries>
+  </archive>
+</configuration>
 ```
 
-1、 Default Service Config
+1、 Default Service Config 内容
 
 ```java
     public void defineServices() {
@@ -196,7 +202,7 @@ Default Config 中的值，S = Service, A = App, D = DB, W = Web，也可以写�
 
 ```
 
-2、 Default App Config
+2、 Default App Config 内容
 
 ```java
 @Configuration
@@ -229,7 +235,7 @@ DB和Web两个扩展特性是平台在spring-component-frame的application/servi
   bin/migrate new <the description>    
 ```
   新生成的migrate脚本文件应该从 /path/to/msc/db/migrate/scripts/xxxx_yyy.sql移动到实际项目resoures目录中，并在被相应模块打包到最终jar包中，部署到/path/to/msc/repository中
-  系统部署后，工程师应该先将msc部署单元的数据库schema准备就绪，具体步骤为：
+  系统部署后，工程师应该先将msc,msu,msp等部署单元的数据库schema，数据库账户，权限等准备就绪，具体步骤为：
 
 ```
  # 登录到mysql控制台 
@@ -252,9 +258,12 @@ mysql> grant select,execute on itsnow_msp_001.* to 'itsnow_msp_001'@'localhost';
 
 ```
  # 保证 db/migrate/environments/development.properties 文件中数据库，用户名，密码设置正确
+ 
+ # 先对msc进行migrate
  cd /path/to/msc/db
  bin/migrate up
  
+ # 而后再对msu或msp进行
  cd /path/to/msu/db
  bin/migrate up
  
@@ -264,7 +273,7 @@ mysql> grant select,execute on itsnow_msp_001.* to 'itsnow_msp_001'@'localhost';
 
 #### 2. 数据库模型映射 
 
-平台默认会扫描每个service package的 dnt/itsnow/repository目录，寻找其中Mybatis的Mapper类以及Mapper XML
+平台默认会扫描每个service package的 `dnt/itsnow/repository` 目录，寻找其中Mybatis的Mapper类以及Mapper XML
 具体mybatis mapper如何 撰写，请参考 [mybatis 文档](http://mybatis.github.io/mybatis-3/)
 
 开发者也可以通过设置在相应模块的输出jar包的Manifest.mf文件的 **DB-Repository** 指令来修改默认的包路径，如果需要扫描多个包路径，请用逗号分割；
@@ -311,7 +320,7 @@ mysql> grant select,execute on itsnow_msp_001.* to 'itsnow_msp_001'@'localhost';
 
 在平台已经将service-package加载，并为其构建好相应的application context后，本扩展将会默认扫描 `dnt.itsnow.web.controller` 目录，寻找所有的 `@Controller`, `@RestController` 等Spring MVC标准标记（包括 `@Component, @Service, @Configuration` 等，但不建议放这里）
 
-而这些控制器，可以 如一般的spring mvc controller一样， `@Autowire`依赖的bean和服务，通过`@RequestMapping`处理特定路由。 
+而这些控制器，可以 如一般的spring mvc controller一样， 通过`@Autowire`注入依赖的beans和服务，通过`@RequestMapping`处理特定路由。 
 
 如果需要定义额外的Web控制器扫描路径：
 
@@ -340,21 +349,22 @@ mysql> grant select,execute on itsnow_msp_001.* to 'itsnow_msp_001'@'localhost';
 
 ### 5.1 CRSF保护
 
-`GET /security/csrf` 可以获取当前的CSRF信息，如下：
+  通过`GET /security/csrf` 可以获取当前的CSRF信息，如下：
 
 ```json
 {"headerName":"X-CSRF-TOKEN","parameterName":"_csrf","token":"541ac4a0-36d2-41eb-a073-962e163c3219"}
 ```
 
-每次POST请求之后，CSRF Token都会变化，请在客户端及时更新。
+  每次POST请求之后，CSRF Token都会变化，请在客户端及时`GET /security/csrf`更新。
 
 ### 5.2 用户认证
 
 默认支持两种认证方式
 
-1. Form认证
+1. Form认证   
    登录：`POST /api/session` 其中带上 username, password 等认证信息
    登出：`DELETE /api/session`  
+   
 2. Basic Authentication认证
    curl -u user:password http://host:port
    
@@ -362,4 +372,4 @@ mysql> grant select,execute on itsnow_msp_001.* to 'itsnow_msp_001'@'localhost';
 
 ### 5.3 用户授权
 
-请参考 [Spring Security](http://docs.spring.io/spring-security/site/docs/3.2.4.RELEASE/reference/htmlsingle/#authorization)
+  请参考 [Spring Security](http://docs.spring.io/spring-security/site/docs/3.2.4.RELEASE/reference/htmlsingle/#authorization)
