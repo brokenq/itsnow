@@ -4,9 +4,6 @@
 package dnt.itsnow.config;
 
 import dnt.itsnow.platform.config.DefaultAppConfig;
-import dnt.itsnow.platform.remote.service.RestFacade;
-import dnt.itsnow.platform.remote.support.RestFacadeImpl;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 
 /**
@@ -14,9 +11,4 @@ import org.springframework.context.annotation.Import;
  */
 @Import(DefaultAppConfig.class)
 public class GeneralAccountAppConfig  {
-
-    @Bean
-    public RestFacade restFacade(){
-        return new RestFacadeImpl();
-    }
 }

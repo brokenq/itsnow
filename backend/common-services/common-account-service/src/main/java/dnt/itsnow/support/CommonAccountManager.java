@@ -23,16 +23,19 @@ public class CommonAccountManager extends Bean implements CommonAccountService {
 
     @Override
     public Account findByName(@Param("name") String name) {
+        logger.debug("Finding account by name {}", name);
         return repository.findByName(name);
     }
 
     @Override
     public Account findBySn(String sn) {
+        logger.debug("Finding account by sn {}", sn);
         return repository.findBySn(sn);
     }
 
     @Override
     public Account findById(Long id) {
+        logger.debug("Finding account by id {}", id);
         return repository.findById(id);
     }
 }

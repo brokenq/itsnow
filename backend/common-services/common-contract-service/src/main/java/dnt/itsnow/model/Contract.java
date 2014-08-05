@@ -4,6 +4,7 @@
 package dnt.itsnow.model;
 
 import dnt.itsnow.platform.model.Record;
+import org.hibernate.validator.constraints.NotBlank;
 
 import java.util.List;
 
@@ -11,14 +12,22 @@ import java.util.List;
  * <h1>MSU和MSP之间关于服务的合同契约</h1>
  */
 public class Contract extends Record {
+    //合同编号
+    @NotBlank
     private String sn;
     //合同甲方，服务采购方
+    @NotBlank
+    private Long msuAccountId;
     private MsuAccount msuAccount;
     //合同乙方，服务供应方
+    @NotBlank
+    private Long mspAccountId;
     private MspAccount mspAccount;
     // MSU 是否批准
+    @NotBlank
     private ContractStatus msuStatus;
     // MSP 是否批准
+    @NotBlank
     private ContractStatus mspStatus;
 
     //合同明细
@@ -48,6 +57,22 @@ public class Contract extends Record {
         this.mspStatus = mspStatus;
     }
 
+    public Long getMsuAccountId() {
+        return msuAccountId;
+    }
+
+    public void setMsuAccountId(Long msuAccountId) {
+        this.msuAccountId = msuAccountId;
+    }
+
+    public Long getMspAccountId() {
+        return mspAccountId;
+    }
+
+    public void setMspAccountId(Long mspAccountId) {
+        this.mspAccountId = mspAccountId;
+    }
+
     public MsuAccount getMsuAccount() {
         return msuAccount;
     }
@@ -73,9 +98,9 @@ public class Contract extends Record {
     }
 
     public ContractDetail getDetail(Long id) {
-        if(details == null ) return null;
+        if (details == null) return null;
         for (ContractDetail detail : details) {
-            if(detail.getId().equals(id)) return detail;
+            if (detail.getId().equals(id)) return detail;
         }
         return null;
     }
@@ -84,7 +109,7 @@ public class Contract extends Record {
         return msuStatus.isApproved();
     }
 
-    public boolean isApprovedByMsp(){
+    public boolean isApprovedByMsp() {
         return mspStatus.isApproved();
     }
 }
