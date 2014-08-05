@@ -3,6 +3,8 @@
  */
 package dnt.itsnow.platform;
 
+import dnt.itsnow.platform.remote.service.RestFacade;
+import dnt.itsnow.platform.remote.support.RestFacadeImpl;
 import dnt.itsnow.platform.repository.DatabaseConfig;
 import dnt.itsnow.platform.services.ServicePackageManager;
 import dnt.itsnow.platform.support.JettyServer;
@@ -53,4 +55,9 @@ public class PlatformConfiguration {
         return new ServicePackageEventForwarder();
     }
 
+
+    @Bean
+    public RestFacade restFacade(){
+        return new RestFacadeImpl();
+    }
 }

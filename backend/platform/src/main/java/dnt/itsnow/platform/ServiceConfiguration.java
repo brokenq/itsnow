@@ -3,6 +3,7 @@
  */
 package dnt.itsnow.platform;
 
+import dnt.itsnow.platform.remote.service.RestFacade;
 import dnt.itsnow.platform.web.security.DelegateSecurityConfigurer;
 import net.happyonroad.spring.service.AbstractServiceConfig;
 import org.apache.ibatis.session.Configuration;
@@ -27,5 +28,6 @@ public class ServiceConfiguration extends AbstractServiceConfig {
         //Spring Security相关服务
         exportService(DelegateSecurityConfigurer.class);
 
+        exportService(RestFacade.class);
     }
 }

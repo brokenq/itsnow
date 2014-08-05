@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Select;
 import java.util.List;
 
 /**
- * 合同仓库服务，包括对合同明细的查询能力
+ * <h1>合同仓库服务，包括对合同明细的查询能力</h1>
  */
 public interface ContractRepository {
     @Select("SELECT count(0) FROM contracts WHERE msu_account_id = #{msuId}")

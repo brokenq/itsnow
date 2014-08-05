@@ -5,6 +5,7 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.exception.AccountException;
 import dnt.itsnow.model.Account;
+import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.service.MutableAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,7 @@ import java.util.List;
 public class AccountsController extends SessionSupportController<Account> {
     @Autowired
     MutableAccountService accountService;
+    Account currentAccount;
 
     /**
      * <h2>查看所有账户</h2>
@@ -61,11 +63,9 @@ public class AccountsController extends SessionSupportController<Account> {
      * GET /admin/api/accounts/{sn}
      */
     @RequestMapping("{sn}")
-    public Account show(@PathVariable(value = "sn") String sn) {
-        logger.debug("Viewing {}", sn);
-        Account account = accountService.findBySn(sn);
-        logger.debug("Viewed  {}", account);
-        return account;
+    public Account show() {
+        logger.debug("Viewed  {}", currentAccount);
+        return currentAccount;
     }
 
     /**
@@ -77,12 +77,12 @@ public class AccountsController extends SessionSupportController<Account> {
      * @return 创建之后的账户信息
      */
     @RequestMapping(method = RequestMethod.POST)
-    public Account create(@Valid Account account){
+    public Account create(@RequestBody @Valid Account account){
         logger.info("Creating {}", account.getName());
         // 可能会抛出重名的异常
-        Account created = accountService.create(account);
-        logger.info("Created  {} with sn {}", created.getName(), created.getSn());
-        return created;
+        currentAccount = accountService.create(account);
+        logger.info("Created  {} with sn {}", currentAccount.getName(), currentAccount.getSn());
+        return currentAccount;
     }
 
     /**
@@ -94,14 +94,12 @@ public class AccountsController extends SessionSupportController<Account> {
      * @return 更新之后的账户信息
      */
     @RequestMapping( value = "{sn}", method = RequestMethod.PUT)
-    public Account update(@PathVariable("sn") String sn,
-                          @RequestBody @Valid Account account){
-        logger.info("Updating {}", sn);
-        Account exist = accountService.findBySn(sn);
-        exist.apply(account);
+    public Account update(@RequestBody @Valid Account account){
+        logger.info("Updating {}", currentAccount.getSn());
+        currentAccount.apply(account);
         Account updated;
         try {
-            updated = accountService.update(exist);
+            updated = accountService.update(currentAccount);
         } catch (AccountException e) {
             // 把service side异常转换为client side exception
             throw new WebClientSideException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
@@ -111,14 +109,23 @@ public class AccountsController extends SessionSupportController<Account> {
     }
 
     @RequestMapping(value = "{sn}", method = RequestMethod.DELETE)
-    public void destroy(@PathVariable("sn") String sn){
-        logger.info("Deleting {}", sn);
+    public void destroy(){
+        logger.warn("Deleting {}", currentAccount.getSn());
         try {
-            accountService.delete(sn);
+            accountService.delete(currentAccount);
         } catch (AccountException e) {
             // 把service side异常转换为client side exception
             throw new WebClientSideException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
         }
-        logger.info("Deleted  {}", sn);
+        logger.warn("Deleted  {}", currentAccount);
     }
+
+    @BeforeFilter({"show", "update","destroy"})
+    public void initCurrentAccount(@PathVariable("sn") String sn){
+        logger.debug("Finding account {}", sn);
+        currentAccount = accountService.findBySn(sn);
+        if( currentAccount == null )
+            throw new WebClientSideException(HttpStatus.NOT_FOUND, "Can't find the account with sn = " + sn);
+    }
+
 }

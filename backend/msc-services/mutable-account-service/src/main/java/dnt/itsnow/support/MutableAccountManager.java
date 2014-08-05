@@ -20,7 +20,7 @@ import java.util.List;
  * <h1>可操作的账户服务</h1>
  */
 @Service
-public class MutableAccountManager extends AccountManager implements MutableAccountService {
+public class MutableAccountManager extends CommonAccountManager implements MutableAccountService {
     @Autowired
     MutableAccountRepository mutableRepository;
 
@@ -55,12 +55,11 @@ public class MutableAccountManager extends AccountManager implements MutableAcco
     }
 
     @Override
-    public void delete(String sn) throws AccountException {
-        logger.info("Deleting account {}", sn);
-        Account deleting = mutableRepository.findBySn(sn);
+    public void delete(Account deleting) throws AccountException {
+        logger.info("Deleting account {}", deleting);
         if( deleting.isValid() )
-            throw new AccountException("Can't delete valid account: " + sn);
-        mutableRepository.deleteBySn(sn);
-        logger.info("Deleted  account {}", sn);
+            throw new AccountException("Can't delete valid account: " + deleting);
+        mutableRepository.deleteBySn(deleting.getSn());
+        logger.info("Deleted  account {}", deleting);
     }
 }

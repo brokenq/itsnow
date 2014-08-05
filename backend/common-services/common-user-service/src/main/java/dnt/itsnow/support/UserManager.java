@@ -6,7 +6,7 @@ package dnt.itsnow.support;
 import dnt.itsnow.model.Account;
 import dnt.itsnow.model.User;
 import dnt.itsnow.repository.UserRepository;
-import dnt.itsnow.service.AccountService;
+import dnt.itsnow.service.CommonAccountService;
 import dnt.itsnow.service.UserService;
 import dnt.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class UserManager extends Bean implements UserService {
     @Autowired
     UserRepository repository;
     @Autowired
-    AccountService accountService;
+    CommonAccountService accountService;
 
     PasswordEncoder passwordEncoder = new StandardPasswordEncoder();
 

@@ -5,7 +5,7 @@ package dnt.itsnow.service;
 
 import dnt.itsnow.model.Account;
 
-public interface AccountService {
+public interface CommonAccountService {
     Account findByName(String name);
 
     Account findBySn(String sn);
