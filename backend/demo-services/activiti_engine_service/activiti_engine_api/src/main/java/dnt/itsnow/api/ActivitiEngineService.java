@@ -44,7 +44,11 @@ public interface ActivitiEngineService {
 
     List<Task> queryTasksAssignee(String userName);
 
+    List<Task> queryTasksAssignee(String userName,String key);
+
     List<Task> queryTasksCandidateUser(String userName);
+
+    List<Task> queryTasksCandidateUser(String userName,String key);
 
     List<Task> queryTasksCandidateGroup(String groupName);
 

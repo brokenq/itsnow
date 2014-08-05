@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class ActivitiIdentifyManager extends Bean implements ActivitiIdentifyService {
 
-    Logger log = LoggerFactory.getLogger(this.getClass());
+    Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     ProcessEngine processEngine;
@@ -27,7 +27,7 @@ public class ActivitiIdentifyManager extends Bean implements ActivitiIdentifySer
     @Override
     public void newActivitiUser(User user, List<Long> groupIds) {
         if(user == null)
-            log.warn("user is null!");
+            logger.warn("user is null!");
         else{
             UserQuery userQuery = processEngine.getIdentityService().createUserQuery();
             List<org.activiti.engine.identity.User> activitiUsers = userQuery.userId(user.getId().toString()).list();
@@ -36,7 +36,7 @@ public class ActivitiIdentifyManager extends Bean implements ActivitiIdentifySer
                 updateActivitiUser(user, groupIds, activitiUsers.get(0));
             }else if(activitiUsers.size() > 1) {//多个
                 String errorMsg = "发现重复用户：id="+ user.getId();
-                log.warn(errorMsg);
+                logger.warn(errorMsg);
             }else{//不存在，新增用户和关系
                 // 添加用户
                 saveActivitiUser(user);
@@ -57,7 +57,7 @@ public class ActivitiIdentifyManager extends Bean implements ActivitiIdentifySer
         List<org.activiti.engine.identity.Group> activitiGroups = processEngine.getIdentityService().createGroupQuery().groupMember(userId).list();
         for(org.activiti.engine.identity.Group group : activitiGroups) {
             processEngine.getIdentityService().deleteMembership(userId, group.getId());
-            log.info("delete user {} from group {}", userId,group.getId());
+            logger.info("delete user {} from group {}", userId, group.getId());
         }
 
         // 添加membership
@@ -72,7 +72,7 @@ public class ActivitiIdentifyManager extends Bean implements ActivitiIdentifySer
         List<org.activiti.engine.identity.Group> activitiGroups = processEngine.getIdentityService().createGroupQuery().groupMember(userId).list();
         for(org.activiti.engine.identity.Group group : activitiGroups) {
             processEngine.getIdentityService().deleteMembership(userId, group.getId());
-            log.info("delete user {} from group {}", userId,group.getId());
+            logger.info("delete user {} from group {}", userId, group.getId());
         }
 
         // 删除Activiti User
@@ -89,7 +89,7 @@ public class ActivitiIdentifyManager extends Bean implements ActivitiIdentifySer
         if(activitiGroups.size()==1){//已存在，更新
             updateActivitiGroup(group);
         }else if(activitiGroups.size()>1){//重复
-            log.warn("存在重复的用户组 {}",group.getGroupName());
+            logger.warn("存在重复的用户组 {}", group.getGroupName());
         }else{//不存在，新增
             saveActivitiGroup(group);
         }
@@ -109,7 +109,7 @@ public class ActivitiIdentifyManager extends Bean implements ActivitiIdentifySer
     @Override
     public void deleteActivitiGroup(Group group) {
         processEngine.getIdentityService().deleteGroup(group.getId().toString());
-        log.info("delete activiti group {}",group.getGroupName());
+        logger.info("delete activiti group {}", group.getGroupName());
     }
 
     /**
@@ -120,7 +120,7 @@ public class ActivitiIdentifyManager extends Bean implements ActivitiIdentifySer
         String userId = user.getId().toString();
         org.activiti.engine.identity.User activitiUser = processEngine.getIdentityService().newUser(userId);
         cloneAndSaveActivitiUser(user, activitiUser);
-        log.info("add activiti user: {}", activitiUser.getFirstName());
+        logger.info("add activiti user: {}", activitiUser.getFirstName());
     }
 
     /**
@@ -131,7 +131,7 @@ public class ActivitiIdentifyManager extends Bean implements ActivitiIdentifySer
     private void addMembershipToIdentify(List<Long> groupIds, String userId) {
         for(Long groupId : groupIds) {
             processEngine.getIdentityService().createMembership(userId, groupId.toString());
-            log.info("add activiti user {} to group {}",userId, groupId);
+            logger.info("add activiti user {} to group {}", userId, groupId);
         }
     }
 
@@ -157,6 +157,6 @@ public class ActivitiIdentifyManager extends Bean implements ActivitiIdentifySer
         org.activiti.engine.identity.Group activitiGroup = processEngine.getIdentityService().newGroup(groupId);
         activitiGroup.setName(group.getGroupName());
         processEngine.getIdentityService().saveGroup(activitiGroup);
-        log.info("add activiti group: {}", group.getGroupName());
+        logger.info("add activiti group: {}", group.getGroupName());
     }
 }

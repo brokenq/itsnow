@@ -200,6 +200,11 @@ public class ActivitiEngineController extends ApplicationController {
             List<Task> ls = activitiEngineService.queryTasksCandidateGroup(groupName);
             for(Task task:ls){
                 Map<String,Object> map = new HashMap<String, Object>();
+                try {
+                    activitiEngineService.traceProcess(task.getProcessInstanceId());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 map.put("taskId",task.getId());
                 map.put("instanceId",task.getProcessInstanceId());
                 map.put("taskName",task.getName());

@@ -11,7 +11,6 @@ public class IncidentServiceConfig extends DefaultServiceConfig {
     @Override
     public void defineServices() {
         super.defineServices();
-        //importService(ProcessEngine.class);
         importService(ActivitiEngineService.class);
     }
 }

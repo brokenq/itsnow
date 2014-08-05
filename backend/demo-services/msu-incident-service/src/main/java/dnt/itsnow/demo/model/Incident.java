@@ -31,6 +31,7 @@ public class Incident extends Record {
     private Timestamp resolveTime;//'解决时间',
     private Timestamp closeTime;//'关闭时间',
     private String solution;//'解决方案',
+    private IncidentStatus status = IncidentStatus.Assigned;
 
     public String getNumber() {
         return number;
@@ -206,5 +207,13 @@ public class Incident extends Record {
 
     public void setInstanceId(String instanceId) {
         this.instanceId = instanceId;
+    }
+
+    public IncidentStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(IncidentStatus status) {
+        this.status = status;
     }
 }

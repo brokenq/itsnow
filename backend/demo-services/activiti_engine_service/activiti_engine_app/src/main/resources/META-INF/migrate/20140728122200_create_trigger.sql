@@ -8,7 +8,7 @@ FOR EACH ROW
 
 CREATE TRIGGER ins_act_id_group AFTER INSERT ON groups
 FOR EACH ROW
-  INSERT INTO act_id_group(ID_,TYPE_) VALUES (NEW.id,'group');
+  INSERT INTO act_id_group(ID_,TYPE_) VALUES (NEW.group_name,'group');
 
 CREATE TRIGGER del_act_id_group BEFORE DELETE ON groups
 FOR EACH ROW
@@ -16,11 +16,11 @@ FOR EACH ROW
 
 CREATE TRIGGER ins_act_id_membership AFTER INSERT ON group_members
 FOR EACH ROW
-  INSERT INTO act_id_membership(USER_ID_,GROUP_ID_) VALUES (NEW.username,NEW.group_id);
+  INSERT INTO act_id_membership(USER_ID_,GROUP_ID_) VALUES (NEW.username,NEW.group_name);
 
 CREATE TRIGGER del_act_id_membership BEFORE DELETE ON group_members
 FOR EACH ROW
-  DELETE FROM act_id_membership WHERE USER_ID_ = OLD.username AND GROUP_ID_ = OLD.group_id;
+  DELETE FROM act_id_membership WHERE USER_ID_ = OLD.username AND GROUP_ID_ = OLD.group_name;
 
 
 -- //@UNDO

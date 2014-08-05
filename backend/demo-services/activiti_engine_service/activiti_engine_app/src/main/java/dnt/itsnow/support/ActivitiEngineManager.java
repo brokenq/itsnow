@@ -4,7 +4,6 @@ import dnt.itsnow.api.ActivitiEngineService;
 import dnt.spring.Bean;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.delegate.Expression;
-import org.activiti.engine.identity.User;
 import org.activiti.engine.impl.RepositoryServiceImpl;
 import org.activiti.engine.impl.bpmn.behavior.UserTaskActivityBehavior;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
@@ -68,7 +67,7 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
      */
     public boolean deploySingleProcess(String processKey,String processCategory) {
         try {
-            //log.info("process engine:" + processEngine.toString());
+            //logger.info("process engine:" + processEngine.toString());
             String path = "bpmn/"+processKey+".bpmn20.xml";
             URL url =  this.getClass().getClassLoader().getResource(path);
             InputStream is = url.openStream();
@@ -148,11 +147,20 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
     }
 
     public List<Task> queryTasksAssignee(String userName){
-        return processEngine.getTaskService().createTaskQuery().taskAssignee(userName).list();
+        return processEngine.getTaskService().createTaskQuery().taskAssignee(userName).processDefinitionKey("").list();
+    }
+
+    public List<Task> queryTasksAssignee(String userName,String key){
+        return processEngine.getTaskService().createTaskQuery().taskAssignee(userName).processDefinitionKey("key").list();
     }
 
     public List<Task> queryTasksCandidateUser(String userName){
         return processEngine.getTaskService().createTaskQuery().taskCandidateUser(userName).list();
+    }
+
+    @Override
+    public List<Task> queryTasksCandidateUser(String userName, String key) {
+        return processEngine.getTaskService().createTaskQuery().taskCandidateUser(userName).processDefinitionKey(key).list();
     }
 
     public List<Task> queryTasksCandidateGroup(String groupName){
@@ -297,13 +305,13 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
     }
 
     private void setTaskGroup(Map<String, Object> vars, Set<Expression> candidateGroupIdExpressions) {
-        String roles = "";
+        /*String roles = "";
         for (Expression expression : candidateGroupIdExpressions) {
             String expressionText = expression.getExpressionText();
             String roleName = processEngine.getIdentityService().createGroupQuery().groupId(expressionText).singleResult().getName();
             roles += roleName;
         }
-        vars.put("任务所属角色", roles);
+        vars.put("任务所属角色", roles);*/
     }
 
     /**
@@ -313,11 +321,11 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
      * @param currentTask
      */
     private void setCurrentTaskAssignee(Map<String, Object> vars, Task currentTask) {
-        String assignee = currentTask.getAssignee();
+        /*String assignee = currentTask.getAssignee();
         if (assignee != null) {
             User assigneeUser = processEngine.getIdentityService().createUserQuery().userId(assignee).singleResult();
             String userInfo = assigneeUser.getFirstName() + " " + assigneeUser.getLastName();
             vars.put("当前处理人", userInfo);
-        }
+        }*/
     }
 }
