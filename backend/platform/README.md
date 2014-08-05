@@ -14,7 +14,7 @@
 1. Mybatis Feature Resolver
 2. Spring MVC Feature Resolver
 
-详细的开发说明，请参考 [模块开发指南](./Standard.md)
+详细的开发说明，请参考 [模块开发指南](http://git.happyonroad.net/insight/itsnow/blob/Dev-0.1.3/backend/platform/Standard.md)
 
 ## 2. Itsnow业务模块说明
 
