@@ -4,7 +4,7 @@ Itsnow平台模块开发指南
 1 前言(Preface)
 -------------
 
-1.1 一般命名规范
+## 1.1 一般命名规范
 
 |   场景               |   命名规范        |  典型样例  |
 |---------------------|------------------|-----------|
@@ -16,28 +16,32 @@ Itsnow平台模块开发指南
 | 数据库外键            | 对方表名_id INT(10) UNSIGNED | account_id INT(10) UNSIGNED|
 | 类注释               | 应以h1标记类主要说明 | &lt;h1&gt;类功能说明&lt;/h1&gt; |
 | 方法注释             | 应以h2标记方法主要功能 | &lt;h2&gt;方法说明&lt;/h2&gt; |
+| package名称          | 小写，underscore    | 严禁大写字符，破折号等字符等出现在package中 |
 | 类名称               | Camel Case       | ManagedService, ServiceCatalog|
 | 模型类名称            | 数据库对应表的Camel Case| contract_details -> ContractDetail |
 | 模型类成员变量        | 数据库对应列的Camel Case(小写开头)| created_at -> createdAt |
-| DAO类名称            | 模型名称 + Repository | UserRepository |
-| 服务接口名称          | 模型名称 + Service    | UserService |
-| 服务接口异常          | 模型名称 + Exception  | UserException |
-| 服务实现类            | 模型名称 + Manager    | UserManager  |
-| 控制器类名称          | $ModelName + "s" + "Controller"  | 如果控制器需要为当前用户管理该模型多个实例，应该用复数，如 `UsersController`， 否则用单数，如: `SessionController` |
-| 控制器查询列表         | GET /api/ + $modelName + "s" | GET /api/users |
-| 控制器查看对象         | GET /api/ + $modelName + "s" + /$identify | GET /api/users/jason |
-| 控制器创建对象         | POST /api/$modelName + "s"  | POST /api/users |
-| 控制器更新对象         | PUT /api/$modelName + "s" + /$identify | PUT /api/users/jason |
-| 控制器删除对象         | DELETE /api/$modelName + "s" + /$identify  | DELETE /api/users/jason|
-| Commom 模块控制器类    | Common + $ModelName + "s" + "Controller" | CommonUsersController |
-| Common 模块服务接口    | Common + $ModelName + "Service" | CommonUserService |
-| Common 模块服务实现    | Common + $ModelName + "Manager" | CommonUserManager |
-| General 模块控制器类    | General + $ModelName + "s" + "Controller" | GeneralUsersController |
-| General 模块服务接口    | General + $ModelName + "Service" | GeneralUserService |
-| General 模块服务实现    | General + $ModelName + "Manager" | GeneralUserManager |
-| MSC 模块控制器类    | Mutable + $ModelName + "s" + "Controller" | MutableUsersController |
-| MSC 模块服务接口    | Mutable + $ModelName + "Service" | MutableUserService |
-| MSC 模块服务实现    | Mutable + $ModelName + "Manager" | MutableUserManager |
+| DAO类名称            | $Model + Repository | UserRepository |
+| 服务接口名称          | $Model + Service    | UserService |
+| 服务接口异常          | $Model + Exception  | UserException |
+| 服务实现类            | $Model + Manager    | UserManager  |
+| 控制器类名称          | $Models + "Controller"  | 如果控制器需要为当前用户管理该模型多个实例，应该用复数，如 `UsersController`， 否则用单数，如: `SessionController` |
+| 控制器查询列表         | GET /api/ + $models | GET /api/users |
+| 控制器查看对象         | GET /api/ + $models + /$identify | GET /api/users/jason |
+| 控制器创建对象         | POST /api/$models  | POST /api/users |
+| 控制器更新对象         | PUT /api/$models + /$identify | PUT /api/users/jason |
+| 控制器删除对象         | DELETE /api/$models + /$identify  | DELETE /api/users/jason|
+| Commom 模块控制器类    | Common + $Models + "Controller" | CommonUsersController |
+| Common 模块服务接口    | Common + $Model + "Service" | CommonUserService |
+| Common 模块服务实现    | Common + $Model + "Manager" | CommonUserManager |
+| Common 模块DAO        | Common + $Model + "Repository" | CommonUserRepository |
+| General 模块控制器类   | General + $Models + "Controller" | GeneralUsersController |
+| General 模块服务接口   | General + $Model + "Service" | GeneralUserService |
+| General 模块服务实现   | General + $Model + "Manager" | GeneralUserManager |
+| General 模块DAO       | General + $Model + "Repository" | GeneralUserRepository |
+| MSC 模块控制器类       | Mutable + $Models + "Controller" | MutableUsersController |
+| MSC 模块服务接口       | Mutable + $Model + "Service" | MutableUserService |
+| MSC 模块服务实现       | Mutable + $Model + "Manager" | MutableUserManager |
+| MSC 模块DAO           | Mutable + $Model + "Repository" | MutableUserRepository |
 
 2 标准模块构成
 -------------
@@ -46,12 +50,12 @@ Itsnow的项目，在平台之外，包括如下大的模块：
 
 | 模块               | 说明          |   建议     |
 | ------------------|--------------|------------| 
-| common services   | 提供任意部署单元都会用到的通用服务 |关于 itsnow_msc的直接读服务, 关于每个部署单元的主schema均有的模型的管理服务（如 groups, acls, 工作流） |
-| general services  | 提供 msu,msp 两类部署单元公用的一般服务 | 关于 msu, msp的主schema中均有的模型的管理服务；指向msc的远程服务 |
-| msc services      | msc部署单元才用到的服务 | 面向 itsnow_msc 的管理服务，并以SPI的形式暴露给 general, msc, msp services 使用 |
-| msu services      | msu部署单元才用到的服务 | msu 独有的业务模型的管理服务 |
-| msp services      | msp部署单元才用到的服务 | msp 独有的业务模型的管理服务 |
-| demo services     | 平台开发时的演示模块    | 系统运行时不需要这些服务 |
+| common-services   | 提供任意部署单元都会用到的通用服务 |关于 itsnow_msc的直接读服务, 关于每个部署单元的主schema均有的模型的管理服务（如 groups, acls, 工作流） |
+| general-services  | 提供 msu,msp 两类部署单元公用的一般服务 | 关于 msu, msp的主schema中均有的模型的管理服务；指向msc的远程服务 |
+| msc-services      | msc部署单元才用到的服务 | 面向 itsnow_msc 的管理服务，并以SPI的形式暴露给 general, msc, msp services 使用 |
+| msu-services      | msu部署单元才用到的服务 | msu 独有的业务模型的管理服务 |
+| msp-services      | msp部署单元才用到的服务 | msp 独有的业务模型的管理服务 |
+| demo-services     | 平台开发时的演示模块    | 系统运行时不需要这些服务 |
 
 每个大的模块下，可以按照业务领域，分为更细的子模块，如 msc-services 被分为了
 
@@ -61,9 +65,7 @@ Itsnow的项目，在平台之外，包括如下大的模块：
 * mutable-sla-service
 * mutable-user-service
 
-等5个子模块；
-
-每个子模块，可以根据其被其他模块使用情况，以两种方式组织：
+等5个子模块, 每个子模块，可以根据其被其他模块使用情况，以两种方式组织：
 
 ## 2.1 接口实现分离模式
 
@@ -82,7 +84,7 @@ Itsnow的项目，在平台之外，包括如下大的模块：
 
 具体例子，可以参考 demo-services中的user-service模块
 
-由于当前itsnow系统没有在部署单元直接使用RMI接口（而是REST接口），而通用模型(itsnow_msc slave schema，一般性schema)又在每个部署单元中都可以访问，所以原则上，没有模块需要采用这个复杂模式部署。
+由于当前itsnow系统没有在部署单元之间直接使用RMI接口（而是REST接口），而通用模型(itsnow_msc.* slave schema，一般性table)又在每个部署单元中都可以访问，所以原则上，没有模块需要采用这个复杂模式部署。
 
 ## 2.2 接口实现混合模式
 
@@ -219,21 +221,21 @@ public class Contract extends Record {
 ```
 
   1. 原则上业务模型均放置于 `dnt.itsnow.model` 包中
-  2. 主业务模型类一般继承于 `dnt.itsnow.platform.model.Record`
+  2. 主业务模型类一般继承于 `dnt.itsnow.platform.model.Record` (其数据表不是中间表)
   3. 模型类，成员变量命名参考前言约束
   4. 模型成员上可以基于Java Validation API进行校验标记
   5. 应该为模型成员变量增加getter/setter
   6. 应该为模型类预留空构造函数
   7. 关联对象应该以成员方式读写
   8. 关联对象的外键也应该成员化
-  9. 如果该业务模型对应的数据表被多类模块(common, general, msc, msu, msp)查询/管理，但仅应该建立一个模型，并将该模型的定义放在common或general模块。
+  9. 如果该业务模型对应的数据表被多类模块(common, general, msc, msu, msp)查询/管理，仅应该建立一个模型，并将该模型的放在common或general模块中。
 
 --
 
 
 ### 3.2 数据库Schema
 
-1. 创建数据库表
+1、 创建数据库表
 
 典型样例：
 
@@ -255,10 +257,10 @@ CREATE TABLE contract_details (
     A. 列对齐，便于执行时在控制台查看
     B. 主键(id)，外键(xxx_id) 的类型均为 INT(10) UNSIGNED
     C. MySQL关键词，类型等均用大写
-    D. 自身表名，列名均小写，underscore方式
-    E. 一般业务模型(实体，非关联表)，均应该增加 created_at(记录创建时间), updated_at(记录更新时间)两个缺省字段
+    D. 自身表名，列名均小写，underscore方式，参考前言规范
+    E. 一般业务模型(实体，非关联表)，均应该增加 id(主键), created_at(记录创建时间), updated_at(记录更新时间)等缺省字段
 
-2. 初始化数据
+2、 初始化数据
 
 典型样例：
 
@@ -273,16 +275,16 @@ INSERT INTO contracts(msu_account_id, msp_account_id, sn) VALUES
 (@msu_001_id, @msp_001_id, 'SWG-201407010010'),
 (@msu_001_id, @msp_001_id, 'SWG-201408050002');
 ```
-  Check List:
+Check List:
   
     A. 如果对其他表数据有依赖，一般不能依赖于自动创建的id，而是应该先根据特定唯一性条件选择出来
-    B. 插入的列名称在INSERT第一行, VALUES也在第一行
+    B. 插入的列名称在INSERT第一行显性指明，不能依赖隐性的列顺序, VALUES也在第一行
     C. 多行数据，每行一条记录，并对齐列。
 
 备注：
 
-  如果该数据表被多类模块(common, general, msc, msu, msp)查询/管理，
-  但应将migrate脚本放在能够对齐进行读写管理的模块中，如user的migrate脚本仅被放在msc/mutable-user-service模块
+    如果该数据表被多类模块(common, general, msc, msu, msp)查询/管理，
+    应将migrate脚本放在能够对其进行读写管理的模块中，如user的migrate脚本仅被放在msc/mutable-user-service模块
 
 ### 3.3 数据映射层
   
@@ -292,8 +294,8 @@ INSERT INTO contracts(msu_account_id, msp_account_id, sn) VALUES
   2. 包名一般为 `dnt.itsnow.repository`
   3. 典型的数据访问方法为：统计(count)/查找单个(find)/查找多个(findAll)/增加(create)/更新(update)/保存(save)/删除(delete)
   4. 前缀与模型同名的Repository，不需要再额外增加模型名称，如 `UserRepository.findUser` 应该直接定义为 `UserRepository.find`
-  5. 如果以上方法有根据条件，则应该加上 By + $field，如 `countByMsuAccountId`, `findAllByName`
-  6. 如果多个条件，则应该为 By + $fieldA + And $fieldB
+  5. 如果以上方法有根据条件，则应该加上 By + $field，如 `countByMsuAccountId(long)`, `findAllByName(String)`
+  6. 如果多个条件，则应该为 By + $fieldA + And $fieldB，如 `countByNameAndAge(String,int)`
   7. 无论是Annotation还是XML中的SQL，均应该遵循SQL语句规范，数据库关键词/类型名均大写。
 
 Mapping约定：
@@ -399,12 +401,12 @@ public interface ContractRepository {
 
 1. 业务接口一般命名为 $Model + Service，如 `ContractService`
 2. 业务接口一般存放于 `dnt.itsnow.service`中
-3. 典型的接口方法为: `find`, `findAll`, `findPage`, `search`, `create`, `update`, `destroy`, `save`
+3. 典型的接口方法为: `find`, `findAll`, `findPage`, `search`, `create`, `update`, `destroy`, `save`等
 4. 与Repository的命名规则一样，如果Service的前缀与模型名称一致，则在以上方法后面不需要加上模型名称；
 5. 业务方法上如果要抛出异常，则应该抛出业务异常 `ServiceException`或其子类
 6. 业务异常可以不定义，如果需要定义，则一般被命名为 $Model + Exception，如 `ContractException`，存放于`dnt.itsnow.exception`包中，并继承 `dnt.itsnow.platform.exception.ServiceException`
 7. 为若干个紧密相关的业务模型仅需要定义一个以主模型为中心的业务服务，如，存在 `Contract`, `ContractDetail`两个密切相关的业务模型，但只需要定义一个 `ContractService`，不需要再额外定义一个 `ContractDetailService`
-8. 在以上例子中，如果存在对ContractDetail的操作，应该增加 `Detail`，如: `updateDetail(ContractDetail detail)` (可以理解为：Contract一词被ContractService中的Contract抵消)
+8. 在以上例子中，如果存在对ContractDetail的操作，应该增加 `Detail`后缀，如: `updateDetail(ContractDetail detail)` (可以理解为：Contract一词被ContractService中的Contract抵消)
 9. 如果存在分页请求，服务接口上应该返回 Page<$Model>，方法命名为 `findAll` 或者 `findPage`，最后一个参数为`Pageable`对象
 10. create/update类型的接口，应该输入修改的对象，返回创建/更新后的对象
 11. 接口设计时，应该根据使用场景考虑好 1+N 问题，如 查询/操作 `Contract`时是否包括其`ContractDetail`，这需要根据该业务模块的特点设计，但在接口注释上必须说明
@@ -452,13 +454,13 @@ public interface ContractService {
 
 1. 业务实现类一般命名为 $Model + "Manager"，并存放于 `dnt.itsnow.support`目录
 2. 业务实现类一般都用 `@org.springframework.stereotype.Service` 标记，并被自动扫描
-3. 业务实现类一般从 `dnt.spring` 下的`Bean`, `EventSupportBean`, `TranslateSupportBean`, `ApplicationSupportBean` 继承，并实现相应业务接口
+3. 业务实现类一般从 `dnt.spring` 下的`Bean`, `EventSupportBean`, `TranslateSupportBean`, `ApplicationSupportBean` 等类继承，并实现相应业务接口 $Model + “Service”
 4. 业务实现类采用`@Autowired`对相应Repository的进行引用，如果两者模型一致，Repository取名为成员变量`repository`
 5. 如果同一个业务模型被按照common/general/mutable分为了多个业务实现，则 general 应该继承 common, mutable也继承common
 6. mutable manager里面对相应的repository的命名改为 `mutableRepository`
 7. find/findAll等无损操作应该有DEBUG级别日志输出
 8. create/update等有损操作应该有INFO级别日志
-9. destroy等破坏性操作应该有warn级别日志
+9. destroy等破坏性操作应该有WARN级别日志
 
 示例：
 
@@ -496,9 +498,9 @@ public class CommonAccountManager extends Bean implements CommonAccountService {
  *  可修改的账户管理服务实现
  */
 @Service
-public class MutableAccountManager extends CommonAccountManager implements MutableContractService {
+public class MutableAccountManager extends CommonAccountManager implements MutableAccountService {
     @Autowired
-    MutableContractRepository mutableRepository;
+    MutableAccountRepository mutableRepository;
     
     @Override
     public Account create(Account account) {
@@ -523,7 +525,7 @@ public class MutableAccountManager extends CommonAccountManager implements Mutab
     }
 
     @Override
-    public void delete(Account deleting) throws AccountException {
+    public void destroy(Account deleting) throws AccountException {
         logger.warn("Deleting account {}", deleting);
         if( deleting.isValid() )
             throw new AccountException("Can't delete valid account: " + deleting);
@@ -544,7 +546,7 @@ public class MutableAccountManager extends CommonAccountManager implements Mutab
 4. 控制器类采用`@Autowired`对相应Servce的进行引用；
 5. 控制器类一般从 继承`dnt.itsnow.platform.web.controller.ApplicationController`
 6. 如果控制器类需要用到当前登录用户信息或者说只有登录用户才可以访问，则应该从 `dnt.itsnow.platform.web.controller.SessionSupportController`继承，这些控制器方法可以访问父类提供的成员变量 `currentUser`, `mainAccount` 获取到当前用户以及用户的主账户信息。
-7. 控制器类的说明一般为如下格式（包括控制器说明，所有的对外SPI说明）
+7. 控制器类的注释一般为如下格式（包括控制器说明，所有的对外SPI说明）
 
 ```java
 /**
@@ -579,15 +581,15 @@ public class MutableAccountManager extends CommonAccountManager implements Mutab
 
 ### 5.2.1 获取资源集合
 
-   URL入口为： GET /api/$models
+URL入口为： GET /api/$models
    
-   应该被映射为 `public List<$Model> index()` 方法，并支持从request parameters中获取分页条件 `page`, `size`, `sort`
+应该被映射为 `public List<$Model> index()` 方法，并支持从request parameters中获取分页条件 `page`, `size`, `sort`
    
-   分页结果信息应该通过http header输出。
+分页结果信息应该通过http response header输出。
    
-   如果有其他的查询需求，可以在index方法的参数中增加`@PathVariable`, `@RequestParam`
-   
-   由于基类`ApplicationController`通过`@BeforeFilter`实现了为index方法解析分页信息：
+如果有其他的查询需求，可以在index方法的参数中增加`@PathVariable`, `@RequestParam`
+
+由于基类`ApplicationController`通过`@BeforeFilter`实现了为index方法解析分页信息：
    
 ```java
     // 通过 Before Filter 自动创建的page request对象
@@ -606,7 +608,7 @@ public class MutableAccountManager extends CommonAccountManager implements Mutab
     }
 ```
    
-   通过`@AfterFilter`实现了将当前获得的页面信息输出到http response头中
+通过`@AfterFilter`实现了将当前获得的页面信息输出到http response头中
    
 ```java
     @AfterFilter(method =  RequestMethod.GET, value = "index")
@@ -620,7 +622,7 @@ public class MutableAccountManager extends CommonAccountManager implements Mutab
     }
 ```
 
-   所以典型的 index 可以实现为:
+所以典型的 index 可以实现为:
    
 ```java
 public class AccountsController extends SessionSupportController<Account> {
