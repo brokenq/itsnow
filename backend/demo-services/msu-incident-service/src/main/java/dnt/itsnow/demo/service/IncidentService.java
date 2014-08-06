@@ -13,6 +13,8 @@ public interface IncidentService {
 
     void newIncident(Incident incident);
 
+    Incident findByInstanceId(String id);
+
     Page<Incident> findByInstanceIds(List<String> ids,Pageable pageable);
 
     Page<Incident> findByUsername(String username,Pageable pageable);
