@@ -11,16 +11,6 @@ var app = angular.module("ItsNow.Login", [
     'ui.router'
 ]);
 
-
-//app.run( function($http) {
-//    $http.get('security/csrf').success(function(data) {
-//        console.log("CSRF Success: " + data.length);
-//        $http.defaults.headers.common[data.headerName] = data.token;
-//    }).error(function(data) {
-//        console.log("CSRF ERROR: " + data);
-//    });
-//});
-
 app.run(function($rootScope,csrf){
     $rootScope.data = csrf.load();
     $rootScope.value = 'testing';
@@ -52,10 +42,10 @@ app.controller('LoginCtrl', function($scope){
 var securityService = angular.module('SecurityService', []);
 
 securityService.factory('Session', ['$resource',
-    function($resource){
-        return $resource("api/session", {}, {
-            create: {method: 'POST'},/* login */
-            destroy: {method: 'DELETE'},/* logout */
+    function ($resource) {
+        return $resource("/api/session?username=:username&password=:password", {username: '@username', password: '@password'}, {
+            create: {method: 'POST'}, /* login */
+            destroy: {method: 'DELETE'}, /* logout */
             current: {method: 'GET'}, /* current session */
             profile: {method: 'GET'}  /* current user profile */
         });
@@ -80,12 +70,13 @@ securityService.factory('User', ['$resource'],
 );
 
 // 拦截器（只拦截POST请求）
-app.factory('sessionInjector', ['$injector',
+app.factory('SessionInjector', ['$injector',
     function ($injector) {
         return {
             response: function (response) {
-                console.log("response.config.method: " + response.config.method);
+                console.log('拦截请求！');
                 if (response.config.method === "POST") {
+                    console.log("response.config.method: " + response.config.method);
                     var csrf = $injector.get('csrf');
                     csrf.load();
                 }
@@ -96,5 +87,5 @@ app.factory('sessionInjector', ['$injector',
 
 // 注入拦截器
 app.config(['$httpProvider', function ($httpProvider) {
-    $httpProvider.interceptors.push('sessionInjector');
+    $httpProvider.interceptors.push('SessionInjector');
 }]);

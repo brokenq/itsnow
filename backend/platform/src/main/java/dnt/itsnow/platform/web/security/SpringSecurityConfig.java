@@ -3,6 +3,8 @@
  */
 package dnt.itsnow.platform.web.security;
 
+import dnt.itsnow.platform.web.support.DefaultAuthenticationFailureHandler;
+import dnt.itsnow.platform.web.support.DefaultAuthenticationSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -15,7 +17,9 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-/** Work as parent of SpringMvcConfig */
+/**
+ * Work as parent of SpringMvcConfig
+ */
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implements DelegateSecurityConfigurer {
@@ -40,17 +44,20 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
         // 若以后支持手机客户端访问，那个时候可能就需要基于Digest-Authentication
         //noinspection unchecked
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry authenticated =
-                (ExpressionUrlAuthorizationConfigurer.ExpressionInterceptUrlRegistry)
-                        //谁在前，谁优先级高
-                        http.authorizeRequests()
-                            .antMatchers(HttpMethod.POST, "api/session").anonymous()
-                            .antMatchers("/api/**").hasAnyRole("ADMIN","MONITOR","REPORTER","USER")
-                            .antMatchers("/admin/api/**").hasAnyRole("ADMIN")
-                            .antMatchers("/monitor/api/**").hasAnyRole("MONITOR")
-                            .antMatchers("/reporter/api/**").hasAnyRole("REPORTER")
-                            .antMatchers("/**").permitAll();
-        authenticated.and().formLogin().loginPage("/login.html").loginProcessingUrl("/api/session")
-                     .and().httpBasic().realmName("ItsNow Platform");
+                (ExpressionUrlAuthorizationConfigurer.ExpressionInterceptUrlRegistry) http.authorizeRequests();
+        //谁在前，谁优先级高
+        authenticated.antMatchers(HttpMethod.POST, "api/session").anonymous()
+                .antMatchers("/api/**").hasAnyRole("ADMIN", "MONITOR", "REPORTER", "USER")
+                .antMatchers("/admin/api/**").hasAnyRole("ADMIN")
+                .antMatchers("/monitor/api/**").hasAnyRole("MONITOR")
+                .antMatchers("/reporter/api/**").hasAnyRole("REPORTER")
+                .antMatchers("/**").permitAll();
+        authenticated.and().formLogin()
+                .loginPage("/login.html")
+                .loginProcessingUrl("/api/session")
+                .successHandler(new DefaultAuthenticationSuccessHandler())
+                .failureHandler(new DefaultAuthenticationFailureHandler())
+                .and().httpBasic().realmName("ItsNow Platform");
     }
 
     @Bean
