@@ -6,6 +6,7 @@ package dnt.itsnow.support;
 import dnt.itsnow.exception.AccountException;
 import dnt.itsnow.model.Account;
 import dnt.itsnow.model.AccountStatus;
+import dnt.itsnow.platform.service.AutoNumberService;
 import dnt.itsnow.platform.service.DefaultPage;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
@@ -18,11 +19,15 @@ import java.util.List;
 
 /**
  * <h1>可操作的账户服务</h1>
+ *
+ * TODO    同样，还有 Mutable Service 是不是应该继承 Common Service，也值得探讨
  */
 @Service
 public class MutableAccountManager extends CommonAccountManager implements MutableAccountService {
     @Autowired
     MutableAccountRepository mutableRepository;
+    @Autowired
+    AutoNumberService autoNumberService;
 
     @Override
     public Page<Account> findAll(String type, Pageable pageable) {
@@ -35,9 +40,13 @@ public class MutableAccountManager extends CommonAccountManager implements Mutab
     public Account create(Account account) {
         logger.info("Creating {}", account);
         //TODO Generate SN
+        if( account.getSn() == null ){
+            String type = account.getType();
+            account.setSn(autoNumberService.next(type));
+        }
         account.setStatus(AccountStatus.New);
         mutableRepository.create(account);
-        Account created = mutableRepository.findBySn(account.getSn());
+        Account created = super.findBySn(account.getSn());
         logger.info("Created  {}", created);
         return created;
     }
@@ -45,7 +54,7 @@ public class MutableAccountManager extends CommonAccountManager implements Mutab
     @Override
     public Account update(Account account) throws AccountException {
         logger.info("Updating {}", account);
-        Account updating = mutableRepository.findBySn(account.getSn());
+        Account updating = super.findBySn(account.getSn());
         if( updating.isExpired() )
             throw new AccountException("Can't update expired account: " + updating.getSn());
         updating.apply(account);

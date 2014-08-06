@@ -58,11 +58,7 @@ public abstract class Account extends Record {
         return this.status == AccountStatus.Valid;
     }
 
-    public String getType(){
-        if(getSn().startsWith(MSU))return MSU;
-        if(getSn().startsWith(MSP))return MSP;
-        return MSC;
-    }
+    public abstract String getType();
 
     public boolean isMsc(){
         return MSC.equals(getType());
@@ -84,8 +80,8 @@ public abstract class Account extends Record {
 
         Account account = (Account) o;
 
-        if (!name.equals(account.name)) return false;
-        if (!sn.equals(account.sn)) return false;
+        if (name != null ? !name.equals(account.name) : account.name != null) return false;
+        if (sn != null ? !sn.equals(account.sn) : account.sn != null) return false;
         //noinspection RedundantIfStatement
         if (status != account.status) return false;
 
@@ -95,9 +91,9 @@ public abstract class Account extends Record {
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + sn.hashCode();
-        result = 31 * result + name.hashCode();
-        result = 31 * result + status.hashCode();
+        result = 31 * result + (sn != null ? sn.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (status != null ? status.hashCode() : 0);
         return result;
     }
 }

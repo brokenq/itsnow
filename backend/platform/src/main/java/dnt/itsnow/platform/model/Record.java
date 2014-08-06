@@ -58,19 +58,14 @@ public class Record {
 
         Record record = (Record) o;
 
-        //if (createdAt != null ? !createdAt.equals(record.createdAt) : record.createdAt != null) return false;
-        if (!id.equals(record.id)) return false;
         //noinspection RedundantIfStatement
-        //if (updatedAt != null ? !updatedAt.equals(record.updatedAt) : record.updatedAt != null) return false;
+        if (id != null ? !id.equals(record.id) : record.id != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = id.hashCode();
-        //result = 31 * result + (createdAt != null ? createdAt.hashCode() : 0);
-        //result = 31 * result + (updatedAt != null ? updatedAt.hashCode() : 0);
-        return result;
+        return id != null ? id.hashCode() : 0;
     }
 }

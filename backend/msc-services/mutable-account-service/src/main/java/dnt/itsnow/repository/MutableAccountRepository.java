@@ -15,8 +15,12 @@ import java.util.List;
 
 /**
  * 针对账户的数据库操作
+ *
+ * <p>
+ * TODO Mutable Repository 是不是应该继承 Common Repository 这是一个值得探讨的问题
+ * </p>
  */
-public interface MutableAccountRepository extends CommonAccountRepository {
+public interface MutableAccountRepository /*extends CommonAccountRepository*/ {
     long countByType(@Param("type") String type);
 
     List<Account> findAllByType(@Param("type") String type, @Param("pageable") Pageable pageable);

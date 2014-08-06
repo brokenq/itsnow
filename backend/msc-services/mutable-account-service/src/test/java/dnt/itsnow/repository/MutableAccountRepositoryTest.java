@@ -3,7 +3,7 @@
  */
 package dnt.itsnow.repository;
 
-import dnt.itsnow.config.MutableAccountTestConfig;
+import dnt.itsnow.config.MutableAccountRepositoryConfig;
 import dnt.itsnow.model.Account;
 import dnt.itsnow.model.AccountStatus;
 import dnt.itsnow.model.MsuAccount;
@@ -28,12 +28,14 @@ import java.util.List;
  * <li>非Happy Case，应该在开发过程中，遇到一个问题/坑，就增加一个相应的测试用例
  * </ul>
  */
-@ContextConfiguration(classes = MutableAccountTestConfig.class)
+@ContextConfiguration(classes = MutableAccountRepositoryConfig.class)
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MutableAccountRepositoryTest {
     @Autowired
-    MutableAccountRepository repository;
+    CommonAccountRepository repository;
+    @Autowired
+    MutableAccountRepository mutableRepository;
     PageRequest pageRequest;
     Account account;
 
@@ -50,18 +52,18 @@ public class MutableAccountRepositoryTest {
 
     @Test
     public void testCountByType() throws Exception {
-        Assert.assertEquals(repository.countByType("msc"), 1);
-        Assert.assertEquals(repository.countByType("msu"), 2);
-        Assert.assertEquals(repository.countByType("msp"), 2);
+        Assert.assertEquals(mutableRepository.countByType("msc"), 1);
+        Assert.assertEquals(mutableRepository.countByType("msu"), 2);
+        Assert.assertEquals(mutableRepository.countByType("msp"), 2);
     }
 
     @Test
     public void testFindAllByType() throws Exception {
-        List<Account> mscs = repository.findAllByType("msc", pageRequest);
+        List<Account> mscs = mutableRepository.findAllByType("msc", pageRequest);
         Assert.assertEquals(1, mscs.size());
-        List<Account> msus = repository.findAllByType("msu", pageRequest);
+        List<Account> msus = mutableRepository.findAllByType("msu", pageRequest);
         Assert.assertEquals(2, msus.size());
-        List<Account> msps = repository.findAllByType("msp", pageRequest);
+        List<Account> msps = mutableRepository.findAllByType("msp", pageRequest);
         Assert.assertEquals(2, msps.size());
     }
 
@@ -72,23 +74,8 @@ public class MutableAccountRepositoryTest {
             // 不比较 createdAt, updatedAt
             Assert.assertEquals(account, created);
         } finally {
-            //清除生成的数据，避免因为这些用例先跑导致前面的count被安排后跑导致的失败
-            repository.deleteBySn(account.getSn());
+            clearNewAccount();
         }
-    }
-
-    Account prepareNewAccount() {
-        repository.create(account);
-        Account created = repository.findBySn(account.getSn());
-        // for assert
-        account.setId(created.getId());
-        return created;
-    }
-
-    //清除生成的数据，避免因为这些用例先跑导致前面的count被安排后跑导致的失败
-    void clearNewAccount(){
-        repository.deleteBySn(newAccountSn);
-
     }
 
     @Test
@@ -100,7 +87,7 @@ public class MutableAccountRepositoryTest {
             account.setName("New Name");
             account.setStatus(AccountStatus.Expired);
 
-            repository.update(account);
+            mutableRepository.update(account);
             Account updated = repository.findBySn(account.getSn());
             Assert.assertEquals(account, updated);
 
@@ -126,7 +113,7 @@ public class MutableAccountRepositoryTest {
         try {
             // 先生成
             prepareNewAccount();
-            repository.deleteBySn(account.getSn());
+            mutableRepository.deleteBySn(account.getSn());
 
             Account deleted = repository.findBySn(account.getSn());
             Assert.assertNull(deleted);
@@ -134,4 +121,19 @@ public class MutableAccountRepositoryTest {
             clearNewAccount();
         }
     }
+
+    Account prepareNewAccount() {
+        mutableRepository.create(account);
+        Account created = repository.findBySn(account.getSn());
+        // for assert
+        account.setId(created.getId());
+        return created;
+    }
+
+    //清除生成的数据，避免因为这些用例先跑导致前面的count被安排后跑导致的失败
+    void clearNewAccount(){
+        mutableRepository.deleteBySn(newAccountSn);
+
+    }
+
 }

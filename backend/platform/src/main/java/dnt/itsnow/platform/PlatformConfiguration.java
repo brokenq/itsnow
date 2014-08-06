@@ -6,7 +6,9 @@ package dnt.itsnow.platform;
 import dnt.itsnow.platform.remote.service.RestFacade;
 import dnt.itsnow.platform.remote.support.RestFacadeImpl;
 import dnt.itsnow.platform.repository.DatabaseConfig;
+import dnt.itsnow.platform.service.AutoNumberService;
 import dnt.itsnow.platform.services.ServicePackageManager;
+import dnt.itsnow.platform.support.AutoNumberInMemory;
 import dnt.itsnow.platform.support.JettyServer;
 import dnt.itsnow.platform.support.ServicePackageEventForwarder;
 import dnt.spring.DefaultAppConfig;
@@ -59,5 +61,10 @@ public class PlatformConfiguration {
     @Bean
     public RestFacade restFacade(){
         return new RestFacadeImpl();
+    }
+
+    @Bean
+    public AutoNumberService autoNumberService(){
+        return new AutoNumberInMemory();
     }
 }

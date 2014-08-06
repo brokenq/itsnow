@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Import;
  */
 @Configuration
 @Import(DatabaseConfig.class)
-public class MutableAccountTestConfig extends TestConfigWithH2 {
+public class MutableAccountRepositoryConfig extends TestConfigWithH2 {
     protected String[] sqlScripts() {
         return new String[]{
                 "classpath:META-INF/setup/prepare_schema.sql",

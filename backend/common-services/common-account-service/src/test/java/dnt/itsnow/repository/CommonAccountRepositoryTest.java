@@ -3,7 +3,7 @@
  */
 package dnt.itsnow.repository;
 
-import dnt.itsnow.config.CommonAccountTestConfig;
+import dnt.itsnow.config.CommonAccountRepositoryConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import org.springframework.util.Assert;
 /**
  * <h1>测试CommonAccountRepository的Mybatis的Mapping配置是否正确</h1>
  */
-@ContextConfiguration(classes = CommonAccountTestConfig.class)
+@ContextConfiguration(classes = CommonAccountRepositoryConfig.class)
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
 public class CommonAccountRepositoryTest {
