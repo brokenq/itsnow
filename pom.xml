@@ -6,9 +6,14 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
 
-    <groupId>dnt</groupId>
+    <parent>
+        <groupId>dnt</groupId>
+        <artifactId>parent</artifactId>
+        <version>1.0.1</version>
+    </parent>
+
     <artifactId>itsnow</artifactId>
-    <version>0.1.3-SNAPSHOT</version>
+    <version>0.1.3</version>
 
     <name>ItsNow</name>
     <description>
@@ -16,47 +21,18 @@
     </description>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-        <version.maven.compiler>2.5.1</version.maven.compiler>
-        <version.maven.source>2.2.1</version.maven.source>
-        <version.maven.resources>2.6</version.maven.resources>
-        <version.maven.antrun>1.7</version.maven.antrun>
-        <version.maven.dependency>2.8</version.maven.dependency>
-        <version.maven.versions>2.1</version.maven.versions>
-        <version.maven.jar>2.4</version.maven.jar>
-        <version.maven.release>2.4.1</version.maven.release>
-
-        <version.slf4j>1.7.7</version.slf4j>
-        <version.springframework>4.0.5.RELEASE</version.springframework>
         <version.spring-security>3.2.4.RELEASE</version.spring-security>
         <version.mybatis>3.2.7</version.mybatis>
         <version.mybatis-spring>1.2.2</version.mybatis-spring>
-        <version.mybatis-migrations>3.2.0</version.mybatis-migrations>
-        <version.logback>1.0.13</version.logback>
-        <version.jcl-core>2.4</version.jcl-core>
-        <version.xstream>1.4.4</version.xstream>
-
-        <version.commons.lang>2.6</version.commons.lang>
-        <version.commons.collections>3.2.1</version.commons.collections>
-        <version.commons.beanutils>1.8.0</version.commons.beanutils>
-        <version.commons.io>2.4</version.commons.io>
-        <version.commons.net>3.3</version.commons.net>
-        <version.commons.pool>1.6</version.commons.pool>
-        <version.commons.proxy>1.0</version.commons.proxy>
-        <version.httpclient>4.3</version.httpclient>
 
         <version.jetty>9.1.0.RC2</version.jetty>
         <version.scala>2.8.2</version.scala>
         <version.scalate>1.5.3-scala_2.8.2</version.scalate>
         <version.mysql>5.1.31</version.mysql>
-        <version.validation-api>1.1.0.Final</version.validation-api>
-        <version.hibernate-validator>5.0.1.Final</version.hibernate-validator>
 
         <version.activiti.engine>5.15.1</version.activiti.engine>
 
-        <version.component-framework>0.1.0-SNAPSHOT</version.component-framework>
+        <version.component-framework>0.1.0</version.component-framework>
         <version.components>0.1.5</version.components>
         <release.root>/opt/releases/itsnow</release.root>
         <release.dir>${release.root}/itsnow-${project.version}</release.dir>
@@ -64,9 +40,9 @@
 
 
     <scm>
-        <url>http://git.happyonroad.net/insight/bsm.git</url>
-        <connection>scm:git:git@happyonroad.net:insight/bsm.git</connection>
-        <developerConnection>scm:git:git@happyonroad.net:insight/bsm.git</developerConnection>
+        <url>http://git.happyonroad.net/insight/itsnow.git</url>
+        <connection>scm:git:git@happyonroad.net:insight/itsnow.git</connection>
+        <developerConnection>scm:git:git@happyonroad.net:insight/itsnow.git</developerConnection>
     </scm>
 
     <modules>
@@ -93,140 +69,7 @@
                 <release.dir>${release.root}/msp-${project.version}</release.dir>
             </properties>
         </profile>
-
-        <profile>
-            <id>dnt</id>
-            <repositories>
-                <repository>
-                    <id>dnt-releases</id>
-                    <url>http://nexus.dnt.com.cn/nexus/content/groups/public</url>
-                </repository>
-
-                <repository>
-                    <id>dnt-snapshots</id>
-                    <url>http://nexus.dnt.com.cn/nexus/content/groups/public-snapshots/</url>
-                </repository>
-            </repositories>
-
-            <pluginRepositories>
-                <pluginRepository>
-                    <id>dnt-releases</id>
-                    <url>http://nexus.dnt.com.cn/nexus/content/groups/public</url>
-                </pluginRepository>
-            </pluginRepositories>
-
-            <distributionManagement>
-                <repository>
-                    <id>dnt-releases</id>
-                    <name>Nexus Release Repository</name>
-                    <url>http://nexus.dnt.com.cn/nexus/content/repositories/releases</url>
-                </repository>
-                <snapshotRepository>
-                    <id>dnt-snapshots</id>
-                    <name>Nexus Snapshot Repository</name>
-                    <url>http://nexus.dnt.com.cn/nexus/content/repositories/snapshots</url>
-                </snapshotRepository>
-            </distributionManagement>
-        </profile>
-
-        <profile>
-            <id>nexus</id>
-            <repositories>
-                <repository>
-                    <id>nexus-releases</id>
-                    <url>http://oss.sonatype.org/content/groups/public</url>
-                </repository>
-            </repositories>
-
-            <pluginRepositories>
-                <pluginRepository>
-                    <id>nexus-releases</id>
-                    <url>http://oss.sonatype.org/content/groups/public</url>
-                </pluginRepository>
-            </pluginRepositories>
-
-            <distributionManagement>
-                <repository>
-                    <id>nexus-releases</id>
-                    <name>Nexus Release Repository</name>
-                    <url>http://oss.sonatype.org/content/repositories/releases</url>
-                </repository>
-                <snapshotRepository>
-                    <id>nexus-snapshots</id>
-                    <name>Nexus Snapshot Repository</name>
-                    <url>http://oss.sonatype.org/content/repositories/snapshots</url>
-                </snapshotRepository>
-            </distributionManagement>
-        </profile>
     </profiles>
-
-    <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/*</include>
-                </includes>
-            </resource>
-        </resources>
-
-        <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${version.maven.compiler}</version>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                    <meminitial>128M</meminitial>
-                    <maxmem>512M</maxmem>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                    <compilerVersion>1.6</compilerVersion>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>${version.maven.resources}</version>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>${version.maven.jar}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <configuration>
-                            <jarName>${project.groupId}.${project.artifactId}-${project.version}</jarName>
-                            <skipIfEmpty>true</skipIfEmpty>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>versions-maven-plugin</artifactId>
-                <version>${version.maven.versions}</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>${version.maven.release}</version>
-                <configuration>
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <tagNameFormat>Rel-@{project.version}</tagNameFormat>
-                    <mavenExecutorId>forked-path</mavenExecutorId>
-                    <useReleaseProfile>false</useReleaseProfile>
-                    <arguments>-P dnt -DskipTests</arguments>
-                </configuration>
-            </plugin>
-
-        </plugins>
-
-    </build>
 
     <dependencyManagement>
         <dependencies>
@@ -313,16 +156,6 @@
                 </exclusions>
             </dependency>
 
-            <dependency>
-                <groupId>javax.validation</groupId>
-                <artifactId>validation-api</artifactId>
-                <version>${version.validation-api}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-validator</artifactId>
-                <version>${version.hibernate-validator}</version>
-            </dependency>
 
             <!-- Framework DEPENDENCIES -->
             <dependency>
@@ -448,11 +281,6 @@
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${version.mysql}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-jdbc</artifactId>
-                <version>${version.springframework}</version>
             </dependency>
 
             <!--activiti dependency-->
