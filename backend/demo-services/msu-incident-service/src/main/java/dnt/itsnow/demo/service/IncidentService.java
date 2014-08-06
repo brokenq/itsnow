@@ -5,7 +5,6 @@ import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by jacky on 2014/7/28.
@@ -14,7 +13,9 @@ public interface IncidentService {
 
     void newIncident(Incident incident);
 
-    Page<Incident> findByInstanceIds(Set<String> ids,Pageable pageable);
+    Incident findByInstanceId(String id);
+
+    Page<Incident> findByInstanceIds(List<String> ids,Pageable pageable);
 
     Page<Incident> findByUsername(String username,Pageable pageable);
 

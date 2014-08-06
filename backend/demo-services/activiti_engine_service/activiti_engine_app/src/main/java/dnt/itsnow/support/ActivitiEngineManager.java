@@ -142,16 +142,20 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
         return processInstance;
     }
 
+    public ProcessInstance queryProcessInstanceById(String instanceId){
+        return processEngine.getRuntimeService().createProcessInstanceQuery().processInstanceId(instanceId).singleResult();
+    }
+
     public List<Task> queryTasksByInstanceId(String instanceId){
         return processEngine.getTaskService().createTaskQuery().processInstanceId(instanceId).list();
     }
 
     public List<Task> queryTasksAssignee(String userName){
-        return processEngine.getTaskService().createTaskQuery().taskAssignee(userName).processDefinitionKey("").list();
+        return processEngine.getTaskService().createTaskQuery().taskAssignee(userName).list();
     }
 
     public List<Task> queryTasksAssignee(String userName,String key){
-        return processEngine.getTaskService().createTaskQuery().taskAssignee(userName).processDefinitionKey("key").list();
+        return processEngine.getTaskService().createTaskQuery().taskAssignee(userName).processDefinitionKey(key).list();
     }
 
     public List<Task> queryTasksCandidateUser(String userName){

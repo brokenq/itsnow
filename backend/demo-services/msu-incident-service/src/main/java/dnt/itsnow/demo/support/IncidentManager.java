@@ -10,6 +10,8 @@ import dnt.itsnow.platform.service.DefaultPage;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 import dnt.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +19,12 @@ import java.beans.Beans;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 
 @Service
 public class IncidentManager extends Beans implements IncidentService {
+
+    Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     IncidentRepository incidentRepository;
@@ -39,10 +42,18 @@ public class IncidentManager extends Beans implements IncidentService {
         return new DefaultPage<Incident>(incidents, pageable, total);
     }
 
-    public Page<Incident> findByInstanceIds(Set<String> ids,Pageable pageable){
+    public Incident findByInstanceId(String id){
+        return incidentRepository.findByInstanceId(id);
+    }
+
+    public Page<Incident> findByInstanceIds(List<String> ids,Pageable pageable){
+
         int total = ids.size();
-        List<Incident> incidents = incidentRepository.findIncidentsByIds(ids,"updated_at desc",pageable.getOffset(),pageable.getPageSize());
-        return new DefaultPage<Incident>(incidents,pageable,total);
+        if(total > 0){
+            List<Incident> incidents = incidentRepository.findAllByInstanceIds(ids,pageable);
+            return new DefaultPage<Incident>(incidents,pageable,total);
+        }else
+            return new DefaultPage<Incident>(null,pageable,total);
     }
 
     public Page<Incident> findAll(String keyword, Pageable pageable){

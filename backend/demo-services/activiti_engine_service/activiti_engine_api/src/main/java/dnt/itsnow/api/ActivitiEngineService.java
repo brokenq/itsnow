@@ -3,10 +3,10 @@
  */
 package dnt.itsnow.api;
 
+import org.activiti.engine.task.Task;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.activiti.engine.task.Task;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,6 +53,8 @@ public interface ActivitiEngineService {
     List<Task> queryTasksCandidateGroup(String groupName);
 
     ProcessInstance startProcessInstanceByKey(String key,Map<String, Object> variables,String assignee);
+
+    ProcessInstance queryProcessInstanceById(String instanceId);
 
     Task claimTask(String taskId,String userId);
 
