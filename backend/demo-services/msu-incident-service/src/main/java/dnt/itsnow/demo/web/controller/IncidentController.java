@@ -53,7 +53,7 @@ public class IncidentController extends ApplicationController<Incident> {
         Set<Task> tasks = new HashSet<Task>();
         tasks.addAll(activitiEngineService.queryTasksAssignee(userId,PROCESS_KEY));
         tasks.addAll(activitiEngineService.queryTasksCandidateUser(userId,PROCESS_KEY));
-        Set<String> ids = new HashSet<String>();
+        List<String> ids = new ArrayList<String>();
         for(Task task:tasks){
             ids.add(task.getProcessInstanceId());
         }

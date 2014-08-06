@@ -1,10 +1,10 @@
 package dnt.itsnow.demo.repository;
 
 import dnt.itsnow.demo.model.Incident;
+import dnt.itsnow.platform.service.Pageable;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by jacky on 2014/7/28.
@@ -32,12 +32,13 @@ public interface IncidentRepository {
                                           @Param("offset") int offset,
                                           @Param("size") int size);
 
-    @Select("select * from demo_incidents where created_by instance_id in '#{ids}'" +
-            " order by #{orderBy} limit #{offset}, #{size}")
-    List<Incident> findIncidentsByIds(@Param("ids") Set ids,
+    @Select("select * from demo_incidents where instance_id in (#{ids}) order by #{orderBy} limit #{offset}, #{size}")
+    List<Incident> findIncidentsByIds(@Param("ids") String ids,
                                            @Param("orderBy") String orderBy,
                                            @Param("offset") int offset,
                                            @Param("size") int size);
+
+    List<Incident> findAllByInstanceIds(@Param("ids")List<String> ids,@Param("pageable")Pageable pageable);
 
     @Select("select count(0) from demo_incidents")
     int count();//如果是count，mybatis会说已经这么映射了，但我貌似又没法用到
