@@ -13,8 +13,8 @@ public class Incident extends Record {
     private String number;//'故障单号，系统自动生成，生成规则:INC20140801111700001',
     private String requesterName;//'请求人',
     private String requesterLocation;//'请求人所处的地区',
-    private String requestEmail;//'请求人的email',
-    private String requestPhone;//'请求人的电话',
+    private String requesterEmail;//'请求人的email',
+    private String requesterPhone;//'请求人的电话',
     private String serviceCatalog;// '服务目录',
     private String category;//'分类：软件、硬件、咨询、其他',
     private String impact;//'影响程度：高、中、低',
@@ -32,6 +32,15 @@ public class Incident extends Record {
     private Timestamp closeTime;//'关闭时间',
     private String solution;//'解决方案',
     private IncidentStatus status = IncidentStatus.Assigned;
+    private String closeCode;//关闭代码
+
+    public String getCloseCode() {
+        return closeCode;
+    }
+
+    public void setCloseCode(String closeCode) {
+        this.closeCode = closeCode;
+    }
 
     public String getNumber() {
         return number;
@@ -57,20 +66,20 @@ public class Incident extends Record {
         this.requesterLocation = requesterLocation;
     }
 
-    public String getRequestEmail() {
-        return requestEmail;
+    public String getRequesterEmail() {
+        return requesterEmail;
     }
 
-    public void setRequestEmail(String requestEmail) {
-        this.requestEmail = requestEmail;
+    public void setRequesterEmail(String requesterEmail) {
+        this.requesterEmail = requesterEmail;
     }
 
-    public String getRequestPhone() {
-        return requestPhone;
+    public String getRequesterPhone() {
+        return requesterPhone;
     }
 
-    public void setRequestPhone(String requestPhone) {
-        this.requestPhone = requestPhone;
+    public void setRequesterPhone(String requesterPhone) {
+        this.requesterPhone = requesterPhone;
     }
 
     public String getServiceCatalog() {

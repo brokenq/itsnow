@@ -1,12 +1,12 @@
 package dnt.itsnow.demo.config;
 
 import dnt.itsnow.api.ActivitiEngineService;
-import dnt.itsnow.platform.config.DefaultServiceConfig;
+import dnt.itsnow.config.DefaultCommonServiceConfig;
 
 /**
  * MSU Incident模块的服务配置
  */
-public class IncidentServiceConfig extends DefaultServiceConfig {
+public class IncidentServiceConfig extends DefaultCommonServiceConfig {
 
     @Override
     public void defineServices() {

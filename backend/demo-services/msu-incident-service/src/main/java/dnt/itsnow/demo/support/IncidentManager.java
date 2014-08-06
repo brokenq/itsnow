@@ -42,10 +42,18 @@ public class IncidentManager extends Beans implements IncidentService {
         return new DefaultPage<Incident>(incidents, pageable, total);
     }
 
+    public Incident findByInstanceId(String id){
+        return incidentRepository.findByInstanceId(id);
+    }
+
     public Page<Incident> findByInstanceIds(List<String> ids,Pageable pageable){
+
         int total = ids.size();
-        List<Incident> incidents = incidentRepository.findAllByInstanceIds(ids,pageable);
-        return new DefaultPage<Incident>(incidents,pageable,total);
+        if(total > 0){
+            List<Incident> incidents = incidentRepository.findAllByInstanceIds(ids,pageable);
+            return new DefaultPage<Incident>(incidents,pageable,total);
+        }else
+            return new DefaultPage<Incident>(null,pageable,total);
     }
 
     public Page<Incident> findAll(String keyword, Pageable pageable){
