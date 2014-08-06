@@ -22,6 +22,10 @@
         Persistence: MyBatis
     </description>
 
+    <properties>
+        <version.h2>1.3.174</version.h2>
+    </properties>
+
     <modules>
         <module>platform</module>
         <module>release</module>
@@ -61,6 +65,17 @@
         </profile>
     </profiles>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+        </dependency>
+    </dependencies>
+
     <dependencyManagement>
         <dependencies>
             <!--Platform -->
@@ -73,6 +88,14 @@
                 <groupId>dnt.itsnow</groupId>
                 <artifactId>release</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+
+            <!--Test-->
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>${version.h2}</version>
+                <scope>test</scope>
             </dependency>
 
             <!--Demo-->

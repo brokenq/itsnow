@@ -4,7 +4,7 @@
 package dnt.itsnow.support;
 
 import dnt.itsnow.model.Account;
-import dnt.itsnow.repository.AccountRepository;
+import dnt.itsnow.repository.CommonAccountRepository;
 import dnt.itsnow.service.CommonAccountService;
 import dnt.spring.Bean;
 import org.apache.ibatis.annotations.Param;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 public class CommonAccountManager extends Bean implements CommonAccountService {
 
     @Autowired
-    AccountRepository repository;
+    CommonAccountRepository repository;
 
     @Override
     public Account findByName(@Param("name") String name) {

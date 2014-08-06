@@ -50,4 +50,27 @@ public class Record {
     public void apply(Record another) {
         // do nothing
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Record record = (Record) o;
+
+        //if (createdAt != null ? !createdAt.equals(record.createdAt) : record.createdAt != null) return false;
+        if (!id.equals(record.id)) return false;
+        //noinspection RedundantIfStatement
+        //if (updatedAt != null ? !updatedAt.equals(record.updatedAt) : record.updatedAt != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        //result = 31 * result + (createdAt != null ? createdAt.hashCode() : 0);
+        //result = 31 * result + (updatedAt != null ? updatedAt.hashCode() : 0);
+        return result;
+    }
 }

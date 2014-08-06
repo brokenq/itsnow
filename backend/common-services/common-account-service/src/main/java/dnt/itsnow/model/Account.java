@@ -75,4 +75,29 @@ public abstract class Account extends Record {
     public boolean isMsp(){
         return MSP.equals(getType());
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        Account account = (Account) o;
+
+        if (!name.equals(account.name)) return false;
+        if (!sn.equals(account.sn)) return false;
+        //noinspection RedundantIfStatement
+        if (status != account.status) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + sn.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + status.hashCode();
+        return result;
+    }
 }

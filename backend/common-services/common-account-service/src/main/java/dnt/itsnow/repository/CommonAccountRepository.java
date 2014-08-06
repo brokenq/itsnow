@@ -11,7 +11,7 @@ import org.apache.ibatis.annotations.Select;
 /**
  * Account Repository
  */
-public interface AccountRepository {
+public interface CommonAccountRepository {
     @Select("SELECT * FROM itsnow_msc.accounts where name = #{name}")
     @ResultMap("accountResult")
     Account findByName(@Param("name") String name);

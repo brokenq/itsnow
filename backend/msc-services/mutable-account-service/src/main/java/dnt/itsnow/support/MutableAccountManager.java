@@ -36,8 +36,8 @@ public class MutableAccountManager extends CommonAccountManager implements Mutab
         logger.info("Creating {}", account);
         //TODO Generate SN
         account.setStatus(AccountStatus.New);
-        long id = mutableRepository.create(account);
-        Account created = mutableRepository.findById(id);
+        mutableRepository.create(account);
+        Account created = mutableRepository.findBySn(account.getSn());
         logger.info("Created  {}", created);
         return created;
     }

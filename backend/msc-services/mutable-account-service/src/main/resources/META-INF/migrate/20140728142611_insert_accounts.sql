@@ -1,7 +1,7 @@
 -- // insert_accounts
 -- Migration SQL that makes the change goes here.
 
-INSERT accounts(sn, name, type, status)
+INSERT INTO accounts(sn, name, type, status)
 VALUES
  ('msc',     'Itsnow Carrier', 'msc', 'Valid'),
  ('msu_001', 'Shanghai VW',    'msu', 'Valid'),
