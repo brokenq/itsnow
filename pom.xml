@@ -10,6 +10,7 @@
         <groupId>dnt</groupId>
         <artifactId>parent</artifactId>
         <version>1.0.1</version>
+        <relativePath>../parent/pom.xml</relativePath>
     </parent>
 
     <artifactId>itsnow</artifactId>
