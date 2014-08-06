@@ -87,7 +87,7 @@ userApp.controller('UserListCtrl', UserListCtrl);
 
 // 封装$http
 userApp.factory('UserService', ['$resource', function ($resource) {
-    return $resource('/api/users', null, {
+    return $resource('/admin/api/users', null, {
         list: {
             method: 'GET',
             isArray: true
