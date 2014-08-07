@@ -6,8 +6,7 @@ package dnt.itsnow.model;
 import dnt.itsnow.platform.model.Record;
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 
 /**
  * <h1>>服务采购方(MSU)或者服务供应方(MSP)在系统数据库中的账户</h1
@@ -17,11 +16,11 @@ public abstract class Account extends Record {
     public static final String MSU = "msu";
     public static final String MSP = "msp";
 
+    @NotBlank
     private String        sn;
     @NotBlank
     // 帐户名称
-    @Min(4)
-    @Max(50)
+    @Size(min = 4, max = 50)
     private String        name;
     // 账户状态
     private AccountStatus status = AccountStatus.New;

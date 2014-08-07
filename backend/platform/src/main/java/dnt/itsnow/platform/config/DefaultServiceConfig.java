@@ -3,6 +3,7 @@
  */
 package dnt.itsnow.platform.config;
 
+import dnt.itsnow.platform.service.AutoNumberService;
 import net.happyonroad.spring.service.AbstractServiceConfig;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -24,6 +25,8 @@ public class DefaultServiceConfig extends AbstractServiceConfig {
         importService(PlatformTransactionManager.class, "*", "transactionManager");
         importService(SqlSessionFactory.class);
         importService(Configuration.class);
-        //Spring MVC相关服务
+        //一般工具服务
+        importService(AutoNumberService.class);
+
     }
 }

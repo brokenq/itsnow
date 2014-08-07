@@ -1,5 +1,5 @@
 <!--这个目录不需要放到classpath下，应用程序应该主动配置logback，让其使用该对象-->
-<configuration scan="true" scanPeriod="30 seconds">
+<configuration scan="true" scanPeriod="30 seconds" debug="false">
 
     <property file="${app.home}/config/now.properties" />
 

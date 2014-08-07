@@ -36,7 +36,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/admin/api/accounts")
-public class AccountsController extends SessionSupportController<Account> {
+public class MutableAccountsController extends SessionSupportController<Account> {
     @Autowired
     MutableAccountService accountService;
     Account currentAccount;

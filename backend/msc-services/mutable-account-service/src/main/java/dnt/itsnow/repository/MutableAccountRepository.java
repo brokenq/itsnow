@@ -18,9 +18,21 @@ import java.util.List;
  *
  * <p>
  * TODO Mutable Repository 是不是应该继承 Common Repository 这是一个值得探讨的问题
+ *
+ * 初步决定，应该继承，理由如下：
+ * <ol>
+ * <li>Common  Account Manager autowire Common Account Repository
+ * <li>Mutable Account Manager autowire Mutable Account Repository
+ * <li>Mutable Account Manager inherit Common Account Manager
+ * <li>Mutable Account Manager autowire Common Account Repository
+ * </ol>
+ * 如果 MutableAccountRepository 不从 CommonAccountRepository 继承，
+ * 则为了让 Mutable Account Manager正确工作，需要将Common Account Repository 也跨组件暴露
+ * 这违反了我们组件开发的原则：组件之间应该暴露服务，而不是服务的底层支撑
+ * 备注：平台倒是可以暴露服务的底层支撑
  * </p>
  */
-public interface MutableAccountRepository /*extends CommonAccountRepository*/ {
+public interface MutableAccountRepository extends CommonAccountRepository {
     long countByType(@Param("type") String type);
 
     List<Account> findAllByType(@Param("type") String type, @Param("pageable") Pageable pageable);

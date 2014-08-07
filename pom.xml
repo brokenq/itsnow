@@ -30,6 +30,8 @@
         <version.scala>2.8.2</version.scala>
         <version.scalate>1.5.3-scala_2.8.2</version.scalate>
         <version.mysql>5.1.31</version.mysql>
+        <version.el-api>3.0.0</version.el-api>
+        <version.el-ri>1.0</version.el-ri>
 
         <version.activiti.engine>5.15.1</version.activiti.engine>
 
@@ -274,11 +276,6 @@
                 <version>${version.mybatis-spring}</version>
             </dependency>
             <dependency>
-                <groupId>org.mybatis</groupId>
-                <artifactId>mybatis-migrations</artifactId>
-                <version>${version.mybatis-migrations}</version>
-            </dependency>
-            <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${version.mysql}</version>
@@ -341,6 +338,16 @@
                 </exclusions>
             </dependency>
 
+            <dependency>
+                <groupId>javax.el</groupId>
+                <artifactId>javax.el-api</artifactId>
+                <version>${version.el-api}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.el</groupId>
+                <artifactId>el-ri</artifactId>
+                <version>${version.el-ri}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>

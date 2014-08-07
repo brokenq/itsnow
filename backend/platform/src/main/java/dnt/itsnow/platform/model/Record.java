@@ -4,6 +4,7 @@
 package dnt.itsnow.platform.model;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.beanutils.BeanUtils;
 
 import java.sql.Timestamp;
 
@@ -48,7 +49,11 @@ public class Record {
      * @param another 另外一个对象
      */
     public void apply(Record another) {
-        // do nothing
+        try {
+            BeanUtils.copyProperties(this, another);
+        } catch (Exception e) {
+            throw new RuntimeException("Can't apply record properties", e);
+        }
     }
 
     @Override
