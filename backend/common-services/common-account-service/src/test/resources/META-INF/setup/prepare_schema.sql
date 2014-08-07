@@ -1,3 +1,3 @@
-CREATE SCHEMA itsnow_msu_001;
-CREATE SCHEMA itsnow_msc;
+CREATE SCHEMA IF NOT EXISTS itsnow_msu_001;
+CREATE SCHEMA IF NOT EXISTS itsnow_msc;
 SET SCHEMA itsnow_msc;

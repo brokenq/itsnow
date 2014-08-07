@@ -1,3 +1,6 @@
+
+DELETE FROM accounts;
+
 INSERT INTO accounts(sn, name, type, status)
 VALUES
   ('msc',     'Itsnow Carrier', 'msc', 'Valid'),

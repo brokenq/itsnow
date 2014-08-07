@@ -1,5 +1,5 @@
 
-CREATE TABLE accounts (
+CREATE TABLE IF NOT EXISTS accounts (
   id         INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
   sn         VARCHAR(20)      NOT NULL,
   name       VARCHAR(255)     NOT NULL,
