@@ -4,6 +4,8 @@ import dnt.itsnow.api.ActivitiEngineService;
 import dnt.spring.Bean;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.delegate.Expression;
+import org.activiti.engine.history.HistoricActivityInstance;
+import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.impl.RepositoryServiceImpl;
 import org.activiti.engine.impl.bpmn.behavior.UserTaskActivityBehavior;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
@@ -11,7 +13,6 @@ import org.activiti.engine.impl.pvm.delegate.ActivityBehavior;
 import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.impl.task.TaskDefinition;
 import org.activiti.engine.repository.Deployment;
-import org.activiti.engine.repository.DeploymentBuilder;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -37,28 +38,6 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
     @Autowired
     ProcessEngine processEngine;
 
-    public void test(String name){
-        try {
-            log.info("process engine:" + processEngine.toString());
-            String path = "bpmn/"+name+".bpmn20.xml";
-            URL url =  this.getClass().getClassLoader().getResource(path);
-            InputStream is;
-            if (url != null) {
-                is = url.openStream();
-                DeploymentBuilder db = processEngine.getRepositoryService().createDeployment();
-                db.addInputStream(path,is);
-                db.name(name);
-                db.category(name);
-                Deployment deployment= db.deploy();
-                //Deployment deployment=processEngine.getRepositoryService().createDeployment().addInputStream(name, is).name(name).deploy();
-                is.close();
-                log.info("Number of process definitions: " + processEngine.getRepositoryService().createProcessDefinitionQuery().count());
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-
     /**
      * 部署单个流程定义
      *
@@ -70,6 +49,7 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
             //logger.info("process engine:" + processEngine.toString());
             String path = "bpmn/"+processKey+".bpmn20.xml";
             URL url =  this.getClass().getClassLoader().getResource(path);
+            assert url != null;
             InputStream is = url.openStream();
             /*DeploymentBuilder db = processEngine.getRepositoryService().createDeployment();
             db.addInputStream(path,is);
@@ -174,8 +154,7 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
     public Task claimTask(String taskId,String userId){
         processEngine.getTaskService().claim(taskId,userId);
         log.info("task:"+taskId+" has claimed by "+userId);
-        Task task = processEngine.getTaskService().createTaskQuery().taskId(taskId).singleResult();
-        return task;
+        return processEngine.getTaskService().createTaskQuery().taskId(taskId).singleResult();
     }
 
     public void completeTask(String id,Map<String, String> taskVariables,String userId){
@@ -199,6 +178,8 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
     public List<Map<String, Object>> traceProcess(String processInstanceId) throws Exception {
         Execution execution = processEngine.getRuntimeService().createExecutionQuery().executionId(processInstanceId).singleResult();//执行实例
         //Object property = PropertyUtils.getProperty(execution, "activityId");
+        if(execution == null)
+            return null;
         String activityId = execution.getActivityId();
 
         ProcessInstance processInstance = processEngine.getRuntimeService().createProcessInstanceQuery().processInstanceId(processInstanceId)
@@ -226,13 +207,34 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
         return activityInfos;
     }
 
+    public Map<String, Object> traceProcessHistory(String processInstanceId){
+        Map<String, Object> maps = new HashMap<String, Object>();
+
+        HistoricProcessInstance historicProcessInstance = processEngine.getHistoryService().createHistoricProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
+        //hisMap.put("duration", historicProcessInstance.getDurationInMillis());
+        //hisMap.put("startUser",historicProcessInstance.getStartUserId());
+        //hisMap.put("startTime",historicProcessInstance.getStartTime());
+        //hisMap.put("endTime",historicProcessInstance.getEndTime());
+        //hisMap.put("startTaskId",historicProcessInstance.getStartActivityId());
+        maps.put("processInstance",historicProcessInstance);
+
+        List<HistoricActivityInstance> hisActs = processEngine.getHistoryService().createHistoricActivityInstanceQuery().processInstanceId(processInstanceId).list();
+        maps.put("historyActivity",hisActs);
+
+        //List<HistoricDetail> historicDetailList = processEngine.getHistoryService().createHistoricDetailQuery().processInstanceId(processInstanceId).list();
+
+        //List<HistoricVariableInstance> historicVariableInstanceList = processEngine.getHistoryService().createHistoricVariableInstanceQuery().processInstanceId(processInstanceId).list();
+
+        return maps;
+    }
+
     /**
      * 封装输出信息，包括：当前节点的X、Y坐标、变量信息、任务类型、任务描述
      *
-     * @param activity
-     * @param processInstance
-     * @param currentActiviti
-     * @return
+     * @param activity 活动
+     * @param processInstance 实例
+     * @param currentActiviti 当前活动
+     * @return 活动信息
      */
     private Map<String, Object> packageSingleActivitiInfo(ActivityImpl activity, ProcessInstance processInstance,
                                                           boolean currentActiviti) throws Exception {
@@ -267,11 +269,11 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
             if (!candidateGroupIdExpressions.isEmpty()) {
 
                 // 任务的处理角色
-                setTaskGroup(vars, candidateGroupIdExpressions);
+                //setTaskGroup(candidateGroupIdExpressions);
 
                 // 当前处理人
                 if (currentTask != null) {
-                    setCurrentTaskAssignee(vars, currentTask);
+                    //setCurrentTaskAssignee(currentTask);
                 }
             }
         }
@@ -289,8 +291,8 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
     /**
      * 获取当前节点信息
      *
-     * @param processInstance
-     * @return
+     * @param processInstance 实例
+     * @return 任务信息
      */
     private Task getCurrentTaskInfo(ProcessInstance processInstance) {
         Task currentTask = null;
@@ -308,28 +310,5 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
         return currentTask;
     }
 
-    private void setTaskGroup(Map<String, Object> vars, Set<Expression> candidateGroupIdExpressions) {
-        /*String roles = "";
-        for (Expression expression : candidateGroupIdExpressions) {
-            String expressionText = expression.getExpressionText();
-            String roleName = processEngine.getIdentityService().createGroupQuery().groupId(expressionText).singleResult().getName();
-            roles += roleName;
-        }
-        vars.put("任务所属角色", roles);*/
-    }
 
-    /**
-     * 设置当前处理人信息
-     *
-     * @param vars
-     * @param currentTask
-     */
-    private void setCurrentTaskAssignee(Map<String, Object> vars, Task currentTask) {
-        /*String assignee = currentTask.getAssignee();
-        if (assignee != null) {
-            User assigneeUser = processEngine.getIdentityService().createUserQuery().userId(assignee).singleResult();
-            String userInfo = assigneeUser.getFirstName() + " " + assigneeUser.getLastName();
-            vars.put("当前处理人", userInfo);
-        }*/
-    }
 }
