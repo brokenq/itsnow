@@ -62,5 +62,6 @@ public interface ActivitiEngineService {
 
     List<Map<String, Object>> traceProcess(String processInstanceId) throws Exception;
 
-    void test(String name);
+    Map<String, Object> traceProcessHistory(String processInstanceId);
+
 }

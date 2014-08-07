@@ -6,13 +6,12 @@
         <activiti:formProperty id="description" name="description" type="string"></activiti:formProperty>
       </extensionElements>
     </startEvent>
-    <userTask id="process_incident" name="firstline process_incident" activiti:exclusive="false" activiti:candidateGroups="firstline">
+    <userTask id="process_incident" name="first line process_incident" activiti:exclusive="false" activiti:candidateGroups="firstline">
       <extensionElements>
         <activiti:formProperty id="resolved" name="resolved" type="boolean" required="true"></activiti:formProperty>
-        <activiti:taskListener event="create" class="TaskUserQuery"></activiti:taskListener>
       </extensionElements>
     </userTask>
-    <userTask id="close_incident" name="servicedesk close incident" activiti:exclusive="false" activiti:assignee="${servicedesk}">
+    <userTask id="close_incident" name="service desk close incident" activiti:exclusive="false" activiti:assignee="${servicedesk}">
       <extensionElements>
         <activiti:formProperty id="close_code" name="close_code" type="string"></activiti:formProperty>
       </extensionElements>
@@ -21,10 +20,8 @@
     <sequenceFlow id="flow7" sourceRef="close_incident" targetRef="flow8"></sequenceFlow>
     <exclusiveGateway id="resolved" name="Resolved?"></exclusiveGateway>
     <sequenceFlow id="sid-7AE5BB76-2701-451C-9ED0-5343033D1C77" sourceRef="process_incident" targetRef="resolved"></sequenceFlow>
-    <userTask id="first_line_accept_incident" name="firstline accept_incident" activiti:candidateGroups="firstline">
-      <documentation>inquire detail:
-[request]:${servicedesk}
-[description]:${description}</documentation>
+    <userTask id="first_line_accept_incident" name="first line accept_incident" activiti:candidateGroups="first_line">
+      <documentation>incident detail:[request]:${servicedesk}[description]:${description}</documentation>
       <extensionElements>
         <activiti:formProperty id="solution1" name="solution1" type="string"></activiti:formProperty>
       </extensionElements>

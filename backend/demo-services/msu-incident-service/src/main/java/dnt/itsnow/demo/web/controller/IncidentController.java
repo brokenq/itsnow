@@ -48,7 +48,7 @@ public class IncidentController extends SessionSupportController<Incident> {
      */
     @RequestMapping(value = "/")
     @ResponseBody
-    public List<Incident> index(@RequestParam(required = false, defaultValue = "") String keyword) {
+    public List<Incident> index() {
 
         Set<Task> tasks = new HashSet<Task>();
         //查询分配给当前用户的任务列表
@@ -75,7 +75,7 @@ public class IncidentController extends SessionSupportController<Incident> {
      */
     @RequestMapping(value = "/assignee")
     @ResponseBody
-    public List<Incident> indexAssignee(HttpServletRequest request) {
+    public List<Incident> indexAssignee() {
 
         Set<Task> tasks = new HashSet<Task>();
         //查询分配给当前用户的任务列表
@@ -100,11 +100,10 @@ public class IncidentController extends SessionSupportController<Incident> {
      */
     @RequestMapping(value = "/candidate")
     @ResponseBody
-    public List<Incident> indexCandidate(HttpServletRequest request) {
-        String userId = "admin";
+    public List<Incident> indexCandidate() {
         Set<Task> tasks = new HashSet<Task>();
         //查询当前用户参与的任务列表
-        tasks.addAll(activitiEngineService.queryTasksCandidateUser(userId,PROCESS_KEY));
+        tasks.addAll(activitiEngineService.queryTasksCandidateUser(currentUser.getUsername(),PROCESS_KEY));
         //获取任务所属实例ID列表
         List<String> ids = new ArrayList<String>();
         for(Task task:tasks){
@@ -121,15 +120,17 @@ public class IncidentController extends SessionSupportController<Incident> {
      * <p/>
      * GET /api/incidents/{instanceId}
      *
-     * @return
+     * @return 故障单信息以及当前的task列表
      */
     @RequestMapping(value = "/{instanceId}")
     @ResponseBody
     public Map<String,Object> query(@PathVariable("instanceId") String instanceId) {
         Map<String,Object> map = new HashMap<String, Object>();
+        //获取故障单信息
         Incident incident = incidentManager.findByInstanceId(instanceId);
         map.put("incident",incident);
 
+        //获取当前task列表信息
         List<Task> tasks = activitiEngineService.queryTasksByInstanceId(instanceId);
         List<Map<String,String>> ls = new ArrayList<Map<String, String>>();
         for(Task task:tasks) {
@@ -141,6 +142,10 @@ public class IncidentController extends SessionSupportController<Incident> {
             ls.add(m);
         }
         map.put("tasks",ls);
+
+        //获取历史信息
+        Map<String,Object> hisMap = activitiEngineService.traceProcessHistory(instanceId);
+        map.put("history",hisMap);
         return map;
     }
 
@@ -153,7 +158,7 @@ public class IncidentController extends SessionSupportController<Incident> {
      */
     @RequestMapping(value = "/start",method = RequestMethod.POST)
     @ResponseBody
-    public Object start(HttpServletRequest request,@RequestBody @Valid Incident incident){
+    public Map<String,Object> start(HttpServletRequest request,@RequestBody @Valid Incident incident){
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.putAll(request.getParameterMap());
         variables.put("description",incident.getRequestDescription());
@@ -165,13 +170,7 @@ public class IncidentController extends SessionSupportController<Incident> {
         incident.setInstanceId(processInstance.getProcessInstanceId());
         incidentManager.newIncident(incident);
 
-        List<Map<String, Object>> l = null;
-        try {
-             l = activitiEngineService.traceProcess(processInstance.getProcessInstanceId());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        //return map
         Map<String,Object> result = new HashMap<String, Object>();
         result.put("instanceId",processInstance.getId());
         result.put("activityId",processInstance.getActivityId());
@@ -186,11 +185,12 @@ public class IncidentController extends SessionSupportController<Incident> {
      * <p/>
      * PUT /api/incidents/{taskId}/complete
      * @param taskId    任务ID
-     * @return
+     * @return result:true/false
      */
     @RequestMapping(value = "/{taskId}/complete",method = RequestMethod.PUT)
     @ResponseBody
-    public Object complete(@PathVariable("taskId") String taskId,HttpServletRequest request,@RequestBody @Valid Incident incident){
+    public Map<String,Object> complete(@PathVariable("taskId") String taskId,HttpServletRequest request,@RequestBody @Valid Incident incident){
+        Map<String,Object> result = new HashMap<String, Object>();
         if(StringUtils.isNotEmpty(currentUser.getUsername())){
             Map<String, String> taskVariables = new HashMap<String, String>();
             // 从request中读取参数然后转换
@@ -203,12 +203,18 @@ public class IncidentController extends SessionSupportController<Incident> {
             //todo add transaction process
             // update incident object status and persist it
             incidentManager.updateIncident(incident);
+            //claim task if not claim
+            activitiEngineService.claimTask(taskId,currentUser.getUsername());
             //complete task
             activitiEngineService.completeTask(taskId,taskVariables,currentUser.getUsername());
 
+            result.put("result","true");
+        }
+        else{
+            result.put("result","false");
         }
 
-        return "result:true";
+        return result;
     }
 
     /**
@@ -216,19 +222,23 @@ public class IncidentController extends SessionSupportController<Incident> {
      * <p/>
      * PUT /api/incidents/{taskId}/claim
      * @param taskId    任务ID
-     * @return
+     * @return result:true/false
      */
     @RequestMapping(value = "/{taskId}/claim",method = RequestMethod.PUT)
     @ResponseBody
-    public Object claimTasksByUser(@PathVariable("taskId") String taskId){
-        Task task = null;
+    public Map<String,Object> claimTasksByUser(@PathVariable("taskId") String taskId){
+        Map<String,Object> result = new HashMap<String, Object>();
         if(StringUtils.isNotEmpty(currentUser.getUsername())) {
-            task = activitiEngineService.claimTask(taskId, currentUser.getUsername());
-
+            //todo add transaction process
+            activitiEngineService.claimTask(taskId, currentUser.getUsername());
             //update incident object status and persist it.
+
+            result.put("result","true");
+        }else{
+            result.put("result","false");
         }
 
-        return "result:success";
+        return result;
     }
 
 }

@@ -9,22 +9,18 @@ import dnt.itsnow.demo.service.IncidentService;
 import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
+import dnt.spring.Bean;
 import dnt.util.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.beans.Beans;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 
 @Service
-public class IncidentManager extends Beans implements IncidentService {
-
-    Logger logger = LoggerFactory.getLogger(getClass());
+public class IncidentManager extends Bean implements IncidentService {
 
     @Autowired
     IncidentRepository incidentRepository;
