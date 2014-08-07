@@ -6,7 +6,7 @@
         <activiti:formProperty id="description" name="description" type="string"></activiti:formProperty>
       </extensionElements>
     </startEvent>
-    <userTask id="process_incident" name="firstline process_incident" activiti:exclusive="false" activiti:candidateGroups="firstline">
+    <userTask id="process_incident" name="first_line process_incident" activiti:exclusive="false" activiti:candidateGroups="first_line">
       <extensionElements>
         <activiti:formProperty id="resolved" name="resolved" type="boolean" required="true"></activiti:formProperty>
         <activiti:taskListener event="create" class="TaskUserQuery"></activiti:taskListener>
@@ -21,7 +21,7 @@
     <sequenceFlow id="flow7" sourceRef="close_incident" targetRef="flow8"></sequenceFlow>
     <exclusiveGateway id="resolved" name="Resolved?"></exclusiveGateway>
     <sequenceFlow id="sid-7AE5BB76-2701-451C-9ED0-5343033D1C77" sourceRef="process_incident" targetRef="resolved"></sequenceFlow>
-    <userTask id="first_line_accept_incident" name="firstline accept_incident" activiti:candidateGroups="firstline">
+    <userTask id="first_line_accept_incident" name="firstline accept_incident" activiti:candidateGroups="first_line">
       <documentation>inquire detail:
 [request]:${servicedesk}
 [description]:${description}</documentation>
@@ -29,7 +29,7 @@
         <activiti:formProperty id="solution1" name="solution1" type="string"></activiti:formProperty>
       </extensionElements>
     </userTask>
-    <userTask id="analysis_incident" name="firstline analysis_incident" activiti:candidateGroups="firstline">
+    <userTask id="analysis_incident" name="firstline analysis_incident" activiti:candidateGroups="first_line">
       <extensionElements>
         <activiti:formProperty id="can_process" name="can_process" type="boolean"></activiti:formProperty>
       </extensionElements>
@@ -37,14 +37,14 @@
     <sequenceFlow id="sid-9880F07B-E267-40D7-8C29-F6FD1F3F9A52" sourceRef="first_line_accept_incident" targetRef="analysis_incident"></sequenceFlow>
     <exclusiveGateway id="can_process" name="can_process?"></exclusiveGateway>
     <sequenceFlow id="sid-0E61B111-23A7-4C44-A0CA-36C464A2958B" sourceRef="analysis_incident" targetRef="can_process"></sequenceFlow>
-    <userTask id="second_line_accpet_incident" name="secondline accept_incident" activiti:candidateGroups="secondline"></userTask>
+    <userTask id="second_line_accpet_incident" name="secondline accept_incident" activiti:candidateGroups="second_line"></userTask>
     <sequenceFlow id="can_process_yes" name="yes" sourceRef="can_process" targetRef="process_incident">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${can_process==true}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="can_process_no" name="no" sourceRef="can_process" targetRef="second_line_accpet_incident">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${can_process==false}]]></conditionExpression>
     </sequenceFlow>
-    <userTask id="sid-254BDAEA-BEDC-43DE-BD02-2082103BC6D4" name="secondline analysis_incident" activiti:candidateGroups="secondline">
+    <userTask id="sid-254BDAEA-BEDC-43DE-BD02-2082103BC6D4" name="secondline analysis_incident" activiti:candidateGroups="second_line">
       <extensionElements>
         <activiti:formProperty id="hardware_error" name="hardware_error" type="boolean"></activiti:formProperty>
       </extensionElements>
@@ -52,7 +52,7 @@
     <sequenceFlow id="sid-75C89B9C-8ED0-43B9-83C1-C74A0103A4A5" sourceRef="second_line_accpet_incident" targetRef="sid-254BDAEA-BEDC-43DE-BD02-2082103BC6D4"></sequenceFlow>
     <exclusiveGateway id="sid-0AC92F5D-6B09-4A0B-ABB4-4D85A4B74C0A" name="hardware_error?"></exclusiveGateway>
     <sequenceFlow id="sid-5C0B9E85-B305-4C28-B80E-AEE8C137D730" sourceRef="sid-254BDAEA-BEDC-43DE-BD02-2082103BC6D4" targetRef="sid-0AC92F5D-6B09-4A0B-ABB4-4D85A4B74C0A"></sequenceFlow>
-    <userTask id="sid-C8954B70-8073-4217-940F-7909E8EE1991" name="secondline process_incident" activiti:candidateGroups="secondline"></userTask>
+    <userTask id="sid-C8954B70-8073-4217-940F-7909E8EE1991" name="secondline process_incident" activiti:candidateGroups="second_line"></userTask>
     <sequenceFlow id="resolved_yes" name="Yes" sourceRef="resolved" targetRef="close_incident">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${resolved==true}]]></conditionExpression>
     </sequenceFlow>
