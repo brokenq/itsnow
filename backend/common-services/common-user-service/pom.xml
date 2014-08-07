@@ -21,6 +21,13 @@
             <groupId>dnt.itsnow</groupId>
             <artifactId>common-account-service</artifactId>
         </dependency>
+
+        <!--suppress MavenDuplicateDependenciesInspection -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>

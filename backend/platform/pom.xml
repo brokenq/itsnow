@@ -106,6 +106,13 @@
             <groupId>com.sun.el</groupId>
             <artifactId>el-ri</artifactId>
         </dependency>
+
+        <!--suppress MavenDuplicateDependenciesInspection -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>

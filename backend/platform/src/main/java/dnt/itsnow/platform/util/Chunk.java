@@ -1,7 +1,10 @@
 /**
  * Developer: Kadvin Date: 14-7-18 下午3:33
  */
-package dnt.itsnow.platform.service;
+package dnt.itsnow.platform.util;
+
+import dnt.itsnow.platform.service.Pageable;
+import dnt.itsnow.platform.service.Slice;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,7 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * A chunk of data restricted by the configured {@link Pageable}.
+ * A chunk of data restricted by the configured {@link dnt.itsnow.platform.service.Pageable}.
  *
  * @author Oliver Gierke
  * @since 1.8

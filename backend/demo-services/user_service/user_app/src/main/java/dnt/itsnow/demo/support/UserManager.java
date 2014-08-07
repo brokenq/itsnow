@@ -3,7 +3,7 @@
  */
 package dnt.itsnow.demo.support;
 
-import dnt.itsnow.platform.service.DefaultPage;
+import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.demo.api.UserService;

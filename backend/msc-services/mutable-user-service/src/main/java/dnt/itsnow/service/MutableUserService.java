@@ -12,7 +12,7 @@ import dnt.itsnow.platform.service.Pageable;
  * <p/>
  * 继承了UserService，是为了能够兼容
  */
-public interface MutableUserService extends UserService {
+public interface MutableUserService extends CommonUserService {
 
     /**
      * <h2>根据关键词查询用户</h2>

@@ -4,8 +4,8 @@
 package dnt.itsnow.platform.repository.support;
 
 import dnt.itsnow.platform.repository.RepositoryScanner;
+import dnt.itsnow.platform.util.BeanFilter;
 import dnt.spring.Bean;
-import dnt.util.StringUtils;
 import org.apache.ibatis.builder.xml.XMLConfigBuilder;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.plugin.Interceptor;
@@ -13,6 +13,7 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.type.TypeHandler;
 import org.mybatis.spring.mapper.ClassPathMapperScanner;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -25,12 +26,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <h1>Class Usage</h1>
+ * <h1>对mybatis的scanner进行filter</h1>
  */
 public class MybatisRepositoryScanner extends Bean implements RepositoryScanner {
 
     ApplicationContext applicationContext;
     SqlSessionFactory sqlSessionFactory;
+    BeanFilter filter;
 
     public MybatisRepositoryScanner(ApplicationContext applicationContext) {
         this(applicationContext, applicationContext.getBean(SqlSessionFactory.class));
@@ -106,7 +108,14 @@ public class MybatisRepositoryScanner extends Bean implements RepositoryScanner 
 
     @Override
     public int scan(String... packages) {
-        ClassPathMapperScanner scanner = new ClassPathMapperScanner((BeanDefinitionRegistry) applicationContext);
+        ClassPathMapperScanner scanner = new ClassPathMapperScanner((BeanDefinitionRegistry) applicationContext){
+            @Override
+            protected boolean checkCandidate(String beanName, BeanDefinition beanDefinition) throws IllegalStateException {
+                boolean superResult = super.checkCandidate(beanName, beanDefinition);
+                boolean accept = filter == null || filter.accept(beanName, beanDefinition);
+                return superResult && accept;
+            }
+        };
         String sqlSessionFactoryBeanName = "sqlSessionFactory";
         scanner.setSqlSessionFactory(sqlSessionFactory);
         scanner.setSqlSessionFactoryBeanName(sqlSessionFactoryBeanName);
@@ -116,5 +125,9 @@ public class MybatisRepositoryScanner extends Bean implements RepositoryScanner 
         int count = scanner.scan(packages);
         logger.debug("Scanned {} mybatis repositories", count);
         return count;
+    }
+
+    public void setFilter(BeanFilter filter) {
+        this.filter = filter;
     }
 }

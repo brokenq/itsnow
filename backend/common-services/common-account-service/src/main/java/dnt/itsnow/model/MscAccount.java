@@ -6,6 +6,7 @@ package dnt.itsnow.model;
 /**
  * 应该仅有一个实例的MSC帐号
  */
+//@JsonTypeName("msc")
 public class MscAccount extends Account {
     @Override
     public String getType() {

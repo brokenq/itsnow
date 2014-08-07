@@ -29,7 +29,7 @@ import org.springframework.web.client.RestClientException;
  */
 @RestController
 @RequestMapping("/api/contracts")
-public class ContractsController extends SessionSupportController{
+public class GeneralContractsController extends SessionSupportController{
     @Autowired
     GeneralContractService contractService;
 

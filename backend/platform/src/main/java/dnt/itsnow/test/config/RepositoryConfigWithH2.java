@@ -5,6 +5,7 @@ package dnt.itsnow.test.config;
 
 import dnt.itsnow.platform.repository.RepositoryScanner;
 import dnt.itsnow.platform.repository.support.MybatisRepositoryScanner;
+import dnt.itsnow.platform.util.BeanFilter;
 import dnt.itsnow.test.support.H2AsMySqlEmbeddedDsConfigurer;
 import dnt.itsnow.test.support.MigrateResourcePopulator;
 import dnt.util.StringUtils;
@@ -22,10 +23,15 @@ import javax.sql.DataSource;
 import java.sql.SQLException;
 
 /**
- * <h1>共享的 Test Config</h1>
+ * <h1>共享的 Repository Test Config</h1>
+ *
+ * 为了模拟实际运行条件下组件隔离机制
+ * 本config类支持Bean Filter机制
+ * 开发者需要继承 repositoryFilter() 方法，过滤掉scan出来不需要的 bean 信息
+ * 默认为null，不进行过滤
  */
 @Profile("test")
-public abstract class TestConfigWithH2 implements InitializingBean {
+public abstract class RepositoryConfigWithH2 implements InitializingBean {
     @Autowired
     ApplicationContext applicationContext;
 
@@ -62,7 +68,14 @@ public abstract class TestConfigWithH2 implements InitializingBean {
 
     @Bean
     public RepositoryScanner repositoryScanner(){
-        return new MybatisRepositoryScanner(applicationContext);
+        BeanFilter repositoryFilter = repositoryFilter();
+        MybatisRepositoryScanner scanner = new MybatisRepositoryScanner(applicationContext);
+        scanner.setFilter(repositoryFilter);
+        return scanner;
+    }
+
+    public BeanFilter repositoryFilter(){
+        return null;
     }
 
     @Override

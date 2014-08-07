@@ -1,7 +1,7 @@
 /**
  * Developer: Kadvin Date: 14-7-18 下午3:24
  */
-package dnt.itsnow.platform.service;
+package dnt.itsnow.platform.util;
 
 /**
  * Description here

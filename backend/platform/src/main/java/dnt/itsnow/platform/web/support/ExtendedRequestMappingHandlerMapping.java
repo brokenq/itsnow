@@ -22,7 +22,18 @@ import java.util.Set;
 
 /**
  * <h1>被扩展的Spring Request Mapping</h1>
+ *
  * 主要目的是让插入的服务scan出来的controller的request mapping 方法能注册上来
+ *
+ * <pre>
+ * 实现方法是：
+ *   监听service package加载事件，
+ *   收到事件后，从事件找找到扩展包的application context
+ *   从相应的application context中找到新建的所有application controller
+ *   而后把所有的RequestMapping/Method注册上来
+ *
+ * 注意：这里并没有按照spring的标准规范，找到所有的 @Controller 标记的bean
+ * </pre>
  */
 public class ExtendedRequestMappingHandlerMapping extends RequestMappingHandlerMapping
         implements ApplicationListener<ServicePackageEvent> {

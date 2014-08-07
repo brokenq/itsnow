@@ -3,12 +3,12 @@
  */
 package dnt.itsnow.support;
 
-import dnt.itsnow.config.MutableAccountManagerConfig;
+import dnt.itsnow.config.MutableAccountManagerConfig2;
 import dnt.itsnow.model.Account;
 import dnt.itsnow.model.AccountStatus;
 import dnt.itsnow.model.MsuAccount;
 import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.service.PageRequest;
+import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.service.MutableAccountService;
 import junit.framework.Assert;
 import org.junit.Before;
@@ -19,15 +19,14 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.List;
-
 /**
- * <h1>Class Usage</h1>
+ * <h1>对Account Manager的测试</h1>
+ * 基于底层真实的Repository实现
  */
-@ContextConfiguration(classes = MutableAccountManagerConfig.class)
+@ContextConfiguration(classes = MutableAccountManagerConfig2.class)
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
-public class MutableAccountManagerTest {
+public class MutableAccountManagerTest2 {
     @Autowired
     MutableAccountService mutableAccountService;
     PageRequest pageRequest;

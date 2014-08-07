@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * <h1>查询用户的仓库接口</h1>
  */
-public interface UserRepository {
+public interface CommonUserRepository {
     //@Select("SELECT * FROM itsnow_msc.users where UPPER(username) = UPPER(#{username})")
     // USE XML which will find user with account
     User findByUsername(@Param("username") String username);

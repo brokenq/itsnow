@@ -1,7 +1,9 @@
 /**
  * Developer: Kadvin Date: 14-7-18 下午3:28
  */
-package dnt.itsnow.platform.service;
+package dnt.itsnow.platform.util;
+
+import dnt.itsnow.platform.service.Pageable;
 
 /**
  * Basic Java Bean implementation of {@code Pageable}.

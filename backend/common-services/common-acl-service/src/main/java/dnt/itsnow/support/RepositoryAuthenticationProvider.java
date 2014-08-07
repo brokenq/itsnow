@@ -3,7 +3,7 @@
  */
 package dnt.itsnow.support;
 
-import dnt.itsnow.service.UserService;
+import dnt.itsnow.service.CommonUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -23,7 +23,7 @@ public class RepositoryAuthenticationProvider extends AbstractUserDetailsAuthent
 
     @Autowired
     @Qualifier("groupedUserService")
-    private UserService userDetailsService;
+    private CommonUserService userDetailsService;
 
     @Override
     protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication)

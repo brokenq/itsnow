@@ -31,7 +31,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/contracts/{contract_sn}/details")
-public class ContractDetailsController extends SessionSupportController{
+public class GeneralContractDetailsController extends SessionSupportController{
     @Autowired
     GeneralContractService contractService;
 

@@ -33,6 +33,10 @@
         <version.el-api>3.0.0</version.el-api>
         <version.el-ri>1.0</version.el-ri>
 
+        <version.easymock>3.2</version.easymock>
+        <version.jmock>2.6.0</version.jmock>
+        <version.hamcrest>1.3</version.hamcrest>
+
         <version.activiti.engine>5.15.1</version.activiti.engine>
 
         <version.component-framework>0.1.0</version.component-framework>
@@ -347,6 +351,26 @@
                 <groupId>com.sun.el</groupId>
                 <artifactId>el-ri</artifactId>
                 <version>${version.el-ri}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.easymock</groupId>
+                <artifactId>easymock</artifactId>
+                <version>${version.easymock}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jmock</groupId>
+                <artifactId>jmock-junit4</artifactId>
+                <version>${version.jmock}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>hamcrest-library</artifactId>
+                <version>${version.hamcrest}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

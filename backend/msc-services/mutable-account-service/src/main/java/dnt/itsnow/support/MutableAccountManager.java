@@ -7,7 +7,7 @@ import dnt.itsnow.exception.AccountException;
 import dnt.itsnow.model.Account;
 import dnt.itsnow.model.AccountStatus;
 import dnt.itsnow.platform.service.AutoNumberService;
-import dnt.itsnow.platform.service.DefaultPage;
+import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.repository.MutableAccountRepository;
@@ -39,7 +39,6 @@ public class MutableAccountManager extends CommonAccountManager implements Mutab
     @Override
     public Account create(Account account) {
         logger.info("Creating {}", account);
-        //TODO Generate SN
         if( account.getSn() == null ){
             String type = account.getType();
             account.setSn(autoNumberService.next(type));

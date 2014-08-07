@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 /** <h1>关于用户的服务</h1> */
-public interface UserService extends UserDetailsService {
+public interface CommonUserService extends UserDetailsService {
 
     /**
      * <h2>根据用户名查找用户</h2>

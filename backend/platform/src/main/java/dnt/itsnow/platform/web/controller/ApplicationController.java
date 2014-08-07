@@ -5,8 +5,8 @@ package dnt.itsnow.platform.web.controller;
 
 import dnt.itsnow.platform.model.Record;
 import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.service.PageRequest;
-import dnt.itsnow.platform.service.Sort;
+import dnt.itsnow.platform.util.PageRequest;
+import dnt.itsnow.platform.util.Sort;
 import dnt.itsnow.platform.web.annotation.AfterFilter;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;

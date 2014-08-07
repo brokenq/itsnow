@@ -8,7 +8,7 @@ import dnt.itsnow.model.User;
 import dnt.itsnow.platform.model.Record;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.controller.ApplicationController;
-import dnt.itsnow.service.UserService;
+import dnt.itsnow.service.CommonUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
@@ -20,9 +20,12 @@ import java.security.Principal;
  * <h1>支持获取当前用户相关信息的基本控制器</h1>
  */
 public class SessionSupportController<T extends Record> extends ApplicationController<T> {
+    // 对于部分可以访问到 mutable user service的模块
+    // 其中的控制器会发现存在多个 User Service 选项
+    // 所以，我们这里需要增加相应的qualifier
     @Autowired
     @Qualifier("plainUserService")
-    UserService    userService;
+    CommonUserService userService;
 
     // 用于before filter与实际方法之间的信息共享
     protected User    currentUser;

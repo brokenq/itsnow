@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
  *  MSU/MSP的合同管理
  */
 @Service
-public class GeneralContractManager extends ContractManager implements GeneralContractService {
+public class GeneralContractManager extends CommonContractManager implements GeneralContractService {
     @Autowired
     RestFacade facade;
     @Override

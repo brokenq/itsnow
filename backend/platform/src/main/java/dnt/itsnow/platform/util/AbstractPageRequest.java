@@ -1,7 +1,9 @@
 /**
  * Developer: Kadvin Date: 14-7-18 下午3:27
  */
-package dnt.itsnow.platform.service;
+package dnt.itsnow.platform.util;
+
+import dnt.itsnow.platform.service.Pageable;
 
 import java.io.Serializable;
 
@@ -86,7 +88,7 @@ public abstract class AbstractPageRequest implements Pageable, Serializable {
 	public abstract Pageable next();
 
 	/**
-	 * Returns the {@link Pageable} requesting the previous {@link Page}.
+	 * Returns the {@link Pageable} requesting the previous {@link dnt.itsnow.platform.service.Page}.
 	 *
 	 * @return
 	 */

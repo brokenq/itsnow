@@ -14,7 +14,7 @@ import dnt.itsnow.platform.service.ServiceException;
  *  本服务虽然是统一服务，其部署的当前实体没有对主数据库的修改权限（仅有对其slave的读权限）
  *  但其可以通过向MSC发起SPI请求实现修改
  */
-public interface GeneralContractService extends ContractService {
+public interface GeneralContractService extends CommonContractService {
 
     /**
      * <h2>批准特定账户下的特定合同</h2>

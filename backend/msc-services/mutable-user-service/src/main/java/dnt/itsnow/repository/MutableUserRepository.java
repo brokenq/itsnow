@@ -16,7 +16,7 @@ import java.util.List;
  * 为了使MutableUserManager的父类UserManager能找到userRepository，
  * 所以本repository应该继承UserRepository
  */
-public interface MutableUserRepository extends UserRepository {
+public interface MutableUserRepository extends CommonUserRepository {
 
     // 采用 Mybatis XML Mapper
     long countByKeyword(@Param("keyword") String keyword);

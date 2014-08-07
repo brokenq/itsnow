@@ -5,9 +5,9 @@ package dnt.itsnow.support;
 
 import dnt.itsnow.model.Account;
 import dnt.itsnow.model.User;
-import dnt.itsnow.repository.UserRepository;
+import dnt.itsnow.repository.CommonUserRepository;
 import dnt.itsnow.service.CommonAccountService;
-import dnt.itsnow.service.UserService;
+import dnt.itsnow.service.CommonUserService;
 import dnt.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,9 +19,9 @@ import org.springframework.stereotype.Service;
  * Basic User Service
  */
 @Service
-public class UserManager extends Bean implements UserService {
+public class CommonUserManager extends Bean implements CommonUserService {
     @Autowired
-    UserRepository repository;
+    CommonUserRepository repository;
     @Autowired
     CommonAccountService accountService;
 

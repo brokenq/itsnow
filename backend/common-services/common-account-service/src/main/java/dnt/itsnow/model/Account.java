@@ -3,6 +3,9 @@
  */
 package dnt.itsnow.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import dnt.itsnow.platform.model.Record;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -11,6 +14,12 @@ import javax.validation.constraints.Size;
 /**
  * <h1>>服务采购方(MSU)或者服务供应方(MSP)在系统数据库中的账户</h1
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(name = "msc", value = MscAccount.class),
+        @JsonSubTypes.Type(name = "msu", value = MsuAccount.class),
+        @JsonSubTypes.Type(name = "msp", value = MspAccount.class)
+})
 public abstract class Account extends Record {
     public static final String MSC = "msc";
     public static final String MSU = "msu";
@@ -49,24 +58,30 @@ public abstract class Account extends Record {
         this.sn = sn;
     }
 
+    @JsonIgnore
     public boolean isExpired() {
         return this.status == AccountStatus.Expired;
     }
 
+    @JsonIgnore
     public boolean isValid() {
         return this.status == AccountStatus.Valid;
     }
 
+    @JsonIgnore
     public abstract String getType();
 
+    @JsonIgnore
     public boolean isMsc(){
         return MSC.equals(getType());
     }
 
+    @JsonIgnore
     public boolean isMsu(){
         return MSU.equals(getType());
     }
 
+    @JsonIgnore
     public boolean isMsp(){
         return MSP.equals(getType());
     }

@@ -344,7 +344,7 @@ public interface ContractRepository {
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="dnt.itsnow.repository.ContractRepository">
+<mapper namespace="dnt.itsnow.repository.CommonContractRepository">
     <select id="findAllByMsuAccountId" resultType="Contract">
         SELECT * FROM itsnow_msc.contracts
         WHERE (msu_account_id = #{msuId})

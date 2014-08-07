@@ -6,7 +6,7 @@ package dnt.itsnow.support;
 import dnt.itsnow.model.Account;
 import dnt.itsnow.model.User;
 import dnt.itsnow.repository.GroupRepository;
-import dnt.itsnow.service.UserService;
+import dnt.itsnow.service.CommonUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,10 +23,10 @@ import org.springframework.stereotype.Service;
  * 当前采用了委托的方式
  */
 @Service("groupedUserService")
-public class GroupedUserDetailsService implements UserService, UserDetailsService {
+public class GroupedUserDetailsService implements CommonUserService, UserDetailsService {
     @Autowired
     @Qualifier("plainUserService") // 代码中的qualifier 就是 context 中的bean名称或id
-    UserService     userService;
+            CommonUserService userService;
     @Autowired
     GroupRepository groupRepository;
 

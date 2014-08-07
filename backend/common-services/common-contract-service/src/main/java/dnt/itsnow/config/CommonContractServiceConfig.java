@@ -3,7 +3,7 @@
  */
 package dnt.itsnow.config;
 
-import dnt.itsnow.repository.ContractRepository;
+import dnt.itsnow.repository.CommonContractRepository;
 
 /**
  * <h1>Common Contract Service Configuration</h1>
@@ -14,6 +14,6 @@ public class CommonContractServiceConfig extends DefaultCommonServiceConfig{
     @Override
     public void defineServices() {
         super.defineServices();
-        exportService(ContractRepository.class);
+        exportService(CommonContractRepository.class);
     }
 }

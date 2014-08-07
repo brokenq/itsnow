@@ -9,7 +9,7 @@ import dnt.itsnow.model.Contract;
 import dnt.itsnow.platform.service.ServiceException;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.platform.web.exception.WebServerSideException;
-import dnt.itsnow.service.ContractService;
+import dnt.itsnow.service.CommonContractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,9 +29,9 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/contracts")
-public class ContractsController extends SessionSupportController<Contract> {
+public class CommonContractsController extends SessionSupportController<Contract> {
     @Autowired
-    ContractService contractService;
+    CommonContractService contractService;
 
     /**
      * <h2>查看当前用户所服务的企业所有合同</h2>

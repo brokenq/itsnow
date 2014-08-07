@@ -1,7 +1,10 @@
 /**
  * Developer: Kadvin Date: 14-7-18 下午3:32
  */
-package dnt.itsnow.platform.service;
+package dnt.itsnow.platform.util;
+
+import dnt.itsnow.platform.service.Page;
+import dnt.itsnow.platform.service.Pageable;
 
 import java.util.List;
 

@@ -4,7 +4,7 @@
 package dnt.itsnow.config;
 
 import dnt.itsnow.platform.config.DefaultServiceConfig;
-import dnt.itsnow.service.UserService;
+import dnt.itsnow.service.CommonUserService;
 
 /**
  * <h1>Class Usage</h1>
@@ -14,6 +14,6 @@ public class DefaultCommonServiceConfig extends DefaultServiceConfig{
     public void defineServices() {
         super.defineServices();
         // User Service is used by SessionSupportController
-        importService(UserService.class, "plain", "plainUserService");
+        importService(CommonUserService.class, "plain", "plainUserService");
     }
 }

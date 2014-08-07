@@ -6,7 +6,7 @@ package dnt.itsnow.demo.support;
 import dnt.itsnow.demo.model.Incident;
 import dnt.itsnow.demo.repository.IncidentRepository;
 import dnt.itsnow.demo.service.IncidentService;
-import dnt.itsnow.platform.service.DefaultPage;
+import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 import dnt.util.StringUtils;

@@ -12,7 +12,7 @@ import dnt.itsnow.platform.service.ServiceException;
 /**
  *  <h1>合同服务</h1>
  */
-public interface ContractService {
+public interface CommonContractService {
     /**
      * 找到特定账户下的所有合同
      *

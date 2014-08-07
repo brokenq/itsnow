@@ -4,7 +4,7 @@
 package dnt.itsnow.support;
 
 import dnt.itsnow.model.User;
-import dnt.itsnow.platform.service.DefaultPage;
+import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.repository.MutableUserRepository;
@@ -19,7 +19,7 @@ import java.util.List;
  * Mutable User Management
  */
 @Service
-public class MutableUserManager extends UserManager
+public class MutableUserManager extends CommonUserManager
         /* 当 UserManager 被声明为 package visible 时，
            由于跨了class loader，
            虽然 Mutable User Manager与User Manager在同一个包下面，

@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * <h1>合同仓库服务，包括对合同明细的查询能力</h1>
  */
-public interface ContractRepository {
+public interface CommonContractRepository {
     @Select("SELECT count(0) FROM contracts WHERE msu_account_id = #{msuId}")
     long countByMsuAccountId(@Param("msuId") long msuId);
 

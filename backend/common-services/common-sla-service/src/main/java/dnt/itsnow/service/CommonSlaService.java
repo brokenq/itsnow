@@ -6,5 +6,5 @@ package dnt.itsnow.service;
 /**
  * <h1>Service Level Agreement Service</h1>
  */
-public interface SlaService {
+public interface CommonSlaService {
 }

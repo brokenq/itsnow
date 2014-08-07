@@ -5,7 +5,7 @@ package dnt.itsnow.config;
 
 import dnt.itsnow.platform.config.DefaultServiceConfig;
 import dnt.itsnow.service.CommonAccountService;
-import dnt.itsnow.service.UserService;
+import dnt.itsnow.service.CommonUserService;
 
 /**
  * User 模块的服务
@@ -15,6 +15,6 @@ public class CommonUserServiceConfig extends DefaultServiceConfig {
     public void defineServices() {
         super.defineServices();
         importService(CommonAccountService.class);
-        exportService(UserService.class, "plain");
+        exportService(CommonUserService.class, "plain");
     }
 }

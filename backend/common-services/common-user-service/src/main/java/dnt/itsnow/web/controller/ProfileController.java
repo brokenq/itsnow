@@ -5,7 +5,7 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.User;
 import dnt.itsnow.platform.web.controller.ApplicationController;
-import dnt.itsnow.service.UserService;
+import dnt.itsnow.service.CommonUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/api/profile")
 public class ProfileController extends ApplicationController {
     @Autowired
-    UserService userService;
+    CommonUserService userService;
 
     /**
      * <h2>查看当前的用户个人信息</h2>

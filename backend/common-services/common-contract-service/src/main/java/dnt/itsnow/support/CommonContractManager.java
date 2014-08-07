@@ -7,12 +7,12 @@ import dnt.itsnow.exception.AccountException;
 import dnt.itsnow.exception.ContractException;
 import dnt.itsnow.model.Account;
 import dnt.itsnow.model.Contract;
-import dnt.itsnow.platform.service.DefaultPage;
+import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.platform.service.ServiceException;
-import dnt.itsnow.repository.ContractRepository;
-import dnt.itsnow.service.ContractService;
+import dnt.itsnow.repository.CommonContractRepository;
+import dnt.itsnow.service.CommonContractService;
 import dnt.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,9 +26,9 @@ import java.util.List;
  *  通用的合同管理
  */
 @Service
-public class ContractManager extends Bean implements ContractService {
+public class CommonContractManager extends Bean implements CommonContractService {
     @Autowired
-    ContractRepository repository;
+    CommonContractRepository repository;
 
     @Override
     public Page<Contract> findAllByAccount(Account account, Pageable pageable) throws ServiceException{
