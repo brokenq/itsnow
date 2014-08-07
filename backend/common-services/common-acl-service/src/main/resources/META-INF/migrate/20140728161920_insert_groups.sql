@@ -5,7 +5,9 @@ INSERT INTO groups(group_name) VALUES
 ('administrators'),
 ('guests'),
 ('monitors'),
-('reporters');
+('reporters'),
+('first_line'),
+('second_line');
 
 -- //@UNDO
 -- SQL to undo the change goes here.
