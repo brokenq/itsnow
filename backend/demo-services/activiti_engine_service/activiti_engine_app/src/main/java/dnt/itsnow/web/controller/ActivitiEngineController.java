@@ -73,7 +73,7 @@ public class ActivitiEngineController extends ApplicationController {
 
     @RequestMapping("/test")
     public Object test() {
-        activitiEngineService.test("VacationRequest");
+        //activitiEngineService.test("VacationRequest");
         return "true";
     }
 
