@@ -71,15 +71,6 @@ public class ActivitiEngineController extends ApplicationController {
         return activitiEngineService.getProcessDeployCount();
     }
 
-<<<<<<< HEAD
-=======
-    @RequestMapping("/test")
-    public Object test() {
-        //activitiEngineService.test("VacationRequest");
-        return "true";
-    }
-
->>>>>>> 61743016abf530e5e8bbd12954e4dff41085b599
     @RequestMapping("/deployment")
     public Object deploy(@RequestParam("key") String key, @RequestParam("category") String category) {
         try {
