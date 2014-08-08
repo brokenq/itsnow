@@ -66,6 +66,8 @@
     </profiles>
 
     <dependencies>
+        <!--suppress MavenDuplicateDependenciesInspection -->
+        <!--Because sub-projects depends them in compile scope-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
@@ -84,7 +86,7 @@
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-library</artifactId>
+            <artifactId>hamcrest-all</artifactId>
         </dependency>
 
     </dependencies>
@@ -103,13 +105,6 @@
                 <version>${project.version}</version>
             </dependency>
 
-            <!--Test-->
-            <dependency>
-                <groupId>com.h2database</groupId>
-                <artifactId>h2</artifactId>
-                <version>${version.h2}</version>
-                <scope>test</scope>
-            </dependency>
 
             <!--Demo-->
             <dependency>
