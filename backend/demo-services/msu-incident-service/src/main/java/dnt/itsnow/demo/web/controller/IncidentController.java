@@ -124,12 +124,16 @@ public class IncidentController extends SessionSupportController<Incident> {
      */
     @RequestMapping(value = "/{instanceId}")
     @ResponseBody
-    public Map<String,Object> query(@PathVariable("instanceId") String instanceId) {
+    public Map<String,Object> query(@PathVariable("instanceId") String instanceId,
+                                    @RequestParam(value = "withHistory", required = false) boolean withHistory,
+                                    @RequestParam(value = "withIncident", required = false) boolean withIncident) {
         Map<String,Object> map = new HashMap<String, Object>();
-        //获取故障单信息
-        Incident incident = incidentManager.findByInstanceId(instanceId);
-        map.put("incident",incident);
 
+        if(withIncident) {
+            //获取故障单信息
+            Incident incident = incidentManager.findByInstanceId(instanceId);
+            map.put("incident", incident);
+        }
         //获取当前task列表信息
         List<Task> tasks = activitiEngineService.queryTasksByInstanceId(instanceId);
         List<Map<String,String>> ls = new ArrayList<Map<String, String>>();
@@ -143,9 +147,11 @@ public class IncidentController extends SessionSupportController<Incident> {
         }
         map.put("tasks",ls);
 
-        //获取历史信息
-        Map<String,Object> hisMap = activitiEngineService.traceProcessHistory(instanceId);
-        map.put("history",hisMap);
+        if(withHistory){
+            //获取历史信息
+            Map<String,Object> hisMap = activitiEngineService.traceProcessHistory(instanceId);
+            map.put("history",hisMap);
+        }
         return map;
     }
 
