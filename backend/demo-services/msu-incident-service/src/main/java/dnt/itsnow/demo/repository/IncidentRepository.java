@@ -35,7 +35,7 @@ public interface IncidentRepository {
     @Select("select * from demo_incidents where instance_id = #{id}")
     Incident findByInstanceId(@Param("id") String id);
 
-    List<Incident> findAllByInstanceIds(@Param("ids")List<String> ids,@Param("pageable")Pageable pageable);
+    List<Incident> findAllByInstanceIds(@Param("ids")List<String> ids,@Param("keyword")String keyword,@Param("pageable")Pageable pageable);
 
     @Select("select count(0) from demo_incidents")
     int count();//如果是count，mybatis会说已经这么映射了，但我貌似又没法用到

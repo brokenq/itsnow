@@ -18,7 +18,7 @@ import java.util.*;
  * <h1>MSU Incident服务的控制器</h1>
  * <pre>
  * <b>HTTP     URI                                方法            含义  </b>
- * # GET      /api/incidents                      index           列出所有当前用户的故障单列表，支持过滤，分页，排序等
+ * # GET      /api/incidents/                      index           列出所有当前用户的故障单列表，支持过滤，分页，排序等
  * # GET      /api/incidents/assignee             indexAssignee   列出分配给当前用户的故障单列表
  * # GET      /api/incidents/candidate            indexCandidate  列出分配给当前用户所属组的故障单列表
  * # POST     /api/incidents/start                start           启动故障流程实例
@@ -48,7 +48,7 @@ public class IncidentController extends SessionSupportController<Incident> {
      */
     @RequestMapping(value = "/")
     @ResponseBody
-    public List<Incident> index() {
+    public List<Incident> index(@RequestParam(value = "key", required = false) String key) {
 
         Set<Task> tasks = new HashSet<Task>();
         //查询分配给当前用户的任务列表
@@ -62,7 +62,7 @@ public class IncidentController extends SessionSupportController<Incident> {
         }
         logger.debug("instance ids:"+ids.toString());
         //根据实例查询对应表单数据
-        indexPage = incidentManager.findByInstanceIds(ids,pageRequest);
+        indexPage = incidentManager.findByInstanceIds(ids,key,pageRequest);
         return indexPage.getContent();
     }
 
@@ -75,7 +75,7 @@ public class IncidentController extends SessionSupportController<Incident> {
      */
     @RequestMapping(value = "/assignee")
     @ResponseBody
-    public List<Incident> indexAssignee() {
+    public List<Incident> indexAssignee(@RequestParam(value = "key", required = false) String key) {
 
         Set<Task> tasks = new HashSet<Task>();
         //查询分配给当前用户的任务列表
@@ -87,7 +87,7 @@ public class IncidentController extends SessionSupportController<Incident> {
         }
         logger.debug("instance ids:"+ids.toString());
         //根据实例查询对应表单数据
-        indexPage = incidentManager.findByInstanceIds(ids,pageRequest);
+        indexPage = incidentManager.findByInstanceIds(ids,key,pageRequest);
         return indexPage.getContent();
     }
 
@@ -100,7 +100,7 @@ public class IncidentController extends SessionSupportController<Incident> {
      */
     @RequestMapping(value = "/candidate")
     @ResponseBody
-    public List<Incident> indexCandidate() {
+    public List<Incident> indexCandidate(@RequestParam(value = "key", required = false) String key) {
         Set<Task> tasks = new HashSet<Task>();
         //查询当前用户参与的任务列表
         tasks.addAll(activitiEngineService.queryTasksCandidateUser(currentUser.getUsername(),PROCESS_KEY));
@@ -111,7 +111,7 @@ public class IncidentController extends SessionSupportController<Incident> {
         }
         logger.debug("instance ids:"+ids.toString());
         //根据实例查询对应表单数据
-        indexPage = incidentManager.findByInstanceIds(ids,pageRequest);
+        indexPage = incidentManager.findByInstanceIds(ids,key,pageRequest);
         return indexPage.getContent();
     }
 
