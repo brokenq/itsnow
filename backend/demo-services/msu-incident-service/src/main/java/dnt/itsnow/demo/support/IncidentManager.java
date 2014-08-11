@@ -6,15 +6,16 @@ package dnt.itsnow.demo.support;
 import dnt.itsnow.demo.model.Incident;
 import dnt.itsnow.demo.repository.IncidentRepository;
 import dnt.itsnow.demo.service.IncidentService;
-import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
+import dnt.itsnow.platform.util.DefaultPage;
 import dnt.spring.Bean;
 import dnt.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -42,14 +43,18 @@ public class IncidentManager extends Bean implements IncidentService {
         return incidentRepository.findByInstanceId(id);
     }
 
-    public Page<Incident> findByInstanceIds(List<String> ids,Pageable pageable){
+    public Page<Incident> findByInstanceIds(List<String> ids,String keyword,Pageable pageable){
 
         int total = ids.size();
         if(total > 0){
-            List<Incident> incidents = incidentRepository.findAllByInstanceIds(ids,pageable);
+            if(keyword == null)
+                keyword = "";
+            List<Incident> incidents = incidentRepository.findAllByInstanceIds(ids,keyword,pageable);
             return new DefaultPage<Incident>(incidents,pageable,total);
-        }else
-            return new DefaultPage<Incident>(null,pageable,total);
+        }else {
+            List<Incident> incidents = new ArrayList<Incident>();
+            return new DefaultPage<Incident>(incidents, pageable, total);
+        }
     }
 
     public Page<Incident> findAll(String keyword, Pageable pageable){

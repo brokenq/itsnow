@@ -15,7 +15,7 @@ public interface IncidentService {
 
     Incident findByInstanceId(String id);
 
-    Page<Incident> findByInstanceIds(List<String> ids,Pageable pageable);
+    Page<Incident> findByInstanceIds(List<String> ids,String keyword,Pageable pageable);
 
     Page<Incident> findByUsername(String username,Pageable pageable);
 
