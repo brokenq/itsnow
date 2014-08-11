@@ -13,13 +13,13 @@ Itsnow平台模块测试开发指南
 
 测试该项内容之前，开发者需要设置好JSR-161的Validator（平台已经配置好所有相关依赖）
 
-```
+```java
     static ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     static Validator validator = factory.getValidator();
 ```
 对于已经采用JSR声明约束的模型：
 
-```
+```java
 public abstract class Account extends Record {
     @NotBlank
     private String        sn;
@@ -33,7 +33,7 @@ public abstract class Account extends Record {
 
 典型的测试内容如下：
 
-```
+```java
     @Test
     public void testEmptyAccountIsNotValid() throws Exception {
         account.setSn(null);
@@ -54,7 +54,7 @@ public abstract class Account extends Record {
 
 该类测试用例主要测试模型对象是否可以被系统配置的jackson完好的 toJson/fromJson，尤其当模型存在继承关系，引用关系时，典型的测试用例如下：
 
-```
+```java
     @Test
     public void testJson() throws Exception {
         String json = JsonSupport.toJSONString(account);
@@ -68,7 +68,7 @@ public abstract class Account extends Record {
 
 针对模型提供的业务方法进行测试，如：
 
-```
+```java
     @Test
     public void testApply() throws Exception {
         Account another = new MsuAccount();
@@ -85,7 +85,7 @@ public abstract class Account extends Record {
 
 本类型测试用例主要测试数据库映射是否正确，Mybatis映射语句是否正确，为了实现该类型测试，以 `CommonAccountRepositoryTest` 为例
 
-```
+```java
 @ContextConfiguration(classes = CommonAccountRepositoryConfig.class)
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -111,7 +111,7 @@ public class CommonAccountRepositoryTest {
 
 其中，最关键的是 `CommonAccountRepositoryConfig` 对象，其代码如下：
 
-```
+```java
 @Configuration
 @Import(DatabaseConfig.class)
 public class CommonAccountRepositoryConfig extends RepositoryConfigWithH2 {
@@ -133,17 +133,17 @@ public class CommonAccountRepositoryConfig extends RepositoryConfigWithH2 {
 
 另外，测试者可以通过覆盖
 
-```
+```java
     protected  String dbRepository() {
         return "dnt.itsnow.repository";
     }
 ```
 
-方法制订额外的db仓库（支持以逗号，分号分割多个路径）
+方法指定额外的db仓库（支持以逗号，分号分割多个包路径）
 
-如果在特定仓库中，需要排除/限制仅扫描特定几个repository，则需要覆盖 `repositoryFilter` 方法，如下：
+如果在特定仓库中，需要排除/限制被扫描的repository类，应覆盖 `repositoryFilter` 方法，如下：
 
-```
+```java
     public BeanFilter repositoryFilter(){      
         return new BeanFilter(){
 		    public boolean accept(String beanName, BeanDefinition definition) {
@@ -158,17 +158,17 @@ public class CommonAccountRepositoryConfig extends RepositoryConfigWithH2 {
 一般而言，Service模块依赖Repository模块，为了进行Service测试，有两种方式：
 
 * 方式1：对依赖的 repository 进行伪造(Mock)
-* 方式2: 在测试环境中，将Repository模块构建出来(基于Memory DB)
+* 方式2：在测试环境中，将Repository模块构建出来(基于Memory DB)
 
 #### 1.3.1 基于Mock的Service测试
 
-* 需要为相应的测试类提供一个单独的Spring配置对象 `MutableAccountManagerConfig1`，在本对象中将mock对象，被测试对象等均构建好
+* 需要为相应的测试类提供一个单独的Spring配置对象 `MutableAccountManagerConfig1`，在本对象中将mock对象，被测试对象等均由其构建好
 * 被测试对象直接 `Autowired` 注入测试程序 `MutableAccountManagerTest1`
 * 需要用 `SpringJUnit4ClassRunner` 运行测试用例
 
 Config类
 
-```
+```java
 @Configuration
 public class MutableAccountManagerConfig1 {
 
@@ -192,7 +192,9 @@ public class MutableAccountManagerConfig1 {
 
 测试类（采用Jmock）:
 
-```
+测试代码基本上就是： expect / perform / verify 三部曲
+
+```java
 @ContextConfiguration(classes = MutableAccountManagerConfig1.class)
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -210,6 +212,7 @@ public class MutableAccountManagerTest1 {
 
     @Test
     public void testCreate() throws Exception {
+        //expect
         Expectations expectations = new Expectations(){{
             allowing(mutableAccountRepository).create(with(any(Account.class)));
             allowing(mutableAccountRepository).findBySn(with(any(String.class)));
@@ -217,20 +220,21 @@ public class MutableAccountManagerTest1 {
         }};
         mockery.checking(expectations);
 
-        //验证会自动生成sn
+		//perform
         mutableAccountService.create(account);
+        
+        //verify: 会自动生成sn
         Assert.assertNotNull(account.getSn());
         Assert.assertEquals(AccountStatus.New, account.getStatus());
-
     }
 }
 ```
 
 #### 1.3.2 基于H2 Repository的Service测试
 
-这种方式的测试，关键在于测试类的config是从RepositoryConfig继承，如下：
+这种方式的测试，关键在于测试类的config是从RepositoryConfig继承，相应的配置方式与上文一致，如下：
 
-```
+```java
 public class MutableAccountManagerConfig2 extends MutableAccountRepositoryConfig {
     @Bean
     public MutableAccountService commonAccountService(){
@@ -244,9 +248,9 @@ public class MutableAccountManagerConfig2 extends MutableAccountRepositoryConfig
 }
 ```
 
-而后测试过程，可以直接基于内存数据库，不需要mock，这种测试用例特别适用于严重依赖底层Repository API的manager：
+而后测试过程，可以直接基于内存数据库，不需要mock，这种测试用例特别适用于严重依赖底层Repository API的service：
 
-```
+```java
 @ContextConfiguration(classes = MutableAccountManagerConfig2.class)
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -278,14 +282,16 @@ public class MutableAccountManagerTest2 {
 ```
   究竟采用哪种测试方式，取决于建立测试环境的代价以及被测试程序的逻辑要求；一般而言，选择代价较小的测试方案；
   例如，如果service严重依赖底层repository的数十个api，mock时需要mock许多方法，此时，将repository层构建在内存数据库上就比较合算；
-  又如，如果service仅仅是依赖了底层某几个api，而建立数据库表结构，以及数据相当麻烦，此时，采用mock技术就比较合算。
+  又如，如果service仅仅是依赖了底层某几个api，而建立数据库表结构，以及插入关联数据相当麻烦，此时，采用mock技术就比较合算。
 ```
 
 ### 1.4 控制器测试
 
-一般而言，控制器对service层有依赖，service对repository层又有依赖，所以，为控制器测试备齐所有底层环境比较困难，所以，控制器测试一般基于service的mock，其configration与上述服务层测试的方式1类似。
+一般而言，控制器对service层有依赖，service对repository层又有依赖，因此，为控制器测试备齐所有底层环境比较困难。
 
-```
+所以，控制器测试一般基于service的mock，其configration与上述服务层测试的方式1类似。
+
+```java
 @Configuration
 public class MutableAccountsControllerConfig extends ApplicationControllerConfig {
 
@@ -310,9 +316,9 @@ public class MutableAccountsControllerConfig extends ApplicationControllerConfig
 }
 ```
 
-对应于平台提供的 `ApplicationController`, `SessionSupportedController`，控制器测试也提供了 `ApplicationControllerTest`（在spring mvc test框架中注入运行application controller所需要的interceptors）, `SessionSupportedControllerTest`(初始化user/account)， 根据被测试的控制器情况，使用者需要从合适的类继承，并直接`@Autowired`注入被mock的service以及被测试的类。
+平台提供的 `ApplicationController`, `SessionSupportedController`，对应的，控制器测试也提供了 `ApplicationControllerTest`（在spring mvc test框架中注入运行application controller所需要的interceptors）, `SessionSupportedControllerTest`(初始化user/account)， 根据被测试的控制器情况，使用者需要从对应的类继承，并直接`@Autowired`注入被mock的service以及被测试的类。
 
-```
+```java
 import static org.easymock.EasyMock.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
@@ -329,7 +335,7 @@ public class MutableAccountsControllerTest extends SessionSupportedControllerTes
 
 基于EasyMock的测试可以：
 
-```
+```java
     @Test
     public void testIndex() throws Exception {
         // Service Mock 记录阶段
@@ -365,7 +371,7 @@ public class MutableAccountsControllerTest extends SessionSupportedControllerTes
 
 ## 2.1 集成测试用例的组织
 
-由于集成测试需要依赖被部署的系统，其测试环境比较难以搭建；按照Maven建议的最佳实践方式，将所有的集成测试用例组织到一个单独的模块 backend/integration-test模块，开发者需要激活 with-itsnow-it profile.
+由于集成测试需要依赖被部署的系统，其测试环境比较难以搭建；按照Maven建议的最佳实践方式，itsnow将所有的集成测试用例组织到一个单独的`backend/integration-test`模块，开发者需要激活 with-itsnow-it profile 以便使用该模块.
 
 在 integration-test目录下，按照被部署的单元性质，分为：
 
@@ -384,7 +390,7 @@ public class MutableAccountsControllerTest extends SessionSupportedControllerTes
 
 支持用户对测试环境/用户进行配置：
 
-```
+```java
 public class GlobalTest extends AbstractTest{
     @Override
     protected void configure(Configuration configuration) {
@@ -399,7 +405,7 @@ public class GlobalTest extends AbstractTest{
 
 配置之后，对目标系统的REST API获取可以直接以URI方式（省去主机，端口）
 
-```
+```java
     @Test
     public void testGetRoutes() throws Exception {
         String routes = getForObject("/routes", String.class);
@@ -410,7 +416,7 @@ public class GlobalTest extends AbstractTest{
 
 如果被测试的REST接口，是POST类型接口，被Spring Security的CSRF保护，则提供了 `withCsrf` 方式：
 
-```
+```java
     @Test
     public void testLoginWithCsrf() throws Exception {
         URI uri = super.withCsrf(new Callback<URI>() {
@@ -426,16 +432,16 @@ public class GlobalTest extends AbstractTest{
 备注：
 
 ```
-  withCsrf 函数也支持无返回值的Job回调方式
+  此时对rest接口的调用，必须将headers以request entity的方式传入，withCsrf 函数也支持无返回值的Job回调方式
 ```
 
-如果被测试的REST接口，需要有已经登录的用户身份，我们提供了 `withLoginUser`的方式：
+如果被测试的REST接口，需要有已经登录的用户身份，我们提供了`withLoginUser`的方式：
 
-```
+```java
     // 测试用户读取自身profile的url
     @Test
     public void testGetProfile() throws Exception {
-        User user = withLoginUser(new Callback<User>() {
+        User user = super.withLoginUser(new Callback<User>() {
             @Override
             public User perform(HttpHeaders headers) {
                 HttpEntity request = new HttpEntity(headers);
@@ -451,9 +457,9 @@ public class GlobalTest extends AbstractTest{
 
 ## 2.3 集成测试用例的执行
 
-在持续集成系统(Teamcity)中，将会以脚本方式，先启动被测试系统，而后按照普通的maven测试；
+持续集成系统(Teamcity)中，将会以脚本方式，先启动被测试系统，而后按照普通的maven测试，最后关闭被测试系统；
 
-在开发者环境，请开发者先自行启动相应的测试环境，而后通过ide或者maven米命令行启动相应的测试用例，其中，被测试主机/端口可以在不修改代码的情况下，通过设置系统 `it.host`, `it.port` 属性加以修改
+而在开发环境中，请先自行启动相应的被测试系统，而后通过IDE或者maven米命令行启动相应的测试用例，其中，被测试主机/端口可以在不修改代码的情况下，通过设置系统 `it.host`, `it.port` 属性加以修改
 
 3 接收测试
 -------------
