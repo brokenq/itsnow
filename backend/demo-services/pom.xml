@@ -52,6 +52,7 @@
         <module>activiti_engine_service</module>
         <module>service_catalog_service</module>
         <module>msu-incident-service</module>
+        <module>msp-incident-service</module>
     </modules>
 
     <dependencyManagement>
@@ -91,7 +92,7 @@
             </dependency>
             <dependency>
                 <groupId>dnt.itsnow.demo</groupId>
-                <artifactId>activiti_engine_app</artifactId>
+                <artifactId>activiti_engine_service</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

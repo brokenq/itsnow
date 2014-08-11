@@ -10,10 +10,10 @@
         <version>0.1.4-SNAPSHOT</version>
     </parent>
 
-    <artifactId>msu-incident-service</artifactId>
-    <name>MSU Incident Service</name>
+    <artifactId>msp-incident-service</artifactId>
+    <name>msp Incident Service</name>
     <description>
-        Demo MSU Incident Service implements,provide spi to frontend..
+        Demo msp Incident Service implements,provide spi to frontend..
     </description>
 
     <dependencies>
@@ -35,8 +35,8 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <App-Config>dnt.itsnow.demo.config.IncidentAppConfig</App-Config>
-                            <Service-Config>dnt.itsnow.demo.config.IncidentServiceConfig</Service-Config>
+                            <App-Config>dnt.itsnow.demo.config.MspIncidentAppConfig</App-Config>
+                            <Service-Config>dnt.itsnow.demo.config.MspIncidentServiceConfig</Service-Config>
                             <DB-Repository>dnt.itsnow.demo.repository</DB-Repository>
                             <Web-Repository>dnt.itsnow.demo.web.controller</Web-Repository>
                         </manifestEntries>
