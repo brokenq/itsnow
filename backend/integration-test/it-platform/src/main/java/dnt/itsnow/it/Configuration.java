@@ -7,9 +7,9 @@ import dnt.itsnow.model.CsrfToken;
 import org.springframework.http.HttpHeaders;
 
 /**
- * <h1>Class Usage</h1>
+ * <h1>IT测试用例运行时的配置+运行状态</h1>
  */
-public class ItConfiguration {
+public class Configuration {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     /* 配置信息 */
@@ -37,7 +37,7 @@ public class ItConfiguration {
         return host;
     }
 
-    public ItConfiguration host(String host) {
+    public Configuration host(String host) {
         this.host = host;
         return this;
     }
@@ -46,7 +46,7 @@ public class ItConfiguration {
         return port;
     }
 
-    public ItConfiguration port(int port) {
+    public Configuration port(int port) {
         this.port = port;
         return this;
     }
@@ -55,7 +55,7 @@ public class ItConfiguration {
         return sessionCookies;
     }
 
-    public ItConfiguration sessionCookies(String sessionCookies) {
+    public Configuration sessionCookies(String sessionCookies) {
         this.sessionCookies = sessionCookies;
         return this;
     }
@@ -64,7 +64,7 @@ public class ItConfiguration {
         return csrf;
     }
 
-    public ItConfiguration csrf(CsrfToken csrf) {
+    public Configuration csrf(CsrfToken csrf) {
         this.csrf = csrf;
         return this;
     }
@@ -73,7 +73,7 @@ public class ItConfiguration {
         return username;
     }
 
-    public ItConfiguration username(String username) {
+    public Configuration username(String username) {
         this.username = username;
         return this;
     }
@@ -82,7 +82,7 @@ public class ItConfiguration {
         return password;
     }
 
-    public ItConfiguration password(String password) {
+    public Configuration password(String password) {
         this.password = password;
         return this;
     }
@@ -94,7 +94,7 @@ public class ItConfiguration {
     public HttpHeaders requestHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.add(csrf.getHeaderName(), csrf.getToken());
-        headers.set("Cookie", sessionCookies);
+        headers.set("Cookie", getSessionCookies());
         return headers;
     }
 

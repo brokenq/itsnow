@@ -26,13 +26,13 @@ public abstract class AbstractTest implements RestOperations {
     private RestTemplate template = new RestTemplate();
 
 
-    protected ItConfiguration configuration;
+    protected Configuration configuration;
 
     private boolean posted = false;
 
     public AbstractTest() {
         /*tested system in localhost*/
-        this(new ItConfiguration()
+        this(new Configuration()
                 .host(System.getProperty("it.host", "localhost"))
                 .port(Integer.valueOf(System.getProperty("it.port", "8071")))
                 .username("admin")
@@ -41,7 +41,7 @@ public abstract class AbstractTest implements RestOperations {
         /*test using msc*/
     }
 
-    public AbstractTest(ItConfiguration configuration) {
+    public AbstractTest(Configuration configuration) {
         this.configuration = configuration;
     }
 
@@ -108,7 +108,7 @@ public abstract class AbstractTest implements RestOperations {
     }
 
     protected <T> T withLoginUser(Callback<T> callback){
-        if( configuration.isLogined() ){
+        if( !configuration.isLogined() ){
             withCsrf(new Callback<URI>() {
                 public URI perform(HttpHeaders headers) {
                     HttpEntity request = new HttpEntity(headers);
@@ -118,7 +118,7 @@ public abstract class AbstractTest implements RestOperations {
             });
             configuration.logined();
         }
-        return callback.perform(configuration.requestHeaders());
+        return withCsrf(callback);
     }
 
 
@@ -131,10 +131,28 @@ public abstract class AbstractTest implements RestOperations {
         }
     }
 
+    public <T> T getForObject(String url, Class<T> responseType, HttpEntity request, Object... uriVariables) throws RestClientException {
+        try {
+            ResponseEntity<T> response = exchange(url, HttpMethod.GET, request, responseType, uriVariables);
+            return response.getBody();
+        } finally {
+            this.normal();
+        }
+    }
+
     @Override
     public <T> T getForObject(String url, Class<T> responseType, Map<String, ?> uriVariables) throws RestClientException {
         try {
             return template.getForObject(assemble(url), responseType, uriVariables);
+        } finally {
+            this.normal();
+        }
+    }
+
+    public <T> T getForObject(String url, Class<T> responseType, HttpEntity request, Map<String, ?> uriVariables) throws RestClientException {
+        try {
+            ResponseEntity<T> response = exchange(url, HttpMethod.GET, request, responseType, uriVariables);
+            return response.getBody();
         } finally {
             this.normal();
         }
@@ -158,6 +176,14 @@ public abstract class AbstractTest implements RestOperations {
         }
     }
 
+    public <T> ResponseEntity<T> getForEntity(String url, Class<T> responseType, HttpEntity request, Object... uriVariables) throws RestClientException {
+        try {
+            return exchange(assemble(url), HttpMethod.GET, request, responseType, uriVariables);
+        } finally {
+            this.normal();
+        }
+    }
+
     @Override
     public <T> ResponseEntity<T> getForEntity(String url, Class<T> responseType, Map<String, ?> uriVariables) throws RestClientException {
         try {
@@ -167,10 +193,26 @@ public abstract class AbstractTest implements RestOperations {
         }
     }
 
+    public <T> ResponseEntity<T> getForEntity(String url, Class<T> responseType, HttpEntity request, Map<String, ?> uriVariables) throws RestClientException {
+        try {
+            return exchange(assemble(url), HttpMethod.GET, request, responseType, uriVariables);
+        } finally {
+            this.normal();
+        }
+    }
+
     @Override
     public <T> ResponseEntity<T> getForEntity(URI url, Class<T> responseType) throws RestClientException {
         try {
             return template.getForEntity(assemble(url), responseType);
+        } finally {
+            this.normal();
+        }
+    }
+
+    public <T> ResponseEntity<T> getForEntity(URI url, Class<T> responseType, HttpEntity request) throws RestClientException {
+        try {
+            return exchange(assemble(url), HttpMethod.GET, request, responseType);
         } finally {
             this.normal();
         }
