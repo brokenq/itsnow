@@ -15,7 +15,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/departments")
-public class DepartmentsController extends SessionSupportController<Department>{
+public class DepartmentsController extends SessionSupportController<Department> {
     Department department;
 
     /**

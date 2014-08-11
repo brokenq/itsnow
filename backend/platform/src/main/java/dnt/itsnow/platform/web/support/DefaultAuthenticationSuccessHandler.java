@@ -18,10 +18,8 @@ import java.io.IOException;
 public class DefaultAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     @Override
     protected void handle(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        String targetUrl = determineTargetUrl(request, response);
         response.setStatus(HttpStatus.SC_OK);
-
-        response.setContentLength(targetUrl.getBytes().length);
-        response.getWriter().append(targetUrl);
+        String targetUrl = determineTargetUrl(request, response);
+        response.setHeader("Location", targetUrl);
     }
 }

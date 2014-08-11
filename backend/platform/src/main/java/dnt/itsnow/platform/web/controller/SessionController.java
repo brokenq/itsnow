@@ -1,9 +1,8 @@
 /**
  * xiongjie on 14-8-4.
  */
-package dnt.itsnow.web.controller;
+package dnt.itsnow.platform.web.controller;
 
-import dnt.itsnow.platform.web.controller.ApplicationController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;

@@ -7,6 +7,7 @@ import dnt.itsnow.platform.web.model.RouteItem;
 import dnt.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +15,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 /**
@@ -38,8 +40,10 @@ public class RoutesController extends ApplicationController{
     @RequestMapping
     public String list(@RequestParam(value = "method", required = false, defaultValue = "") String method,
                        @RequestParam(value = "pattern", required = false, defaultValue = "") String pattern,
-                       @RequestParam(value = "detail", required = false, defaultValue = "false") boolean detail
+                       @RequestParam(value = "detail", required = false, defaultValue = "false") boolean detail,
+                       HttpServletResponse response
                        ) {
+        response.setContentType(MediaType.TEXT_PLAIN_VALUE);
         Map<RequestMappingInfo, HandlerMethod> methods = mappings.getHandlerMethods();
         List<RouteItem> routeItems = new ArrayList<RouteItem>(methods.size());
         for( RequestMappingInfo mapping : methods.keySet()){

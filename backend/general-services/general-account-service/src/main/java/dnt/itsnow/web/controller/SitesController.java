@@ -15,7 +15,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/sites")
-public class SitesController extends SessionSupportController<Site>{
+public class SitesController extends SessionSupportController<Site> {
     Site site;
 
     /**

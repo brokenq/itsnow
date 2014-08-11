@@ -15,7 +15,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/admin/api/contracts")
-public class MutableContractsController extends SessionSupportController<Contract>{
+public class MutableContractsController extends SessionSupportController<Contract> {
     Contract contract;
 
     /**

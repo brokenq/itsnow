@@ -18,7 +18,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/groups")
-public class GroupsController extends SessionSupportController<Group>{
+public class GroupsController extends SessionSupportController<Group> {
     @Autowired
     GroupService groupService;
 
