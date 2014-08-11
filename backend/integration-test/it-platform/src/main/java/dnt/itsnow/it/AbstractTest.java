@@ -31,18 +31,16 @@ public abstract class AbstractTest implements RestOperations {
     private boolean posted = false;
 
     public AbstractTest() {
-        /*tested system in localhost*/
-        this(new Configuration()
+        this.configuration = new Configuration();
+        configure(configuration);
+    }
+
+    protected void configure(Configuration configuration) {
+        configuration
                 .host(System.getProperty("it.host", "localhost"))
                 .port(Integer.valueOf(System.getProperty("it.port", "8071")))
                 .username("admin")
-                .password("secret")
-        );
-        /*test using msc*/
-    }
-
-    public AbstractTest(Configuration configuration) {
-        this.configuration = configuration;
+                .password("secret");
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

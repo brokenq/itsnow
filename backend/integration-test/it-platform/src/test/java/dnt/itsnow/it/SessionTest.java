@@ -46,10 +46,7 @@ public class SessionTest extends AbstractTest{
             Assert.assertTrue(e instanceof HttpClientErrorException);
             HttpClientErrorException ce = (HttpClientErrorException) e;
             Assert.assertEquals(403, ce.getStatusCode().value());
-            System.out.println(e.getMessage());
-            //Assert.assertTrue();
         }
-
     }
 
     @Test
