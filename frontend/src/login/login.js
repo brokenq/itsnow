@@ -2,6 +2,7 @@
  * Created by kadvin on 14-7-2.
  */
 var app = angular.module("ItsNow.Login", [
+    'ItsNow.Interceprot',
     'templates-login',
     'templates-common',
     'ItsNow.Login.Authenticate',
@@ -10,22 +11,6 @@ var app = angular.module("ItsNow.Login", [
     'ngResource',
     'ui.router'
 ]);
-
-app.run(function($rootScope,csrf){
-    $rootScope.data = csrf.load();
-    $rootScope.value = 'testing';
-});
-
-app.factory('csrf', function ($http,$window) {
-    return {
-        load: function () {
-            $http.get('security/csrf').then(function (response) {
-                console.log("CSRF Success. headerName:" + response.data.headerName + " token:" + response.data.token);
-                $http.defaults.headers.common[response.data.headerName] = response.data.token;
-            });
-        }
-    };
-});
 
 app.config(function($stateProvider, $urlRouterProvider){
     $urlRouterProvider.otherwise("/authenticate");
@@ -68,24 +53,3 @@ securityService.factory('User', ['$resource'],
         });
     }
 );
-
-// 拦截器（只拦截POST请求）
-app.factory('SessionInjector', ['$injector',
-    function ($injector) {
-        return {
-            request : function (config) {
-                console.log('login.js拦截'+config.method+'请求！');
-                if (config.method === 'POST') {
-                    console.log("response.config.method: " + config.method);
-                    var csrf = $injector.get('csrf');
-                    csrf.load();
-                }
-                return config;
-            }
-        };
-    }]);
-
-// 注入拦截器
-app.config(['$httpProvider', function ($httpProvider) {
-    $httpProvider.interceptors.push('SessionInjector');
-}]);
