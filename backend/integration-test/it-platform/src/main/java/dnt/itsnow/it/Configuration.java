@@ -56,6 +56,7 @@ public class Configuration {
     }
 
     public Configuration sessionCookies(String sessionCookies) {
+        //System.out.println("cookies changed from " + this.sessionCookies + " to " + sessionCookies);
         this.sessionCookies = sessionCookies;
         return this;
     }
@@ -93,8 +94,10 @@ public class Configuration {
 
     public HttpHeaders requestHeaders() {
         HttpHeaders headers = new HttpHeaders();
-        headers.add(csrf.getHeaderName(), csrf.getToken());
-        headers.set("Cookie", getSessionCookies());
+        if( csrf != null )
+            headers.add(csrf.getHeaderName(), csrf.getToken());
+        if( hasSessionCookies() )
+            headers.set("Cookie", getSessionCookies());
         return headers;
     }
 

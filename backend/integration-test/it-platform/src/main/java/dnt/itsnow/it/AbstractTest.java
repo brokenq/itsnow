@@ -48,11 +48,14 @@ public abstract class AbstractTest implements RestOperations {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     protected String assemble(String url) {
+        if( url.startsWith("http://") || url.startsWith("https://")) return url;
         return "http://" + configuration.getHost() + ":" + configuration.getPort()
                 + (url.startsWith("/") ? url : "/" + url);
     }
 
     protected URI assemble(URI url) {
+        String str = url.toString();
+        if( str.startsWith("http://") || str.startsWith("https://")) return url;
         try {
             return new URI(assemble(url.toString()));
         } catch (URISyntaxException e) {
@@ -78,10 +81,14 @@ public abstract class AbstractTest implements RestOperations {
 
     protected <T> T withCsrf(Callback<T> callback) {
         if (configuration.getCsrf() == null) {
-            ResponseEntity<CsrfToken> response = getForEntity("/security/csrf", CsrfToken.class);
+            HttpHeaders headers = configuration.requestHeaders();
+            HttpEntity entity = new HttpEntity(headers);
+            ResponseEntity<CsrfToken> response = getForEntity("/security/csrf", CsrfToken.class, entity);
             configuration.csrf(response.getBody());
-            if (!configuration.hasSessionCookies()) {
-                configuration.sessionCookies(response.getHeaders().getFirst("Set-Cookie"));
+            // 登录等前后会由服务器端发起改变cookie，所以，是否有cookie，不由客户端决定，而是由服务器端决定
+            String newCookies = response.getHeaders().getFirst("Set-Cookie");
+            if (newCookies != null ) {
+                configuration.sessionCookies(newCookies);
             }
         }
         try {
@@ -110,8 +117,14 @@ public abstract class AbstractTest implements RestOperations {
             withCsrf(new Callback<URI>() {
                 public URI perform(HttpHeaders headers) {
                     HttpEntity request = new HttpEntity(headers);
-                    return postForLocation("/api/session?username={username}&password={password}", request,
-                            configuration.getUsername(), configuration.getPassword());
+                    ResponseEntity<String> response = postForEntity("/api/session?username={username}&password={password}",
+                            request, String.class, configuration.getUsername(), configuration.getPassword());
+                    //登录成功之后，改变session
+                    String newCookies = response.getHeaders().getFirst("Set-Cookie");
+                    if (newCookies != null ) {
+                        configuration.sessionCookies(newCookies);
+                    }
+                    return response.getHeaders().getLocation();
                 }
             });
             configuration.logined();
@@ -191,7 +204,7 @@ public abstract class AbstractTest implements RestOperations {
         }
     }
 
-    public <T> ResponseEntity<T> getForEntity(String url, Class<T> responseType, HttpEntity request, Map<String, ?> uriVariables) throws RestClientException {
+    public <T> ResponseEntity<T> gettForEntity(String url, Class<T> responseType, HttpEntity request, Map<String, ?> uriVariables) throws RestClientException {
         try {
             return exchange(assemble(url), HttpMethod.GET, request, responseType, uriVariables);
         } finally {

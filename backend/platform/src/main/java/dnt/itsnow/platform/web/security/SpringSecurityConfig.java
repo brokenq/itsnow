@@ -44,7 +44,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
                 .logoutRequestMatcher(new AntPathRequestMatcher("/api/session", "DELETE"))
                 .logoutSuccessHandler(new DefaultLogoutSuccessHandler())
                 /* 配置会话服务 */
-                .and().sessionManagement().enableSessionUrlRewriting(true).sessionFixation().none();
+                .and().sessionManagement().enableSessionUrlRewriting(true).sessionFixation().migrateSession();
         // 若以后支持手机客户端访问，那个时候可能就需要基于Digest-Authentication
         //noinspection unchecked
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry authenticated =
