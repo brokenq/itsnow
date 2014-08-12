@@ -9,11 +9,11 @@
             <div class="row">
                 <div class="col-sm-6">
                     <div id="sample-table-2_length" class="dataTables_length"><label>Search: <input type="text"
-                                                                                                    ng-model="filterOptions.filterText"
+                                                                                                    ng-model="searchKey"
                                                                                                     aria-controls="sample-table-2">
                     </label>
 
-                        <a href="javascript:void(0)" id="fbox_grid-table_search"
+                        <a href="javascript:void(0)" id="fbox_grid-table_search" ng-click="searchFun()"
                            class="fm-button ui-state-default ui-corner-all fm-button-icon-right ui-reset btn btn-sm btn-purple"><span
                                 class="icon-search"></span>Find</a>
 

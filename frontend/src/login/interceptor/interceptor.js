@@ -29,12 +29,14 @@ angular
                 request: function(config) {
                     var deferred = $q.defer();
                     if (config.method === 'POST' || config.method === 'PUT') {
+//                        console.log("这个是POST/PUT方法");
                         var CSRFService = $injector.get('CSRFService');
                         CSRFService.get().then(function(data){
                             config.headers[data.headerName] = data.token;
                             deferred.resolve(config);
                         });
                     }else{
+//                        console.log("这个是GET方法");
                         deferred.resolve(config);
                     }
                     return deferred.promise;
