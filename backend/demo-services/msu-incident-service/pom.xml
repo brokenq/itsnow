@@ -19,12 +19,7 @@
     <dependencies>
         <dependency>
             <groupId>dnt.itsnow.demo</groupId>
-            <artifactId>activiti_engine_api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>dnt.itsnow.demo</groupId>
-            <artifactId>activiti_engine_app</artifactId>
-            <scope>runtime</scope>
+            <artifactId>activiti_engine_service</artifactId>
         </dependency>
         <dependency>
             <groupId>dnt.itsnow</groupId>

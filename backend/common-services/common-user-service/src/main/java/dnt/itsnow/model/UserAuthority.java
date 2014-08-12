@@ -5,7 +5,9 @@ package dnt.itsnow.model;
 
 import org.springframework.security.core.GrantedAuthority;
 
-/** Description */
+/**
+ * the authority granted to user
+ */
 public class UserAuthority implements GrantedAuthority {
     private String username;
     private String authority;

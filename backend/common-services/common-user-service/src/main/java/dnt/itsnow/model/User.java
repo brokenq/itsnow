@@ -3,6 +3,7 @@
  */
 package dnt.itsnow.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import dnt.itsnow.platform.model.Record;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
@@ -32,9 +33,10 @@ public class User extends Record implements UserDetails, CredentialsContainer {
     private String phone;
     private String password;
     private Long accountId;
+    @JsonIgnore
     // 用户的当前主账户，可以为空，可以变化
     private Account account;
-
+    @JsonIgnore
     private Set<GrantedAuthority> authorities;
     private boolean enabled = true;   // 由一般注册流程或者管理员设置，该信息存储在user上
     private boolean expired = false;  //帐号过期
@@ -64,14 +66,18 @@ public class User extends Record implements UserDetails, CredentialsContainer {
         return enabled;
     }
 
+    @JsonIgnore
     public boolean isAccountNonExpired() {
         return !expired;
     }
 
+    @JsonIgnore
     public boolean isAccountNonLocked() {
         return !locked;
     }
 
+
+    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return !passwordExpired;
     }
@@ -209,6 +215,7 @@ public class User extends Record implements UserDetails, CredentialsContainer {
      */
     @Override
     public boolean equals(Object rhs) {
+        //noinspection SimplifiableIfStatement
         if (rhs instanceof User) {
             return username.equals(((User) rhs).username);
         }

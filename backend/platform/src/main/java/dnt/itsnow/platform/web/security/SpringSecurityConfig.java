@@ -5,6 +5,7 @@ package dnt.itsnow.platform.web.security;
 
 import dnt.itsnow.platform.web.support.DefaultAuthenticationFailureHandler;
 import dnt.itsnow.platform.web.support.DefaultAuthenticationSuccessHandler;
+import dnt.itsnow.platform.web.support.DefaultLogoutSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -13,6 +14,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -27,6 +29,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authenticationProvider(delegateAuthenticationProvider())
+                // 配置了 authentication provider 之后， 不需要配置 user details service
                 //.userDetailsService(delegateUserDetailsService())
                 /* 配置 remember me*/
                 .rememberMe()
@@ -39,6 +42,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
                 /* 配置登出服务 */
                 .and().logout().invalidateHttpSession(true).logoutSuccessUrl("/login.html")
                 .logoutRequestMatcher(new AntPathRequestMatcher("/api/session", "DELETE"))
+                .logoutSuccessHandler(new DefaultLogoutSuccessHandler())
                 /* 配置会话服务 */
                 .and().sessionManagement().enableSessionUrlRewriting(true).sessionFixation().none();
         // 若以后支持手机客户端访问，那个时候可能就需要基于Digest-Authentication
@@ -51,6 +55,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
                 .antMatchers("/admin/api/**").hasAnyRole("ADMIN")
                 .antMatchers("/monitor/api/**").hasAnyRole("MONITOR")
                 .antMatchers("/reporter/api/**").hasAnyRole("REPORTER")
+                .antMatchers("/routes").hasRole("ANONYMOUS")
                 .antMatchers("/**").permitAll();
         authenticated.and().formLogin()
                 .loginPage("/login.html")
@@ -65,10 +70,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
         return new DelegateAuthenticationProvider();
     }
 
-//    @Bean
-//    DelegateUserDetailsService delegateUserDetailsService() {
-//        return new DelegateUserDetailsService();
-//    }
+    @Bean
+    DelegateUserDetailsService delegateUserDetailsService() {
+        return new DelegateUserDetailsService();
+    }
 
     @Bean
     DelegatePersistentTokenRepository delegateTokenRepository() {
@@ -89,9 +94,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
         return this;
     }
 
-//    @Override
-//    public DelegateSecurityConfigurer delegate(UserDetailsService delegate) {
-//        delegateUserDetailsService().setDelegate(delegate);
-//        return this;
-//    }
+    @Override
+    public DelegateSecurityConfigurer delegate(UserDetailsService delegate) {
+        delegateUserDetailsService().setDelegate(delegate);
+        return this;
+    }
 }

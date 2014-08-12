@@ -5,7 +5,9 @@ package dnt.itsnow.model;
 
 import org.springframework.security.core.GrantedAuthority;
 
-/** Description */
+/**
+ * the authority granted to group
+ */
 public class GroupAuthority implements GrantedAuthority {
 
     private String groupName;

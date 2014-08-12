@@ -26,7 +26,8 @@ import org.springframework.stereotype.Service;
 public class GroupedUserDetailsService implements CommonUserService, UserDetailsService {
     @Autowired
     @Qualifier("plainUserService") // 代码中的qualifier 就是 context 中的bean名称或id
-            CommonUserService userService;
+    CommonUserService userService;
+
     @Autowired
     GroupRepository groupRepository;
 
