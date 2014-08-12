@@ -48,11 +48,14 @@ public abstract class AbstractTest implements RestOperations {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     protected String assemble(String url) {
+        if (url.startsWith("http://") || url.startsWith("https://")) return url;
         return "http://" + configuration.getHost() + ":" + configuration.getPort()
                 + (url.startsWith("/") ? url : "/" + url);
     }
 
     protected URI assemble(URI url) {
+        String str = url.toString();
+        if (str.startsWith("http://") || str.startsWith("https://")) return url;
         try {
             return new URI(assemble(url.toString()));
         } catch (URISyntaxException e) {
@@ -67,21 +70,25 @@ public abstract class AbstractTest implements RestOperations {
 
     @SuppressWarnings("UnusedDeclaration")
     protected void withCsrf(final Job job) {
-      withCsrf(new Callback<Object>() {
-          @Override
-          public Object perform(HttpHeaders headers) {
-              job.perform(headers);
-              return null;
-          }
-      });
+        withCsrf(new Callback<Object>() {
+            @Override
+            public Object perform(HttpHeaders headers) {
+                job.perform(headers);
+                return null;
+            }
+        });
     }
 
     protected <T> T withCsrf(Callback<T> callback) {
         if (configuration.getCsrf() == null) {
-            ResponseEntity<CsrfToken> response = getForEntity("/security/csrf", CsrfToken.class);
+            HttpHeaders headers = configuration.requestHeaders();
+            HttpEntity entity = new HttpEntity(headers);
+            ResponseEntity<CsrfToken> response = getForEntity("/security/csrf", CsrfToken.class, entity);
             configuration.csrf(response.getBody());
-            if (!configuration.hasSessionCookies()) {
-                configuration.sessionCookies(response.getHeaders().getFirst("Set-Cookie"));
+            // 登录等前后会由服务器端发起改变cookie，所以，是否有cookie，不由客户端决定，而是由服务器端决定
+            String newCookies = response.getHeaders().getFirst("Set-Cookie");
+            if (newCookies != null) {
+                configuration.sessionCookies(newCookies);
             }
         }
         try {
@@ -95,7 +102,7 @@ public abstract class AbstractTest implements RestOperations {
     }
 
     @SuppressWarnings("UnusedDeclaration")
-    protected void withLoginUser(final Job job){
+    protected void withLoginUser(final Job job) {
         withLoginUser(new Callback<Object>() {
             @Override
             public Object perform(HttpHeaders headers) {
@@ -105,13 +112,19 @@ public abstract class AbstractTest implements RestOperations {
         });
     }
 
-    protected <T> T withLoginUser(Callback<T> callback){
-        if( !configuration.isLogined() ){
+    protected <T> T withLoginUser(Callback<T> callback) {
+        if (!configuration.isLogined()) {
             withCsrf(new Callback<URI>() {
                 public URI perform(HttpHeaders headers) {
                     HttpEntity request = new HttpEntity(headers);
-                    return postForLocation("/api/session?username={username}&password={password}", request,
-                            configuration.getUsername(), configuration.getPassword());
+                    ResponseEntity<String> response = postForEntity("/api/session?username={username}&password={password}",
+                            request, String.class, configuration.getUsername(), configuration.getPassword());
+                    //登录成功之后，改变session
+                    String newCookies = response.getHeaders().getFirst("Set-Cookie");
+                    if (newCookies != null) {
+                        configuration.sessionCookies(newCookies);
+                    }
+                    return response.getHeaders().getLocation();
                 }
             });
             configuration.logined();
