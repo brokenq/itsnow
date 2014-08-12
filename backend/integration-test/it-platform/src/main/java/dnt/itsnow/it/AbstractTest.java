@@ -204,7 +204,7 @@ public abstract class AbstractTest implements RestOperations {
         }
     }
 
-    public <T> ResponseEntity<T> gettForEntity(String url, Class<T> responseType, HttpEntity request, Map<String, ?> uriVariables) throws RestClientException {
+    public <T> ResponseEntity<T> getForEntity(String url, Class<T> responseType, HttpEntity request, Map<String, ?> uriVariables) throws RestClientException {
         try {
             return exchange(assemble(url), HttpMethod.GET, request, responseType, uriVariables);
         } finally {
