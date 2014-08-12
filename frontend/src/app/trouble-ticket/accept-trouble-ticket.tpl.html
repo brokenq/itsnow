@@ -1,0 +1,169 @@
+<div class="page-content">
+
+<div class="row">
+<div class="col-xs-12">
+<!-- PAGE CONTENT BEGINS -->
+
+<ng-form name="troubleTicketForm" class="form-horizontal" role="form" ng-controller="AcceptTroubleTicketCtrl">
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="ticketId"> 故障单号 </label>
+
+    <div class="col-sm-9">
+        <input readonly="" type="text" id="ticketId" ng-model="acceptIncident.number" class="col-xs-10 col-sm-5"  value="{{acceptIncident.number}}"/>
+    </div>
+</div>
+
+<div class="space-4"></div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="requesterType"> 请求类型 </label>
+
+    <div class="col-sm-9">
+        <select id="requesterType" ng-model="acceptIncident.requesterType" ng-options="m.value as m.name for m in requesterTypeModule">
+            <option value=""> 请选择 </option>
+        </select>
+    </div>
+</div>
+
+<div class="space-4"></div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="requester"> 请求人 </label>
+
+    <div class="col-sm-9">
+        <input type="text" id="requester" name="requesterName" ng-model="acceptIncident.requesterName" required placeholder="例如：张三" class="col-xs-10 col-sm-5" />
+        <span ng-show="troubleTicketForm.requesterName.$error.required">必填</span>
+    </div>
+</div>
+
+<div class="space-4"></div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="phone"> 联系电话 </label>
+
+    <div class="col-sm-9">
+        <input type="text" id="phone" name="requestPhone" ng-model="acceptIncident.requesterPhone" placeholder="例如：15901968888" class="col-xs-10 col-sm-5" />
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="area"> 所处地区 </label>
+
+    <div class="col-sm-9">
+        <select id="area" name="requesterLocation" ng-model="acceptIncident.requesterLocation" ng-options="m.value as m.name for m in areaModule">
+            <option value=""> 请选择 </option>
+        </select>
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="email"> 邮箱 </label>
+
+    <div class="col-sm-9">
+        <input type="text" id="email" name="requestEmail" ng-model="acceptIncident.requesterEmail" required type="email" placeholder="例如：stone@gmail.com" class="col-xs-10 col-sm-5" />
+        <span ng-show="!troubleTicketForm.requestEmail.$valid">有错</span>
+        <span ng-show="troubleTicketForm.requestEmail.$error.required">必填</span>
+        <span ng-show="troubleTicketForm.requestEmail.$error.email">email 地址不对</span>
+    </div>
+</div>
+
+<div class="hr hr-24"></div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="serviceCatalog"> 服务目录 </label>
+
+    <div class="col-sm-9">
+        <select id="serviceCatalog" ng-model="acceptIncident.serviceCatalog" ng-options="m.value as m.name for m in serviceCatalogModule">
+            <option value=""> 请选择 </option>
+        </select>
+    </div>
+</div>
+
+<div class="space-4"></div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="impact"> 影响程度 </label>
+
+    <div class="col-sm-9">
+        <select id="impact" ng-model="acceptIncident.impact" ng-options="m.value as m.name for m in impactModule">
+            <option value=""> 请选择 </option>
+        </select>
+    </div>
+</div>
+
+<div class="space-4"></div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="category"> 配置分类 </label>
+
+    <div class="col-sm-9">
+        <select id="category" ng-model="acceptIncident.category" ng-options="m.value as m.name for m in categoryModule">
+            <option value=""> 请选择 </option>
+        </select>
+    </div>
+</div>
+
+<div class="space-4"></div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="urgency"> 紧急程度 </label>
+
+    <div class="col-sm-9">
+        <select id="urgency" ng-model="acceptIncident.urgency" ng-options="m.value as m.name for m in urgencyModule">
+            <option value=""> 请选择 </option>
+        </select>
+    </div>
+</div>
+
+<div class="space-4"></div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="ci"> 配置项 </label>
+
+    <div class="col-sm-9">
+        <select id="ci" ng-model="acceptIncident.ci" ng-options="m.value as m.name for m in ciModule">
+            <option value=""> 请选择 </option>
+        </select>
+    </div>
+</div>
+
+<div class="space-4"></div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="priority"> 优先级 </label>
+
+    <div class="col-sm-9">
+        <select id="priority" ng-model="acceptIncident.priority" ng-options="m.value as m.name for m in priorityModule">
+            <option value=""> 请选择 </option>
+        </select>
+    </div>
+</div>
+
+<div class="hr hr-24"></div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="requestDescription"> 问题描述 </label>
+
+    <div class="col-sm-9">
+        <textarea class="form-control" id="requestDescription" name="requestDescription" ng-model="acceptIncident.requestDescription" placeholder="请详细描述问题" required></textarea>
+        <!--<input type="text" id="phone" name="requestPhone" ng-model="acceptIncident.requesterPhone" placeholder="例如：15901968888" class="col-xs-10 col-sm-5" />-->
+        <span ng-show="troubleTicketForm.requestDescription.$error.required">必填</span>
+    </div>
+</div>
+
+<div class="hr hr-24"></div>
+
+<div class="clearfix form-actions">
+    <div class="col-md-offset-3 col-md-9">
+        <button class="btn btn-info" type="submit" ng-click="accept(acceptIncident)" ng-disabled="troubleTicketForm.$invalid">
+            <i class="icon-ok bigger-110"></i>
+            签收
+        </button>
+    </div>
+</div>
+
+</ng-form>
+
+</div><!-- /.col -->
+</div><!-- /.row -->
+</div><!-- /.page-content -->

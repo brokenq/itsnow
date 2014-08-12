@@ -2,24 +2,24 @@
  * Created by User on 2014/7/23.
  */
 //angular module
-var menuApp = angular.module('menuApp', ['ui.tree']);
+var menuApp = angular.module('ItsNow.Menu', ['ui.tree']);
 
 //test controller
 var menuCtrl = menuApp.controller('menuCtrl', function ($scope) {
 
     $scope.menuList = [
-        {id: '001', title: '用户', url: 'index.user', subMenu: ''},
+        {id: '001', title: '用户', url: 'index.user'},
         {id: '002', title: 'SLA', url: 'index.sla'},
-        {id: '002', title: '合同', url: 'index.contract'},
-        {id: '003', title: 'UI Elements', url: 'ui-elements', subMenu: [
-            {id: '003001', title: 'Elements', url: 'ui-elements.elements'},
-            {id: '003002', title: 'treeview', url: 'ui-elements.treeview'}
-        ]},
-        {id: '004', title: 'Tables', url: 'tables', subMenu: [
-            {id: '004001', title: 'Simple & Dynamic', url: 'tables.simple'},
-            {id: '004002', title: 'jqGrid plugin', url: 'tables.jqGrid_plugin'}
-        ]},
-        {id: '005', title: '日历', url: 'calendar'}
+        {id: '003', title: '合同', url: 'index.contract'},
+        {id: '004', title: '故障单', url: 'index.list-trouble-ticket'
+//            , subMenu: [
+//            {id: '004001', title: '新建故障单', url: 'index.new-trouble-ticket'},
+//            {id: '004002', title: '签收故障单', url: 'index.trouble-ticket.sign'},
+//            {id: '004003', title: '处理故障单', url: 'index.trouble-ticket.handling'},
+//            {id: '004004', title: '关闭故障单', url: 'index.trouble-ticket.close'},
+//            {id: '004005', title: '查询故障单', url: 'index.trouble-ticket.query'}
+//        ]
+        }
     ];
 
     $scope.toggle = function(scope) {

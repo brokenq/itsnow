@@ -16,7 +16,7 @@ app.run(function($rootScope,csrf){
     $rootScope.value = 'testing';
 });
 
-app.factory('csrf', function ($http) {
+app.factory('csrf', function ($http,$window) {
     return {
         load: function () {
             $http.get('security/csrf').then(function (response) {
@@ -73,14 +73,14 @@ securityService.factory('User', ['$resource'],
 app.factory('SessionInjector', ['$injector',
     function ($injector) {
         return {
-            response: function (response) {
-                console.log('拦截请求！');
-                if (response.config.method === "POST") {
-                    console.log("response.config.method: " + response.config.method);
+            request : function (config) {
+                console.log('login.js拦截'+config.method+'请求！');
+                if (config.method === 'POST') {
+                    console.log("response.config.method: " + config.method);
                     var csrf = $injector.get('csrf');
                     csrf.load();
                 }
-                return response;
+                return config;
             }
         };
     }]);

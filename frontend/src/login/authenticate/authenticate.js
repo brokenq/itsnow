@@ -1,11 +1,12 @@
 /**
  * Created by kadvin on 14-7-9.
  */
-angular.module('ItsNow.Login.Authenticate', [
-    'ui.router',
-    'ui.bootstrap',
-    'SecurityService'
-])
+angular
+    .module('ItsNow.Login.Authenticate', [
+        'ui.router',
+        'ui.bootstrap',
+        'SecurityService'
+    ])
 
     .config(function ($stateProvider) {
         $stateProvider.state('authenticate', {
@@ -20,31 +21,14 @@ angular.module('ItsNow.Login.Authenticate', [
         });
     })
 
-//    .controller('AuthenticateCtrl', ['$scope', 'Session',
-//        function ($scope, Session) {
-//            $scope.credential = {username: 'admin', password: 'secret', remember: true};
-//            $scope.error = null;
-//
-//            $scope.challenge = function (input) {
-//                Session.create(input, function (value, header) {
-//                    window.location.href = '/index.html';
-//                }, function (response) {
-//                    $scope.error = response.data;//后端现在处理了异常，返回的是简要的错误信息
-//                });
-//            };
-//            //有了这个成员，模板中才能写成: authenticate.challenge(input)
-//            //this.challenge = $scope.challenge;
-//        }])
+    .controller('AuthenticateCtrl', ['$scope', '$rootScope', '$http',
+        function ($scope, $rootScope, $http) {
+            $scope.credential = {username: 'jacky.cao', password: 'secret', remember: true};
 
-    .controller('AuthenticateCtrl', ['$scope', '$http',
-        function ($scope, $http, $location) {
-            $scope.credential = {username: 'admin', password: 'secret', remember: true};
-
-            $scope.challenge = function (input) {
-                $http.post("/api/session?username=" + input.username + "&password=" + input.password, input)
+            $scope.challenge = function () {
+                $http.post("/api/session?username=" + $scope.credential.username + "&password=" + $scope.credential.password)
                     .success(function (data, status, headers, config) {
                         window.location.href = '/index.html';
-//                    console.log(headers());
                     })
                     .error(function (data, status, headers, config) {
                         $scope.error = data;

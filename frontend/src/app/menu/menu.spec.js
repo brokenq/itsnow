@@ -4,7 +4,7 @@
 describe('menu controllers', function () {
     var scope, ctrl, $httpBackend;
 
-    beforeEach(module('menuApp'));
+    beforeEach(module('ItsNow.Menu'));
 
     beforeEach(inject(function (_$httpBackend_, $rootScope, $controller) {
         $httpBackend = _$httpBackend_;
