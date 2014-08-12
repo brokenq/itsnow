@@ -348,14 +348,10 @@ angular.module('ItsNow.TroubleTicket', [])
         });
     }])
 
-//    .run(function ($rootScope, csrf) {
-//        $rootScope.data = csrf.load();
-//        $rootScope.value = 'testing';
-//    })
-
     // 故障单列表控制器
     .controller('ListTroubleTicketCtrl', ['$q','$rootScope', '$scope', 'ListTroubleTicketService', 'QueryTroubleTicketTaskService', 'SearchTroubleTicketService', '$location', 'CloseTroubleTicketService',
         function ($q, $rootScope, $scope, ListTroubleTicketService, QueryTroubleTicketTaskService, SearchTroubleTicketService, $location, CloseTroubleTicketService) {
+
         $scope.mySelections = [];
         $scope.filterOptions = {
             filterText: "",
@@ -368,11 +364,8 @@ angular.module('ItsNow.TroubleTicket', [])
             currentPage: 1
         };
 
-        // 编辑按钮
-        $scope.editableInPopup = '<button id="editBtn" type="button" ng-click="edit(row)" >Edit</button>';
-
-        $scope.edit = function edit(row) {
-            console.log("Here I need to know which button was selected " + row.entity.name)
+        $scope.searchFun = function (){
+            $scope.getPagedDataAsyncBySearch($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.searchKey);
         };
 
         $scope.acceptFun = function (){
@@ -383,7 +376,6 @@ angular.module('ItsNow.TroubleTicket', [])
 
             for(var ticket in $scope.mySelections){
                 instanceId = $scope.mySelections[ticket].instanceId;
-//                console.log('instanceId:'+instanceId);
                 promise = QueryTroubleTicketTaskService.query(instanceId);
             };
 
@@ -396,7 +388,7 @@ angular.module('ItsNow.TroubleTicket', [])
                 if(taskName==='firstline accept_incident'){
                     var deferred1 = $q.defer();
                     var promise1 = deferred1.promise;
-                    SearchTroubleTicketService.query({instanceId:instanceId},
+                    SearchTroubleTicketService.query({key:instanceId},
                         function(data){
                             for(var i in data){
                                 var troubleTicket = data[i];
@@ -428,7 +420,6 @@ angular.module('ItsNow.TroubleTicket', [])
 
             for(var ticket in $scope.mySelections){
                 instanceId = $scope.mySelections[ticket].instanceId;
-//                console.log('instanceId:'+instanceId);
                 promise = QueryTroubleTicketTaskService.query(instanceId);
             };
 
@@ -441,7 +432,7 @@ angular.module('ItsNow.TroubleTicket', [])
                 if(taskName==='firstline analysis_incident'){
                     var deferred1 = $q.defer();
                     var promise1 = deferred1.promise;
-                    SearchTroubleTicketService.query({instanceId:instanceId},
+                    SearchTroubleTicketService.query({key:instanceId},
                         function(data){
                             for(var i in data){
                                 var troubleTicket = data[i];
@@ -485,7 +476,7 @@ angular.module('ItsNow.TroubleTicket', [])
                     if(taskName==='firstline process_incident'){
                         var deferred1 = $q.defer();
                         var promise1 = deferred1.promise;
-                        SearchTroubleTicketService.query({instanceId:instanceId},
+                        SearchTroubleTicketService.query({key:instanceId},
                             function(data){
                                 for(var i in data){
                                     var troubleTicket = data[i];
@@ -531,7 +522,7 @@ angular.module('ItsNow.TroubleTicket', [])
                     if(taskName==='servicedesk close incident'){
                         var deferred1 = $q.defer();
                         var promise1 = deferred1.promise;
-                        SearchTroubleTicketService.query({instanceId:instanceId},
+                        SearchTroubleTicketService.query({key:instanceId},
                             function(data){
                                 for(var i in data){
                                     var troubleTicket = data[i];
@@ -546,7 +537,6 @@ angular.module('ItsNow.TroubleTicket', [])
                             CloseTroubleTicketService.complete({taskId:taskId}, $scope.processIncident,function (data) {
                                 if(data.result==='true'){
                                     alert('关闭成功');
-//                                    $location.path('/index/list-trouble-ticket');
                                     $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
                                 };
                             });
@@ -589,6 +579,14 @@ angular.module('ItsNow.TroubleTicket', [])
             }, 100);
         };
 
+        $scope.getPagedDataAsyncBySearch = function (pageSize, page, searchText) {
+            setTimeout(function () {
+                SearchTroubleTicketService.query({key:searchText}, function (largeLoad) {
+                    $scope.setPagingData(largeLoad, page, pageSize);
+                });
+            }, 100);
+        };
+
         $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
 
         $scope.$watch('pagingOptions', function (newVal, oldVal) {
@@ -622,8 +620,6 @@ angular.module('ItsNow.TroubleTicket', [])
                 {field: 'status', displayName: '状态'},
                 {field: 'assignedGroup', displayName: '分配组'},
                 {field: 'assignedUser', displayName: '分配用户'}
-//                ,
-//                {cellTemplate: $scope.editableInPopup, displayName: '操作'}
             ]
         };
     }])
