@@ -18,14 +18,14 @@ import java.util.*;
  * <h1>MSU Incident服务的控制器</h1>
  * <pre>
  * <b>HTTP     URI                                方法            含义  </b>
- * # GET      /api/mspIncidents/                      index           列出所有当前用户的故障单列表，支持过滤，分页，排序等
- * # POST     /api/mspIncidents/start                start           启动故障流程实例
- * # GET      /api/mspIncidents/{instanceId}         query           查询实例ID为{instanceId}的流程的状态，返回task信息
- * # PUT      /api/mspIncidents/{taskId}/complete    complete        完成流程task
+ * # GET      /api/msp-incidents/                      index           列出所有当前用户的故障单列表，支持过滤，分页，排序等
+ * # POST     /api/msp-incidents/start                start           启动故障流程实例
+ * # GET      /api/msp-incidents/{instanceId}         query           查询实例ID为{instanceId}的流程的状态，返回task信息
+ * # PUT      /api/msp-incidents/{taskId}/complete    complete        完成流程task
  * </pre>
  */
 @RestController
-@RequestMapping("/api/mspIncidents")
+@RequestMapping("/api/msp-incidents")
 public class MspIncidentController extends SessionSupportController<MspIncident> {
 
     @Autowired
@@ -39,7 +39,7 @@ public class MspIncidentController extends SessionSupportController<MspIncident>
     /**
      * <h2>查询所有当前用户的故障单列表</h2>
      * <p/>
-     * GET /api/mspIncidents
+     * GET /api/msp-incidents
      *
      * @return  Incident列表
      */
@@ -66,7 +66,7 @@ public class MspIncidentController extends SessionSupportController<MspIncident>
     /**
      * <h2>查询流程实例ID对应的故障单信息</h2>
      * <p/>
-     * GET /api/mspIncidents/{instanceId}
+     * GET /api/msp-incidents/{instanceId}
      * @param withHistory 是否返回历史信息
      * @param withIncident 是否返回故障单信息
      * @return 当前的task列表以及历史信息和故障单信息
@@ -107,7 +107,7 @@ public class MspIncidentController extends SessionSupportController<MspIncident>
     /**
      * <h2>启动MSP Incident流程实例</h2>
      * <p/>
-     * POST /api/mspIncidents/start
+     * POST /api/msp-incidents/start
      *
      * @return 创建之后的流程实例信息
      */
@@ -138,7 +138,7 @@ public class MspIncidentController extends SessionSupportController<MspIncident>
     /**
      * <h2>完成流程中的task，提交表单数据</h2>
      * <p/>
-     * PUT /api/mspIncidents/{taskId}/complete
+     * PUT /api/msp-incidents/{taskId}/complete
      * @param taskId    任务ID
      * @return result:true/false
      */

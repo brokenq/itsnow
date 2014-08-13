@@ -17,8 +17,6 @@ import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,8 +30,6 @@ import java.util.*;
  */
 @Service
 public class ActivitiEngineManager extends Bean implements ActivitiEngineService {
-
-    Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     ProcessEngine processEngine;
@@ -62,9 +58,9 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
                     .category(processCategory)
                     .deploy();
             is.close();
-            log.info("Deploy id:"+deployment.getId()+" deploy time:"+deployment.getDeploymentTime()+" deploy name:"+deployment.getName());
+            logger.info("Deploy id:"+deployment.getId()+" deploy time:"+deployment.getDeploymentTime()+" deploy name:"+deployment.getName());
         }catch(Exception e){
-            log.warn(e.getMessage());
+            logger.warn(e.getMessage());
             return false;
         }
         return true;
@@ -107,7 +103,7 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
         for(Deployment deployment:ls){
             processEngine.getRepositoryService().deleteDeployment(deployment.getId());
         }
-        log.info("delete all process deploys finish, delete size:"+ls.size());
+        logger.info("delete all process deploys finish, delete size:"+ls.size());
         return ls.size();
     }
 
@@ -153,7 +149,7 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
 
     public Task claimTask(String taskId,String userId){
         processEngine.getTaskService().claim(taskId,userId);
-        log.info("task:"+taskId+" has claimed by "+userId);
+        logger.debug("task:"+taskId+" has been claimed by "+userId);
         return processEngine.getTaskService().createTaskQuery().taskId(taskId).singleResult();
     }
 
