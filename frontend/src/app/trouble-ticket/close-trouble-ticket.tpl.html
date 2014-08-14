@@ -5,7 +5,8 @@
 <!-- PAGE CONTENT BEGINS -->
 
 <ng-form name="troubleTicketForm" class="form-horizontal" role="form"
-         ng-controller="ProcessTroubleTicketCtrl">
+         ng-controller="CloseTroubleTicketCtrl">
+
 <div class="form-group">
     <div class="col-xs-12 col-sm-4">
         <label class="col-sm-3 control-label no-padding-right" for="ticketId"> 故障单号 </label>
@@ -158,6 +159,33 @@
     </div>
 </div>
 
+<div class="space-4"></div>
+
+<div class="form-group">
+
+    <div class="col-xs-12 col-sm-4">
+        <label class="col-sm-3 control-label no-padding-right" for="closeCode"> 关闭代码 </label>
+
+        <div class="col-sm-9">
+            <select id="closeCode" ng-model="incident.closeCode"
+                    ng-options="m.name as m.name for m in selectedModel.closeCodeModule">
+                <option value=""> 请选择</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-4">
+        <label class="col-sm-3 control-label no-padding-right" for="status"> 当前状态 </label>
+
+        <div class="col-sm-9">
+            <select id="status" ng-model="incident.status"
+                    ng-options="m.name as m.name for m in selectedModel.statusModule">
+                <option value=""> 请选择</option>
+            </select>
+        </div>
+    </div>
+</div>
+
 <div class="hr hr-24"></div>
 
 <div class="form-group">
@@ -172,13 +200,11 @@
     </div>
 
     <div class="col-xs-12 col-sm-4">
-        <label class="col-sm-3 control-label no-padding-right" for="status"> 当前状态 </label>
+        <label class="col-sm-3 control-label no-padding-right" for="responseTime"> 响应时间 </label>
 
         <div class="col-sm-9">
-            <select id="status" ng-model="incident.status"
-                    ng-options="m.name as m.name for m in selectedModel.statusModule">
-                <option value=""> 请选择</option>
-            </select>
+            <input type="text" id="responseTime" name="createdAt" ng-model="incident.responseTime"
+                   class="input-sm"/>
         </div>
     </div>
 </div>
@@ -196,7 +222,14 @@
         </div>
     </div>
 
-    <div class="col-xs-12 col-sm-4"></div>
+    <div class="col-xs-12 col-sm-4">
+        <label class="col-sm-3 control-label no-padding-right" for="closeTime"> 关闭时间 </label>
+
+        <div class="col-sm-9">
+            <input type="text" id="closeTime" name="closeTime" ng-model="incident.closeTime"
+                   class="input-sm"/>
+        </div>
+    </div>
 </div>
 
 <div class="hr hr-24"></div>
@@ -213,24 +246,12 @@
 
 <div class="hr hr-24"></div>
 
-<div class="form-group">
-    <div style="margin-left: 15%;">
-        <label for="solution"> 解决方案 </label>
-
-        <textarea class="form-control" id="solution" name="solution"
-                  ng-model="incident.solution" placeholder="解决方案"
-                  style="margin: 0px -0.015625px 0px 0px; height: 64px; width: 331px;"></textarea>
-    </div>
-</div>
-
-<div class="hr hr-24"></div>
-
 <div class="clearfix form-actions">
     <div class="col-md-offset-3 col-md-9">
-        <button class="btn btn-info" type="submit" ng-click="process(incident)"
+        <button class="btn btn-info" type="submit" ng-click="close(incident)"
                 ng-disabled="troubleTicketForm.$invalid">
             <i class="icon-ok bigger-110"></i>
-            处理完毕
+            关闭
         </button>
     </div>
 </div>
