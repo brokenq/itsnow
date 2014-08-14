@@ -68,11 +68,16 @@ indexApp.config(function ($stateProvider, $urlRouterProvider) {
         .state('index.process-trouble-ticket', {
             url: '/process-trouble-ticket',
             templateUrl: 'trouble-ticket/process-trouble-ticket.tpl.html'
+        })
+        // 关闭故障单
+        .state('index.close-trouble-ticket', {
+            url: '/close-trouble-ticket',
+            templateUrl: 'trouble-ticket/close-trouble-ticket.tpl.html'
         });
 });
 
 // 获取用户信息工厂
-indexApp.factory('LoginOutService', ['$resource', function ($resource) {
+indexApp.factory('LogoutService', ['$resource', function ($resource) {
     return $resource('/api/session', null, {
         delete: {method: 'DELETE'}
     });
@@ -85,7 +90,7 @@ indexApp.factory('ProfileService', ['$resource', function ($resource) {
     });
 }])
 
-indexApp.controller('indexCtrl', ['$scope', '$location',  'LoginOutService', function ($scope, $location, LoginOutService) {
+indexApp.controller('indexCtrl', ['$scope', '$location',  'LogoutService', function ($scope, $location, LogoutService) {
 
 //    $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
 //        if (angular.isDefined(toState.data.pageTitle)) {
@@ -93,8 +98,8 @@ indexApp.controller('indexCtrl', ['$scope', '$location',  'LoginOutService', fun
 //        }
 //    });
 
-    $scope.loginOut = function(){
-        LoginOutService.delete(function(){
+    $scope.logout = function(){
+        LogoutService.delete(function(){
             $location.path('/login.html');
         });
     };
