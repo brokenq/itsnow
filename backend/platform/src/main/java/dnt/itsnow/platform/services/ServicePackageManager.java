@@ -30,10 +30,7 @@ import org.springframework.context.event.ApplicationEventMulticaster;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * The service package manager
@@ -82,13 +79,22 @@ public class ServicePackageManager extends ApplicationSupportBean
         if (packageJars == null)
             packageJars = new File[0]; /*也可能在目录下没有jar*/
         logger.debug("Loading {} service packages from: {}", packageJars.length, repository.getAbsolutePath());
-        List<Component> components = new ArrayList<Component>();
-        for (File packageJar : packageJars) {
-            components.add(componentRepository.resolveComponent(packageJar.getName()));
-        }
-        componentRepository.sortComponents(components);
         // sort the model packages by them inner dependency
         componentRepository.sortCandidates(packageJars);
+        // TODO  不知道为什么，排序结果中会出错
+        // 现在手工加上把 common-account-service放在第一个， common-user-service 第二个
+        Arrays.sort(packageJars, new Comparator<File>() {
+            @Override
+            public int compare(File jar1, File jar2) {
+                return order(jar1.getName()) - order(jar2.getName());
+            }
+
+            private int order(String name){
+                if( name.contains("common-account-service")) return 10;
+                if( name.contains("common-user-service")) return 20;
+                return 100;
+            }
+        });
         StringBuilder sb = new StringBuilder();
         for (File packageJar : packageJars) {
             Component pkg = componentRepository.resolveComponent(packageJar.getName());
