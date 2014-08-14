@@ -80,9 +80,9 @@ public class ServicePackageManager extends ApplicationSupportBean
             packageJars = new File[0]; /*也可能在目录下没有jar*/
         logger.debug("Loading {} service packages from: {}", packageJars.length, repository.getAbsolutePath());
         // sort the model packages by them inner dependency
-        componentRepository.sortCandidates(packageJars);
+        // componentRepository.sortCandidates(packageJars);
         // TODO  不知道为什么，排序结果中会出错
-        // 现在手工加上把 common-account-service放在第一个， common-user-service 第二个
+        // 临时规则，让系统能先正常的跑起来，以后再来解决
         Arrays.sort(packageJars, new Comparator<File>() {
             @Override
             public int compare(File jar1, File jar2) {
@@ -90,10 +90,36 @@ public class ServicePackageManager extends ApplicationSupportBean
             }
 
             private int order(String name){
-                if( name.contains("common-account-service")) return 10;
-                if( name.contains("common-user-service")) return 20;
-                return 100;
+                int base = baseOrder(name);
+                int sub = subOrder(name);
+                return base + sub;
             }
+
+            private int baseOrder(String name){
+                if( name.contains("common-") ){
+                    return 10;
+                } else if( name.contains("general-")) {
+                    return 30;
+                }else if (name.contains("mutable-")){
+                    return 50;
+                }else if( name.contains("demo-")) {
+                    return 70;
+                }else {
+                    return 90;
+                }
+            }
+
+            private int subOrder(String name){
+                if( name.contains("account-service")) return 1;
+                if( name.contains("user-service")) return 2;
+                if( name.contains("acl-service")) return 3;
+                if( name.contains("service_catalog")) return 4;
+                if( name.contains("sla-service")) return 5;
+                if( name.contains("contract-service")) return 6;
+                if( name.contains("staff-service")) return 7;
+                return 10;
+            }
+
         });
         StringBuilder sb = new StringBuilder();
         for (File packageJar : packageJars) {

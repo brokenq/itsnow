@@ -22,6 +22,6 @@ public interface TokenRepository {
     @Select("SELECT username,series,token as tokenValue,last_used FROM persistent_logins WHERE series = #{series}")
     PersistentRememberMeToken findBySeries(@Param("series") String series);
 
-    @Delete("delete from persistent_logins where username = #{username}")
+    @Delete("DELETE FROM persistent_logins WHERE username = #{username}")
     void delete(@Param("username") String username);
 }
