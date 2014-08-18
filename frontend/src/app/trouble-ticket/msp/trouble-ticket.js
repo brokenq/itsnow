@@ -4,35 +4,35 @@
 // incident实体类
 // 故障单Module
 
-angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.TroubleTicket.Service'])
+angular.module('ItsNow.MSP.TroubleTicket', ['ItsNow.MSP.TroubleTicket.Model','ItsNow.MSP.TroubleTicket.Service'])
 
     // 新建故障单
-    .controller('NewTroubleTicketCtrl', ['$scope', 'NewTroubleTicketService', '$location', 'TroubleTicketModelSerivce',
-        function ($scope, NewTroubleTicketService, $location, TroubleTicketModelSerivce) {
+    .controller('MSPNewTroubleTicketCtrl', ['$scope', 'MSPNewTroubleTicketService', '$location', 'MSPTroubleTicketModelSerivce',
+        function ($scope, MSPNewTroubleTicketService, $location, MSPTroubleTicketModelSerivce) {
 
-            $scope.selectedModel = TroubleTicketModelSerivce.selectedModel;
+            $scope.selectedModel = MSPTroubleTicketModelSerivce.selectedModel;
 
             $scope.save = function () {
-                NewTroubleTicketService.start($scope.incident, function () {
-                    $location.path('/index/list-trouble-ticket');
+                MSPNewTroubleTicketService.start($scope.incident, function () {
+                    $location.path('/index/msp-list-trouble-ticket');
                 });
             };
 
         }])
 
     // 签收故障单
-    .controller('AcceptTroubleTicketCtrl', ['$q', '$rootScope', '$scope', '$location', 'QueryTroubleTicketTaskService', 'AcceptTroubleTicketService', 'TroubleTicketModelSerivce',
-        function ($q, $rootScope, $scope, $location, QueryTroubleTicketTaskService, AcceptTroubleTicketService, TroubleTicketModelSerivce) {
+    .controller('MSPAcceptTroubleTicketCtrl', ['$q', '$rootScope', '$scope', '$location', 'MSPQueryTroubleTicketTaskService', 'MSPAcceptTroubleTicketService', 'MSPTroubleTicketModelSerivce',
+        function ($q, $rootScope, $scope, $location, MSPQueryTroubleTicketTaskService, MSPAcceptTroubleTicketService, MSPTroubleTicketModelSerivce) {
 
             $scope.incident = $rootScope.incident;
 
-            $scope.selectedModel = TroubleTicketModelSerivce.selectedModel;
+            $scope.selectedModel = MSPTroubleTicketModelSerivce.selectedModel;
 
             $scope.accept = function () {
 
                 var taskId = '';
 
-                var promise = QueryTroubleTicketTaskService.query($scope.incident.instanceId);
+                var promise = MSPQueryTroubleTicketTaskService.query($scope.incident.instanceId);
 
                 promise
                     .then(function (data) {
@@ -45,10 +45,10 @@ angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.Tro
                     return anotherDeferred.promise;
                 })
                     .then(function(){
-                        AcceptTroubleTicketService.complete({taskId:taskId}, $scope.incident,function (data) {
+                        MSPAcceptTroubleTicketService.complete({taskId:taskId}, $scope.incident,function (data) {
                             if(data.result==='true'){
                                 alert("签收成功");
-                                $location.path('/index/list-trouble-ticket');
+                                $location.path('/index/msp-list-trouble-ticket');
                             };
                         });
                     }
@@ -57,18 +57,18 @@ angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.Tro
         }])
 
     // 分析故障单
-    .controller('AnalysisTroubleTicketCtrl', ['$q', '$rootScope', '$scope', '$location', 'QueryTroubleTicketTaskService', 'AnalysisTroubleTicketService', 'TroubleTicketModelSerivce',
-        function ($q, $rootScope, $scope, $location, QueryTroubleTicketTaskService, AnalysisTroubleTicketService, TroubleTicketModelSerivce) {
+    .controller('MSPAnalysisTroubleTicketCtrl', ['$q', '$rootScope', '$scope', '$location', 'MSPQueryTroubleTicketTaskService', 'MSPAnalysisTroubleTicketService', 'MSPTroubleTicketModelSerivce',
+        function ($q, $rootScope, $scope, $location, MSPQueryTroubleTicketTaskService, MSPAnalysisTroubleTicketService, MSPTroubleTicketModelSerivce) {
 
             $scope.incident = $rootScope.incident;
 
-            $scope.selectedModel = TroubleTicketModelSerivce.selectedModel;
+            $scope.selectedModel = MSPTroubleTicketModelSerivce.selectedModel;
 
             $scope.analysis = function () {
 
                 var taskId = '';
 
-                var promise = QueryTroubleTicketTaskService.query($scope.incident.instanceId);
+                var promise = MSPQueryTroubleTicketTaskService.query($scope.incident.instanceId);
 
                 promise
                     .then(function (data) {
@@ -81,10 +81,10 @@ angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.Tro
                     return anotherDeferred.promise;
                 })
                     .then(function(){
-                        AnalysisTroubleTicketService.complete({taskId:taskId,flag:true}, $scope.incident,function (data) {
+                        MSPAnalysisTroubleTicketService.complete({taskId:taskId,flag:true}, $scope.incident,function (data) {
                             if(data.result==='true'){
                                 alert("分析完毕");
-                                $location.path('/index/list-trouble-ticket');
+                                $location.path('/index/msp-list-trouble-ticket');
                             };
                         });
                     }
@@ -93,18 +93,18 @@ angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.Tro
         }])
 
     // 处理故障单
-    .controller('ProcessTroubleTicketCtrl', ['$q', '$rootScope', '$scope', '$location', 'QueryTroubleTicketTaskService', 'ProcessTroubleTicketService', 'TroubleTicketModelSerivce',
-        function ($q, $rootScope, $scope, $location, QueryTroubleTicketTaskService, ProcessTroubleTicketService, TroubleTicketModelSerivce) {
+    .controller('MSPProcessTroubleTicketCtrl', ['$q', '$rootScope', '$scope', '$location', 'MSPQueryTroubleTicketTaskService', 'MSPProcessTroubleTicketService', 'MSPTroubleTicketModelSerivce',
+        function ($q, $rootScope, $scope, $location, MSPQueryTroubleTicketTaskService, MSPProcessTroubleTicketService, MSPTroubleTicketModelSerivce) {
 
             $scope.incident = $rootScope.incident;
 
-            $scope.selectedModel = TroubleTicketModelSerivce.selectedModel;
+            $scope.selectedModel = MSPTroubleTicketModelSerivce.selectedModel;
 
             $scope.process = function () {
 
                 var taskId = '';
 
-                var promise = QueryTroubleTicketTaskService.query($scope.incident.instanceId);
+                var promise = MSPQueryTroubleTicketTaskService.query($scope.incident.instanceId);
 
                 promise
                     .then(function (data) {
@@ -117,10 +117,10 @@ angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.Tro
                     return anotherDeferred.promise;
                 })
                     .then(function(){
-                        ProcessTroubleTicketService.complete({taskId:taskId,resolved:true}, $scope.incident,function (data) {
+                        MSPProcessTroubleTicketService.complete({taskId:taskId,resolved:true}, $scope.incident,function (data) {
                             if(data.result==='true'){
                                 alert("处理完毕");
-                                $location.path('/index/list-trouble-ticket');
+                                $location.path('/index/msp-list-trouble-ticket');
                             };
                         });
                     }
@@ -129,18 +129,18 @@ angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.Tro
         }])
 
     // 关闭故障单
-    .controller('CloseTroubleTicketCtrl', ['$q', '$rootScope', '$scope', '$location', 'QueryTroubleTicketTaskService', 'CloseTroubleTicketService', 'TroubleTicketModelSerivce',
-        function ($q, $rootScope, $scope, $location, QueryTroubleTicketTaskService, CloseTroubleTicketService, TroubleTicketModelSerivce) {
+    .controller('MSPCloseTroubleTicketCtrl', ['$q', '$rootScope', '$scope', '$location', 'MSPQueryTroubleTicketTaskService', 'MSPCloseTroubleTicketService', 'MSPTroubleTicketModelSerivce',
+        function ($q, $rootScope, $scope, $location, MSPQueryTroubleTicketTaskService, MSPCloseTroubleTicketService, MSPTroubleTicketModelSerivce) {
 
             $scope.incident = $rootScope.incident;
 
-            $scope.selectedModel = TroubleTicketModelSerivce.selectedModel;
+            $scope.selectedModel = MSPTroubleTicketModelSerivce.selectedModel;
 
             $scope.close = function () {
 
                 var taskId = '';
 
-                var promise = QueryTroubleTicketTaskService.query($scope.incident.instanceId);
+                var promise = MSPQueryTroubleTicketTaskService.query($scope.incident.instanceId);
 
                 promise
                     .then(function (data) {
@@ -153,10 +153,10 @@ angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.Tro
                     return anotherDeferred.promise;
                 })
                     .then(function(){
-                        CloseTroubleTicketService.complete({taskId:taskId}, $scope.incident,function (data) {
+                        MSPCloseTroubleTicketService.complete({taskId:taskId}, $scope.incident,function (data) {
                             if(data.result==='true'){
                                 alert("关闭成功");
-                                $location.path('/index/list-trouble-ticket');
+                                $location.path('/index/msp-list-trouble-ticket');
                             };
                         });
                     }
@@ -165,8 +165,8 @@ angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.Tro
         }])
 
     // 故障单列表控制器
-    .controller('ListTroubleTicketCtrl', ['$q','$rootScope', '$scope', 'ListTroubleTicketService', 'QueryTroubleTicketTaskService', 'SearchTroubleTicketService', '$location',
-        function ($q, $rootScope, $scope, ListTroubleTicketService, QueryTroubleTicketTaskService, SearchTroubleTicketService, $location) {
+    .controller('MSPListTroubleTicketCtrl', ['$q','$rootScope', '$scope', 'MSPListTroubleTicketService', 'MSPQueryTroubleTicketTaskService', 'MSPSearchTroubleTicketService', '$location',
+        function ($q, $rootScope, $scope, MSPListTroubleTicketService, MSPQueryTroubleTicketTaskService, MSPSearchTroubleTicketService, $location) {
 
         $scope.mySelections = [];
         $scope.filterOptions = {
@@ -194,14 +194,14 @@ angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.Tro
                 var data;
                 if (searchText) {
                     var ft = searchText.toLowerCase();
-                    ListTroubleTicketService.list(function (largeLoad) {
+                    MSPListTroubleTicketService.list(function (largeLoad) {
                         data = largeLoad.filter(function (item) {
                             return JSON.stringify(item).toLowerCase().indexOf(ft) != -1;
                         });
                         $scope.setPagingData(data, page, pageSize);
                     });
                 } else {
-                    ListTroubleTicketService.list(function (largeLoad) {
+                    MSPListTroubleTicketService.list(function (largeLoad) {
                         $scope.setPagingData(largeLoad, page, pageSize);
                     });
                 }
@@ -210,7 +210,7 @@ angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.Tro
 
         $scope.getPagedDataAsyncBySearch = function (pageSize, page, searchText) {
             setTimeout(function () {
-                SearchTroubleTicketService.query({key:searchText}, function (largeLoad) {
+                MSPSearchTroubleTicketService.query({key:searchText}, function (largeLoad) {
                     $scope.setPagingData(largeLoad, page, pageSize);
                 });
             }, 100);
@@ -258,7 +258,7 @@ angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.Tro
             };
 
             $scope.newFun = function (){
-                $location.path('/index/new-trouble-ticket');
+                 $location.path('/index/msp-new-trouble-ticket');
             };
 
             $scope.acceptFun = function (){
@@ -268,15 +268,15 @@ angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.Tro
 
                 for(var ticket in $scope.mySelections){
                     $rootScope.incident = $scope.mySelections[ticket];
-                    promise = QueryTroubleTicketTaskService.query($rootScope.incident.instanceId);
+                    promise = MSPQueryTroubleTicketTaskService.query($rootScope.incident.instanceId);
                 };
 
                 promise.then(function success(data) {
                     for (var i in data.tasks) {
                         taskName = data.tasks[i].taskName;
                     }
-                    if(taskName==='firstline accept_incident'){
-                        $location.path('/index/accept-trouble-ticket');
+                    if(taskName.indexOf('accept')>-1){
+                        $location.path('/index/msp-accept-trouble-ticket');
                     }else{
                         alert("流程错误！下一步处理应为："+taskName);
                     };
@@ -292,7 +292,7 @@ angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.Tro
 
                 for(var ticket in $scope.mySelections){
                     $rootScope.incident = $scope.mySelections[ticket];
-                    promise = QueryTroubleTicketTaskService.query($rootScope.incident.instanceId);
+                    promise = MSPQueryTroubleTicketTaskService.query($rootScope.incident.instanceId);
                 };
 
                 promise.then(function success(data) {
@@ -300,9 +300,9 @@ angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.Tro
                         var task = data.tasks[i];
                         taskName = task.taskName;
                     }
-
-                    if(taskName==='firstline analysis_incident'){
-                        $location.path('/index/analysis-trouble-ticket');
+                    if(taskName.indexOf('analysis')>-1){
+//                    if(taskName==='firstline analysis_incident'){
+                        $location.path('/index/msp-analysis-trouble-ticket');
                     }else{
                         alert("流程错误！下一步处理应为："+taskName);
                     };
@@ -319,7 +319,7 @@ angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.Tro
 
                 for(var ticket in $scope.mySelections){
                     $rootScope.incident = $scope.mySelections[ticket];
-                    promise = QueryTroubleTicketTaskService.query($rootScope.incident.instanceId);
+                    promise = MSPQueryTroubleTicketTaskService.query($rootScope.incident.instanceId);
                 };
 
                 promise.then(function success(data) {
@@ -327,9 +327,9 @@ angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.Tro
                         var task = data.tasks[i];
                         taskName = task.taskName;
                     }
-
-                    if(taskName==='firstline process_incident'){
-                        $location.path('/index/process-trouble-ticket');
+                    if(taskName.indexOf('process')>-1){
+//                    if(taskName==='firstline process_incident'){
+                        $location.path('/index/msp-process-trouble-ticket');
                     }else{
                         alert("流程错误！下一步处理应为："+taskName);
                     };
@@ -346,7 +346,7 @@ angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.Tro
 
                 for(var ticket in $scope.mySelections){
                     $rootScope.incident = $scope.mySelections[ticket];
-                    promise = QueryTroubleTicketTaskService.query($rootScope.incident.instanceId);
+                    promise = MSPQueryTroubleTicketTaskService.query($rootScope.incident.instanceId);
                 };
 
                 promise.then(function success(data) {
@@ -354,9 +354,9 @@ angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.Tro
                         var task = data.tasks[i];
                         taskName = task.taskName;
                     }
-
-                    if(taskName.indexOf('close incident')>-1){
-                        $location.path('/index/close-trouble-ticket');
+                    if(taskName.indexOf('close')>-1){
+//                    if(taskName.indexOf('close incident')>-1){
+                        $location.path('/index/msp-close-trouble-ticket');
                     }else{
                         alert("流程错误！下一步处理应为："+taskName);
                     };
