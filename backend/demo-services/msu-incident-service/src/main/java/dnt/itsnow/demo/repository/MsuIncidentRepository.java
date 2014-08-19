@@ -1,6 +1,6 @@
 package dnt.itsnow.demo.repository;
 
-import dnt.itsnow.demo.model.Incident;
+import dnt.itsnow.demo.model.MsuIncident;
 import dnt.itsnow.platform.service.Pageable;
 import org.apache.ibatis.annotations.*;
 
@@ -9,33 +9,33 @@ import java.util.List;
 /**
  * Created by jacky on 2014/7/28.
  */
-public interface IncidentRepository {
+public interface MsuIncidentRepository {
 
 
     @Select("select * from demo_incidents " +
             " order by #{orderBy} limit #{offset}, #{size}")
-    List<Incident> findIncidents(@Param("orderBy") String orderBy,
+    List<MsuIncident> findIncidents(@Param("orderBy") String orderBy,
                          @Param("offset") int offset,
                          @Param("size") int size);
 
     @Select("select * from demo_incidents where request_description like '%#{keyword}%'" +
             " order by #{orderBy} limit #{offset}, #{size}")
-    List<Incident> findIncidentsByKeyword(@Param("keyword") String keyword,
+    List<MsuIncident> findIncidentsByKeyword(@Param("keyword") String keyword,
                                                       @Param("orderBy") String orderBy,
                                                       @Param("offset") int offset,
                                                       @Param("size") int size);
 
     @Select("select * from demo_incidents where created_by like '#{orderBy}' " )
     //        " order by #{orderBy} limit #{offset}, #{size}")
-    List<Incident> findIncidentsByUsername(@Param("username") String username,
+    List<MsuIncident> findIncidentsByUsername(@Param("username") String username,
                                           @Param("orderBy") String orderBy,
                                           @Param("offset") int offset,
                                           @Param("size") int size);
 
     @Select("select * from demo_incidents where instance_id = #{id}")
-    Incident findByInstanceId(@Param("id") String id);
+    MsuIncident findByInstanceId(@Param("id") String id);
 
-    List<Incident> findAllByInstanceIds(@Param("ids")List<String> ids,@Param("keyword")String keyword,@Param("pageable")Pageable pageable);
+    List<MsuIncident> findAllByInstanceIds(@Param("ids")List<String> ids,@Param("keyword")String keyword,@Param("pageable")Pageable pageable);
 
     @Select("select count(0) from demo_incidents")
     int count();//如果是count，mybatis会说已经这么映射了，但我貌似又没法用到
@@ -45,7 +45,6 @@ public interface IncidentRepository {
 
     @Select("select count(0) from demo_incidents")
     long countByUsername(@Param("username") String username);//如果是count，mybatis会说已经这么映射了，但我貌似又没法用到
-
 
     @Options(useGeneratedKeys = true,keyColumn = "id")
     @Insert("INSERT INTO `demo_incidents` (`number`,`instance_id`,`requester_name`,`requester_location`,`requester_email`,`requester_phone`," +
@@ -58,7 +57,7 @@ public interface IncidentRepository {
             "#{ciType},#{ci},#{requestDescription},CURRENT_TIMESTAMP,CURRENT_TIMESTAMP," +
             "#{createdBy},#{assignedUser},#{assignedGroup},#{responseTime},#{resolveTime}," +
             "#{closeTime},#{solution},#{closeCode});")
-    void save(Incident incident);
+    void save(MsuIncident incident);
 
     @Update("UPDATE demo_incidents SET " +
             "`requester_location` = #{requesterLocation},`requester_name` = #{requesterName},"+
@@ -81,14 +80,18 @@ public interface IncidentRepository {
             "`status` = #{status},"+
             "`close_code` = #{closeCode} "+
             " WHERE `id` = #{id};")
-    void update(Incident incident);
+    void update(MsuIncident incident);
 
+    @Update("UPDATE `demo_incidents` SET "+
+            "status = #{status} "+
+            "WHERE instance_id = #{instanceId};")
+    void updateStatus(@Param("instanceId") String instanceId,@Param("status") String status);
 
     @Update("UPDATE 'demo_incidents' SET " +
             "close_time = CURRENT_TIMESTAMP," +
             "close_code = #{closeCode} " +
             "WHERE id = #{id}")
-    void close(Incident incident);
+    void close(MsuIncident incident);
 
 
 

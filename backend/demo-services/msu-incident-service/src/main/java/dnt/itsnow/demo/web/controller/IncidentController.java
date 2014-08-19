@@ -2,7 +2,8 @@ package dnt.itsnow.demo.web.controller;
 
 import dnt.itsnow.api.ActivitiEngineService;
 import dnt.itsnow.demo.model.Incident;
-import dnt.itsnow.demo.support.IncidentManager;
+import dnt.itsnow.demo.model.MsuIncident;
+import dnt.itsnow.demo.support.MsuIncidentManager;
 import dnt.itsnow.web.controller.SessionSupportController;
 import dnt.util.StringUtils;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -29,13 +30,13 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/api/incidents")
-public class IncidentController extends SessionSupportController<Incident> {
+public class IncidentController extends SessionSupportController<MsuIncident> {
 
     @Autowired
     ActivitiEngineService activitiEngineService;
 
     @Autowired
-    IncidentManager incidentManager;
+    MsuIncidentManager msuIncidentManager;
 
     private static final String PROCESS_KEY = "msu_incident";
 
@@ -48,7 +49,7 @@ public class IncidentController extends SessionSupportController<Incident> {
      */
     @RequestMapping(value = "/")
     @ResponseBody
-    public List<Incident> index(@RequestParam(value = "key", required = false) String key) {
+    public List<MsuIncident> index(@RequestParam(value = "key", required = false) String key) {
 
         Set<Task> tasks = new HashSet<Task>();
         //查询分配给当前用户的任务列表
@@ -62,7 +63,7 @@ public class IncidentController extends SessionSupportController<Incident> {
         }
         logger.debug("instance ids:"+ids.toString());
         //根据实例查询对应表单数据
-        indexPage = incidentManager.findByInstanceIds(ids,key,pageRequest);
+        indexPage = msuIncidentManager.findByInstanceIds(ids,key,pageRequest);
         return indexPage.getContent();
     }
 
@@ -75,8 +76,7 @@ public class IncidentController extends SessionSupportController<Incident> {
      */
     @RequestMapping(value = "/assignee")
     @ResponseBody
-    public List<Incident> indexAssignee(@RequestParam(value = "key", required = false) String key) {
-
+    public List<MsuIncident> indexAssignee(@RequestParam(value = "key", required = false) String key) {
         Set<Task> tasks = new HashSet<Task>();
         //查询分配给当前用户的任务列表
         tasks.addAll(activitiEngineService.queryTasksAssignee(currentUser.getUsername(), PROCESS_KEY));
@@ -87,7 +87,7 @@ public class IncidentController extends SessionSupportController<Incident> {
         }
         logger.debug("instance ids:"+ids.toString());
         //根据实例查询对应表单数据
-        indexPage = incidentManager.findByInstanceIds(ids,key,pageRequest);
+        indexPage = msuIncidentManager.findByInstanceIds(ids,key,pageRequest);
         return indexPage.getContent();
     }
 
@@ -100,7 +100,7 @@ public class IncidentController extends SessionSupportController<Incident> {
      */
     @RequestMapping(value = "/candidate")
     @ResponseBody
-    public List<Incident> indexCandidate(@RequestParam(value = "key", required = false) String key) {
+    public List<MsuIncident> indexCandidate(@RequestParam(value = "key", required = false) String key) {
         Set<Task> tasks = new HashSet<Task>();
         //查询当前用户参与的任务列表
         tasks.addAll(activitiEngineService.queryTasksCandidateUser(currentUser.getUsername(),PROCESS_KEY));
@@ -111,7 +111,7 @@ public class IncidentController extends SessionSupportController<Incident> {
         }
         logger.debug("instance ids:"+ids.toString());
         //根据实例查询对应表单数据
-        indexPage = incidentManager.findByInstanceIds(ids,key,pageRequest);
+        indexPage = msuIncidentManager.findByInstanceIds(ids,key,pageRequest);
         return indexPage.getContent();
     }
 
@@ -131,7 +131,7 @@ public class IncidentController extends SessionSupportController<Incident> {
 
         if(withIncident) {
             //获取故障单信息
-            Incident incident = incidentManager.findByInstanceId(instanceId);
+            Incident incident = msuIncidentManager.findByInstanceId(instanceId);
             map.put("incident", incident);
         }
         //获取当前task列表信息
@@ -164,17 +164,17 @@ public class IncidentController extends SessionSupportController<Incident> {
      */
     @RequestMapping(value = "/start",method = RequestMethod.POST)
     @ResponseBody
-    public Map<String,Object> start(HttpServletRequest request,@RequestBody @Valid Incident incident){
+    public Map<String,Object> start(HttpServletRequest request,@RequestBody @Valid MsuIncident incident){
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.putAll(request.getParameterMap());
         variables.put("description",incident.getRequestDescription());
         //start incident process
         ProcessInstance processInstance = activitiEngineService.startProcessInstanceByKey(PROCESS_KEY,variables,currentUser.getUsername());
-
+        //activitiEngineService.addEventListener( msuEventListener);
         //save incident object and persist it
         incident.setCreatedBy(currentUser.getUsername());
         incident.setInstanceId(processInstance.getProcessInstanceId());
-        incidentManager.newIncident(incident);
+        msuIncidentManager.newIncident(incident);
 
         //return map
         Map<String,Object> result = new HashMap<String, Object>();
@@ -195,7 +195,7 @@ public class IncidentController extends SessionSupportController<Incident> {
      */
     @RequestMapping(value = "/{taskId}/complete",method = RequestMethod.PUT)
     @ResponseBody
-    public Map<String,Object> complete(@PathVariable("taskId") String taskId,HttpServletRequest request,@RequestBody @Valid Incident incident){
+    public Map<String,Object> complete(@PathVariable("taskId") String taskId,HttpServletRequest request,@RequestBody @Valid MsuIncident incident){
         Map<String,Object> result = new HashMap<String, Object>();
         if(StringUtils.isNotEmpty(currentUser.getUsername())){
             Map<String, String> taskVariables = new HashMap<String, String>();
@@ -208,9 +208,9 @@ public class IncidentController extends SessionSupportController<Incident> {
 
             //todo add transaction process
             // update incident object status and persist it
-            incidentManager.updateIncident(incident);
+            msuIncidentManager.updateIncident(incident);
             //claim task if not claim
-            activitiEngineService.claimTask(taskId,currentUser.getUsername());
+            //activitiEngineService.claimTask(taskId,currentUser.getUsername());
             //complete task
             activitiEngineService.completeTask(taskId,taskVariables,currentUser.getUsername());
 

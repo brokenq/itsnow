@@ -3,17 +3,22 @@
  */
 package dnt.itsnow.demo.support;
 
+import dnt.itsnow.api.ActivitiEngineService;
 import dnt.itsnow.demo.model.MspIncident;
 import dnt.itsnow.demo.repository.MspIncidentRepository;
 import dnt.itsnow.demo.service.MspIncidentService;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.platform.util.DefaultPage;
+import dnt.messaging.MessageBus;
 import dnt.spring.Bean;
 import dnt.util.StringUtils;
+import org.activiti.engine.delegate.event.ActivitiEventType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,7 +31,48 @@ public class MspIncidentManager extends Bean implements MspIncidentService {
     @Autowired
     MspIncidentRepository mspIncidentRepository;
 
+    @Autowired
+    MessageBus messageBus;
+
+    @Autowired
+    ActivitiEngineService activitiEngineService;
+
+    @Autowired
+    MspEventListener mspEventListener;
+
     SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+
+    private static final String LISTENER = "listener";
+
+    private static final String LISTEN_CHANNEL = "MSU-001-TO-MSP-001";
+
+    private static final String PROCESS_KEY = "msp_incident";
+
+    @Override
+    protected void performStart() {
+        this.autoDeployment();
+        activitiEngineService.addEventListener(mspEventListener, ActivitiEventType.ACTIVITY_COMPLETED);
+        //add message-bus listener
+        messageBus.subscribe(LISTENER,LISTEN_CHANNEL,mspEventListener);
+    }
+
+    @Override
+    protected void performStop() {
+        messageBus.unsubscribe(LISTENER);
+    }
+
+    private void autoDeployment() {
+        String path = "bpmn/"+PROCESS_KEY+".bpmn20.xml";
+        try {
+            URL url = this.getClass().getClassLoader().getResource(path);
+            assert url != null;
+            InputStream is = url.openStream();
+            activitiEngineService.deploySingleProcess(is,PROCESS_KEY,PROCESS_KEY);
+            is.close();
+        }catch(Exception e){
+            logger.warn("error:{}",e);
+        }
+    }
 
     public void newIncident(MspIncident incident){
         incident.setNumber("INC"+df.format(new Date()));

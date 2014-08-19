@@ -25,6 +25,23 @@
             <groupId>dnt.itsnow</groupId>
             <artifactId>common-user-service</artifactId>
         </dependency>
+        <dependency>
+            <groupId>dnt.itsnow.demo</groupId>
+            <artifactId>common-incident-service</artifactId>
+        </dependency>
+        <!-- message-bus,redis,cache-service -->
+        <dependency>
+            <groupId>dnt.components</groupId>
+            <artifactId>message_bus</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dnt.components</groupId>
+            <artifactId>cache_service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dnt.components</groupId>
+            <artifactId>redis</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -35,8 +52,8 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <App-Config>dnt.itsnow.demo.config.IncidentAppConfig</App-Config>
-                            <Service-Config>dnt.itsnow.demo.config.IncidentServiceConfig</Service-Config>
+                            <App-Config>dnt.itsnow.demo.config.MsuIncidentAppConfig</App-Config>
+                            <Service-Config>dnt.itsnow.demo.config.MsuIncidentServiceConfig</Service-Config>
                             <DB-Repository>dnt.itsnow.demo.repository</DB-Repository>
                             <Web-Repository>dnt.itsnow.demo.web.controller</Web-Repository>
                         </manifestEntries>

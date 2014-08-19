@@ -2,8 +2,8 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="dnt.itsnow.demo.repository.IncidentRepository">
-    <select id="findAllByInstanceIds" resultType="Incident">
+<mapper namespace="dnt.itsnow.demo.repository.MsuIncidentRepository">
+    <select id="findAllByInstanceIds" resultType="MsuIncident">
         <bind name="pattern" value="'%' + keyword + '%' "/>
         SELECT * FROM demo_incidents
         WHERE (instance_id IN

@@ -4,6 +4,8 @@ import dnt.itsnow.api.ActivitiEngineService;
 import dnt.spring.Bean;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.delegate.Expression;
+import org.activiti.engine.delegate.event.ActivitiEventListener;
+import org.activiti.engine.delegate.event.ActivitiEventType;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.impl.RepositoryServiceImpl;
@@ -66,13 +68,19 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
         return true;
     }
 
-    public void deploySingleProcess(InputStream inputStream,String processKey) throws IOException {
+    public void deploySingleProcess(InputStream inputStream,String processKey,String processCategory) throws IOException {
         if (inputStream == null) {
             logger.warn("ignore deploy workflow module: {}", processKey);
         } else {
             logger.debug("find workflow module: {}, deploy it!", processKey);
             //ZipInputStream zis = new ZipInputStream(inputStream);
-            Deployment deployment = processEngine.getRepositoryService().createDeployment().addInputStream(processKey, inputStream).name(processKey).category(processKey).deploy();
+            String path = "bpmn/"+processKey+".bpmn20.xml";
+            Deployment deployment = processEngine.getRepositoryService().createDeployment()
+                    .addInputStream(path, inputStream)
+                    .name(processKey)
+                    .category(processCategory)
+                    .deploy();
+            processEngine.getRepositoryService().createDeployment().activateProcessDefinitionsOn(new Date());
             logger.info("deploy id:"+deployment.getId()+" name:"+deployment.getName()+" category:"+deployment.getCategory());
             logger.info("deploy count:"+processEngine.getRepositoryService().createDeploymentQuery().count());
         }
@@ -141,6 +149,11 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
     @Override
     public List<Task> queryTasksCandidateUser(String userName, String key) {
         return processEngine.getTaskService().createTaskQuery().taskCandidateUser(userName).processDefinitionKey(key).list();
+    }
+
+    @Override
+    public List<HistoricProcessInstance> queryTasksFinished(String userName, String key){
+        return processEngine.getHistoryService().createHistoricProcessInstanceQuery().involvedUser(userName).processDefinitionKey(key).finished().orderByProcessInstanceEndTime().desc().list();
     }
 
     public List<Task> queryTasksCandidateGroup(String groupName){
@@ -222,6 +235,16 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
         //List<HistoricVariableInstance> historicVariableInstanceList = processEngine.getHistoryService().createHistoricVariableInstanceQuery().processInstanceId(processInstanceId).list();
 
         return maps;
+    }
+
+    @Override
+    public void addEventListener(ActivitiEventListener listenerToAdd) {
+        processEngine.getRuntimeService().addEventListener(listenerToAdd);
+    }
+
+    @Override
+    public void addEventListener(ActivitiEventListener listenerToAdd,ActivitiEventType activitiEventType) {
+        processEngine.getRuntimeService().addEventListener(listenerToAdd, activitiEventType);
     }
 
     /**
