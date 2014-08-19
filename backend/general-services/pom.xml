@@ -23,6 +23,7 @@
         <module>general-staff-service</module>
         <module>general-service_catalog-service</module>
         <module>general-contract-service</module>
+        <module>general-cmdb-service</module>
     </modules>
 
     <dependencies>
