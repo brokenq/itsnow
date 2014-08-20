@@ -16,6 +16,10 @@
         面向甲方/采购方的业务系统
     </description>
 
+    <modules>
+        <module>msu-cmdb-service</module>
+    </modules>
+
     <build>
         <plugins>
             <plugin>

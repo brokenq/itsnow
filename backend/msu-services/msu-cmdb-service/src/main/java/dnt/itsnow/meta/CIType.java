@@ -21,7 +21,9 @@ public class CIType {
     private CIType              parent;
     private String              icon;
     private String              description;
+    // 这个CIType可以/可能有的关系类型集合
     private Set<CIRelationType> relations;
+    // 这个CIType中的字段
     private Set<CIFieldType>    fields;
 
     public String getName() {
