@@ -32,7 +32,7 @@ angular.module('ItsNow.MSP.TroubleTicket', ['ItsNow.MSP.TroubleTicket.Model','It
 
                 var taskId = '';
 
-                var promise = MSPQueryTroubleTicketTaskService.query($scope.incident.instanceId);
+                var promise = MSPQueryTroubleTicketTaskService.query($scope.incident.mspInstanceId);
 
                 promise
                     .then(function (data) {
@@ -68,7 +68,7 @@ angular.module('ItsNow.MSP.TroubleTicket', ['ItsNow.MSP.TroubleTicket.Model','It
 
                 var taskId = '';
 
-                var promise = MSPQueryTroubleTicketTaskService.query($scope.incident.instanceId);
+                var promise = MSPQueryTroubleTicketTaskService.query($scope.incident.mspInstanceId);
 
                 promise
                     .then(function (data) {
@@ -104,7 +104,7 @@ angular.module('ItsNow.MSP.TroubleTicket', ['ItsNow.MSP.TroubleTicket.Model','It
 
                 var taskId = '';
 
-                var promise = MSPQueryTroubleTicketTaskService.query($scope.incident.instanceId);
+                var promise = MSPQueryTroubleTicketTaskService.query($scope.incident.mspInstanceId);
 
                 promise
                     .then(function (data) {
@@ -140,7 +140,7 @@ angular.module('ItsNow.MSP.TroubleTicket', ['ItsNow.MSP.TroubleTicket.Model','It
 
                 var taskId = '';
 
-                var promise = MSPQueryTroubleTicketTaskService.query($scope.incident.instanceId);
+                var promise = MSPQueryTroubleTicketTaskService.query($scope.incident.mspInstanceId);
 
                 promise
                     .then(function (data) {
@@ -242,14 +242,14 @@ angular.module('ItsNow.MSP.TroubleTicket', ['ItsNow.MSP.TroubleTicket.Model','It
             showSelectionCheckbox: true,
             selectedItems: $scope.mySelections,
             columnDefs: [
+                {field: 'msuAccountName', displayName: '帐户'},
+                {field: 'msuStatus', displayName: 'MSU状态'},
                 {field: 'number', displayName: '故障单号'},
                 {field: 'requesterName', displayName: '请求人'},
                 {field: 'requestDescription', displayName: '故障描述'},
                 {field: 'serviceCatalog', displayName: '服务目录'},
                 {field: 'priority', displayName: '优先级'},
-                {field: 'status', displayName: '状态'},
-                {field: 'assignedGroup', displayName: '分配组'},
-                {field: 'assignedUser', displayName: '分配用户'}
+                {field: 'mspStatus', displayName: 'MSP状态'}
             ]
         };
 
@@ -268,7 +268,7 @@ angular.module('ItsNow.MSP.TroubleTicket', ['ItsNow.MSP.TroubleTicket.Model','It
 
                 for(var ticket in $scope.mySelections){
                     $rootScope.incident = $scope.mySelections[ticket];
-                    promise = MSPQueryTroubleTicketTaskService.query($rootScope.incident.instanceId);
+                    promise = MSPQueryTroubleTicketTaskService.query($rootScope.incident.mspInstanceId);
                 };
 
                 promise.then(function success(data) {
@@ -292,7 +292,7 @@ angular.module('ItsNow.MSP.TroubleTicket', ['ItsNow.MSP.TroubleTicket.Model','It
 
                 for(var ticket in $scope.mySelections){
                     $rootScope.incident = $scope.mySelections[ticket];
-                    promise = MSPQueryTroubleTicketTaskService.query($rootScope.incident.instanceId);
+                    promise = MSPQueryTroubleTicketTaskService.query($rootScope.incident.mspInstanceId);
                 };
 
                 promise.then(function success(data) {
@@ -319,7 +319,7 @@ angular.module('ItsNow.MSP.TroubleTicket', ['ItsNow.MSP.TroubleTicket.Model','It
 
                 for(var ticket in $scope.mySelections){
                     $rootScope.incident = $scope.mySelections[ticket];
-                    promise = MSPQueryTroubleTicketTaskService.query($rootScope.incident.instanceId);
+                    promise = MSPQueryTroubleTicketTaskService.query($rootScope.incident.mspInstanceId);
                 };
 
                 promise.then(function success(data) {
@@ -346,7 +346,7 @@ angular.module('ItsNow.MSP.TroubleTicket', ['ItsNow.MSP.TroubleTicket.Model','It
 
                 for(var ticket in $scope.mySelections){
                     $rootScope.incident = $scope.mySelections[ticket];
-                    promise = MSPQueryTroubleTicketTaskService.query($rootScope.incident.instanceId);
+                    promise = MSPQueryTroubleTicketTaskService.query($rootScope.incident.mspInstanceId);
                 };
 
                 promise.then(function success(data) {

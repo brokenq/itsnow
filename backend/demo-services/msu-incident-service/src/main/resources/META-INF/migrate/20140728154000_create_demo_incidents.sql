@@ -1,6 +1,5 @@
-CREATE TABLE `demo_incidents` (
+CREATE TABLE `demo_incidents_msu` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `instance_id` varchar(32) COMMENT '流程实例ID',
   `number` varchar(32) NOT NULL COMMENT '故障单号，系统自动生成，生成规则:INC20140801111700001',
   `requester_name` varchar(255) COMMENT '请求人',
   `requester_location` varchar(255) DEFAULT NULL COMMENT '请求人所处的地区',
@@ -24,8 +23,13 @@ CREATE TABLE `demo_incidents` (
   `resolve_time` timestamp NULL DEFAULT NULL COMMENT '解决时间',
   `close_time` timestamp NULL DEFAULT NULL COMMENT '关闭时间',
   `solution` varchar(2000) DEFAULT NULL COMMENT '解决方案',
-  `status` varchar(255) DEFAULT 'New' COMMENT '当前状态',
   `close_code` varchar(255) DEFAULT NULL COMMENT '关闭代码',
+  `msu_account_name` varchar(255) DEFAULT NULL COMMENT 'MSU帐户NAME',
+  `msp_account_name` varchar(255) DEFAULT NULL COMMENT 'MSP帐户NAME',
+  `msu_instance_id` varchar(255) COMMENT 'MSU流程实例ID',
+  `msp_instance_id` varchar(255) DEFAULT NULL COMMENT 'MSP流程实例ID',
+  `msu_status` varchar(255) DEFAULT NULL COMMENT 'MSU当前状态',
+  `msp_status` varchar(255) DEFAULT NULL COMMENT 'MSP当前状态',
   PRIMARY KEY (`id`),
   UNIQUE KEY `number_UNIQUE` (`number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;

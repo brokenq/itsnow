@@ -2,7 +2,6 @@ package dnt.itsnow.demo.web.controller;
 
 import dnt.itsnow.api.ActivitiEngineService;
 import dnt.itsnow.demo.model.Incident;
-import dnt.itsnow.demo.model.MsuIncident;
 import dnt.itsnow.demo.support.MsuIncidentManager;
 import dnt.itsnow.web.controller.SessionSupportController;
 import dnt.util.StringUtils;
@@ -30,7 +29,7 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/api/incidents")
-public class IncidentController extends SessionSupportController<MsuIncident> {
+public class IncidentController extends SessionSupportController<Incident> {
 
     @Autowired
     ActivitiEngineService activitiEngineService;
@@ -49,7 +48,7 @@ public class IncidentController extends SessionSupportController<MsuIncident> {
      */
     @RequestMapping(value = "/")
     @ResponseBody
-    public List<MsuIncident> index(@RequestParam(value = "key", required = false) String key) {
+    public List<Incident> index(@RequestParam(value = "key", required = false) String key) {
 
         Set<Task> tasks = new HashSet<Task>();
         //查询分配给当前用户的任务列表
@@ -76,7 +75,7 @@ public class IncidentController extends SessionSupportController<MsuIncident> {
      */
     @RequestMapping(value = "/assignee")
     @ResponseBody
-    public List<MsuIncident> indexAssignee(@RequestParam(value = "key", required = false) String key) {
+    public List<Incident> indexAssignee(@RequestParam(value = "key", required = false) String key) {
         Set<Task> tasks = new HashSet<Task>();
         //查询分配给当前用户的任务列表
         tasks.addAll(activitiEngineService.queryTasksAssignee(currentUser.getUsername(), PROCESS_KEY));
@@ -100,7 +99,7 @@ public class IncidentController extends SessionSupportController<MsuIncident> {
      */
     @RequestMapping(value = "/candidate")
     @ResponseBody
-    public List<MsuIncident> indexCandidate(@RequestParam(value = "key", required = false) String key) {
+    public List<Incident> indexCandidate(@RequestParam(value = "key", required = false) String key) {
         Set<Task> tasks = new HashSet<Task>();
         //查询当前用户参与的任务列表
         tasks.addAll(activitiEngineService.queryTasksCandidateUser(currentUser.getUsername(),PROCESS_KEY));
@@ -164,7 +163,7 @@ public class IncidentController extends SessionSupportController<MsuIncident> {
      */
     @RequestMapping(value = "/start",method = RequestMethod.POST)
     @ResponseBody
-    public Map<String,Object> start(HttpServletRequest request,@RequestBody @Valid MsuIncident incident){
+    public Map<String,Object> start(HttpServletRequest request,@RequestBody @Valid Incident incident){
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.putAll(request.getParameterMap());
         variables.put("description",incident.getRequestDescription());
@@ -173,7 +172,8 @@ public class IncidentController extends SessionSupportController<MsuIncident> {
         //activitiEngineService.addEventListener( msuEventListener);
         //save incident object and persist it
         incident.setCreatedBy(currentUser.getUsername());
-        incident.setInstanceId(processInstance.getProcessInstanceId());
+        incident.setMsuInstanceId(processInstance.getProcessInstanceId());
+        incident.setMsuAccountName(mainAccount.getName());
         msuIncidentManager.newIncident(incident);
 
         //return map
@@ -195,7 +195,7 @@ public class IncidentController extends SessionSupportController<MsuIncident> {
      */
     @RequestMapping(value = "/{taskId}/complete",method = RequestMethod.PUT)
     @ResponseBody
-    public Map<String,Object> complete(@PathVariable("taskId") String taskId,HttpServletRequest request,@RequestBody @Valid MsuIncident incident){
+    public Map<String,Object> complete(@PathVariable("taskId") String taskId,HttpServletRequest request,@RequestBody @Valid Incident incident){
         Map<String,Object> result = new HashMap<String, Object>();
         if(StringUtils.isNotEmpty(currentUser.getUsername())){
             Map<String, String> taskVariables = new HashMap<String, String>();

@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.itsnow.com/processdef">
   <process id="msp_incident" name="msp_incident" isExecutable="true">
-    <startEvent id="new_incident" name="servicedesk new incident" activiti:initiator="servicedesk" activiti:formKey="demo_incidents_msp"></startEvent>
-    <userTask id="process_incident" name="firstline process_incident" activiti:exclusive="false" activiti:candidateGroups="first_line" activiti:formKey="demo_incidents_msp">
-      <documentation>process</documentation>
+    <startEvent id="new_incident" name="servicedesk new incident" activiti:initiator="servicedesk">
+      <documentation>New</documentation>
+    </startEvent>
+    <userTask id="process_incident" name="firstline process_incident" activiti:exclusive="false" activiti:candidateGroups="first_line">
+      <documentation>Resolved</documentation>
     </userTask>
-    <userTask id="close_incident" name="servicedesk close incident" activiti:exclusive="false" activiti:assignee="${servicedesk}" activiti:formKey="demo_incidents_msp">
-      <documentation>close</documentation>
+    <userTask id="close_incident" name="servicedesk close incident" activiti:exclusive="false" activiti:assignee="${servicedesk}">
+      <documentation>Closed</documentation>
     </userTask>
-    <userTask id="first_line_accept_incident" name="firstline accept incident" activiti:candidateGroups="first_line" activiti:formKey="demo_incidents_msp">
-      <documentation>accept</documentation>
+    <userTask id="first_line_accept_incident" name="firstline accept incident" activiti:candidateGroups="first_line">
+      <documentation>Accepted</documentation>
     </userTask>
-    <userTask id="analysis_incident" name="firstline analysis_incident" activiti:candidateGroups="first_line" activiti:formKey="demo_incidents_msp">
-      <documentation>analysis</documentation>
+    <userTask id="analysis_incident" name="firstline analysis_incident" activiti:candidateGroups="first_line">
+      <documentation>Resolving</documentation>
     </userTask>
     <sequenceFlow id="sid-0E61B111-23A7-4C44-A0CA-36C464A2958B" sourceRef="analysis_incident" targetRef="process_incident"></sequenceFlow>
-    <endEvent id="sid-4D540106-84DA-4F83-87D1-A03794DA7B2C"></endEvent>
-    <sequenceFlow id="sid-C35DD6FB-FC53-4877-9E0A-48704A6C620A" sourceRef="close_incident" targetRef="sid-4D540106-84DA-4F83-87D1-A03794DA7B2C"></sequenceFlow>
-    <sequenceFlow id="sid-368F59F5-468F-4171-82EF-E7404218080A" sourceRef="process_incident" targetRef="close_incident"></sequenceFlow>
+    <endEvent id="end" name="end"></endEvent>
+    <sequenceFlow id="sid-C35DD6FB-FC53-4877-9E0A-48704A6C620A" sourceRef="close_incident" targetRef="end"></sequenceFlow>
     <sequenceFlow id="assign" name="assign_to_firstline" sourceRef="new_incident" targetRef="first_line_accept_incident"></sequenceFlow>
     <sequenceFlow id="sid-9880F07B-E267-40D7-8C29-F6FD1F3F9A52" sourceRef="first_line_accept_incident" targetRef="analysis_incident"></sequenceFlow>
+    <sequenceFlow id="sid-368F59F5-468F-4171-82EF-E7404218080A" sourceRef="process_incident" targetRef="close_incident"></sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_msp_incident">
     <bpmndi:BPMNPlane bpmnElement="msp_incident" id="BPMNPlane_msp_incident">
@@ -38,7 +40,7 @@
       <bpmndi:BPMNShape bpmnElement="analysis_incident" id="BPMNShape_analysis_incident">
         <omgdc:Bounds height="80.0" width="100.0" x="315.0" y="150.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="sid-4D540106-84DA-4F83-87D1-A03794DA7B2C" id="BPMNShape_sid-4D540106-84DA-4F83-87D1-A03794DA7B2C">
+      <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
         <omgdc:Bounds height="28.0" width="28.0" x="725.0" y="86.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="assign" id="BPMNEdge_assign">

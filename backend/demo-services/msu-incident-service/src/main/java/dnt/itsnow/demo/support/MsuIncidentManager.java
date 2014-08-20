@@ -4,8 +4,8 @@
 package dnt.itsnow.demo.support;
 
 import dnt.itsnow.api.ActivitiEngineService;
+import dnt.itsnow.demo.model.Incident;
 import dnt.itsnow.demo.model.IncidentStatus;
-import dnt.itsnow.demo.model.MsuIncident;
 import dnt.itsnow.demo.repository.MsuIncidentRepository;
 import dnt.itsnow.demo.service.IncidentService;
 import dnt.itsnow.platform.service.Page;
@@ -43,7 +43,7 @@ public class MsuIncidentManager extends Bean implements IncidentService {
     @Autowired
     MessageBus messageBus;
 
-    private static final String PROCESS_KEY = "msu_incident";
+    public static final String PROCESS_KEY = "msu_incident";
 
     private static final String LISTENER = "listener";
 
@@ -75,61 +75,61 @@ public class MsuIncidentManager extends Bean implements IncidentService {
         }
     }
 
-    public void newIncident(MsuIncident incident){
+    public void newIncident(Incident incident){
         incident.setNumber("INC"+df.format(new Date()));
-        incident.setStatus(IncidentStatus.Assigned);
+        incident.setMsuStatus(IncidentStatus.Assigned);
         msuIncidentRepository.save(incident);
     }
 
-    public Page<MsuIncident> findByUsername(String username,Pageable pageable){
+    public Page<Incident> findByUsername(String username,Pageable pageable){
         long total = msuIncidentRepository.countByUsername(username);
-        List<MsuIncident> incidents = msuIncidentRepository.findIncidentsByUsername(username,"updated_at desc",pageable.getOffset(),pageable.getPageNumber());
-        return new DefaultPage<MsuIncident>(incidents, pageable, total);
+        List<Incident> incidents = msuIncidentRepository.findIncidentsByUsername(username,"updated_at desc",pageable.getOffset(),pageable.getPageNumber());
+        return new DefaultPage<Incident>(incidents, pageable, total);
     }
 
-    public MsuIncident findByInstanceId(String id){
+    public Incident findByInstanceId(String id){
         return msuIncidentRepository.findByInstanceId(id);
     }
 
-    public Page<MsuIncident> findByInstanceIds(List<String> ids,String keyword,Pageable pageable){
+    public Page<Incident> findByInstanceIds(List<String> ids,String keyword,Pageable pageable){
 
         int total = ids.size();
         if(total > 0){
             if(keyword == null)
                 keyword = "";
-            List<MsuIncident> incidents = msuIncidentRepository.findAllByInstanceIds(ids,keyword,pageable);
-            return new DefaultPage<MsuIncident>(incidents,pageable,total);
+            List<Incident> incidents = msuIncidentRepository.findAllByInstanceIds(ids,keyword,pageable);
+            return new DefaultPage<Incident>(incidents,pageable,total);
         }else {
-            List<MsuIncident> incidents = new ArrayList<MsuIncident>();
-            return new DefaultPage<MsuIncident>(incidents, pageable, total);
+            List<Incident> incidents = new ArrayList<Incident>();
+            return new DefaultPage<Incident>(incidents, pageable, total);
         }
     }
 
-    public Page<MsuIncident> findAll(String keyword, Pageable pageable){
+    public Page<Incident> findAll(String keyword, Pageable pageable){
         if(StringUtils.isBlank(keyword)){
             int total = msuIncidentRepository.count();
-            List<MsuIncident> incidents = msuIncidentRepository.findIncidents("updated_at desc", pageable.getOffset(), pageable.getPageSize());
-            return new DefaultPage<MsuIncident>(incidents, pageable, total);
+            List<Incident> incidents = msuIncidentRepository.findIncidents("updated_at desc", pageable.getOffset(), pageable.getPageSize());
+            return new DefaultPage<Incident>(incidents, pageable, total);
         }else{
             int total = msuIncidentRepository.countByKeyword(keyword);
-            List<MsuIncident> incidents = msuIncidentRepository.findIncidentsByKeyword(keyword, "updated_at desc",
+            List<Incident> incidents = msuIncidentRepository.findIncidentsByKeyword(keyword, "updated_at desc",
                     pageable.getOffset(), pageable.getPageSize());
-            return new DefaultPage<MsuIncident>(incidents, pageable, total);
+            return new DefaultPage<Incident>(incidents, pageable, total);
         }
     }
 
-    public List<MsuIncident> findIncidents(String orderBy, int offset, int size){
+    public List<Incident> findIncidents(String orderBy, int offset, int size){
 
         return msuIncidentRepository.findIncidents(orderBy,offset,size);
     }
 
     @Override
-    public void updateIncident(MsuIncident incident) {
+    public void updateIncident(Incident incident) {
         msuIncidentRepository.update(incident);
     }
 
     @Override
-    public void closeIncident(MsuIncident incident) {
+    public void closeIncident(Incident incident) {
         msuIncidentRepository.close(incident);
     }
 }

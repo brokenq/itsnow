@@ -1,6 +1,6 @@
 package dnt.itsnow.demo.service;
 
-import dnt.itsnow.demo.model.MsuIncident;
+import dnt.itsnow.demo.model.Incident;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 
@@ -11,19 +11,19 @@ import java.util.List;
  */
 public interface IncidentService {
 
-    void newIncident(MsuIncident incident);
+    void newIncident(Incident incident);
 
-    MsuIncident findByInstanceId(String id);
+    Incident findByInstanceId(String id);
 
-    Page<MsuIncident> findByInstanceIds(List<String> ids, String keyword, Pageable pageable);
+    Page<Incident> findByInstanceIds(List<String> ids, String keyword, Pageable pageable);
 
-    Page<MsuIncident> findByUsername(String username, Pageable pageable);
+    Page<Incident> findByUsername(String username, Pageable pageable);
 
-    List<MsuIncident> findIncidents(String orderBy, int offset, int size);
+    List<Incident> findIncidents(String orderBy, int offset, int size);
 
-    Page<MsuIncident> findAll(String keyword, Pageable pageable);
+    Page<Incident> findAll(String keyword, Pageable pageable);
 
-    void updateIncident(MsuIncident incident);
+    void updateIncident(Incident incident);
 
-    void closeIncident(MsuIncident incident);
+    void closeIncident(Incident incident);
 }

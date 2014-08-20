@@ -9,7 +9,7 @@ import java.sql.Timestamp;
  */
 public class Incident extends Record {
 
-    private String instanceId;//对应activiti的instanceId
+    private String msuInstanceId;//对应msu activiti的instanceId
     private String number;//'故障单号，系统自动生成，生成规则:INC20140801111700001',
     private String requesterName;//'请求人',
     private String requesterLocation;//'请求人所处的地区',
@@ -31,8 +31,14 @@ public class Incident extends Record {
     private Timestamp resolveTime;//'解决时间',
     private Timestamp closeTime;//'关闭时间',
     private String solution;//'解决方案',
-    private IncidentStatus status = IncidentStatus.Assigned;
+    private IncidentStatus msuStatus = IncidentStatus.Assigned;
     private String closeCode;//关闭代码
+
+    private String msuAccountName;//msu account name
+    //add msp msuInstanceId,msp msuStatus
+    private String mspAccountName;//msp account name
+    private String mspInstanceId;//msp instance id
+    private IncidentStatus mspStatus;//msp msuStatus
 
     public String getCloseCode() {
         return closeCode;
@@ -210,19 +216,51 @@ public class Incident extends Record {
         this.solution = solution;
     }
 
-    public String getInstanceId() {
-        return instanceId;
+    public String getMsuInstanceId() {
+        return msuInstanceId;
     }
 
-    public void setInstanceId(String instanceId) {
-        this.instanceId = instanceId;
+    public void setMsuInstanceId(String msuInstanceId) {
+        this.msuInstanceId = msuInstanceId;
     }
 
-    public IncidentStatus getStatus() {
-        return status;
+    public IncidentStatus getMsuStatus() {
+        return msuStatus;
     }
 
-    public void setStatus(IncidentStatus status) {
-        this.status = status;
+    public void setMsuStatus(IncidentStatus msuStatus) {
+        this.msuStatus = msuStatus;
+    }
+
+    public String getMsuAccountName() {
+        return msuAccountName;
+    }
+
+    public void setMsuAccountName(String msuAccountName) {
+        this.msuAccountName = msuAccountName;
+    }
+
+    public String getMspAccountName() {
+        return mspAccountName;
+    }
+
+    public void setMspAccountName(String mspAccountName) {
+        this.mspAccountName = mspAccountName;
+    }
+
+    public String getMspInstanceId() {
+        return mspInstanceId;
+    }
+
+    public void setMspInstanceId(String mspInstanceId) {
+        this.mspInstanceId = mspInstanceId;
+    }
+
+    public IncidentStatus getMspStatus() {
+        return mspStatus;
+    }
+
+    public void setMspStatus(IncidentStatus mspStatus) {
+        this.mspStatus = mspStatus;
     }
 }

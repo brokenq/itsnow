@@ -26,7 +26,7 @@ angular.module('ItsNow.MSP.TroubleTicket.Service', [])
 
     // 查询故障单对应的当前任务信息
     .factory('MSPQueryTroubleTicketTaskResource', ['$resource', function ($resource) {
-        return $resource('/api/msp-incidents/:instanceId', {instanceId:'@instanceId'}, {
+        return $resource('/api/msp-incidents/:mspInstanceId', {mspInstanceId:'@mspInstanceId'}, {
             query: {
                 method: 'GET'
             }
@@ -36,8 +36,8 @@ angular.module('ItsNow.MSP.TroubleTicket.Service', [])
     // 查询故障单对应的当前任务信息
     .factory('MSPQueryTroubleTicketTaskService', ['MSPQueryTroubleTicketTaskResource', function (MSPQueryTroubleTicketTaskResource) {
         return{
-            query: function (instanceId) {
-                return MSPQueryTroubleTicketTaskResource.query({instanceId: instanceId}).$promise;
+            query: function (mspInstanceId) {
+                return MSPQueryTroubleTicketTaskResource.query({mspInstanceId: mspInstanceId}).$promise;
             }
         };
     }])

@@ -3,10 +3,10 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="dnt.itsnow.demo.repository.MspIncidentRepository">
-    <select id="findAllByInstanceIds" resultType="MspIncident">
+    <select id="findAllByInstanceIds" resultType="Incident">
         <bind name="pattern" value="'%' + keyword + '%' "/>
         SELECT * FROM demo_incidents_msp
-        WHERE (instance_id IN
+        WHERE (msp_instance_id IN
         <foreach item="item" index="index" collection="ids"
                  open="(" separator="," close=")">
             #{item}
@@ -14,7 +14,7 @@
         <if test="keyword != ''">
             AND ((requester_name LIKE #{pattern})
             OR (request_description LIKE #{pattern})
-            OR (status LIKE #{pattern}))
+            OR (msp_status LIKE #{pattern}))
         </if>
         <if test="pageable.sort != null">
             ORDER BY #{pageable.sort}
