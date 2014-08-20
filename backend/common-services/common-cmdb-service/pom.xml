@@ -6,14 +6,14 @@
 
     <parent>
         <groupId>dnt.itsnow</groupId>
-        <artifactId>msu-services</artifactId>
+        <artifactId>common-services</artifactId>
         <version>0.1.5-SNAPSHOT</version>
     </parent>
 
-    <artifactId>msu-cmdb-service</artifactId>
-    <name>MSU CMDB Service</name>
+    <artifactId>common-cmdb-service</artifactId>
+    <name>Common CMDB Service</name>
     <description>
-        The CMDB service of MSU
+        The CMDB model and meta model.
     </description>
 
     

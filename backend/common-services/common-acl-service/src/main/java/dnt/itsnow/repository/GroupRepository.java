@@ -18,10 +18,10 @@ import java.util.Set;
  */
 public interface GroupRepository {
 
-    @Select("SELECT * FROM groups WHERE UPPER(name) = UPPER(#{name})")
+    @Select("SELECT * FROM groups WHERE UPPER(group_name) = UPPER(#{name})")
     Group findByName(@Param("name") String name);
 
-    @Select("SELECT * FROM groups WHERE UPPER(name) LIKE UPPER('%#{keyword}%')")
+    @Select("SELECT * FROM groups WHERE UPPER(group_name) LIKE UPPER('%#{keyword}%')")
     List<Group> findAllByKeyword(@Param("keyword") String keyword);
 
     @Select(" SELECT ga.authority, g.group_name" +

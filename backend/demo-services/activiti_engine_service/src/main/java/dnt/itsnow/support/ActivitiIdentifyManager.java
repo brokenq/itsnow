@@ -89,7 +89,7 @@ public class ActivitiIdentifyManager extends Bean implements ActivitiIdentifySer
         if(activitiGroups.size()==1){//已存在，更新
             updateActivitiGroup(group);
         }else if(activitiGroups.size()>1){//重复
-            logger.warn("存在重复的用户组 {}", group.getGroupName());
+            logger.warn("存在重复的用户组 {}", group.getName());
         }else{//不存在，新增
             saveActivitiGroup(group);
         }
@@ -101,7 +101,7 @@ public class ActivitiIdentifyManager extends Bean implements ActivitiIdentifySer
 
         GroupQuery groupQuery = processEngine.getIdentityService().createGroupQuery();
         org.activiti.engine.identity.Group activitiGroup = groupQuery.groupId(groupId).singleResult();
-        activitiGroup.setName(group.getGroupName());
+        activitiGroup.setName(group.getName());
         processEngine.getIdentityService().saveGroup(activitiGroup);
 
     }
@@ -109,7 +109,7 @@ public class ActivitiIdentifyManager extends Bean implements ActivitiIdentifySer
     @Override
     public void deleteActivitiGroup(Group group) {
         processEngine.getIdentityService().deleteGroup(group.getId().toString());
-        logger.info("delete activiti group {}", group.getGroupName());
+        logger.info("delete activiti group {}", group.getName());
     }
 
     /**
@@ -155,8 +155,8 @@ public class ActivitiIdentifyManager extends Bean implements ActivitiIdentifySer
     private void saveActivitiGroup(Group group) {
         String groupId = group.getId().toString();
         org.activiti.engine.identity.Group activitiGroup = processEngine.getIdentityService().newGroup(groupId);
-        activitiGroup.setName(group.getGroupName());
+        activitiGroup.setName(group.getName());
         processEngine.getIdentityService().saveGroup(activitiGroup);
-        logger.info("add activiti group: {}", group.getGroupName());
+        logger.info("add activiti group: {}", group.getName());
     }
 }

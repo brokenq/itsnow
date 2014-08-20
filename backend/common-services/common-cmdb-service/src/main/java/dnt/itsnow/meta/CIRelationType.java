@@ -3,6 +3,8 @@
  */
 package dnt.itsnow.meta;
 
+import dnt.itsnow.platform.model.Record;
+
 /**
  * CI(Configuration Item) Relation Type
  *
@@ -17,7 +19,7 @@ package dnt.itsnow.meta;
  *
  * 根据实际开发和其他参考经验，Relation的定义应该不仅仅限于CI之间，还应该可以在CI和非CI之间
  */
-public class CIRelationType {
+public class CIRelationType extends Record{
 
     private String name;
     private String reverseName;

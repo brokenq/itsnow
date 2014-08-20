@@ -3,16 +3,14 @@
  */
 package dnt.itsnow.model;
 
-import dnt.itsnow.platform.model.Record;
-
 /**
  * <h1>MSP或者MSU的员工</h1>
  */
-public class Staff extends Record {
+public class Staff extends ConfigItem {
     //该员工的工号
     private String no;
     //该员工在公司的别名，就像许多人，虽然有中文，但在公司大家都叫他Steven
-    private String nickName;
+    //private String nickName;
     //该员工的工作邮件,与user的mail未必一样
     private String email;
     //岗位，职位
@@ -34,11 +32,11 @@ public class Staff extends Record {
     }
 
     public String getNickName() {
-        return nickName;
+        return getName();
     }
 
     public void setNickName(String nickName) {
-        this.nickName = nickName;
+        setName(nickName);
     }
 
     public String getEmail() {

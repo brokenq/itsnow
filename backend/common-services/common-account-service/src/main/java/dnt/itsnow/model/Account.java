@@ -6,7 +6,6 @@ package dnt.itsnow.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import dnt.itsnow.platform.model.Record;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Size;
@@ -20,26 +19,21 @@ import javax.validation.constraints.Size;
         @JsonSubTypes.Type(name = "msu", value = MsuAccount.class),
         @JsonSubTypes.Type(name = "msp", value = MspAccount.class)
 })
-public abstract class Account extends Record {
+public abstract class Account extends ConfigItem {
     public static final String MSC = "msc";
     public static final String MSU = "msu";
     public static final String MSP = "msp";
 
     @NotBlank
     private String        sn;
-    @NotBlank
-    // 帐户名称
-    @Size(min = 4, max = 50)
-    private String        name;
+    //@NotBlank
     // 账户状态
     private AccountStatus status = AccountStatus.New;
 
+    // 帐户名称
+    @Size(min = 4, max = 50)
     public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+        return super.getName();
     }
 
     public AccountStatus getStatus() {
@@ -94,7 +88,6 @@ public abstract class Account extends Record {
 
         Account account = (Account) o;
 
-        if (name != null ? !name.equals(account.name) : account.name != null) return false;
         if (sn != null ? !sn.equals(account.sn) : account.sn != null) return false;
         //noinspection RedundantIfStatement
         if (status != account.status) return false;
@@ -106,7 +99,6 @@ public abstract class Account extends Record {
     public int hashCode() {
         int result = super.hashCode();
         result = 31 * result + (sn != null ? sn.hashCode() : 0);
-        result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
         return result;
     }

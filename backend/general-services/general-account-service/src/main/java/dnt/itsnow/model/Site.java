@@ -3,30 +3,19 @@
  */
 package dnt.itsnow.model;
 
-import dnt.itsnow.platform.model.Record;
-
 import java.util.Set;
 
 /**
  * <h1>MSU/MSP的Site</h1>
+ * 也是配置项
  */
-public class Site extends Record {
-    //名称
-    private String name;
+public class Site extends ConfigItem {
     //地址
     private String address;//TODO Address未来需要细化模型
     //工作时间
     private WorkTime workTime;
     //节假日
     private Set<Holiday> holidays;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getAddress() {
         return address;

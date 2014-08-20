@@ -22,6 +22,7 @@
     </description>
 
     <modules>
+        <module>common-cmdb-service</module>
         <module>common-gui-service</module>
         <module>common-account-service</module>
         <module>common-user-service</module>
@@ -46,6 +47,16 @@
             <scope>runtime</scope>
         </dependency>
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>dnt.itsnow</groupId>
+                <artifactId>common-cmdb-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>
