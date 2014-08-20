@@ -8,5 +8,5 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan("dnt.itsnow.demo.support")
-public class IncidentAppConfig {
+public class MsuIncidentAppConfig {
 }

@@ -113,6 +113,20 @@
             <artifactId>spring-test</artifactId>
             <scope>compile</scope>
         </dependency>
+
+        <!-- message-bus,redis,cache-service -->
+        <dependency>
+            <groupId>dnt.components</groupId>
+            <artifactId>message_bus</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dnt.components</groupId>
+            <artifactId>cache_service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dnt.components</groupId>
+            <artifactId>redis</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

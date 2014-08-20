@@ -3,6 +3,8 @@
  */
 package dnt.itsnow.platform.config;
 
+import dnt.messaging.MessageBus;
+import dnt.cache.CacheService;
 import dnt.itsnow.platform.service.AutoNumberService;
 import net.happyonroad.spring.service.AbstractServiceConfig;
 import org.apache.ibatis.session.Configuration;
@@ -28,5 +30,8 @@ public class DefaultServiceConfig extends AbstractServiceConfig {
         //一般工具服务
         importService(AutoNumberService.class);
 
+        //redis,message-bus,cache-service
+        importService(CacheService.class,System.getProperty("messaging.provider"),"cacheService");
+        importService(MessageBus.class,System.getProperty("cache.provider"),"messageBus");
     }
 }

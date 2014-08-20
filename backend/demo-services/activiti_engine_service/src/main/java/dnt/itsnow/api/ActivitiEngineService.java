@@ -3,10 +3,13 @@
  */
 package dnt.itsnow.api;
 
-import org.activiti.engine.task.Task;
+import org.activiti.engine.delegate.event.ActivitiEventListener;
+import org.activiti.engine.delegate.event.ActivitiEventType;
+import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.Task;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,7 +29,7 @@ public interface ActivitiEngineService {
      */
     boolean deploySingleProcess(String processKey,String processCategory);
 
-    void deploySingleProcess(InputStream inputStream,String processKey) throws IOException;
+    void deploySingleProcess(InputStream inputStream,String processKey,String processCategory) throws IOException;
 
     long getProcessDefinitionCount();
 
@@ -56,6 +59,8 @@ public interface ActivitiEngineService {
 
     ProcessInstance queryProcessInstanceById(String instanceId);
 
+    List<HistoricProcessInstance> queryTasksFinished(String userName, String key);
+
     Task claimTask(String taskId,String userId);
 
     void completeTask(String id,Map<String, String> taskVariables,String assignee);
@@ -63,5 +68,9 @@ public interface ActivitiEngineService {
     List<Map<String, Object>> traceProcess(String processInstanceId) throws Exception;
 
     Map<String, Object> traceProcessHistory(String processInstanceId);
+
+    void addEventListener(ActivitiEventListener listenerToAdd);
+
+    void addEventListener(ActivitiEventListener listenerToAdd,ActivitiEventType activitiEventType);
 
 }
