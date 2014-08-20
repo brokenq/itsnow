@@ -16,6 +16,17 @@
         面向甲方/采购方的业务系统
     </description>
 
+    <dependencies>
+        <dependency>
+            <groupId>dnt.itsnow</groupId>
+            <artifactId>platform</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dnt.itsnow</groupId>
+            <artifactId>common-user-service</artifactId>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>

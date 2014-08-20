@@ -10,16 +10,10 @@
         <version>0.1.5-SNAPSHOT</version>
     </parent>
 
-    <artifactId>common-sla-service</artifactId>
-    <name>Common SLA Service</name>
+    <artifactId>common-gui-service</artifactId>
+    <name>Common GUI Service</name>
     <description>
-        The common SLA service shared by all deployment builds to access(read) system schema by DBI.
+        Provide icon/menu services
     </description>
-
-    <dependencies>
-        <dependency>
-            <groupId>dnt.itsnow</groupId>
-            <artifactId>common-cmdb-service</artifactId>
-        </dependency>
-    </dependencies>
+    
 </project>

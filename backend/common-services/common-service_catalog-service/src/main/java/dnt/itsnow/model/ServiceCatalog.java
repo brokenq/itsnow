@@ -9,6 +9,8 @@ import java.util.List;
 
 /**
  * <h1>服务目录</h1>
+ *
+ * 服务目录不作为配置项
  */
 public class ServiceCatalog extends Record{
     private String title;

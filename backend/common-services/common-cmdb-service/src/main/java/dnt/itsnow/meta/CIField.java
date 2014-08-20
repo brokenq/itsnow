@@ -4,14 +4,14 @@
 package dnt.itsnow.meta;
 
 /**
- * CI(Configuration Item) Field Type
+ * CI(Configuration Item) Field
  * <ul>
  * <li>name: 字段名称
  * <li>type: 字段数值类型
  * <li>section: 该字段所属分组（暂时没有定义CISection)
  * </ul>
  */
-public class CIFieldType {
+public class CIField {
     private String name;
     private String type;
     private String section;

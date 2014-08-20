@@ -3,18 +3,15 @@
  */
 package dnt.itsnow.model;
 
-import dnt.itsnow.platform.model.Record;
-
 import java.util.Set;
 
 /**
  * <h1>MSU/MSP的部门</h1>
+ * 也是配置项
  */
-public class Department extends Record {
+public class Department extends ConfigItem {
     //所属site
     private Site site;
-    //部门名称
-    private String name;
     //上级部门
     private Department parent;
     //下级部门
@@ -26,14 +23,6 @@ public class Department extends Record {
 
     public void setSite(Site site) {
         this.site = site;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Department getParent() {
