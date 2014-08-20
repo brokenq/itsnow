@@ -22,6 +22,7 @@
     </description>
 
     <modules>
+        <module>common-gui-service</module>
         <module>common-account-service</module>
         <module>common-user-service</module>
         <module>common-acl-service</module>
