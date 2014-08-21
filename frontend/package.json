@@ -14,7 +14,9 @@
     "type": "git",
     "url": "git@happyonroad.net:insight/itsnow.git"
   },
-  "dependencies": {},
+  "dependencies": {
+    "angular-dialog-service": "0.0.1"
+  },
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-less": "~0.11.0",

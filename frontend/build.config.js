@@ -92,13 +92,17 @@ module.exports = {
       'vendor/ace-bootstrap/js/ace-extra.js',
       'vendor/typehead.js/bs2/typeahead-bs2.js',
       'vendor/ng-grid/ng-grid-2.0.11.debug.js',
-      'vendor/angular-ui-tree/dist/angular-ui-tree.js'
+      'vendor/angular-ui-tree/dist/angular-ui-tree.js',
+      'vendor/angular-dialog-service/dialogs.js',
+      'vendor/angular-dialog-service/dialogs-default-translations.js',
+      'vendor/angular-translate/angular-translate.js'
     ],
     css: [
 //      'vendor/angular/angular-csp.css',
       'vendor/bootstrap/dist/css/bootstrap-theme.css',
       'vendor/ace-bootstrap/css/*.css',
       'vendor/ng-grid/ng-grid.css',
+      'vendor/angular-dialog-service/dialogs.css',
       'vendor/angular-ui-tree/dist/angular-ui-tree.min.css'
     ],
     assets: [

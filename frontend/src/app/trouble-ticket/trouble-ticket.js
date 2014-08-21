@@ -4,25 +4,30 @@
 // incident实体类
 // 故障单Module
 
-angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.TroubleTicket.Service'])
+angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.TroubleTicket.Service','ItsNow.Component.Table', 'ItsNow.Component.Dialog'])
 
     // 新建故障单
-    .controller('NewTroubleTicketCtrl', ['$scope', 'NewTroubleTicketService', '$location', 'TroubleTicketModelSerivce',
-        function ($scope, NewTroubleTicketService, $location, TroubleTicketModelSerivce) {
+    .controller('NewTroubleTicketCtrl', ['$scope', '$element', '$location', 'NewTroubleTicketService', 'TroubleTicketModelSerivce',
+        function ($scope, $element, $location, NewTroubleTicketService, TroubleTicketModelSerivce) {
 
             $scope.selectedModel = TroubleTicketModelSerivce.selectedModel;
 
             $scope.save = function () {
-                NewTroubleTicketService.start($scope.incident, function () {
+                console.log(angular.element($element.find('button#save')));
+                angular.element($element.find('button#save')).attr('disabled','disabled');
+                NewTroubleTicketService.start($scope.incident, function success () {
                     $location.path('/index/list-trouble-ticket');
+                },function error (data){
+                    console.error('error:'+data);
+//                    angular.element($element.find('button#save')).removeAttr('disabled');
                 });
             };
 
         }])
 
     // 签收故障单
-    .controller('AcceptTroubleTicketCtrl', ['$q', '$rootScope', '$scope', '$location', 'QueryTroubleTicketTaskService', 'AcceptTroubleTicketService', 'TroubleTicketModelSerivce',
-        function ($q, $rootScope, $scope, $location, QueryTroubleTicketTaskService, AcceptTroubleTicketService, TroubleTicketModelSerivce) {
+    .controller('AcceptTroubleTicketCtrl', ['$q', '$rootScope', '$scope', '$location', 'QueryTroubleTicketTaskService', 'AcceptTroubleTicketService', 'TroubleTicketModelSerivce', 'DialogService',
+        function ($q, $rootScope, $scope, $location, QueryTroubleTicketTaskService, AcceptTroubleTicketService, TroubleTicketModelSerivce, DialogService) {
 
             $scope.incident = $rootScope.incident;
 
@@ -47,7 +52,7 @@ angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.Tro
                     .then(function(){
                         AcceptTroubleTicketService.complete({taskId:taskId}, $scope.incident,function (data) {
                             if(data.result==='true'){
-                                alert("签收成功");
+                                DialogService('notify','','签收成功');
                                 $location.path('/index/list-trouble-ticket');
                             };
                         });
@@ -57,8 +62,8 @@ angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.Tro
         }])
 
     // 分析故障单
-    .controller('AnalysisTroubleTicketCtrl', ['$q', '$rootScope', '$scope', '$location', 'QueryTroubleTicketTaskService', 'AnalysisTroubleTicketService', 'TroubleTicketModelSerivce',
-        function ($q, $rootScope, $scope, $location, QueryTroubleTicketTaskService, AnalysisTroubleTicketService, TroubleTicketModelSerivce) {
+    .controller('AnalysisTroubleTicketCtrl', ['$q', '$rootScope', '$scope', '$location', 'QueryTroubleTicketTaskService', 'AnalysisTroubleTicketService', 'TroubleTicketModelSerivce', 'DialogService',
+        function ($q, $rootScope, $scope, $location, QueryTroubleTicketTaskService, AnalysisTroubleTicketService, TroubleTicketModelSerivce, DialogService) {
 
             $scope.incident = $rootScope.incident;
 
@@ -83,7 +88,7 @@ angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.Tro
                     .then(function(){
                         AnalysisTroubleTicketService.complete({taskId:taskId,flag:true}, $scope.incident,function (data) {
                             if(data.result==='true'){
-                                alert("分析完毕");
+                                DialogService('notify','','分析完毕');
                                 $location.path('/index/list-trouble-ticket');
                             };
                         });
@@ -93,8 +98,8 @@ angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.Tro
         }])
 
     // 处理故障单
-    .controller('ProcessTroubleTicketCtrl', ['$q', '$rootScope', '$scope', '$location', 'QueryTroubleTicketTaskService', 'ProcessTroubleTicketService', 'TroubleTicketModelSerivce',
-        function ($q, $rootScope, $scope, $location, QueryTroubleTicketTaskService, ProcessTroubleTicketService, TroubleTicketModelSerivce) {
+    .controller('ProcessTroubleTicketCtrl', ['$q', '$rootScope', '$scope', '$location', 'QueryTroubleTicketTaskService', 'ProcessTroubleTicketService', 'TroubleTicketModelSerivce', 'DialogService',
+        function ($q, $rootScope, $scope, $location, QueryTroubleTicketTaskService, ProcessTroubleTicketService, TroubleTicketModelSerivce, DialogService) {
 
             $scope.incident = $rootScope.incident;
 
@@ -119,7 +124,7 @@ angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.Tro
                     .then(function(){
                         ProcessTroubleTicketService.complete({taskId:taskId,resolved:true}, $scope.incident,function (data) {
                             if(data.result==='true'){
-                                alert("处理完毕");
+                                DialogService('notify','','处理完毕');
                                 $location.path('/index/list-trouble-ticket');
                             };
                         });
@@ -129,8 +134,8 @@ angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.Tro
         }])
 
     // 关闭故障单
-    .controller('CloseTroubleTicketCtrl', ['$q', '$rootScope', '$scope', '$location', 'QueryTroubleTicketTaskService', 'CloseTroubleTicketService', 'TroubleTicketModelSerivce',
-        function ($q, $rootScope, $scope, $location, QueryTroubleTicketTaskService, CloseTroubleTicketService, TroubleTicketModelSerivce) {
+    .controller('CloseTroubleTicketCtrl', ['$q', '$rootScope', '$scope', '$location', 'QueryTroubleTicketTaskService', 'CloseTroubleTicketService', 'TroubleTicketModelSerivce', 'DialogService',
+        function ($q, $rootScope, $scope, $location, QueryTroubleTicketTaskService, CloseTroubleTicketService, TroubleTicketModelSerivce, DialogService) {
 
             $scope.incident = $rootScope.incident;
 
@@ -155,7 +160,7 @@ angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.Tro
                     .then(function(){
                         CloseTroubleTicketService.complete({taskId:taskId}, $scope.incident,function (data) {
                             if(data.result==='true'){
-                                alert("关闭成功");
+                                DialogService('notify','','关闭成功');
                                 $location.path('/index/list-trouble-ticket');
                             };
                         });
@@ -165,205 +170,37 @@ angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.Tro
         }])
 
     // 故障单列表控制器
-    .controller('ListTroubleTicketCtrl', ['$q','$rootScope', '$scope', 'ListTroubleTicketService', 'QueryTroubleTicketTaskService', 'SearchTroubleTicketService', '$location',
-        function ($q, $rootScope, $scope, ListTroubleTicketService, QueryTroubleTicketTaskService, SearchTroubleTicketService, $location) {
+    .controller('ListTroubleTicketCtrl', ['$scope', 'ListTroubleTicketService', 'QueryTroubleTicketTaskService', 'SearchTroubleTicketService', 'StatusChangeService',
+        function ($scope, ListTroubleTicketService, QueryTroubleTicketTaskService, SearchTroubleTicketService, StatusChangeService) {
 
-        $scope.mySelections = [];
-        $scope.filterOptions = {
-            filterText: "",
-            useExternalFilter: true
-        };
-        $scope.totalServerItems = 0;
-        $scope.pagingOptions = {
-            pageSizes: [20],
-            pageSize: 20,
-            currentPage: 1
-        };
+            // 搜索列表
+            $scope.ListService = ListTroubleTicketService;
 
-        $scope.setPagingData = function (data, page, pageSize) {
-            var pagedData = data.slice((page - 1) * pageSize, page * pageSize);
-            $scope.troubleTicketList = pagedData;
-            $scope.totalServerItems = data.length;
-            if (!$scope.$$phase) {
-                $scope.$apply();
-            }
-        };
+            // 搜索框
+            $scope.SearchService = SearchTroubleTicketService;
 
-        $scope.getPagedDataAsync = function (pageSize, page, searchText) {
-            setTimeout(function () {
-                var data;
-                if (searchText) {
-                    var ft = searchText.toLowerCase();
-                    ListTroubleTicketService.list(function (largeLoad) {
-                        data = largeLoad.filter(function (item) {
-                            return JSON.stringify(item).toLowerCase().indexOf(ft) != -1;
-                        });
-                        $scope.setPagingData(data, page, pageSize);
-                    });
-                } else {
-                    ListTroubleTicketService.list(function (largeLoad) {
-                        $scope.setPagingData(largeLoad, page, pageSize);
-                    });
-                }
-            }, 100);
-        };
+            // 查询记录状态
+            $scope.QueryTaskService = QueryTroubleTicketTaskService;
 
-        $scope.getPagedDataAsyncBySearch = function (pageSize, page, searchText) {
-            setTimeout(function () {
-                SearchTroubleTicketService.query({key:searchText}, function (largeLoad) {
-                    $scope.setPagingData(largeLoad, page, pageSize);
-                });
-            }, 100);
-        };
-
-        $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-
-        $scope.$watch('pagingOptions', function (newVal, oldVal) {
-            if (newVal !== oldVal && newVal.currentPage !== oldVal.currentPage) {
-                $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
-            }
-        }, true);
-
-        $scope.$watch('filterOptions', function (newVal, oldVal) {
-            if (newVal !== oldVal) {
-                $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
-            }
-        }, true);
-
-        // 故障单列表
-        $scope.gridUserList = {
-            data: 'troubleTicketList',
-            enablePaging: true,
-            showFooter: true,
-            totalServerItems: 'totalServerItems',
-            pagingOptions: $scope.pagingOptions,
-            filterOptions: $scope.filterOptions,
-            multiSelect: false,
-            showSelectionCheckbox: true,
-            selectedItems: $scope.mySelections,
-            columnDefs: [
+            // 要显示的列及列名
+            $scope.columnDefs = [
                 {field: 'number', displayName: '故障单号'},
                 {field: 'requesterName', displayName: '请求人'},
                 {field: 'requestDescription', displayName: '故障描述'},
                 {field: 'serviceCatalog', displayName: '服务目录'},
                 {field: 'priority', displayName: '优先级'},
-                {field: 'status', displayName: '状态'},
+//                {field: 'status', displayName: '状态',cellTemplate: '<div ng-class="{new : row.getProperty(col.field) === \'New\'}"><div class="ngCellText">{{row.getProperty(col.field)}}</div></div>'},
+                {field: 'status', displayName: '状态',cellTemplate: StatusChangeService.do()},
                 {field: 'assignedGroup', displayName: '分配组'},
                 {field: 'assignedUser', displayName: '分配用户'}
-            ]
-        };
+            ];
 
-            $scope.searchFun = function (){
-                $scope.getPagedDataAsyncBySearch($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.searchKey);
-            };
+            // 需要跳转的URL
+            $scope.newUrl = '/index/new-trouble-ticket';
+            $scope.acceptUrl = '/index/accept-trouble-ticket';
+            $scope.analysisUrl = '/index/analysis-trouble-ticket';
+            $scope.processUrl = '/index/process-trouble-ticket';
+            $scope.closeUrl = '/index/close-trouble-ticket';
 
-            $scope.newFun = function (){
-                $location.path('/index/new-trouble-ticket');
-            };
-
-            $scope.acceptFun = function (){
-
-                var promise;
-                var taskName = '';
-
-                for(var ticket in $scope.mySelections){
-                    $rootScope.incident = $scope.mySelections[ticket];
-                    promise = QueryTroubleTicketTaskService.query($rootScope.incident.instanceId);
-                };
-
-                promise.then(function success(data) {
-                    for (var i in data.tasks) {
-                        taskName = data.tasks[i].taskName;
-                    }
-                    if(taskName==='firstline accept_incident'){
-                        $location.path('/index/accept-trouble-ticket');
-                    }else{
-                        alert("流程错误！下一步处理应为："+taskName);
-                    };
-                }, function error(msg) {
-                    alert('出错：'+msg);
-                });
-            };
-
-            $scope.analysisFun = function (){
-
-                var promise;
-                var taskName = '';
-
-                for(var ticket in $scope.mySelections){
-                    $rootScope.incident = $scope.mySelections[ticket];
-                    promise = QueryTroubleTicketTaskService.query($rootScope.incident.instanceId);
-                };
-
-                promise.then(function success(data) {
-                    for (var i in data.tasks) {
-                        var task = data.tasks[i];
-                        taskName = task.taskName;
-                    }
-
-                    if(taskName==='firstline analysis_incident'){
-                        $location.path('/index/analysis-trouble-ticket');
-                    }else{
-                        alert("流程错误！下一步处理应为："+taskName);
-                    };
-
-                }, function error(msg) {
-                    console.error(msg);
-                });
-            };
-
-            $scope.processFun = function (){
-
-                var promise;
-                var taskName = '';
-
-                for(var ticket in $scope.mySelections){
-                    $rootScope.incident = $scope.mySelections[ticket];
-                    promise = QueryTroubleTicketTaskService.query($rootScope.incident.instanceId);
-                };
-
-                promise.then(function success(data) {
-                    for (var i in data.tasks) {
-                        var task = data.tasks[i];
-                        taskName = task.taskName;
-                    }
-
-                    if(taskName==='firstline process_incident'){
-                        $location.path('/index/process-trouble-ticket');
-                    }else{
-                        alert("流程错误！下一步处理应为："+taskName);
-                    };
-
-                }, function error(msg) {
-                    console.error(msg);
-                });
-            };
-
-            $scope.closeFun = function (){
-
-                var promise;
-                var taskName = '';
-
-                for(var ticket in $scope.mySelections){
-                    $rootScope.incident = $scope.mySelections[ticket];
-                    promise = QueryTroubleTicketTaskService.query($rootScope.incident.instanceId);
-                };
-
-                promise.then(function success(data) {
-                    for (var i in data.tasks) {
-                        var task = data.tasks[i];
-                        taskName = task.taskName;
-                    }
-
-                    if(taskName.indexOf('close incident')>-1){
-                        $location.path('/index/close-trouble-ticket');
-                    }else{
-                        alert("流程错误！下一步处理应为："+taskName);
-                    };
-
-                }, function error(msg) {
-                    console.error(msg);
-                });
-            };
         }])
 ;
