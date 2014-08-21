@@ -23,6 +23,7 @@ public class User {
     private boolean locked;
     private boolean passwordExpired;
     private Timestamp createdAt, updatedAt;
+    private String description;
 
     public long getId() {
         return id;
@@ -38,6 +39,14 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getName(){
+        return username;
+    }
+
+    public void setName(String name){
+        setUsername(name);
     }
 
     public String getEmail() {
@@ -120,4 +129,11 @@ public class User {
         this.updatedAt = updatedAt;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }
