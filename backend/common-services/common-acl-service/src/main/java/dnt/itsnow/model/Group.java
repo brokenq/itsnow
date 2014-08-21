@@ -3,19 +3,22 @@
  */
 package dnt.itsnow.model;
 
-import dnt.itsnow.platform.model.Record;
-
 /**
- * <h1>Class Usage</h1>
+ * <h1>The user group</h1>
+ *
+ * group作为配置项
+ *
+ * group#name == group#groupName
+ *
+ * TODO add group to members support
  */
-public class Group extends Record {
-    private String groupName;
+public class Group extends ConfigItem {
 
-    public String getGroupName() {
-        return groupName;
+    public String getGroupName(){
+        return super.getName();
     }
 
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
+    public void setGroupName(String name){
+        setName(name);
     }
 }

@@ -7,8 +7,7 @@ SET @MSP001 = (SELECT id from accounts where sn = 'msp_001');
 SET @MSP002 = (SELECT id from accounts where sn = 'msp_002');
 
 
-INSERT users(account_id, username, email, phone, password)
-VALUES
+INSERT users(account_id, username, email, phone, password) VALUES
 (@MSC_ID, 'admin',      'admin@itsnow.com',    '13012345678', '54442704733e9cddaeb28d54fb631f56247d326288d9d4e09da2039dff070bd47430a0e6b3560cd2'),
 (@MSC_ID, 'root',       'root@itsnow.com',     '13112345678', 'e81a8a2dc76c227258a1bd5551f3d3f45e21deeec634c052dc4e7acd82c0dd92db674b56d22dd637'),
 (@MSU001, 'steve.li',   'steve@csvw.com',      '13212345678', 'd73e6f76127849f457d17eb663f3f9605c89d1b9d596a5842e13bbcb56e658bbaceb07b8da9886b8'),

@@ -30,7 +30,9 @@ INSERT INTO group_members(username, group_id, groupname) VALUES
 ('sharp.liu',  @reporter_gid, @reporters_name),
 ('mike.wei',   @monitor_gid, @monitors_name),
 ('jacky.cao',  @first_line_gid, @first_line),
-('jay.xiong',  @second_line_gid, @second_line)
+('jay.xiong',  @second_line_gid, @second_line),
+('steve.li',  @first_line_gid, @first_line),
+('jason.wang',  @second_line_gid, @second_line)
 ;
 
 -- //@UNDO

@@ -2,7 +2,7 @@ package dnt.itsnow.demo.web.controller;
 
 import dnt.itsnow.api.ActivitiEngineService;
 import dnt.itsnow.demo.model.Incident;
-import dnt.itsnow.demo.support.IncidentManager;
+import dnt.itsnow.demo.support.MsuIncidentManager;
 import dnt.itsnow.web.controller.SessionSupportController;
 import dnt.util.StringUtils;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -35,7 +35,7 @@ public class IncidentController extends SessionSupportController<Incident> {
     ActivitiEngineService activitiEngineService;
 
     @Autowired
-    IncidentManager incidentManager;
+    MsuIncidentManager msuIncidentManager;
 
     private static final String PROCESS_KEY = "msu_incident";
 
@@ -62,7 +62,7 @@ public class IncidentController extends SessionSupportController<Incident> {
         }
         logger.debug("instance ids:"+ids.toString());
         //根据实例查询对应表单数据
-        indexPage = incidentManager.findByInstanceIds(ids,key,pageRequest);
+        indexPage = msuIncidentManager.findByInstanceIds(ids,key,pageRequest);
         return indexPage.getContent();
     }
 
@@ -76,7 +76,6 @@ public class IncidentController extends SessionSupportController<Incident> {
     @RequestMapping(value = "/assignee")
     @ResponseBody
     public List<Incident> indexAssignee(@RequestParam(value = "key", required = false) String key) {
-
         Set<Task> tasks = new HashSet<Task>();
         //查询分配给当前用户的任务列表
         tasks.addAll(activitiEngineService.queryTasksAssignee(currentUser.getUsername(), PROCESS_KEY));
@@ -87,7 +86,7 @@ public class IncidentController extends SessionSupportController<Incident> {
         }
         logger.debug("instance ids:"+ids.toString());
         //根据实例查询对应表单数据
-        indexPage = incidentManager.findByInstanceIds(ids,key,pageRequest);
+        indexPage = msuIncidentManager.findByInstanceIds(ids,key,pageRequest);
         return indexPage.getContent();
     }
 
@@ -111,7 +110,7 @@ public class IncidentController extends SessionSupportController<Incident> {
         }
         logger.debug("instance ids:"+ids.toString());
         //根据实例查询对应表单数据
-        indexPage = incidentManager.findByInstanceIds(ids,key,pageRequest);
+        indexPage = msuIncidentManager.findByInstanceIds(ids,key,pageRequest);
         return indexPage.getContent();
     }
 
@@ -131,7 +130,7 @@ public class IncidentController extends SessionSupportController<Incident> {
 
         if(withIncident) {
             //获取故障单信息
-            Incident incident = incidentManager.findByInstanceId(instanceId);
+            Incident incident = msuIncidentManager.findByInstanceId(instanceId);
             map.put("incident", incident);
         }
         //获取当前task列表信息
@@ -170,11 +169,12 @@ public class IncidentController extends SessionSupportController<Incident> {
         variables.put("description",incident.getRequestDescription());
         //start incident process
         ProcessInstance processInstance = activitiEngineService.startProcessInstanceByKey(PROCESS_KEY,variables,currentUser.getUsername());
-
+        //activitiEngineService.addEventListener( msuEventListener);
         //save incident object and persist it
         incident.setCreatedBy(currentUser.getUsername());
-        incident.setInstanceId(processInstance.getProcessInstanceId());
-        incidentManager.newIncident(incident);
+        incident.setMsuInstanceId(processInstance.getProcessInstanceId());
+        incident.setMsuAccountName(mainAccount.getName());
+        msuIncidentManager.newIncident(incident);
 
         //return map
         Map<String,Object> result = new HashMap<String, Object>();
@@ -208,9 +208,9 @@ public class IncidentController extends SessionSupportController<Incident> {
 
             //todo add transaction process
             // update incident object status and persist it
-            incidentManager.updateIncident(incident);
+            msuIncidentManager.updateIncident(incident);
             //claim task if not claim
-            activitiEngineService.claimTask(taskId,currentUser.getUsername());
+            //activitiEngineService.claimTask(taskId,currentUser.getUsername());
             //complete task
             activitiEngineService.completeTask(taskId,taskVariables,currentUser.getUsername());
 

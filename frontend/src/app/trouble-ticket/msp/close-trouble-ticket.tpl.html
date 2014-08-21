@@ -175,10 +175,10 @@
     </div>
 
     <div class="col-xs-12 col-sm-4">
-        <label class="col-sm-3 control-label no-padding-right" for="status"> 当前状态 </label>
+        <label class="col-sm-3 control-label no-padding-right" for="mspStatus"> 当前状态 </label>
 
         <div class="col-sm-9">
-            <select id="status" ng-model="incident.status"
+            <select id="mspStatus" ng-model="incident.mspStatus"
                     ng-options="m.name as m.name for m in selectedModel.statusModule">
                 <option value=""> 请选择</option>
             </select>

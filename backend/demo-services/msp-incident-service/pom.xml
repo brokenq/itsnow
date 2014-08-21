@@ -25,6 +25,10 @@
             <groupId>dnt.itsnow</groupId>
             <artifactId>common-user-service</artifactId>
         </dependency>
+        <dependency>
+            <groupId>dnt.itsnow.demo</groupId>
+            <artifactId>common-incident-service</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

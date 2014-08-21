@@ -1,7 +1,7 @@
 package dnt.itsnow.demo.web.controller;
 
 import dnt.itsnow.api.ActivitiEngineService;
-import dnt.itsnow.demo.model.MspIncident;
+import dnt.itsnow.demo.model.Incident;
 import dnt.itsnow.demo.support.MspIncidentManager;
 import dnt.itsnow.web.controller.SessionSupportController;
 import dnt.util.StringUtils;
@@ -26,7 +26,7 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/api/msp-incidents")
-public class MspIncidentController extends SessionSupportController<MspIncident> {
+public class MspIncidentController extends SessionSupportController<Incident> {
 
     @Autowired
     ActivitiEngineService activitiEngineService;
@@ -45,7 +45,7 @@ public class MspIncidentController extends SessionSupportController<MspIncident>
      */
     @RequestMapping(value = "")
     @ResponseBody
-    public List<MspIncident> index(@RequestParam(value = "key", required = false) String key) {
+    public List<Incident> index(@RequestParam(value = "key", required = false) String key) {
 
         Set<Task> tasks = new HashSet<Task>();
         //查询分配给当前用户的任务列表
@@ -80,7 +80,7 @@ public class MspIncidentController extends SessionSupportController<MspIncident>
 
         if(withIncident) {
             //获取故障单信息
-            MspIncident incident = incidentManager.findByInstanceId(instanceId);
+            Incident incident = incidentManager.findByInstanceId(instanceId);
             map.put("incident", incident);
         }
         //获取当前task列表信息
@@ -113,16 +113,15 @@ public class MspIncidentController extends SessionSupportController<MspIncident>
      */
     @RequestMapping(value = "/start",method = RequestMethod.POST)
     @ResponseBody
-    public Map<String,Object> start(HttpServletRequest request,@RequestBody @Valid MspIncident incident){
+    public Map<String,Object> start(HttpServletRequest request,@RequestBody @Valid Incident incident){
         Map<String, Object> variables = new HashMap<String, Object>();
-        variables.putAll(request.getParameterMap());
-        variables.put("description",incident.getRequestDescription());
         //start incident process
         ProcessInstance processInstance = activitiEngineService.startProcessInstanceByKey(PROCESS_KEY,variables,currentUser.getUsername());
 
         //save incident object and persist it
         incident.setCreatedBy(currentUser.getUsername());
-        incident.setInstanceId(processInstance.getProcessInstanceId());
+        incident.setMspInstanceId(processInstance.getProcessInstanceId());
+        incident.setMspAccountName(this.mainAccount.getName());
         incidentManager.newIncident(incident);
 
         //return map
@@ -144,7 +143,7 @@ public class MspIncidentController extends SessionSupportController<MspIncident>
      */
     @RequestMapping(value = "/{taskId}/complete",method = RequestMethod.PUT)
     @ResponseBody
-    public Map<String,Object> complete(@PathVariable("taskId") String taskId,HttpServletRequest request,@RequestBody @Valid MspIncident incident){
+    public Map<String,Object> complete(@PathVariable("taskId") String taskId,HttpServletRequest request,@RequestBody @Valid Incident incident){
         Map<String,Object> result = new HashMap<String, Object>();
         if(StringUtils.isNotEmpty(currentUser.getUsername())){
             Map<String, String> taskVariables = new HashMap<String, String>();
@@ -159,7 +158,7 @@ public class MspIncidentController extends SessionSupportController<MspIncident>
             // update incident object status and persist it
             incidentManager.updateIncident(incident);
             //claim task if not claim
-            activitiEngineService.claimTask(taskId,currentUser.getUsername());
+            //activitiEngineService.claimTask(taskId,currentUser.getUsername());
             //complete task
             activitiEngineService.completeTask(taskId,taskVariables,currentUser.getUsername());
 

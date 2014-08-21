@@ -4,7 +4,6 @@
 package dnt.itsnow.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import dnt.itsnow.platform.model.Record;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
@@ -19,13 +18,12 @@ import java.util.*;
 
 /**
  * <h1>系统的某个用户，一般与甲方或者乙方存在工作雇佣关系</h1>
+ *
+ * user也是配置项
  */
-public class User extends Record implements UserDetails, CredentialsContainer {
+public class User extends ConfigItem implements UserDetails, CredentialsContainer {
 
     //~ Instance fields ================================================================================================
-    @NotBlank
-    @Length(min = 4, max = 20)
-    private String username;
     @Email
     @NotBlank
     private String email;
@@ -59,7 +57,7 @@ public class User extends Record implements UserDetails, CredentialsContainer {
     }
 
     public String getUsername() {
-        return username;
+        return getName();
     }
 
     public boolean isEnabled() {
@@ -86,8 +84,10 @@ public class User extends Record implements UserDetails, CredentialsContainer {
         password = null;
     }
 
+    @NotBlank
+    @Length(min = 4, max = 20)
     public void setUsername(String username) {
-        this.username = username;
+        setName(username);
     }
 
     public String getEmail() {
@@ -179,7 +179,7 @@ public class User extends Record implements UserDetails, CredentialsContainer {
     }
 
     public void apply(User another) {
-        this.username = another.username;
+        this.setName(another.getName());
         this.email = another.email;
         this.phone = another.phone;
         this.enabled = another.enabled;
@@ -217,7 +217,7 @@ public class User extends Record implements UserDetails, CredentialsContainer {
     public boolean equals(Object rhs) {
         //noinspection SimplifiableIfStatement
         if (rhs instanceof User) {
-            return username.equals(((User) rhs).username);
+            return getName().equals(((User) rhs).getName());
         }
         return false;
     }
@@ -227,14 +227,14 @@ public class User extends Record implements UserDetails, CredentialsContainer {
      */
     @Override
     public int hashCode() {
-        return username.hashCode();
+        return getName().hashCode();
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(super.toString()).append(": ");
-        sb.append("Username: ").append(this.username).append("; ");
+        sb.append("Username: ").append(this.getUsername()).append("; ");
         sb.append("Password: [PROTECTED]; ");
         sb.append("Enabled: ").append(this.enabled).append("; ");
         sb.append("AccountNonExpired: ").append(this.isAccountNonExpired()).append("; ");

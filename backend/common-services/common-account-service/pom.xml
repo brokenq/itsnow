@@ -16,6 +16,12 @@
         The common account service shared by all deployment builds to access(read) system schema by DBI.
     </description>
 
+    <dependencies>
+        <dependency>
+            <groupId>dnt.itsnow</groupId>
+            <artifactId>common-cmdb-service</artifactId>
+        </dependency>
+    </dependencies>
     <build>
         <plugins>
             <plugin>

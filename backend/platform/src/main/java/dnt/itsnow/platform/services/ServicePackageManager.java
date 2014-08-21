@@ -30,10 +30,7 @@ import org.springframework.context.event.ApplicationEventMulticaster;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * The service package manager
@@ -82,13 +79,11 @@ public class ServicePackageManager extends ApplicationSupportBean
         if (packageJars == null)
             packageJars = new File[0]; /*也可能在目录下没有jar*/
         logger.debug("Loading {} service packages from: {}", packageJars.length, repository.getAbsolutePath());
-        List<Component> components = new ArrayList<Component>();
-        for (File packageJar : packageJars) {
-            components.add(componentRepository.resolveComponent(packageJar.getName()));
-        }
-        componentRepository.sortComponents(components);
         // sort the model packages by them inner dependency
-        componentRepository.sortCandidates(packageJars);
+        // componentRepository.sortCandidates(packageJars);
+        // TODO  不知道为什么，排序结果中会出错
+        // 临时规则，让系统能先正常的跑起来，以后再来解决
+        Arrays.sort(packageJars, new ServicePackageComparator());
         StringBuilder sb = new StringBuilder();
         for (File packageJar : packageJars) {
             Component pkg = componentRepository.resolveComponent(packageJar.getName());
@@ -190,4 +185,5 @@ public class ServicePackageManager extends ApplicationSupportBean
         String id = dependency.getArtifactId().toLowerCase();
         return !id.endsWith("_api");
     }
+
 }

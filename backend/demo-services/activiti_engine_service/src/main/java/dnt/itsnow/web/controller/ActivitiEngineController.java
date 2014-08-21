@@ -82,12 +82,12 @@ public class ActivitiEngineController extends ApplicationController {
         return "true";
     }
 
-    @RequestMapping(value = "/upload/{fileName}", method = RequestMethod.POST)
+    @RequestMapping(value = "/upload/{filename}", method = RequestMethod.POST)
     @ResponseBody
-    public void uploadFile(@RequestBody @PathVariable("fileName") String fileName, HttpServletRequest request) {
+    public void uploadFile(@RequestBody @PathVariable("filename") String fileName, HttpServletRequest request) {
         try {
             InputStream inputStream = request.getInputStream();
-            activitiEngineService.deploySingleProcess(inputStream, fileName);
+            activitiEngineService.deploySingleProcess(inputStream, fileName,fileName);
             inputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -109,9 +109,9 @@ public class ActivitiEngineController extends ApplicationController {
         return "{'result':'true','size':" + size + "}";
     }
 
-    @RequestMapping(value = "/tasksInstanceId")
+    @RequestMapping(value = "/tasks")
     @ResponseBody
-    public Object queryTasksByInstanceId(@RequestParam("instanceId") String instanceId){
+    public Object queryTasksByInstanceId(@RequestParam("instance-id") String instanceId){
         List<Map<String, Object>> resultLs = new ArrayList<Map<String, Object>>();
         if(StringUtils.isNotEmpty(instanceId)){
             List<Task> ls = activitiEngineService.queryTasksByInstanceId(instanceId);
@@ -135,9 +135,9 @@ public class ActivitiEngineController extends ApplicationController {
         return resultLs;
     }
 
-    @RequestMapping(value = "/tasksAssignee")
+    @RequestMapping(value = "/tasks-assignee")
     @ResponseBody
-    public Object queryTasksByAssignee(@RequestParam("userName") String userName){
+    public Object queryTasksByAssignee(@RequestParam("username") String userName){
         List<Map<String, Object>> resultLs = new ArrayList<Map<String, Object>>();
         if(StringUtils.isNotEmpty(userName)){
             List<Task> ls = activitiEngineService.queryTasksAssignee(userName);
@@ -161,9 +161,9 @@ public class ActivitiEngineController extends ApplicationController {
         return resultLs;
     }
 
-    @RequestMapping(value = "/tasksCandidateUser")
+    @RequestMapping(value = "/tasks-candidate-user")
     @ResponseBody
-    public Object queryTasksByCandidateUser(@RequestParam("userName") String userName){
+    public Object queryTasksByCandidateUser(@RequestParam("username") String userName){
         List<Map<String, Object>> resultLs = new ArrayList<Map<String, Object>>();
         if(StringUtils.isNotEmpty(userName)){
             List<Task> ls = activitiEngineService.queryTasksCandidateUser(userName);
@@ -186,9 +186,9 @@ public class ActivitiEngineController extends ApplicationController {
         return resultLs;
     }
 
-    @RequestMapping(value = "/tasksCandidateGroup")
+    @RequestMapping(value = "/tasks-candidate-group")
     @ResponseBody
-    public Object queryTasksByUser(@RequestParam("groupName") String groupName){
+    public Object queryTasksByUser(@RequestParam("group-name") String groupName){
         List<Map<String, Object>> resultLs = new ArrayList<Map<String, Object>>();
         if(StringUtils.isNotEmpty(groupName)){
             List<Task> ls = activitiEngineService.queryTasksCandidateGroup(groupName);
@@ -245,7 +245,7 @@ public class ActivitiEngineController extends ApplicationController {
 
     @RequestMapping(value = "/tasks/complete/{id}")
     @ResponseBody
-    public Object completeTasksByUser(@PathVariable("id") String taskId,@RequestParam("userName") String userName,HttpServletRequest request){
+    public Object completeTasksByUser(@PathVariable("id") String taskId,@RequestParam("username") String userName,HttpServletRequest request){
         List<Map<String, Object>> resultLs = new ArrayList<Map<String, Object>>();
         if(StringUtils.isNotEmpty(userName)){
             Map<String, String> taskVariables = new HashMap<String, String>();

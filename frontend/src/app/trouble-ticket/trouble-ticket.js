@@ -37,7 +37,7 @@ angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.Tro
 
                 var taskId = '';
 
-                var promise = QueryTroubleTicketTaskService.query($scope.incident.instanceId);
+                var promise = QueryTroubleTicketTaskService.query($scope.incident.msuInstanceId);
 
                 promise
                     .then(function (data) {
@@ -73,7 +73,7 @@ angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.Tro
 
                 var taskId = '';
 
-                var promise = QueryTroubleTicketTaskService.query($scope.incident.instanceId);
+                var promise = QueryTroubleTicketTaskService.query($scope.incident.msuInstanceId);
 
                 promise
                     .then(function (data) {
@@ -109,7 +109,7 @@ angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.Tro
 
                 var taskId = '';
 
-                var promise = QueryTroubleTicketTaskService.query($scope.incident.instanceId);
+                var promise = QueryTroubleTicketTaskService.query($scope.incident.msuInstanceId);
 
                 promise
                     .then(function (data) {
@@ -145,7 +145,7 @@ angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.Tro
 
                 var taskId = '';
 
-                var promise = QueryTroubleTicketTaskService.query($scope.incident.instanceId);
+                var promise = QueryTroubleTicketTaskService.query($scope.incident.msuInstanceId);
 
                 promise
                     .then(function (data) {
@@ -192,7 +192,10 @@ angular.module('ItsNow.TroubleTicket', ['ItsNow.TroubleTicket.Model','ItsNow.Tro
 //                {field: 'status', displayName: '状态',cellTemplate: '<div ng-class="{new : row.getProperty(col.field) === \'New\'}"><div class="ngCellText">{{row.getProperty(col.field)}}</div></div>'},
                 {field: 'status', displayName: '状态',cellTemplate: StatusChangeService.do()},
                 {field: 'assignedGroup', displayName: '分配组'},
-                {field: 'assignedUser', displayName: '分配用户'}
+                {field: 'assignedUser', displayName: '分配用户'},
+                {field: 'msuStatus', displayName: '状态'},
+                {field: 'mspAccountName', displayName: 'MSP帐户'},
+                {field: 'mspStatus', displayName: 'MSP状态'}
             ];
 
             // 需要跳转的URL
