@@ -15,4 +15,65 @@
     <description>
         A technical prototype for webapp frontend
     </description>
+
+    <dependencies>
+        <dependency>
+            <groupId>dnt.itsnow</groupId>
+            <artifactId>backend</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>${version.maven.antrun}</version>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <id>build-frontend</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <exec dir="${project.basedir}" executable="grunt" failonerror="true">
+                                    <arg line="build --force"/>
+                                </exec>
+                                <echo message="Frontend is built" />
+                                <copy todir="${release.dir}/webapp/build/" overwrite="true">
+                                    <fileset dir="${project.basedir}/build"/>
+                                </copy>
+
+                            </tasks>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>compile-frontend</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <exec dir="${project.basedir}" executable="grunt" failonerror="true">
+                                    <arg line="compile"/>
+                                </exec>
+                                <echo message="Frontend is compiled" />
+                                <copy todir="${release.dir}/webapp/deploy/" overwrite="true">
+                                    <fileset dir="${project.basedir}/deploy" />
+                                </copy>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+
+            </plugin>
+
+        </plugins>
+    </build>
 </project>
