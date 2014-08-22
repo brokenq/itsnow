@@ -205,19 +205,19 @@ appModule.directive('hello', function(){
 
         },
         link : function(scope, element, attrs) {
-                console.log(angular.element(element.find('div')));
+//                console.log(angular.element(element.find('div')));
             scope.$watch('mySelections', function (newVal, oldVal) {
 //                console.log('newVal:');
 //                console.log(newVal);
                 if(newVal.length>0){
                     var taskName = '';
-                    var promise = scope.QueryTaskService.query(newVal[0].instanceId);
+                    var promise = scope.QueryTaskService.query(newVal[0].msuInstanceId);
                     promise.then(function success(data) {
                         for (var i in data.tasks) {
                             var task = data.tasks[i];
                             taskName = task.taskName;
                         }
-
+                        console.log("taskName:"+taskName);
                         if(taskName.indexOf('accept')>-1){
                             angular.element(element.find('button#accept')).removeAttr('disabled');
                             angular.element(element.find('button#analysis')).attr('disabled','disabled');
