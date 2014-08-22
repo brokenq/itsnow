@@ -121,7 +121,7 @@ indexApp.factory('ProfileService', ['$resource', function ($resource) {
     });
 }])
 
-indexApp.controller('indexCtrl', ['$scope', '$location',  'LogoutService', function ($scope, $location, LogoutService) {
+indexApp.controller('indexCtrl', ['$scope', '$location',  'LogoutService', '$window', function ($scope, $location, LogoutService, $window) {
 
 //    $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
 //        if (angular.isDefined(toState.data.pageTitle)) {
@@ -131,7 +131,7 @@ indexApp.controller('indexCtrl', ['$scope', '$location',  'LogoutService', funct
 
     $scope.logout = function(){
         LogoutService.delete(function(){
-            $location.path('/login.html');
+            $window.location.href='/login.html';
         });
     };
 

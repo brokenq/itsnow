@@ -28,7 +28,7 @@ angular
             var requestInterceptor = {
                 request: function(config) {
                     var deferred = $q.defer();
-                    if (config.method === 'POST' || config.method === 'PUT') {
+                    if (config.method === 'POST' || config.method === 'PUT' || config.method === 'DELETE') {
 //                        console.log("这个是POST/PUT方法");
                         var CSRFService = $injector.get('CSRFService');
                         CSRFService.get().then(function(data){
