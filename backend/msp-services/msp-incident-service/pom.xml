@@ -1,24 +1,24 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>dnt.itsnow.demo</groupId>
-        <artifactId>demo-services</artifactId>
+        <groupId>dnt.itsnow</groupId>
+        <artifactId>msp-services</artifactId>
         <version>0.1.5</version>
     </parent>
 
-    <artifactId>msu-incident-service</artifactId>
-    <name>MSU Incident Service</name>
+    <artifactId>msp-incident-service</artifactId>
+    <name>msp Incident Service</name>
     <description>
-        Demo MSU Incident Service implements,provide spi to frontend..
+        Demo msp Incident Service implements,provide spi to frontend..
     </description>
 
     <dependencies>
         <dependency>
-            <groupId>dnt.itsnow.demo</groupId>
+            <groupId>dnt.itsnow</groupId>
             <artifactId>activiti_engine_service</artifactId>
         </dependency>
         <dependency>
@@ -26,21 +26,8 @@
             <artifactId>common-user-service</artifactId>
         </dependency>
         <dependency>
-            <groupId>dnt.itsnow.demo</groupId>
+            <groupId>dnt.itsnow</groupId>
             <artifactId>common-incident-service</artifactId>
-        </dependency>
-        <!-- message-bus,redis,cache-service -->
-        <dependency>
-            <groupId>dnt.components</groupId>
-            <artifactId>message_bus</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>dnt.components</groupId>
-            <artifactId>cache_service</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>dnt.components</groupId>
-            <artifactId>redis</artifactId>
         </dependency>
     </dependencies>
 
@@ -52,8 +39,8 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <App-Config>dnt.itsnow.demo.config.MsuIncidentAppConfig</App-Config>
-                            <Service-Config>dnt.itsnow.demo.config.MsuIncidentServiceConfig</Service-Config>
+                            <App-Config>dnt.itsnow.demo.config.MspIncidentAppConfig</App-Config>
+                            <Service-Config>dnt.itsnow.demo.config.MspIncidentServiceConfig</Service-Config>
                             <DB-Repository>dnt.itsnow.demo.repository</DB-Repository>
                             <Web-Repository>dnt.itsnow.demo.web.controller</Web-Repository>
                         </manifestEntries>
