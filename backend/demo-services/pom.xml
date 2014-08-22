@@ -49,11 +49,7 @@
     <modules>
         <module>session_service</module>
         <module>user_service</module>
-        <module>activiti_engine_service</module>
         <module>service_catalog_service</module>
-        <module>common-incident-service</module>
-        <module>msu-incident-service</module>
-        <module>msp-incident-service</module>
     </modules>
 
     <dependencyManagement>
@@ -69,21 +65,13 @@
                 <artifactId>session_api</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>dnt.itsnow.demo</groupId>
-                <artifactId>activiti_engine_api</artifactId>
-                <version>${project.version}</version>
-            </dependency>
+
             <dependency>
                 <groupId>dnt.itsnow.demo</groupId>
                 <artifactId>service_catalog_api</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>dnt.itsnow.demo</groupId>
-                <artifactId>common-incident-service</artifactId>
-                <version>${project.version}</version>
-            </dependency>
+
 
             <!--APP for runtime dependencies-->
             <dependency>
@@ -96,11 +84,7 @@
                 <artifactId>session_app</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>dnt.itsnow.demo</groupId>
-                <artifactId>activiti_engine_service</artifactId>
-                <version>${project.version}</version>
-            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

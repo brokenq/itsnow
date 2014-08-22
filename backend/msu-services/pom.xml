@@ -16,6 +16,10 @@
         面向甲方/采购方的业务系统
     </description>
 
+    <modules>
+        <module>msu-incident-service</module>
+    </modules>
+
     <dependencies>
         <dependency>
             <groupId>dnt.itsnow</groupId>
@@ -26,6 +30,21 @@
             <artifactId>common-user-service</artifactId>
         </dependency>
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>dnt.itsnow</groupId>
+                <artifactId>activiti_engine_service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dnt.itsnow</groupId>
+                <artifactId>common-incident-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>

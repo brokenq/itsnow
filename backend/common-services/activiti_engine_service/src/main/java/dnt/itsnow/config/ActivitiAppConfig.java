@@ -12,7 +12,7 @@ import org.springframework.context.annotation.ImportResource;
  * the activiti app configuration
  */
 @Configuration
-@ImportResource( "classpath:META-INF/activiti.xml")
+@ImportResource("classpath:META-INF/activiti.xml")
 @Import(DefaultAppConfig.class)
 public class ActivitiAppConfig {
 }

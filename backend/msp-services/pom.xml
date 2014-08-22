@@ -16,6 +16,27 @@
         面向乙方/供应方的业务系统
     </description>
 
+    <modules>
+        <module>msp-incident-service</module>
+    </modules>
+
+    <dependencies>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>dnt.itsnow</groupId>
+                <artifactId>activiti_engine_service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dnt.itsnow</groupId>
+                <artifactId>common-incident-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>

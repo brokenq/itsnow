@@ -30,6 +30,8 @@
         <module>common-service_catalog-service</module>
         <module>common-contract-service</module>
         <module>common-sla-service</module>
+        <module>activiti_engine_service</module>
+        <module>common-incident-service</module>
     </modules>
 
     <dependencies>

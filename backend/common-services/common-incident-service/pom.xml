@@ -5,22 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>dnt.itsnow.demo</groupId>
-        <artifactId>demo-services</artifactId>
+        <groupId>dnt.itsnow</groupId>
+        <artifactId>common-services</artifactId>
         <version>0.1.5-SNAPSHOT</version>
     </parent>
-
-    <dependencies>
-        <dependency>
-            <groupId>dnt.itsnow</groupId>
-            <artifactId>common-account-service</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>dnt.itsnow</groupId>
-            <artifactId>common-user-service</artifactId>
-        </dependency>
-    </dependencies>
-
 
     <artifactId>common-incident-service</artifactId>
     <name>Common Incident Service</name>
