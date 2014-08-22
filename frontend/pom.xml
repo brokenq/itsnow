@@ -19,9 +19,8 @@
     <dependencies>
         <dependency>
             <groupId>dnt.itsnow</groupId>
-            <artifactId>backend</artifactId>
+            <artifactId>release</artifactId>
             <version>${project.version}</version>
-            <type>pom</type>
             <scope>runtime</scope>
         </dependency>
     </dependencies>
@@ -40,7 +39,7 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                            <tasks>
+                            <target>
                                 <exec dir="${project.basedir}" executable="grunt" failonerror="true">
                                     <arg line="build --force"/>
                                 </exec>
@@ -49,7 +48,7 @@
                                     <fileset dir="${project.basedir}/build"/>
                                 </copy>
 
-                            </tasks>
+                            </target>
                         </configuration>
                     </execution>
                     <execution>
@@ -59,15 +58,16 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                            <tasks>
+                            <target>
                                 <exec dir="${project.basedir}" executable="grunt" failonerror="true">
                                     <arg line="compile"/>
                                 </exec>
                                 <echo message="Frontend is compiled" />
+                                <delete dir="${release.dir}/webapp/build/"/>
                                 <copy todir="${release.dir}/webapp/deploy/" overwrite="true">
                                     <fileset dir="${project.basedir}/deploy" />
                                 </copy>
-                            </tasks>
+                            </target>
                         </configuration>
                     </execution>
                 </executions>
