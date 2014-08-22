@@ -1,0 +1,32 @@
+<div class="table-responsive">
+    <div id="sample-table-2_wrapper" class="dataTables_wrapper" role="grid">
+
+        <div class="row">
+            <div class="col-sm-6">
+                <div id="sample-table-2_length" class="dataTables_length"><label>Search: <input type="text"
+                                                                                                ng-model="searchKey"
+                                                                                                aria-controls="sample-table-2">
+                </label>
+
+                    <a href="javascript:void(0)" id="fbox_grid-table_search" ng-click="searchFun()"
+                       class="fm-button ui-state-default ui-corner-all fm-button-icon-right ui-reset btn btn-sm btn-purple"><span
+                            class="icon-search"></span>Find</a>
+
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="dataTables_filter" id="sample-table-2_filter">
+                    <button type="button" class="btn btn-sm btn-success" ng-click="newFun()" id="new" name="new">新建</button>
+                    <button type="button" class="btn btn-sm btn-primary" ng-click="acceptFun()" id="accept" name="accept">签收</button>
+                    <button type="button" class="btn btn-sm btn-warning" ng-click="analysisFun()" id="analysis" name="analysis">分析
+                    </button>
+                    <button type="button" class="btn btn-sm btn-info" ng-click="processFun()" id="process" name="process">处理</button>
+                    <button type="button" class="btn btn-sm btn-danger" ng-click="closeFun()" id="close" name="close">关闭</button>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="gridStyle" ng-grid="gridUserList"></div>
+    </div>
+</div>

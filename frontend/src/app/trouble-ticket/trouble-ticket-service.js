@@ -77,4 +77,14 @@ angular.module('ItsNow.TroubleTicket.Service', [])
         });
     }])
 
+    // 关闭故障工单
+    .factory('StatusChangeService', [function () {
+        return {
+            do : function(field){
+                console.log('field:'+field);
+                return "<div ng-class=\"{new : row.getProperty(col.field) === \'New\'}\"><div class=\"ngCellText\">{{row.getProperty(col.field)}}</div></div>";
+            }
+        };
+    }])
+
 ;

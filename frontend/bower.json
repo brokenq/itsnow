@@ -21,5 +21,8 @@
   },
   "depeacendencies": {
     "-bootstrap": "git@github.com:Kadvin/ace-bootstrap.git"
+  },
+  "dependencies": {
+    "angular-dialog-service": "~5.1.1"
   }
 }
