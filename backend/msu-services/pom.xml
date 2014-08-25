@@ -18,6 +18,7 @@
 
     <modules>
         <module>msu-incident-service</module>
+        <module>msu-gui-service</module>
     </modules>
 
     <dependencies>

@@ -18,6 +18,7 @@
 
     <modules>
         <module>msp-incident-service</module>
+        <module>msp-gui-service</module>
     </modules>
 
     <dependencies>

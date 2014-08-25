@@ -25,6 +25,7 @@
         <module>mutable-service_catalog-service</module>
         <module>mutable-contract-service</module>
         <module>mutable-sla-service</module>
+        <module>msc-gui-service</module>
     </modules>
 
     <dependencies>
