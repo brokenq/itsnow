@@ -15,11 +15,4 @@
     <description>
         The mutable contract service implemented by MSC, and provide SPI to other deployment builds.
     </description>
-
-    <dependencies>
-        <dependency>
-            <groupId>dnt.itsnow</groupId>
-            <artifactId>common-contract-service</artifactId>
-        </dependency>
-    </dependencies>
 </project>

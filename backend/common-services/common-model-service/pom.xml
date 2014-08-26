@@ -1,4 +1,4 @@
-﻿﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -6,27 +6,32 @@
 
     <parent>
         <groupId>dnt.itsnow</groupId>
-        <artifactId>msp-services</artifactId>
+        <artifactId>common-services</artifactId>
         <version>0.1.6-SNAPSHOT</version>
     </parent>
 
-    <artifactId>msp-incident-service</artifactId>
-    <name>msp Incident Service</name>
+    <artifactId>common-model-service</artifactId>
+    <name>Common Model Service</name>
     <description>
-        Demo msp Incident Service implements,provide spi to frontend..
+        Define all core models
     </description>
 
     <dependencies>
         <dependency>
             <groupId>dnt.itsnow</groupId>
-            <artifactId>activiti_engine_service</artifactId>
+            <artifactId>common-cmdb-service</artifactId>
         </dependency>
         <dependency>
             <groupId>dnt.itsnow</groupId>
-            <artifactId>general-incident-service</artifactId>
+            <artifactId>common-gui-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
-
+    
     <build>
         <plugins>
             <plugin>
@@ -35,10 +40,8 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <App-Config>dnt.itsnow.demo.config.MspIncidentAppConfig</App-Config>
-                            <Service-Config>dnt.itsnow.demo.config.MspIncidentServiceConfig</Service-Config>
-                            <DB-Repository>dnt.itsnow.demo.repository</DB-Repository>
-                            <Web-Repository>dnt.itsnow.demo.web.controller</Web-Repository>
+                            <App-Config>dnt.itsnow.config.CommonModelAppConfig</App-Config>
+                            <Service-Config>dnt.itsnow.config.CommonModelServiceConfig</Service-Config>
                         </manifestEntries>
                     </archive>
                 </configuration>

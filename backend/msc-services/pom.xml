@@ -20,12 +20,12 @@
     </description>
 
     <modules>
+        <module>msc-gui-service</module>
         <module>mutable-account-service</module>
         <module>mutable-user-service</module>
         <module>mutable-service_catalog-service</module>
         <module>mutable-contract-service</module>
         <module>mutable-sla-service</module>
-        <module>msc-gui-service</module>
     </modules>
 
     <dependencies>
@@ -35,7 +35,7 @@
         </dependency>
         <dependency>
             <groupId>dnt.itsnow</groupId>
-            <artifactId>common-user-service</artifactId>
+            <artifactId>common-model-service</artifactId>
         </dependency>
     </dependencies>
 

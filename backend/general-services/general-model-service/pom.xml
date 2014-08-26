@@ -6,16 +6,15 @@
 
     <parent>
         <groupId>dnt.itsnow</groupId>
-        <artifactId>msc-services</artifactId>
+        <artifactId>general-services</artifactId>
         <version>0.1.6-SNAPSHOT</version>
     </parent>
 
-    <artifactId>mutable-user-service</artifactId>
-    <name>Mutable User Service</name>
+    <artifactId>general-model-service</artifactId>
+    <name>General Model Service</name>
     <description>
-        The mutable user service implemented by MSC, and provide SPI to other deployment builds.
+        General model service of MSU and MSP
     </description>
-
     <build>
         <plugins>
             <plugin>
@@ -24,13 +23,12 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Service-Config>dnt.itsnow.config.MutableUserServiceConfig</Service-Config>
+                            <App-Config>dnt.itsnow.config.GeneralModelAppConfig</App-Config>
+                            <Service-Config>dnt.itsnow.config.GeneralModelServiceConfig</Service-Config>
                         </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
-
 </project>

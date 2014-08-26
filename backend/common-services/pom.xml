@@ -23,15 +23,12 @@
 
     <modules>
         <module>common-cmdb-service</module>
+
         <module>common-gui-service</module>
-        <module>common-account-service</module>
-        <module>common-user-service</module>
-        <module>common-acl-service</module>
-        <module>common-service_catalog-service</module>
-        <module>common-contract-service</module>
-        <module>common-sla-service</module>
+
+        <module>common-model-service</module>
+
         <module>activiti_engine_service</module>
-        <module>common-incident-service</module>
     </modules>
 
     <dependencies>
@@ -49,16 +46,6 @@
             <scope>runtime</scope>
         </dependency>
     </dependencies>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>dnt.itsnow</groupId>
-                <artifactId>common-cmdb-service</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <build>
         <plugins>

@@ -22,11 +22,7 @@
         </dependency>
         <dependency>
             <groupId>dnt.itsnow</groupId>
-            <artifactId>common-user-service</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>dnt.itsnow</groupId>
-            <artifactId>common-acl-service</artifactId>
+            <artifactId>common-model-service</artifactId>
         </dependency>
     </dependencies>
 

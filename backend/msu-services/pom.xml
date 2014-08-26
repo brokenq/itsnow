@@ -19,6 +19,7 @@
     <modules>
         <module>msu-incident-service</module>
         <module>msu-gui-service</module>
+        <module>msu-service_catalog-service</module>
     </modules>
 
     <dependencies>
@@ -28,24 +29,9 @@
         </dependency>
         <dependency>
             <groupId>dnt.itsnow</groupId>
-            <artifactId>common-user-service</artifactId>
+            <artifactId>common-model-service</artifactId>
         </dependency>
     </dependencies>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>dnt.itsnow</groupId>
-                <artifactId>activiti_engine_service</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>dnt.itsnow</groupId>
-                <artifactId>common-incident-service</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <build>
         <plugins>

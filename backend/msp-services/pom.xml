@@ -22,22 +22,15 @@
     </modules>
 
     <dependencies>
+        <dependency>
+            <groupId>dnt.itsnow</groupId>
+            <artifactId>platform</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dnt.itsnow</groupId>
+            <artifactId>common-model-service</artifactId>
+        </dependency>
     </dependencies>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>dnt.itsnow</groupId>
-                <artifactId>activiti_engine_service</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>dnt.itsnow</groupId>
-                <artifactId>common-incident-service</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <build>
         <plugins>

@@ -37,10 +37,6 @@
         </dependency>
         <dependency>
             <groupId>dnt.itsnow</groupId>
-            <artifactId>common-user-service</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>dnt.itsnow</groupId>
             <artifactId>release</artifactId>
             <scope>runtime</scope>
         </dependency>

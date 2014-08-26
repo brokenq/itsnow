@@ -6,13 +6,14 @@
 
     <parent>
         <groupId>dnt.itsnow</groupId>
-        <artifactId>msc-services</artifactId>
+        <artifactId>msu-services</artifactId>
         <version>0.1.6-SNAPSHOT</version>
     </parent>
 
-    <artifactId>mutable-service_catalog-service</artifactId>
-    <name>Mutable ServiceCatalog Service</name>
+    <artifactId>msu-service_catalog-service</artifactId>
+    <name>Msu ServiceCatalog Service</name>
     <description>
-        The mutable service_catalog service implemented by MSC, and provide SPI to other deployment builds.
+        Private Service Catalog of MSU
     </description>
+    
 </project>

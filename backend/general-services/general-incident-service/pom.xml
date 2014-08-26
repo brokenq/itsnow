@@ -6,13 +6,16 @@
 
     <parent>
         <groupId>dnt.itsnow</groupId>
-        <artifactId>msc-services</artifactId>
+        <artifactId>general-services</artifactId>
         <version>0.1.6-SNAPSHOT</version>
     </parent>
 
-    <artifactId>mutable-service_catalog-service</artifactId>
-    <name>Mutable ServiceCatalog Service</name>
+    <artifactId>general-incident-service</artifactId>
+    <name>General Incident Service</name>
     <description>
-        The mutable service_catalog service implemented by MSC, and provide SPI to other deployment builds.
+        General Incident Service used by MSU and MSP
     </description>
+
+
+    
 </project>

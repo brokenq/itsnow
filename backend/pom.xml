@@ -122,49 +122,34 @@
             <!--Common Services-->
             <dependency>
                 <groupId>dnt.itsnow</groupId>
-                <artifactId>common-account-service</artifactId>
+                <artifactId>common-cmdb-service</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>dnt.itsnow</groupId>
-                <artifactId>common-acl-service</artifactId>
+                <artifactId>common-gui-service</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>dnt.itsnow</groupId>
-                <artifactId>common-user-service</artifactId>
+                <artifactId>common-model-service</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>dnt.itsnow</groupId>
-                <artifactId>common-contract-service</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>dnt.itsnow</groupId>
-                <artifactId>common-service_catalog-service</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>dnt.itsnow</groupId>
-                <artifactId>common-sla-service</artifactId>
+                <artifactId>activiti_engine_service</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <!--General Services-->
             <dependency>
                 <groupId>dnt.itsnow</groupId>
-                <artifactId>general-account-service</artifactId>
+                <artifactId>general-model-service</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>dnt.itsnow</groupId>
-                <artifactId>general-staff-service</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>dnt.itsnow</groupId>
-                <artifactId>general-service_catalog-service</artifactId>
+                <artifactId>general-incident-service</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
