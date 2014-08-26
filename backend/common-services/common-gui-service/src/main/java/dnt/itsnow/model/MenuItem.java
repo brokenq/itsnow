@@ -4,6 +4,10 @@
 package dnt.itsnow.model;
 
 import dnt.itsnow.platform.model.Record;
+import org.hibernate.validator.constraints.NotBlank;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <h1>菜单对象</h1>
@@ -12,26 +16,54 @@ import dnt.itsnow.platform.model.Record;
  */
 public class MenuItem extends Record {
 
+    // 父菜单ID
     private Long parentId;
-
+    // 菜单名称
+    @NotBlank
     private String name;
-
+    // 菜单类型
+    @NotBlank
     private String type;
-
+    // 菜单对应的URL
+    @NotBlank
     private String url;
-
+    // 菜单的样式
     private String css;
-
+    // 菜单的描述
     private String description;
+    // 菜单的展示顺序
+    private Long showOrder;
+    // 菜单的快捷键
+    private Long shortCut;
 
-    private MenuItem subMenuItem;
+    private List<MenuItem> subMenuItems = new ArrayList<MenuItem>();
 
-    public MenuItem getSubMenuItem() {
-        return subMenuItem;
+    public List<MenuItem> getSubMenuItems() {
+        return subMenuItems;
     }
 
-    public void setSubMenuItem(MenuItem subMenuItem) {
-        this.subMenuItem = subMenuItem;
+    public void setSubMenuItems(List<MenuItem> subMenuItems) {
+        this.subMenuItems = subMenuItems;
+    }
+
+    public void addSubMenuItem(MenuItem subMenuItem) {
+        subMenuItems.add(subMenuItem);
+    }
+
+    public Long getShowOrder() {
+        return showOrder;
+    }
+
+    public void setShowOrder(Long showOrder) {
+        this.showOrder = showOrder;
+    }
+
+    public Long getShortCut() {
+        return shortCut;
+    }
+
+    public void setShortCut(Long shortCut) {
+        this.shortCut = shortCut;
     }
 
     public Long getParentId() {
