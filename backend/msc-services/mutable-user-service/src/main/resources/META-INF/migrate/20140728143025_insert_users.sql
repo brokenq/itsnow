@@ -27,6 +27,17 @@ INSERT users(account_id, username, email, phone, password) VALUES
 -- passwordEncoder.encode("secret");
 -- 方式生成
 
+-- 更新以上账户的主用户
+SET @steven_li_id = (SELECT id FROM users where username = 'steve.li');
+SET @sharp_liu_id = (SELECT id FROM users where username = 'sharp.liu');
+SET @jacky_cao_id = (SELECT id FROM users where username = 'jacky.cao');
+SET @rose_zhou_id = (SELECT id FROM users where username = 'rose.zhou');
+
+UPDATE accounts SET user_id = @steven_li_id WHERE id = @MSU001;
+UPDATE accounts SET user_id = @sharp_liu_id WHERE id = @MSU002;
+UPDATE accounts SET user_id = @jacky_cao_id WHERE id = @MSP001;
+UPDATE accounts SET user_id = @rose_zhou_id WHERE id = @MSP002;
+
 -- //@UNDO
 -- SQL to undo the change goes here.
 -- 存在其他表外键引用本表时, 就无法使用 truncate

@@ -24,8 +24,11 @@ public abstract class Account extends ConfigItem {
     public static final String MSU = "msu";
     public static final String MSP = "msp";
 
+    //序号, auto number service generate
     @NotBlank
     private String        sn;
+    //子域名
+    private String        domain;
     //@NotBlank
     // 账户状态
     private AccountStatus status = AccountStatus.New;
@@ -50,6 +53,14 @@ public abstract class Account extends ConfigItem {
 
     public void setSn(String sn) {
         this.sn = sn;
+    }
+
+    public String getDomain() {
+        return domain;
+    }
+
+    public void setDomain(String domain) {
+        this.domain = domain;
     }
 
     @JsonIgnore

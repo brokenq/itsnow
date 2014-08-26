@@ -3,7 +3,9 @@
 
 CREATE TABLE accounts (
   id         INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  user_id    INT(10) UNSIGNED,
   sn         VARCHAR(20)      NOT NULL,
+  domain     VARCHAR(50)      NOT NULL,
   name       VARCHAR(255)     NOT NULL,
   type       VARCHAR(100)     NOT NULL,
   status     VARCHAR(50)               DEFAULT 'New',
