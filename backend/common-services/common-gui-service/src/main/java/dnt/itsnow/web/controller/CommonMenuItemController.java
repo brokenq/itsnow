@@ -3,12 +3,11 @@ package dnt.itsnow.web.controller;
 import dnt.itsnow.model.MenuItem;
 import dnt.itsnow.platform.web.controller.ApplicationController;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
-import dnt.itsnow.support.CommonMenuItemManager;
+import dnt.itsnow.service.CommonMenuItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -26,7 +25,7 @@ import java.util.List;
 public class CommonMenuItemController extends ApplicationController {
 
     @Autowired
-    private CommonMenuItemManager commonMenuItemManager;
+    private CommonMenuItemService commonMenuItemManager;
 
     /**
      * <h2>展示用户菜单</h2>
