@@ -20,6 +20,8 @@ import java.util.*;
  * <h1>系统的某个用户，一般与甲方或者乙方存在工作雇佣关系</h1>
  *
  * user也是配置项
+ *
+ * TODO 添加测试用例
  */
 public class User extends ConfigItem implements UserDetails, CredentialsContainer {
 

@@ -5,6 +5,9 @@ package dnt.itsnow.service;
 
 import dnt.itsnow.model.Account;
 
+/**
+ * <h1>一般性的帐户服务</h1>
+ */
 public interface CommonAccountService {
     Account findByName(String name);
 

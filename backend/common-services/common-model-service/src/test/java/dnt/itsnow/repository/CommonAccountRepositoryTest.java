@@ -14,6 +14,8 @@ import org.springframework.util.Assert;
 
 /**
  * <h1>测试CommonAccountRepository的Mybatis的Mapping配置是否正确</h1>
+ *
+ * TODO 需要测试 Account + User的方式
  */
 @ContextConfiguration(classes = CommonAccountRepositoryConfig.class)
 @ActiveProfiles("test")

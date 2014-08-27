@@ -12,7 +12,8 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 /**
- * 基于Mybatis Repository的持久化Token Repository
+ * <h1>基于Mybatis Repository的持久化Token Repository</h1>
+ * TODO 添加测试用例
  */
 @Component
 public class CustomizedTokenRepository implements PersistentTokenRepository {

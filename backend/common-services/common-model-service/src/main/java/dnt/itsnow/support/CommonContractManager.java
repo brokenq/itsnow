@@ -24,6 +24,8 @@ import java.util.List;
  *  <h1> The common contract manager</h1>
  *
  *  通用的合同管理
+ *
+ *  TODO 添加测试用例
  */
 @Service
 public class CommonContractManager extends Bean implements CommonContractService {

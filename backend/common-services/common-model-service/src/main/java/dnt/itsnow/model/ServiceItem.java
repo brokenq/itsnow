@@ -9,6 +9,8 @@ import dnt.itsnow.platform.model.Record;
  * <h1>服务项目</h1>
  *
  * 服务项目也不作为配置项
+ *
+ * TODO 添加测试用例
  */
 public class ServiceItem extends Record{
     private String title;

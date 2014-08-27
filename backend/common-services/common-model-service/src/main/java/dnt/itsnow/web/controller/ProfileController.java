@@ -24,6 +24,8 @@ import javax.servlet.http.HttpServletRequest;
  * </pre>
  *
  * 因为站在特定用户的角度看来，只有一个“自身”，所以该控制器命名为单数
+ *
+ * TODO 添加测试用例
  */
 @RestController
 @RequestMapping("/api/profile")

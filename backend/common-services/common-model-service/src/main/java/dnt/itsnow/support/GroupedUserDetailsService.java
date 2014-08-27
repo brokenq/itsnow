@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
  * <li>一种是委托</li>
  * </ul>
  * 当前采用了委托的方式
+ *
+ * TODO 添加测试用例
  */
 @Service("groupedUserService")
 public class GroupedUserDetailsService implements CommonUserService, UserDetailsService {

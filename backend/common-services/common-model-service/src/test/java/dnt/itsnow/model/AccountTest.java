@@ -35,6 +35,7 @@ public class AccountTest {
     public void setUp() throws Exception {
         account = new MsuAccount();
         this.account.setName("demo");
+        this.account.setDomain("demo");
         this.account.setSn("msu-099");
         this.account.setId(1L);
         this.account.setCreatedAt(new Timestamp(System.currentTimeMillis()));
@@ -42,8 +43,30 @@ public class AccountTest {
     }
 
     @Test
-    public void testEmptyAccountIsNotValid() throws Exception {
+    public void testSnConstraints() throws Exception {
         account.setSn(null);
+        Set<ConstraintViolation<Account>> violations = validator.validate(account);
+        Assert.assertFalse(violations.isEmpty());
+    }
+
+    @Test
+    public void testNameConstraints() throws Exception {
+        account.setName(null);
+        Set<ConstraintViolation<Account>> violations = validator.validate(account);
+        Assert.assertFalse(violations.isEmpty());
+
+        account.setName("hel");
+        violations = validator.validate(account);
+        Assert.assertFalse(violations.isEmpty());
+
+        account.setName( "very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_very_long_name");
+        violations = validator.validate(account);
+        Assert.assertFalse(violations.isEmpty());
+    }
+
+    @Test
+    public void testDomainConstraints() throws Exception{
+        account.setDomain("invalid.domain");
         Set<ConstraintViolation<Account>> violations = validator.validate(account);
         Assert.assertFalse(violations.isEmpty());
     }

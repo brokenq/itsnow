@@ -1,5 +1,5 @@
 
-DELETE FROM accounts;
+TRUNCATE TABLE accounts;
 
 INSERT INTO accounts(sn, name, type, status)
 VALUES

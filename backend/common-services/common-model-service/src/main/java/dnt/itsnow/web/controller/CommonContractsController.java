@@ -26,6 +26,7 @@ import java.util.List;
  * # GET      /api/contracts              index     列出所有相关合同，支持过滤，分页，排序等
  * # GET      /api/contracts/{sn}         show      列出特定的合同
  * </pre>
+ * TODO 添加测试用例
  */
 @RestController
 @RequestMapping("/api/contracts")

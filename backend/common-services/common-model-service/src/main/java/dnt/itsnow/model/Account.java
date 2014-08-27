@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 /**
@@ -28,6 +29,8 @@ public abstract class Account extends ConfigItem {
     @NotBlank
     private String        sn;
     //子域名
+    @NotBlank
+    @Pattern(regexp = "[\\w|\\d|_|-]+")
     private String        domain;
     private Long          userId; // 帐户管理员ID
     @JsonIgnore
@@ -37,6 +40,7 @@ public abstract class Account extends ConfigItem {
     private AccountStatus status = AccountStatus.New;
 
     // 帐户名称
+    @NotBlank
     @Size(min = 4, max = 50)
     public String getName() {
         return super.getName();

@@ -16,7 +16,9 @@ import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
- * Basic User Service
+ * <h1>Basic User Service</h1>
+ *
+ * TODO 添加测试用例
  */
 @Service("plainUserService")
 public class CommonUserManager extends Bean implements CommonUserService {
