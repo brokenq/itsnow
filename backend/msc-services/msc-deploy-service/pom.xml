@@ -10,11 +10,10 @@
         <version>0.1.6-SNAPSHOT</version>
     </parent>
 
-    <artifactId>mutable-sla-service</artifactId>
-    <version>0.1.6-SNAPSHOT</version>
-    <name>Mutable SLA Service</name>
+    <artifactId>msc-deploy-service</artifactId>
+    <name>MSC Deploy Service</name>
     <description>
-        The mutable SLA service implemented by MSC, and provide SPI to other deployment builds.
+        The deployment service of MSC, for msu/msp subsystem.
     </description>
-
+    
 </project>

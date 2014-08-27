@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dnt.itsnow.repository.GeneralContractRepository">
+    <select id="findAllByMsuAccountId" resultType="Contract">
+        SELECT * FROM itsnow_msc.contracts
+        WHERE (msu_account_id = #{msuId})
+        <if test="pageable.sort != null">
+            ORDER BY #{pageable.sort}
+        </if>
+        <trim prefix="LIMIT" prefixOverrides=",">
+            <if test="pageable.offset > 0">#{pageable.offset}</if>
+            <if test="pageable.pageSize > 0">, #{pageable.pageSize}</if>
+        </trim>
+    </select>
+    <select id="findAllByMspAccountId" resultType="Contract">
+        SELECT * FROM itsnow_msc.contracts
+        WHERE (msp_account_id = #{mspId})
+        <if test="pageable.sort != null">
+            ORDER BY #{pageable.sort}
+        </if>
+        <trim prefix="LIMIT" prefixOverrides=",">
+            <if test="pageable.offset > 0">#{pageable.offset}</if>
+            <if test="pageable.pageSize > 0">, #{pageable.pageSize}</if>
+        </trim>
+    </select>
+
+    <select id="findBySn" resultMap="contractWithDetails">
+      SELECT c.*,
+          d.id          AS detail_id,
+          d.contract_id AS detail_contract_id,
+          d.title       AS detail_title,
+          d.brief       AS detail_brief,
+          d.description AS detail_description,
+          d.icon        AS detail_icon,
+          d.created_at  AS detail_created_at,
+          d.updated_at  AS detail_updated_at
+      FROM contracts c
+      LEFT OUTER JOIN contract_details d ON c.id = d.contract_id
+      WHERE c.sn = #{sn}
+    </select>
+
+    <resultMap id="contractWithDetails" type="Contract" autoMapping="true">
+        <id property="id" column="id"/>
+        <collection property="details"
+                    ofType="ContractDetail"
+                    columnPrefix="detail_"
+                    autoMapping="true"/>
+    </resultMap>
+
+</mapper>

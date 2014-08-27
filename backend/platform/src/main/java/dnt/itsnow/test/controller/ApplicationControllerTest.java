@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
-public class ApplicationControllerTest {
+public abstract class ApplicationControllerTest {
     @Autowired
     protected WebApplicationContext wac;
     protected MockMvc browser;

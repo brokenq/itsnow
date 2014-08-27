@@ -29,6 +29,9 @@ public abstract class Account extends ConfigItem {
     private String        sn;
     //子域名
     private String        domain;
+    private Long          userId; // 帐户管理员ID
+    @JsonIgnore
+    private User          user;   // 帐户管理员
     //@NotBlank
     // 账户状态
     private AccountStatus status = AccountStatus.New;
@@ -100,6 +103,7 @@ public abstract class Account extends ConfigItem {
         Account account = (Account) o;
 
         if (sn != null ? !sn.equals(account.sn) : account.sn != null) return false;
+        if (userId != null ? !userId.equals(account.userId) : account.userId != null) return false;
         //noinspection RedundantIfStatement
         if (status != account.status) return false;
 
@@ -111,6 +115,23 @@ public abstract class Account extends ConfigItem {
         int result = super.hashCode();
         result = 31 * result + (sn != null ? sn.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
+        result = 31 * result + (userId != null ? userId.hashCode() : 0);
         return result;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

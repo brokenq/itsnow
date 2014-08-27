@@ -5,6 +5,7 @@ CREATE TABLE users (
   id               INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
   account_id       INT(20) UNSIGNED,
   username         VARCHAR(25)   NOT NULL,
+  nick_name        VARCHAR(25),
   email            VARCHAR(255),
   phone            VARCHAR(50),
   password         VARCHAR(255)  NOT NULL,

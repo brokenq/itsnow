@@ -7,6 +7,7 @@ import dnt.itsnow.model.User;
 import dnt.itsnow.platform.web.controller.ApplicationController;
 import dnt.itsnow.service.CommonUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/api/profile")
 public class ProfileController extends ApplicationController {
     @Autowired
+    @Qualifier("plainUserService")
     CommonUserService userService;
 
     /**

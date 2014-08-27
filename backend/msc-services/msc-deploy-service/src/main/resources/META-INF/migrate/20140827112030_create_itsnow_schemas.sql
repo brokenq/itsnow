@@ -1,22 +1,19 @@
--- // create_accounts
+-- // create_itsnow_databases
 -- Migration SQL that makes the change goes here.
 
-CREATE TABLE accounts (
+CREATE TABLE itsnow_schemas (
   id          INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  user_id     INT(10) UNSIGNED,
-  sn          VARCHAR(20)      NOT NULL,
-  domain      VARCHAR(50)      NOT NULL,
-  name        VARCHAR(255)     NOT NULL,
-  type        VARCHAR(100)     NOT NULL,
-  status      VARCHAR(50)               DEFAULT 'New',
+  host_id     INT(10) UNSIGNED NOT NULL,
+  name        VARCHAR(50)      NOT NULL,
   description VARCHAR(255),
   created_at  TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at  TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY (sn)
+  FOREIGN KEY (host_id)        REFERENCES itsnow_hosts(id),
+  UNIQUE KEY (name)
 );
 
 
 -- //@UNDO
 -- SQL to undo the change goes here.
 
-DROP TABLE accounts;
+DROP TABLE itsnow_schemas;

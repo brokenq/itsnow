@@ -23,9 +23,9 @@
         <module>msc-gui-service</module>
         <module>mutable-account-service</module>
         <module>mutable-user-service</module>
+        <module>msc-deploy-service</module>
         <module>mutable-service_catalog-service</module>
         <module>mutable-contract-service</module>
-        <module>mutable-sla-service</module>
     </modules>
 
     <dependencies>
