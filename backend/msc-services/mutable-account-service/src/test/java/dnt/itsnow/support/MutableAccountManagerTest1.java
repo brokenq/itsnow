@@ -55,7 +55,7 @@ public class MutableAccountManagerTest1 {
         pageRequest = new PageRequest(0, 1);
         account = new MsuAccount();
         account.setName("Test Account");
-        account.setStatus(AccountStatus.Expired);
+        account.setStatus(AccountStatus.Rejected);
         accounts = new ArrayList<Account>(1);
         accounts.add(account);
     }

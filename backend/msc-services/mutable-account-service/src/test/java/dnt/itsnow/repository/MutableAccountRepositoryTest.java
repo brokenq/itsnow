@@ -46,6 +46,7 @@ public class MutableAccountRepositoryTest {
         pageRequest = new PageRequest(0, 2);
         account = new MsuAccount();
         account.setName("Test Account");
+        account.setDomain("test");
         account.setSn(newAccountSn);
         account.setStatus(AccountStatus.New);
     }
@@ -83,9 +84,9 @@ public class MutableAccountRepositoryTest {
         try {
             prepareNewAccount();
 
-            // 现在 update 只更新name, status
+            // 现在 update 只更新name, domain
             account.setName("New Name");
-            account.setStatus(AccountStatus.Expired);
+            account.setDomain("another");
 
             mutableRepository.update(account);
             Account updated = repository.findBySn(account.getSn());

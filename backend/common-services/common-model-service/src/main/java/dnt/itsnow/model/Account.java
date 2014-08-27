@@ -67,13 +67,18 @@ public abstract class Account extends ConfigItem {
     }
 
     @JsonIgnore
-    public boolean isExpired() {
-        return this.status == AccountStatus.Expired;
+    public boolean isNew() {
+        return this.status == AccountStatus.New;
     }
 
     @JsonIgnore
     public boolean isValid() {
         return this.status == AccountStatus.Valid;
+    }
+
+    @JsonIgnore
+    public boolean isRejected() {
+        return this.status == AccountStatus.Rejected;
     }
 
     @JsonIgnore

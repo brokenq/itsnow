@@ -19,4 +19,8 @@ public interface MutableAccountService extends CommonAccountService {
     Account update(Account account) throws AccountException;
 
     void delete(Account account) throws AccountException;
+
+    Account approve(Account account) throws AccountException;
+
+    Account reject(Account account) throws AccountException;
 }

@@ -21,7 +21,6 @@ import java.util.List;
  * <b>HTTP     URI                            方法       含义  </b>
  * # GET      /admin/api/accounts            index     列出所有相关账户，支持过滤，分页，排序等
  * # GET      /admin/api/accounts/{sn}       show      列出特定的账户
- * # POST     /admin/api/accounts            create    创建账户，账户信息通过HTTP BODY提交
  * # PUT      /admin/api/accounts/{sn}       update    修改账户，账户信息通过HTTP BODY提交
  * # DELETE   /admin/api/accounts/{sn}       destroy   删除账户
  *
@@ -68,21 +67,29 @@ public class MutableAccountsController extends SessionSupportController<Account>
         return currentAccount;
     }
 
-    /**
-     * <h2>创建一个账户</h2>
-     * <p/>
-     * POST /admin/api/accounts
-     *
-     * @param account 需要创建的账户对象，通过HTTP BODY POST上来
-     * @return 创建之后的账户信息
-     */
-    @RequestMapping(method = RequestMethod.POST)
-    public Account create(@RequestBody @Valid Account account){
-        logger.info("Creating {}", account.getName());
-        // 可能会抛出重名的异常
-        currentAccount = accountService.create(account);
-        logger.info("Created  {} with sn {}", currentAccount.getName(), currentAccount.getSn());
-        return currentAccount;
+
+    @RequestMapping("{sn}/approve")
+    public Account approve(){
+        logger.info("Approving {}", currentAccount.getSn());
+        try {
+            Account account = accountService.approve(currentAccount);
+            logger.info("Approved  {}", account);
+            return account;
+        } catch (AccountException e) {
+            throw new WebClientSideException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
+        }
+    }
+
+    @RequestMapping("{sn}/reject")
+    public Account reject(){
+        logger.info("Rejecting {}", currentAccount.getSn());
+        try {
+            Account account = accountService.reject(currentAccount);
+            logger.info("Rejected  {}", account);
+            return account;
+        } catch (AccountException e) {
+            throw new WebClientSideException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
+        }
     }
 
     /**
@@ -120,7 +127,7 @@ public class MutableAccountsController extends SessionSupportController<Account>
         logger.warn("Deleted  {}", currentAccount);
     }
 
-    @BeforeFilter({"show", "update","destroy"})
+    @BeforeFilter({"show", "update", "destroy", "approve", "reject"})
     public void initCurrentAccount(@PathVariable("sn") String sn){
         logger.debug("Finding account {}", sn);
         currentAccount = accountService.findBySn(sn);

@@ -98,18 +98,6 @@ public class MutableAccountsControllerTest extends SessionSupportedControllerTes
         decorate(result).andExpect(status().isOk());
     }
 
-    @Test
-    public void testCreate() throws Exception {
-        expect(accountService.create(anyObject(Account.class))).andReturn(account);
-        replay(accountService);
-
-        MockHttpServletRequestBuilder request = post("/admin/api/accounts").content(accountJson());
-        decorate(request);
-
-        ResultActions result = this.browser.perform(request);
-        decorate(result).andExpect(status().isOk());
-
-    }
 
     @Test
     public void testUpdate() throws Exception {

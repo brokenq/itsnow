@@ -55,9 +55,34 @@ public interface MutableAccountRepository extends CommonAccountRepository {
      *
      * @param account 新建的账户
      */
-    @Update("UPDATE itsnow_msc.accounts SET name = #{name}, status = #{status} WHERE id = #{id}")
+    @Update("UPDATE itsnow_msc.accounts SET name = #{name}, domain = #{domain} WHERE id = #{id}")
     void update(Account account);
 
+    /**
+     * <h2>批准帐户</h2>
+     *
+     * 将某个帐户的状态修改为 Valid
+     *
+     * @param account 被修改的帐户对象
+     */
+    @Update("UPDATE itsnow_msc.accounts SET status = 'Valid' WHERE id = #{id}")
+    void approve(Account account);
+
+    /**
+     * <h2>拒绝帐户</h2>
+     *
+     * 将某个帐户的状态修改为 Rejected
+     *
+     * @param account 被修改的帐户对象
+     */
+    @Update("UPDATE itsnow_msc.accounts SET status = 'Rejected' WHERE id = #{id}")
+    void reject(Account account);
+
+    /**
+     * 根据sn删除帐户
+     *
+     * @param sn 帐户的序号
+     */
     @Delete("DELETE FROM itsnow_msc.accounts WHERE sn = #{sn}")
     void deleteBySn(@Param("sn") String sn);
 }

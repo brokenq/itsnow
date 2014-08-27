@@ -54,8 +54,8 @@ public class MutableAccountManager extends CommonAccountManager implements Mutab
     public Account update(Account account) throws AccountException {
         logger.info("Updating {}", account);
         Account updating = super.findBySn(account.getSn());
-        if( updating.isExpired() )
-            throw new AccountException("Can't update expired account: " + updating.getSn());
+        if( updating.isRejected() )
+            throw new AccountException("Can't update rejected account: " + updating.getSn());
         updating.apply(account);
         mutableRepository.update(updating);
         logger.info("Updated  {}", updating);
@@ -65,9 +65,35 @@ public class MutableAccountManager extends CommonAccountManager implements Mutab
     @Override
     public void delete(Account deleting) throws AccountException {
         logger.info("Deleting account {}", deleting);
+        if( deleting.isNew() )
+            throw new AccountException("Can't delete new account: " + deleting);
         if( deleting.isValid() )
             throw new AccountException("Can't delete valid account: " + deleting);
         mutableRepository.deleteBySn(deleting.getSn());
         logger.info("Deleted  account {}", deleting);
+    }
+
+    @Override
+    public Account approve(Account account) throws AccountException {
+        logger.info("Approving {}", account);
+        if( account.isNew()){
+            account.setStatus(AccountStatus.Valid);
+            mutableRepository.approve(account);
+            logger.info("Approved  {}", account);
+            return account;
+        } else
+            throw new AccountException("Can't approve account in " + account.getStatus());
+    }
+
+    @Override
+    public Account reject(Account account) throws AccountException {
+        logger.info("Rejecting {}", account);
+        if( account.isNew()){
+            account.setStatus(AccountStatus.Rejected);
+            mutableRepository.reject(account);
+            logger.info("Rejected  {}", account);
+            return account;
+        } else
+            throw new AccountException("Can't reject account in " + account.getStatus());
     }
 }
