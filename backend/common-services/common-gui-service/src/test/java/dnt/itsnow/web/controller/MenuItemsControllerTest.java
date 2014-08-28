@@ -1,8 +1,8 @@
 package dnt.itsnow.web.controller;
 
-import dnt.itsnow.config.CommonMenuItemControllerConfig;
+import dnt.itsnow.config.MenuItemsControllerConfig;
 import dnt.itsnow.model.MenuItem;
-import dnt.itsnow.service.CommonMenuItemService;
+import dnt.itsnow.service.MenuItemService;
 import dnt.itsnow.test.controller.ApplicationControllerTest;
 import org.junit.After;
 import org.junit.Before;
@@ -12,6 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,11 +24,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Created by Sin on 2014/8/26.
  */
-@ContextConfiguration(classes = CommonMenuItemControllerConfig.class)
-public class CommonMenuItemControllerTest extends ApplicationControllerTest {
+@ContextConfiguration(classes = MenuItemsControllerConfig.class)
+public class MenuItemsControllerTest extends ApplicationControllerTest {
 
     @Autowired
-    CommonMenuItemService commonMenuItemService;
+    MenuItemService commonMenuItemService;
 
     List<MenuItem> menuItemList;
 
@@ -38,10 +39,15 @@ public class CommonMenuItemControllerTest extends ApplicationControllerTest {
 
         menuItemList = new ArrayList<MenuItem>();
         menuItem = new MenuItem();
-        menuItem.setId(1L);
-        menuItem.setParentId(null);
-        menuItem.setName("用户");
-        menuItem.setUrl("www.google.com");
+        this.menuItem.setId(1L);
+        this.menuItem.setName("用户");
+        this.menuItem.setState("index.user");
+        this.menuItem.setTemplateUrl("user/list-user.tpl.html");
+        this.menuItem.setPosition(0L);
+        this.menuItem.setShortcut("Shift+Ctrl+A");
+        this.menuItem.setDescription("This is a test.");
+        this.menuItem.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        this.menuItem.setUpdatedAt(this.menuItem.getCreatedAt());
         menuItemList.add(menuItem);
 
         reset(commonMenuItemService);
@@ -50,13 +56,13 @@ public class CommonMenuItemControllerTest extends ApplicationControllerTest {
     @Test
     public void testShow() throws Exception {
 
-        expect(commonMenuItemService.findAll())
+        expect(commonMenuItemService.findAll(true))
                 .andReturn(menuItemList);
 
         replay(commonMenuItemService);
 
         // 准备 Mock Request
-        MockHttpServletRequestBuilder request = get("/api/menu-item");
+        MockHttpServletRequestBuilder request = get("/api/menu_items");
         request = decorate(request);
 
         // 执行
@@ -70,14 +76,14 @@ public class CommonMenuItemControllerTest extends ApplicationControllerTest {
     @Test
     public void testUpdate() throws Exception {
 
-        expect(commonMenuItemService.findAll())
+        expect(commonMenuItemService.findAll(true))
                 .andReturn(menuItemList);
 
         replay(commonMenuItemService);
 
         // 准备 Mock Request
         menuItem.setName("企业用户");
-        MockHttpServletRequestBuilder request = put("/api/menu-item?id=1", menuItem);
+        MockHttpServletRequestBuilder request = put("/api/menu_items", menuItem);
         request = decorate(request);
 
         // 执行

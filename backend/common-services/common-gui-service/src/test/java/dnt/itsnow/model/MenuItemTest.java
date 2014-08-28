@@ -13,22 +13,25 @@ import java.sql.Timestamp;
 import java.util.Set;
 
 /**
- * Created by Sin on 2014/8/25.
+ * <h1>MenuItem测试类</h1>
  */
 public class MenuItemTest {
 
-    static ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-    static Validator validator = factory.getValidator();
+    private static ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    private static Validator validator = factory.getValidator();
 
-    MenuItem menuItem;
+    private MenuItem menuItem;
 
     @Before
     public void setUp() throws Exception {
         menuItem = new MenuItem();
         this.menuItem.setId(1L);
         this.menuItem.setName("用户");
-        this.menuItem.setUrl("index.user");
-        this.menuItem.setType("0");
+        this.menuItem.setState("index.user");
+        this.menuItem.setTemplateUrl("user/list-user.tpl.html");
+        this.menuItem.setPosition(0L);
+        this.menuItem.setShortcut("Shift+Ctrl+A");
+        this.menuItem.setDescription("This is a test.");
         this.menuItem.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         this.menuItem.setUpdatedAt(this.menuItem.getCreatedAt());
     }
@@ -36,8 +39,7 @@ public class MenuItemTest {
     @Test
     public void testEmptyMenuItemIsNotValid() throws Exception {
         menuItem.setName(null);
-        menuItem.setUrl(null);
-        menuItem.setType(null);
+        menuItem.setState(null);
         Set<ConstraintViolation<MenuItem>> violations = validator.validate(menuItem);
         Assert.assertFalse(violations.isEmpty());
     }
@@ -45,8 +47,9 @@ public class MenuItemTest {
     @Test
     public void testCorrectMenuItemIsValid() throws Exception {
         menuItem.setName("用户");
+        menuItem.setState("index.user");
         menuItem.setUrl("index.user");
-        menuItem.setType("0");
+        menuItem.setTemplateUrl("index.user");
         Set<ConstraintViolation<MenuItem>> violations = validator.validate(menuItem);
         Assert.assertTrue(violations == null || violations.isEmpty());
     }
@@ -55,8 +58,7 @@ public class MenuItemTest {
     public void testJson() throws Exception {
         String json = JsonSupport.toJSONString(menuItem);
         System.out.println(json);
-        MenuItem parsed = JsonSupport.parseJson(json, MenuItem.class);
-        Assert.assertTrue(parsed instanceof MenuItem);
+        Assert.assertNotNull(json);
     }
 
 }

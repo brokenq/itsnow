@@ -1,6 +1,6 @@
 package dnt.itsnow.repository;
 
-import dnt.itsnow.config.CommonMenuItemRepositoryConfig;
+import dnt.itsnow.config.MenuItemRepositoryConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +12,13 @@ import org.springframework.util.Assert;
 /**
  * <h1>测试CommonMenuItemRepository的MyBatis的Mapping配置是否正确</h1>
  */
-@ContextConfiguration(classes = CommonMenuItemRepositoryConfig.class)
+@ContextConfiguration(classes = MenuItemRepositoryConfig.class)
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
-public class CommonMenuItemRepositoryTest {
+public class MenuItemRepositoryTest {
 
     @Autowired
-    CommonMenuItemRepository repository;
+    MenuItemRepository repository;
 
     @Test
     public void testFindById() throws Exception {
