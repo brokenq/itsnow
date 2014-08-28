@@ -1,0 +1,7 @@
+{
+ "name":    "msc",
+ "title":   "Msc",
+ "version": "0.1.6",
+ "app":     "msc-app-0.1.6",
+ "login":   "msc-login-0.1.6"
+}

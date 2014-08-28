@@ -1,14 +1,14 @@
 /**
  * Created by User on 2014/7/23.
  */
-describe('menu controllers', function () {
+describe('App Menu', function () {
     var scope, ctrl, $httpBackend;
 
-    beforeEach(module('ItsNow.Menu'));
+    beforeEach(module('App.Menu'));
 
     beforeEach(inject(function (_$httpBackend_, $rootScope, $controller) {
         $httpBackend = _$httpBackend_;
-        $httpBackend.expectGET('/api/menu').
+        $httpBackend.expectGET('/api/menu_items').
             respond([
                 {id: '001', title: '用户', url: '/user', subMenu: ''},
                 {id: '002', title: '任务单', url: '/task'},

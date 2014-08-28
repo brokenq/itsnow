@@ -1,9 +1,9 @@
 /**
  * Created by Sin on 2014/8/18.
  */
-var appModule = angular.module('App.Table',['ngGrid', 'App.Dialog']);
+var appTable = angular.module('App.Table',['ngGrid', 'App.Dialog']);
 
-appModule.directive('hello', function(){
+appTable.directive('hello', function(){
     return {
         restrict: 'E',
         templateUrl: 'itsnow-table.tpl.html',
@@ -106,7 +106,7 @@ appModule.directive('hello', function(){
                 for(var ticket in $scope.mySelections){
                     $rootScope.incident = $scope.mySelections[ticket];
                     promise = $scope.QueryTaskService.query($rootScope.incident.instanceId);
-                };
+                }
 
                 promise.then(function success(data) {
                     for (var i in data.tasks) {
@@ -115,10 +115,10 @@ appModule.directive('hello', function(){
                     if(taskName.indexOf('accept')>-1){
                         $location.path($scope.acceptUrl);
                     }else{
-                        DialogService('error','流程错误！','下一步处理应为：'+taskName);
-                    };
+                        new DialogService('error','流程错误！','下一步处理应为：'+taskName);
+                    }
                 }, function error(msg) {
-                        DialogService('error','','出错：'+msg);
+                        new DialogService('error','','出错：'+msg);
                 });
             };
 
@@ -130,7 +130,7 @@ appModule.directive('hello', function(){
                 for(var ticket in $scope.mySelections){
                     $rootScope.incident = $scope.mySelections[ticket];
                     promise = $scope.QueryTaskService.query($rootScope.incident.instanceId);
-                };
+                }
 
                 promise.then(function success(data) {
                     for (var i in data.tasks) {
@@ -141,8 +141,8 @@ appModule.directive('hello', function(){
                     if(taskName.indexOf('analysis')>-1){
                         $location.path($scope.analysisUrl);
                     }else{
-                        DialogService('error','流程错误！','下一步处理应为：'+taskName);
-                    };
+                        new DialogService('error','流程错误！','下一步处理应为：'+taskName);
+                    }
 
                 }, function error(msg) {
                     console.error(msg);
@@ -157,7 +157,7 @@ appModule.directive('hello', function(){
                 for(var ticket in $scope.mySelections){
                     $rootScope.incident = $scope.mySelections[ticket];
                     promise = $scope.QueryTaskService.query($rootScope.incident.instanceId);
-                };
+                }
 
                 promise.then(function success(data) {
                     for (var i in data.tasks) {
@@ -168,8 +168,8 @@ appModule.directive('hello', function(){
                     if(taskName.indexOf('process')>-1){
                         $location.path($scope.processUrl);
                     }else{
-                        DialogService('error','流程错误！','下一步处理应为：'+taskName);
-                    };
+                        new DialogService('error','流程错误！','下一步处理应为：'+taskName);
+                    }
 
                 }, function error(msg) {
                     console.error(msg);
@@ -184,7 +184,7 @@ appModule.directive('hello', function(){
                 for(var ticket in $scope.mySelections){
                     $rootScope.incident = $scope.mySelections[ticket];
                     promise = $scope.QueryTaskService.query($rootScope.incident.instanceId);
-                };
+                }
 
                 promise.then(function success(data) {
                     for (var i in data.tasks) {
@@ -195,8 +195,8 @@ appModule.directive('hello', function(){
                     if(taskName.indexOf('close')>-1){
                         $location.path($scope.closeUrl);
                     }else{
-                        DialogService('error','流程错误！','下一步处理应为：'+taskName);
-                    };
+                        new DialogService('error','流程错误！','下一步处理应为：'+taskName);
+                    }
 
                 }, function error(msg) {
                     console.error(msg);
@@ -223,25 +223,25 @@ appModule.directive('hello', function(){
                             angular.element(element.find('button#analysis')).attr('disabled','disabled');
                             angular.element(element.find('button#process')).attr('disabled','disabled');
                             angular.element(element.find('button#close')).attr('disabled','disabled');
-                        };
+                        }
                         if(taskName.indexOf('analysis')>-1){
                             angular.element(element.find('button#accept')).attr('disabled','disabled');
                             angular.element(element.find('button#analysis')).removeAttr('disabled');
                             angular.element(element.find('button#process')).attr('disabled','disabled');
                             angular.element(element.find('button#close')).attr('disabled','disabled');
-                        };
+                        }
                         if(taskName.indexOf('process')>-1){
                             angular.element(element.find('button#accept')).attr('disabled','disabled');
                             angular.element(element.find('button#analysis')).attr('disabled','disabled');
                             angular.element(element.find('button#process')).removeAttr('disabled');
                             angular.element(element.find('button#close')).attr('disabled','disabled');
-                        };
+                        }
                         if(taskName.indexOf('close')>-1){
                             angular.element(element.find('button#accept')).removeAttr('disabled');
                             angular.element(element.find('button#analysis')).removeAttr('disabled');
                             angular.element(element.find('button#process')).removeAttr('disabled');
                             angular.element(element.find('button#close')).attr('disabled','disabled');
-                        };
+                        }
 
                     }, function error(msg) {
                         console.error(msg);
@@ -256,5 +256,5 @@ appModule.directive('hello', function(){
             }, true);
 
         }
-    }
-    });
+    };
+  });

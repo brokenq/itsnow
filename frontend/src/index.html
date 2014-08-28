@@ -9,16 +9,13 @@
   <link rel="icon" type="image/icon" href="/assets/favicon.ico"/>
 
   <!-- compiled CSS --><% styles.forEach( function ( file ) { %>
-  <link rel="stylesheet" type="text/css" href="<%= file %>"/>
-  <% }); %>
-
+  <link rel="stylesheet" type="text/css" href="<%= file %>"/><% }); %>
   <!-- compiled JavaScript --><% scripts.forEach( function ( file ) { %>
-  <script type="text/javascript" src="<%= file %>"></script>
-  <% }); %>
+  <script type="text/javascript" src="<%= file %>"></script><% }); %>
 
 </head>
 
-<body ng-app="ItsNow.Index">
+<body ng-app="<%=sysName%>.App">
 <div class="navbar navbar-default" id="navbar">
 <script type="text/javascript">
   try {

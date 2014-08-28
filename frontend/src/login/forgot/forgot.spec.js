@@ -1,11 +1,11 @@
 /**
  * Created by kadvin on 14-7-9.
  */
-describe( 'ForgotCtrl', function() {
-  describe( 'isCurrentUrl', function() {
+describe( 'Login Forgot', function() {
+  describe( 'loading', function() {
     var ForgotCtrl, MockPassword, $location, $scope;
 
-    beforeEach( module( 'ItsNow.Login.Forgot' ) );
+    beforeEach( module( 'Login.Forgot' ) );
 
     beforeEach( inject( function( $controller, _$location_, $rootScope ) {
       $location = _$location_;
