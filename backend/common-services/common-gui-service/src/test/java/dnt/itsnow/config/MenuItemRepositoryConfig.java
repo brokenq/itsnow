@@ -13,15 +13,14 @@ import org.springframework.context.annotation.Import;
  */
 @Configuration
 @Import(DatabaseConfig.class)
-public class CommonMenuItemRepositoryConfig extends RepositoryConfigWithH2 {
+public class MenuItemRepositoryConfig extends RepositoryConfigWithH2 {
 
     protected String[] sqlScripts() {
         // 由于 common 模块并不依赖于mutable模块，而且也无法依赖
         // 所以，为了做这些测试，需要copy一份mutable schema过来
         return new String[]{
                 "classpath:META-INF/migrate/20140819094130_create_menu_items.sql@up",
-                "classpath:META-INF/setup/20140827133930_insert_menu_items.sql"
-//                "classpath:META-INF/setup/prepare_schema.sql",
+                "classpath:META-INF/setup/20140825140057_insert_msc_menu_items.sql"
         };
     }
 }

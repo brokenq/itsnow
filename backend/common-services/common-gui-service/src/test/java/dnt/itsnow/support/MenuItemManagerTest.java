@@ -1,8 +1,8 @@
 package dnt.itsnow.support;
 
-import dnt.itsnow.config.CommonMenuItemManagerConfig;
+import dnt.itsnow.config.MenuItemManagerConfig;
 import dnt.itsnow.model.MenuItem;
-import dnt.itsnow.service.CommonMenuItemService;
+import dnt.itsnow.service.MenuItemService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +16,13 @@ import java.util.List;
 /**
  * Created by Sin on 2014/8/26.
  */
-@ContextConfiguration(classes = CommonMenuItemManagerConfig.class)
+@ContextConfiguration(classes = MenuItemManagerConfig.class)
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
-public class CommonMenuItemManagerTest {
+public class MenuItemManagerTest {
 
     @Autowired
-    CommonMenuItemService service;
+    MenuItemService service;
 
     @Test
     public void testFindById() throws Exception {
@@ -31,7 +31,7 @@ public class CommonMenuItemManagerTest {
 
     @Test
     public void testFindAll() throws Exception {
-        List<MenuItem> menuItemList = service.findAll();
+        List<MenuItem> menuItemList = service.findAll(true);
         System.out.print(menuItemList);
         Assert.notNull(menuItemList);
     }
