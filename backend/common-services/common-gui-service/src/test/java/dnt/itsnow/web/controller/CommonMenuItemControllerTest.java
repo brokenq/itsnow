@@ -17,6 +17,7 @@ import java.util.List;
 
 import static org.easymock.EasyMock.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -30,11 +31,13 @@ public class CommonMenuItemControllerTest extends ApplicationControllerTest {
 
     List<MenuItem> menuItemList;
 
+    MenuItem menuItem;
+
     @Before
     public void setup() {
 
         menuItemList = new ArrayList<MenuItem>();
-        MenuItem menuItem = new MenuItem();
+        menuItem = new MenuItem();
         menuItem.setId(1L);
         menuItem.setParentId(null);
         menuItem.setName("用户");
@@ -53,7 +56,28 @@ public class CommonMenuItemControllerTest extends ApplicationControllerTest {
         replay(commonMenuItemService);
 
         // 准备 Mock Request
-        MockHttpServletRequestBuilder request = get("/api/menu");
+        MockHttpServletRequestBuilder request = get("/api/menu-item");
+        request = decorate(request);
+
+        // 执行
+        ResultActions result = this.browser.perform(request);
+
+        // 对业务结果的验证
+        decorate(result).andExpect(status().isOk());
+
+    }
+
+    @Test
+    public void testUpdate() throws Exception {
+
+        expect(commonMenuItemService.findAll())
+                .andReturn(menuItemList);
+
+        replay(commonMenuItemService);
+
+        // 准备 Mock Request
+        menuItem.setName("企业用户");
+        MockHttpServletRequestBuilder request = put("/api/menu-item?id=1", menuItem);
         request = decorate(request);
 
         // 执行

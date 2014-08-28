@@ -14,14 +14,14 @@ import java.util.List;
 /**
  * <h1>菜单服务的控制器</h1>
  * <pre>
- * <b>HTTP    URI                            方法      含义  </b>
- * # GET      /api/menu                      show      列出所有菜单
- * # POST     /api/menu                      create    创建一个菜单项
- * # PUT      /api/menu                      update    修改菜单项
+ * <b>HTTP    URI                                 方法      含义  </b>
+ * # GET      /api/menu-item                      show      列出所有菜单
+ * # POST     /api/menu-item                      create    创建一个菜单项
+ * # PUT      /api/menu-item/{id}                 update    修改菜单项
  *
  */
 @RestController
-@RequestMapping("/api/menu")
+@RequestMapping("/api/menu-item")
 public class CommonMenuItemController extends ApplicationController {
 
     @Autowired
@@ -30,7 +30,7 @@ public class CommonMenuItemController extends ApplicationController {
     /**
      * <h2>展示用户菜单</h2>
      * <p></p>
-     * GET /api/menu
+     * GET /api/menu-item
      * @param
      * @return 菜单项列表
      */
@@ -44,7 +44,7 @@ public class CommonMenuItemController extends ApplicationController {
     /**
      * <h2>创建用户菜单</h2>
      * <p></p>
-     * POST /api/menu
+     * POST /api/menu-item
      * @param menuItem MenuItem实例
      * @return
      */
@@ -60,14 +60,16 @@ public class CommonMenuItemController extends ApplicationController {
     /**
      * <h2>修改用户菜单</h2>
      * <p></p>
-     * PUT /api/menu
+     * PUT /api/menu-item
      * @param menuItem MenuItem实例
      * @return
      */
-    @RequestMapping(method = RequestMethod.PUT)
-    public void update(@RequestBody @Valid  MenuItem menuItem){
+    @RequestMapping(value = "{id}",method = RequestMethod.PUT)
+    public void update(@PathVariable("id") Long id, @RequestBody @Valid  MenuItem menuItem){
         try{
-            commonMenuItemManager.update(menuItem);
+            MenuItem mi = commonMenuItemManager.find(id);
+            mi.apply(menuItem);
+            commonMenuItemManager.update(mi);
         }catch(Exception e){
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
