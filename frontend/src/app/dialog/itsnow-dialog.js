@@ -1,7 +1,7 @@
 /**
  * Created by Sin on 2014/8/18.
  */
-angular.module('ItsNow.Component.Dialog',['ui.bootstrap','dialogs.main','dialogs.default-translations','pascalprecht.translate'])
+angular.module('App.Dialog',['ui.bootstrap','dialogs.main','dialogs.default-translations','pascalprecht.translate'])
     .factory('DialogService',function($rootScope,$timeout,dialogs){
 
         //-- Variables --//

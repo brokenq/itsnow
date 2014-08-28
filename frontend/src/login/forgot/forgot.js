@@ -1,10 +1,10 @@
 /**
- * Created by kadvin on 14-7-9.
+ * The forget module in Login
  */
-angular.module( 'ItsNow.Login.Forgot', [
+angular.module( 'Login.Forgot', [
   'ui.router',
   'ui.bootstrap',
-  'SecurityService'
+  'Itsnow.Security'
 ])
 
   .config(function( $stateProvider ) {

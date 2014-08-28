@@ -1,10 +1,10 @@
 /**
  * Created by kadvin on 14-7-9.
  */
-angular.module( 'ItsNow.Login.Signup', [
+angular.module( 'Login.Signup', [
   'ui.router',
   'ui.bootstrap',
-  'SecurityService'
+  'Itsnow.Security'
 ])
 
   .config(function( $stateProvider ) {

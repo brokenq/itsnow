@@ -20,7 +20,7 @@ module.exports = {
    * app's unit tests.
    */
   app_files: {
-    js: [ 'src/**/*.js', '!src/login/**/*.js', '!src/**/*.spec.js', '!src/assets/**/*.js' ],
+    js: [ 'src/app/**/*.js', '!src/**/*.spec.js', '!src/assets/**/*.js' ],
     jsunit: [ 'src/**/*.spec.js', '!src/login/**/*.spec.js' ],
 
     coffee: [ 'src/**/*.coffee', '!src/login/**/*.coffee', '!src/**/*.spec.coffee' ],
@@ -34,7 +34,7 @@ module.exports = {
   },
 
   login_files: {
-    js: [ 'src/**/*.js', '!src/app/**/*.js', '!src/**/*.spec.js', '!src/assets/**/*.js' ],
+    js: [ 'src/login/**/*.js', '!src/**/*.spec.js', '!src/assets/**/*.js' ],
     jsunit: [ 'src/**/*.spec.js', '!src/app/**/*.spec.js' ],
 
     coffee: [ 'src/**/*.coffee', '!src/app/**/*.coffee', '!src/**/*.spec.coffee' ],

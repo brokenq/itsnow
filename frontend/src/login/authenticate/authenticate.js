@@ -1,38 +1,39 @@
 /**
- * Created by kadvin on 14-7-9.
+ * The authenticate module in Login
  */
 angular
-    .module('ItsNow.Login.Authenticate', [
-        'ui.router',
-        'ui.bootstrap',
-        'SecurityService'
-    ])
+  .module('Login.Authenticate', [
+    'ui.router',
+    'ui.bootstrap',
+    'Itsnow.Security'
+  ])
 
-    .config(function ($stateProvider) {
-        $stateProvider.state('authenticate', {
-            url: '/authenticate',
-            views: {
-                "login": {
-                    controller: 'AuthenticateCtrl as authenticate',
-                    templateUrl: 'authenticate/authenticate.tpl.html'
-                }
-            },
-            data: { pageTitle: '登录' }
-        });
-    })
+  .config(function ($stateProvider) {
+    $stateProvider.state('authenticate', {
+      url: '/authenticate',
+      views: {
+        "login": {
+          controller: 'AuthenticateCtrl as authenticate',
+          templateUrl: 'authenticate/authenticate.tpl.html'
+        }
+      },
+      data: { pageTitle: '登录' }
+    });
+  })
 
-    .controller('AuthenticateCtrl', ['$scope', '$rootScope', '$http',
-        function ($scope, $rootScope, $http) {
-            $scope.credential = {username: 'jacky.cao', password: 'secret', remember: true};
+  .controller('AuthenticateCtrl', ['$scope', '$rootScope', '$http',
+    function ($scope, $rootScope, $http) {
+      $scope.credential = {username: 'jacky.cao', password: 'secret', remember: true};
 
-            $scope.challenge = function () {
-                $http.post("/api/session?username=" + $scope.credential.username + "&password=" + $scope.credential.password)
-                    .success(function (data, status, headers, config) {
-                        window.location.href = '/index.html';
-                    })
-                    .error(function (data, status, headers, config) {
-                        $scope.error = data;
-                    });
-            };
-        }]);
+      $scope.challenge = function () {
+        $http.post("/api/session?username=" + $scope.credential.username + "&password=" + $scope.credential.password)
+          .success(function (data, status, headers, config) {
+            window.location.href = '/index.html';
+          })
+          .error(function (data, status, headers, config) {
+            $scope.error = data;
+          });
+      };
+    }]);
+
 

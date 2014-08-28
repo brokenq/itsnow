@@ -15,6 +15,7 @@ module.exports = function ( grunt ) {
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-conventional-changelog');
   grunt.loadNpmTasks('grunt-bump');
+  grunt.loadNpmTasks('grunt-env');
   grunt.loadNpmTasks('grunt-coffeelint');
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-ngmin');
@@ -195,8 +196,9 @@ module.exports = function ( grunt ) {
         src: [
           '<%= vendor_files.js %>', 
           'module.prefix', 
+          '<%= build_dir %>/src/common/**/*.js',
           '<%= build_dir %>/src/app/**/*.js',
-          '<%= html2js.app.dest %>', 
+          '<%= html2js.app.dest %>',
           '<%= html2js.common.dest %>', 
           'module.suffix' 
         ],
@@ -206,6 +208,7 @@ module.exports = function ( grunt ) {
         src: [
           '<%= vendor_files.js %>',
           'module.prefix',
+          '<%= build_dir %>/src/common/**/*.js',
           '<%= build_dir %>/src/login/**/*.js',
           '<%= html2js.login.dest %>',
           '<%= html2js.common.dest %>',
@@ -364,7 +367,8 @@ module.exports = function ( grunt ) {
        */
       app: {
         options: {
-          base: 'src/app'
+          base: 'src/app',
+          module: 'App.Templates'
         },
         src: [ '<%= app_files.atpl %>' ],
         dest: '<%= build_dir %>/templates-app.js'
@@ -374,7 +378,8 @@ module.exports = function ( grunt ) {
        */
       login: {
         options: {
-          base: 'src/login'
+          base: 'src/login',
+          module: 'Login.Templates'
         },
         src: [ '<%= login_files.atpl %>' ],
         dest: '<%= build_dir %>/templates-login.js'
@@ -385,7 +390,8 @@ module.exports = function ( grunt ) {
        */
       common: {
         options: {
-          base: 'src/common'
+          base: 'src/common',
+          module: 'Common.Templates'
         },
         src: [ '<%= app_files.ctpl %>' ],
         dest: '<%= build_dir %>/templates-common.js'
@@ -425,7 +431,8 @@ module.exports = function ( grunt ) {
         dir: '<%= build_dir %>',
         src: [
           '<%= vendor_files.js %>',
-          '<%= build_dir %>/src/**/*.js',
+          '<%= build_dir %>/src/common/**/*.js',
+          '<%= build_dir %>/src/app/**/*.js',
           '<%= html2js.common.dest %>',
           '<%= html2js.app.dest %>',
           '<%= build_dir %>/assets/<%= pkg.app %>.css'
@@ -457,6 +464,7 @@ module.exports = function ( grunt ) {
         dir: '<%= build_dir %>',
         src: [
           '<%= vendor_files.js %>',
+          '<%= build_dir %>/src/common/**/*.js',
           '<%= build_dir %>/src/login/**/*.js',
           '<%= html2js.common.dest %>',
           '<%= html2js.login.dest %>',

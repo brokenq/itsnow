@@ -1,12 +1,12 @@
 /**
  * Created by Sin on 2014/8/18.
  */
-var appModule = angular.module('ItsNow.Component.Table',['ngGrid', 'ItsNow.Component.Dialog']);
+var appModule = angular.module('App.Table',['ngGrid', 'App.Dialog']);
 
 appModule.directive('hello', function(){
     return {
         restrict: 'E',
-        templateUrl: 'component/itsnow-table.tpl.html',
+        templateUrl: 'itsnow-table.tpl.html',
         replace: true,
         transclude : true,
         controller : function($rootScope, $scope, $element, $location, DialogService){
