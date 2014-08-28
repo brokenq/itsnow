@@ -30,7 +30,7 @@ Itsnow平台模块开发指南
 | 控制器创建对象         | POST /api/$models  | POST /api/users |
 | 控制器更新对象         | PUT /api/$models + /$identify | PUT /api/users/jason |
 | 控制器删除对象         | DELETE /api/$models + /$identify  | DELETE /api/users/jason|
-| Commom 模块控制器类    | Common + $Models + "Controller" | CommonUsersController |
+| Common 模块控制器类    | Common + $Models + "Controller" | CommonUsersController |
 | Common 模块服务接口    | Common + $Model + "Service" | CommonUserService |
 | Common 模块服务实现    | Common + $Model + "Manager" | CommonUserManager |
 | Common 模块DAO        | Common + $Model + "Repository" | CommonUserRepository |

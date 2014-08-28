@@ -10,6 +10,8 @@ import java.util.Date;
 
 /**
  * Mybatis persistent logins repository
+ *
+ * TODO 编写测试用例
  */
 public interface TokenRepository {
     @Insert("INSERT INTO persistent_logins (username, series, token, last_used)" +

@@ -3,8 +3,6 @@
  */
 package dnt.itsnow.model;
 
-import java.util.List;
-
 /**
  * <h1>公共的服务目录</h1>
  */

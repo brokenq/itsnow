@@ -7,6 +7,8 @@ import dnt.itsnow.platform.model.Record;
 
 /**
  * <h1>合同的详情</h1>
+ *
+ * TODO 添加测试用例
  */
 public class ContractDetail extends Record{
     private Contract contract;

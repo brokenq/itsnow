@@ -10,6 +10,7 @@ package dnt.itsnow.model;
  *
  * group#name == group#groupName
  *
+ * TODO 添加测试用例
  * TODO add group to members support
  */
 public class Group extends ConfigItem {

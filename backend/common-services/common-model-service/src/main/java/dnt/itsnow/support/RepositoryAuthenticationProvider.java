@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 /**
  * <h1>基于UserRepository的身份认证实现</h1>
+ *
+ * TODO 添加测试用例
  */
 @Service
 public class RepositoryAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
