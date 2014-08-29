@@ -5,8 +5,8 @@
 // 故障单Module
 
 angular.module('MspApp.Incident', [
-  'MspIncident.Model',
-  'MspIncident.Service'
+  'MspApp.Incident.Model',
+  'MspApp.Incident.Service'
 ])
 
     // 新建故障单

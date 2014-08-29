@@ -132,8 +132,8 @@ itsnow/frontend/
 
 #### 1. 模块命名
 
-1. 顶层模块一般命名为 `Itsnow.$ModuleName`，如 `Itsnow.Msc`
-2. 子模块一般命名为: `$ParentModule.$ChildModule`，为了简化 `$ParentModule` 不需要全名，只需要Last Name.
+1. 顶层模块一般命名为 `Itsnow.$ModuleName`，如 `Itsnow.App`,`Itsnow.MscApp`
+2. 子模块一般命名为: `$ParentModule.$ChildModule`，为了避免模块名到处充斥了 `Itsnow`， 非顶级模块可以去除 `Itsnow`，如 `Itsnow.MscApp` 的`SLA`子模块可以命名为 `MscApp.SLA`；
 
 #### 2. 模块编写
 
