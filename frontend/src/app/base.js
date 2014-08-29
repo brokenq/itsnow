@@ -17,7 +17,7 @@ angular.module('Itsnow.AppBase', [
                 templateUrl: 'main/main-container.tpl.html'
             });
 
-        var menuList;
+        var menuList = [];
         $.ajax({
             async: false,
             type : "GET",
@@ -30,6 +30,7 @@ angular.module('Itsnow.AppBase', [
 
         for(var i =0 ;i < menuList.length; i++){
             var item = menuList[i];
+            console.log(item.state+"|"+item.url+"|"+item.templateUrl);
             $stateProvider.state(item.state, {
                     url:item.url,
                     templateUrl: item.templateUrl
