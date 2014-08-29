@@ -47,6 +47,7 @@ public class MutableAccountsControllerTest extends SessionSupportedControllerTes
 
         this.account = new MsuAccount();
         this.account.setName("demo");
+        this.account.setDomain("demo");
         this.account.setSn("msu-099");
         this.account.setId(1L);
         this.account.setCreatedAt(new Timestamp(System.currentTimeMillis()));
