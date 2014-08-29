@@ -17,7 +17,7 @@ angular.module('Msp.Incident', [
 
             $scope.save = function () {
                 MSPNewTroubleTicketService.start($scope.incident, function () {
-                    $location.path('/index/msp-list-trouble-ticket');
+                    $location.path('/index/list-trouble-ticket');
                 });
             };
 
@@ -51,7 +51,7 @@ angular.module('Msp.Incident', [
                         MSPAcceptTroubleTicketService.complete({taskId:taskId}, $scope.incident,function (data) {
                             if(data.result==='true'){
                                 alert("签收成功");
-                                $location.path('/index/msp-list-trouble-ticket');
+                                $location.path('/index/list-trouble-ticket');
                             }
                         });
                     }
@@ -87,7 +87,7 @@ angular.module('Msp.Incident', [
                         MSPAnalysisTroubleTicketService.complete({taskId:taskId,flag:true}, $scope.incident,function (data) {
                             if(data.result==='true'){
                                 alert("分析完毕");
-                                $location.path('/index/msp-list-trouble-ticket');
+                                $location.path('/index/list-trouble-ticket');
                             }
                         });
                     }
@@ -123,7 +123,7 @@ angular.module('Msp.Incident', [
                         MSPProcessTroubleTicketService.complete({taskId:taskId,resolved:true}, $scope.incident,function (data) {
                             if(data.result==='true'){
                                 alert("处理完毕");
-                                $location.path('/index/msp-list-trouble-ticket');
+                                $location.path('/index/list-trouble-ticket');
                             }
                         });
                     }
@@ -159,7 +159,7 @@ angular.module('Msp.Incident', [
                         MSPCloseTroubleTicketService.complete({taskId:taskId}, $scope.incident,function (data) {
                             if(data.result==='true'){
                                 alert("关闭成功");
-                                $location.path('/index/msp-list-trouble-ticket');
+                                $location.path('/index/list-trouble-ticket');
                             }
                         });
                     }
@@ -261,7 +261,7 @@ angular.module('Msp.Incident', [
             };
 
             $scope.newFun = function (){
-                 $location.path('/index/msp-new-trouble-ticket');
+                 $location.path('/index/new-trouble-ticket');
             };
 
             $scope.acceptFun = function (){
@@ -279,7 +279,7 @@ angular.module('Msp.Incident', [
                         taskName = data.tasks[i].taskName;
                     }
                     if(taskName.indexOf('accept')>-1){
-                        $location.path('/index/msp-accept-trouble-ticket');
+                        $location.path('/index/accept-trouble-ticket');
                     }else{
                         alert("流程错误！下一步处理应为："+taskName);
                     }
@@ -305,7 +305,7 @@ angular.module('Msp.Incident', [
                     }
                     if(taskName.indexOf('analysis')>-1){
 //                    if(taskName==='firstline analysis_incident'){
-                        $location.path('/index/msp-analysis-trouble-ticket');
+                        $location.path('/index/analysis-trouble-ticket');
                     }else{
                         alert("流程错误！下一步处理应为："+taskName);
                     }
@@ -332,7 +332,7 @@ angular.module('Msp.Incident', [
                     }
                     if(taskName.indexOf('process')>-1){
 //                    if(taskName==='firstline process_incident'){
-                        $location.path('/index/msp-process-trouble-ticket');
+                        $location.path('/index/process-trouble-ticket');
                     }else{
                         alert("流程错误！下一步处理应为："+taskName);
                     }
@@ -359,7 +359,7 @@ angular.module('Msp.Incident', [
                     }
                     if(taskName.indexOf('close')>-1){
 //                    if(taskName.indexOf('close incident')>-1){
-                        $location.path('/index/msp-close-trouble-ticket');
+                        $location.path('/index/close-trouble-ticket');
                     }else{
                         alert("流程错误！下一步处理应为："+taskName);
                     }

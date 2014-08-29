@@ -15,6 +15,31 @@ angular.module('Itsnow.AppBase', [
             .state('index', {
                 url: '/index',
                 templateUrl: 'main/main-container.tpl.html'
+            })
+            // 新建故障单
+            .state('index.new-trouble-ticket', {
+                url: '/new-trouble-ticket',
+                templateUrl: 'incident/new-trouble-ticket.tpl.html'
+            })
+            // 签收故障单
+            .state('index.accept-trouble-ticket', {
+                url: '/accept-trouble-ticket',
+                templateUrl: 'incident/accept-trouble-ticket.tpl.html'
+            })
+            // 分析故障单
+            .state('index.analysis-trouble-ticket', {
+                url: '/analysis-trouble-ticket',
+                templateUrl: 'incident/analysis-trouble-ticket.tpl.html'
+            })
+            // 处理故障单
+            .state('index.process-trouble-ticket', {
+                url: '/process-trouble-ticket',
+                templateUrl: 'incident/process-trouble-ticket.tpl.html'
+            })
+            // 关闭故障单
+            .state('index.close-trouble-ticket', {
+                url: '/close-trouble-ticket',
+                templateUrl: 'incident/close-trouble-ticket.tpl.html'
             });
 
         var menuList = [];
