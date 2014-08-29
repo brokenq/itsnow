@@ -1,10 +1,10 @@
 /**
  * The MSC Main Application
  */
-angular.module('Msc.App', [
-  'Itsnow.AppBase',
-  'Msc.Templates',
-  'Msc.User',
-  'Msc.SLA',
-  'Msc.Contract'
+angular.module('Itsnow.MscApp', [
+  'Itsnow.App',
+  'MscApp.Templates',
+  'MscApp.User',
+  'MscApp.SLA',
+  'MscApp.Contract'
 ]);

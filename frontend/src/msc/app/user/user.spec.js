@@ -12,7 +12,7 @@ describe('Msc User', function () {
       {id: '005', name: 'Enos',    nickname: 'En',  createdAt: '201407211258', updatedAt: '201407211258'}
     ];
 
-    beforeEach(module('Msc.User'));
+    beforeEach(module('MscApp.User'));
 
     beforeEach(inject(function (_$httpBackend_, $rootScope, $controller) {
         $httpBackend = _$httpBackend_;

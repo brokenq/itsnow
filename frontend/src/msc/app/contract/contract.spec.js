@@ -11,7 +11,7 @@ describe('Msc Contract', function () {
       {id: '004', name: '协议4',  resolutionTime: '201407211258', responseTime: '201407211258'},
       {id: '005', name: '协议5',  resolutionTime: '201407211258', responseTime: '201407211258'}
     ];
-    beforeEach(module('Msc.Contract'));
+    beforeEach(module('MscApp.Contract'));
 
     beforeEach(inject(function (_$httpBackend_, $rootScope, $controller) {
         $httpBackend = _$httpBackend_;

@@ -2,7 +2,7 @@
  * Created by Sin on 2014/8/6.
  */
 // Service
-angular.module('Msp.Incident.Service', [])
+angular.module('MspApp.Incident.Service', [])
 
     // 故障工单列表
     .factory('MSPListTroubleTicketService', ['$resource', function ($resource) {

@@ -1,4 +1,4 @@
-angular.module('Itsnow.AppBase', [
+angular.module('Itsnow.App', [
     'ui.router',
     'ngResource',
     'Common.Interceptor',

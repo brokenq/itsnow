@@ -1,7 +1,7 @@
 /**
  * Created by User on 2014/7/21.
  */
-var slaApp = angular.module('Msc.SLA', ['ngGrid','ngResource']);
+var slaApp = angular.module('MscApp.SLA', ['ngGrid','ngResource']);
 
 var SlaListCtrl = ['$scope', '$http', 'SlaService', function ($scope, $http, SlaService) {
     $scope.filterOptions = {

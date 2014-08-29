@@ -4,9 +4,9 @@
 // incident实体类
 // 故障单Module
 
-angular.module('Msu.Incident', [
-  'Msu.Incident.Model',
-  'Msu.Incident.Service',
+angular.module('MsuApp.Incident', [
+  'MsuIncident.Model',
+  'MsuIncident.Service',
   'App.Table',
   'App.Dialog'
 ])

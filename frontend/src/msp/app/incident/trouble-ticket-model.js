@@ -4,7 +4,7 @@
 // incident实体类
 // 故障单Module
 
-angular.module('Msp.Incident.Model', [])
+angular.module('MspApp.Incident.Model', [])
 
     .factory('MSPTroubleTicketModelService', function () {
 

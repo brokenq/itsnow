@@ -2,7 +2,7 @@ describe( 'Itsnow Msc App', function() {
   describe( 'loading', function() {
     var $scope;
 
-    beforeEach( module( 'Msc.App' ) );
+    beforeEach( module( 'Itsnow.MscApp' ) );
 
     beforeEach( inject( function( $controller, $rootScope ) {
       $scope = $rootScope.$new();

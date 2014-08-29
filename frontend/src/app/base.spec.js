@@ -1,8 +1,8 @@
-describe( 'Itsnow App Base', function() {
+describe( 'Itsnow App', function() {
   describe( 'loading', function() {
     var AppCtrl, $scope;
 
-    beforeEach( module( 'Itsnow.AppBase' ) );
+    beforeEach( module( 'Itsnow.App' ) );
 
     beforeEach( inject( function( $controller, $rootScope ) {
       $scope = $rootScope.$new();

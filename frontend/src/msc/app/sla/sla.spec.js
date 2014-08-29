@@ -12,7 +12,7 @@ describe('Msc SLA', function () {
       {id: '005', name: '协议5',  resolutionTime: '201407211258', responseTime: '201407211258'}
     ];
 
-    beforeEach(module('Msc.SLA'));
+    beforeEach(module('MscApp.SLA'));
 
     beforeEach(inject(function (_$httpBackend_, $rootScope, $controller) {
         $httpBackend = _$httpBackend_;

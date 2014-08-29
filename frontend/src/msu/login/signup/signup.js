@@ -1,7 +1,7 @@
 /**
  * Created by kadvin on 14-7-9.
  */
-angular.module( 'Login.MsuStaff.Signup', [
+angular.module( 'MsuLogin.StaffSignup', [
   'ui.router',
   'ui.bootstrap',
   'Itsnow.Security'

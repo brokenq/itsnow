@@ -1,7 +1,7 @@
 /**
  * Signup Module for MSU in MSC Login Application.
  */
-angular.module( 'Login.Msu.Signup', [
+angular.module( 'MscLogin.MsuSignup', [
   'ui.router',
   'ui.bootstrap',
   'Itsnow.Security'

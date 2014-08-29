@@ -2,8 +2,8 @@
  * The MSP Application
  */
 
-angular.module('Msp.App', [
-  'Itsnow.AppBase',
-  'Msp.Templates',
-  'Msp.Incident'
+angular.module('Itsnow.MspApp', [
+  'Itsnow.App',
+  'MspApp.Templates',
+  'MspApp.Incident'
 ]);
