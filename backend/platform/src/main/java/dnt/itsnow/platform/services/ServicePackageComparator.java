@@ -24,27 +24,36 @@ class ServicePackageComparator implements Comparator<File> {
     private int baseOrder(String name){
         if( name.contains("common-") ){
             return 10;
-        } else if( name.contains("general-")) {
+        } else if( name.contains("activiti")) {
             return 30;
-        }else if (name.contains("mutable-")){
+        } else if( name.contains("general-")) {
             return 50;
-        }else if( name.contains("demo-")) {
+        }else if (name.contains("mutable-")){
             return 70;
-        }else {
+        }else if (name.contains("msu-")){
+            return 70;
+        }else if (name.contains("msp-")){
+            return 70;
+        }else if( name.contains("demo-")) {
             return 90;
+        }else {//unknown
+            return 110;
         }
     }
 
     private int subOrder(String name){
-        if( name.contains("gui-service")) return 1;
-        if( name.contains("account-service")) return 2;
-        if( name.contains("user-service")) return 3;
-        if( name.contains("acl-service")) return 4;
-        if( name.contains("service_catalog")) return 5;
-        if( name.contains("sla-service")) return 6;
-        if( name.contains("contract-service")) return 7;
-        if( name.contains("staff-service")) return 8;
-        return 10;
+        if( name.contains("cmdb")) return 1;
+        if( name.contains("gui")) return 2;
+        if( name.contains("model")) return 3;
+        if( name.contains("deploy")) return 4;
+        if( name.contains("activiti")) return 5;
+        if( name.contains("account")) return 6;
+        if( name.contains("user")) return 7;
+        if( name.contains("session")) return 8;
+        if( name.contains("contract")) return 9;
+        if( name.contains("service_catalog")) return 10;
+        if( name.contains("incident")) return 11;
+        return 12;
     }
 
 }

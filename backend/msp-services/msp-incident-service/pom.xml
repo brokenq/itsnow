@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>msp-incident-service</artifactId>
-    <name>msp Incident Service</name>
+    <name>MSP Incident Service</name>
     <description>
         Demo msp Incident Service implements,provide spi to frontend..
     </description>

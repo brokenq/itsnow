@@ -83,7 +83,7 @@ public class ServicePackageManager extends ApplicationSupportBean
         componentRepository.sortCandidates(packageJars);
         // TODO  不知道为什么，排序结果中会出错
         // 临时规则，让系统能先正常的跑起来，以后再来解决
-        //Arrays.sort(packageJars, new ServicePackageComparator());
+        Arrays.sort(packageJars, new ServicePackageComparator());
         StringBuilder sb = new StringBuilder();
         for (File packageJar : packageJars) {
             Component pkg = componentRepository.resolveComponent(packageJar.getName());
