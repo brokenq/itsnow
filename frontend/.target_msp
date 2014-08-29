@@ -1,7 +1,0 @@
-{
- "name":    "msp",
- "title":   "Msp",
- "version": "0.1.6",
- "app":     "msp-app-0.1.6",
- "login":   "msp-login-0.1.6"
-}

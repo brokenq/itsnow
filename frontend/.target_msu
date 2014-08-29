@@ -1,7 +1,0 @@
-{
- "name":    "msu",
- "title":   "Msu",
- "version": "0.1.6",
- "app":     "msu-app-0.1.6",
- "login":   "msu-login-0.1.6"
-}
