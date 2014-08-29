@@ -94,7 +94,7 @@
                         <configuration>
                             <target>
                                 <exec dir="${project.basedir}" executable="grunt" failonerror="true">
-                                    <arg line="build --force"/>
+                                    <arg line="build --force --verbose"/>
                                 </exec>
                                 <echo message="Frontend is built" />
                                 <copy todir="${release.dir}/webapp/build/" overwrite="true">
