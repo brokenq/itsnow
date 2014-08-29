@@ -25,6 +25,38 @@
         </dependency>
     </dependencies>
 
+    <properties>
+        <target.name>itsnow</target.name>
+        <target.title>Itsnow</target.title>
+        <target.version>${project.version}</target.version>
+        <target.app>${target.name}-app-${target.version}</target.app>
+        <target.login>${target.name}-login-${target.version}</target.login>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>with-itsnow-msc</id>
+            <properties>
+                <target.name>msc</target.name>
+                <target.title>Msc</target.title>
+            </properties>
+        </profile>
+        <profile>
+            <id>with-itsnow-msu</id>
+            <properties>
+                <target.name>msu</target.name>
+                <target.title>Msu</target.title>
+            </properties>
+        </profile>
+        <profile>
+            <id>with-itsnow-msp</id>
+            <properties>
+                <target.name>msp</target.name>
+                <target.title>Msp</target.title>
+            </properties>
+        </profile>
+    </profiles>
+
     <build>
         <plugins>
             <plugin>
@@ -32,6 +64,27 @@
                 <version>${version.maven.antrun}</version>
                 <inherited>false</inherited>
                 <executions>
+                    <execution>
+                        <id>prepare-target</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <echo file=".target">
+{
+    "name":    "${target.name}",
+    "title":   "${target.title}",
+    "version": "${target.version}",
+    "app":     "${target.app}",
+    "login":   "${target.login}"
+}
+
+                                </echo>
+                            </target>
+                        </configuration>
+                    </execution>
                     <execution>
                         <id>build-frontend</id>
                         <phase>package</phase>
@@ -41,11 +94,11 @@
                         <configuration>
                             <target>
                                 <exec dir="${project.basedir}" executable="grunt" failonerror="true">
-                                    <arg line="build --force"/>
+                                    <arg line="build --force --verbose"/>
                                 </exec>
                                 <echo message="Frontend is built" />
                                 <copy todir="${release.dir}/webapp/build/" overwrite="true">
-                                    <fileset dir="${project.basedir}/build"/>
+                                    <fileset dir="${project.basedir}/${target.name}/build"/>
                                 </copy>
 
                             </target>
@@ -65,7 +118,7 @@
                                 <echo message="Frontend is compiled" />
                                 <delete dir="${release.dir}/webapp/build/"/>
                                 <copy todir="${release.dir}/webapp/deploy/" overwrite="true">
-                                    <fileset dir="${project.basedir}/deploy" />
+                                    <fileset dir="${project.basedir}/${target.name}/deploy" />
                                 </copy>
                             </target>
                         </configuration>

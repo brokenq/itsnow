@@ -1,11 +1,21 @@
 /**
  * Created by User on 2014/7/23.
  */
-var menuApp = angular.module('ItsNow.Menu', ['ui.tree']);
+var appMenu = angular.module('App.Menu', ['ui.tree']);
 
-var menuCtrl = menuApp.controller('menuCtrl', ['$scope', 'MenuService', function ($scope, MenuService) {
+appMenu.factory('MenuService', ['$resource', function ($resource) {
+    return $resource('/api/menu_items', null, {
+        list: {
+            method: 'GET',
+            isArray: true
+        }
+    });
+}]);
 
-    $scope.menuList = MenuService.list({tree:true});
+var menuCtrl = appMenu.controller('MenuCtrl', ['$scope', 'MenuService', function ($scope, menuService) {
+
+
+    $scope.menuList = menuService.list();
 
     $scope.toggle = function(scope) {
         if(scope.collapse){
@@ -17,11 +27,3 @@ var menuCtrl = menuApp.controller('menuCtrl', ['$scope', 'MenuService', function
 
 }]);
 
-menuApp.factory('MenuService', ['$resource', function ($resource) {
-    return $resource('/api/menu_items', null, {
-        list: {
-            method: 'GET',
-            isArray: true
-        }
-    });
-}]);

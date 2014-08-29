@@ -1,7 +1,9 @@
 *.sw*
 *~
-.build/
 build/
+deploy/
+ms?/build/
 bin/
-.deploy/
+ms?/deploy/
 node_modules/
+.target

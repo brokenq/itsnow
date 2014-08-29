@@ -20,10 +20,11 @@ module.exports = function ( grunt ) {
   grunt.loadNpmTasks('grunt-ngmin');
   grunt.loadNpmTasks('grunt-html2js');
 
+  var system = grunt.file.readJSON('.target');
   /**
    * Load in our build configuration file.
    */
-  var userConfig = require( './build.config.js' );
+  var userConfig = require( './' + system.name + '.config.js' );
 
   /**
    * This is the configuration object Grunt uses to give each plugin its 
@@ -36,6 +37,8 @@ module.exports = function ( grunt ) {
      */
     pkg: grunt.file.readJSON("package.json"),
 
+    target: system,
+
     /**
      * The banner is the comment that is placed at the top of our compiled 
      * source files. It is first processed as a Grunt template, where the `<%=`
@@ -44,7 +47,7 @@ module.exports = function ( grunt ) {
     meta: {
       banner: 
         '/**\n' +
-        ' * <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
+        ' * <%= target.name %> - v<%= target.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
         ' * <%= pkg.homepage %>\n' +
         ' *\n' +
         ' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author %>\n' +
@@ -92,6 +95,159 @@ module.exports = function ( grunt ) {
       '<%= build_dir %>', 
       '<%= compile_dir %>'
     ],
+
+    /**
+     * HTML2JS is a Grunt plugin that takes all of your template files and
+     * places them into JavaScript files as strings that are added to
+     * AngularJS's template cache. This means that the templates too become
+     * part of the initial payload as one JavaScript file. Neat!
+     */
+    html2js: {
+      /**
+       * These are the templates from `src/common`.
+       */
+      common: {
+        options: {
+          base: 'src/common',
+          module: 'Common.Templates'
+        },
+        src: [ '<%= app_files.ctpl %>' ],
+        dest: '<%= build_dir %>/templates-common.js'
+      },
+      /**
+       * These are the templates from `src/app`.
+       */
+      app: {
+        options: {
+          base: 'src/app',
+          module: 'App.Templates'
+        },
+        src: [ '<%= app_files.atpl %>' ],
+        dest: '<%= build_dir %>/templates-app.js'
+      },
+      ms_app: {
+        options: {
+          base: 'src/<%= target.name %>/app',
+          module: '<%= target.title %>.Templates'
+        },
+        src: [ '<%= app_files.mtpl %>' ],
+        dest: '<%= build_dir %>/templates-<%= target.name %>-app.js'
+      },
+      /**
+       * These are the templates from `src/login`.
+       */
+      login: {
+        options: {
+          base: 'src/login',
+          module: 'Login.Templates'
+        },
+        src: [ '<%= login_files.atpl %>' ],
+        dest: '<%= build_dir %>/templates-login.js'
+      },
+      ms_login: {
+        options: {
+          base: 'src/<%= target.name %>/login',
+          module: '<%=target.title%>Login.Templates'
+        },
+        src: [ '<%= login_files.mtpl %>' ],
+        dest: '<%= build_dir %>/templates-<%= target.name %>-login.js'
+      }
+
+    },
+
+    /**
+     * `jshint` defines the rules of our linter as well as which files we
+     * should check. This file, all javascript sources, and all our unit tests
+     * are linted based on the policies listed in `options`. But we can also
+     * specify exclusionary patterns by prefixing them with an exclamation
+     * point (!); this is useful when code comes from a third party but is
+     * nonetheless inside `src/`.
+     */
+    jshint: {
+      src: [
+        '<%= app_files.js %>',
+        '<%= login_files.js %>'
+      ],
+      test: [
+        '<%= app_files.jsunit %>',
+        '<%= login_files.jsunit %>'
+      ],
+      gruntfile: [
+        'Gruntfile.js'
+      ],
+      options: {
+        curly: true,
+        immed: true,
+        newcap: true,
+        noarg: true,
+        sub: true,
+        boss: true,
+        eqnull: true
+      },
+      globals: {}
+    },
+
+    /**
+     * `coffeelint` does the same as `jshint`, but for CoffeeScript.
+     * CoffeeScript is not the default in ItsNow, so we're just using
+     * the defaults here.
+     */
+    coffeelint: {
+      src: {
+        files: {
+          src: [ '<%= app_files.coffee %>', '<%= login_files.coffee %>' ]
+        }
+      },
+      test: {
+        files: {
+          src: [ '<%= app_files.coffeeunit %>', '<%= login_files.coffeeunit %>' ]
+        }
+      }
+    },
+
+    /**
+     * `grunt coffee` compiles the CoffeeScript sources. To work well with the
+     * rest of the build, we have a separate compilation task for sources and
+     * specs so they can go to different places. For example, we need the
+     * sources to live with the rest of the copied JavaScript so we can include
+     * it in the final build, but we don't want to include our specs there.
+     */
+    coffee: {
+      source: {
+        options: {
+          bare: true
+        },
+        expand: true,
+        cwd: '.',
+        src: [ '<%= app_files.coffee %>', '<%= login_files.coffee %>' ],
+        dest: '<%= build_dir %>',
+        ext: '.js'
+      }
+    },
+
+    /**
+     * `grunt-contrib-less` handles our LESS compilation and uglification automatically.
+     * Only our `main.less` file is included in compilation;
+     * all other files should be imported from this file OR concat by grunt .
+     */
+    less: {
+      build: {
+        files: {
+          '<%= build_dir %>/assets/<%= target.app %>.css': '<%= app_files.less %>',
+          '<%= build_dir %>/assets/<%= target.login %>.css': '<%= login_files.less %>'
+        }
+      },
+      compile: {
+        files: {
+          '<%= compile_dir %>/assets/<%= target.app %>.css': '<%= app_files.less %>',
+          '<%= compile_dir %>/assets/<%= target.login %>.css': '<%= login_files.less %>'
+        },
+        options: {
+          cleancss: true,
+          compress: true
+        }
+      }
+    },
 
     /**
      * The `copy` task just copies files from A to B. We use it here to copy
@@ -175,17 +331,17 @@ module.exports = function ( grunt ) {
        */
       build_app_css: {
         src: [
-          '<%= build_dir %>/assets/<%= pkg.app %>.css',
+          '<%= build_dir %>/assets/<%= target.app %>.css',
           '<%= vendor_files.css %>'
         ],
-        dest: '<%= build_dir %>/assets/<%= pkg.app %>.css'
+        dest: '<%= build_dir %>/assets/<%= target.app %>.css'
       },
       build_login_css: {
         src: [
-          '<%= build_dir %>/assets/<%= pkg.login %>.css',
+          '<%= build_dir %>/assets/<%= target.login %>.css',
           '<%= vendor_files.css %>'
         ],
-        dest: '<%= build_dir %>/assets/<%= pkg.login %>.css'
+        dest: '<%= build_dir %>/assets/<%= target.login %>.css'
       },
       /**
        * The `compile_js` target is the concatenation of our application source
@@ -195,43 +351,25 @@ module.exports = function ( grunt ) {
         src: [
           '<%= vendor_files.js %>', 
           'module.prefix', 
+          '<%= build_dir %>/src/common/**/*.js',
           '<%= build_dir %>/src/app/**/*.js',
-          '<%= html2js.app.dest %>', 
+          '<%= html2js.app.dest %>',
           '<%= html2js.common.dest %>', 
           'module.suffix' 
         ],
-        dest: '<%= compile_dir %>/assets/<%= pkg.app %>.js'
+        dest: '<%= compile_dir %>/assets/<%= target.app %>.js'
       },
       compile_login_js: {
         src: [
           '<%= vendor_files.js %>',
           'module.prefix',
+          '<%= build_dir %>/src/common/**/*.js',
           '<%= build_dir %>/src/login/**/*.js',
           '<%= html2js.login.dest %>',
           '<%= html2js.common.dest %>',
           'module.suffix'
         ],
-        dest: '<%= compile_dir %>/assets/<%= pkg.login %>.js'
-      }
-    },
-
-    /**
-     * `grunt coffee` compiles the CoffeeScript sources. To work well with the
-     * rest of the build, we have a separate compilation task for sources and
-     * specs so they can go to different places. For example, we need the
-     * sources to live with the rest of the copied JavaScript so we can include
-     * it in the final build, but we don't want to include our specs there.
-     */
-    coffee: {
-      source: {
-        options: {
-          bare: true
-        },
-        expand: true,
-        cwd: '.',
-        src: [ '<%= app_files.coffee %>', '<%= login_files.coffee %>' ],
-        dest: '<%= build_dir %>',
-        ext: '.js'
+        dest: '<%= compile_dir %>/assets/<%= target.login %>.js'
       }
     },
 
@@ -269,126 +407,12 @@ module.exports = function ( grunt ) {
 
     cssmin: {
       app: {
-        src: '<%= compile_dir %>/assets/<%= pkg.app %>.css',
-        dest: '<%= compile_dir %>/assets/<%= pkg.app %>.css'
+        src: '<%= compile_dir %>/assets/<%= target.app %>.css',
+        dest: '<%= compile_dir %>/assets/<%= target.app %>.css'
       },
       login: {
-        src: '<%= compile_dir %>/assets/<%= pkg.login %>.css',
-        dest: '<%= compile_dir %>/assets/<%= pkg.login %>.css'
-      }
-    },
-
-    /**
-     * `grunt-contrib-less` handles our LESS compilation and uglification automatically.
-     * Only our `main.less` file is included in compilation;
-     * all other files should be imported from this file OR concat by grunt .
-     */
-    less: {
-      build: {
-        files: {
-          '<%= build_dir %>/assets/<%= pkg.app %>.css': '<%= app_files.less %>',
-          '<%= build_dir %>/assets/<%= pkg.login %>.css': '<%= login_files.less %>'
-        }
-      },
-      compile: {
-        files: {
-          '<%= compile_dir %>/assets/<%= pkg.app %>.css': '<%= app_files.less %>',
-          '<%= compile_dir %>/assets/<%= pkg.login %>.css': '<%= login_files.less %>'
-        },
-        options: {
-          cleancss: true,
-          compress: true
-        }
-      }
-    },
-
-    /**
-     * `jshint` defines the rules of our linter as well as which files we
-     * should check. This file, all javascript sources, and all our unit tests
-     * are linted based on the policies listed in `options`. But we can also
-     * specify exclusionary patterns by prefixing them with an exclamation
-     * point (!); this is useful when code comes from a third party but is
-     * nonetheless inside `src/`.
-     */
-    jshint: {
-      src: [ 
-        '<%= app_files.js %>',
-        '<%= login_files.js %>'
-      ],
-      test: [
-        '<%= app_files.jsunit %>',
-        '<%= login_files.jsunit %>'
-      ],
-      gruntfile: [
-        'Gruntfile.js'
-      ],
-      options: {
-        curly: true,
-        immed: true,
-        newcap: true,
-        noarg: true,
-        sub: true,
-        boss: true,
-        eqnull: true
-      },
-      globals: {}
-    },
-
-    /**
-     * `coffeelint` does the same as `jshint`, but for CoffeeScript.
-     * CoffeeScript is not the default in ItsNow, so we're just using
-     * the defaults here.
-     */
-    coffeelint: {
-      src: {
-        files: {
-          src: [ '<%= app_files.coffee %>', '<%= login_files.coffee %>' ]
-        }
-      },
-      test: {
-        files: {
-          src: [ '<%= app_files.coffeeunit %>', '<%= login_files.coffeeunit %>' ]
-        }
-      }
-    },
-
-    /**
-     * HTML2JS is a Grunt plugin that takes all of your template files and
-     * places them into JavaScript files as strings that are added to
-     * AngularJS's template cache. This means that the templates too become
-     * part of the initial payload as one JavaScript file. Neat!
-     */
-    html2js: {
-      /**
-       * These are the templates from `src/app`.
-       */
-      app: {
-        options: {
-          base: 'src/app'
-        },
-        src: [ '<%= app_files.atpl %>' ],
-        dest: '<%= build_dir %>/templates-app.js'
-      },
-      /**
-       * These are the templates from `src/login`.
-       */
-      login: {
-        options: {
-          base: 'src/login'
-        },
-        src: [ '<%= login_files.atpl %>' ],
-        dest: '<%= build_dir %>/templates-login.js'
-      },
-
-      /**
-       * These are the templates from `src/common`.
-       */
-      common: {
-        options: {
-          base: 'src/common'
-        },
-        src: [ '<%= app_files.ctpl %>' ],
-        dest: '<%= build_dir %>/templates-common.js'
+        src: '<%= compile_dir %>/assets/<%= target.login %>.css',
+        dest: '<%= compile_dir %>/assets/<%= target.login %>.css'
       }
     },
 
@@ -425,10 +449,11 @@ module.exports = function ( grunt ) {
         dir: '<%= build_dir %>',
         src: [
           '<%= vendor_files.js %>',
-          '<%= build_dir %>/src/**/*.js',
+          '<%= app_files.js %>',
           '<%= html2js.common.dest %>',
           '<%= html2js.app.dest %>',
-          '<%= build_dir %>/assets/<%= pkg.app %>.css'
+          '<%= html2js.ms_app.dest %>',
+          '<%= build_dir %>/assets/<%= target.app %>.css'
         ]
       },
 
@@ -441,7 +466,7 @@ module.exports = function ( grunt ) {
         dir: '<%= compile_dir %>',
         src: [
           '<%= concat.compile_app_js.dest %>',
-          '<%= compile_dir %>/assets/<%= pkg.app %>.css'
+          '<%= compile_dir %>/assets/<%= target.app %>.css'
         ]
       }
     },
@@ -457,10 +482,11 @@ module.exports = function ( grunt ) {
         dir: '<%= build_dir %>',
         src: [
           '<%= vendor_files.js %>',
-          '<%= build_dir %>/src/login/**/*.js',
+          '<%= login_files.js %>',
           '<%= html2js.common.dest %>',
           '<%= html2js.login.dest %>',
-          '<%= build_dir %>/assets/<%= pkg.login %>.css'
+          '<%= html2js.ms_login.dest %>',
+          '<%= build_dir %>/assets/<%= target.login %>.css'
         ]
       },
 
@@ -473,7 +499,7 @@ module.exports = function ( grunt ) {
         dir: '<%= compile_dir %>',
         src: [
           '<%= concat.compile_login_js.dest %>',
-          '<%= compile_dir %>/assets/<%= pkg.login %>.css'
+          '<%= compile_dir %>/assets/<%= target.login %>.css'
         ]
       }
     },
@@ -487,10 +513,16 @@ module.exports = function ( grunt ) {
         dir: '<%= build_dir %>',
         src: [ 
           '<%= vendor_files.js %>',
-          '<%= html2js.app.dest %>',
-          '<%= html2js.login.dest %>',
-          '<%= html2js.common.dest %>',
-          '<%= test_files.js %>'
+          '<%= app_files.js %>',
+          '<%= app_files.coffee %>',
+          '<%= login_files.js %>',
+          '<%= login_files.coffee %>',
+
+          '<%= test_files.js %>',
+          '<%= app_files.jsunit %>',
+          '<%= app_files.coffeeunit %>',
+          '<%= login_files.jsunit %>',
+          '<%= login_files.coffeeunit %>'
         ]
       }
     },
@@ -576,10 +608,12 @@ module.exports = function ( grunt ) {
        */
       tpls: {
         files: [ 
-          '<%= app_files.atpl %>', 
+          '<%= app_files.atpl %>',
           '<%= app_files.ctpl %>',
+          '<%= app_files.mtpl %>',
           '<%= login_files.atpl %>',
-          '<%= login_files.ctpl %>'
+          '<%= login_files.ctpl %>',
+          '<%= login_files.mtpl %>'
         ],
         tasks: [ 'html2js' ]
       },
@@ -673,6 +707,13 @@ module.exports = function ( grunt ) {
     });
   }
 
+  function filterForSpec ( files, match ) {
+    return files.filter( function ( file ) {
+      var result = file.match( /\.spec\.js$/ ) || file.match( /mocks\.js$/ );
+      return match ? result : !result;
+    });
+  }
+
   /**
    * A utility function to get all app CSS sources.
    */
@@ -703,6 +744,7 @@ module.exports = function ( grunt ) {
           data: {
             scripts: jsFiles,
             styles: cssFiles,
+            sysName: system.title,
             version: grunt.config( 'pkg.version' )
           }
         });
@@ -731,6 +773,7 @@ module.exports = function ( grunt ) {
           data: {
             scripts: jsFiles,
             styles: cssFiles,
+            sysName: system.title,
             version: grunt.config( 'pkg.version' )
           }
         });
@@ -745,12 +788,15 @@ module.exports = function ( grunt ) {
    */
   grunt.registerMultiTask( 'karmaconfig', 'Process karma config templates', function () {
     var jsFiles = filterForJS( this.filesSrc );
-    
-    grunt.file.copy( 'karma/karma-unit.tpl.js', grunt.config( 'build_dir' ) + '/karma-unit.js', { 
+    var scriptFiles = filterForSpec( jsFiles, false );
+    var specFiles = filterForSpec( jsFiles, true );
+    grunt.file.copy( 'karma/karma-unit.tpl.js', grunt.config( 'build_dir' ) + '/karma-unit.js', {
       process: function ( contents, path ) {
         return grunt.template.process( contents, {
           data: {
-            scripts: jsFiles
+            scripts: scriptFiles,
+            specs: specFiles,
+            build_dir: grunt.config('build_dir')
           }
         });
       }

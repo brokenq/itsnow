@@ -1,0 +1,198 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'node', '/usr/local/bin/npm', 'install' ]
+2 info using npm@1.4.14
+3 info using node@v0.10.29
+4 verbose readDependencies using package.json deps
+5 verbose install where, deps [ '/opt/dnt/insight/itsnow/frontend',
+5 verbose install   [ 'angular-dialog-service',
+5 verbose install     'grunt',
+5 verbose install     'grunt-env',
+5 verbose install     'grunt-contrib-less',
+5 verbose install     'grunt-contrib-clean',
+5 verbose install     'grunt-contrib-copy',
+5 verbose install     'grunt-contrib-jshint',
+5 verbose install     'grunt-contrib-concat',
+5 verbose install     'grunt-contrib-watch',
+5 verbose install     'grunt-contrib-uglify',
+5 verbose install     'grunt-contrib-cssmin',
+5 verbose install     'grunt-ngmin',
+5 verbose install     'grunt-html2js',
+5 verbose install     'grunt-contrib-coffee',
+5 verbose install     'grunt-coffeelint',
+5 verbose install     'grunt-conventional-changelog',
+5 verbose install     'grunt-bump',
+5 verbose install     'karma-firefox-launcher',
+5 verbose install     'karma-chrome-launcher',
+5 verbose install     'karma-jasmine',
+5 verbose install     'grunt-karma',
+5 verbose install     'karma-coffee-preprocessor',
+5 verbose install     'karma' ] ]
+6 info preinstall now@0.0.1
+7 verbose readDependencies using package.json deps
+8 verbose cache add [ 'grunt-env@~0.4.1', null ]
+9 verbose cache add name=undefined spec="grunt-env@~0.4.1" args=["grunt-env@~0.4.1",null]
+10 verbose parsed url { protocol: null,
+10 verbose parsed url   slashes: null,
+10 verbose parsed url   auth: null,
+10 verbose parsed url   host: null,
+10 verbose parsed url   port: null,
+10 verbose parsed url   hostname: null,
+10 verbose parsed url   hash: null,
+10 verbose parsed url   search: null,
+10 verbose parsed url   query: null,
+10 verbose parsed url   pathname: 'grunt-env@~0.4.1',
+10 verbose parsed url   path: 'grunt-env@~0.4.1',
+10 verbose parsed url   href: 'grunt-env@~0.4.1' }
+11 verbose cache add [ 'angular-dialog-service@0.0.1', null ]
+12 verbose cache add name=undefined spec="angular-dialog-service@0.0.1" args=["angular-dialog-service@0.0.1",null]
+13 verbose parsed url { protocol: null,
+13 verbose parsed url   slashes: null,
+13 verbose parsed url   auth: null,
+13 verbose parsed url   host: null,
+13 verbose parsed url   port: null,
+13 verbose parsed url   hostname: null,
+13 verbose parsed url   hash: null,
+13 verbose parsed url   search: null,
+13 verbose parsed url   query: null,
+13 verbose parsed url   pathname: 'angular-dialog-service@0.0.1',
+13 verbose parsed url   path: 'angular-dialog-service@0.0.1',
+13 verbose parsed url   href: 'angular-dialog-service@0.0.1' }
+14 verbose already installed skipping grunt@~0.4.1 /opt/dnt/insight/itsnow/frontend
+15 verbose already installed skipping grunt-contrib-less@~0.11.0 /opt/dnt/insight/itsnow/frontend
+16 verbose already installed skipping grunt-contrib-clean@^0.4.1 /opt/dnt/insight/itsnow/frontend
+17 verbose already installed skipping grunt-contrib-copy@^0.4.1 /opt/dnt/insight/itsnow/frontend
+18 verbose already installed skipping grunt-contrib-jshint@^0.4.3 /opt/dnt/insight/itsnow/frontend
+19 verbose already installed skipping grunt-contrib-concat@^0.3.0 /opt/dnt/insight/itsnow/frontend
+20 verbose cache add name="grunt-env" spec="~0.4.1" args=["grunt-env","~0.4.1"]
+21 verbose parsed url { protocol: null,
+21 verbose parsed url   slashes: null,
+21 verbose parsed url   auth: null,
+21 verbose parsed url   host: null,
+21 verbose parsed url   port: null,
+21 verbose parsed url   hostname: null,
+21 verbose parsed url   hash: null,
+21 verbose parsed url   search: null,
+21 verbose parsed url   query: null,
+21 verbose parsed url   pathname: '~0.4.1',
+21 verbose parsed url   path: '~0.4.1',
+21 verbose parsed url   href: '~0.4.1' }
+22 verbose addNamed [ 'grunt-env', '~0.4.1' ]
+23 verbose addNamed [ null, '>=0.4.1-0 <0.5.0-0' ]
+24 verbose cache add name="angular-dialog-service" spec="0.0.1" args=["angular-dialog-service","0.0.1"]
+25 verbose parsed url { protocol: null,
+25 verbose parsed url   slashes: null,
+25 verbose parsed url   auth: null,
+25 verbose parsed url   host: null,
+25 verbose parsed url   port: null,
+25 verbose parsed url   hostname: null,
+25 verbose parsed url   hash: null,
+25 verbose parsed url   search: null,
+25 verbose parsed url   query: null,
+25 verbose parsed url   pathname: '0.0.1',
+25 verbose parsed url   path: '0.0.1',
+25 verbose parsed url   href: '0.0.1' }
+26 verbose addNamed [ 'angular-dialog-service', '0.0.1' ]
+27 verbose addNamed [ '0.0.1', '0.0.1' ]
+28 verbose already installed skipping grunt-contrib-watch@^0.4.4 /opt/dnt/insight/itsnow/frontend
+29 verbose already installed skipping grunt-contrib-uglify@^0.2.7 /opt/dnt/insight/itsnow/frontend
+30 silly lockFile 6526b89d-grunt-env-0-4-1 grunt-env@~0.4.1
+31 verbose lock grunt-env@~0.4.1 /Users/kadvin/.npm/6526b89d-grunt-env-0-4-1.lock
+32 silly lockFile 4ebdbd9a-angular-dialog-service-0-0-1 angular-dialog-service@0.0.1
+33 verbose lock angular-dialog-service@0.0.1 /Users/kadvin/.npm/4ebdbd9a-angular-dialog-service-0-0-1.lock
+34 verbose already installed skipping grunt-ngmin@0.0.2 /opt/dnt/insight/itsnow/frontend
+35 verbose already installed skipping grunt-contrib-cssmin@~0.10 /opt/dnt/insight/itsnow/frontend
+36 silly addNameRange { name: 'grunt-env',
+36 silly addNameRange   range: '>=0.4.1-0 <0.5.0-0',
+36 silly addNameRange   hasData: false }
+37 verbose already installed skipping grunt-contrib-coffee@^0.7.0 /opt/dnt/insight/itsnow/frontend
+38 verbose already installed skipping grunt-html2js@^0.1.9 /opt/dnt/insight/itsnow/frontend
+39 verbose url raw angular-dialog-service
+40 verbose url resolving [ 'https://registry.npmjs.org/', './angular-dialog-service' ]
+41 verbose url resolved https://registry.npmjs.org/angular-dialog-service
+42 info trying registry request attempt 1 at 18:09:00
+43 http GET https://registry.npmjs.org/angular-dialog-service
+44 verbose already installed skipping grunt-bump@0.0.6 /opt/dnt/insight/itsnow/frontend
+45 verbose already installed skipping grunt-coffeelint@~0.0.10 /opt/dnt/insight/itsnow/frontend
+46 verbose already installed skipping karma-firefox-launcher@^0.1.3 /opt/dnt/insight/itsnow/frontend
+47 verbose already installed skipping grunt-conventional-changelog@^0.1.2 /opt/dnt/insight/itsnow/frontend
+48 verbose already installed skipping karma-chrome-launcher@^0.1.4 /opt/dnt/insight/itsnow/frontend
+49 verbose already installed skipping karma-jasmine@^0.1.5 /opt/dnt/insight/itsnow/frontend
+50 verbose already installed skipping grunt-karma@^0.8.2 /opt/dnt/insight/itsnow/frontend
+51 verbose already installed skipping karma-coffee-preprocessor@^0.2.1 /opt/dnt/insight/itsnow/frontend
+52 verbose already installed skipping karma@^0.12.9 /opt/dnt/insight/itsnow/frontend
+53 verbose url raw grunt-env
+54 verbose url resolving [ 'https://registry.npmjs.org/', './grunt-env' ]
+55 verbose url resolved https://registry.npmjs.org/grunt-env
+56 info trying registry request attempt 1 at 18:09:00
+57 verbose etag "6CV93948PNW25HEMKRBNSCYJR"
+58 http GET https://registry.npmjs.org/grunt-env
+59 http 200 https://registry.npmjs.org/angular-dialog-service
+60 silly registry.get cb [ 200,
+60 silly registry.get   { date: 'Thu, 28 Aug 2014 10:08:48 GMT',
+60 silly registry.get     server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+60 silly registry.get     etag: '"8C362DAELHM8KF75VB5GB9IX7"',
+60 silly registry.get     'content-type': 'application/json',
+60 silly registry.get     'cache-control': 'max-age=60',
+60 silly registry.get     'content-length': '1797',
+60 silly registry.get     'accept-ranges': 'bytes',
+60 silly registry.get     via: '1.1 varnish',
+60 silly registry.get     age: '0',
+60 silly registry.get     'x-served-by': 'cache-ty66-TYO',
+60 silly registry.get     'x-cache': 'MISS',
+60 silly registry.get     'x-cache-hits': '0',
+60 silly registry.get     'x-timer': 'S1409220528.472817,VS0,VE187',
+60 silly registry.get     vary: 'Accept',
+60 silly registry.get     'keep-alive': 'timeout=10, max=50',
+60 silly registry.get     connection: 'Keep-Alive' } ]
+61 silly lockFile b0ad324b-angular-dialog-service-0-0-1-tgz https://registry.npmjs.org/angular-dialog-service/-/angular-dialog-service-0.0.1.tgz
+62 verbose lock https://registry.npmjs.org/angular-dialog-service/-/angular-dialog-service-0.0.1.tgz /Users/kadvin/.npm/b0ad324b-angular-dialog-service-0-0-1-tgz.lock
+63 verbose addRemoteTarball [ 'https://registry.npmjs.org/angular-dialog-service/-/angular-dialog-service-0.0.1.tgz',
+63 verbose addRemoteTarball   'ff3e0c72e01fe7d983fdced6f092cced20755c02' ]
+64 info retry fetch attempt 1 at 18:09:00
+65 verbose fetch to= /var/folders/sj/_fspgn2s51v4b72l91blsbsw0000gn/T/npm-41435-NuRt7efQ/registry.npmjs.org/angular-dialog-service/-/angular-dialog-service-0.0.1.tgz
+66 http GET https://registry.npmjs.org/angular-dialog-service/-/angular-dialog-service-0.0.1.tgz
+67 http 304 https://registry.npmjs.org/grunt-env
+68 silly registry.get cb [ 304,
+68 silly registry.get   { date: 'Thu, 28 Aug 2014 10:08:48 GMT',
+68 silly registry.get     server: 'Apache',
+68 silly registry.get     via: '1.1 varnish',
+68 silly registry.get     'last-modified': 'Thu, 28 Aug 2014 10:08:48 GMT',
+68 silly registry.get     'cache-control': 'max-age=60',
+68 silly registry.get     etag: '"6CV93948PNW25HEMKRBNSCYJR"',
+68 silly registry.get     'x-served-by': 'cache-ty67-TYO',
+68 silly registry.get     'x-cache': 'HIT',
+68 silly registry.get     'x-cache-hits': '1',
+68 silly registry.get     'x-timer': 'S1409220528.506282,VS0,VE186',
+68 silly registry.get     vary: 'Accept',
+68 silly registry.get     'content-length': '0',
+68 silly registry.get     'keep-alive': 'timeout=10, max=50',
+68 silly registry.get     connection: 'Keep-Alive' } ]
+69 verbose etag grunt-env from cache
+70 silly addNameRange number 2 { name: 'grunt-env', range: '>=0.4.1-0 <0.5.0-0', hasData: true }
+71 silly addNameRange versions [ 'grunt-env',
+71 silly addNameRange   [ '0.1.0', '0.2.0', '0.2.1', '0.3.0', '0.4.0', '0.4.1' ] ]
+72 verbose addNamed [ 'grunt-env', '0.4.1' ]
+73 verbose addNamed [ '0.4.1', '0.4.1' ]
+74 silly lockFile 65198471-grunt-env-0-4-1 grunt-env@0.4.1
+75 verbose lock grunt-env@0.4.1 /Users/kadvin/.npm/65198471-grunt-env-0-4-1.lock
+76 silly lockFile 65198471-grunt-env-0-4-1 grunt-env@0.4.1
+77 silly lockFile 65198471-grunt-env-0-4-1 grunt-env@0.4.1
+78 silly lockFile 6526b89d-grunt-env-0-4-1 grunt-env@~0.4.1
+79 silly lockFile 6526b89d-grunt-env-0-4-1 grunt-env@~0.4.1
+80 error Error: EACCES, open '/Users/kadvin/.npm/grunt-env/0.4.1/package/package.json'
+80 error  { [Error: EACCES, open '/Users/kadvin/.npm/grunt-env/0.4.1/package/package.json']
+80 error   errno: 3,
+80 error   code: 'EACCES',
+80 error   path: '/Users/kadvin/.npm/grunt-env/0.4.1/package/package.json',
+80 error   parent: 'now' }
+81 error Please try running this command again as root/Administrator.
+82 error System Darwin 13.3.0
+83 error command "node" "/usr/local/bin/npm" "install"
+84 error cwd /opt/dnt/insight/itsnow/frontend
+85 error node -v v0.10.29
+86 error npm -v 1.4.14
+87 error path /Users/kadvin/.npm/grunt-env/0.4.1/package/package.json
+88 error code EACCES
+89 error errno 3
+90 error stack Error: EACCES, open '/Users/kadvin/.npm/grunt-env/0.4.1/package/package.json'
+91 verbose exit [ 3, true ]
