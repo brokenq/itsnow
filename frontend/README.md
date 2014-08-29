@@ -132,8 +132,23 @@ itsnow/frontend/
 
 #### 1. 模块命名
 
+模块是指angular模块，用于组织js代码
+
 1. 顶层模块一般命名为 `Itsnow.$ModuleName`，如 `Itsnow.App`,`Itsnow.MscApp`
 2. 子模块一般命名为: `$ParentModule.$ChildModule`，为了避免模块名到处充斥了 `Itsnow`， 非顶级模块可以去除 `Itsnow`，如 `Itsnow.MscApp` 的`SLA`子模块可以命名为 `MscApp.SLA`；
 
-#### 2. 模块编写
+#### 2. 服务命名
 
+服务是指angular模块里面的controller, service等，用于实现特定功能
+
+1. 控制器模块命名格式为 `$SomeCtrl`
+2. 控制器类实例化的变量命名为 `$someCtrl`
+3. 后端资源命名格式为 `$SomeService`
+4. 后端资源实例化的变量命名为 `$someService`
+
+### 3. 代码布局
+
+1. 模块声明(module)
+2. 模块配置(config)
+3. 服务定义(controller/factory)
+4. 模块运行(run)
