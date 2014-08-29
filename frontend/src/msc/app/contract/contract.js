@@ -1,7 +1,7 @@
 /**
  * Created by User on 2014/7/21.
  */
-var contractApp = angular.module('Msc.Contract', ['ngGrid','ngResource']);
+var contractApp = angular.module('MscApp.Contract', ['ngGrid','ngResource']);
 
 // 封装$http
 contractApp.factory('ContractService', ['$resource', function ($resource) {

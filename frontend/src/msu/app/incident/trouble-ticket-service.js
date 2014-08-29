@@ -2,7 +2,7 @@
  * Created by Sin on 2014/8/6.
  */
 // Service
-angular.module('Msu.Incident.Service', [])
+angular.module('MsuIncident.Service', [])
 
     // 故障工单列表
     .factory('ListTroubleTicketService', ['$resource', function ($resource) {

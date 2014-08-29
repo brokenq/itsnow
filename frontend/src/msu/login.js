@@ -1,8 +1,8 @@
 /**
  * The MSU Login Application
  */
-angular.module('Msu.Login', [
-  'Itsnow.LoginBase',
+angular.module('Itsnow.MsuLogin', [
+  'Itsnow.Login',
   'MsuLogin.Templates',
-  'Login.MsuStaff.Signup'
+  'MsuLogin.StaffSignup'
 ]);

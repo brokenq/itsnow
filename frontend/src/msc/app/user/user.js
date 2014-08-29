@@ -1,7 +1,7 @@
 /**
  * Created by User on 2014/7/21.
  */
-var userApp = angular.module('Msc.User', ['ngGrid','ngResource']);
+var userApp = angular.module('MscApp.User', ['ngGrid','ngResource']);
 
 // 封装$http
 userApp.factory('UserService', ['$resource', function ($resource) {

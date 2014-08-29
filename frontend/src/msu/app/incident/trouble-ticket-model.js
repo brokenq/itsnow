@@ -4,7 +4,7 @@
 // incident实体类
 // 故障单Module
 
-angular.module('Msu.Incident.Model', [])
+angular.module('MsuIncident.Model', [])
 
     .factory('TroubleTicketModelService', function () {
 

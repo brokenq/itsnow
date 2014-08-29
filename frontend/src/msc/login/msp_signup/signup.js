@@ -1,7 +1,7 @@
 /**
  * Signup Module in Login App for MSP
  */
-angular.module( 'Login.Msp.Signup', [
+angular.module( 'MscLogin.MspSignup', [
   'ui.router',
   'ui.bootstrap',
   'Itsnow.Security'

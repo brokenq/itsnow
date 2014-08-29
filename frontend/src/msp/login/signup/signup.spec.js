@@ -5,7 +5,7 @@ describe( 'MSP Staff Signup', function() {
   describe( 'loading', function() {
     var SignupCtrl, MockUser, $location, $scope;
 
-    beforeEach( module( 'Login.MspStaff.Signup' ) );
+    beforeEach( module( 'MspLogin.StaffSignup' ) );
 
     beforeEach( inject( function( $controller, _$location_, $rootScope ) {
       $location = _$location_;

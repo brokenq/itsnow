@@ -1,7 +1,7 @@
 /**
  * The shared login Application(SPA)
  */
-angular.module("Itsnow.LoginBase", [
+angular.module("Itsnow.Login", [
     'ngResource',
     'ui.router',
 

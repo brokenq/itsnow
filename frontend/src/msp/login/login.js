@@ -1,8 +1,8 @@
 /**
  * The MSP Login Application
  */
-angular.module('Msp.Login', [
-  'Itsnow.LoginBase',
+angular.module('Itsnow.MspLogin', [
+  'Itsnow.Login',
   'MspLogin.Templates',
-  'Login.MspStaff.Signup'
+  'MspLogin.StaffSignup'
 ]);

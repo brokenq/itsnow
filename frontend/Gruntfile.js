@@ -128,7 +128,7 @@ module.exports = function ( grunt ) {
       ms_app: {
         options: {
           base: 'src/<%= target.name %>/app',
-          module: '<%= target.title %>.Templates'
+          module: '<%= target.title %>App.Templates'
         },
         src: [ '<%= app_files.mtpl %>' ],
         dest: '<%= build_dir %>/templates-<%= target.name %>-app.js'

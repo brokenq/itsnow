@@ -1,9 +1,9 @@
 /**
  * The MSC Login Application
  */
-angular.module('Msc.Login', [
-  'Itsnow.LoginBase',
+angular.module('Itsnow.MscLogin', [
+  'Itsnow.Login',
   'MscLogin.Templates',
-  'Login.Msu.Signup',
-  'Login.Msp.Signup'
+  'MscLogin.MsuSignup',
+  'MscLogin.MspSignup'
 ]);
