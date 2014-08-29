@@ -29,83 +29,30 @@ indexApp.config(function ($stateProvider, $urlRouterProvider) {
         .state('index', {
             url: '/index',
             templateUrl: 'main/main-container.tpl.html'
-        })
-        // 用户
-        .state('index.user', {
-            url: '/user',
-            templateUrl: 'user/list-user.tpl.html'
-        })
-        // SLA
-        .state('index.sla', {
-            url: '/sla',
-            templateUrl: 'sla/list-sla.tpl.html'
-        })
-        // 合同
-        .state('index.contract', {
-            url: '/contract',
-            templateUrl: 'contract/list-contract.tpl.html'
-        })
-        // 故障单列表
-        .state('index.list-trouble-ticket', {
-            url: '/list-trouble-ticket',
-            templateUrl: 'trouble-ticket/list-trouble-ticket.tpl.html'
-        })
-        // 新建故障单
-        .state('index.new-trouble-ticket', {
-            url: '/new-trouble-ticket',
-            templateUrl: 'trouble-ticket/new-trouble-ticket.tpl.html'
-        })
-        // 签收故障单
-        .state('index.accept-trouble-ticket', {
-            url: '/accept-trouble-ticket',
-            templateUrl: 'trouble-ticket/accept-trouble-ticket.tpl.html'
-        })
-        // 分析故障单
-        .state('index.analysis-trouble-ticket', {
-            url: '/analysis-trouble-ticket',
-            templateUrl: 'trouble-ticket/analysis-trouble-ticket.tpl.html'
-        })
-        // 处理故障单
-        .state('index.process-trouble-ticket', {
-            url: '/process-trouble-ticket',
-            templateUrl: 'trouble-ticket/process-trouble-ticket.tpl.html'
-        })
-        // 关闭故障单
-        .state('index.close-trouble-ticket', {
-            url: '/close-trouble-ticket',
-            templateUrl: 'trouble-ticket/close-trouble-ticket.tpl.html'
-        })
-        // 故障单列表
-        .state('index.msp-list-trouble-ticket', {
-            url: '/msp-list-trouble-ticket',
-            templateUrl: 'trouble-ticket/msp/list-trouble-ticket.tpl.html'
-        })
-        // 新建故障单
-        .state('index.msp-new-trouble-ticket', {
-            url: '/msp-new-trouble-ticket',
-            templateUrl: 'trouble-ticket/msp/new-trouble-ticket.tpl.html'
-        })
-        // 签收故障单
-        .state('index.msp-accept-trouble-ticket', {
-            url: '/msp-accept-trouble-ticket',
-            templateUrl: 'trouble-ticket/msp/accept-trouble-ticket.tpl.html'
-        })
-        // 分析故障单
-        .state('index.msp-analysis-trouble-ticket', {
-            url: '/msp-analysis-trouble-ticket',
-            templateUrl: 'trouble-ticket/msp/analysis-trouble-ticket.tpl.html'
-        })
-        // 处理故障单
-        .state('index.msp-process-trouble-ticket', {
-            url: '/msp-process-trouble-ticket',
-            templateUrl: 'trouble-ticket/msp/process-trouble-ticket.tpl.html'
-        })
-        // 关闭故障单
-        .state('index.msp-close-trouble-ticket', {
-            url: '/msp-close-trouble-ticket',
-            templateUrl: 'trouble-ticket/msp/close-trouble-ticket.tpl.html'
         });
+
+    var menuList;
+    $.ajax({
+        async: false,
+        type : "GET",
+        url : "/api/menu_items",
+        dataType : 'json',
+        success : function(data) {
+            menuList=data;
+        }
+    });
+
+    for(var i in menuList){
+        $stateProvider
+            .state(menuList[i].state, {
+                url:menuList[i].url,
+                templateUrl: menuList[i].templateUrl
+            });
+    }
+
 });
+
+
 
 // 获取用户信息工厂
 indexApp.factory('LogoutService', ['$resource', function ($resource) {

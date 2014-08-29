@@ -52,13 +52,13 @@
             <!-- Menu Component -->
             <div ng-controller="menuCtrl">
                 <script type="text/ng-template" id="nodes_renderer.html">
-                    <a ui-sref="{{menu.url}}" ng-class="{'dropdown-toggle':true}">
+                    <a ui-sref="{{menu.state}}" ng-class="{'dropdown-toggle':true}">
                         <i ng-class="{'icon-desktop':true}"></i>
                         <span ng-class="{'menu-text':true}">{{menu.name}}</span>
                         <b ng-class="{'arrow icon-angle-down':true}"></b>
                     </a>
-                    <ul ui-tree-nodes ng-model="menu.subMenu" ng-class="{'submenu':true}">
-                        <li ng-repeat="menu in menu.subMenu" ui-tree-node ng-include="'nodes_renderer.html'" data-nodrag></li>
+                    <ul ui-tree-nodes ng-model="menu.children" ng-class="{'submenu':true}">
+                        <li ng-repeat="menu in menu.children" ui-tree-node ng-include="'nodes_renderer.html'" data-nodrag></li>
                     </ul>
                 </script>
                 <div ui-tree>
