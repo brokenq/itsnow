@@ -353,9 +353,11 @@ module.exports = function ( grunt ) {
           'module.prefix', 
           '<%= build_dir %>/src/common/**/*.js',
           '<%= build_dir %>/src/app/**/*.js',
+          '<%= build_dir %>/src/<%= target.name %>/app/**/*.js',
+          '<%= html2js.common.dest %>',
           '<%= html2js.app.dest %>',
-          '<%= html2js.common.dest %>', 
-          'module.suffix' 
+          '<%= html2js.ms_app.dest %>',
+          'module.suffix'
         ],
         dest: '<%= compile_dir %>/assets/<%= target.app %>.js'
       },
@@ -365,8 +367,10 @@ module.exports = function ( grunt ) {
           'module.prefix',
           '<%= build_dir %>/src/common/**/*.js',
           '<%= build_dir %>/src/login/**/*.js',
-          '<%= html2js.login.dest %>',
+          '<%= build_dir %>/src/<%= target.name %>/login/**/*.js',
           '<%= html2js.common.dest %>',
+          '<%= html2js.login.dest %>',
+          '<%= html2js.ms_login.dest %>',
           'module.suffix'
         ],
         dest: '<%= compile_dir %>/assets/<%= target.login %>.js'
