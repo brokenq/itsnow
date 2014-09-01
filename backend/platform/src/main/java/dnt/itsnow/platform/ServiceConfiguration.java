@@ -9,6 +9,7 @@ import dnt.itsnow.platform.web.security.DelegateSecurityConfigurer;
 import net.happyonroad.spring.service.AbstractServiceConfig;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
@@ -22,6 +23,7 @@ public class ServiceConfiguration extends AbstractServiceConfig {
         //数据库相关服务
         exportService(DataSource.class);
         exportService(SqlSessionFactory.class);
+        exportService(JdbcTemplate.class);
         // 被 activiti 使用
         exportService(PlatformTransactionManager.class);
         // 被 mybatis的config模块使用

@@ -13,11 +13,13 @@ import org.springframework.context.ApplicationContextException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
+import java.beans.PropertyVetoException;
 
 /**
  * <h1>关于数据库的配置</h1>
@@ -77,5 +79,10 @@ public class DatabaseConfig {
     @Bean
     public StatementInterceptor statementInterceptor(){
         return new StatementInterceptor();
+    }
+
+    @Bean
+    public JdbcTemplate jdbcTemplate() throws PropertyVetoException {
+        return new JdbcTemplate(dataSource());
     }
 }

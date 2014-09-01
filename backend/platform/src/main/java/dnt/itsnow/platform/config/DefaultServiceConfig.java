@@ -9,6 +9,7 @@ import dnt.itsnow.platform.service.AutoNumberService;
 import net.happyonroad.spring.service.AbstractServiceConfig;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
@@ -27,6 +28,7 @@ public class DefaultServiceConfig extends AbstractServiceConfig {
         importService(PlatformTransactionManager.class, "*", "transactionManager");
         importService(SqlSessionFactory.class);
         importService(Configuration.class);
+        importService(JdbcTemplate.class);
         //一般工具服务
         importService(AutoNumberService.class);
 
