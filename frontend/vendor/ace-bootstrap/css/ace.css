@@ -8665,7 +8665,7 @@ td .lbl:only-child {
 }
 /* login pages */
 .login-container {
-  width: 375px;
+  width: 800px;
   margin: 0 auto;
 }
 .login-layout {
@@ -11083,7 +11083,7 @@ ul.attachment-list > li {
   display: inline-block;
 }
 /* wizard */
-.wizard-steps {
+.wizard .steps {
   list-style: none;
   display: table;
   width: 100%;
@@ -11091,12 +11091,12 @@ ul.attachment-list > li {
   margin: 0;
   position: relative;
 }
-.wizard-steps li {
+.wizard .steps li {
   display: table-cell;
   text-align: center;
   width: 1%;
 }
-.wizard-steps li .step {
+.wizard .steps li .step {
   border: 5px solid #ced1d6;
   color: #546474;
   font-size: 15px;
@@ -11110,7 +11110,7 @@ ul.attachment-list > li {
   line-height: 30px;
   text-align: center;
 }
-.wizard-steps li:before {
+.wizard .steps li:before {
   /* the line running through each step*/
 
   display: block;
@@ -11124,27 +11124,27 @@ ul.attachment-list > li {
   top: 21px;
   z-index: 1;
 }
-.wizard-steps li:last-child:before {
+.wizard .steps li:last-child:before {
   max-width: 50%;
   width: 50%;
 }
-.wizard-steps li:first-child:before {
+.wizard .steps li:first-child:before {
   max-width: 51%;
   left: 50%;
 }
-.wizard-steps li.active:before,
-.wizard-steps li.complete:before,
-.wizard-steps li.active .step,
-.wizard-steps li.complete .step {
+.wizard .steps li.active:before,
+.wizard .steps li.complete:before,
+.wizard .steps li.active .step,
+.wizard .steps li.complete .step {
   border-color: #5293c4;
 }
-.wizard-steps li.complete .step {
+.wizard .steps li.complete .step {
   cursor: default;
   color: #FFF;
   -webkit-transition: transform ease 0.1s;
   transition: transform ease 0.1s;
 }
-.wizard-steps li.complete .step:before {
+.wizard .steps li.complete .step:before {
   display: block;
   position: absolute;
   top: 0;
@@ -11161,7 +11161,7 @@ ul.attachment-list > li {
   font-size: 17px;
   color: #87ba21;
 }
-.wizard-steps li.complete:hover .step {
+.wizard .steps li.complete:hover .step {
   -moz-transform: scale(1.1);
   -webkit-transform: scale(1.1);
   -o-transform: scale(1.1);
@@ -11169,10 +11169,10 @@ ul.attachment-list > li {
   transform: scale(1.1);
   border-color: #80afd4;
 }
-.wizard-steps li.complete:hover:before {
+.wizard .steps li.complete:hover:before {
   border-color: #80afd4;
 }
-.wizard-steps li .title {
+.wizard .steps li .title {
   display: block;
   margin-top: 4px;
   max-width: 100%;
@@ -11183,8 +11183,8 @@ ul.attachment-list > li {
   table-layout: fixed;
   word-wrap: break-word;
 }
-.wizard-steps li.complete .title,
-.wizard-steps li.active .title {
+.wizard .steps li.complete .title,
+.wizard .steps li.active .title {
   color: #2b3d53;
 }
 .step-content .step-pane {
@@ -11195,25 +11195,25 @@ ul.attachment-list > li {
 .step-content .active {
   display: block;
 }
-.wizard-actions {
+.wizard .actions {
   text-align: right;
 }
 @media only screen and (max-width: 767px) {
-  .wizard-steps li .step {
+  .wizard .steps li .step {
     width: 30px;
     height: 30px;
     line-height: 24px;
     border-width: 3px;
   }
-  .wizard-steps li:before,
-  .wizard-steps li:after {
+  .wizard .steps li:before,
+  .wizard .steps li:after {
     border-width: 3px;
   }
-  .wizard-steps li.complete .step:before {
+  .wizard .steps li.complete .step:before {
     line-height: 24px;
     font-size: 13px;
   }
-  .wizard-steps li:before {
+  .wizard .steps li:before {
     top: 16px;
   }
   .step-content .step-pane {

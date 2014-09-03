@@ -89,6 +89,7 @@ module.exports = {
 //      'vendor/placeholders/angular-placeholders-0.0.1-SNAPSHOT.min.js',
       'vendor/angular-ui-router/release/angular-ui-router.js',
       'vendor/angular-ui-utils/modules/route/route.js',
+      'vendor/fuelux/dist/js/fuelux.js',
       'vendor/ace-bootstrap/js/ace.js',
       'vendor/ace-bootstrap/js/ace-elements.js',
       'vendor/ace-bootstrap/js/ace-extra.js',
@@ -106,6 +107,7 @@ module.exports = {
       'vendor/ng-grid/ng-grid.css',
       'vendor/angular-dialog-service/dialogs.css',
       'vendor/angular-ui-tree/dist/angular-ui-tree.min.css'
+//      'vendor/fuelux/dist/css/fuelux.css'
     ],
     assets: [
       'vendor/font-awesome/fonts/*.*',
@@ -116,6 +118,7 @@ module.exports = {
       'vendor/ace-bootstrap/images/*.png',
       'vendor/ace-bootstrap/avatars/*.*',
       'vendor/ace-bootstrap/images/gallery/*.jpg'
+//      'vendor/fuelux/dist/fonts/fuelux.*'
     ]
   }
 };

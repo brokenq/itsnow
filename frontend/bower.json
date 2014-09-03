@@ -1,6 +1,6 @@
 {
   "name": "itsnow",
-  "version": "0.3.2",
+  "version": "0.1.7",
   "devDependencies": {
     "angular": "~1.2",
     "angular-resource": "~1.2",
@@ -17,7 +17,8 @@
     "font-awesome": "~4.1.0",
     "typehead.js": "~0.10.2",
     "ng-grid": "angular-ui/ng-grid#~2.0.11",
-    "angular-ui-tree": "~2.1.4"
+    "angular-ui-tree": "~2.1.4",
+    "fuelux": "3.0.1"
   },
   "depeacendencies": {
     "-bootstrap": "git@github.com:Kadvin/ace-bootstrap.git"

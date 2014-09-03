@@ -1,6 +1,7 @@
 angular.module('Itsnow.App', [
     'ui.router',
     'ngResource',
+    'ngLocale',
     'Common.Interceptor',
     'Common.Templates',
     'App.Templates',
@@ -77,8 +78,8 @@ angular.module('Itsnow.App', [
       });
   }])
 
-  .controller('IndexCtrl', ['$scope', '$location',  'SessionService', '$window',
-    function ($scope, $location, sessionService, $window) {
+  .controller('IndexCtrl', ['$scope',  'SessionService', '$window',
+    function ($scope, sessionService, $window) {
       $scope.logout = function(){
         sessionService.logout(function(){
           $window.location.href='/login.html';

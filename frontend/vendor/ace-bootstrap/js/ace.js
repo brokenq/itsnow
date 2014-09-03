@@ -1,4 +1,4 @@
-if(! ('ace' in window) ) window['ace'] = {}
+if(! ('ace' in window) ) window['ace'] = {};
 jQuery(function($) {
 	//at some places we try to use 'tap' event instead of 'click' if jquery mobile plugin is available
 	window['ace'].click_event = $.fn.tap ? "tap" : "click";
@@ -95,7 +95,7 @@ ace.handle_side_menu = function($) {
 		$(sub).slideToggle(200).parent().toggleClass('open');
 		return false;
 	 })
-}
+};
 
 
 
@@ -121,19 +121,19 @@ ace.general_things = function($) {
  
  $('#ace-settings-navbar').on('click', function(){
 	ace.settings.navbar_fixed(this.checked);//@ ace-extra.js
- }).each(function(){this.checked = ace.settings.is('navbar', 'fixed')})
+ }).each(function(){this.checked = ace.settings.is('navbar', 'fixed')});
 
  $('#ace-settings-sidebar').on('click', function(){
 	ace.settings.sidebar_fixed(this.checked);//@ ace-extra.js
- }).each(function(){this.checked = ace.settings.is('sidebar', 'fixed')})
+ }).each(function(){this.checked = ace.settings.is('sidebar', 'fixed')});
 
  $('#ace-settings-breadcrumbs').on('click', function(){
 	ace.settings.breadcrumbs_fixed(this.checked);//@ ace-extra.js
- }).each(function(){this.checked = ace.settings.is('breadcrumbs', 'fixed')})
+ }).each(function(){this.checked = ace.settings.is('breadcrumbs', 'fixed')});
 
  $('#ace-settings-add-container').on('click', function(){
 	ace.settings.main_container_fixed(this.checked);//@ ace-extra.js
- }).each(function(){this.checked = ace.settings.is('main-container', 'fixed')})
+ }).each(function(){this.checked = ace.settings.is('main-container', 'fixed')});
 
  //Switching to RTL (right to left) Mode
  $('#ace-settings-rtl').removeAttr('checked').on('click', function(){
@@ -183,7 +183,7 @@ ace.general_things = function($) {
 	}
  });
  
-}
+};
 
 
 
@@ -191,28 +191,28 @@ ace.widget_boxes = function($) {
 	$(document).on('hide.bs.collapse show.bs.collapse', function (ev) {
 		var hidden_id = ev.target.getAttribute('id')
 		$('[href*="#'+ hidden_id+'"]').find('[class*="icon-"]').each(function(){
-			var $icon = $(this)
+			var $icon = $(this);
 
-			var $match
-			var $icon_down = null
-			var $icon_up = null
+			var $match;
+			var $icon_down = null;
+			var $icon_up = null;
 			if( ($icon_down = $icon.attr('data-icon-show')) ) {
 				$icon_up = $icon.attr('data-icon-hide')
 			}
 			else if( $match = $icon.attr('class').match(/icon\-(.*)\-(up|down)/) ) {
-				$icon_down = 'icon-'+$match[1]+'-down'
-				$icon_up = 'icon-'+$match[1]+'-up'
+				$icon_down = 'icon-'+$match[1]+'-down';
+				$icon_up = 'icon-'+$match[1]+'-up';
 			}
 
 			if($icon_down) {
-				if(ev.type == 'show') $icon.removeClass($icon_down).addClass($icon_up)
-					else $icon.removeClass($icon_up).addClass($icon_down)
+				if(ev.type == 'show') $icon.removeClass($icon_down).addClass($icon_up);
+					else $icon.removeClass($icon_up).addClass($icon_down);
 					
 				return false;//ignore other icons that match, one is enough
 			}
 
 		});
-	})
+	});
 
 
 	$(document).on('click.ace.widget', '[data-action]', function (ev) {
@@ -229,9 +229,9 @@ ace.widget_boxes = function($) {
 			var event_complete_name = event_name == 'show' ? 'shown' : 'hidden';
 
 			
-			var event
-			$box.trigger(event = $.Event(event_name+'.ace.widget'))
-			if (event.isDefaultPrevented()) return
+			var event;
+			$box.trigger(event = $.Event(event_name+'.ace.widget'));
+			if (event.isDefaultPrevented()) return;
 		
 			var $body = $box.find('.widget-body');
 			var $icon = $this.find('[class*=icon-]').eq(0);
@@ -239,7 +239,7 @@ ace.widget_boxes = function($) {
 			var $icon_down = 'icon-'+$match[1]+'-down';
 			var $icon_up = 'icon-'+$match[1]+'-up';
 			
-			var $body_inner = $body.find('.widget-body-inner')
+			var $body_inner = $body.find('.widget-body-inner');
 			if($body_inner.length == 0) {
 				$body = $body.wrapInner('<div class="widget-body-inner"></div>').find(':first-child').eq(0);
 			} else $body = $body_inner.eq(0);
@@ -261,17 +261,17 @@ ace.widget_boxes = function($) {
 			
 		}
 		else if($action == 'close') {
-			var event
-			$box.trigger(event = $.Event('close.ace.widget'))
-			if (event.isDefaultPrevented()) return
+			var event;
+			$box.trigger(event = $.Event('close.ace.widget'));
+			if (event.isDefaultPrevented()) return;
 			
 			var closeSpeed = parseInt($this.data('close-speed')) || 300;
 			$box.hide(closeSpeed , function(){$box.trigger(event = $.Event('closed.ace.widget'));$box.remove();});
 		}
 		else if($action == 'reload') {
-			var event
-			$box.trigger(event = $.Event('reload.ace.widget'))
-			if (event.isDefaultPrevented()) return
+			var event;
+			$box.trigger(event = $.Event('reload.ace.widget'));
+			if (event.isDefaultPrevented()) return;
 
 			$this.blur();
 
@@ -286,12 +286,12 @@ ace.widget_boxes = function($) {
 
 		}
 		else if($action == 'settings') {
-			var event = $.Event('settings.ace.widget')
+			var event = $.Event('settings.ace.widget');
 			$box.trigger(event)
 		}
 
 	});
-}
+};
 
 
 ace.widget_reload_handler = function($) {
@@ -315,13 +315,13 @@ ace.widget_reload_handler = function($) {
 		$(this).trigger('reloaded.ace.widget');
 	});	
 	*/
-}
+};
 
 
 
 //search box's dropdown autocomplete
 ace.enable_search_ahead = function($) {
-	ace.variable_US_STATES = ["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Dakota","North Carolina","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"]
+	ace.variable_US_STATES = ["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Dakota","North Carolina","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"];
 	
 	try {
 		$('#nav-search-input').typeahead({
@@ -332,7 +332,7 @@ ace.enable_search_ahead = function($) {
 			}
 		});
 	} catch(e) {}
-}
+};
 
 
 
@@ -352,7 +352,7 @@ ace.switch_direction = function($) {
 	.end()
 	
 	.find('.chosen-container').toggleClass('chosen-rtl')
-	.end()
+	.end();
 
 	function swap_classes(class1, class2) {
 		$body
@@ -384,4 +384,4 @@ ace.switch_direction = function($) {
 		var pos = $(document.body).hasClass('rtl') ? 'nw' : 'ne';//draw on north-west or north-east?
 		placeholder.data('draw').call(placeholder.get(0) , placeholder, placeholder.data('chart'), pos);
 	}
-}
+};

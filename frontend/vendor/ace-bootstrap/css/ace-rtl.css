@@ -1619,13 +1619,13 @@
   left: auto;
   top: auto;
 }
-.rtl .wizard-steps {
+.rtl .wizard .steps {
   margin-right: 0;
 }
-.rtl .wizard-actions {
+.rtl .wizard .actions {
   text-align: left;
 }
-.rtl .wizard-steps li:first-child:before {
+.rtl .wizard .steps li:first-child:before {
   right: 50%;
   left: auto;
 }

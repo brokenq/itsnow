@@ -21,18 +21,17 @@ angular
     });
   })
 
-  .controller('AuthenticateCtrl', ['$scope', '$rootScope', '$http',
-    function ($scope, $rootScope, $http) {
+  .controller('AuthenticateCtrl', ['$scope', '$http', 'SessionService',
+    function ($scope, $http, sessionService) {
       $scope.credential = {username: 'jacky.cao', password: 'secret', remember: true};
 
       $scope.challenge = function () {
-        $http.post("/api/session?username=" + $scope.credential.username + "&password=" + $scope.credential.password)
-          .success(function (data, status, headers, config) {
-            window.location.href = '/index.html';
-          })
-          .error(function (data, status, headers, config) {
-            $scope.error = data;
-          });
+        sessionService.challenge($scope.credential, function(){
+          window.location.href = '/index.html';
+        }, function(data){
+          $scope.error = data;
+
+        });
       };
     }]);
 

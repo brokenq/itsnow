@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Fuel UX Test Suite</title>
+
+		<link rel="stylesheet" href="../bower_components/qunit/qunit/qunit.css" media="screen">
+
+		<script src="../bower_components/moment/min/moment-with-langs.js"></script>
+		<script src="../bower_components/qunit/qunit/qunit.js"></script>
+		<script>QUnit.config.autostart = false;</script>
+		<script src="../bower_components/requirejs/require.js"></script>
+
+		<!--[if gte IE 9]> -->
+		<script type="text/javascript" src="../bower_components/blanket/dist/qunit/blanket.js" data-cover-only="/js" data-cover-never="/bower_components"></script>
+		<!-- <![endif]-->
+
+		<script>
+			window.tmpMoment = window.moment;
+			window.moment = undefined;
+
+			(function () {
+				var jQueryPath;
+
+				// Feature detect for jQuery version
+				if('querySelector' in document
+					&& 'localStorage' in window
+					&& 'addEventListener' in window ) {
+					jQueryPath = 'bower_components/jquery/dist/jquery';
+				} else {
+					jQueryPath = 'bower_components/jquery-1.9.1/jquery';
+				}
+
+				// or force/overwrite the variable with a version via ?jquery= URL parameter
+				var jqverParam = location.search.match(/[?&]jquery=(.*?)(?=&|$)/);
+				var jqver = (jqverParam) ? jqverParam[1] : undefined;
+
+				// if jquery version does not using dist folder
+				if(jqver == '1.9.1') {
+					jQueryPath = 'bower_components/jquery-' + jqver + '/jquery';
+				}
+
+				require.config({
+					baseUrl: '../',
+					paths: {
+						jquery: jQueryPath,
+						bootstrap: 'bower_components/bootstrap/dist/js/bootstrap',
+						fuelux: 'js',
+						test: 'test',
+						text: 'bower_components/requirejs-text/text'
+					},
+					shim: {
+						'bootstrap': {
+							deps: ['jquery'],
+							exports: 'bootstrap'
+						}
+					}
+				});
+
+				require(['jquery', 'test/fuelux-test'], function() {});
+			})();
+		</script>
+	</head>
+	<body>
+		<h1 id="qunit-header">Fuel UX Test Suite</h1>
+		<h2 id="qunit-banner"></h2>
+		<div id="qunit-testrunner-toolbar"></div>
+		<h2 id="qunit-userAgent"></h2>
+		<ol id="qunit-tests"></ol>
+		<div id="qunit-fixture"></div>
+	</body>
+</html>
