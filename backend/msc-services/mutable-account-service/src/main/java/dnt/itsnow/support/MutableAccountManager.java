@@ -6,12 +6,14 @@ package dnt.itsnow.support;
 import dnt.itsnow.exception.AccountException;
 import dnt.itsnow.model.Account;
 import dnt.itsnow.model.AccountStatus;
+import dnt.itsnow.model.User;
 import dnt.itsnow.platform.service.AutoNumberService;
 import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.repository.MutableAccountRepository;
 import dnt.itsnow.service.MutableAccountService;
+import dnt.itsnow.service.MutableUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +29,9 @@ public class MutableAccountManager extends CommonAccountManager implements Mutab
     @Autowired
     MutableAccountRepository mutableRepository;
     @Autowired
-    AutoNumberService autoNumberService;
+    AutoNumberService        autoNumberService;
+    @Autowired
+    MutableUserService       userService;
 
     @Override
     public Page<Account> findAll(String type, Pageable pageable) {
@@ -39,7 +43,7 @@ public class MutableAccountManager extends CommonAccountManager implements Mutab
     @Override
     public Account create(Account account) {
         logger.info("Creating {}", account);
-        if( account.getSn() == null ){
+        if (account.getSn() == null) {
             String type = account.getType();
             account.setSn(autoNumberService.next(type));
         }
@@ -95,5 +99,15 @@ public class MutableAccountManager extends CommonAccountManager implements Mutab
             return account;
         } else
             throw new AccountException("Can't reject account in " + account.getStatus());
+    }
+
+    @Override
+    public Account register(Account account, User user) throws AccountException {
+        //这句代码可能抛出 FK Violation exception, 需要将其转化为合适的Validation异常
+        Account created = this.create(account);
+        user.setAccount(created);
+        User admin = userService.create(user);
+        created.setUser(admin);
+        return this.update(created);
     }
 }

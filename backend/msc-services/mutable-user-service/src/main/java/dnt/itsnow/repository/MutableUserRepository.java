@@ -7,6 +7,7 @@ import dnt.itsnow.model.User;
 import dnt.itsnow.platform.service.Pageable;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
@@ -31,8 +32,9 @@ public interface MutableUserRepository extends CommonUserRepository {
      * @param user 需要创建的对象
      * @return 创建之后的id
      */
-    @Insert("INSERT INTO users(username, email, phone, password, enabled, expired) " +
-            "VALUES(#{username}, #{email}, #{phone}, #{password}, TRUE, FALSE)")
+    @Insert("INSERT INTO users(username, email, phone, password, enabled, expired, account_id) " +
+            "VALUES(#{username}, #{email}, #{phone}, #{password}, TRUE, FALSE, #{accountId})")
+    @SelectKey(statement="call identity()", keyProperty="id", before=false, resultType=long.class)
     long create(User user);
 
     /**

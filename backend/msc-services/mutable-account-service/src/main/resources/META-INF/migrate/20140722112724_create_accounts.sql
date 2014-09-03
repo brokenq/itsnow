@@ -12,7 +12,8 @@ CREATE TABLE accounts (
   description VARCHAR(255),
   created_at  TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at  TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY (sn)
+  UNIQUE KEY (sn),
+  UNIQUE KEY (domain)
 );
 
 

@@ -5,6 +5,7 @@ package dnt.itsnow.model;
 
 import dnt.support.JsonSupport;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import junit.framework.Assert;
 
@@ -43,6 +44,7 @@ public class AccountTest {
     }
 
     @Test
+    @Ignore
     public void testSnConstraints() throws Exception {
         account.setSn(null);
         Set<ConstraintViolation<Account>> violations = validator.validate(account);
@@ -69,6 +71,15 @@ public class AccountTest {
         account.setDomain("invalid.domain");
         Set<ConstraintViolation<Account>> violations = validator.validate(account);
         Assert.assertFalse(violations.isEmpty());
+    }
+
+    @Test
+    public void testReservedDomain() throws Exception {
+        for(String kept : Account.RESERVED_DOMAINS){
+            account.setDomain(kept);
+            Set<ConstraintViolation<Account>> violations = validator.validate(account);
+            Assert.assertFalse(violations.isEmpty());
+        }
     }
 
     @Test

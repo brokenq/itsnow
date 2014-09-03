@@ -10,6 +10,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.Arrays;
 
 /**
  * <h1>>服务采购方(MSU)或者服务供应方(MSP)在系统数据库中的账户</h1
@@ -20,21 +21,25 @@ import javax.validation.constraints.Size;
         @JsonSubTypes.Type(name = "msu", value = MsuAccount.class),
         @JsonSubTypes.Type(name = "msp", value = MspAccount.class)
 })
-public abstract class Account extends ConfigItem {
+public class Account extends ConfigItem {
+    public static final String[] RESERVED_DOMAINS = {"www", "blog", "dev", "developer", "sales", "marketing", "hr", "test"};
+
     public static final String MSC = "msc";
     public static final String MSU = "msu";
     public static final String MSP = "msp";
 
+
     //序号, auto number service generate
-    @NotBlank
-    private String        sn;
+    // auto generate, controller without
+    private String sn;
     //子域名
     @NotBlank
     @Pattern(regexp = "[\\w|\\d|_|-]+")
-    private String        domain;
-    private Long          userId; // 帐户管理员ID
+    @IsNotReservedDomain
+    private String domain;
+    private Long   userId; // 帐户管理员ID
     @JsonIgnore
-    private User          user;   // 帐户管理员
+    private User   user;   // 帐户管理员
     //@NotBlank
     // 账户状态
     private AccountStatus status = AccountStatus.New;
@@ -86,7 +91,9 @@ public abstract class Account extends ConfigItem {
     }
 
     @JsonIgnore
-    public abstract String getType();
+    public String getType(){
+        throw new UnsupportedOperationException("You should cal this method on concrete account");
+    }
 
     @JsonIgnore
     public boolean isMsc(){
@@ -142,5 +149,9 @@ public abstract class Account extends ConfigItem {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    static {
+        Arrays.sort(RESERVED_DOMAINS);
     }
 }

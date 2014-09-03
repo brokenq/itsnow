@@ -3,12 +3,15 @@
  */
 package dnt.itsnow.web.controller;
 
+import dnt.itsnow.exception.AccountException;
 import dnt.itsnow.model.Account;
-import dnt.itsnow.model.MspAccount;
-import dnt.itsnow.model.MsuAccount;
 import dnt.itsnow.platform.web.controller.ApplicationController;
+import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.service.MutableAccountService;
+import dnt.itsnow.web.model.AccountRegistration;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,12 +23,13 @@ import javax.validation.Valid;
  * <h1>MSC/MSU注册</h1>
  * <pre>
  * <b>HTTP     URI                            方法       含义  </b>
- * # POST      /msu/signup                createMsu     通过注册创建MSU帐号
- * # POST      /msp/signup                createMsp     通过注册创建MSP帐号
+ * # POST      /api/accounts                create     通过注册创建帐号
  * </pre>
+ * 之所以单独搞一个控制器，是因为它与 MutableAccountController 中定义的其他方法有不同的使用者
+ * 没法在同一个控制器/rest resource下进行分别授权
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/accounts")
 public class AccountsSignupController extends ApplicationController<Account> {
     @Autowired
     MutableAccountService accountService;
@@ -34,35 +38,33 @@ public class AccountsSignupController extends ApplicationController<Account> {
     /**
      * <h2>创建一个MSU账户</h2>
      * <p/>
-     * POST /msu/signup
+     * POST /api/accounts
      *
-     * @param account 需要创建的MSU帐户对象，通过HTTP BODY POST上来
+     * @param registration 需要创建的帐户信息，通过HTTP BODY POST上来
      * @return 创建之后的账户信息
      */
-    @RequestMapping(value = "/msu/signup", method = RequestMethod.POST)
-    public MsuAccount createMsu(@RequestBody @Valid MsuAccount account){
-        logger.info("Creating MSU {}", account.getName());
-        // 可能会抛出重名的异常
-        currentAccount = accountService.create(account);
-        logger.info("Created  MSU {} with sn {}", currentAccount.getName(), currentAccount.getSn());
-        return (MsuAccount) currentAccount;
-    }
-
-    /**
-     * <h2>创建一个MSP账户</h2>
-     * <p/>
-     * POST /msp/signup
-     *
-     * @param account 需要创建的MSP帐户对象，通过HTTP BODY POST上来
-     * @return 创建之后的账户信息
-     */
-    @RequestMapping(value = "/msp/signup",method = RequestMethod.POST)
-    public MspAccount createMsp(@RequestBody @Valid MspAccount account){
-        logger.info("Creating MSP {}", account.getName());
-        // 可能会抛出重名的异常
-        currentAccount = accountService.create(account);
-        logger.info("Created  MSP {} with sn {}", currentAccount.getName(), currentAccount.getSn());
-        return (MspAccount) currentAccount;
+    @RequestMapping(method = RequestMethod.POST)
+    public Account create(@RequestBody @Valid AccountRegistration registration, BindingResult result) {
+        if( result.hasErrors() ){
+            //TODO 抛出的异常 最终需要转换为前端可以处理的错误信息
+            // status: 400
+            // body:
+            // {
+            //   'registration.account.domain': '与系统保留的域名:www重复',
+            //   'registration.user.username': '用户名:admin不唯一'
+            // }
+            throw new WebClientSideException(HttpStatus.BAD_REQUEST, result.toString());
+        }
+        logger.info("Creating {} Account {}", registration.getType(), registration.getAccount());
+        try{
+            // 可能会抛出重名的异常(重名由数据库uk保证)
+            currentAccount = accountService.register(registration.prepareAccount(), registration.getUser());
+            logger.info("Created  {} account {} administrated by {}",
+                        registration.getType(), currentAccount, registration.getUser());
+            return currentAccount;
+        }catch (AccountException ex){// user exception 也会被转换为account exception
+            throw new WebClientSideException(HttpStatus.BAD_REQUEST, ex.getMessage());
+        }
     }
 
 }

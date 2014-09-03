@@ -5,6 +5,7 @@ package dnt.itsnow.service;
 
 import dnt.itsnow.exception.AccountException;
 import dnt.itsnow.model.Account;
+import dnt.itsnow.model.User;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 
@@ -23,4 +24,12 @@ public interface MutableAccountService extends CommonAccountService {
     Account approve(Account account) throws AccountException;
 
     Account reject(Account account) throws AccountException;
+
+    /**
+     * <h2>实际注册帐户的接口</h2>
+     *
+     * @param account 注册的帐户信息
+     * @param user    管理员信息
+     */
+    Account register(Account account, User user) throws AccountException;
 }

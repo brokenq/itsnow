@@ -102,4 +102,10 @@ public class MutableAccountManagerTest1 {
     public void testDelete() throws Exception {
 
     }
+
+    @Test
+    public void testRegister() throws Exception {
+        //TODO TEST register
+
+    }
 }

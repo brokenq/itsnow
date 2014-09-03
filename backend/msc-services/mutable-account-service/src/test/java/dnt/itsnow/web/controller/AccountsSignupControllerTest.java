@@ -5,11 +5,12 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.config.MutableAccountsControllerConfig;
 import dnt.itsnow.model.Account;
-import dnt.itsnow.model.MspAccount;
-import dnt.itsnow.model.MsuAccount;
+import dnt.itsnow.model.User;
 import dnt.itsnow.service.CommonUserService;
 import dnt.itsnow.service.MutableAccountService;
 import dnt.itsnow.test.controller.SessionSupportedControllerTest;
+import dnt.itsnow.web.model.AccountRegistration;
+import dnt.itsnow.web.model.RegistrationType;
 import dnt.support.JsonSupport;
 import org.junit.After;
 import org.junit.Before;
@@ -19,12 +20,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.easymock.EasyMock.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -38,28 +35,26 @@ public class AccountsSignupControllerTest extends SessionSupportedControllerTest
     @Autowired
     MutableAccountService accountService;
 
-    private MsuAccount    msuAccount;
-    private MspAccount    mspAccount;
+    AccountRegistration registration;
 
     @Before
     public void setup() {
+        registration = new AccountRegistration();
+        registration.setType(RegistrationType.Enterprise);
+        registration.setAsProvider(true);
 
-        this.msuAccount = new MsuAccount();
-        this.msuAccount.setName("User");
-        this.msuAccount.setDomain("user");
-        this.msuAccount.setSn("msu-099");
-        this.msuAccount.setId(2L);
-        this.msuAccount.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        this.msuAccount.setUpdatedAt(this.msuAccount.getCreatedAt());
+        Account account = new Account();
+        account.setName("test-account");
+        account.setDomain("test-domain");
+        account.setDescription("test account");
+        registration.setAccount(account);
 
-        this.mspAccount = new MspAccount();
-        this.mspAccount.setName("Provider");
-        this.mspAccount.setDomain("provider");
-        this.mspAccount.setSn("msp-099");
-        this.mspAccount.setId(3L);
-        this.mspAccount.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        this.mspAccount.setUpdatedAt(this.msuAccount.getCreatedAt());
-
+        User user = new User();
+        user.setUsername("jay.xiong");
+        user.setPassword("123456");
+        user.setPhone("138202020202");
+        user.setEmail("jay@xiong.com");
+        registration.setUser(user);
 
         reset(accountService);
     }
@@ -71,11 +66,12 @@ public class AccountsSignupControllerTest extends SessionSupportedControllerTest
     }
 
     @Test
-    public void testMsuSignup() throws Exception {
-        expect(accountService.create(anyObject(Account.class))).andReturn(msuAccount);
+    public void testSignup() throws Exception {
+        expect(accountService.register(anyObject(Account.class), anyObject(User.class)))
+                .andReturn(registration.getAccount());
         replay(accountService);
 
-        MockHttpServletRequestBuilder request = post("/api/msu/signup").content(msuJson());
+        MockHttpServletRequestBuilder request = post("/api/accounts").content(registrationJson());
         decorate(request);
 
         ResultActions result = this.browser.perform(request);
@@ -83,25 +79,8 @@ public class AccountsSignupControllerTest extends SessionSupportedControllerTest
 
     }
 
-    @Test
-    public void testMspSignup() throws Exception {
-        expect(accountService.create(anyObject(Account.class))).andReturn(mspAccount);
-        replay(accountService);
-
-        MockHttpServletRequestBuilder request = post("/api/msp/signup").content(mspJson());
-        decorate(request);
-
-        ResultActions result = this.browser.perform(request);
-        decorate(result).andExpect(status().isOk());
-
-    }
-
-    protected String msuJson(){
-        return JsonSupport.toJSONString(msuAccount);
-    }
-
-    protected String mspJson(){
-        return JsonSupport.toJSONString(mspAccount);
+    protected String registrationJson() {
+        return JsonSupport.toJSONString(registration);
     }
 
 }

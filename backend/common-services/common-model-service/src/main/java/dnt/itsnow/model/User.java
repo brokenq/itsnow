@@ -58,6 +58,8 @@ public class User extends ConfigItem implements UserDetails, CredentialsContaine
         return password;
     }
 
+    @NotBlank
+    @Length(min = 4, max = 20)
     public String getUsername() {
         return getName();
     }
@@ -86,8 +88,6 @@ public class User extends ConfigItem implements UserDetails, CredentialsContaine
         password = null;
     }
 
-    @NotBlank
-    @Length(min = 4, max = 20)
     public void setUsername(String username) {
         setName(username);
     }
