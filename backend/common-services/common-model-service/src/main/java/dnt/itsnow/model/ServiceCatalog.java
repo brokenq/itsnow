@@ -15,11 +15,30 @@ import java.util.List;
  * TODO 添加测试用例
  */
 public class ServiceCatalog extends Record{
+    private Long parentId;
     private String title;
     private String description;
     private String icon;
+    private String sn;
+    private List<ServiceCatalog> children;
 
     private List<ServiceItem> items;
+
+    public List<ServiceCatalog> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<ServiceCatalog> children) {
+        this.children = children;
+    }
+
+    public String getSn() {
+        return sn;
+    }
+
+    public void setSn(String sn) {
+        this.sn = sn;
+    }
 
     public String getTitle() {
         return title;
@@ -35,6 +54,14 @@ public class ServiceCatalog extends Record{
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 
     public String getIcon() {

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dnt.itsnow.repository.PrivateServiceItemRepository">
+    <select id="findAllPrivate" resultMap="privateItems">
+        SELECT i.* FROM private_service_items i
+    </select>
+
+    <select id="findPrivateById" resultMap="privateItems">
+        SELECT i.* FROM private_service_items i WHERE i.id = #{id}
+    </select>
+
+    <resultMap id="privateItems" type="PrivateServiceItem" autoMapping="true">
+        <id property="id" column="id"/>
+        <association property="catalog" javaType="PrivateServiceCatalog" autoMapping="true">
+            <id column="catalog_id" property="id"></id>
+        </association>
+    </resultMap>
+
+</mapper>

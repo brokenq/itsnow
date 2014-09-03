@@ -4,7 +4,8 @@
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.PublicServiceCatalog;
-import dnt.itsnow.platform.web.annotation.BeforeFilter;
+import dnt.itsnow.service.PublicServiceCatalogService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -17,8 +18,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/api/public_service_catalogs")
 public class PublicServiceCatalogsController extends SessionSupportController<PublicServiceCatalog> {
-    PublicServiceCatalog serviceCatalog;
-
+    //PublicServiceCatalog serviceCatalog;
+    @Autowired
+    PublicServiceCatalogService publicServiceCatalogService;
     /**
      * <h2>获得所有的服务目录</h2>
      *
@@ -28,7 +30,9 @@ public class PublicServiceCatalogsController extends SessionSupportController<Pu
      */
     @RequestMapping
     public List<PublicServiceCatalog> index(){
-        return null;
+        List<PublicServiceCatalog> list = publicServiceCatalogService.findAll();
+        logger.debug("Get public_service_catalogs size:{}",list.size());
+        return list;
     }
 
     /**
@@ -39,8 +43,8 @@ public class PublicServiceCatalogsController extends SessionSupportController<Pu
      * @return 服务目录
      */
     @RequestMapping("{sn}")
-    public PublicServiceCatalog show(){
-        return serviceCatalog;
+    public PublicServiceCatalog show(@PathVariable("sn") String sn){
+        return publicServiceCatalogService.findBySn(sn);
     }
 
     /**
@@ -52,7 +56,7 @@ public class PublicServiceCatalogsController extends SessionSupportController<Pu
      */
     @RequestMapping(method = RequestMethod.POST)
     public PublicServiceCatalog create(@Valid @RequestBody PublicServiceCatalog serviceCatalog){
-        return serviceCatalog;
+        return publicServiceCatalogService.save(serviceCatalog);
     }
 
     /**
@@ -64,9 +68,8 @@ public class PublicServiceCatalogsController extends SessionSupportController<Pu
      */
     @RequestMapping(value = "{sn}", method = RequestMethod.PUT)
     public PublicServiceCatalog update(@Valid @RequestBody PublicServiceCatalog serviceCatalog){
-        this.serviceCatalog.apply(serviceCatalog);
-        //TODO SAVE IT
-        return this.serviceCatalog;
+        //this.serviceCatalog.apply(serviceCatalog);
+        return publicServiceCatalogService.update(serviceCatalog);
     }
 
     /**
@@ -77,13 +80,15 @@ public class PublicServiceCatalogsController extends SessionSupportController<Pu
      * @return 被删除的服务目录
      */
     @RequestMapping(value = "{sn}", method = RequestMethod.DELETE)
-    public PublicServiceCatalog destroy(){
+    public PublicServiceCatalog destroy(@PathVariable("sn") String sn){
+        publicServiceCatalogService.delete(sn);
         return null;
     }
 
+    /*
     @BeforeFilter({"show", "update", "destroy"})
     public void initServiceCatalog(@PathVariable("sn") String sn){
         serviceCatalog = null;//find it by sn
-    }
+    }*/
 
 }
