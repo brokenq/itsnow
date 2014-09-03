@@ -3,6 +3,7 @@
  */
 angular.module("Itsnow.Login", [
     'ngResource',
+    'ngLocale',
     'ui.router',
 
     'Common.Interceptor',

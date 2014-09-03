@@ -1,30 +1,27 @@
 angular
   .module('Itsnow.Security', [])
 
-  .factory('Session', ['$resource',
+  .factory('SessionService', ['$resource',
     function ($resource) {
       return $resource("/api/session?username=:username&password=:password", {username: '@username', password: '@password'}, {
-        create: {method: 'POST'}, /* login */
-        destroy: {method: 'DELETE'}, /* logout */
-        current: {method: 'GET'}, /* current session */
-        profile: {method: 'GET'}  /* current user profile */
+        challenge: {method: 'POST'} /* login */
       });
     }
   ])
 
-  .factory('Password', ['$resource'],
+  .factory('PasswordService', ['$resource',
     function($resource){
       return $resource("api/password", {}, {
         forgot: {method: 'POST'},
         reset: {method: 'PUT'}
       });
-    }
+    }]
   )
 
-  .factory('User', ['$resource'],
+  .factory('UserService', ['$resource',
     function($resource){
       return $resource('api/users/:userId', {}, {
         signup: {url: 'users', method: 'POST', params:{userId:'@userId'}}
       });
-    }
+    }]
   );

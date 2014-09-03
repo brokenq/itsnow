@@ -1,0 +1,360 @@
+<div id="signup-box" class="signup-box visible widget-box no-border">
+<div class="widget-body">
+<div class="widget-main fuelux">
+<h4 class="header green lighter bigger">
+  <i class="icon-group blue"></i>
+  注册帐户
+</h4>
+
+<div id="fuelux-wizard" class="row-fluid wizard"
+     data-initialize="wizard" data-adjust="false">
+  <ul class="steps">
+    <li data-step="1" class="active">
+      <span class="step">1</span>
+      <span class="title">基本信息</span>
+    </li>
+
+    <li data-step="2">
+      <span class="step">2</span>
+      <span class="title">管理员信息</span>
+    </li>
+
+    <li data-step="3">
+      <span class="step">3</span>
+      <span class="title">凭证信息</span>
+    </li>
+
+    <li data-step="4">
+      <span class="step">4</span>
+      <span class="title">完成注册</span>
+    </li>
+  </ul>
+
+  <hr/>
+
+  <div id="step-container" class="step-content row-fluid position-relative">
+
+  <div id="step1" class="step-pane active" data-step="1">
+
+    <form name="step1Form" novalidate class="form-horizontal" role="form">
+      <div class="form-group has-info">
+        <label class="col-xs-12 col-sm-3 control-label no-padding-right"> 帐户类型 </label>
+
+        <div class="col-xs-12 col-sm-5 radio">
+          <label>
+            <input id="registration_type_enterprise"
+                   name="registration.type"
+                   ng-model="registration.type"
+                   value="enterprise" type="radio" class="ace"/>
+            <span class="lbl">企业</span>
+          </label>
+          <label>
+            <input id="registration_type_individual"
+                   name="registration.type"
+                   ng-model="registration.type"
+                   value="individual" type="radio" class="ace"/>
+            <span class="lbl">个人</span>
+          </label>
+        </div>
+        <div class="help-block col-xs-12 col-sm-reset inline">
+          {{registration.typeHelp()}}
+        </div>
+      </div>
+
+      <div class="form-group has-info">
+        <label class="col-xs-12 col-sm-3 control-label no-padding-right"> 角色选择 </label>
+
+        <div class="col-xs-12 col-sm-5 checkbox">
+          <label>
+            <input id="registration_as_user"
+                   name="registration.asUser"
+                   ng-model="registration.asUser"
+                   ng-disabled="registration.individual()"
+                   value="user" type="checkbox" class="ace"/>
+            <span class="lbl">服务使用方</span>
+          </label>
+          <label>
+            <input id="registration_as_provider"
+                   name="registration.asProvider"
+                   ng-model="registration.asProvider"
+                   ng-disabled="registration.individual()"
+                   value="provider" type="checkbox" class="ace"/>
+            <span class="lbl">服务供应方</span>
+          </label>
+        </div>
+        <div class="help-block col-xs-12 col-sm-reset inline">
+          选择您需要在itsnow平台完成的工作
+        </div>
+      </div>
+
+      <div class="form-group"
+           ng-class="inputStyle('step1Form','registration.account.name')">
+        <label class="col-xs-12 col-sm-3 control-label no-padding-right"> {{registration.nameLabel()}} </label>
+
+        <div class="col-xs-12 col-sm-5 checkbox">
+          <span class="block input-icon input-icon-right">
+            <input id="registration_account_name"
+                   name="registration.account.name"
+                   ng-model="registration.account.name"
+                   ng-required
+                   ng-minlength="2"
+                   ng-maxlength="50"
+                   type="text" class="form-control" placeholder="{{registration.namePlaceholder()}}"/>
+            <i class="icon-group"></i>
+          </span>
+        </div>
+        <div class="help-block col-xs-12 col-sm-reset inline">
+          请设置{{registration.nameLabel()}}
+        </div>
+      </div>
+
+      <div class="form-group"
+           ng-class="inputStyle('step1Form','registration.account.domain')">
+        <label class="col-xs-12 col-sm-3 control-label no-padding-right"> 自定义域名 </label>
+
+        <div class="col-xs-12 col-sm-5">
+          <div class="input-group">
+            <div class="input-group-addon">http://</div>
+            <input id="registration_account_domain"
+                   name="registration.account.domain"
+                   ng-model="registration.account.domain"
+                   ng-required="true"
+                   ng-minlength="2"
+                   ng-maxlength="10"
+                   ng-pattern="/[\w|\d|_]+/"
+                   type="text" class="span2" placeholder="2-10位"/>
+
+            <div class="input-group-addon">.itsnow.com</div>
+          </div>
+        </div>
+        <div class="help-block col-xs-12 col-sm-reset inline">
+          仅由英文,数字，下划线组合
+        </div>
+      </div>
+    </form>
+
+  </div><!-- #step 1 -->
+
+  <div id="step2" class="step-pane" data-step="2">
+
+    <form name="step2Form" novalidate
+          ng-model-options="{ updateOn: 'mousedown blur' }"
+          class="form-horizontal" role="form">
+      <div class="form-group"
+           ng-class="inputStyle('step2Form','registration.user.username')">
+        <label for="registration_user_username" class="col-xs-12 col-sm-3 control-label no-padding-right">
+          用户名
+        </label>
+
+        <div class="col-xs-12 col-sm-5">
+        <span class="block input-icon input-icon-right">
+          <input id="registration_user_username"
+                 name="registration.user.username"
+                 ng-model="registration.user.username"
+                 ng-required
+                 ng-minlength="4"
+                 ng-maxlength="20"
+                 ng-pattern="/[\w|\d|_|.]+/"
+                 type="text" class="form-control" placeholder="用户名"/>
+          <i class="icon-user"></i>
+        </span>
+        </div>
+        <div class="help-block col-xs-12 col-sm-reset inline">
+          4-20位，英文，数字，下划线，点号组合
+        </div>
+      </div>
+
+      <div class="form-group"
+           ng-class="inputStyle('step2Form','registration.user.email')">
+        <label for="registration_user_email" class="col-xs-12 col-sm-3 control-label no-padding-right">
+          电子邮箱
+        </label>
+
+        <div class="col-xs-12 col-sm-5">
+        <span class="block input-icon input-icon-right">
+          <input id="registration_user_email"
+                 name="registration.user.email"
+                 ng-model="registration.user.email"
+                 ng-required
+                 type="email" class="form-control" placeholder="someone@company.com"/>
+          <i class="icon-envelope"></i>
+        </span>
+        </div>
+        <div class="help-block col-xs-12 col-sm-reset inline">
+          用于找回密码，接收通知等
+        </div>
+      </div>
+
+      <div class="form-group" ng-class="inputStyle('step2Form','registration.user.phone')">
+        <label for="registration_user_phone" class="col-xs-12 col-sm-3 control-label no-padding-right">
+          电话号码
+        </label>
+
+        <div class="col-xs-12 col-sm-5">
+        <span class="block input-icon input-icon-right">
+          <input id="registration_user_phone"
+                 name="registration.user.phone"
+                 ng-model="registration.user.phone"
+                 ng-required ng-pattern="/[\d|-]{8,11}/"
+                 type="text" class="form-control" placeholder="13912345678"/>
+          <i class="icon-headphones"></i>
+        </span>
+        </div>
+        <div class="help-block col-xs-12 col-sm-reset inline">
+          帐号审批通过后，会通过该电话与您联系
+        </div>
+      </div>
+
+      <div class="form-group" ng-class="inputStyle('step2Form','registration.user.password')">
+        <label for="registration_user_password" class="col-xs-12 col-sm-3 control-label no-padding-right">
+          密码
+        </label>
+
+        <div class="col-xs-12 col-sm-5">
+        <span class="block input-icon input-icon-right">
+          <input id="registration_user_password"
+                 name="registration.user.password"
+                 ng-model="registration.user.password"
+                 ng-required ng-minlength="6" ng-maxlength="20"
+                 type="password" class="form-control"
+                 placeholder="数字,字母，符号组合"/>
+          <i class="icon-lock"></i>
+        </span>
+        </div>
+        <div class="help-block col-xs-12 col-sm-reset inline">
+          设置6-20位密码
+        </div>
+      </div>
+
+      <div class="form-group" ng-class="inputStyle('step2Form','registration.user.repeat_password')">
+        <label for="registration_user_repeat_password" class="col-xs-12 col-sm-3 control-label no-padding-right">
+          重复密码
+        </label>
+
+        <div class="col-xs-12 col-sm-5">
+        <span class="block input-icon input-icon-right">
+          <input id="registration_user_repeat_password"
+                 name="registration.user.repeat_password"
+                 ng-model="registration.user.repeat_password"
+                 ng-required
+                 type="password" class="form-control"
+                 placeholder="重复密码"/>
+          <i class="icon-retweet"></i>
+        </span>
+        </div>
+        <div class="help-block col-xs-12 col-sm-reset inline">
+          重复以上密码
+        </div>
+      </div>
+    </form>
+  </div><!-- #step 2 -->
+
+  <div id="step3" class="step-pane" data-step="3">
+
+    <form name="step3Form" novalidate class="form-horizontal" role="form">
+      <div class="form-group"
+           ng-class="inputStyle('step3Form','registration.attachments.yyzz')"
+           ng-hide="registration.individual()">
+        <label for="registration_attachments_yyzz" class="col-xs-12 col-sm-3 control-label no-padding-right">
+          营业执照
+        </label>
+
+        <div class="col-xs-12 col-sm-5">
+        <span class="block input-icon input-icon-right">
+          <input id="registration_attachments_yyzz"
+                 name="registration.attachments.yyzz"
+                 ng-model="registration.attachments.yyzz"
+                 type="file" class="width-100">
+          <i class="icon-briefcase"></i>
+        </span>
+        </div>
+        <div class="help-block col-xs-12 col-sm-reset inline">
+          请上传营业执照复印件
+        </div>
+      </div>
+
+      <div class="form-group has-info"
+           ng-class="inputStyle('step3Form','registration.attachments.swdjz')"
+           ng-hide="registration.individual()">
+        <label for="registration_attachments_swdjz" class="col-xs-12 col-sm-3 control-label no-padding-right">
+          税务登记证
+        </label>
+
+        <div class="col-xs-12 col-sm-5">
+        <span class="block input-icon input-icon-right">
+          <input id="registration_attachments_swdjz"
+                 name="registration.attachments.swdjz"
+                 ng-model="registration.attachments.swdjz"
+                 type="file" class="width-100">
+          <i class="icon-certificate"></i>
+        </span>
+        </div>
+        <div class="help-block col-xs-12 col-sm-reset inline">
+          请上传税务登记证复印件
+        </div>
+      </div>
+
+      <div class="form-group"
+           ng-class="inputStyle('step3Form','registration.attachments.id_card')"
+           ng-show="registration.individual()">
+        <label for="registration_attachments_id_card" class="col-xs-12 col-sm-3 control-label no-padding-right">
+          个人身份证
+        </label>
+
+        <div class="col-xs-12 col-sm-5">
+        <span class="block input-icon input-icon-right">
+          <input id="registration_attachments_id_card"
+                 name="registration.attachments.id_card"
+                 ng-model="registration.attachments.id_card"
+                 type="file" class="width-100">
+          <i class="icon-credit-card"></i>
+        </span>
+        </div>
+        <div class="help-block col-xs-12 col-sm-reset inline">
+          请上传个人身份证复印件
+        </div>
+      </div>
+    </form>
+  </div><!-- #step 3 -->
+
+  <div id="step4" class="step-pane" data-step="4">
+  <pre>
+  {{registration}}
+  </pre>
+    <form name="step4Form" novalidate class="form-horizontal" role="form">
+      <label class="block">
+        <input
+            id="accept_license"
+            name="acceptLicense"
+            ng-model="acceptLicense"
+            type="checkbox" value="accept" class="ace"/>
+        <span class="lbl"> 我接受 <a href="#">使用协议</a> </span>
+      </label>
+    </form>
+  </div><!-- #step 4 -->
+
+  </div><!--#step container-->
+
+  <hr/>
+
+  <div class="row-fluid actions">
+    <button class="btn btn-prev" disabled="disabled">
+      <i class="icon-arrow-left"></i>
+      上一步
+    </button>
+
+    <button class="btn btn-success btn-next" data-last="注册">
+      下一步
+      <i class="icon-arrow-right icon-on-right"></i>
+    </button>
+  </div><!-- .wizard-actions -->
+
+</div><!-- #fuelux-wizard -->
+
+
+
+</div><!-- .widget-main -->
+
+</div><!-- .widget-body -->
+
+</div><!-- #signup-box -->

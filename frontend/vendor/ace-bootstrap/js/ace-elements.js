@@ -1,4 +1,4 @@
-if(! ('ace' in window) ) window['ace'] = {}
+if(! ('ace' in window) ) window['ace'] = {};
 jQuery(function() {
 	//at some places we try to use 'tap' event instead of 'click' if jquery mobile plugin is available
 	window['ace'].click_event = $.fn.tap ? "tap" : "click";
@@ -26,7 +26,7 @@ jQuery(function() {
 		this.$element.wrap('<div class="ace-file-input" />');
 		
 		this.apply_settings();
-	}
+	};
 	Ace_File_Input.error = {
 		'FILE_LOAD_FAILED' : 1,
 		'IMAGE_LOAD_FAILED' : 2,
@@ -51,7 +51,7 @@ jQuery(function() {
 		this.$label.on('click', function(){//firefox mobile doesn't allow 'tap'!
 			if(!this.disabled && !self.element.disabled && !self.$element.attr('readonly')) 
 				self.$element.click();
-		})
+		});
 
 		if(remove_btn) this.$label.next('a').on(ace.click_event, function(){
 			if(! self.can_reset ) return false;
@@ -66,7 +66,7 @@ jQuery(function() {
 		if(this.settings.droppable && hasFileList) {
 			enable_drop_functionality.call(this);
 		}
-	}
+	};
 
 	Ace_File_Input.prototype.show_file_list = function($files) {
 		var files = typeof $files === "undefined" ? this.$element.data('ace_input_files') : $files;
@@ -100,7 +100,7 @@ jQuery(function() {
 				var type = $.trim(files[i].type);
 				var can_preview = hasFileReader && this.settings.thumbnail 
 						&&
-						( (type.length > 0 && type.match('image')) || (type.length == 0 && fileIcon == 'icon-picture') )//the second one is for Android's default browser which gives an empty text for file.type
+						( (type.length > 0 && type.match('image')) || (type.length == 0 && fileIcon == 'icon-picture') );//the second one is for Android's default browser which gives an empty text for file.type
 				if(can_preview) {
 					var self = this;
 					$.when(preview_image.call(this, files[i])).fail(function(result){
@@ -113,7 +113,7 @@ jQuery(function() {
 		}
 
 		return true;
-	}
+	};
 
 	Ace_File_Input.prototype.reset_input = function() {
 	  this.$label.attr({'data-title':this.settings.btn_choose, 'class':'file-label'})
@@ -132,38 +132,38 @@ jQuery(function() {
 		this.reset_input_field();
 		
 		return false;
-	}
+	};
 
 	Ace_File_Input.prototype.reset_input_field = function() {
 		//http://stackoverflow.com/questions/1043957/clearing-input-type-file-using-jquery/13351234#13351234
 		this.$element.wrap('<form>').closest('form').get(0).reset();
 		this.$element.unwrap();
-	}
+	};
 	
 	Ace_File_Input.prototype.enable_reset = function(can_reset) {
 		this.can_reset = can_reset;
-	}
+	};
 
 	Ace_File_Input.prototype.disable = function() {
 		this.disabled = true;
 		this.$element.attr('disabled', 'disabled').addClass('disabled');
-	}
+	};
 	Ace_File_Input.prototype.enable = function() {
 		this.disabled = false;
 		this.$element.removeAttr('disabled').removeClass('disabled');
-	}
+	};
 	
 	Ace_File_Input.prototype.files = function() {
 		return $(this).data('ace_input_files') || null;
-	}
+	};
 	Ace_File_Input.prototype.method = function() {
 		return $(this).data('ace_input_method') || '';
-	}
+	};
 	
 	Ace_File_Input.prototype.update_settings = function(new_settings) {
 		this.settings = $.extend({}, this.settings, new_settings);
 		this.apply_settings();
-	}
+	};
 
 
 
@@ -208,7 +208,7 @@ jQuery(function() {
 			self.$element.triggerHandler('change' , [true]);//true means inner_call
 			return true;
 		});
-	}
+	};
 	
 	
 	var handle_on_change = function() {
@@ -232,7 +232,7 @@ jQuery(function() {
 		else {
 			var name = $.trim( this.element.value );
 			if(name && name.length > 0) {
-				files = []
+				files = [];
 				files.push(name);
 				this.$element.data('ace_input_files', files);
 			}
@@ -242,7 +242,7 @@ jQuery(function() {
 		this.show_file_list(files);
 
 		return true;
-	}
+	};
 
 
 
@@ -251,7 +251,7 @@ jQuery(function() {
 		var self = this;
 		var $span = self.$label.find('.file-name:last');//it should be out of onload, otherwise all onloads may target the same span because of delays
 		
-		var deferred = new $.Deferred
+		var deferred = new $.Deferred;
 		var reader = new FileReader();
 		reader.onload = function (e) {
 			$span.prepend("<img class='middle' style='display:none;' />");
@@ -273,11 +273,11 @@ jQuery(function() {
 				}
 
 				var w = thumb.w, h = thumb.h;
-				if(self.settings.thumbnail == 'small') {w=h=size;};
+				if(self.settings.thumbnail == 'small') {w=h=size;}
 				$(img).css({'background-image':'url('+thumb.src+')' , width:w, height:h})									
 						.data('thumb', thumb.src)
 						.attr({src:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=='})
-						.show()
+						.show();
 
 				///////////////////
 				deferred.resolve();
@@ -288,14 +288,14 @@ jQuery(function() {
 			});
 
 			img.src = e.target.result;
-		}
+		};
 		reader.onerror = function (e) {
 			deferred.reject({code:Ace_File_Input.error['FILE_LOAD_FAILED']});
-		}
+		};
 		reader.readAsDataURL(file);
 
 		return deferred.promise();
-	}
+	};
 
 	var get_thumbnail = function(img, size, type) {
 		
@@ -310,7 +310,7 @@ jQuery(function() {
 		  }
 		}
 
-		var dataURL
+		var dataURL;
 		try {
 			var canvas = document.createElement('canvas');
 			canvas.width = w; canvas.height = h;
@@ -326,7 +326,7 @@ jQuery(function() {
 		if(! dataURL) return null;
 
 		return {src: dataURL, w:w, h:h};
-	}
+	};
 
 
 
@@ -378,18 +378,18 @@ jQuery(function() {
 		
 		//when min is negative, the input maxlength does not account for the extra minus sign
 		this.each(function() {
-			var icon_up = options.icon_up || 'icon-chevron-up'
-			var icon_down = options.icon_down || 'icon-chevron-down'
-			var on_sides = options.on_sides || false
+			var icon_up = options.icon_up || 'icon-chevron-up';
+			var icon_down = options.icon_down || 'icon-chevron-down';
+			var on_sides = options.on_sides || false;
 			
-			var btn_up_class = options.btn_up_class || ''
-			var btn_down_class = options.btn_down_class || ''
+			var btn_up_class = options.btn_up_class || '';
+			var btn_down_class = options.btn_down_class || '';
 		
-			var max = options.max || 999
-			max = (''+max).length
+			var max = options.max || 999;
+			max = (''+max).length;
 			
-				$(this).addClass('spinner-input form-control').wrap('<div class="ace-spinner">')
-				var $parent_div = $(this).closest('.ace-spinner').spinner(options).wrapInner("<div class='input-group'></div>")
+				$(this).addClass('spinner-input form-control').wrap('<div class="ace-spinner">');
+				var $parent_div = $(this).closest('.ace-spinner').spinner(options).wrapInner("<div class='input-group'></div>");
 
 				if(on_sides)
 				{
@@ -402,10 +402,10 @@ jQuery(function() {
 							<button type="button" class="btn spinner-up btn-xs '+btn_up_class+'">\
 								<i class="'+icon_up+'"></i>\
 							</button>\
-						</div>')
+						</div>');
 				
-					$parent_div.addClass('touch-spinner')
-					$parent_div.css('width' , (max * 20 + 40)+'px')
+					$parent_div.addClass('touch-spinner');
+					$parent_div.css('width' , (max * 20 + 40)+'px');
 				}
 				else {
 					 $(this).after('<div class="spinner-buttons input-group-btn">\
@@ -415,29 +415,29 @@ jQuery(function() {
 							<button type="button" class="btn spinner-down btn-xs '+btn_down_class+'">\
 								<i class="'+icon_down+'"></i>\
 							</button>\
-						</div>')
+						</div>');
 
 					if("ontouchend" in document || options.touch_spinner) {
-						$parent_div.addClass('touch-spinner')
-						$parent_div.css('width' , (max * 20 + 40)+'px')
+						$parent_div.addClass('touch-spinner');
+						$parent_div.css('width' , (max * 20 + 40)+'px');
 					}
 					else {
 						$(this).next().addClass('btn-group-vertical');
-						$parent_div.css('width' , (max * 20 + 10)+'px')
+						$parent_div.css('width' , (max * 20 + 10)+'px');
 					}
 				}
 				
 				
 
 			$(this).on('mousewheel DOMMouseScroll', function(event){
-				var delta = event.originalEvent.detail < 0 || event.originalEvent.wheelDelta > 0 ? 1 : -1
-				$parent_div.spinner('step', delta > 0)//accepts true or false as second param
-				$parent_div.spinner('triggerChangedEvent')
+				var delta = event.originalEvent.detail < 0 || event.originalEvent.wheelDelta > 0 ? 1 : -1;
+				$parent_div.spinner('step', delta > 0);//accepts true or false as second param
+				$parent_div.spinner('triggerChangedEvent');
 				return false
 			});
 			var that = $(this);
 			$parent_div.on('changed', function(){
-				that.trigger('change')//trigger the input's change event
+				that.trigger('change');//trigger the input's change event
 			});
 			
 		});
@@ -548,9 +548,9 @@ jQuery(function() {
 			'selectable' : true,
 			'selected-icon' : 'icon-ok',
 			'unselected-icon' : 'tree-dot'
-		}
+		};
 		
-		$options = $.extend({}, $options, options)
+		$options = $.extend({}, $options, options);
 
 		this.each(function() {
 			var $this = $(this);
@@ -601,7 +601,7 @@ jQuery(function() {
 			'#92e1c0','#9fe1e7','#9fc6e7','#4986e7','#9a9cff','#b99aff',
 			'#c2c2c2','#cabdbf','#cca6ac','#f691b2','#cd74e6','#a47ae2',
 			'#444444'
-		]
+		];
 
 		var button_defaults =
 		{
@@ -704,7 +704,7 @@ jQuery(function() {
 				icon : 'icon-code',
 				title : 'View Source'
 			}
-		}
+		};
 		
 		var toolbar_buttons =
 		options.toolbar ||
@@ -739,7 +739,7 @@ jQuery(function() {
 			'redo',
 			null,
 			'viewSource'
-		]
+		];
 
 
 		this.each(function() {
@@ -767,7 +767,7 @@ jQuery(function() {
 						toolbar += ' <ul class="dropdown-menu dropdown-light">';
 						for(var font in button.values)
 							if(button.values.hasOwnProperty(font))
-								toolbar += ' <li><a data-edit="fontName ' + button.values[font] +'" style="font-family:\''+ button.values[font]  +'\'">'+button.values[font]  + '</a></li> '
+								toolbar += ' <li><a data-edit="fontName ' + button.values[font] +'" style="font-family:\''+ button.values[font]  +'\'">'+button.values[font]  + '</a></li> ';
 						toolbar += ' </ul>';
 					break;
 
@@ -776,7 +776,7 @@ jQuery(function() {
 						toolbar += ' <ul class="dropdown-menu dropdown-light"> ';
 						for(var size in button.values)
 							if(button.values.hasOwnProperty(size))
-								toolbar += ' <li><a data-edit="fontSize '+size+'"><font size="'+size+'">'+ button.values[size] +'</font></a></li> '
+								toolbar += ' <li><a data-edit="fontSize '+size+'"><font size="'+size+'">'+ button.values[size] +'</font></a></li> ';
 						toolbar += ' </ul> ';
 					break;
 
@@ -806,7 +806,7 @@ jQuery(function() {
 							 <div class="center">\
 								<button class="btn btn-sm '+button.button_class+' wysiwyg-choose-file" type="button">'+button.button_text+'</button>\
 								<input type="file" data-edit="'+button.name+'" />\
-							  </div>'
+							  </div>';
 						toolbar += ' </div> </div>';
 					break;
 
@@ -855,7 +855,7 @@ jQuery(function() {
 				toolbar.append(speech_input);
 				$(speech_input).attr({type:'text', 'data-edit':'inserttext','x-webkit-speech':''}).addClass('wysiwyg-speech-input')
 				.css({'position':'absolute'}).offset({top: editorOffset.top, left: editorOffset.left+$(this).innerWidth()-35});
-			} else speech_input = null
+			} else speech_input = null;
 			
 			
 			//view source
@@ -868,7 +868,7 @@ jQuery(function() {
 					$('<textarea />')
 					.css({'width':self.outerWidth(), 'height':self.outerHeight()})
 					.val(self.html())
-					.insertAfter(self)
+					.insertAfter(self);
 					self.hide();
 					
 					$(this).addClass('active');
@@ -885,7 +885,7 @@ jQuery(function() {
 			});
 
 
-			var $options = $.extend({}, { activeToolbarClass: 'active' , toolbarSelector : toolbar }, options.wysiwyg || {})
+			var $options = $.extend({}, { activeToolbarClass: 'active' , toolbarSelector : toolbar }, options.wysiwyg || {});
 			$(this).wysiwyg( $options );
 		});
 
