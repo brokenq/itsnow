@@ -38,7 +38,7 @@ public abstract class RepositoryConfigWithH2 implements InitializingBean {
     @Bean
     public DataSource dataSource(DatabasePopulator populator) throws SQLException {
         EmbeddedDatabaseFactory dbFactory = new EmbeddedDatabaseFactory();
-        dbFactory.setDatabaseConfigurer(new H2AsMySqlEmbeddedDsConfigurer());
+        dbFactory.setDatabaseConfigurer(new H2AsMySqlEmbeddedDsConfigurer(dbSchema()));
         dbFactory.setDatabasePopulator(populator);
         return new SingleConnectionDataSource(dbFactory.getDatabase().getConnection(), true);
     }
@@ -61,6 +61,10 @@ public abstract class RepositoryConfigWithH2 implements InitializingBean {
     }
 
     protected abstract String[] sqlScripts();
+
+    protected String dbSchema(){
+      return "PUBLIC";
+    }
 
     protected  String dbRepository() {
         return "dnt.itsnow.repository";

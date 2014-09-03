@@ -41,7 +41,7 @@ public interface MutableAccountRepository extends CommonAccountRepository {
      *
      * @param account 新建的账户
      */
-    @Insert("INSERT INTO accounts(sn, name, type, status) " +
+    @Insert("INSERT INTO itsnow_msc.accounts(sn, name, type, status) " +
             "VALUES(#{sn}, #{name}, #{type}, #{status})")
     @SelectKey(statement="call identity()", keyProperty="id", before=false, resultType=long.class)
     void create(Account account);
@@ -53,7 +53,7 @@ public interface MutableAccountRepository extends CommonAccountRepository {
      *
      * @param account 新建的账户
      */
-    @Update("UPDATE accounts SET name = #{name}, domain = #{domain}, user_id = #{userId} WHERE id = #{id}")
+    @Update("UPDATE itsnow_msc.accounts SET name = #{name}, domain = #{domain}, user_id = #{userId} WHERE id = #{id}")
     void update(Account account);
 
     /**
@@ -63,7 +63,7 @@ public interface MutableAccountRepository extends CommonAccountRepository {
      *
      * @param account 被修改的帐户对象
      */
-    @Update("UPDATE accounts SET status = 'Valid' WHERE id = #{id}")
+    @Update("UPDATE itsnow_msc.accounts SET status = 'Valid' WHERE id = #{id}")
     void approve(Account account);
 
     /**
@@ -73,7 +73,7 @@ public interface MutableAccountRepository extends CommonAccountRepository {
      *
      * @param account 被修改的帐户对象
      */
-    @Update("UPDATE accounts SET status = 'Rejected' WHERE id = #{id}")
+    @Update("UPDATE itsnow_msc.accounts SET status = 'Rejected' WHERE id = #{id}")
     void reject(Account account);
 
     /**
@@ -81,6 +81,6 @@ public interface MutableAccountRepository extends CommonAccountRepository {
      *
      * @param sn 帐户的序号
      */
-    @Delete("DELETE FROM accounts WHERE sn = #{sn}")
+    @Delete("DELETE FROM itsnow_msc.accounts WHERE sn = #{sn}")
     void deleteBySn(@Param("sn") String sn);
 }

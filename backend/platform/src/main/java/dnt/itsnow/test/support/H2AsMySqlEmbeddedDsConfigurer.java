@@ -21,12 +21,19 @@ import static java.lang.String.format;
  */
 public class H2AsMySqlEmbeddedDsConfigurer extends Bean implements EmbeddedDatabaseConfigurer {
 
+    private String schema;
+
+    public H2AsMySqlEmbeddedDsConfigurer(String schema){
+      this.schema = schema;
+    }
+
     @Override
     public void configureConnectionProperties(ConnectionProperties properties, String databaseName) {
         try {
             //noinspection unchecked
             properties.setDriverClass((Class<? extends Driver>) Class.forName("org.h2.Driver"));
-            String url = format("jdbc:h2:mem:%s;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false;MODE=MySQL", databaseName);
+            String url = format("jdbc:h2:mem:%s;INIT=CREATE SCHEMA IF NOT EXISTS %s;SCHEMA=%s;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false;MODE=MySQL", 
+                                databaseName, this.schema, this.schema);
             properties.setUrl(url);
             properties.setUsername("sa");
             properties.setPassword("");

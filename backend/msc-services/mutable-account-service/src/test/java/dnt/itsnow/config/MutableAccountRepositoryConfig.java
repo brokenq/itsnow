@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @Import(DatabaseConfig.class)
 public class MutableAccountRepositoryConfig extends RepositoryConfigWithH2 implements BeanFilter {
+
     protected String[] sqlScripts() {
         return new String[]{
                 "classpath:META-INF/setup/prepare_schema.sql",
