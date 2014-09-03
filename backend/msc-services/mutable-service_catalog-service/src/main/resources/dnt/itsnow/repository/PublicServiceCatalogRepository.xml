@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dnt.itsnow.repository.PublicServiceCatalogRepository">
+    <select id="findAll" resultMap="catalogWithItems">
+        SELECT c.*,
+                i.id AS item_id,
+                i.catalog_id AS item_catalog_id,
+                i.title AS item_title,
+                i.brief AS item_brief,
+                i.description AS item_description,
+                i.icon AS item_icon,
+                i.created_at AS item_created_at,
+                i.updated_at AS item_updated_at
+        FROM public_service_catalogs c
+        LEFT OUTER JOIN public_service_items i ON c.id = i.catalog_id
+    </select>
+
+    <resultMap id="catalogWithItems" type="PublicServiceCatalog" autoMapping="true">
+        <id property="id" column="id"/>
+        <collection property="items"
+                    ofType="PublicServiceItem"
+                    columnPrefix="item_"
+                    autoMapping="true"/>
+    </resultMap>
+
+</mapper>

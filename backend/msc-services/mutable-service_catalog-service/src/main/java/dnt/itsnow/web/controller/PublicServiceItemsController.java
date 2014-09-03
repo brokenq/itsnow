@@ -6,6 +6,9 @@ package dnt.itsnow.web.controller;
 import dnt.itsnow.model.PublicServiceCatalog;
 import dnt.itsnow.model.PublicServiceItem;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
+import dnt.itsnow.service.PublicServiceCatalogService;
+import dnt.itsnow.service.PublicServiceItemService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -20,7 +23,13 @@ import java.util.List;
 public class PublicServiceItemsController extends SessionSupportController<PublicServiceItem> {
     PublicServiceCatalog serviceCatalog;
     PublicServiceItem serviceItem;
-    
+
+    @Autowired
+    PublicServiceItemService publicServiceItemService;
+
+    @Autowired
+    PublicServiceCatalogService publicServiceCatalogService;
+
     /**
      * <h2>获得所有的服务项目</h2>
      *
@@ -30,7 +39,7 @@ public class PublicServiceItemsController extends SessionSupportController<Publi
      */
     @RequestMapping
     public List<PublicServiceItem> index(){
-        return null;
+        return publicServiceItemService.findAll();
     }
     
     /**
@@ -41,8 +50,8 @@ public class PublicServiceItemsController extends SessionSupportController<Publi
      * @return 服务项目
      */
     @RequestMapping("{id}")
-    public PublicServiceCatalog show(){
-        return serviceCatalog;
+    public PublicServiceItem show(@PathVariable("id") Long id){
+        return publicServiceItemService.findById(id);
     }
 
     /**
@@ -54,7 +63,7 @@ public class PublicServiceItemsController extends SessionSupportController<Publi
      */
     @RequestMapping(method = RequestMethod.POST)
     public PublicServiceItem create(@Valid @RequestBody PublicServiceItem serviceItem){
-        return serviceItem;
+        return publicServiceItemService.save(serviceItem);
     }
 
     /**
@@ -66,9 +75,9 @@ public class PublicServiceItemsController extends SessionSupportController<Publi
      */
     @RequestMapping(value = "{id}", method = RequestMethod.PUT)
     public PublicServiceItem update(@Valid @RequestBody PublicServiceItem serviceItem){
-        this.serviceItem.apply(serviceItem);
+        //this.serviceItem.apply(serviceItem);
         //TODO SAVE IT
-        return this.serviceItem;
+        return publicServiceItemService.update(serviceItem);
     }
 
     /**
@@ -79,18 +88,21 @@ public class PublicServiceItemsController extends SessionSupportController<Publi
      * @return 被删除的服务项目
      */
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
-    public PublicServiceItem destroy(){
+    public PublicServiceItem destroy(@PathVariable("id") Long id){
+        publicServiceItemService.delete(id);
         return null;
     }
 
+
     @BeforeFilter
     public void initServiceCatalog(@PathVariable("sn") String catalogSn){
-        serviceCatalog = null;//find it by sn, load with items
+        serviceCatalog = publicServiceCatalogService.findBySn(catalogSn);
     }
     
     @BeforeFilter(order = 60, value = {"show", "update", "destroy"})
     public void initServiceItem(@PathVariable("id") Long id){
-        serviceItem = (PublicServiceItem) serviceCatalog.getItemBySn(id);
+        if(serviceCatalog != null)
+            serviceItem = (PublicServiceItem) serviceCatalog.getItemBySn(id);
     }
     
 }
