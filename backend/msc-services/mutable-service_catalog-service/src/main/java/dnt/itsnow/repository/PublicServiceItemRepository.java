@@ -5,14 +5,10 @@ import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Update;
 
-import java.util.List;
-
 /**
  * Created by jacky on 2014/9/2.
  */
-public interface PublicServiceItemRepository {
-
-    List<PublicServiceItem> findAll();
+public interface PublicServiceItemRepository extends CommonServiceItemRepository{
 
     @Insert("INSERT INTO public_service_items (catalog_id,title,brief,description,icon) "+
             " values(#{catalog.id},#{title},#{brief},#{description},#{icon})")

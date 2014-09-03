@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dnt.itsnow.repository.PrivateServiceCatalogRepository">
+    <select id="findAllPrivate" resultMap="privateCatalogWithItems">
+        SELECT c.*,
+                i.id AS item_id,
+                i.public_id AS item_public_id,
+                i.catalog_id AS item_catalog_id,
+                i.title AS item_title,
+                i.brief AS item_brief,
+                i.description AS item_description,
+                i.icon AS item_icon,
+                i.created_at AS item_created_at,
+                i.updated_at AS item_updated_at
+        FROM private_service_catalogs c
+        LEFT OUTER JOIN private_service_items i ON c.id = i.catalog_id
+    </select>
+
+    <select id="findPrivateBySn" resultMap="privateCatalogWithItems">
+        SELECT c.*,
+        i.id AS item_id,
+        i.public_id AS item_public_id,
+        i.catalog_id AS item_catalog_id,
+        i.title AS item_title,
+        i.brief AS item_brief,
+        i.description AS item_description,
+        i.icon AS item_icon,
+        i.created_at AS item_created_at,
+        i.updated_at AS item_updated_at
+        FROM private_service_catalogs c
+        LEFT OUTER JOIN private_service_items i ON c.id = i.catalog_id
+        WHERE c.sn = #{sn}
+    </select>
+
+    <resultMap id="privateCatalogWithItems" type="PrivateServiceCatalog" autoMapping="true">
+        <id property="id" column="id"/>
+        <collection property="items"
+                    ofType="PrivateServiceItem"
+                    columnPrefix="item_"
+                    autoMapping="true"/>
+    </resultMap>
+
+</mapper>

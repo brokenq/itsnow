@@ -5,27 +5,10 @@ package dnt.itsnow.service;
 
 import dnt.itsnow.model.PublicServiceCatalog;
 
-import java.util.List;
-
 /**
  * <h1>公共服务目录服务</h1>
  */
-public interface PublicServiceCatalogService {
-
-    /**
-     * <h2>查询所有公共服务目录</h2>
-     *
-     * @return 公共服务目录列表
-     */
-    List<PublicServiceCatalog> findAll();
-
-    /**
-     * <h2>根据SN查找公共服务目录</h2>
-     *
-     * @param sn 序列号
-     * @return 找到的公共服务目录，找不到则返回null
-     */
-    PublicServiceCatalog findBySn(String sn);
+public interface PublicServiceCatalogService extends CommonServiceCatalogService {
 
     /**
      * <h2>保存新的公共服务目录</h2>

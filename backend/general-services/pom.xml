@@ -21,6 +21,7 @@
     <modules>
         <module>general-model-service</module>
         <module>general-incident-service</module>
+        <module>general-service_catalog-service</module>
     </modules>
 
     <dependencies>
