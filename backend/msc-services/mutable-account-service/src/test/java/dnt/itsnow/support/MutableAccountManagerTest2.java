@@ -7,6 +7,7 @@ import dnt.itsnow.config.MutableAccountManagerConfig2;
 import dnt.itsnow.model.Account;
 import dnt.itsnow.model.AccountStatus;
 import dnt.itsnow.model.MsuAccount;
+import dnt.itsnow.model.User;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.service.MutableAccountService;
@@ -37,6 +38,7 @@ public class MutableAccountManagerTest2 {
         pageRequest = new PageRequest(0, 1);
         account = new MsuAccount();
         account.setName("Test Account");
+        account.setDomain("test");
         account.setStatus(AccountStatus.New);
     }
 
@@ -63,4 +65,18 @@ public class MutableAccountManagerTest2 {
     public void testDelete() throws Exception {
 
     }
+
+
+    @Test
+    public void testRegister() throws Exception {
+        User user = new User();
+        user.setName("test");
+        user.setEmail("test@itsnow.com");
+        user.setPassword("123456");
+        Account registeredAccount = mutableAccountService.register(account, user);
+
+        Assert.assertEquals(registeredAccount.getUser(), user);
+        Assert.assertEquals(user.getAccount(), registeredAccount);
+    }
+
 }

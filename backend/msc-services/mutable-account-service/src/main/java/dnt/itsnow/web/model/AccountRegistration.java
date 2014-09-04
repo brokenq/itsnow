@@ -10,6 +10,8 @@ import dnt.itsnow.model.User;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.io.File;
+import java.util.Map;
 
 /**
  * <h1>帐号注册信息</h1>
@@ -26,6 +28,8 @@ public class AccountRegistration {
     @NotNull
     @Valid
     User user;
+
+    Map<String, File> attachments;
 
     public RegistrationType getType() {
         return type;
@@ -67,6 +71,14 @@ public class AccountRegistration {
         this.user = user;
     }
 
+    public Map<String, File> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(Map<String, File> attachments) {
+        this.attachments = attachments;
+    }
+
     public Account prepareAccount() {
         Account prepared;
         if(isAsUser()){
@@ -76,5 +88,31 @@ public class AccountRegistration {
         }
         prepared.apply(getAccount());
         return prepared;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AccountRegistration)) return false;
+
+        AccountRegistration that = (AccountRegistration) o;
+
+        if (asProvider != that.asProvider) return false;
+        if (asUser != that.asUser) return false;
+        if (!account.equals(that.account)) return false;
+        if (type != that.type) return false;
+        if (!user.equals(that.user)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = type.hashCode();
+        result = 31 * result + (asUser ? 1 : 0);
+        result = 31 * result + (asProvider ? 1 : 0);
+        result = 31 * result + account.hashCode();
+        result = 31 * result + user.hashCode();
+        return result;
     }
 }

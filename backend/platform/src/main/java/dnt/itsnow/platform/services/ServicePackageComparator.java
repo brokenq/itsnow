@@ -47,8 +47,8 @@ class ServicePackageComparator implements Comparator<File> {
         if( name.contains("model")) return 3;
         if( name.contains("deploy")) return 4;
         if( name.contains("activiti")) return 5;
-        if( name.contains("account")) return 6;
-        if( name.contains("user")) return 7;
+        if( name.contains("user")) return 6;
+        if( name.contains("account")) return 7;
         if( name.contains("session")) return 8;
         if( name.contains("contract")) return 9;
         if( name.contains("service_catalog")) return 10;

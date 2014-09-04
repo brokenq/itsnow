@@ -13,7 +13,6 @@ public interface MenuItemRepository {
     @Options(useGeneratedKeys = true,keyColumn = "id")
     @Insert("INSERT INTO menu_items (parent_id, name, type, state, template_url, url, css, position, shortcut, description) VALUES " +
             "(#{parentId}, #{name}, #{type}, #{state}, #{templateUrl}, #{css}, #{position} ,#{shortcut}, #{description})")
-    @SelectKey(statement="call identity()", keyProperty="id", before=false, resultType=long.class)
     public long create(MenuItem menuItem);
 
     @Delete("DELETE FROM menu_items WHERE id = #{id}")
@@ -30,7 +29,6 @@ public interface MenuItemRepository {
             " shortcut     = #{shortcut} " +
             " description  = #{description} " +
             " WHERE id     = #{id} ")
-    @SelectKey(statement="call identity()", keyProperty="id", before=false, resultType=long.class)
     public long update(MenuItem menuItem);
 
     @Select("SELECT * FROM menu_items WHERE id = #{id}")

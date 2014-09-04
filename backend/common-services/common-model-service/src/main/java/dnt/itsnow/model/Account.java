@@ -6,6 +6,7 @@ package dnt.itsnow.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import dnt.itsnow.platform.model.Record;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Pattern;
@@ -17,6 +18,7 @@ import java.util.Arrays;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
+        @JsonSubTypes.Type(name = "base", value = Account.class),
         @JsonSubTypes.Type(name = "msc", value = MscAccount.class),
         @JsonSubTypes.Type(name = "msu", value = MsuAccount.class),
         @JsonSubTypes.Type(name = "msp", value = MspAccount.class)
@@ -92,7 +94,7 @@ public class Account extends ConfigItem {
 
     @JsonIgnore
     public String getType(){
-        throw new UnsupportedOperationException("You should cal this method on concrete account");
+        return "base";
     }
 
     @JsonIgnore
@@ -143,12 +145,20 @@ public class Account extends ConfigItem {
         this.userId = userId;
     }
 
+    @Override
+    public void apply(Record another) {
+        super.apply(another);
+        if (this.userId == 0) this.userId = null;
+    }
+
     public User getUser() {
         return user;
     }
 
     public void setUser(User user) {
         this.user = user;
+        if(this.user == null ) this.userId = null;
+        else this.userId = this.user.getId();
     }
 
     static {

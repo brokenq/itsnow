@@ -21,20 +21,20 @@ angular.module( 'MscLogin.Signup', [
   })
 
   .factory('AccountService', ['$resource', function($resource){
-    return $resource('/api/accounts');
+    return $resource('/public/accounts');
   }])
 
   .controller( 'SignupCtrl', ['$scope', 'AccountService',
     function( $scope, accountService ) {
       var registration = {
-        type: "enterprise",
+        type: "Enterprise",
         asUser: true,
         asProvider: false,
-        account: {},
+        account: {type: "base"},/*Let server side decide real type*/
         user: {},
         attachments: {/*营业执照(yyzz), 税务登记证(rwdjz), 个人身份证(id_card)*/},
         individual: function(){
-          return this.type == 'individual';
+          return this.type == 'Individual';
         },
         nameLabel : function(){
           if( this.individual() ){
@@ -73,6 +73,10 @@ angular.module( 'MscLogin.Signup', [
           return 'has-info';
         }
       };
+      //TODO 3. 考虑增加额外的机制，委托后端进行校验，如：
+      //  用户输入 accountName, domainName, userName, email, phone的时候
+      //  本地校验通过之后，均要发起请求向远端进行额外的校验
+      //TODO 4. form submit 等于 触发wizard next
       $scope.$watch('registration.type', function(newValue, oldValue){
         if(registration.individual()){
           enterpriseRole.asUser = registration.asUser;
@@ -117,11 +121,13 @@ angular.module( 'MscLogin.Signup', [
               $scope.feedback("您已经完成注册", "谢谢!");
               //而后将界面重定向到首页，避免用户在原界面中再次注册
               window.location = "/";
-            }, function(){ // failure callback
+            }, function(response){ // failure callback
+              //response{config-(request), data, status, statusText, headers())
               //TODO 判断错误原因，而后使用 $wizard('selectedItem', {step: x}); 返回特定步骤
               // 并且，需要把服务器端的各种错误原因(account.domain: 如输入的子域名为保留的子域名)
               // 对应到 $scope.registration中
               // 以便更新 相应form的group/field的css/tips
+              $scope.feedback(response.data, "注册失败");
             });
           }else{
             $scope.feedback('必须接受使用协议');

@@ -41,9 +41,9 @@ public interface MutableAccountRepository extends CommonAccountRepository {
      *
      * @param account 新建的账户
      */
-    @Insert("INSERT INTO itsnow_msc.accounts(sn, name, type, status) " +
-            "VALUES(#{sn}, #{name}, #{type}, #{status})")
-    @SelectKey(statement="call identity()", keyProperty="id", before=false, resultType=long.class)
+    @Insert("INSERT INTO itsnow_msc.accounts(sn, name, domain, type, status, created_at, updated_at) " +
+            "VALUES(#{sn}, #{name}, #{domain}, #{type}, #{status}, #{createdAt}, #{updatedAt})")
+    @Options(useGeneratedKeys = true,keyColumn = "id")
     void create(Account account);
 
     /**
@@ -53,7 +53,12 @@ public interface MutableAccountRepository extends CommonAccountRepository {
      *
      * @param account 新建的账户
      */
-    @Update("UPDATE itsnow_msc.accounts SET name = #{name}, domain = #{domain}, user_id = #{userId} WHERE id = #{id}")
+    @Update("UPDATE itsnow_msc.accounts SET " +
+            " name = #{name}," +
+            " domain = #{domain}," +
+            " user_id = #{userId}," +
+            " updated_at = #{updatedAt}" +
+            " WHERE id = #{id}")
     void update(Account account);
 
     /**
@@ -63,7 +68,10 @@ public interface MutableAccountRepository extends CommonAccountRepository {
      *
      * @param account 被修改的帐户对象
      */
-    @Update("UPDATE itsnow_msc.accounts SET status = 'Valid' WHERE id = #{id}")
+    @Update("UPDATE itsnow_msc.accounts SET " +
+            " status = 'Valid'," +
+            " updated_at = #{updatedAt}" +
+            " WHERE id = #{id}")
     void approve(Account account);
 
     /**
@@ -73,7 +81,10 @@ public interface MutableAccountRepository extends CommonAccountRepository {
      *
      * @param account 被修改的帐户对象
      */
-    @Update("UPDATE itsnow_msc.accounts SET status = 'Rejected' WHERE id = #{id}")
+    @Update("UPDATE itsnow_msc.accounts SET " +
+            " status = 'Rejected', " +
+            " updated_at = #{updatedAt}" +
+            "WHERE id = #{id}")
     void reject(Account account);
 
     /**

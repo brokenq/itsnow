@@ -7,6 +7,7 @@ import dnt.itsnow.platform.service.AutoNumberService;
 import dnt.itsnow.platform.support.AutoNumberInMemory;
 import dnt.itsnow.repository.MutableAccountRepository;
 import dnt.itsnow.service.MutableAccountService;
+import dnt.itsnow.service.MutableUserService;
 import dnt.itsnow.support.MutableAccountManager;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
@@ -32,10 +33,16 @@ public class MutableAccountManagerConfig1 {
     public Mockery junit4Mockery(){
         return  new JUnit4Mockery();
     }
+
     // 被测试对象
     @Bean
-    public MutableAccountService commonAccountService(){
+    public MutableAccountService mutableAccountService(){
         return new MutableAccountManager();
+    }
+
+    @Bean
+    public MutableUserService mutableUserService(){
+        return junit4Mockery().mock(MutableUserService.class);
     }
 
     @Bean

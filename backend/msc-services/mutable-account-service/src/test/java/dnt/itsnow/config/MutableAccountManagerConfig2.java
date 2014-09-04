@@ -6,7 +6,10 @@ package dnt.itsnow.config;
 import dnt.itsnow.platform.service.AutoNumberService;
 import dnt.itsnow.platform.support.AutoNumberInMemory;
 import dnt.itsnow.service.MutableAccountService;
+import dnt.itsnow.service.MutableUserService;
 import dnt.itsnow.support.MutableAccountManager;
+import dnt.itsnow.support.MutableUserManager;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -31,12 +34,35 @@ import org.springframework.context.annotation.Configuration;
 
 public class MutableAccountManagerConfig2 extends MutableAccountRepositoryConfig {
     @Bean
-    public MutableAccountService commonAccountService(){
+    public MutableAccountService mutableAccountService(){
         return new MutableAccountManager();
     }
 
     @Bean
     public AutoNumberService autoNumberService(){
         return new AutoNumberInMemory();
+    }
+
+
+    // 增加了 mutalbe user service
+
+
+    @Override
+    protected String[] sqlScripts() {
+        String[] accountScripts = super.sqlScripts();
+        String[] allScripts = new String[accountScripts.length + 1];
+        System.arraycopy(accountScripts, 0, allScripts, 0, accountScripts.length);
+        allScripts[accountScripts.length] = "classpath:META-INF/migrate/20140722125016_create_users.sql@up";
+        return allScripts;
+    }
+
+    @Bean
+    public MutableUserService mutableUserService(){
+        return new MutableUserManager();
+    }
+
+    @Override
+    public boolean accept(String beanName, BeanDefinition definition) {
+        return super.accept(beanName, definition) && !beanName.equals("commonUserRepository");
     }
 }

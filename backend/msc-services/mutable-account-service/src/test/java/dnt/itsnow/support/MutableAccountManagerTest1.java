@@ -28,7 +28,7 @@ import java.util.List;
 
 /**
  * <h1>对Account Manager的测试</h1>
- * 基于 JMock 实现
+ * 基于 JMock 实现，底层Repository也是mock的
  */
 @ContextConfiguration(classes = MutableAccountManagerConfig1.class)
 @ActiveProfiles("test")
@@ -100,12 +100,6 @@ public class MutableAccountManagerTest1 {
 
     @Test
     public void testDelete() throws Exception {
-
-    }
-
-    @Test
-    public void testRegister() throws Exception {
-        //TODO TEST register
 
     }
 }

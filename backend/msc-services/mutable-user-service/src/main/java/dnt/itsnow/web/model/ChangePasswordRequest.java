@@ -3,20 +3,22 @@
  */
 package dnt.itsnow.web.model;
 
+import dnt.itsnow.model.PasswordContainer;
+import dnt.itsnow.model.RepeatPassword;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 修改密码的请求
  */
-public class ChangePasswordRequest {
+@RepeatPassword
+public class ChangePasswordRequest implements PasswordContainer{
     @NotBlank
     private String oldPassword;
     @NotBlank
     @Length(min = 6, max = 20)
-    private String newPassword;
+    private String password;
     @NotBlank
-    @Repeat
     private String repeatPassword;
 
 
@@ -28,12 +30,12 @@ public class ChangePasswordRequest {
         this.oldPassword = oldPassword;
     }
 
-    public String getNewPassword() {
-        return newPassword;
+    public String getPassword() {
+        return password;
     }
 
-    public void setNewPassword(String newPassword) {
-        this.newPassword = newPassword;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getRepeatPassword() {

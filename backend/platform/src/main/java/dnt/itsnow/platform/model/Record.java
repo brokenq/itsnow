@@ -48,7 +48,7 @@ public class Record {
      *
      * @param another 另外一个对象
      */
-    public void apply(Record another) {
+    public void apply( Record another) {
         try {
             BeanUtils.copyProperties(this, another);
         } catch (Exception e) {

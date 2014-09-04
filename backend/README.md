@@ -30,10 +30,10 @@ Itsnow平台模块开发指南
 | 控制器创建对象         | POST /api/$models  | POST /api/users |
 | 控制器更新对象         | PUT /api/$models + /$identify | PUT /api/users/jason |
 | 控制器删除对象         | DELETE /api/$models + /$identify  | DELETE /api/users/jason|
-| Common 模块控制器类    | Common + $Models + "Controller" | CommonUsersController |
-| Common 模块服务接口    | Common + $Model + "Service" | CommonUserService |
-| Common 模块服务实现    | Common + $Model + "Manager" | CommonUserManager |
-| Common 模块DAO        | Common + $Model + "Repository" | CommonUserRepository |
+| Common  模块控制器类   | Common + $Models + "Controller" | CommonUsersController |
+| Common  模块服务接口   | Common + $Model + "Service" | CommonUserService |
+| Common  模块服务实现   | Common + $Model + "Manager" | CommonUserManager |
+| Common  模块DAO       | Common + $Model + "Repository" | CommonUserRepository |
 | General 模块控制器类   | General + $Models + "Controller" | GeneralUsersController |
 | General 模块服务接口   | General + $Model + "Service" | GeneralUserService |
 | General 模块服务实现   | General + $Model + "Manager" | GeneralUserManager |
@@ -42,6 +42,13 @@ Itsnow平台模块开发指南
 | MSC 模块服务接口       | Mutable + $Model + "Service" | MutableUserService |
 | MSC 模块服务实现       | Mutable + $Model + "Manager" | MutableUserManager |
 | MSC 模块DAO           | Mutable + $Model + "Repository" | MutableUserRepository |
+
+注意：
+
+```
+  控制器,服务接口，服务实现，服务DAO等仅在被common/general/msc/msu/msp等多个不同层级的模块同时管理时
+  才需要添加模块特征前缀(Common/General/Mutable/Msc/Msu/Msp)等
+```
 
 2 标准模块构成
 -------------
@@ -118,7 +125,7 @@ import java.util.List;
 /**
  * <h1>MSU和MSP之间关于服务的合同契约</h1>
  */
-public class Contract extends Record {
+public class Contract extends ConfigItem {
     // 合同编号
     @NotBlank
     private String sn;
@@ -222,13 +229,14 @@ public class Contract extends Record {
 
   1. 原则上业务模型均放置于 `dnt.itsnow.model` 包中
   2. 主业务模型类一般继承于 `dnt.itsnow.platform.model.Record` (其数据表不是中间表)
-  3. 模型类，成员变量命名参考前言约束
-  4. 模型成员上可以基于Java Validation API进行校验标记
-  5. 应该为模型成员变量增加getter/setter
-  6. 应该为模型类预留空构造函数
-  7. 关联对象应该以成员方式读写
-  8. 关联对象的外键也应该成员化
-  9. 如果该业务模型对应的数据表被多类模块(common, general, msc, msu, msp)查询/管理，仅应该建立一个模型，并将该模型的放在common或general模块中。
+  3. 如果主业务模型是配置项，那么应该继承 `dnt.itsnow.model.ConfigItem` 类(未来扩展)
+  4. 模型类，成员变量命名参考前言约束
+  5. 模型成员上可以基于Java Validation API进行校验标记
+  6. 应该为模型成员变量增加getter/setter
+  7. 应该为模型类预留空构造函数
+  8. 关联对象应该以成员方式读写
+  9. 关联对象的外键也应该成员化
+  10. 如果该业务模型对应的数据表被多类模块(common, general, msc, msu, msp)查询/管理，仅应该建立一个模型，并将该模型的放在common或general模块中。
 
 --
 
@@ -259,6 +267,37 @@ CREATE TABLE contract_details (
     C. MySQL关键词，类型等均用大写
     D. 自身表名，列名均小写，underscore方式，参考前言规范
     E. 一般业务模型(实体，非关联表)，均应该增加 id(主键), created_at(记录创建时间), updated_at(记录更新时间)等缺省字段
+
+备注：三个magic field(id, created_at, updated_at)各自处理策略不同:
+
+  1. id: 应该在Repository#create(Model)的方法上增加：`@SelectKey(statement="call identity()", keyProperty="id", before=false, resultType=long.class)`
+      以便Mybatis自动为创建的对象设置id
+  2. created_at: 由Service实现者(manager)设置对应的createdAt属性，由Repository的mapping语句写入
+  3. updated_at: 与created_at的策略类似，也是在创建/更新时由service负责设置值，由repository负责写入
+
+ 我们没有选择由数据库的current_timestamp函数实现created_at,updated_at字段的赋值，最主要的原因是为了在保证数据一致的前提下，减少数据库查询次数，如下：
+
+未自行设置值的情况：
+
+```java
+  public Xxx create(Xxx instance){
+    xxxRepository.create(instance);
+    //必须单独查询一次，才能保证返回的记录属性与数据库一致
+    return xxxRepository.findById(instance.getId());
+  }
+```
+
+已经自行设置的情况:
+
+```java
+  public Xxx create(Xxx instance){
+    instance.setCreatedAt(new TimeStamp(System.currentTimeMillis()));
+    instance.setUpdatedAt(instance.getCreatedAt());
+    xxxRepository.create(instance);
+    //不需要再次查询，三个magic字段均与数据库一致了
+    return instance;
+  }
+```
 
 2、 初始化数据
 
@@ -820,14 +859,14 @@ package dnt.itsnow.web.model;
 /**
  * 修改密码的请求
  */
+@RepeatPassword
 public class ChangePasswordRequest {
     @NotBlank
     private String oldPassword;
     @NotBlank
     @Length(min = 6, max = 20)
-    private String newPassword;
+    private String password;
     @NotBlank
-    @Repeat
     private String repeatPassword;
 
 
@@ -839,12 +878,12 @@ public class ChangePasswordRequest {
         this.oldPassword = oldPassword;
     }
 
-    public String getNewPassword() {
-        return newPassword;
+    public String getPassword() {
+        return password;
     }
 
-    public void setNewPassword(String newPassword) {
-        this.newPassword = newPassword;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getRepeatPassword() {

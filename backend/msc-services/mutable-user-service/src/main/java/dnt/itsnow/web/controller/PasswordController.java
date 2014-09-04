@@ -68,7 +68,7 @@ public class PasswordController extends ApplicationController {
         if(!userService.challenge(username, changeRequest.getOldPassword()))
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, "The old password is not valid!");
 
-        userService.changePassword(username, changeRequest.getNewPassword());
+        userService.changePassword(username, changeRequest.getPassword());
         logger.info("Changed  password for {}", username);
     }
 

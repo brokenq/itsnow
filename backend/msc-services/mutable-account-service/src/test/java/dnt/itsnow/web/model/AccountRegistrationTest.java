@@ -5,6 +5,7 @@ package dnt.itsnow.web.model;
 
 import dnt.itsnow.model.Account;
 import dnt.itsnow.model.User;
+import dnt.support.JsonSupport;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,6 +40,7 @@ public class AccountRegistrationTest {
         User user = new User();
         user.setUsername("jay.xiong");
         user.setPassword("123456");
+        user.setRepeatPassword("123456");
         user.setPhone("138202020202");
         user.setEmail("jay@xiong.com");
         registration.setUser(user);
@@ -48,5 +50,12 @@ public class AccountRegistrationTest {
     public void testValidation() throws Exception {
         Set<ConstraintViolation<AccountRegistration>> violations = validator.validate(registration);
         Assert.assertTrue(violations.isEmpty());
+    }
+
+    @Test
+    public void testJsonSerialize() throws Exception {
+        String json = JsonSupport.toJSONString(registration);
+        AccountRegistration parsed = JsonSupport.parseJson(json, AccountRegistration.class);
+        Assert.assertEquals(registration, parsed);
     }
 }

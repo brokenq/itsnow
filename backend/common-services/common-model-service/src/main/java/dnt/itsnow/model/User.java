@@ -23,7 +23,9 @@ import java.util.*;
  *
  * TODO 添加测试用例
  */
-public class User extends ConfigItem implements UserDetails, CredentialsContainer {
+@RepeatPassword
+public class User extends ConfigItem
+        implements UserDetails, CredentialsContainer, PasswordContainer {
 
     //~ Instance fields ================================================================================================
     @Email
@@ -31,7 +33,11 @@ public class User extends ConfigItem implements UserDetails, CredentialsContaine
     private String email;
     @NotBlank
     private String phone;
+    @NotBlank
     private String password;
+    @NotBlank
+    private String repeatPassword;
+
     private Long accountId;
     @JsonIgnore
     // 用户的当前主账户，可以为空，可以变化
@@ -56,6 +62,10 @@ public class User extends ConfigItem implements UserDetails, CredentialsContaine
 
     public String getPassword() {
         return password;
+    }
+
+    public String getRepeatPassword() {
+        return repeatPassword;
     }
 
     @NotBlank
@@ -86,6 +96,7 @@ public class User extends ConfigItem implements UserDetails, CredentialsContaine
 
     public void eraseCredentials() {
         password = null;
+        repeatPassword = null;
     }
 
     public void setUsername(String username) {
@@ -110,6 +121,10 @@ public class User extends ConfigItem implements UserDetails, CredentialsContaine
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setRepeatPassword(String repeatPassword) {
+        this.repeatPassword = repeatPassword;
     }
 
     public boolean isExpired() {
@@ -142,6 +157,8 @@ public class User extends ConfigItem implements UserDetails, CredentialsContaine
 
     public void setAccount(Account account) {
         this.account = account;
+        if( this.account == null ) this.accountId = null;
+        else this.accountId = this.account.getId();
     }
 
     public Long getAccountId() {
@@ -180,15 +197,6 @@ public class User extends ConfigItem implements UserDetails, CredentialsContaine
         return sortedAuthorities;
     }
 
-    public void apply(User another) {
-        this.setName(another.getName());
-        this.email = another.email;
-        this.phone = another.phone;
-        this.enabled = another.enabled;
-        this.expired = another.expired;
-        this.locked = another.locked;
-        this.passwordExpired = another.passwordExpired;
-    }
 
     private static class AuthorityComparator implements Comparator<GrantedAuthority>, Serializable {
         private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;

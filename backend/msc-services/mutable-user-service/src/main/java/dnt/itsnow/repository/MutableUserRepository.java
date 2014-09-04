@@ -5,10 +5,7 @@ package dnt.itsnow.repository;
 
 import dnt.itsnow.model.User;
 import dnt.itsnow.platform.service.Pageable;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.SelectKey;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -30,24 +27,24 @@ public interface MutableUserRepository extends CommonUserRepository {
      * Return the created user id
      *
      * @param user 需要创建的对象
-     * @return 创建之后的id
      */
-    @Insert("INSERT INTO users(username, email, phone, password, enabled, expired, account_id) " +
-            "VALUES(#{username}, #{email}, #{phone}, #{password}, TRUE, FALSE, #{accountId})")
-    @SelectKey(statement="call identity()", keyProperty="id", before=false, resultType=long.class)
-    long create(User user);
+    @Insert("INSERT INTO itsnow_msc.users(account_id, username, email, phone, password, enabled, expired, created_at, updated_at) " +
+            "VALUES(#{accountId}, #{username}, #{email}, #{phone}, #{password}, TRUE, FALSE, #{createdAt}, #{updatedAt})")
+    @Options(useGeneratedKeys = true,keyColumn = "id")
+    void create(User user);
 
     /**
      * 只更新用户的用户名，email，电话, enabled, expired
      *
      * @param user 被更新的用户信息
      */
-    @Update("UPDATE users SET " +
+    @Update("UPDATE itsnow_msc.users SET " +
             " username = #{username}, " +
             " email    = #{email}, " +
             " phone    = #{phone}," +
             " enabled  = #{enabled}," +
-            " expired  = #{expired} " +
+            " expired  = #{expired}, " +
+            " updated_at = #{updatedAt}" +
             " WHERE id = #{id} ")
     void update(User user);
 
@@ -57,8 +54,9 @@ public interface MutableUserRepository extends CommonUserRepository {
      * @param username    被更新的用户
      * @param newPassword 密码
      */
-    @Update("UPDATE users SET " +
-            " password = #{password} " +
+    @Update("UPDATE itsnow_msc.users SET " +
+            " password = #{password}, " +
+            " updated_at = #{updatedAt}" +
             " WHERE username = #{username} ")
     void changePassword(@Param("username") String username,
                         @Param("password") String newPassword);

@@ -17,6 +17,7 @@ import dnt.itsnow.service.MutableUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -48,10 +49,11 @@ public class MutableAccountManager extends CommonAccountManager implements Mutab
             account.setSn(autoNumberService.next(type));
         }
         account.setStatus(AccountStatus.New);
+        account.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        account.setUpdatedAt(account.getCreatedAt());
         mutableRepository.create(account);
-        Account created = super.findBySn(account.getSn());
-        logger.info("Created  {}", created);
-        return created;
+        logger.info("Created  {}", account);
+        return account;
     }
 
     @Override
@@ -61,6 +63,7 @@ public class MutableAccountManager extends CommonAccountManager implements Mutab
         if( updating.isRejected() )
             throw new AccountException("Can't update rejected account: " + updating.getSn());
         updating.apply(account);
+        updating.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         mutableRepository.update(updating);
         logger.info("Updated  {}", updating);
         return updating;
@@ -82,6 +85,7 @@ public class MutableAccountManager extends CommonAccountManager implements Mutab
         logger.info("Approving {}", account);
         if( account.isNew()){
             account.setStatus(AccountStatus.Valid);
+            account.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
             mutableRepository.approve(account);
             logger.info("Approved  {}", account);
             return account;
@@ -94,6 +98,7 @@ public class MutableAccountManager extends CommonAccountManager implements Mutab
         logger.info("Rejecting {}", account);
         if( account.isNew()){
             account.setStatus(AccountStatus.Rejected);
+            account.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
             mutableRepository.reject(account);
             logger.info("Rejected  {}", account);
             return account;
@@ -103,7 +108,10 @@ public class MutableAccountManager extends CommonAccountManager implements Mutab
 
     @Override
     public Account register(Account account, User user) throws AccountException {
-        //这句代码可能抛出 FK Violation exception, 需要将其转化为合适的Validation异常
+        // TODO 根据测试情况发现，此地没有事务控制
+        //   user 有问题，account没有问题，account created，user fail， account没有被回退
+        //这句代码可能抛出 FK Violation exception(org.springframework.dao.DuplicateKeyException)
+        // 需要将其转化为合适的Validation异常
         Account created = this.create(account);
         user.setAccount(created);
         User admin = userService.create(user);

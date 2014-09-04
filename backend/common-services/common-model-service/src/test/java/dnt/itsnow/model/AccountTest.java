@@ -3,6 +3,7 @@
  */
 package dnt.itsnow.model;
 
+import dnt.itsnow.test.model.ValidatorSupport;
 import dnt.support.JsonSupport;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -10,9 +11,6 @@ import org.junit.Test;
 import junit.framework.Assert;
 
 import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 import java.sql.Timestamp;
 import java.util.Set;
 
@@ -26,15 +24,13 @@ import java.util.Set;
  * <li>业务方法</li>
  * </ul>
  */
-public class AccountTest {
-    static ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-    static Validator validator = factory.getValidator();
+public class AccountTest extends ValidatorSupport{
 
     Account account;
 
     @Before
     public void setUp() throws Exception {
-        account = new MsuAccount();
+        account = new Account();
         this.account.setName("demo");
         this.account.setDomain("demo");
         this.account.setSn("msu-099");
@@ -92,12 +88,9 @@ public class AccountTest {
 
     @Test
     public void testApply() throws Exception {
-        Account another = new MsuAccount();
-        another.setSn("msu-010");
-        another.setName("another-msu");
-        account.apply(another);
-        Assert.assertEquals("msu-010", account.getSn());
-        Assert.assertEquals("another-msu", account.getName());
+        Account another = new Account();
+        another.apply(account);
+        Assert.assertEquals(account, another);
     }
 
     @Test
@@ -105,6 +98,6 @@ public class AccountTest {
         String json = JsonSupport.toJSONString(account);
         System.out.println(json);
         Account parsed = JsonSupport.parseJson(json, Account.class);
-        Assert.assertTrue(parsed instanceof MsuAccount);
+        Assert.assertEquals(account, parsed);
     }
 }

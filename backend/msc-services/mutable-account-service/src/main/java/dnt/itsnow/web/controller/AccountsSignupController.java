@@ -29,7 +29,7 @@ import javax.validation.Valid;
  * 没法在同一个控制器/rest resource下进行分别授权
  */
 @RestController
-@RequestMapping("/api/accounts")
+@RequestMapping("/public/accounts")
 public class AccountsSignupController extends ApplicationController<Account> {
     @Autowired
     MutableAccountService accountService;

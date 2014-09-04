@@ -52,6 +52,7 @@ public class AccountsSignupControllerTest extends SessionSupportedControllerTest
         User user = new User();
         user.setUsername("jay.xiong");
         user.setPassword("123456");
+        user.setRepeatPassword("123456");
         user.setPhone("138202020202");
         user.setEmail("jay@xiong.com");
         registration.setUser(user);
@@ -71,7 +72,7 @@ public class AccountsSignupControllerTest extends SessionSupportedControllerTest
                 .andReturn(registration.getAccount());
         replay(accountService);
 
-        MockHttpServletRequestBuilder request = post("/api/accounts").content(registrationJson());
+        MockHttpServletRequestBuilder request = post("/public/accounts").content(registrationJson());
         decorate(request);
 
         ResultActions result = this.browser.perform(request);

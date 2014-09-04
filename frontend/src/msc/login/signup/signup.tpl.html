@@ -45,14 +45,14 @@
             <input id="registration_type_enterprise"
                    name="registration.type"
                    ng-model="registration.type"
-                   value="enterprise" type="radio" class="ace"/>
+                   value="Enterprise" type="radio" class="ace"/>
             <span class="lbl">企业</span>
           </label>
           <label>
             <input id="registration_type_individual"
                    name="registration.type"
                    ng-model="registration.type"
-                   value="individual" type="radio" class="ace"/>
+                   value="Individual" type="radio" class="ace"/>
             <span class="lbl">个人</span>
           </label>
         </div>
@@ -226,7 +226,7 @@
         </div>
       </div>
 
-      <div class="form-group" ng-class="inputStyle('step2Form','registration.user.repeat_password')">
+      <div class="form-group" ng-class="inputStyle('step2Form','registration.user.repeatPassword')">
         <label for="registration_user_repeat_password" class="col-xs-12 col-sm-3 control-label no-padding-right">
           重复密码
         </label>
@@ -234,8 +234,8 @@
         <div class="col-xs-12 col-sm-5">
         <span class="block input-icon input-icon-right">
           <input id="registration_user_repeat_password"
-                 name="registration.user.repeat_password"
-                 ng-model="registration.user.repeat_password"
+                 name="registration.user.repeatPassword"
+                 ng-model="registration.user.repeatPassword"
                  ng-required
                  type="password" class="form-control"
                  placeholder="重复密码"/>

@@ -43,8 +43,7 @@ public class MutableUserManager extends CommonUserManager
         user.setPassword(encode(user.getPassword()));
         user.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         user.setUpdatedAt(user.getCreatedAt());
-        long id = mutableRepository.create(user);
-        user.setId(id);
+        mutableRepository.create(user);
         logger.info("Created  {}", user);
         return user;
     }
