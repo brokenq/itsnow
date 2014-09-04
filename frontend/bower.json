@@ -20,7 +20,7 @@
     "angular-ui-tree": "~2.1.4"
   },
   "depeacendencies": {
-    "-bootstrap": "git@github.com:Kadvin/ace-bootstrap.git",
+    "-ace-bootstrap": "git@github.com:Kadvin/ace-bootstrap.git",
     "-fuelux": "git@github.com:Kadvin/fuelux.git"
   },
   "dependencies": {
