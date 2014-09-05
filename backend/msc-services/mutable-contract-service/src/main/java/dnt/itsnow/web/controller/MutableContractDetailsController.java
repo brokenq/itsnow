@@ -25,7 +25,7 @@ public class MutableContractDetailsController extends SessionSupportController<C
     /**
      * <h2>查看当特定合同下的所有明细</h2>
      * <p/>
-     * GET /api/contracts/{contract_sn}/details
+     * GET /api/contracts/{sn}/details
      *
      * @return 合同明细列表
      */

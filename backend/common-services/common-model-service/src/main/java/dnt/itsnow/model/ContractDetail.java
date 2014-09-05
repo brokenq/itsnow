@@ -17,6 +17,25 @@ public class ContractDetail extends Record{
     private String description;
     private String icon;
 
+    private PublicServiceItem publicServiceItem;
+    private Long itemId;
+
+    public Long getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(Long itemId) {
+        this.itemId = itemId;
+    }
+
+    public PublicServiceItem getPublicServiceItem() {
+        return publicServiceItem;
+    }
+
+    public void setPublicServiceItem(PublicServiceItem publicServiceItem) {
+        this.publicServiceItem = publicServiceItem;
+    }
+
     public Contract getContract() {
         return contract;
     }

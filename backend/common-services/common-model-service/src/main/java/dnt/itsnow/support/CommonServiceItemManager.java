@@ -18,7 +18,7 @@ public class CommonServiceItemManager extends Bean implements CommonServiceItemS
     @Autowired
     CommonServiceItemRepository commonServiceItemRepository;
 
-    private  static List<PublicServiceItem> commonServiceItemList;
+    private  List<PublicServiceItem> commonServiceItemList;
 
     @Override
     public List<PublicServiceItem> findAll() {
@@ -33,11 +33,16 @@ public class CommonServiceItemManager extends Bean implements CommonServiceItemS
         return commonServiceItemRepository.findById(id);
     }
 
-    public static List<PublicServiceItem> getCommonServiceItemList() {
+    @Override
+    public List<PublicServiceItem> findByAccountId(Long accountId) {
+        return commonServiceItemRepository.findByAccountId(accountId);
+    }
+
+    public List<PublicServiceItem> getCommonServiceItemList() {
         return commonServiceItemList;
     }
 
-    public static void setCommonServiceItemList(List<PublicServiceItem> commonServiceItemList) {
-        CommonServiceItemManager.commonServiceItemList = commonServiceItemList;
+    public void setCommonServiceItemList(List<PublicServiceItem> commonServiceItemList) {
+        this.commonServiceItemList = commonServiceItemList;
     }
 }

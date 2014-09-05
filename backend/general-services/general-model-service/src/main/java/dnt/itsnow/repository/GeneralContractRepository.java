@@ -11,4 +11,10 @@ package dnt.itsnow.repository;
  * 违背 common-model-service的封装性
  */
 public interface GeneralContractRepository extends CommonContractRepository {
+
+    Contract saveContract(Contract contract);
+
+    Contract updateContract(Contract contract);
+
+    void deleteContract(String sn);
 }

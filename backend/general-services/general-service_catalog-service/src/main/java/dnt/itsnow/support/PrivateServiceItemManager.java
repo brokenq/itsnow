@@ -16,7 +16,7 @@ public class PrivateServiceItemManager extends CommonServiceItemManager implemen
     @Autowired
     PrivateServiceItemRepository privateServiceItemRepository;
 
-    private  static List<PrivateServiceItem> privateServiceItemList;
+    private  List<PrivateServiceItem> privateServiceItemList;
 
     @Override
     public List<PrivateServiceItem> findAllPrivate() {
@@ -43,11 +43,11 @@ public class PrivateServiceItemManager extends CommonServiceItemManager implemen
         privateServiceItemRepository.deletePrivate(id);
     }
 
-    public static List<PrivateServiceItem> getPrivateServiceItemList() {
+    public List<PrivateServiceItem> getPrivateServiceItemList() {
         return privateServiceItemList;
     }
 
-    public static void setPrivateServiceItemList(List<PrivateServiceItem> privateServiceItemList) {
-        PrivateServiceItemManager.privateServiceItemList = privateServiceItemList;
+    public void setPrivateServiceItemList(List<PrivateServiceItem> privateServiceItemList) {
+        this.privateServiceItemList = privateServiceItemList;
     }
 }

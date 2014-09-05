@@ -21,6 +21,8 @@ import org.springframework.web.client.RestClientException;
  * 面向当前用户所服务的企业，获取其相关的合同信息
  * <pre>
  * <b>HTTP     URI                        方法       含义  </b>
+ * # POST     /api/contracts/             invite     MSU新建合同
+ * # PUT      /api/contracts/{sn}         bid        MSP投标
  * # PUT      /api/contracts/{sn}/approve approve   签订合同
  * # PUT      /api/contracts/{sn}/reject  reject    拒签合同
  * </pre>

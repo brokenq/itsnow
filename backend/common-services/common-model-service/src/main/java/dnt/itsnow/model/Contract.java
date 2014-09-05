@@ -6,6 +6,7 @@ package dnt.itsnow.model;
 import dnt.itsnow.platform.model.Record;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -20,18 +21,18 @@ public class Contract extends Record {
     @NotBlank
     private String sn;
     //合同甲方，服务采购方
-    @NotBlank
+    @NotNull
     private Long msuAccountId;
     private MsuAccount msuAccount;
     //合同乙方，服务供应方
-    @NotBlank
+    //@NotBlank
     private Long mspAccountId;
     private MspAccount mspAccount;
     // MSU 是否批准
-    @NotBlank
+    @NotNull
     private ContractStatus msuStatus;
     // MSP 是否批准
-    @NotBlank
+    @NotNull
     private ContractStatus mspStatus;
 
     //合同明细

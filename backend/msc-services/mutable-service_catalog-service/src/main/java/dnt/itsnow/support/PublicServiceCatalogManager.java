@@ -16,15 +16,17 @@ public class PublicServiceCatalogManager extends CommonServiceCatalogManager imp
     PublicServiceCatalogRepository publicServiceCatalogRepository;
 
     @Override
-    public PublicServiceCatalog save(PublicServiceCatalog publicServiceCatalog) {
+    public PublicServiceCatalog create(PublicServiceCatalog publicServiceCatalog) {
         setCommonServiceCatalogList(null);
-        return publicServiceCatalogRepository.save(publicServiceCatalog);
+        publicServiceCatalogRepository.create(publicServiceCatalog);
+        return publicServiceCatalog;
     }
 
     @Override
     public PublicServiceCatalog update(PublicServiceCatalog publicServiceCatalog) {
         setCommonServiceCatalogList(null);
-        return publicServiceCatalogRepository.update(publicServiceCatalog);
+        publicServiceCatalogRepository.update(publicServiceCatalog);
+        return publicServiceCatalog;
     }
 
     @Override

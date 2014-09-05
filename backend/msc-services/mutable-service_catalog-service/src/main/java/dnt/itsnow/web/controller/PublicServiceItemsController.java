@@ -73,10 +73,9 @@ public class PublicServiceItemsController extends SessionSupportController<Publi
      *
      * @return 被更新的服务项目
      */
-    @RequestMapping(value = "{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public PublicServiceItem update(@Valid @RequestBody PublicServiceItem serviceItem){
         //this.serviceItem.apply(serviceItem);
-        //TODO SAVE IT
         return publicServiceItemService.update(serviceItem);
     }
 
@@ -87,12 +86,33 @@ public class PublicServiceItemsController extends SessionSupportController<Publi
      *
      * @return 被删除的服务项目
      */
-    @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public PublicServiceItem destroy(@PathVariable("id") Long id){
         publicServiceItemService.delete(id);
         return null;
     }
 
+    /**
+     * <h2>删除帐户的一个服务项目</h2>
+     *
+     * DELETE /admin/api/public_service_catalogs/{sn}/items/accounts/{id}
+     *
+     */
+    @RequestMapping(value = "/accounts/{id}", method = RequestMethod.DELETE)
+    public void destroyByAccount(@PathVariable("id") Long accountId,@RequestParam("itemId") Long itemId){
+        publicServiceItemService.deleteByAccount(itemId,accountId);
+    }
+
+    /**
+     * <h2>删除帐户的一个服务项目</h2>
+     *
+     * PUT /admin/api/public_service_catalogs/{sn}/items/accounts/{id}
+     *
+     */
+    @RequestMapping(value = "/accounts/{id}", method = RequestMethod.PUT)
+    public void addByAccount(@PathVariable("id") Long accountId,@RequestParam("itemId") Long itemId){
+        publicServiceItemService.saveByAccount(itemId,accountId);
+    }
 
     @BeforeFilter
     public void initServiceCatalog(@PathVariable("sn") String catalogSn){

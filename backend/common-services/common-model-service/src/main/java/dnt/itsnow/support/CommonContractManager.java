@@ -35,8 +35,11 @@ public class CommonContractManager extends Bean implements CommonContractService
     @Override
     public Page<Contract> findAllByAccount(Account account, Pageable pageable) throws ServiceException{
         Assert.notNull(account, "the account shouldn't be null");
-        if(account.isMsc())
-            throw new AccountException("Don't support find contract of Carrier");
+        if(account.isMsc()) {
+            long total = repository.count();
+            List<Contract> contracts = repository.findAll(pageable);
+            return new DefaultPage<Contract>(contracts, pageable, total);
+        }
         if( account.isMsu()){
             long total = repository.countByMsuAccountId(account.getId());
             List<Contract> contracts = repository.findAllByMsuAccountId(account.getId(), pageable);
@@ -53,18 +56,18 @@ public class CommonContractManager extends Bean implements CommonContractService
     @Override
     public Contract findByAccountAndSn(Account account, String sn, boolean withDetails) throws ServiceException{
         Assert.notNull(account, "the account shouldn't be null");
-        if(account.isMsc())
-            throw new AccountException("Don't support find contract of Carrier");
-        else{
+        //if(account.isMsc())
+        //    throw new AccountException("Don't support findByAccountId contract of Carrier");
+        //else{
             Contract contract = repository.findBySn(sn);
-            if( account.isMsu() && !contract.getMsuAccount().equals(account)){
+            if( account.isMsu() && !contract.getMsuAccountId().equals(account.getId())){
                 throw new ContractException(account + " should be MSU of the contract: " + contract);
             }
-            if(account.isMsp() && !contract.getMspAccount().equals(account)){
+            if(account.isMsp() && !contract.getMspAccountId().equals(account.getId())){
                 throw new ContractException(account + " should be MSP of the contract: " + contract);
             }
             return contract;
-        }
+        //}
     }
 
 }

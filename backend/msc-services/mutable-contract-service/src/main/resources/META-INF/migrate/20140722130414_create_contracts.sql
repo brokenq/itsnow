@@ -4,7 +4,7 @@
 CREATE TABLE contracts (
   id             INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
   msu_account_id INT(10) UNSIGNED NOT NULL,
-  msp_account_id INT(10) UNSIGNED NOT NULL,
+  msp_account_id INT(10) UNSIGNED ,
   sn             VARCHAR(20)      NOT NULL,
   msu_status     VARCHAR(20)      NOT NULL DEFAULT 'Draft',
   msp_status     VARCHAR(20)      NOT NULL DEFAULT 'Draft',

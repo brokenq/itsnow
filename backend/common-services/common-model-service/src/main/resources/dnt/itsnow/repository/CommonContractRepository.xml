@@ -3,6 +3,16 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="dnt.itsnow.repository.CommonContractRepository">
+    <select id="findAll" resultType="Contract">
+        SELECT * FROM itsnow_msc.contracts
+        <if test="pageable.sort != null">
+            ORDER BY #{pageable.sort}
+        </if>
+        <trim prefix="LIMIT" prefixOverrides=",">
+            <if test="pageable.offset > 0">#{pageable.offset}</if>
+            <if test="pageable.pageSize > 0">, #{pageable.pageSize}</if>
+        </trim>
+    </select>
     <select id="findAllByMsuAccountId" resultType="Contract">
         SELECT * FROM itsnow_msc.contracts
         WHERE (msu_account_id = #{msuId})
@@ -30,6 +40,7 @@
       SELECT c.*,
           d.id          AS detail_id,
           d.contract_id AS detail_contract_id,
+          d.item_id     AS detail_item_id,
           d.title       AS detail_title,
           d.brief       AS detail_brief,
           d.description AS detail_description,

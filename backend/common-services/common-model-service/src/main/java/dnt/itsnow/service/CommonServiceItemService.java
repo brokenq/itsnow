@@ -27,5 +27,13 @@ public interface CommonServiceItemService {
      */
     PublicServiceItem findById(Long id);
 
+    /**
+     * <h2>根据帐户ID查找该帐户的公共服务项</h2>
+     *
+     * @param accountId 帐户编号
+     * @return 找到的该帐户的所有公共服务项列表，找不到则返回null
+     */
+    List<PublicServiceItem> findByAccountId(Long accountId);
+
 
 }

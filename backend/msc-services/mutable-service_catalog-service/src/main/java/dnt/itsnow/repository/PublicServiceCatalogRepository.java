@@ -12,14 +12,14 @@ public interface PublicServiceCatalogRepository extends CommonServiceCatalogRepo
 
     @Insert("INSERT INTO public_service_catalogs (parent_id,sn,title,description,icon) "+
             " values(#{parentId},#{sn},#{title},#{description},#{icon})")
-    PublicServiceCatalog save(PublicServiceCatalog publicServiceCatalog);
+    void create(PublicServiceCatalog publicServiceCatalog);
 
     @Update("UPDATE public_service_catalogs SET updated_at = CURRENT_TIMESTAMP," +
             "title = #{title},"+
             "description = #{description},"+
             "icon = #{icon}"+
             " WHERE sn = #{sn}")
-    PublicServiceCatalog update(PublicServiceCatalog publicServiceCatalog);
+    void update(PublicServiceCatalog publicServiceCatalog);
 
     @Delete("DELETE FROM public_service_catalogs WHERE sn = #{sn}")
     void delete(String sn);

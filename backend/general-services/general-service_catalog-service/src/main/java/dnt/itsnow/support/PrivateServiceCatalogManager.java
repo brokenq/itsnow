@@ -19,7 +19,7 @@ public class PrivateServiceCatalogManager extends CommonServiceCatalogManager im
     @Autowired
     PrivateServiceCatalogRepository privateServiceCatalogRepository;
 
-    private  static List<PrivateServiceCatalog> privateServiceCatalogList;
+    private  List<PrivateServiceCatalog> privateServiceCatalogList;
 
     @Override
     public List<PrivateServiceCatalog> findAllPrivate() {
@@ -64,11 +64,11 @@ public class PrivateServiceCatalogManager extends CommonServiceCatalogManager im
         privateServiceCatalogRepository.deletePrivate(sn);
     }
 
-    public static List<PrivateServiceCatalog> getPrivateServiceCatalogList() {
+    public List<PrivateServiceCatalog> getPrivateServiceCatalogList() {
         return privateServiceCatalogList;
     }
 
-    public static void setPrivateServiceCatalogList(List<PrivateServiceCatalog> privateServiceCatalogList) {
-        PrivateServiceCatalogManager.privateServiceCatalogList = privateServiceCatalogList;
+    public void setPrivateServiceCatalogList(List<PrivateServiceCatalog> privateServiceCatalogList) {
+        this.privateServiceCatalogList = privateServiceCatalogList;
     }
 }

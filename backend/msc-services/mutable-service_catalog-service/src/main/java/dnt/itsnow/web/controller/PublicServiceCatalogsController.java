@@ -56,7 +56,7 @@ public class PublicServiceCatalogsController extends SessionSupportController<Pu
      */
     @RequestMapping(method = RequestMethod.POST)
     public PublicServiceCatalog create(@Valid @RequestBody PublicServiceCatalog serviceCatalog){
-        return publicServiceCatalogService.save(serviceCatalog);
+        return publicServiceCatalogService.create(serviceCatalog);
     }
 
     /**
@@ -88,7 +88,7 @@ public class PublicServiceCatalogsController extends SessionSupportController<Pu
     /*
     @BeforeFilter({"show", "update", "destroy"})
     public void initServiceCatalog(@PathVariable("sn") String sn){
-        serviceCatalog = null;//find it by sn
+        serviceCatalog = null;//findByAccountId it by sn
     }*/
 
 }

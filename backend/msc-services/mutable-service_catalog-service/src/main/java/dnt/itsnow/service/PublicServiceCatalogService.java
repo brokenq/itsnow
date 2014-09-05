@@ -16,7 +16,7 @@ public interface PublicServiceCatalogService extends CommonServiceCatalogService
      * @param publicServiceCatalog 公共服务目录对象
      * @return 新建的公共服务目录对象
      */
-    PublicServiceCatalog save(PublicServiceCatalog publicServiceCatalog);
+    PublicServiceCatalog create(PublicServiceCatalog publicServiceCatalog);
 
     /**
      * <h2>更新公共服务目录属性</h2>

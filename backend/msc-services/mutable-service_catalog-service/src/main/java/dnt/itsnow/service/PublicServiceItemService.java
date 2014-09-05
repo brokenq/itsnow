@@ -33,4 +33,20 @@ public interface PublicServiceItemService extends CommonServiceItemService {
      */
     void delete(Long id);
 
+    /**
+     * <h2>新增帐户的公共服务项</h2>
+     *
+     * @param itemId 服务项ID
+     * @param accountId 帐户ID
+     */
+    void saveByAccount(Long itemId,Long accountId);
+
+    /**
+     * <h2>删除帐户的公共服务项</h2>
+     *
+     * @param itemId 服务项ID
+     * @param accountId 帐户ID
+     */
+    void deleteByAccount(Long itemId,Long accountId);
+
 }
