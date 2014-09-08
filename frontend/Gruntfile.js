@@ -13,6 +13,7 @@ module.exports = function ( grunt ) {
   grunt.loadNpmTasks('grunt-contrib-coffee');
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-jade');
   grunt.loadNpmTasks('grunt-conventional-changelog');
   grunt.loadNpmTasks('grunt-bump');
   grunt.loadNpmTasks('grunt-coffeelint');
@@ -91,10 +92,37 @@ module.exports = function ( grunt ) {
     /**
      * The directories to delete when `grunt clean` is executed.
      */
-    clean: [ 
-      '<%= build_dir %>', 
-      '<%= compile_dir %>'
-    ],
+    clean: {
+      build: ['<%= build_dir %>'],
+      deploy:['<%= compile_dir %>' ],
+      extra:  ['<%= build_dir %>/**/*.jade', '<%= build_dir%>/**/*.tpl.html'],
+      options: {force: true}
+    },
+    
+    /**
+     * Jade is used to compile .jade to .html
+     */
+    jade: {
+      source: {
+        files: {'<%= build_dir %>': ['**/*.jade']},
+        options: {
+          basePath: '.'
+        }
+      },
+      index: {
+        files: {'<%= build_dir %>': ['<%= build_dir %>/index.jade']}
+      },
+      login: {
+        files: {'<%= build_dir %>': ['<%= build_dir %>/login.jade']}
+      },
+      options: {
+        extension: '.html',
+        client: false,
+        runtime: false,
+        wrap: true,
+        locals:{ title: 'Convert src by grunt-jade'}
+      }
+    },
 
     /**
      * HTML2JS is a Grunt plugin that takes all of your template files and
@@ -104,76 +132,65 @@ module.exports = function ( grunt ) {
      */
     html2js: {
       /**
-       * These are the templates from `src/common`.
+       * These are the templates from `src/lib`.
        */
-      common: {
+      lib: {
         options: {
-          base: 'src/common',
-          module: 'Common.Templates'
+          base: 'lib',
+          module: 'Lib.Templates'
         },
         src: [ '<%= app_files.ctpl %>' ],
-        dest: '<%= build_dir %>/templates-common.js'
+        dest: '<%= build_dir %>/templates/lib.js'
       },
       /**
        * These are the templates from `src/app`.
        */
       app: {
         options: {
-          base: 'src/app',
+          base: 'app',
           module: 'App.Templates'
         },
         src: [ '<%= app_files.atpl %>' ],
-        dest: '<%= build_dir %>/templates-app.js'
+        dest: '<%= build_dir %>/templates/app.js'
       },
       ms_app: {
         options: {
-          base: 'src/<%= target.name %>/app',
+          base: '<%= target.name %>/app',
           module: '<%= target.title %>App.Templates'
         },
         src: [ '<%= app_files.mtpl %>' ],
-        dest: '<%= build_dir %>/templates-<%= target.name %>-app.js'
+        dest: '<%= build_dir %>/templates/<%= target.name %>-app.js'
       },
       /**
        * These are the templates from `src/login`.
        */
       login: {
         options: {
-          base: 'src/login',
+          base: 'login',
           module: 'Login.Templates'
         },
         src: [ '<%= login_files.atpl %>' ],
-        dest: '<%= build_dir %>/templates-login.js'
+        dest: '<%= build_dir %>/templates/login.js'
       },
       ms_login: {
         options: {
-          base: 'src/<%= target.name %>/login',
+          base: '<%= target.name %>/login',
           module: '<%=target.title%>Login.Templates'
         },
         src: [ '<%= login_files.mtpl %>' ],
-        dest: '<%= build_dir %>/templates-<%= target.name %>-login.js'
+        dest: '<%= build_dir %>/templates/<%= target.name %>-login.js'
       }
 
     },
 
     /**
-     * `jshint` defines the rules of our linter as well as which files we
-     * should check. This file, all javascript sources, and all our unit tests
-     * are linted based on the policies listed in `options`. But we can also
-     * specify exclusionary patterns by prefixing them with an exclamation
-     * point (!); this is useful when code comes from a third party but is
-     * nonetheless inside `src/`.
+     * jslint 任务路径只能以Gruntfile所在目录为相对路径
      */
     jshint: {
-      src: [
-        '<%= app_files.js %>',
-        '<%= login_files.js %>'
-      ],
-      test: [
-        '<%= app_files.jsunit %>',
-        '<%= login_files.jsunit %>'
-      ],
+      source: [ '<%= app_files.js %>', '<%= login_files.js %>' ],
+      test: [ '<%= app_files.jsunit %>', '<%= login_files.jsunit %>' ],
       gruntfile: [
-        'Gruntfile.js'
+        '../Gruntfile.js'
       ],
       options: {
         curly: true,
@@ -193,16 +210,8 @@ module.exports = function ( grunt ) {
      * the defaults here.
      */
     coffeelint: {
-      src: {
-        files: {
-          src: [ '<%= app_files.coffee %>', '<%= login_files.coffee %>' ]
-        }
-      },
-      test: {
-        files: {
-          src: [ '<%= app_files.coffeeunit %>', '<%= login_files.coffeeunit %>' ]
-        }
-      }
+      source: [ '<%= app_files.coffee %>', '<%= login_files.coffee %>' ],
+      test: [ '<%= app_files.coffeeunit %>', '<%= login_files.coffeeunit %>' ]
     },
 
     /**
@@ -213,13 +222,21 @@ module.exports = function ( grunt ) {
      * it in the final build, but we don't want to include our specs there.
      */
     coffee: {
-      source: {
+      app: {
         options: {
           bare: true
         },
         expand: true,
-        cwd: '.',
-        src: [ '<%= app_files.coffee %>', '<%= login_files.coffee %>' ],
+        src: [ '<%= app_files.coffee %>' ],
+        dest: '<%= build_dir %>',
+        ext: '.js'
+      },
+      login: {
+        options: {
+          bare: true
+        },
+        expand: true,
+        src: [ '<%= login_files.coffee %>' ],
         dest: '<%= build_dir %>',
         ext: '.js'
       }
@@ -257,20 +274,19 @@ module.exports = function ( grunt ) {
     copy: {
       build_assets: {
         files: [
-          { 
+          {
             src: [ '**' ],
             dest: '<%= build_dir %>/assets/',
-            cwd: 'src/assets',
+            cwd: 'assets',
             expand: true
           }
-       ]   
+       ]
       },
       build_vendor_assets: {
         files: [
           {
             src: [ '<%= vendor_files.assets %>' ],
             dest: '<%= build_dir %>/assets/',
-            cwd: '.',
             expand: true,
             flatten: true
           }
@@ -281,7 +297,6 @@ module.exports = function ( grunt ) {
           {
             src: [ '<%= app_files.js %>' ],
             dest: '<%= build_dir %>/',
-            cwd: '.',
             expand: true
           }
         ]
@@ -291,7 +306,6 @@ module.exports = function ( grunt ) {
           {
             src: [ '<%= login_files.js %>' ],
             dest: '<%= build_dir %>/',
-            cwd: '.',
             expand: true
           }
         ]
@@ -300,11 +314,20 @@ module.exports = function ( grunt ) {
         files: [
           {
             src: [ '<%= vendor_files.js %>' ],
-            dest: '<%= build_dir %>/',
-            cwd: '.',
+            dest: '<%= build_dir %>/vendor',
             expand: true
           }
         ]
+      },
+      build_specs: {
+        files: [
+          {
+            src: [ '**/*.spec.js','**/*.spec.coffee' ],
+            dest: '<%= build_dir %>',
+            expand: true
+          }
+        ]
+
       },
       compile_assets: {
         files: [
@@ -349,12 +372,12 @@ module.exports = function ( grunt ) {
        */
       compile_app_js: {
         src: [
-          '<%= vendor_files.js %>', 
-          'module.prefix', 
-          '<%= build_dir %>/src/common/**/*.js',
-          '<%= build_dir %>/src/app/**/*.js',
-          '<%= build_dir %>/src/<%= target.name %>/app/**/*.js',
-          '<%= html2js.common.dest %>',
+          '<%= vendor_files.js %>',
+          'module.prefix',
+          '<%= build_dir %>/lib/**/*.js',
+          '<%= build_dir %>/app/**/*.js',
+          '<%= build_dir %>/<%= target.name %>/app/**/*.js',
+          '<%= html2js.lib.dest %>',
           '<%= html2js.app.dest %>',
           '<%= html2js.ms_app.dest %>',
           'module.suffix'
@@ -365,10 +388,10 @@ module.exports = function ( grunt ) {
         src: [
           '<%= vendor_files.js %>',
           'module.prefix',
-          '<%= build_dir %>/src/common/**/*.js',
-          '<%= build_dir %>/src/login/**/*.js',
-          '<%= build_dir %>/src/<%= target.name %>/login/**/*.js',
-          '<%= html2js.common.dest %>',
+          '<%= build_dir %>/lib/**/*.js',
+          '<%= build_dir %>/login/**/*.js',
+          '<%= build_dir %>/<%= target.name %>/login/**/*.js',
+          '<%= html2js.lib.dest %>',
           '<%= html2js.login.dest %>',
           '<%= html2js.ms_login.dest %>',
           'module.suffix'
@@ -420,6 +443,30 @@ module.exports = function ( grunt ) {
       }
     },
 
+
+    /**
+     * This task compiles the karma template so that changes to its file array
+     * don't have to be managed manually.
+     */
+    karma_config: {
+      unit: {
+        output: '<%= build_dir %>',
+        src: [
+          '<%= vendor_files.js %>',
+          '<%= app_files.js %>',
+          '<%= app_files.coffee %>',
+          '<%= login_files.js %>',
+          '<%= login_files.coffee %>',
+
+          '<%= test_files.js %>',
+          '<%= app_files.jsunit %>',
+          '<%= app_files.coffeeunit %>',
+          '<%= login_files.jsunit %>',
+          '<%= login_files.coffeeunit %>'
+        ]
+      }
+    },
+
     /**
      * The Karma configurations.
      */
@@ -450,15 +497,15 @@ module.exports = function ( grunt ) {
        * `src` property contains the list of included files.
        */
       build: {
-        dir: '<%= build_dir %>',
+        output: '<%= build_dir %>',
         src: [
           '<%= vendor_files.js %>',
-          '<%= app_files.js %>',
-          '<%= html2js.common.dest %>',
+          '<%= html2js.lib.dest %>',
           '<%= html2js.app.dest %>',
           '<%= html2js.ms_app.dest %>',
-          '<%= build_dir %>/assets/<%= target.app %>.css'
-        ]
+          '<%= app_files.js %>'
+        ],
+        style: '<%= build_dir %>/assets/<%= target.app %>.css'
       },
 
       /**
@@ -468,10 +515,8 @@ module.exports = function ( grunt ) {
        */
       compile: {
         dir: '<%= compile_dir %>',
-        src: [
-          '<%= concat.compile_app_js.dest %>',
-          '<%= compile_dir %>/assets/<%= target.app %>.css'
-        ]
+        src: '<%= concat.compile_app_js.dest %>',
+        style: '<%= compile_dir %>/assets/<%= target.app %>.css'
       }
     },
 
@@ -483,15 +528,15 @@ module.exports = function ( grunt ) {
     login: {
 
       build: {
-        dir: '<%= build_dir %>',
+        output: '<%= build_dir %>',
         src: [
           '<%= vendor_files.js %>',
-          '<%= login_files.js %>',
-          '<%= html2js.common.dest %>',
+          '<%= html2js.lib.dest %>',
           '<%= html2js.login.dest %>',
           '<%= html2js.ms_login.dest %>',
-          '<%= build_dir %>/assets/<%= target.login %>.css'
-        ]
+          '<%= login_files.js %>'
+        ],
+        style: '<%= build_dir %>/assets/<%= target.login %>.css'
       },
 
       /**
@@ -509,37 +554,14 @@ module.exports = function ( grunt ) {
     },
 
     /**
-     * This task compiles the karma template so that changes to its file array
-     * don't have to be managed manually.
-     */
-    karmaconfig: {
-      unit: {
-        dir: '<%= build_dir %>',
-        src: [ 
-          '<%= vendor_files.js %>',
-          '<%= app_files.js %>',
-          '<%= app_files.coffee %>',
-          '<%= login_files.js %>',
-          '<%= login_files.coffee %>',
-
-          '<%= test_files.js %>',
-          '<%= app_files.jsunit %>',
-          '<%= app_files.coffeeunit %>',
-          '<%= login_files.jsunit %>',
-          '<%= login_files.coffeeunit %>'
-        ]
-      }
-    },
-
-    /**
      * And for rapid development, we have a watch set up that checks to see if
-     * any of the files listed below change, and then to execute the listed 
+     * any of the files listed below change, and then to execute the listed
      * tasks when they do. This just saves us from having to type "grunt" into
      * the command-line every time we want to see what we're working on; we can
      * instead just leave "grunt watch" running in a background terminal. Set it
      * and forget it, as Ron Popeil used to tell us.
      *
-     * But we don't need the same thing to happen for all the files. 
+     * But we don't need the same thing to happen for all the files.
      */
     delta: {
       /**
@@ -557,7 +579,7 @@ module.exports = function ( grunt ) {
        * your Gruntfile changes, it will automatically be reloaded!
        */
       gruntfile: {
-        files: 'Gruntfile.js',
+        files: '../Gruntfile.js',
         tasks: [ 'jshint:gruntfile' ],
         options: {
           livereload: false
@@ -569,7 +591,7 @@ module.exports = function ( grunt ) {
        * run our unit tests.
        */
       jssrc: {
-        files: [ 
+        files: [
           '<%= app_files.js %>',
           '<%= login_files.js %>'
         ],
@@ -581,7 +603,7 @@ module.exports = function ( grunt ) {
        * run our unit tests.
        */
       coffeesrc: {
-        files: [ 
+        files: [
           '<%= app_files.coffee %>',
           '<%= login_files.coffee %>'
         ],
@@ -593,8 +615,8 @@ module.exports = function ( grunt ) {
        * files, so this is probably not very useful.
        */
       assets: {
-        files: [ 
-          'src/assets/**/*'
+        files: [
+          'assets/**/*'
         ],
         tasks: [ 'copy:build_assets', 'copy:build_vendor_assets' ]
       },
@@ -611,7 +633,7 @@ module.exports = function ( grunt ) {
        * When our templates change, we only rewrite the template cache.
        */
       tpls: {
-        files: [ 
+        files: [
           '<%= app_files.atpl %>',
           '<%= app_files.ctpl %>',
           '<%= app_files.mtpl %>',
@@ -626,7 +648,7 @@ module.exports = function ( grunt ) {
        * When the CSS files change, we need to compile and minify them.
        */
       less: {
-        files: [ 'src/**/*.less' ],
+        files: [ '**/*.less' ],
         tasks: [ 'less:build' ]
       },
 
@@ -664,6 +686,7 @@ module.exports = function ( grunt ) {
 
   grunt.initConfig( grunt.util._.extend( taskConfig, userConfig ) );
 
+  grunt.file.setBase("src");
   /**
    * In order to make it safe to just compile or copy *only* what was changed,
    * we need to ensure we are starting from a clean, fresh build. So we rename
@@ -683,12 +706,28 @@ module.exports = function ( grunt ) {
    * The `build` task gets your app ready to run for development and testing.
    */
   grunt.registerTask( 'build', [
-    'clean', 'html2js', 'jshint', 'coffeelint', 'coffee',
-    'less:build', 'copy:build_assets', 'copy:build_vendor_assets',
-    'copy:build_appjs', 'copy:build_loginjs', 'copy:build_vendorjs',
-    'concat:build_app_css', 'concat:build_login_css',
-    'login:build', 'index:build',
-    'karmaconfig', 'karma:continuous'
+    'clean:build',                // 清除build目录
+    'jade:source',                // 将src目录中的jade文件编译成为build目录中的html
+    'html2js',                    // 将src/build目录中的*.tpl.html编译成为build目录中的templates/*.js
+    'jshint',                     // 检查src目录中的js语法
+    'coffeelint',                 // 检查src目录中的coffee语法
+    'coffee',                     // 将src目录中的coffee文件编译为build目录中的js
+    'less:build',                 // 将src目录中的less文件编译为css
+    'copy:build_assets',          // 将assets目录中的文件copy到build目录中的assets
+    'copy:build_vendor_assets',   // 将vendor的assets copy到build目录中的assets
+    'copy:build_appjs',           // 将src目录中的js文件copy到build目录中
+    'copy:build_loginjs',
+    'copy:build_vendorjs',
+    'copy:build_specs',
+    'concat:build_app_css',       // 合并build目录中所有的css文件为一个文件（与deploy环境一致)
+    'concat:build_login_css',
+    'index:build',                // 将实际输出目录的scripts,style变量设置到 index.jade 文件中
+    'jade:index',                 // 编译 build_dir下的index.jade 为index.html
+    'login:build',                // 将实际输出目录的scripts,style变量设置到 login.jade 文件中
+    'jade:login',                 // 编译 build_dir下的login.jade 为login.html
+    'clean:extra',                // 清除build目录多余的文件
+    'karma_config',               // 准备单元测试(karma-unit.tpl.js -> karma-unit.js)
+    'karma:continuous'            // 执行单元测试
   ]);
 
   /**
@@ -696,58 +735,77 @@ module.exports = function ( grunt ) {
    * minifying your code.
    */
   grunt.registerTask( 'compile', [
-    'copy:compile_assets', /*这里包括了两个主CSS文件*/
-    'ngmin',
-    'concat:compile_app_js', 'concat:compile_login_js',
-    'uglify', 'cssmin:app', 'cssmin:login', 'login:compile', 'index:compile'
+    'copy:compile_assets',       //将build目录下的assets copy到deploy目录下
+    'ngmin',                     //在压缩前标记js文件
+    'concat:compile_app_js',     //合并js文件
+    'concat:compile_login_js',
+    'uglify',                    //压缩js文件
+    'cssmin:app',                //压缩css文件
+    'cssmin:login',
+    'login:compile',
+    'index:compile'
   ]);
 
+  var BuildDir = function(){};
+  BuildDir.prototype = {
+    dir: grunt.config('build_dir'),
+    scripts: [],
+    processPattern: function(pattern){
+      //vendor pattern need special process
+      if( pattern.indexOf("../vendor") === 0) {
+        pattern = pattern.substring(3);
+      }
+      //if relative to build dir
+      if( pattern.indexOf(this.dir) === 0 ) {
+        pattern = pattern.substring(this.dir.length);
+      }
+      if( pattern.indexOf("/") === 0 ) {
+        pattern = pattern.substring(1);
+      }
+      return grunt.file.expand({cwd: this.dir}, pattern);
+    },
+    processRaw: function(arrayOrPattern){
+      if(Array.isArray(arrayOrPattern)){
+        arrayOrPattern.forEach(this.processRaw.bind(this));
+      }else{
+        this.scripts.push.apply(this.scripts, this.processPattern(arrayOrPattern));
+      }
+    }
+  };
+
+
   /**
-   * A utility function to get all app JavaScript sources.
-   */
-  function filterForJS ( files ) {
-    return files.filter( function ( file ) {
-      return file.match( /\.js$/ );
-    });
-  }
-
-  function filterForSpec ( files, match ) {
-    return files.filter( function ( file ) {
-      var result = file.match( /\.spec\.js$/ ) || file.match( /mocks\.js$/ );
-      return match ? result : !result;
-    });
-  }
-
-  /**
-   * A utility function to get all app CSS sources.
-   */
-  function filterForCSS ( files ) {
-    return files.filter( function ( file ) {
-      return file.match( /\.css$/ );
-    });
-  }
-
-  /** 
-   * The index.html template includes the stylesheet and javascript sources
+   * The index.jade template needs the stylesheet and javascript sources
    * based on dynamic names calculated in this Gruntfile. This task assembles
    * the list into variables for the template to use and then runs the
    * compilation.
    */
-  grunt.registerMultiTask( 'index', 'Process index.html template', function () {
-    var dirRE = new RegExp( '^('+grunt.config('build_dir')+'|'+grunt.config('compile_dir')+')\/', 'g' );
-    var jsFiles = filterForJS( this.filesSrc ).map( function ( file ) {
-      return file.replace( dirRE, '' );
-    });
-    var cssFiles = filterForCSS( this.filesSrc ).map( function ( file ) {
-      return file.replace( dirRE, '' );
-    });
 
-    grunt.file.copy('src/index.html', this.data.dir + '/index.html', { 
-      process: function ( contents, path ) {
+  grunt.registerMultiTask( 'index', 'Process index.jade template', function () {
+    //Expand relative to build dir)
+    //
+    // JS Files
+    //   when build(is array)
+    //     vendor_files.js
+    //     html2js.lib.dest
+    //     html2js.app.dest
+    //     html2js.ms_app.dest
+    //     app_files.js
+    //   when compile(is string)
+    //     concat.app.dest
+    //CSS File
+    //  assets/<%= target.app %>.css
+    var bd = new BuildDir();
+    var style = bd.processPattern(this.data.style)[0];
+    bd.processRaw(this.data.src);
+    var scripts = bd.scripts;
+
+    grunt.file.copy('../index.jade', this.data.output + '/index.jade', {
+      process: function ( contents ) {
         return grunt.template.process( contents, {
           data: {
-            scripts: jsFiles,
-            styles: cssFiles,
+            scripts: scripts,
+            style: style,
             sysName: system.title,
             version: grunt.config( 'pkg.version' )
           }
@@ -756,27 +814,18 @@ module.exports = function ( grunt ) {
     });
   });
 
-  /**
-   * The login.html template includes the stylesheet and javascript sources
-   * based on dynamic names calculated in this Gruntfile. This task assembles
-   * the list into variables for the template to use and then runs the
-   * compilation.
-   */
-  grunt.registerMultiTask( 'login', 'Process login.html template', function () {
-    var dirRE = new RegExp( '^('+grunt.config('build_dir')+'|'+grunt.config('compile_dir')+')\/', 'g' );
-    var jsFiles = filterForJS( this.filesSrc ).map( function ( file ) {
-      return file.replace( dirRE, '' );
-    });
-    var cssFiles = filterForCSS( this.filesSrc ).map( function ( file ) {
-      return file.replace( dirRE, '' );
-    });
+  grunt.registerMultiTask( 'login', 'Process login.jade template', function () {
+    var bd = new BuildDir();
+    var style = bd.processPattern(this.data.style)[0];
+    bd.processRaw(this.data.src);
+    var scripts = bd.scripts;
 
-    grunt.file.copy('src/login.html', this.data.dir + '/login.html', {
-      process: function ( contents, path ) {
+    grunt.file.copy('../login.jade', this.data.output + '/login.jade', {
+      process: function ( contents ) {
         return grunt.template.process( contents, {
           data: {
-            scripts: jsFiles,
-            styles: cssFiles,
+            scripts: scripts,
+            style: style,
             sysName: system.title,
             version: grunt.config( 'pkg.version' )
           }
@@ -790,16 +839,15 @@ module.exports = function ( grunt ) {
    * run, we use grunt to manage the list for us. The `karma/*` files are
    * compiled as grunt templates for use by Karma. Yay!
    */
-  grunt.registerMultiTask( 'karmaconfig', 'Process karma config templates', function () {
-    var jsFiles = filterForJS( this.filesSrc );
-    var scriptFiles = filterForSpec( jsFiles, false );
-    var specFiles = filterForSpec( jsFiles, true );
-    grunt.file.copy( 'karma/karma-unit.tpl.js', grunt.config( 'build_dir' ) + '/karma-unit.js', {
+  grunt.registerMultiTask( 'karma_config', 'Process karma config templates', function () {
+    var bd = new BuildDir();
+    bd.processRaw(this.data.src);
+    var scripts = bd.scripts;
+    grunt.file.copy( '../karma/karma-unit.tpl.js', grunt.config( 'build_dir' ) + '/karma-unit.js', {
       process: function ( contents, path ) {
         return grunt.template.process( contents, {
           data: {
-            scripts: scriptFiles,
-            specs: specFiles,
+            scripts: scripts,
             build_dir: grunt.config('build_dir')
           }
         });

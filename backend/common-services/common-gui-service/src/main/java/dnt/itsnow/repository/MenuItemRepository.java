@@ -34,7 +34,7 @@ public interface MenuItemRepository {
     @Select("SELECT * FROM menu_items WHERE id = #{id}")
     public MenuItem findById(@Param("id") Long id);
 
-    @Select("SELECT * FROM menu_items")
+    @Select("SELECT * FROM menu_items order by position")
     public List<MenuItem> findAll();
 
 }

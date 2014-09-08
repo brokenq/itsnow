@@ -1,0 +1,6 @@
+.container(ng-controller="AccountListCtrl")
+  table.table(ng-table)
+    tr(ng-repeat="account in accounts")
+      td(data-title="'SN'") {{account.sn}}
+      td(data-title="'Name'") {{account.name}}
+      td(data-title="'Domain'") {{account.domain}}

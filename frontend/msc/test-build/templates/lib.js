@@ -1,0 +1,2 @@
+angular.module('Lib.Templates', []);
+

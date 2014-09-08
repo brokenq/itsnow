@@ -9,13 +9,14 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
 
 /**
  * <h1>菜单对象</h1>
  * <p/>
  * 不同的系统看到不同的菜单体系，不同的用户，根据其权限看到不同的菜单
  */
-public class MenuItem extends Record {
+public class MenuItem extends Record implements Comparable<MenuItem>{
 
     // 父菜单ID
     @JsonIgnore
@@ -148,6 +149,11 @@ public class MenuItem extends Record {
     void addChild(MenuItem child){
         if(this.children == null ) this.children = new ArrayList<MenuItem>();
         if(!this.children.contains(child)) this.children.add(child);
+        Collections.sort(this.children);
+    }
+
+    public int compareTo(MenuItem another){
+      return (int)(this.position - another.position);
     }
 
 }

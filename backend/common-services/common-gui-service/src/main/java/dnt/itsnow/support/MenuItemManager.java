@@ -120,6 +120,7 @@ public class MenuItemManager extends Bean implements MenuItemService {
                 topMenuItems.add(menuItem);
             }
         }
+        Collections.sort(topMenuItems);
         return topMenuItems;
     }
 }
