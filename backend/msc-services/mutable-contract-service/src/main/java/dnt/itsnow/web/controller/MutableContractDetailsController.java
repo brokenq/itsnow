@@ -7,6 +7,11 @@ import dnt.itsnow.model.Contract;
 import dnt.itsnow.model.ContractDetail;
 import dnt.itsnow.platform.service.ServiceException;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
+import dnt.itsnow.platform.web.exception.WebClientSideException;
+import dnt.itsnow.service.MutableContractDetailService;
+import dnt.itsnow.service.MutableContractService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -21,6 +26,12 @@ public class MutableContractDetailsController extends SessionSupportController<C
 
     private Contract currentContract;
     private ContractDetail currentDetail;
+
+    @Autowired
+    MutableContractService mutableContractService;
+
+    @Autowired
+    MutableContractDetailService mutableContractDetailService;
 
     /**
      * <h2>查看当特定合同下的所有明细</h2>
@@ -40,27 +51,38 @@ public class MutableContractDetailsController extends SessionSupportController<C
     @RequestMapping(method = RequestMethod.POST)
     public ContractDetail create(@RequestBody @Valid ContractDetail detail){
         logger.info("Creating contract details {}: {}", detail.getTitle());
+        mutableContractDetailService.create(currentDetail);
         return currentDetail;
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.PUT)
     public ContractDetail update(@RequestBody @Valid ContractDetail detail){
         logger.info("Updating contract details {}: {}", detail.getTitle());
+        this.currentDetail.apply(detail);
+        mutableContractDetailService.update(currentDetail);
         return currentDetail;
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
     public ContractDetail destroy(@RequestBody @Valid ContractDetail detail){
         logger.info("Destroying contract details {}: {}", detail.getTitle());
+        currentContract.apply(detail);
+        mutableContractDetailService.delete(currentDetail);
         return currentDetail;
     }
 
     @BeforeFilter
     void initContract(@PathVariable("sn") String contractSn) throws ServiceException {
-        currentContract = null;
+        currentContract = mutableContractService.findByAccountAndSn(mainAccount,contractSn,true);
+        if(currentContract == null){
+            throw new WebClientSideException(HttpStatus.NOT_FOUND, "Can't find the contract with sn = " + contractSn);
+        }
     }
     @BeforeFilter(order = 60, value = {"update", "destroy"})
-    void initDetail(@PathVariable("sn") String contractSn) throws ServiceException {
-        currentDetail = null;
+    void initDetail(@PathVariable("sn") String contractSn,@PathVariable("id") Long detailId) throws ServiceException {
+        currentDetail = currentContract.getDetail(detailId);
+        if(currentDetail == null){
+            throw new WebClientSideException(HttpStatus.NOT_FOUND, "Can't find the contract details with sn = " + contractSn+ "detail id:"+detailId);
+        }
     }
 }

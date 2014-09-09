@@ -1,10 +1,7 @@
 package dnt.itsnow.repository;
 
 import dnt.itsnow.model.ContractDetail;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 /**
  * Created by jacky on 2014/9/4.
@@ -16,8 +13,9 @@ public interface MutableContractDetailRepository {
      *
      * @param contractDetail 新建的合同Detail
      */
-    @Insert("INSERT INTO itsnow_msc.contract_details(contract_id,title,brief,description,icon,item_id) " +
-            "VALUES(#{contract.id}, #{title}, #{brief}, #{description},#{icon},#{itemId})")
+    @Insert("INSERT INTO itsnow_msc.contract_details(contract_id,title,brief,description,icon,item_id,created_at,updated_at) " +
+            "VALUES(#{contract.id}, #{title}, #{brief}, #{description},#{icon},#{itemId},#{createdAt},#{updatedAt})")
+    @Options(useGeneratedKeys = true,keyColumn = "id")
     void create(ContractDetail contractDetail);
 
     /**
@@ -32,7 +30,8 @@ public interface MutableContractDetailRepository {
             " brief = #{brief}," +
             " description = #{description},"+
             " icon = #{icon},"+
-            " item_id = #{itemId}"+
+            " item_id = #{itemId},"+
+            " updated_at = #{updatedAt}"+
             " WHERE id = #{id}")
     void update(ContractDetail contractDetail);
 

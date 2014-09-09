@@ -17,7 +17,30 @@ import dnt.itsnow.platform.service.ServiceException;
 public interface GeneralContractService extends CommonContractService {
 
     /**
-     * <h2>批准特定账户下的特定合同</h2>
+     * <h2>MSU创建合同</h2>
+     *
+     * 本方法是调用远程msc的SPI实现的
+     *
+     * @param account 企业/提供商的账户
+     * @param contract      合同对象
+     * @return 合同对象
+     */
+    Contract create(Account account, Contract contract) throws ServiceException;
+
+    /**
+     * <h2>MSP投标</h2>
+     *
+     * 本方法是调用远程msc的SPI实现的
+     *
+     * @param account 企业/提供商的账户
+     * @param sn      合同编号
+     * @return 合同对象
+     */
+    Contract bid(Account account, String sn) throws ServiceException;
+
+
+    /**
+     * <h2>MSU批准特定账户下的特定合同</h2>
      *
      * 本方法是调用远程msc的SPI实现的
      *

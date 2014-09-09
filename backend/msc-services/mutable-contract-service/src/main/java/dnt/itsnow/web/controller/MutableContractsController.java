@@ -83,6 +83,46 @@ public class MutableContractsController extends SessionSupportController<Contrac
     }
 
     /**
+     * <h2>MSP投标</h2>
+     *
+     * PUT /admin/api/contracts/{sn}/bid
+     *
+     * @return 合同
+     */
+    @RequestMapping(value = "/{sn}/bid", method = RequestMethod.PUT)
+    public Contract bid(@Valid @RequestBody Contract contract){
+        logger.debug("msp bid contract:{}",contract.getSn());
+        this.contract.apply(contract);
+        return mutableContractService.bid(contract);
+    }
+
+    /**
+     * <h2>MSU批准一个合同</h2>
+     *
+     * PUT /admin/api/contracts/{sn}/approve
+     *
+     * @return 被批准的合同
+     */
+    @RequestMapping(value = "/{sn}/approve", method = RequestMethod.PUT)
+    public Contract approve(){
+        logger.debug("msu approve contract:{}", contract.getSn());
+        return mutableContractService.approve(contract);
+    }
+
+    /**
+     * <h2>MSU拒绝一个合同</h2>
+     *
+     * PUT /admin/api/contracts/{sn}/reject
+     *
+     * @return 被拒绝的合同
+     */
+    @RequestMapping(value = "/{sn}/reject", method = RequestMethod.PUT)
+    public Contract reject(){
+        logger.debug("msu reject contract:{}",contract.getSn());
+        return mutableContractService.reject(contract);
+    }
+
+    /**
      * <h2>删除一个合同</h2>
      *
      * DELETE /admin/api/contracts/{sn}
@@ -92,15 +132,18 @@ public class MutableContractsController extends SessionSupportController<Contrac
     @RequestMapping(value = "/{sn}", method = RequestMethod.DELETE)
     public Contract destroy(@PathVariable("sn")String sn){
         mutableContractService.delete(contract);
-        return null;
+        return contract;
     }
 
-    @BeforeFilter({"show", "update", "destroy"})
-    public void initContract(@PathVariable("sn") String sn) {
+    @BeforeFilter({"show", "update","bid","approve","reject", "destroy"})
+    public void initContract(@PathVariable("sn")String sn){
         try {
             contract = mutableContractService.findByAccountAndSn(mainAccount, sn, true);//findByAccountId it by sn
         }catch(ServiceException e){
-            throw new WebClientSideException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
+            throw new WebClientSideException(HttpStatus.NOT_ACCEPTABLE,e.getMessage());
+        }
+        if(contract == null){
+            throw new WebClientSideException(HttpStatus.NOT_FOUND, "Can't find the contract with sn = " + sn);
         }
     }
 }

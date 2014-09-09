@@ -11,5 +11,11 @@ public interface MutableContractService extends CommonContractService{
 
     Contract update(Contract contract);
 
+    Contract bid(Contract contract);
+
+    Contract approve(Contract contract);
+
+    Contract reject(Contract contract);
+
     void delete(Contract contract);
 }

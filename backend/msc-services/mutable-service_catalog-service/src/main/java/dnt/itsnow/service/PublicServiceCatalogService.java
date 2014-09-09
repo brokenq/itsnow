@@ -29,8 +29,8 @@ public interface PublicServiceCatalogService extends CommonServiceCatalogService
     /**
      * <h2>根据SN删除公共服务目录</h2>
      *
-     * @param sn 序列号
+     * @param publicServiceCatalog 公共服务目录对象
      */
-    void delete(String sn);
+    void delete(PublicServiceCatalog publicServiceCatalog);
 
 }

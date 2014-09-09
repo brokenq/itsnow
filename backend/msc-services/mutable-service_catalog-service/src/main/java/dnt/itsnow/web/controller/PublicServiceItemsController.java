@@ -6,9 +6,11 @@ package dnt.itsnow.web.controller;
 import dnt.itsnow.model.PublicServiceCatalog;
 import dnt.itsnow.model.PublicServiceItem;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
+import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.service.PublicServiceCatalogService;
 import dnt.itsnow.service.PublicServiceItemService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -51,7 +53,7 @@ public class PublicServiceItemsController extends SessionSupportController<Publi
      */
     @RequestMapping("{id}")
     public PublicServiceItem show(@PathVariable("id") Long id){
-        return publicServiceItemService.findById(id);
+        return serviceItem;
     }
 
     /**
@@ -63,7 +65,7 @@ public class PublicServiceItemsController extends SessionSupportController<Publi
      */
     @RequestMapping(method = RequestMethod.POST)
     public PublicServiceItem create(@Valid @RequestBody PublicServiceItem serviceItem){
-        return publicServiceItemService.save(serviceItem);
+        return publicServiceItemService.create(serviceItem);
     }
 
     /**
@@ -75,7 +77,7 @@ public class PublicServiceItemsController extends SessionSupportController<Publi
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public PublicServiceItem update(@Valid @RequestBody PublicServiceItem serviceItem){
-        //this.serviceItem.apply(serviceItem);
+        this.serviceItem.apply(serviceItem);
         return publicServiceItemService.update(serviceItem);
     }
 
@@ -88,8 +90,8 @@ public class PublicServiceItemsController extends SessionSupportController<Publi
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public PublicServiceItem destroy(@PathVariable("id") Long id){
-        publicServiceItemService.delete(id);
-        return null;
+        publicServiceItemService.delete(serviceItem);
+        return serviceItem;
     }
 
     /**
@@ -104,7 +106,7 @@ public class PublicServiceItemsController extends SessionSupportController<Publi
     }
 
     /**
-     * <h2>删除帐户的一个服务项目</h2>
+     * <h2>增加帐户的一个服务项目</h2>
      *
      * PUT /admin/api/public_service_catalogs/{sn}/items/accounts/{id}
      *
@@ -117,12 +119,17 @@ public class PublicServiceItemsController extends SessionSupportController<Publi
     @BeforeFilter
     public void initServiceCatalog(@PathVariable("sn") String catalogSn){
         serviceCatalog = publicServiceCatalogService.findBySn(catalogSn);
+        if(serviceCatalog == null)
+            throw new WebClientSideException(HttpStatus.NOT_FOUND, "Can't find the service catalog with sn = " + catalogSn);
+
     }
     
     @BeforeFilter(order = 60, value = {"show", "update", "destroy"})
     public void initServiceItem(@PathVariable("id") Long id){
         if(serviceCatalog != null)
             serviceItem = (PublicServiceItem) serviceCatalog.getItemBySn(id);
+        if(serviceItem == null)
+            throw new WebClientSideException(HttpStatus.NOT_FOUND, "Can't find the service item with id: " + id);
     }
     
 }

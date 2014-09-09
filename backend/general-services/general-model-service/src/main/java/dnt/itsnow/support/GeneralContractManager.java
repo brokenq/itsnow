@@ -7,6 +7,7 @@ import dnt.itsnow.exception.ContractException;
 import dnt.itsnow.model.Account;
 import dnt.itsnow.model.Contract;
 import dnt.itsnow.model.ContractDetail;
+import dnt.itsnow.model.ContractStatus;
 import dnt.itsnow.platform.remote.service.RestFacade;
 import dnt.itsnow.platform.service.ServiceException;
 import dnt.itsnow.service.GeneralContractService;
@@ -68,4 +69,26 @@ public class GeneralContractManager extends CommonContractManager implements Gen
         logger.info("Updated  {}", detail);
         return contractDetail;
     }
+
+    @Override
+    public Contract bid(Account account, String sn) throws ServiceException{
+        logger.info("Msp bid contract:{} {}", account, sn);
+        Contract contract = findByAccountAndSn(account, sn, true);
+        contract.setMspStatus(ContractStatus.Purposed);
+        contract.setMspAccountId(account.getId());
+        contract = facade.putWithObject("/admin/api/contracts/"+sn+"/bid",contract);
+        logger.info("Msp bid contract {}", contract);
+        return contract;
+    }
+
+    @Override
+    public Contract create(Account account, Contract contract) throws ServiceException{
+        contract.setMsuStatus(ContractStatus.Draft);
+        contract.setMsuAccountId(account.getId());
+        contract = facade.putWithObject("/admin/api/contracts",contract);
+        logger.info("Created  {}", contract);
+        return contract;
+    }
+
+
 }

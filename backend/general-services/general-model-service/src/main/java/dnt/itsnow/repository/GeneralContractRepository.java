@@ -12,9 +12,9 @@ package dnt.itsnow.repository;
  */
 public interface GeneralContractRepository extends CommonContractRepository {
 
-    Contract saveContract(Contract contract);
+    //Contract saveContract(Contract contract);
 
-    Contract updateContract(Contract contract);
+    //Contract updateContract(Contract contract);
 
-    void deleteContract(String sn);
+    //void deleteContract(String sn);
 }

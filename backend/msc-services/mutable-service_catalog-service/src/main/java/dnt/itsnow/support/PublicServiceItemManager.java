@@ -6,6 +6,8 @@ import dnt.itsnow.service.PublicServiceItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+
 /**
  * Created by jacky on 2014/9/2.
  */
@@ -16,21 +18,26 @@ public class PublicServiceItemManager extends CommonServiceItemManager implement
     PublicServiceItemRepository publicServiceItemRepository;
 
     @Override
-    public PublicServiceItem save(PublicServiceItem publicServiceItem) {
+    public PublicServiceItem create(PublicServiceItem publicServiceItem) {
         setCommonServiceItemList(null);
-        return publicServiceItemRepository.save(publicServiceItem);
+        publicServiceItem.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        publicServiceItem.setUpdatedAt(publicServiceItem.getCreatedAt());
+        publicServiceItemRepository.save(publicServiceItem);
+        return publicServiceItem;
     }
 
     @Override
     public PublicServiceItem update(PublicServiceItem publicServiceItem) {
         setCommonServiceItemList(null);
-        return publicServiceItemRepository.update(publicServiceItem);
+        publicServiceItem.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        publicServiceItemRepository.update(publicServiceItem);
+        return publicServiceItem;
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(PublicServiceItem publicServiceItem) {
         setCommonServiceItemList(null);
-        publicServiceItemRepository.delete(id);
+        publicServiceItemRepository.delete(publicServiceItem.getId());
     }
 
     @Override
