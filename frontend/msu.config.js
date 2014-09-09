@@ -7,8 +7,8 @@ module.exports = {
    * development and the `compile_dir` folder is where our app resides once it's
    * completely built.
    */
-  build_dir: 'msu/build',
-  compile_dir: 'msu/deploy',
+  build_dir: '../msu/build',
+  deploy_dir: '../msu/deploy',
 
   /**
    * This is a collection of file patterns that refer to our app code (the
@@ -19,34 +19,32 @@ module.exports = {
    * main HTML file, `less` is our main stylesheet, and `unit` contains our
    * app's unit tests.
    */
-  app_files: {
-    js: [ 'src/common/**/*.js', 'src/app/**/*.js', 'src/msu/app/**/*.js', '!src/**/*.spec.js' ],
-    jsunit: [ 'src/common/**/*.spec.js', 'src/app/**/*.spec.js', 'src/msu/app/**/*.spec.js'],
+  index_files: {
+    js: [ 'lib/**/*.js', 'index/**/*.js', 'msu/index/**/*.js', '!**/*.spec.js' ],
+    jsunit: [ 'lib/**/*.spec.js', 'index/**/*.spec.js', 'msu/index/**/*.spec.js'],
 
-    coffee: [ 'src/common/**/*.coffee', 'src/app/**/*.coffee', 'src/msu/app/**/*.coffee', '!src/**/*.spec.coffee' ],
-    coffeeunit: [ 'src/common/**/*.spec.coffee', 'src/app/**/*.spec.coffee', 'src/msu/app/**/*.spec.coffee'],
+    coffee: [ 'lib/**/*.coffee', 'index/**/*.coffee', 'msu/index/**/*.coffee', '!**/*.spec.coffee' ],
+    coffeeunit: [ 'lib/**/*.spec.coffee', 'index/**/*.spec.coffee', 'msu/index/**/*.spec.coffee'],
 
-    ctpl: [ 'src/common/**/*.tpl.html' ],
-    atpl: [ 'src/app/**/*.tpl.html' ],
-    mtpl: [ 'src/msu/app/**/*.tpl.html' ],
+    ctpl: [ 'lib/**/*.tpl.html' ],
+    atpl: [ 'index/**/*.tpl.html' ],
+    mtpl: [ 'msu/index/**/*.tpl.html' ],
 
-    html: [ 'src/index.html' ],
-    less: 'src/less/main.less'
+    less: 'less/index.less'
   },
 
   login_files: {
-    js: [ 'src/common/**/*.js', 'src/login/**/*.js', 'src/msu/login/**/*.js', '!src/**/*.spec.js'],
-    jsunit: [ 'src/common/**/*.spec.js', 'src/login/**/*.spec.js', 'src/msu/login/**/*.spec.js'],
+    js: [ 'lib/**/*.js', 'login/**/*.js', 'msu/login/**/*.js', '!**/*.spec.js'],
+    jsunit: [ 'lib/**/*.spec.js', 'login/**/*.spec.js', 'msu/login/**/*.spec.js'],
 
-    coffee: [ 'src/common/**/*.coffee', 'src/login/**/*.coffee', 'src/msu/login/**/*.coffee', '!src/**/*.spec.coffee' ],
-    coffeeunit: [ 'src/common/**/*.spec.coffee', 'src/login/**/*.spec.coffee', 'src/msu/login/**/*.spec.coffee'],
+    coffee: [ 'lib/**/*.coffee', 'login/**/*.coffee', 'msu/login/**/*.coffee', '!**/*.spec.coffee' ],
+    coffeeunit: [ 'lib/**/*.spec.coffee', 'login/**/*.spec.coffee', 'msu/login/**/*.spec.coffee'],
 
-    ctpl: [ 'src/common/**/*.tpl.html' ],
-    atpl: [ 'src/login/**/*.tpl.html' ],
-    mtpl: [ 'src/msu/login/**/*.tpl.html' ],
+    ctpl: [ 'lib/**/*.tpl.html' ],
+    atpl: [ 'login/**/*.tpl.html' ],
+    mtpl: [ 'msu/login/**/*.tpl.html' ],
 
-    html: [ 'src/login.html' ],
-    less: 'src/less/login.less'
+    less: 'less/login.less'
   },
 
   /**
@@ -54,7 +52,7 @@ module.exports = {
    */
   test_files: {
     js: [
-      'vendor/angular-mocks/angular-mocks.js'
+      '../vendor/angular-mocks/angular-mocks.js'
     ]
   },
 
@@ -78,45 +76,49 @@ module.exports = {
    */
   vendor_files: {
     js: [
-      'vendor/jquery/dist/jquery.js',
-      'vendor/angular/angular.js',
-      'vendor/angular-resource/angular-resource.js',
-      'vendor/angular-route/angular-route.js',
-      'vendor/angular-animate/angular-animate.js',
-      'vendor/angular-sanitize/angular-sanitize.js',
-      'vendor/bootstrap/dist/js/bootstrap.js',
-      'vendor/angular-bootstrap/ui-bootstrap-tpls.js',
-//      'vendor/placeholders/angular-placeholders-0.0.1-SNAPSHOT.min.js',
-      'vendor/angular-ui-router/release/angular-ui-router.js',
-      'vendor/angular-ui-utils/modules/route/route.js',
-      'vendor/fuelux/dist/js/fuelux.js',
-      'vendor/ace-bootstrap/js/ace.js',
-      'vendor/ace-bootstrap/js/ace-elements.js',
-      'vendor/ace-bootstrap/js/ace-extra.js',
-      'vendor/typehead.js/bs2/typeahead-bs2.js',
-      'vendor/ng-grid/ng-grid-2.0.11.debug.js',
-      'vendor/angular-ui-tree/dist/angular-ui-tree.js',
-      'vendor/angular-dialog-service/dialogs.js',
-      'vendor/angular-dialog-service/dialogs-default-translations.js',
-      'vendor/angular-translate/angular-translate.js'
+      '../vendor/jquery/dist/jquery.js',
+      '../vendor/angular/angular.js',
+      '../vendor/angular-resource/angular-resource.js',
+      '../vendor/angular-route/angular-route.js',
+      '../vendor/angular-animate/angular-animate.js',
+      '../vendor/angular-sanitize/angular-sanitize.js',
+      '../vendor/bootstrap/dist/js/bootstrap.js',
+      '../vendor/angular-bootstrap/ui-bootstrap-tpls.js',
+//    '../vendor/placeholders/angular-placeholders-0.0.1-SNAPSHOT.min.js',
+      '../vendor/angular-ui-router/release/angular-ui-router.js',
+      '../vendor/angular-ui-utils/modules/route/route.js',
+      '../vendor/fuelux/dist/js/fuelux.js',
+      '../vendor/ace-bootstrap/js/ace.js',
+      '../vendor/ace-bootstrap/js/ace-elements.js',
+      '../vendor/ace-bootstrap/js/ace-extra.js',
+      '../vendor/typehead.js/bs2/typeahead-bs2.js',
+      '../vendor/ng-table/ng-table.js',
+      '../vendor/ng-grid/ng-grid-2.0.11.debug.js',
+      '../vendor/angular-ui-tree/dist/angular-ui-tree.js',
+      '../vendor/angular-dialog-service/dialogs.js',
+      '../vendor/angular-dialog-service/dialogs-default-translations.js',
+      '../vendor/angular-translate/angular-translate.js'
     ],
     css: [
-//      'vendor/angular/angular-csp.css',
-      'vendor/bootstrap/dist/css/bootstrap-theme.css',
-      'vendor/ace-bootstrap/css/*.css',
-      'vendor/ng-grid/ng-grid.css',
-      'vendor/angular-dialog-service/dialogs.css',
-      'vendor/angular-ui-tree/dist/angular-ui-tree.min.css'
+//    '../vendor/angular/angular-csp.css',
+      '../vendor/bootstrap/dist/css/bootstrap-theme.css',
+      '../vendor/ace-bootstrap/css/*.css',
+      '../vendor/ng-table/ng-table.css',
+      '../vendor/ng-grid/ng-grid.css',
+      '../vendor/angular-dialog-service/dialogs.css',
+      '../vendor/angular-ui-tree/dist/angular-ui-tree.min.css'
+//    '../vendor/fuelux/dist/css/fuelux.css'
     ],
     assets: [
-      'vendor/font-awesome/fonts/*.*',
-      'vendor/bootstrap/dist/fonts/*.*',
-      'vendor/bootstrap/dist/css/bootstrap-theme.css.map',
-      'vendor/ace-bootstrap/fonts/font1.woff',
-      'vendor/ace-bootstrap/fonts/font2.woff',
-      'vendor/ace-bootstrap/images/*.png',
-      'vendor/ace-bootstrap/avatars/*.*',
-      'vendor/ace-bootstrap/images/gallery/*.jpg'
+      '../vendor/font-awesome/fonts/*.*',
+      '../vendor/bootstrap/dist/fonts/*.*',
+      '../vendor/bootstrap/dist/css/bootstrap-theme.css.map',
+      '../vendor/ace-bootstrap/fonts/font1.woff',
+      '../vendor/ace-bootstrap/fonts/font2.woff',
+      '../vendor/ace-bootstrap/images/*.png',
+      '../vendor/ace-bootstrap/avatars/*.*',
+      '../vendor/ace-bootstrap/images/gallery/*.jpg'
+//    '../vendor/fuelux/dist/fonts/fuelux.*'
     ]
   }
 };

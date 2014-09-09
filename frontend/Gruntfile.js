@@ -94,8 +94,9 @@ module.exports = function ( grunt ) {
      */
     clean: {
       build: ['<%= build_dir %>'],
-      deploy:['<%= compile_dir %>' ],
-      extra:  ['<%= build_dir %>/**/*.jade', '<%= build_dir%>/**/*.tpl.html'],
+      deploy:['<%= deploy_dir %>' ],
+      build_extra: ['<%= build_dir %>/**/*.jade', '<%= build_dir%>/**/*.tpl.html'],
+      deploy_extra: ['<%= deploy_dir %>/**/*.jade'],
       specs: ['<%= build_dir %>/**/*.spec.js', '<%= build_dir %>/**/*.spec.coffee'],
       options: {force: true}
     },
@@ -115,6 +116,12 @@ module.exports = function ( grunt ) {
       },
       login: {
         files: {'<%= build_dir %>': ['<%= build_dir %>/login.jade']}
+      },
+      index2: {
+        files: {'<%= deploy_dir %>': ['<%= deploy_dir %>/index.jade']}
+      },
+      login2: {
+        files: {'<%= deploy_dir %>': ['<%= deploy_dir %>/login.jade']}
       },
       options: {
         extension: '.html',
@@ -257,8 +264,8 @@ module.exports = function ( grunt ) {
       },
       compile: {
         files: {
-          '<%= compile_dir %>/assets/<%= target.index %>.css': '<%= index_files.less %>',
-          '<%= compile_dir %>/assets/<%= target.login %>.css': '<%= login_files.less %>'
+          '<%= deploy_dir %>/assets/<%= target.index %>.css': '<%= index_files.less %>',
+          '<%= deploy_dir %>/assets/<%= target.login %>.css': '<%= login_files.less %>'
         },
         options: {
           cleancss: true,
@@ -270,7 +277,7 @@ module.exports = function ( grunt ) {
     /**
      * The `copy` task just copies files from A to B. We use it here to copy
      * our project assets (images, fonts, etc.) and javascripts into
-     * `build_dir`, and then to copy the assets to `compile_dir`.
+     * `build_dir`, and then to copy the assets to `deploy_dir`.
      */
     copy: {
       build_assets: {
@@ -334,7 +341,7 @@ module.exports = function ( grunt ) {
         files: [
           {
             src: [ '**' ],
-            dest: '<%= compile_dir %>/assets',
+            dest: '<%= deploy_dir %>/assets',
             cwd: '<%= build_dir %>/assets',
             expand: true
           }
@@ -383,7 +390,7 @@ module.exports = function ( grunt ) {
           '<%= html2js.ms_index.dest %>',
           'module.suffix'
         ],
-        dest: '<%= compile_dir %>/assets/<%= target.index %>.js'
+        dest: '<%= deploy_dir %>/assets/<%= target.index %>.js'
       },
       compile_login_js: {
         src: [
@@ -397,7 +404,7 @@ module.exports = function ( grunt ) {
           '<%= html2js.ms_login.dest %>',
           'module.suffix'
         ],
-        dest: '<%= compile_dir %>/assets/<%= target.login %>.js'
+        dest: '<%= deploy_dir %>/assets/<%= target.login %>.js'
       }
     },
 
@@ -435,12 +442,12 @@ module.exports = function ( grunt ) {
 
     cssmin: {
       index: {
-        src: '<%= compile_dir %>/assets/<%= target.index %>.css',
-        dest: '<%= compile_dir %>/assets/<%= target.index %>.css'
+        src: '<%= deploy_dir %>/assets/<%= target.index %>.css',
+        dest: '<%= deploy_dir %>/assets/<%= target.index %>.css'
       },
       login: {
-        src: '<%= compile_dir %>/assets/<%= target.login %>.css',
-        dest: '<%= compile_dir %>/assets/<%= target.login %>.css'
+        src: '<%= deploy_dir %>/assets/<%= target.login %>.css',
+        dest: '<%= deploy_dir %>/assets/<%= target.login %>.css'
       }
     },
 
@@ -515,9 +522,9 @@ module.exports = function ( grunt ) {
        * file. Now we're back!
        */
       compile: {
-        dir: '<%= compile_dir %>',
+        output: '<%= deploy_dir %>',
         src: '<%= concat.compile_index_js.dest %>',
-        style: '<%= compile_dir %>/assets/<%= target.index %>.css'
+        style: '<%= deploy_dir %>/assets/<%= target.index %>.css'
       }
     },
 
@@ -546,11 +553,11 @@ module.exports = function ( grunt ) {
        * file. Now we're back!
        */
       compile: {
-        dir: '<%= compile_dir %>',
+        output: '<%= deploy_dir %>',
         src: [
-          '<%= concat.compile_login_js.dest %>',
-          '<%= compile_dir %>/assets/<%= target.login %>.css'
-        ]
+          '<%= concat.compile_login_js.dest %>'
+        ],
+        style: '<%= deploy_dir %>/assets/<%= target.login %>.css'
       }
     },
 
@@ -716,20 +723,20 @@ module.exports = function ( grunt ) {
     'less:build',                 // 将src目录中的less文件编译为css
     'copy:build_assets',          // 将assets目录中的文件copy到build目录中的assets
     'copy:build_vendor_assets',   // 将vendor的assets copy到build目录中的assets
-    'copy:build_index_js',           // 将src目录中的js文件copy到build目录中
+    'copy:build_index_js',        // 将src目录中的js文件copy到build目录中
     'copy:build_login_js',
     'copy:build_vendor_js',
-    'copy:build_specs',
-    'concat:build_index_css',       // 合并build目录中所有的css文件为一个文件（与deploy环境一致)
+    'concat:build_index_css',     // 合并build目录中所有的css文件为一个文件（与deploy环境一致)
     'concat:build_login_css',
     'index:build',                // 将实际输出目录的scripts,style变量设置到 index.jade 文件中
     'jade:index',                 // 编译 build_dir下的index.jade 为index.html
     'login:build',                // 将实际输出目录的scripts,style变量设置到 login.jade 文件中
     'jade:login',                 // 编译 build_dir下的login.jade 为login.html
-    'clean:extra',                // 清除build目录多余的文件
+    'clean:build_extra',          // 清除build目录多余的文件
+    'copy:build_specs',
     'karma_config',               // 准备单元测试(karma-unit.tpl.js -> karma-unit.js)
-    'karma:continuous',           // 执行单元测试
-    'clean:specs',                // 清除build目录多余的单元测试文件
+    //'karma:continuous',           // 执行单元测试
+    'clean:specs'                 // 清除build目录多余的单元测试文件
   ]);
 
   /**
@@ -739,18 +746,23 @@ module.exports = function ( grunt ) {
   grunt.registerTask( 'compile', [
     'copy:compile_assets',       //将build目录下的assets copy到deploy目录下
     'ngmin',                     //在压缩前标记js文件
-    'concat:compile_index_js',     //合并js文件
+    'concat:compile_index_js',   //合并js文件
     'concat:compile_login_js',
     'uglify',                    //压缩js文件
-    'cssmin:index',                //压缩css文件
+    'cssmin:index',              //压缩css文件
     'cssmin:login',
-    'login:compile',
-    'index:compile'
+    'login:compile',             // 将实际输出目录的scripts,style变量设置到 login.jade 文件中
+    'jade:login2',               // 编译deploy_dir下的login.jade为login.html
+    'index:compile',
+    'jade:index2',               // 编译deploy_dir下的index.jade为index.html
+    'clean:deploy_extra'         // 清除deploy目录多余的文件
   ]);
 
-  var BuildDir = function(){};
+  var BuildDir = function(dir){
+    this.scripts = [];
+    this.dir = dir;
+  };
   BuildDir.prototype = {
-    dir: grunt.config('build_dir'),
     scripts: [],
     processPattern: function(pattern){
       //vendor pattern need special process
@@ -797,7 +809,7 @@ module.exports = function ( grunt ) {
     //     concat.index.dest
     //CSS File
     //  assets/<%= target.index %>.css
-    var bd = new BuildDir();
+    var bd = new BuildDir(this.data.output);
     var style = bd.processPattern(this.data.style)[0];
     bd.processRaw(this.data.src);
     var scripts = bd.scripts;
@@ -817,7 +829,7 @@ module.exports = function ( grunt ) {
   });
 
   grunt.registerMultiTask( 'login', 'Process login.jade template', function () {
-    var bd = new BuildDir();
+    var bd = new BuildDir(this.data.output);
     var style = bd.processPattern(this.data.style)[0];
     bd.processRaw(this.data.src);
     var scripts = bd.scripts;
@@ -842,7 +854,7 @@ module.exports = function ( grunt ) {
    * compiled as grunt templates for use by Karma. Yay!
    */
   grunt.registerMultiTask( 'karma_config', 'Process karma config templates', function () {
-    var bd = new BuildDir();
+    var bd = new BuildDir(this.data.output);
     bd.processRaw(this.data.src);
     var scripts = bd.scripts;
     grunt.file.copy( '../karma/karma-unit.tpl.js', grunt.config( 'build_dir' ) + '/karma-unit.js', {
