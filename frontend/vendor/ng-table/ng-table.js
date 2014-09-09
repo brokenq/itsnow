@@ -479,6 +479,10 @@ var ngTableController = ['$scope', 'ngTableParams', '$timeout', function ($scope
     })();
 
     $scope.$watch('params.$params', function (newParams, oldParams) {
+        //Jay Xiong bugfix for compliant with params changed to number by outside
+        if(typeof($scope.params) !== 'object' ){
+          return;
+        }
         $scope.params.settings().$scope = $scope;
 
         if (!angular.equals(newParams.filter, oldParams.filter)) {
@@ -692,6 +696,10 @@ app.directive('ngTablePagination', ['$compile',
             link: function (scope, element, attrs) {
 
                 scope.params.settings().$scope.$on('ngTableAfterReloadData', function () {
+                  //Jay Xiong bugfix for compliant with params changed to number by outside
+                  if(typeof(scope.params) !== 'object' ){
+                    return;
+                  }
                     scope.pages = scope.params.generatePagesArray(scope.params.page(), scope.params.total(), scope.params.count());
                 }, true);
 
