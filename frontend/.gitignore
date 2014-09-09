@@ -2,9 +2,9 @@
 *~
 build/
 deploy/
-ms?/build/
+ms?/*build*/
 bin/
-ms?/deploy/
+ms?/*deploy*/
 node_modules/
 .target
 npm_debug.log

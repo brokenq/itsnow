@@ -1,2 +1,0 @@
-angular.module('Common.Templates', []);
-
