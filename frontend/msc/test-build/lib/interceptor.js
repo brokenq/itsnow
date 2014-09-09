@@ -3,7 +3,7 @@
  */
 // CSRF拦截器
 angular
-    .module('Common.Interceptor', [])
+    .module('Lib.Interceptor', [])
 
     .factory('CSRFResource', ['$resource', function ($resource) {
         return $resource('security/csrf', null, {

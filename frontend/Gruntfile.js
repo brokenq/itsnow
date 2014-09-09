@@ -96,6 +96,7 @@ module.exports = function ( grunt ) {
       build: ['<%= build_dir %>'],
       deploy:['<%= compile_dir %>' ],
       extra:  ['<%= build_dir %>/**/*.jade', '<%= build_dir%>/**/*.tpl.html'],
+      specs: ['<%= build_dir %>/**/*.spec.js', '<%= build_dir %>/**/*.spec.coffee'],
       options: {force: true}
     },
     
@@ -139,27 +140,27 @@ module.exports = function ( grunt ) {
           base: 'lib',
           module: 'Lib.Templates'
         },
-        src: [ '<%= app_files.ctpl %>' ],
+        src: [ '<%= index_files.ctpl %>' ],
         dest: '<%= build_dir %>/templates/lib.js'
       },
       /**
-       * These are the templates from `src/app`.
+       * These are the templates from `src/index`.
        */
-      app: {
+      index: {
         options: {
-          base: 'app',
-          module: 'App.Templates'
+          base: 'index',
+          module: 'Index.Templates'
         },
-        src: [ '<%= app_files.atpl %>' ],
-        dest: '<%= build_dir %>/templates/app.js'
+        src: [ '<%= index_files.atpl %>' ],
+        dest: '<%= build_dir %>/templates/index.js'
       },
-      ms_app: {
+      ms_index: {
         options: {
-          base: '<%= target.name %>/app',
-          module: '<%= target.title %>App.Templates'
+          base: '<%= target.name %>/index',
+          module: '<%= target.title %>Index.Templates'
         },
-        src: [ '<%= app_files.mtpl %>' ],
-        dest: '<%= build_dir %>/templates/<%= target.name %>-app.js'
+        src: [ '<%= index_files.mtpl %>' ],
+        dest: '<%= build_dir %>/templates/<%= target.name %>-index.js'
       },
       /**
        * These are the templates from `src/login`.
@@ -187,8 +188,8 @@ module.exports = function ( grunt ) {
      * jslint 任务路径只能以Gruntfile所在目录为相对路径
      */
     jshint: {
-      source: [ '<%= app_files.js %>', '<%= login_files.js %>' ],
-      test: [ '<%= app_files.jsunit %>', '<%= login_files.jsunit %>' ],
+      source: [ '<%= index_files.js %>', '<%= login_files.js %>' ],
+      test: [ '<%= index_files.jsunit %>', '<%= login_files.jsunit %>' ],
       gruntfile: [
         '../Gruntfile.js'
       ],
@@ -210,8 +211,8 @@ module.exports = function ( grunt ) {
      * the defaults here.
      */
     coffeelint: {
-      source: [ '<%= app_files.coffee %>', '<%= login_files.coffee %>' ],
-      test: [ '<%= app_files.coffeeunit %>', '<%= login_files.coffeeunit %>' ]
+      source: [ '<%= index_files.coffee %>', '<%= login_files.coffee %>' ],
+      test: [ '<%= index_files.coffeeunit %>', '<%= login_files.coffeeunit %>' ]
     },
 
     /**
@@ -222,12 +223,12 @@ module.exports = function ( grunt ) {
      * it in the final build, but we don't want to include our specs there.
      */
     coffee: {
-      app: {
+      index: {
         options: {
           bare: true
         },
         expand: true,
-        src: [ '<%= app_files.coffee %>' ],
+        src: [ '<%= index_files.coffee %>' ],
         dest: '<%= build_dir %>',
         ext: '.js'
       },
@@ -250,13 +251,13 @@ module.exports = function ( grunt ) {
     less: {
       build: {
         files: {
-          '<%= build_dir %>/assets/<%= target.app %>.css': '<%= app_files.less %>',
+          '<%= build_dir %>/assets/<%= target.index %>.css': '<%= index_files.less %>',
           '<%= build_dir %>/assets/<%= target.login %>.css': '<%= login_files.less %>'
         }
       },
       compile: {
         files: {
-          '<%= compile_dir %>/assets/<%= target.app %>.css': '<%= app_files.less %>',
+          '<%= compile_dir %>/assets/<%= target.index %>.css': '<%= index_files.less %>',
           '<%= compile_dir %>/assets/<%= target.login %>.css': '<%= login_files.less %>'
         },
         options: {
@@ -292,16 +293,16 @@ module.exports = function ( grunt ) {
           }
        ]
       },
-      build_appjs: {
+      build_index_js: {
         files: [
           {
-            src: [ '<%= app_files.js %>' ],
+            src: [ '<%= index_files.js %>' ],
             dest: '<%= build_dir %>/',
             expand: true
           }
         ]
       },
-      build_loginjs: {
+      build_login_js: {
         files: [
           {
             src: [ '<%= login_files.js %>' ],
@@ -310,7 +311,7 @@ module.exports = function ( grunt ) {
           }
         ]
       },
-      build_vendorjs: {
+      build_vendor_js: {
         files: [
           {
             src: [ '<%= vendor_files.js %>' ],
@@ -349,15 +350,15 @@ module.exports = function ( grunt ) {
         banner: '<%= meta.banner %>'
       },
       /**
-       * The `build_app_css` target concatenates compiled CSS and vendor CSS
+       * The `build_index_css` target concatenates compiled CSS and vendor CSS
        * together.
        */
-      build_app_css: {
+      build_index_css: {
         src: [
-          '<%= build_dir %>/assets/<%= target.app %>.css',
+          '<%= build_dir %>/assets/<%= target.index %>.css',
           '<%= vendor_files.css %>'
         ],
-        dest: '<%= build_dir %>/assets/<%= target.app %>.css'
+        dest: '<%= build_dir %>/assets/<%= target.index %>.css'
       },
       build_login_css: {
         src: [
@@ -370,19 +371,19 @@ module.exports = function ( grunt ) {
        * The `compile_js` target is the concatenation of our application source
        * code and all specified vendor source code into a single file.
        */
-      compile_app_js: {
+      compile_index_js: {
         src: [
           '<%= vendor_files.js %>',
           'module.prefix',
           '<%= build_dir %>/lib/**/*.js',
-          '<%= build_dir %>/app/**/*.js',
-          '<%= build_dir %>/<%= target.name %>/app/**/*.js',
+          '<%= build_dir %>/index/**/*.js',
+          '<%= build_dir %>/<%= target.name %>/index/**/*.js',
           '<%= html2js.lib.dest %>',
-          '<%= html2js.app.dest %>',
-          '<%= html2js.ms_app.dest %>',
+          '<%= html2js.index.dest %>',
+          '<%= html2js.ms_index.dest %>',
           'module.suffix'
         ],
-        dest: '<%= compile_dir %>/assets/<%= target.app %>.js'
+        dest: '<%= compile_dir %>/assets/<%= target.index %>.js'
       },
       compile_login_js: {
         src: [
@@ -408,7 +409,7 @@ module.exports = function ( grunt ) {
       compile: {
         files: [
           {
-            src: [ '<%= app_files.js %>', '<%= login_files.js %>',  '<%= test_files.js %>' ],
+            src: [ '<%= index_files.js %>', '<%= login_files.js %>',  '<%= test_files.js %>' ],
             cwd: '<%= build_dir %>',
             dest: '<%= build_dir %>',
             expand: true
@@ -426,16 +427,16 @@ module.exports = function ( grunt ) {
           banner: '<%= meta.banner %>'
         },
         files: {
-          '<%= concat.compile_app_js.dest %>': '<%= concat.compile_app_js.dest %>',
+          '<%= concat.compile_index_js.dest %>': '<%= concat.compile_index_js.dest %>',
           '<%= concat.compile_login_js.dest %>': '<%= concat.compile_login_js.dest %>'
         }
       }
     },
 
     cssmin: {
-      app: {
-        src: '<%= compile_dir %>/assets/<%= target.app %>.css',
-        dest: '<%= compile_dir %>/assets/<%= target.app %>.css'
+      index: {
+        src: '<%= compile_dir %>/assets/<%= target.index %>.css',
+        dest: '<%= compile_dir %>/assets/<%= target.index %>.css'
       },
       login: {
         src: '<%= compile_dir %>/assets/<%= target.login %>.css',
@@ -453,14 +454,14 @@ module.exports = function ( grunt ) {
         output: '<%= build_dir %>',
         src: [
           '<%= vendor_files.js %>',
-          '<%= app_files.js %>',
-          '<%= app_files.coffee %>',
+          '<%= index_files.js %>',
+          '<%= index_files.coffee %>',
           '<%= login_files.js %>',
           '<%= login_files.coffee %>',
 
           '<%= test_files.js %>',
-          '<%= app_files.jsunit %>',
-          '<%= app_files.coffeeunit %>',
+          '<%= index_files.jsunit %>',
+          '<%= index_files.coffeeunit %>',
           '<%= login_files.jsunit %>',
           '<%= login_files.coffeeunit %>'
         ]
@@ -501,11 +502,11 @@ module.exports = function ( grunt ) {
         src: [
           '<%= vendor_files.js %>',
           '<%= html2js.lib.dest %>',
-          '<%= html2js.app.dest %>',
-          '<%= html2js.ms_app.dest %>',
-          '<%= app_files.js %>'
+          '<%= html2js.index.dest %>',
+          '<%= html2js.ms_index.dest %>',
+          '<%= index_files.js %>'
         ],
-        style: '<%= build_dir %>/assets/<%= target.app %>.css'
+        style: '<%= build_dir %>/assets/<%= target.index %>.css'
       },
 
       /**
@@ -515,8 +516,8 @@ module.exports = function ( grunt ) {
        */
       compile: {
         dir: '<%= compile_dir %>',
-        src: '<%= concat.compile_app_js.dest %>',
-        style: '<%= compile_dir %>/assets/<%= target.app %>.css'
+        src: '<%= concat.compile_index_js.dest %>',
+        style: '<%= compile_dir %>/assets/<%= target.index %>.css'
       }
     },
 
@@ -592,10 +593,10 @@ module.exports = function ( grunt ) {
        */
       jssrc: {
         files: [
-          '<%= app_files.js %>',
+          '<%= index_files.js %>',
           '<%= login_files.js %>'
         ],
-        tasks: [ 'jshint:src', 'karma:unit:run', 'copy:build_appjs', 'copy:build_loginjs' ]
+        tasks: [ 'jshint:src', 'karma:unit:run', 'copy:build_indexjs', 'copy:build_loginjs' ]
       },
 
       /**
@@ -604,10 +605,10 @@ module.exports = function ( grunt ) {
        */
       coffeesrc: {
         files: [
-          '<%= app_files.coffee %>',
+          '<%= index_files.coffee %>',
           '<%= login_files.coffee %>'
         ],
-        tasks: [ 'coffeelint:src', 'coffee:source', 'karma:unit:run', 'copy:build_appjs', 'copy:build_loginjs' ]
+        tasks: [ 'coffeelint:src', 'coffee:source', 'karma:unit:run', 'copy:build_indexjs', 'copy:build_loginjs' ]
       },
 
       /**
@@ -625,7 +626,7 @@ module.exports = function ( grunt ) {
        * When index.html | login.html changes, we need to compile it.
        */
       html: {
-        files: [ '<%= app_files.html %>', '<%= login_files.html %>' ],
+        files: [ '<%= index_files.html %>', '<%= login_files.html %>' ],
         tasks: [ 'index:build', 'login:build' ]
       },
 
@@ -634,9 +635,9 @@ module.exports = function ( grunt ) {
        */
       tpls: {
         files: [
-          '<%= app_files.atpl %>',
-          '<%= app_files.ctpl %>',
-          '<%= app_files.mtpl %>',
+          '<%= index_files.atpl %>',
+          '<%= index_files.ctpl %>',
+          '<%= index_files.mtpl %>',
           '<%= login_files.atpl %>',
           '<%= login_files.ctpl %>',
           '<%= login_files.mtpl %>'
@@ -658,7 +659,7 @@ module.exports = function ( grunt ) {
        */
       jsunit: {
         files: [
-          '<%= app_files.jsunit %>',
+          '<%= index_files.jsunit %>',
           '<%= login_files.jsunit %>'
         ],
         tasks: [ 'jshint:test', 'karma:unit:run' ],
@@ -673,7 +674,7 @@ module.exports = function ( grunt ) {
        */
       coffeeunit: {
         files: [
-          '<%= app_files.coffeeunit %>',
+          '<%= index_files.coffeeunit %>',
           '<%= login_files.coffeeunit %>'
         ],
         tasks: [ 'coffeelint:test', 'karma:unit:run' ],
@@ -715,11 +716,11 @@ module.exports = function ( grunt ) {
     'less:build',                 // 将src目录中的less文件编译为css
     'copy:build_assets',          // 将assets目录中的文件copy到build目录中的assets
     'copy:build_vendor_assets',   // 将vendor的assets copy到build目录中的assets
-    'copy:build_appjs',           // 将src目录中的js文件copy到build目录中
-    'copy:build_loginjs',
-    'copy:build_vendorjs',
+    'copy:build_index_js',           // 将src目录中的js文件copy到build目录中
+    'copy:build_login_js',
+    'copy:build_vendor_js',
     'copy:build_specs',
-    'concat:build_app_css',       // 合并build目录中所有的css文件为一个文件（与deploy环境一致)
+    'concat:build_index_css',       // 合并build目录中所有的css文件为一个文件（与deploy环境一致)
     'concat:build_login_css',
     'index:build',                // 将实际输出目录的scripts,style变量设置到 index.jade 文件中
     'jade:index',                 // 编译 build_dir下的index.jade 为index.html
@@ -727,7 +728,8 @@ module.exports = function ( grunt ) {
     'jade:login',                 // 编译 build_dir下的login.jade 为login.html
     'clean:extra',                // 清除build目录多余的文件
     'karma_config',               // 准备单元测试(karma-unit.tpl.js -> karma-unit.js)
-    'karma:continuous'            // 执行单元测试
+    'karma:continuous',           // 执行单元测试
+    'clean:specs',                // 清除build目录多余的单元测试文件
   ]);
 
   /**
@@ -737,10 +739,10 @@ module.exports = function ( grunt ) {
   grunt.registerTask( 'compile', [
     'copy:compile_assets',       //将build目录下的assets copy到deploy目录下
     'ngmin',                     //在压缩前标记js文件
-    'concat:compile_app_js',     //合并js文件
+    'concat:compile_index_js',     //合并js文件
     'concat:compile_login_js',
     'uglify',                    //压缩js文件
-    'cssmin:app',                //压缩css文件
+    'cssmin:index',                //压缩css文件
     'cssmin:login',
     'login:compile',
     'index:compile'
@@ -788,13 +790,13 @@ module.exports = function ( grunt ) {
     //   when build(is array)
     //     vendor_files.js
     //     html2js.lib.dest
-    //     html2js.app.dest
-    //     html2js.ms_app.dest
-    //     app_files.js
+    //     html2js.index.dest
+    //     html2js.ms_index.dest
+    //     index_files.js
     //   when compile(is string)
-    //     concat.app.dest
+    //     concat.index.dest
     //CSS File
-    //  assets/<%= target.app %>.css
+    //  assets/<%= target.index %>.css
     var bd = new BuildDir();
     var style = bd.processPattern(this.data.style)[0];
     bd.processRaw(this.data.src);

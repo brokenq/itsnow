@@ -19,19 +19,18 @@ module.exports = {
    * main HTML file, `less` is our main stylesheet, and `unit` contains our
    * app's unit tests.
    */
-  app_files: {
-    js: [ 'lib/**/*.js', 'app/**/*.js', 'msc/app/**/*.js', '!**/*.spec.js' ],
-    jsunit: [ 'lib/**/*.spec.js', 'app/**/*.spec.js', 'msc/app/**/*.spec.js'],
+  index_files: {
+    js: [ 'lib/**/*.js', 'index/**/*.js', 'msc/index/**/*.js', '!**/*.spec.js' ],
+    jsunit: [ 'lib/**/*.spec.js', 'index/**/*.spec.js', 'msc/index/**/*.spec.js'],
 
-    coffee: [ 'lib/**/*.coffee', 'app/**/*.coffee', 'msc/app/**/*.coffee', '!**/*.spec.coffee' ],
-    coffeeunit: [ 'src/lib/**/*.spec.coffee', 'src/app/**/*.spec.coffee', 'src/msc/app/**/*.spec.coffee'],
+    coffee: [ 'lib/**/*.coffee', 'index/**/*.coffee', 'msc/index/**/*.coffee', '!**/*.spec.coffee' ],
+    coffeeunit: [ 'lib/**/*.spec.coffee', 'index/**/*.spec.coffee', 'msc/index/**/*.spec.coffee'],
 
     ctpl: [ 'lib/**/*.tpl.html' ],
-    atpl: [ 'app/**/*.tpl.html' ],
-    mtpl: [ 'msc/app/**/*.tpl.html' ],
+    atpl: [ 'index/**/*.tpl.html' ],
+    mtpl: [ 'msc/index/**/*.tpl.html' ],
 
-    html: [ '../index.html' ],
-    less: 'less/main.less'
+    less: 'less/index.less'
   },
 
   login_files: {
@@ -45,7 +44,6 @@ module.exports = {
     atpl: [ 'login/**/*.tpl.html' ],
     mtpl: [ 'msc/login/**/*.tpl.html' ],
 
-    html: [ '../login.html' ],
     less: 'less/login.less'
   },
 

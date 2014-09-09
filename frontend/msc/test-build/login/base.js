@@ -6,8 +6,8 @@ angular.module("Itsnow.Login", [
     'ngLocale',
     'ui.router',
 
-    'Common.Interceptor',
-    'Common.Templates',
+    'Lib.Interceptor',
+    'Lib.Templates',
     'Login.Templates',
     'Itsnow.Security',
     'Login.Authenticate',
