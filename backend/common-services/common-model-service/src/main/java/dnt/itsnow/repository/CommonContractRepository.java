@@ -20,11 +20,14 @@ public interface CommonContractRepository {
     @Select("SELECT count(0) FROM contracts WHERE msu_account_id = #{msuId}")
     long countByMsuAccountId(@Param("msuId") long msuId);
 
-
-    @Select("SELECT count(0) FROM contracts WHERE msp_account_id = #{msuId}")
+    @Select("SELECT count(0) FROM contracts WHERE msp_account_id = #{mspId}")
     long countByMspAccountId(@Param("mspId") long mspId);
 
+    @Select("SELECT count(0) FROM contracts")
+    long count();
+
     //不需要加载details，但需要分页
+    List<Contract> findAll(@Param("pageable")Pageable pageable);
 
     List<Contract> findAllByMsuAccountId(@Param("msuId") long msuId, @Param("pageable")Pageable pageable);
 

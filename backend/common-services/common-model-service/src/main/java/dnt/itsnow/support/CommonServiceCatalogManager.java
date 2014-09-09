@@ -20,7 +20,7 @@ public class CommonServiceCatalogManager extends Bean implements CommonServiceCa
     @Autowired
     CommonServiceCatalogRepository commonServiceCatalogRepository;
 
-    private  static List<PublicServiceCatalog> commonServiceCatalogList;
+    private  List<PublicServiceCatalog> commonServiceCatalogList;
 
     @Override
     public List<PublicServiceCatalog> findAll() {
@@ -53,11 +53,11 @@ public class CommonServiceCatalogManager extends Bean implements CommonServiceCa
         return commonServiceCatalogRepository.findBySn(sn);
     }
 
-    public static List<PublicServiceCatalog> getCommonServiceCatalogList() {
+    public List<PublicServiceCatalog> getCommonServiceCatalogList() {
         return commonServiceCatalogList;
     }
 
-    public static void setCommonServiceCatalogList(List<PublicServiceCatalog> commonServiceCatalogList) {
-        CommonServiceCatalogManager.commonServiceCatalogList = commonServiceCatalogList;
+    public void setCommonServiceCatalogList(List<PublicServiceCatalog> commonServiceCatalogList) {
+        this.commonServiceCatalogList = commonServiceCatalogList;
     }
 }

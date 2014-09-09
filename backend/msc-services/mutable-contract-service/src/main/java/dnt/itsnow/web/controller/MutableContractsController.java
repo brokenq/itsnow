@@ -4,7 +4,12 @@
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.Contract;
+import dnt.itsnow.platform.service.ServiceException;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
+import dnt.itsnow.platform.web.exception.WebClientSideException;
+import dnt.itsnow.service.MutableContractService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -17,6 +22,8 @@ import java.util.List;
 @RequestMapping("/admin/api/contracts")
 public class MutableContractsController extends SessionSupportController<Contract> {
     Contract contract;
+    @Autowired
+    MutableContractService mutableContractService;
 
     /**
      * <h2>获得所有的合同</h2>
@@ -25,20 +32,28 @@ public class MutableContractsController extends SessionSupportController<Contrac
      *
      * @return 合同
      */
-    @RequestMapping
+    @RequestMapping(method=RequestMethod.GET)
     public List<Contract> index(){
-        return null;
+        logger.debug("Listing contracts");
+        try {
+            indexPage = mutableContractService.findAllByAccount(mainAccount, pageRequest);
+            logger.debug("Found   contracts {}", indexPage.getTotalElements());
+        }
+        catch (ServiceException e) {
+            throw new WebClientSideException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
+        }
+        return indexPage.getContent();
     }
 
     /**
      * <h2>查看一个合同</h2>
      *
-     * GET /admin/api/contracts/{no}
+     * GET /admin/api/contracts/{sn}
      *
      * @return 合同
      */
-    @RequestMapping("{no}")
-    public Contract show(){
+    @RequestMapping(value="/{sn}",method=RequestMethod.GET)
+    public Contract show(@PathVariable("sn")String sn){
         return contract;
     }
 
@@ -51,7 +66,7 @@ public class MutableContractsController extends SessionSupportController<Contrac
      */
     @RequestMapping(method = RequestMethod.POST)
     public Contract create(@Valid @RequestBody Contract contract){
-        return contract;
+        return mutableContractService.create(contract);
     }
 
     /**
@@ -61,11 +76,50 @@ public class MutableContractsController extends SessionSupportController<Contrac
      *
      * @return 被更新的合同
      */
-    @RequestMapping(value = "{no}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{sn}", method = RequestMethod.PUT)
     public Contract update(@Valid @RequestBody Contract contract){
         this.contract.apply(contract);
-        //TODO SAVE IT
-        return this.contract;
+        return mutableContractService.update(contract);
+    }
+
+    /**
+     * <h2>MSP投标</h2>
+     *
+     * PUT /admin/api/contracts/{sn}/bid
+     *
+     * @return 合同
+     */
+    @RequestMapping(value = "/{sn}/bid", method = RequestMethod.PUT)
+    public Contract bid(@Valid @RequestBody Contract contract){
+        logger.debug("msp bid contract:{}",contract.getSn());
+        this.contract.apply(contract);
+        return mutableContractService.bid(contract);
+    }
+
+    /**
+     * <h2>MSU批准一个合同</h2>
+     *
+     * PUT /admin/api/contracts/{sn}/approve
+     *
+     * @return 被批准的合同
+     */
+    @RequestMapping(value = "/{sn}/approve", method = RequestMethod.PUT)
+    public Contract approve(){
+        logger.debug("msu approve contract:{}", contract.getSn());
+        return mutableContractService.approve(contract);
+    }
+
+    /**
+     * <h2>MSU拒绝一个合同</h2>
+     *
+     * PUT /admin/api/contracts/{sn}/reject
+     *
+     * @return 被拒绝的合同
+     */
+    @RequestMapping(value = "/{sn}/reject", method = RequestMethod.PUT)
+    public Contract reject(){
+        logger.debug("msu reject contract:{}",contract.getSn());
+        return mutableContractService.reject(contract);
     }
 
     /**
@@ -75,13 +129,21 @@ public class MutableContractsController extends SessionSupportController<Contrac
      *
      * @return 被删除的合同
      */
-    @RequestMapping(value = "{no}", method = RequestMethod.DELETE)
-    public Contract destroy(){
-        return null;
+    @RequestMapping(value = "/{sn}", method = RequestMethod.DELETE)
+    public Contract destroy(@PathVariable("sn")String sn){
+        mutableContractService.delete(contract);
+        return contract;
     }
 
-    @BeforeFilter({"show", "update", "destroy"})
-    public void initContract(@PathVariable("no") String no){
-        contract = null;//find it by sn
+    @BeforeFilter({"show", "update","bid","approve","reject", "destroy"})
+    public void initContract(@PathVariable("sn")String sn){
+        try {
+            contract = mutableContractService.findByAccountAndSn(mainAccount, sn, true);//findByAccountId it by sn
+        }catch(ServiceException e){
+            throw new WebClientSideException(HttpStatus.NOT_ACCEPTABLE,e.getMessage());
+        }
+        if(contract == null){
+            throw new WebClientSideException(HttpStatus.NOT_FOUND, "Can't find the contract with sn = " + sn);
+        }
     }
 }

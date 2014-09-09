@@ -8,9 +8,12 @@ CREATE TABLE contract_details (
   brief       VARCHAR(255),
   description TEXT(16),
   icon        VARCHAR(100),
+  item_id     INT(10) UNSIGNED,
   created_at  TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at  TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (contract_id)    REFERENCES contracts(id)
+  FOREIGN KEY (contract_id)    REFERENCES contracts(id)ON DELETE CASCADE
+  ON UPDATE CASCADE,
+  FOREIGN KEY (item_id)         REFERENCES public_service_items(id)
 );
 
 

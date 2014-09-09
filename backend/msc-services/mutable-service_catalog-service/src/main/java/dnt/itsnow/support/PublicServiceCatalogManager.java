@@ -6,6 +6,8 @@ import dnt.itsnow.service.PublicServiceCatalogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+
 /**
  * Created by jacky on 2014/9/2.
  */
@@ -16,21 +18,26 @@ public class PublicServiceCatalogManager extends CommonServiceCatalogManager imp
     PublicServiceCatalogRepository publicServiceCatalogRepository;
 
     @Override
-    public PublicServiceCatalog save(PublicServiceCatalog publicServiceCatalog) {
+    public PublicServiceCatalog create(PublicServiceCatalog publicServiceCatalog) {
         setCommonServiceCatalogList(null);
-        return publicServiceCatalogRepository.save(publicServiceCatalog);
+        publicServiceCatalog.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        publicServiceCatalog.setUpdatedAt(publicServiceCatalog.getCreatedAt());
+        publicServiceCatalogRepository.create(publicServiceCatalog);
+        return publicServiceCatalog;
     }
 
     @Override
     public PublicServiceCatalog update(PublicServiceCatalog publicServiceCatalog) {
         setCommonServiceCatalogList(null);
-        return publicServiceCatalogRepository.update(publicServiceCatalog);
+        publicServiceCatalog.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        publicServiceCatalogRepository.update(publicServiceCatalog);
+        return publicServiceCatalog;
     }
 
     @Override
-    public void delete(String sn) {
+    public void delete(PublicServiceCatalog publicServiceCatalog) {
         setCommonServiceCatalogList(null);
-        publicServiceCatalogRepository.delete(sn);
+        publicServiceCatalogRepository.delete(publicServiceCatalog.getSn());
     }
 
 }

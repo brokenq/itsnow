@@ -4,8 +4,11 @@
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.PublicServiceCatalog;
+import dnt.itsnow.platform.web.annotation.BeforeFilter;
+import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.service.PublicServiceCatalogService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -18,7 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/api/public_service_catalogs")
 public class PublicServiceCatalogsController extends SessionSupportController<PublicServiceCatalog> {
-    //PublicServiceCatalog serviceCatalog;
+    PublicServiceCatalog serviceCatalog;
     @Autowired
     PublicServiceCatalogService publicServiceCatalogService;
     /**
@@ -44,7 +47,7 @@ public class PublicServiceCatalogsController extends SessionSupportController<Pu
      */
     @RequestMapping("{sn}")
     public PublicServiceCatalog show(@PathVariable("sn") String sn){
-        return publicServiceCatalogService.findBySn(sn);
+        return serviceCatalog;
     }
 
     /**
@@ -56,7 +59,7 @@ public class PublicServiceCatalogsController extends SessionSupportController<Pu
      */
     @RequestMapping(method = RequestMethod.POST)
     public PublicServiceCatalog create(@Valid @RequestBody PublicServiceCatalog serviceCatalog){
-        return publicServiceCatalogService.save(serviceCatalog);
+        return publicServiceCatalogService.create(serviceCatalog);
     }
 
     /**
@@ -68,7 +71,7 @@ public class PublicServiceCatalogsController extends SessionSupportController<Pu
      */
     @RequestMapping(value = "{sn}", method = RequestMethod.PUT)
     public PublicServiceCatalog update(@Valid @RequestBody PublicServiceCatalog serviceCatalog){
-        //this.serviceCatalog.apply(serviceCatalog);
+        this.serviceCatalog.apply(serviceCatalog);
         return publicServiceCatalogService.update(serviceCatalog);
     }
 
@@ -81,14 +84,16 @@ public class PublicServiceCatalogsController extends SessionSupportController<Pu
      */
     @RequestMapping(value = "{sn}", method = RequestMethod.DELETE)
     public PublicServiceCatalog destroy(@PathVariable("sn") String sn){
-        publicServiceCatalogService.delete(sn);
-        return null;
+        publicServiceCatalogService.delete(serviceCatalog);
+        return serviceCatalog;
     }
 
-    /*
+
     @BeforeFilter({"show", "update", "destroy"})
     public void initServiceCatalog(@PathVariable("sn") String sn){
-        serviceCatalog = null;//find it by sn
-    }*/
+        serviceCatalog = publicServiceCatalogService.findBySn(sn);
+        if(serviceCatalog == null)
+            throw new WebClientSideException(HttpStatus.NOT_FOUND, "Can't find the service catalog with sn = " + sn);
+    }
 
 }

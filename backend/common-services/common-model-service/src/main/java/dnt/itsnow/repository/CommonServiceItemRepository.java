@@ -12,4 +12,6 @@ public interface CommonServiceItemRepository {
     List<PublicServiceItem> findAll();
 
     PublicServiceItem findById(Long id);
+
+    List<PublicServiceItem> findByAccountId(Long accountId);
 }
