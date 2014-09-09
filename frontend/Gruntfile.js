@@ -97,7 +97,7 @@ module.exports = function ( grunt ) {
       deploy:['<%= deploy_dir %>' ],
       build_extra: ['<%= build_dir %>/**/*.jade', '<%= build_dir%>/**/*.tpl.html'],
       deploy_extra: ['<%= deploy_dir %>/**/*.jade'],
-      specs: ['<%= build_dir %>/**/*.spec.js', '<%= build_dir %>/**/*.spec.coffee'],
+      specs: ['<%= build_dir %>/**/*.spec.js', '<%= build_dir %>/**/*.spec.coffee', '<%= build_dir %>/karma-unit.js'],
       options: {force: true}
     },
     
@@ -128,7 +128,7 @@ module.exports = function ( grunt ) {
         client: false,
         runtime: false,
         wrap: true,
-        locals:{ title: 'Convert src by grunt-jade'}
+        locals:{ title: 'Convert jade by grunt-jade'}
       }
     },
 
@@ -147,7 +147,7 @@ module.exports = function ( grunt ) {
           base: 'lib',
           module: 'Lib.Templates'
         },
-        src: [ '<%= index_files.ctpl %>' ],
+        src: [ '<%= index_files.lib_tpl %>' ],
         dest: '<%= build_dir %>/templates/lib.js'
       },
       /**
@@ -158,7 +158,7 @@ module.exports = function ( grunt ) {
           base: 'index',
           module: 'Index.Templates'
         },
-        src: [ '<%= index_files.atpl %>' ],
+        src: [ '<%= index_files.index_tpl %>' ],
         dest: '<%= build_dir %>/templates/index.js'
       },
       ms_index: {
@@ -166,7 +166,7 @@ module.exports = function ( grunt ) {
           base: '<%= target.name %>/index',
           module: '<%= target.title %>Index.Templates'
         },
-        src: [ '<%= index_files.mtpl %>' ],
+        src: [ '<%= index_files.ms_tpl %>' ],
         dest: '<%= build_dir %>/templates/<%= target.name %>-index.js'
       },
       /**
@@ -177,7 +177,7 @@ module.exports = function ( grunt ) {
           base: 'login',
           module: 'Login.Templates'
         },
-        src: [ '<%= login_files.atpl %>' ],
+        src: [ '<%= login_files.login_tpl %>' ],
         dest: '<%= build_dir %>/templates/login.js'
       },
       ms_login: {
@@ -185,7 +185,7 @@ module.exports = function ( grunt ) {
           base: '<%= target.name %>/login',
           module: '<%=target.title%>Login.Templates'
         },
-        src: [ '<%= login_files.mtpl %>' ],
+        src: [ '<%= login_files.ms_tpl %>' ],
         dest: '<%= build_dir %>/templates/<%= target.name %>-login.js'
       }
 
@@ -196,7 +196,7 @@ module.exports = function ( grunt ) {
      */
     jshint: {
       source: [ '<%= index_files.js %>', '<%= login_files.js %>' ],
-      test: [ '<%= index_files.jsunit %>', '<%= login_files.jsunit %>' ],
+      test: [ '<%= index_files.js_unit %>', '<%= login_files.js_unit %>' ],
       gruntfile: [
         '../Gruntfile.js'
       ],
@@ -208,8 +208,7 @@ module.exports = function ( grunt ) {
         sub: true,
         boss: true,
         eqnull: true
-      },
-      globals: {}
+      }
     },
 
     /**
@@ -219,7 +218,7 @@ module.exports = function ( grunt ) {
      */
     coffeelint: {
       source: [ '<%= index_files.coffee %>', '<%= login_files.coffee %>' ],
-      test: [ '<%= index_files.coffeeunit %>', '<%= login_files.coffeeunit %>' ]
+      test: [ '<%= index_files.coffee_unit %>', '<%= login_files.coffee_unit %>' ]
     },
 
     /**
@@ -330,7 +329,12 @@ module.exports = function ( grunt ) {
       build_specs: {
         files: [
           {
-            src: [ '**/*.spec.js','**/*.spec.coffee' ],
+            src: [
+              '<%= index_files.js_unit%>',
+              '<%= index_files.coffee_unit%>',
+              '<%= login_files.js_unit%>',
+              '<%= login_files.coffee_unit%>'
+            ],
             dest: '<%= build_dir %>',
             expand: true
           }
@@ -467,10 +471,10 @@ module.exports = function ( grunt ) {
           '<%= login_files.coffee %>',
 
           '<%= test_files.js %>',
-          '<%= index_files.jsunit %>',
-          '<%= index_files.coffeeunit %>',
-          '<%= login_files.jsunit %>',
-          '<%= login_files.coffeeunit %>'
+          '<%= index_files.js_unit %>',
+          '<%= index_files.coffee_unit %>',
+          '<%= login_files.js_unit %>',
+          '<%= login_files.coffee_unit %>'
         ]
       }
     },
@@ -642,12 +646,12 @@ module.exports = function ( grunt ) {
        */
       tpls: {
         files: [
-          '<%= index_files.atpl %>',
-          '<%= index_files.ctpl %>',
-          '<%= index_files.mtpl %>',
-          '<%= login_files.atpl %>',
-          '<%= login_files.ctpl %>',
-          '<%= login_files.mtpl %>'
+          '<%= index_files.lib_tpl %>',
+          '<%= index_files.index_tpl %>',
+          '<%= index_files.ms_tpl %>',
+          '<%= login_files.lib_tpl %>',
+          '<%= login_files.login_tpl %>',
+          '<%= login_files.ms_tpl %>'
         ],
         tasks: [ 'html2js' ]
       },
@@ -666,8 +670,8 @@ module.exports = function ( grunt ) {
        */
       jsunit: {
         files: [
-          '<%= index_files.jsunit %>',
-          '<%= login_files.jsunit %>'
+          '<%= index_files.js_unit %>',
+          '<%= login_files.js_unit %>'
         ],
         tasks: [ 'jshint:test', 'karma:unit:run' ],
         options: {
@@ -681,8 +685,8 @@ module.exports = function ( grunt ) {
        */
       coffeeunit: {
         files: [
-          '<%= index_files.coffeeunit %>',
-          '<%= login_files.coffeeunit %>'
+          '<%= index_files.coffee_unit %>',
+          '<%= login_files.coffee_unit %>'
         ],
         tasks: [ 'coffeelint:test', 'karma:unit:run' ],
         options: {
@@ -715,7 +719,7 @@ module.exports = function ( grunt ) {
    */
   grunt.registerTask( 'build', [
     'clean:build',                // 清除build目录
-    'jade:source',                // 将src目录中的jade文件编译成为build目录中的html
+    //'jade:source',              // 将src目录中的jade文件编译成为build目录中的html(由于现在html2js支持了jade，所以暂时不需要直接生成)
     'html2js',                    // 将src/build目录中的*.tpl.html编译成为build目录中的templates/*.js
     'jshint',                     // 检查src目录中的js语法
     'coffeelint',                 // 检查src目录中的coffee语法
@@ -723,9 +727,9 @@ module.exports = function ( grunt ) {
     'less:build',                 // 将src目录中的less文件编译为css
     'copy:build_assets',          // 将assets目录中的文件copy到build目录中的assets
     'copy:build_vendor_assets',   // 将vendor的assets copy到build目录中的assets
-    'copy:build_index_js',        // 将src目录中的js文件copy到build目录中
+    'copy:build_vendor_js',       // 将src目录中的js文件copy到build目录中
+    'copy:build_index_js',
     'copy:build_login_js',
-    'copy:build_vendor_js',
     'concat:build_index_css',     // 合并build目录中所有的css文件为一个文件（与deploy环境一致)
     'concat:build_login_css',
     'index:build',                // 将实际输出目录的scripts,style变量设置到 index.jade 文件中

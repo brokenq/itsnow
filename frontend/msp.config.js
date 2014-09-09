@@ -21,28 +21,28 @@ module.exports = {
    */
   index_files: {
     js: [ 'lib/**/*.js', 'index/**/*.js', 'msp/index/**/*.js', '!**/*.spec.js' ],
-    jsunit: [ 'lib/**/*.spec.js', 'index/**/*.spec.js', 'msp/index/**/*.spec.js'],
+    js_unit: [ 'lib/**/*.spec.js', 'index/**/*.spec.js', 'msp/index/**/*.spec.js'],
 
     coffee: [ 'lib/**/*.coffee', 'index/**/*.coffee', 'msp/index/**/*.coffee', '!**/*.spec.coffee' ],
-    coffeeunit: [ 'lib/**/*.spec.coffee', 'index/**/*.spec.coffee', 'msp/index/**/*.spec.coffee'],
+    coffee_unit: [ 'lib/**/*.spec.coffee', 'index/**/*.spec.coffee', 'msp/index/**/*.spec.coffee'],
 
-    ctpl: [ 'lib/**/*.tpl.html' ],
-    atpl: [ 'index/**/*.tpl.html' ],
-    mtpl: [ 'msp/index/**/*.tpl.html' ],
+    lib_tpl: [ '/lib/**/*.tpl.html', '/lib/**/*.tpl.jade' ],
+    index_tpl: [ 'index/**/*.tpl.html', 'index/**/*.tpl.jade' ],
+    ms_tpl: [ 'msp/index/**/*.tpl.html', 'msp/index/**/*.tpl.jade' ],
 
     less: 'less/index.less'
   },
 
   login_files: {
     js: [ 'lib/**/*.js', 'login/**/*.js', 'msp/login/**/*.js', '!**/*.spec.js'],
-    jsunit: [ 'lib/**/*.spec.js', 'login/**/*.spec.js', 'msp/login/**/*.spec.js'],
+    js_unit: [ 'lib/**/*.spec.js', 'login/**/*.spec.js', 'msp/login/**/*.spec.js'],
 
     coffee: [ 'lib/**/*.coffee', 'login/**/*.coffee', 'msp/login/**/*.coffee', '!**/*.spec.coffee' ],
-    coffeeunit: [ 'lib/**/*.spec.coffee', 'login/**/*.spec.coffee', 'msp/login/**/*.spec.coffee'],
+    coffee_unit: [ 'lib/**/*.spec.coffee', 'login/**/*.spec.coffee', 'msp/login/**/*.spec.coffee'],
 
-    ctpl: [ 'lib/**/*.tpl.html' ],
-    atpl: [ 'login/**/*.tpl.html' ],
-    mtpl: [ 'msp/login/**/*.tpl.html' ],
+    lib_tpl: [ 'lib/**/*.tpl.html', 'lib/**/*.tpl.jade' ],
+    login_tpl: [ 'login/**/*.tpl.html', 'login/**/*.tpl.jade' ],
+    ms_tpl: [ 'msp/login/**/*.tpl.html', 'msp/login/**/*.tpl.jade' ],
 
     less: 'less/login.less'
   },

@@ -96,6 +96,18 @@
                         </configuration>
                     </execution>
                     <execution>
+                        <id>clean-frontend</id>
+                        <phase>clean</phase>
+                        <goals><goal>run</goal></goals>
+                        <configuration>
+                            <target>
+                                <echo message="Clean frontend build/deploy" />
+                                <delete dir="${release.dir}/webapp/build/"/>
+                                <delete dir="${release.dir}/webapp/deploy/"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>build-frontend</id>
                         <phase>package</phase>
                         <goals>
