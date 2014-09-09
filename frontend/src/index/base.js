@@ -6,8 +6,7 @@ angular.module('Itsnow.Index', [
     'Lib.Templates',
     'Index.Templates',
     'Index.Menu',
-    'Index.Dialog',
-    'Index.Table'
+    'Index.Dialog'
 ])
   .config(function ($httpProvider, $stateProvider, $urlRouterProvider) {
         $urlRouterProvider.otherwise('');
