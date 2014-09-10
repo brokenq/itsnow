@@ -1,4 +1,4 @@
-package dnt.itsnow.demo.model;
+package dnt.itsnow.model;
 
 /**
  * Created by jacky on 2014/8/5.

@@ -2,12 +2,9 @@
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="msu_incident">
   <process id="msu_incident" name="msu_incident" isExecutable="true">
     <startEvent id="new_incident" name="servicedesk new_incident" activiti:initiator="servicedesk">
-      <documentation>Assigned</documentation>
-      <extensionElements>
-        <activiti:formProperty id="description" name="description" type="string"></activiti:formProperty>
-      </extensionElements>
+      <documentation>New</documentation>
     </startEvent>
-    <userTask id="process_incident" name="firstline process_incident" activiti:exclusive="false" activiti:candidateGroups="first_line">
+    <userTask id="process_incident" name="firstline process_incident" activiti:exclusive="false" activiti:candidateGroups="ROLE_LINE_ONE">
       <documentation>Resolved</documentation>
       <extensionElements>
         <activiti:formProperty id="resolved" name="resolved" type="boolean" required="true"></activiti:formProperty>
@@ -15,70 +12,64 @@
     </userTask>
     <userTask id="close_incident" name="servicedesk close incident" activiti:exclusive="false" activiti:assignee="${servicedesk}">
       <documentation>Closed</documentation>
-      <extensionElements>
-        <activiti:formProperty id="close_code" name="close_code" type="string"></activiti:formProperty>
-      </extensionElements>
     </userTask>
     <intermediateThrowEvent id="end"></intermediateThrowEvent>
     <sequenceFlow id="flow7" sourceRef="close_incident" targetRef="end"></sequenceFlow>
     <exclusiveGateway id="resolved" name="Resolved?"></exclusiveGateway>
-    <sequenceFlow id="sid-7AE5BB76-2701-451C-9ED0-5343033D1C77" sourceRef="process_incident" targetRef="resolved"></sequenceFlow>
-    <userTask id="first_line_accept_incident" name="firstline accept_incident" activiti:candidateGroups="first_line">
+    <userTask id="first_line_accept_incident" name="firstline accept_incident" activiti:candidateGroups="ROLE_LINE_ONE">
       <documentation>Accepted</documentation>
-      <extensionElements>
-        <activiti:formProperty id="solution1" name="solution1" type="string"></activiti:formProperty>
-      </extensionElements>
     </userTask>
-    <userTask id="analysis_incident" name="firstline analysis_incident" activiti:candidateGroups="first_line">
+    <userTask id="firstline-analysis_incident" name="firstline analysis_incident" activiti:candidateGroups="ROLE_LINE_ONE">
       <documentation>Resolving</documentation>
       <extensionElements>
-        <activiti:formProperty id="can_process" name="can_process" type="boolean"></activiti:formProperty>
+        <activiti:formProperty id="canProcess" name="canProcess" type="boolean"></activiti:formProperty>
       </extensionElements>
     </userTask>
     <exclusiveGateway id="can_process" name="can_process?"></exclusiveGateway>
-    <userTask id="second_line_accpet_incident" name="secondline accept_incident" activiti:candidateGroups="second_line">
+    <userTask id="second_line_accpet_incident" name="secondline accept_incident" activiti:candidateGroups="ROLE_LINE_TWO">
       <documentation>Accepted</documentation>
     </userTask>
     <userTask id="secondline-analysis-incident" name="secondline analysis_incident" activiti:candidateGroups="second_line">
       <documentation>Resolving</documentation>
       <extensionElements>
-        <activiti:formProperty id="hardware_error" name="hardware_error" type="boolean"></activiti:formProperty>
+        <activiti:formProperty id="hardwareError" name="hardwareError" type="boolean"></activiti:formProperty>
       </extensionElements>
     </userTask>
     <exclusiveGateway id="hardware" name="hardware_error?"></exclusiveGateway>
-    <userTask id="secondline-process-incident" name="secondline process_incident" activiti:candidateGroups="second_line">
+    <userTask id="secondline-process-incident" name="secondline process_incident" activiti:candidateGroups="ROLE_LINE_TWO">
       <documentation>Resolved</documentation>
     </userTask>
+    <sequenceFlow id="sid-48E5A371-D2B4-4064-99C9-84956E559417" sourceRef="secondline-process-incident" targetRef="close_incident"></sequenceFlow>
+    <userTask id="secondline-call-msp" name="call-msp" activiti:candidateGroups="ROLE_LINE_TWO">
+      <documentation>Call</documentation>
+    </userTask>
+    <sequenceFlow id="sid-5C0B9E85-B305-4C28-B80E-AEE8C137D730" sourceRef="secondline-analysis-incident" targetRef="hardware"></sequenceFlow>
+    <sequenceFlow id="sid-FCD072E6-3539-4C1E-B62C-31B57F62F3D4" sourceRef="secondline-call-msp" targetRef="close_incident"></sequenceFlow>
+    <sequenceFlow id="sid-7AE5BB76-2701-451C-9ED0-5343033D1C77" sourceRef="process_incident" targetRef="resolved"></sequenceFlow>
     <sequenceFlow id="resolved_no" name="No" sourceRef="resolved" targetRef="second_line_accpet_incident">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${resolved==false}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="sid-48E5A371-D2B4-4064-99C9-84956E559417" sourceRef="secondline-process-incident" targetRef="close_incident"></sequenceFlow>
-    <sequenceFlow id="sid-0E61B111-23A7-4C44-A0CA-36C464A2958B" sourceRef="analysis_incident" targetRef="can_process"></sequenceFlow>
-    <sequenceFlow id="can_process_yes" name="yes" sourceRef="can_process" targetRef="process_incident">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${can_process==true}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="sid-9880F07B-E267-40D7-8C29-F6FD1F3F9A52" sourceRef="first_line_accept_incident" targetRef="analysis_incident"></sequenceFlow>
-    <sequenceFlow id="assign" name="assign_to_firstline" sourceRef="new_incident" targetRef="first_line_accept_incident">
-      <documentation>Assigned</documentation>
-    </sequenceFlow>
-    <userTask id="secondline-call-msp" name="call-msp" activiti:candidateGroups="second_line">
-      <documentation>Call</documentation>
-    </userTask>
-    <sequenceFlow id="hardware_error_no" name="no" sourceRef="hardware" targetRef="secondline-process-incident">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${hardware_error==false}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="sid-5C0B9E85-B305-4C28-B80E-AEE8C137D730" sourceRef="secondline-analysis-incident" targetRef="hardware"></sequenceFlow>
     <sequenceFlow id="sid-75C89B9C-8ED0-43B9-83C1-C74A0103A4A5" sourceRef="second_line_accpet_incident" targetRef="secondline-analysis-incident"></sequenceFlow>
+    <sequenceFlow id="lineone-to-analysis" sourceRef="first_line_accept_incident" targetRef="firstline-analysis_incident"></sequenceFlow>
+    <sequenceFlow id="sid-0E61B111-23A7-4C44-A0CA-36C464A2958B" sourceRef="firstline-analysis_incident" targetRef="can_process"></sequenceFlow>
+    <sequenceFlow id="can_process_yes" name="yes" sourceRef="can_process" targetRef="process_incident">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${canProcess==true}]]></conditionExpression>
+    </sequenceFlow>
     <sequenceFlow id="can_process_no" name="no" sourceRef="can_process" targetRef="second_line_accpet_incident">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${can_process==false}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${canProcess==false}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="hardware_error_yes" name="yes" sourceRef="hardware" targetRef="secondline-call-msp">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${hardwareError==true}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="hardware_error_no" name="no" sourceRef="hardware" targetRef="secondline-process-incident">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${hardwareError==false}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="resolved_yes" name="Yes" sourceRef="resolved" targetRef="close_incident">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${resolved==true}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="hardware_error_yes" name="yes" sourceRef="hardware" targetRef="secondline-call-msp">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${hardware_error==true}]]></conditionExpression>
+    <sequenceFlow id="assign" name="assign_to_firstline" sourceRef="new_incident" targetRef="first_line_accept_incident">
+      <documentation>Assigned</documentation>
     </sequenceFlow>
-    <sequenceFlow id="sid-FCD072E6-3539-4C1E-B62C-31B57F62F3D4" sourceRef="secondline-call-msp" targetRef="close_incident"></sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_msu_incident">
     <bpmndi:BPMNPlane bpmnElement="msu_incident" id="BPMNPlane_msu_incident">
@@ -100,7 +91,7 @@
       <bpmndi:BPMNShape bpmnElement="first_line_accept_incident" id="BPMNShape_first_line_accept_incident">
         <omgdc:Bounds height="80.0" width="100.0" x="75.0" y="150.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="analysis_incident" id="BPMNShape_analysis_incident">
+      <bpmndi:BPMNShape bpmnElement="firstline-analysis_incident" id="BPMNShape_firstline-analysis_incident">
         <omgdc:Bounds height="80.0" width="100.0" x="210.0" y="150.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="can_process" id="BPMNShape_can_process">
@@ -156,10 +147,6 @@
         <omgdi:waypoint x="365.0" y="325.0"></omgdi:waypoint>
         <omgdi:waypoint x="430.0" y="325.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-9880F07B-E267-40D7-8C29-F6FD1F3F9A52" id="BPMNEdge_sid-9880F07B-E267-40D7-8C29-F6FD1F3F9A52">
-        <omgdi:waypoint x="175.0" y="190.0"></omgdi:waypoint>
-        <omgdi:waypoint x="210.0" y="190.0"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-0E61B111-23A7-4C44-A0CA-36C464A2958B" id="BPMNEdge_sid-0E61B111-23A7-4C44-A0CA-36C464A2958B">
         <omgdi:waypoint x="310.0" y="190.0"></omgdi:waypoint>
         <omgdi:waypoint x="345.0" y="190.0"></omgdi:waypoint>
@@ -183,6 +170,10 @@
       <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
         <omgdi:waypoint x="1025.0" y="100.0"></omgdi:waypoint>
         <omgdi:waypoint x="1060.0" y="100.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="lineone-to-analysis" id="BPMNEdge_lineone-to-analysis">
+        <omgdi:waypoint x="175.0" y="190.0"></omgdi:waypoint>
+        <omgdi:waypoint x="210.0" y="190.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="hardware_error_no" id="BPMNEdge_hardware_error_no">
         <omgdi:waypoint x="760.0" y="325.0"></omgdi:waypoint>

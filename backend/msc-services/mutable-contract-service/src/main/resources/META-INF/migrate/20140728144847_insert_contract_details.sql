@@ -5,10 +5,10 @@ SET @swg0003 = (SELECT id from contracts where sn = 'SWG-201403080003');
 SET @swg0010 = (SELECT id from contracts where sn = 'SWG-201407010010');
 SET @swg0002 = (SELECT id from contracts where sn = 'SWG-201408050002');
 
-SET @ITEM001 = (SELECT id FROM public_service_item WHERE title = 'General Hardware Problem');
-SET @ITEM002 = (SELECT id FROM public_service_item WHERE title = 'Desktop Clean');
-SET @ITEM003 = (SELECT id FROM public_service_item WHERE title = 'Laptop Maintain');
-SET @ITEM004 = (SELECT id FROM public_service_item WHERE title = 'Laptop Env configure');
+SET @ITEM001 = (SELECT id FROM public_service_items WHERE title = 'General Hardware Problem');
+SET @ITEM002 = (SELECT id FROM public_service_items WHERE title = 'Desktop Clean');
+SET @ITEM003 = (SELECT id FROM public_service_items WHERE title = 'Laptop Maintain');
+SET @ITEM004 = (SELECT id FROM public_service_items WHERE title = 'Laptop Env configure');
 
 INSERT INTO contract_details(contract_id,item_id, title, brief, description, icon) VALUES
 (@swg0003,@ITEM001, '项目1', '第一个明细', '第一个详细说明', '/assets/cd01.png'),

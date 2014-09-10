@@ -1,6 +1,7 @@
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.PrivateServiceCatalog;
+import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.service.PrivateServiceCatalogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/private_service_catalogs")
 public class PrivateServiceCatalogsController extends SessionSupportController<PrivateServiceCatalog> {
-    //PrivateServiceCatalog serviceCatalog;
+    PrivateServiceCatalog serviceCatalog;
     @Autowired
     PrivateServiceCatalogService privateServiceCatalogService;
 
@@ -42,7 +43,7 @@ public class PrivateServiceCatalogsController extends SessionSupportController<P
      */
     @RequestMapping("/{sn}")
     public PrivateServiceCatalog show(@PathVariable("sn") String sn){
-        return privateServiceCatalogService.findPrivateBySn(sn);
+        return serviceCatalog;
     }
 
     /**
@@ -54,7 +55,7 @@ public class PrivateServiceCatalogsController extends SessionSupportController<P
      */
     @RequestMapping(value = "/{sn}", method = RequestMethod.POST)
     public PrivateServiceCatalog add(@Valid @RequestBody PrivateServiceCatalog serviceCatalog){
-        //this.serviceCatalog.apply(serviceCatalog);
+        this.serviceCatalog.apply(serviceCatalog);
         return privateServiceCatalogService.savePrivate(serviceCatalog);
     }
 
@@ -69,6 +70,11 @@ public class PrivateServiceCatalogsController extends SessionSupportController<P
     public PrivateServiceCatalog destroy(@PathVariable("sn") String sn){
         privateServiceCatalogService.deletePrivate(sn);
         return null;
+    }
+
+    @BeforeFilter
+    public void initServiceCatalog(@PathVariable("sn") String catalogSn){
+        serviceCatalog = privateServiceCatalogService.findPrivateBySn(catalogSn);
     }
 
 }

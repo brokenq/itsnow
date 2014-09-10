@@ -1,4 +1,4 @@
-package dnt.itsnow.demo.model;
+package dnt.itsnow.model;
 
 import dnt.itsnow.platform.model.Record;
 
@@ -9,35 +9,41 @@ import java.sql.Timestamp;
  */
 public class Incident extends Record {
 
-    private String msuInstanceId;//对应msu activiti的instanceId
-    private String number;//'故障单号，系统自动生成，生成规则:INC20140801111700001',
-    private String requesterName;//'请求人',
-    private String requesterLocation;//'请求人所处的地区',
-    private String requesterEmail;//'请求人的email',
-    private String requesterPhone;//'请求人的电话',
-    private String serviceCatalog;// '服务目录',
-    private String category;//'分类：软件、硬件、咨询、其他',
-    private String impact;//'影响程度：高、中、低',
-    private String urgency;//'紧急度：高、中、低',
-    private String priority;//'优先级：高、中、低',
-    private String requestType;//'请求类型：email,phone,web',
-    private String ciType;//'CI类型',
-    private String ci;//'CI',
-    private String requestDescription;//'故障描述',
-    private String createdBy;//'创建人',
-    private String assignedUser;//'分配用户',
-    private String assignedGroup;//'分配组',
-    private Timestamp responseTime;//'响应时间',
-    private Timestamp resolveTime;//'解决时间',
-    private Timestamp closeTime;//'关闭时间',
-    private String solution;//'解决方案',
-    private IncidentStatus msuStatus = IncidentStatus.Assigned;
+    private String number;//'故障单号，系统自动生成，生成规则:INC20140801111700001'
+    private String requesterName;//'请求人'
+    private String requesterLocation;//'请求人所处的地区'
+    private String requesterEmail;//'请求人的email'
+    private String requesterPhone;//'请求人的电话,
+    private String serviceCatalog;// '服务目录'
+    private String category;//'分类：软件、硬件、咨询、其他'
+    private String impact;//'影响程度：高、中、低'
+    private String urgency;//'紧急度：高、中、低'
+    private String priority;//'优先级：高、中、低'
+    private String requestType;//'请求类型：email,phone,web'
+    private String ciType;//'CI类型'
+    private String ci;//'CI'
+    private String requestDescription;//'故障描述'
+    private String createdBy;//'创建人'
+    private String updatedBy;//'更新人'
+    private String assignedUser;//'分配用户'
+    private String assignedGroup;//'分配组'
+    private Timestamp responseTime;//'响应时间'
+    private Timestamp resolveTime;//'解决时间'
+    private Timestamp closeTime;//'关闭时间'
+    private String solution;//'解决方案'
     private String closeCode;//关闭代码
 
+    private Boolean canProcess;//一线工程师是否可以处理该故障
+    private Boolean resolved;//是否解决故障
+    private Boolean hardwareError;//是否是硬件故障
+
+    private String msuInstanceId;//对应msu activiti的instanceId
     private String msuAccountName;//msu account name
+    private IncidentStatus msuStatus = IncidentStatus.Assigned;
+
     //add msp msuInstanceId,msp msuStatus
-    private String mspAccountName;//msp account name
     private String mspInstanceId;//msp instance id
+    private String mspAccountName;//msp account name
     private IncidentStatus mspStatus;//msp msuStatus
 
     public String getCloseCode() {
@@ -262,5 +268,37 @@ public class Incident extends Record {
 
     public void setMspStatus(IncidentStatus mspStatus) {
         this.mspStatus = mspStatus;
+    }
+
+    public Boolean getCanProcess() {
+        return canProcess;
+    }
+
+    public void setCanProcess(Boolean canProcess) {
+        this.canProcess = canProcess;
+    }
+
+    public Boolean getResolved() {
+        return resolved;
+    }
+
+    public void setResolved(Boolean resolved) {
+        this.resolved = resolved;
+    }
+
+    public Boolean getHardwareError() {
+        return hardwareError;
+    }
+
+    public void setHardwareError(Boolean hardwareError) {
+        this.hardwareError = hardwareError;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
     }
 }

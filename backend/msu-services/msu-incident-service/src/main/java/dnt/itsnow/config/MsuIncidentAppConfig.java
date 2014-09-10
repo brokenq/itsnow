@@ -1,4 +1,4 @@
-package dnt.itsnow.demo.config;
+package dnt.itsnow.config;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -7,6 +7,6 @@ import org.springframework.context.annotation.Configuration;
  * The demo Incident app config
  */
 @Configuration
-@ComponentScan("dnt.itsnow.demo.support")
+@ComponentScan("dnt.itsnow.support")
 public class MsuIncidentAppConfig {
 }
