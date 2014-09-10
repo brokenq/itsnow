@@ -1,7 +1,6 @@
-package dnt.itsnow.demo.config;
+package dnt.itsnow.config;
 
 import dnt.itsnow.api.ActivitiEngineService;
-import dnt.itsnow.config.DefaultCommonServiceConfig;
 
 /**
  * MSP Incident模块的服务配置

@@ -41,4 +41,4 @@ CREATE TABLE `msu_incidents` (
 
 -- //@UNDO
 
-DROP TABLE demo_incidents;
+DROP TABLE msu_incidents;

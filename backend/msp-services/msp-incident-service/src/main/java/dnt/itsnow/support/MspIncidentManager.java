@@ -3,12 +3,12 @@ package dnt.itsnow.support;
 import dnt.itsnow.api.ActivitiEngineService;
 import dnt.itsnow.model.Incident;
 import dnt.itsnow.model.IncidentStatus;
-import dnt.itsnow.model.MsuIncident;
+import dnt.itsnow.model.MspIncident;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.platform.util.DefaultPage;
-import dnt.itsnow.repository.MsuIncidentRepository;
-import dnt.itsnow.service.MsuIncidentService;
+import dnt.itsnow.repository.MspIncidentRepository;
+import dnt.itsnow.service.MspIncidentService;
 import dnt.messaging.MessageBus;
 import dnt.spring.Bean;
 import org.activiti.engine.delegate.event.ActivitiEventType;
@@ -27,10 +27,10 @@ import java.util.*;
 
 
 @Service
-public class MsuIncidentManager extends Bean implements MsuIncidentService {
+public class MspIncidentManager extends Bean implements MspIncidentService {
 
     @Autowired
-    MsuIncidentRepository msuIncidentRepository;
+    MspIncidentRepository mspIncidentRepository;
 
     @Autowired
     ActivitiEngineService activitiEngineService;
@@ -38,29 +38,29 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService {
     SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 
     @Autowired
-    MsuEventListener msuEventListener;
+    MspEventListener mspEventListener;
 
     @Autowired
     MessageBus messageBus;
 
-    public static final String PROCESS_KEY = "msu_incident";
+    public static final String PROCESS_KEY = "msp_incident";
 
     private static final String LISTENER = "listener";
 
     public static String getSendChannel() {
-        return "MSU-001-TO-MSP-001";
+        return "MSP-001-TO-MSU-001";
     }
 
     public static String getListenChannel() {
-        return  "MSP-001-TO-MSU-001";
+        return  "MSU-001-TO-MSP-001";
     }
 
     @Override
     protected void performStart() {
         this.autoDeployment();
-        activitiEngineService.addEventListener(msuEventListener, ActivitiEventType.ACTIVITY_COMPLETED);
+        activitiEngineService.addEventListener(mspEventListener, ActivitiEventType.ACTIVITY_COMPLETED);
         //add message-bus listener
-        messageBus.subscribe(LISTENER, getListenChannel(), msuEventListener);
+        messageBus.subscribe(LISTENER, getListenChannel(), mspEventListener);
     }
 
     @Override
@@ -100,7 +100,7 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService {
         if(total > 0){
             if(keyword == null)
                 keyword = "";
-            List<Incident> incidents = msuIncidentRepository.findAllByInstanceIds(ids,keyword,pageable);
+            List<Incident> incidents = mspIncidentRepository.findAllByInstanceIds(ids,keyword,pageable);
             return new DefaultPage<Incident>(incidents,pageable,total);
         }else {
             List<Incident> incidents = new ArrayList<Incident>();
@@ -123,7 +123,7 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService {
         if(total > 0){
             if(keyword == null)
                 keyword = "";
-            List<Incident> incidents = msuIncidentRepository.findAllByInstanceIds(ids,keyword,pageable);
+            List<Incident> incidents = mspIncidentRepository.findAllByInstanceIds(ids,keyword,pageable);
             return new DefaultPage<Incident>(incidents,pageable,total);
         }else {
             List<Incident> incidents = new ArrayList<Incident>();
@@ -132,68 +132,58 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService {
     }
 
     @Override
-    public MsuIncident findByInstanceId(String instanceId,boolean withHistory){
-        MsuIncident msuIncident = new MsuIncident();
-        Incident incident = msuIncidentRepository.findByInstanceId(instanceId);
-        msuIncident.setIncident(incident);
+    public MspIncident findByInstanceId(String instanceId,boolean withHistory){
+        MspIncident mspIncident = new MspIncident();
+        Incident incident = mspIncidentRepository.findByInstanceId(instanceId);
+        mspIncident.setIncident(incident);
         List<Task> tasks = activitiEngineService.queryTasksByInstanceId(instanceId);
 
-        msuIncident.setTasks(tasks);
+        mspIncident.setTasks(tasks);
         if(withHistory){
             //获取历史信息
             List<HistoricActivityInstance> list = activitiEngineService.traceProcessHistory(instanceId);
-            msuIncident.setHistoricActivityInstanceList(list);
+            for(HistoricActivityInstance instance:list){
+
+            }
+            mspIncident.setHistoricActivityInstanceList(list);
         }
-        return msuIncident;
+        return mspIncident;
     }
 
     @Override
-    public MsuIncident startIncident(String accountName,String username,Incident incident){
-        MsuIncident msuIncident = new MsuIncident();
+    public MspIncident startIncident(String accountName,String username,Incident incident){
+        MspIncident mspIncident = new MspIncident();
 
         //start incident process
         ProcessInstance processInstance = activitiEngineService.startProcessInstanceByKey(PROCESS_KEY, null, username);
-        //activitiEngineService.addEventListener( msuEventListener);
+        //activitiEngineService.addEventListener( mspEventListener);
         //create incident object and persist it
         incident.setNumber("INC"+df.format(new Date()));
-        incident.setMsuStatus(IncidentStatus.New);
+        incident.setMspStatus(IncidentStatus.New);
         incident.setCreatedBy(username);
         incident.setUpdatedBy(username);
-        incident.setMsuInstanceId(processInstance.getProcessInstanceId());
-        incident.setMsuAccountName(accountName);
+        incident.setMspInstanceId(processInstance.getProcessInstanceId());
+        incident.setMspAccountName(accountName);
         incident.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         incident.setUpdatedAt(incident.getCreatedAt());
-        msuIncidentRepository.create(incident);
+        mspIncidentRepository.create(incident);
 
-        msuIncident.setIncident(incident);
+        mspIncident.setIncident(incident);
 
-        return msuIncident;
+        return mspIncident;
     }
 
     @Override
-    public MsuIncident processIncident(String instanceId,String taskId,String username,Incident incident){
-        MsuIncident msuIncident = new MsuIncident();
+    public MspIncident processIncident(String instanceId,String taskId,String username,Incident incident){
+        MspIncident mspIncident = new MspIncident();
         //Task task = activitiEngineService.queryTask(taskId);
-        //Incident incident1 = msuIncidentRepository.findByInstanceId(task.getProcessInstanceId());
+        //Incident incident1 = mspIncidentRepository.findByInstanceId(task.getProcessInstanceId());
         incident.setUpdatedBy(username);
-        msuIncidentRepository.update(incident);
-
+        mspIncidentRepository.update(incident);
         Map<String, String> taskVariables = new HashMap<String, String>();
-        if(incident.getMsuStatus().equals(IncidentStatus.Accepted)){
-            if("ROLE_LINE_ONE".equals(incident.getAssignedGroup()))
-                taskVariables.put("canProcess",incident.getCanProcess()+"");
-            else if("ROLE_LINE_TWO".equals(incident.getAssignedGroup()))
-                taskVariables.put("hardwareError",incident.getHardwareError()+"");
-            else
-                logger.debug("incident msu status not match {}",incident);
-        }
-        else if(incident.getMsuStatus().equals(IncidentStatus.Resolving))
-            taskVariables.put("resolved",incident.getResolved()+"");
-
         activitiEngineService.completeTask(taskId,taskVariables,username);
-
-        msuIncident.setIncident(incident);
-        return msuIncident;
+        mspIncident.setIncident(incident);
+        return mspIncident;
     }
 
 }

@@ -1,4 +1,4 @@
-CREATE TABLE `demo_incidents_msp` (
+CREATE TABLE `msp_incidents` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `number` varchar(32) NOT NULL COMMENT '故障单号，系统自动生成，生成规则:INC20140801111700001',
   `requester_name` varchar(255) COMMENT '请求人',
@@ -17,6 +17,7 @@ CREATE TABLE `demo_incidents_msp` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
   `created_by` varchar(255) DEFAULT NULL COMMENT '创建人',
+  `updated_by` varchar(255) DEFAULT NULL COMMENT '更新人',
   `assigned_user` varchar(255) DEFAULT NULL COMMENT '分配用户',
   `assigned_group` varchar(255) DEFAULT NULL COMMENT '分配组',
   `response_time` timestamp NULL DEFAULT NULL COMMENT '响应时间',
@@ -24,6 +25,9 @@ CREATE TABLE `demo_incidents_msp` (
   `close_time` timestamp NULL DEFAULT NULL COMMENT '关闭时间',
   `solution` varchar(2000) DEFAULT NULL COMMENT '解决方案',
   `close_code` varchar(255) DEFAULT NULL COMMENT '关闭代码',
+  `can_process` tinyint(1) DEFAULT NULL COMMENT '能否处理',
+  `resolved` tinyint(1) DEFAULT NULL COMMENT '是否已解决',
+  `hardware_error` tinyint(1) DEFAULT NULL COMMENT '是否是硬件故障',
   `msu_account_name` varchar(255) DEFAULT NULL COMMENT 'MSU帐户NAME',
   `msp_account_name` varchar(255) DEFAULT NULL COMMENT 'MSP帐户NAME',
   `msu_instance_id` varchar(255) COMMENT 'MSU流程实例ID',
@@ -37,4 +41,4 @@ CREATE TABLE `demo_incidents_msp` (
 
 -- //@UNDO
 
-DROP TABLE demo_incidents_msp;
+DROP TABLE msp_incidents;

@@ -16,4 +16,4 @@ VALUES
 -- //@UNDO
 -- SQL to undo the change goes here.
 
-DELETE FROM public_service_items;
+DELETE FROM private_service_items;

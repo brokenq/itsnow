@@ -8,7 +8,7 @@ import dnt.itsnow.platform.service.Pageable;
 /**
  * Created by jacky on 2014/7/28.
  */
-public interface IncidentService {
+public interface MsuIncidentService {
 
     Page<Incident> findByUserAndKey(String username, String keyword, Pageable pageable);
 
