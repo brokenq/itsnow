@@ -4,66 +4,75 @@
     <startEvent id="new_incident" name="servicedesk new incident" activiti:initiator="servicedesk">
       <documentation>New</documentation>
     </startEvent>
-    <userTask id="process_incident" name="firstline process_incident" activiti:exclusive="false" activiti:candidateGroups="first_line">
+    <userTask id="process_incident" name="firstline process_incident" activiti:exclusive="false" activiti:candidateGroups="ROLE_LINE_ONE">
       <documentation>Resolved</documentation>
     </userTask>
-    <userTask id="close_incident" name="servicedesk close incident" activiti:exclusive="false" activiti:assignee="${servicedesk}">
+    <userTask id="close_incident" name="servicedesk close incident" activiti:exclusive="false" activiti:candidateGroups="ROLE_SERVICE_DESK">
       <documentation>Closed</documentation>
     </userTask>
-    <userTask id="first_line_accept_incident" name="firstline accept incident" activiti:candidateGroups="first_line">
+    <userTask id="first_line_accept_incident" name="firstline accept incident" activiti:candidateGroups="ROLE_LINE_ONE">
       <documentation>Accepted</documentation>
     </userTask>
-    <userTask id="analysis_incident" name="firstline analysis_incident" activiti:candidateGroups="first_line">
+    <userTask id="analysis_incident" name="firstline analysis_incident" activiti:candidateGroups="ROLE_LINE_ONE">
       <documentation>Resolving</documentation>
     </userTask>
-    <sequenceFlow id="sid-0E61B111-23A7-4C44-A0CA-36C464A2958B" sourceRef="analysis_incident" targetRef="process_incident"></sequenceFlow>
     <endEvent id="end" name="end"></endEvent>
-    <sequenceFlow id="sid-C35DD6FB-FC53-4877-9E0A-48704A6C620A" sourceRef="close_incident" targetRef="end"></sequenceFlow>
-    <sequenceFlow id="assign" name="assign_to_firstline" sourceRef="new_incident" targetRef="first_line_accept_incident"></sequenceFlow>
+    <userTask id="servicedesk-accept-incident" name="servicedesk accept incident" activiti:candidateGroups="ROLE_SERVICE_DESK">
+      <documentation>Assigned</documentation>
+    </userTask>
     <sequenceFlow id="sid-9880F07B-E267-40D7-8C29-F6FD1F3F9A52" sourceRef="first_line_accept_incident" targetRef="analysis_incident"></sequenceFlow>
+    <sequenceFlow id="sid-C35DD6FB-FC53-4877-9E0A-48704A6C620A" sourceRef="close_incident" targetRef="end"></sequenceFlow>
     <sequenceFlow id="sid-368F59F5-468F-4171-82EF-E7404218080A" sourceRef="process_incident" targetRef="close_incident"></sequenceFlow>
+    <sequenceFlow id="sid-0E61B111-23A7-4C44-A0CA-36C464A2958B" sourceRef="analysis_incident" targetRef="process_incident"></sequenceFlow>
+    <sequenceFlow id="sid-new-incident" sourceRef="new_incident" targetRef="servicedesk-accept-incident"></sequenceFlow>
+    <sequenceFlow id="sid-assign-incident" sourceRef="servicedesk-accept-incident" targetRef="first_line_accept_incident"></sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_msp_incident">
     <bpmndi:BPMNPlane bpmnElement="msp_incident" id="BPMNPlane_msp_incident">
       <bpmndi:BPMNShape bpmnElement="new_incident" id="BPMNShape_new_incident">
-        <omgdc:Bounds height="30.0" width="30.0" x="135.0" y="75.0"></omgdc:Bounds>
+        <omgdc:Bounds height="30.0" width="30.0" x="75.0" y="55.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="process_incident" id="BPMNShape_process_incident">
-        <omgdc:Bounds height="80.0" width="100.0" x="460.0" y="150.0"></omgdc:Bounds>
+        <omgdc:Bounds height="80.0" width="100.0" x="480.0" y="150.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="close_incident" id="BPMNShape_close_incident">
-        <omgdc:Bounds height="80.0" width="100.0" x="580.0" y="60.0"></omgdc:Bounds>
+        <omgdc:Bounds height="80.0" width="100.0" x="480.0" y="30.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="first_line_accept_incident" id="BPMNShape_first_line_accept_incident">
-        <omgdc:Bounds height="80.0" width="100.0" x="160.0" y="150.0"></omgdc:Bounds>
+        <omgdc:Bounds height="80.0" width="100.0" x="180.0" y="150.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="analysis_incident" id="BPMNShape_analysis_incident">
-        <omgdc:Bounds height="80.0" width="100.0" x="315.0" y="150.0"></omgdc:Bounds>
+        <omgdc:Bounds height="80.0" width="100.0" x="335.0" y="150.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
-        <omgdc:Bounds height="28.0" width="28.0" x="725.0" y="86.0"></omgdc:Bounds>
+        <omgdc:Bounds height="28.0" width="28.0" x="645.0" y="56.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge bpmnElement="assign" id="BPMNEdge_assign">
-        <omgdi:waypoint x="165.0" y="90.0"></omgdi:waypoint>
-        <omgdi:waypoint x="210.0" y="90.0"></omgdi:waypoint>
-        <omgdi:waypoint x="210.0" y="150.0"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape bpmnElement="servicedesk-accept-incident" id="BPMNShape_servicedesk-accept-incident">
+        <omgdc:Bounds height="80.0" width="98.0" x="180.0" y="30.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="sid-0E61B111-23A7-4C44-A0CA-36C464A2958B" id="BPMNEdge_sid-0E61B111-23A7-4C44-A0CA-36C464A2958B">
-        <omgdi:waypoint x="415.0" y="190.0"></omgdi:waypoint>
-        <omgdi:waypoint x="460.0" y="190.0"></omgdi:waypoint>
+        <omgdi:waypoint x="435.0" y="190.0"></omgdi:waypoint>
+        <omgdi:waypoint x="480.0" y="190.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-C35DD6FB-FC53-4877-9E0A-48704A6C620A" id="BPMNEdge_sid-C35DD6FB-FC53-4877-9E0A-48704A6C620A">
-        <omgdi:waypoint x="680.0" y="100.0"></omgdi:waypoint>
-        <omgdi:waypoint x="725.0" y="100.0"></omgdi:waypoint>
+        <omgdi:waypoint x="580.0" y="70.0"></omgdi:waypoint>
+        <omgdi:waypoint x="645.0" y="70.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-assign-incident" id="BPMNEdge_sid-assign-incident">
+        <omgdi:waypoint x="229.33333333333334" y="110.0"></omgdi:waypoint>
+        <omgdi:waypoint x="229.66666666666666" y="150.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-368F59F5-468F-4171-82EF-E7404218080A" id="BPMNEdge_sid-368F59F5-468F-4171-82EF-E7404218080A">
-        <omgdi:waypoint x="510.0" y="150.0"></omgdi:waypoint>
-        <omgdi:waypoint x="510.0" y="100.0"></omgdi:waypoint>
-        <omgdi:waypoint x="580.0" y="100.0"></omgdi:waypoint>
+        <omgdi:waypoint x="530.0" y="150.0"></omgdi:waypoint>
+        <omgdi:waypoint x="530.0" y="110.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-new-incident" id="BPMNEdge_sid-new-incident">
+        <omgdi:waypoint x="105.0" y="70.0"></omgdi:waypoint>
+        <omgdi:waypoint x="180.0" y="70.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-9880F07B-E267-40D7-8C29-F6FD1F3F9A52" id="BPMNEdge_sid-9880F07B-E267-40D7-8C29-F6FD1F3F9A52">
-        <omgdi:waypoint x="260.0" y="190.0"></omgdi:waypoint>
-        <omgdi:waypoint x="315.0" y="190.0"></omgdi:waypoint>
+        <omgdi:waypoint x="280.0" y="190.0"></omgdi:waypoint>
+        <omgdi:waypoint x="335.0" y="190.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

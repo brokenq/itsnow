@@ -18,6 +18,7 @@ import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -160,12 +161,27 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
         return processEngine.getTaskService().createTaskQuery().taskCandidateGroup(groupName).list();
     }
 
+    public Task queryTask(String taskId){
+        return processEngine.getTaskService().createTaskQuery().taskId(taskId).singleResult();
+    }
+
+    @Override
+    public List<IdentityLink> queryTaskIdentity(String taskId){
+        List<IdentityLink> identityLinkList = processEngine.getTaskService().getIdentityLinksForTask(taskId);
+        for(IdentityLink identityLink:identityLinkList){
+            logger.debug("task assignee type:{},userId:{},groupId:{}",identityLink.getType(),identityLink.getUserId(),identityLink.getGroupId());
+        }
+        return identityLinkList;
+    }
+
+    @Override
     public Task claimTask(String taskId,String userId){
         processEngine.getTaskService().claim(taskId,userId);
         logger.debug("task:"+taskId+" has been claimed by "+userId);
         return processEngine.getTaskService().createTaskQuery().taskId(taskId).singleResult();
     }
 
+    @Override
     public void completeTask(String id,Map<String, String> taskVariables,String userId){
         try {
             processEngine.getIdentityService().setAuthenticatedUserId(userId);
@@ -216,25 +232,18 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
         return activityInfos;
     }
 
-    public Map<String, Object> traceProcessHistory(String processInstanceId){
-        Map<String, Object> maps = new HashMap<String, Object>();
+    @Override
+    public List<HistoricActivityInstance> traceProcessHistory(String processInstanceId){
 
         HistoricProcessInstance historicProcessInstance = processEngine.getHistoryService().createHistoricProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
-        //hisMap.put("duration", historicProcessInstance.getDurationInMillis());
-        //hisMap.put("startUser",historicProcessInstance.getStartUserId());
-        //hisMap.put("startTime",historicProcessInstance.getStartTime());
-        //hisMap.put("endTime",historicProcessInstance.getEndTime());
-        //hisMap.put("startTaskId",historicProcessInstance.getStartActivityId());
-        maps.put("processInstance",historicProcessInstance);
 
         List<HistoricActivityInstance> hisActs = processEngine.getHistoryService().createHistoricActivityInstanceQuery().processInstanceId(processInstanceId).list();
-        maps.put("historyActivity",hisActs);
 
         //List<HistoricDetail> historicDetailList = processEngine.getHistoryService().createHistoricDetailQuery().processInstanceId(processInstanceId).list();
 
         //List<HistoricVariableInstance> historicVariableInstanceList = processEngine.getHistoryService().createHistoricVariableInstanceQuery().processInstanceId(processInstanceId).list();
 
-        return maps;
+        return hisActs;
     }
 
     @Override

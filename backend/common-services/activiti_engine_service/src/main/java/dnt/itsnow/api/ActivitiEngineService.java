@@ -5,10 +5,12 @@ package dnt.itsnow.api;
 
 import org.activiti.engine.delegate.event.ActivitiEventListener;
 import org.activiti.engine.delegate.event.ActivitiEventType;
+import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.Task;
 
 import java.io.IOException;
@@ -61,13 +63,17 @@ public interface ActivitiEngineService {
 
     List<HistoricProcessInstance> queryTasksFinished(String userName, String key);
 
+    List<IdentityLink> queryTaskIdentity(String taskId);
+
+    Task queryTask(String taskId);
+
     Task claimTask(String taskId,String userId);
 
     void completeTask(String id,Map<String, String> taskVariables,String assignee);
 
     List<Map<String, Object>> traceProcess(String processInstanceId) throws Exception;
 
-    Map<String, Object> traceProcessHistory(String processInstanceId);
+    List<HistoricActivityInstance> traceProcessHistory(String processInstanceId);
 
     void addEventListener(ActivitiEventListener listenerToAdd);
 

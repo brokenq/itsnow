@@ -1,6 +1,7 @@
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.PrivateServiceCatalog;
+import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.service.PrivateServiceCatalogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/private_service_catalogs")
 public class PrivateServiceCatalogsController extends SessionSupportController<PrivateServiceCatalog> {
-    //PrivateServiceCatalog serviceCatalog;
+    PrivateServiceCatalog serviceCatalog;
     @Autowired
     PrivateServiceCatalogService privateServiceCatalogService;
 
@@ -26,7 +27,7 @@ public class PrivateServiceCatalogsController extends SessionSupportController<P
      *
      * @return 按照层次划分的服务目录
      */
-    @RequestMapping()
+    @RequestMapping(method = RequestMethod.GET)
     public List<PrivateServiceCatalog> index(){
         List<PrivateServiceCatalog> list = privateServiceCatalogService.findAllPrivate();
         logger.debug("Get private_service_catalogs size:{}",list.size());
@@ -40,9 +41,9 @@ public class PrivateServiceCatalogsController extends SessionSupportController<P
      *
      * @return 服务目录
      */
-    @RequestMapping("/{sn}")
+    @RequestMapping(value = "/{sn}",method = RequestMethod.GET)
     public PrivateServiceCatalog show(@PathVariable("sn") String sn){
-        return privateServiceCatalogService.findPrivateBySn(sn);
+        return serviceCatalog;
     }
 
     /**
@@ -52,9 +53,8 @@ public class PrivateServiceCatalogsController extends SessionSupportController<P
      *
      * @return 被更新的服务目录
      */
-    @RequestMapping(value = "/{sn}", method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     public PrivateServiceCatalog add(@Valid @RequestBody PrivateServiceCatalog serviceCatalog){
-        //this.serviceCatalog.apply(serviceCatalog);
         return privateServiceCatalogService.savePrivate(serviceCatalog);
     }
 
@@ -69,6 +69,11 @@ public class PrivateServiceCatalogsController extends SessionSupportController<P
     public PrivateServiceCatalog destroy(@PathVariable("sn") String sn){
         privateServiceCatalogService.deletePrivate(sn);
         return null;
+    }
+
+    @BeforeFilter({"show"})
+    public void initServiceCatalog(@PathVariable("sn") String catalogSn){
+        serviceCatalog = privateServiceCatalogService.findPrivateBySn(catalogSn);
     }
 
 }

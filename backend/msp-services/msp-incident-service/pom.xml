@@ -35,10 +35,10 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <App-Config>dnt.itsnow.demo.config.MspIncidentAppConfig</App-Config>
-                            <Service-Config>dnt.itsnow.demo.config.MspIncidentServiceConfig</Service-Config>
-                            <DB-Repository>dnt.itsnow.demo.repository</DB-Repository>
-                            <Web-Repository>dnt.itsnow.demo.web.controller</Web-Repository>
+                            <App-Config>dnt.itsnow.config.MspIncidentAppConfig</App-Config>
+                            <Service-Config>dnt.itsnow.config.MspIncidentServiceConfig</Service-Config>
+                            <DB-Repository>dnt.itsnow.repository</DB-Repository>
+                            <Web-Repository>dnt.itsnow.web.controller</Web-Repository>
                         </manifestEntries>
                     </archive>
                 </configuration>
