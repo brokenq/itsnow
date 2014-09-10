@@ -68,18 +68,18 @@ public class ApplicationController<T extends Record> {
      *
      * 注意：这个请求仅仅针对 GET类型动作，实现方法名称为index的生效
      *
-     * @param page    第几页
-     * @param size    分页参数
+     * @param page    第几页, Start from 1, not zero, to work with ngTable
+     * @param count    分页参数
      *                即便这个值被放到用户profile,或者session里面
      *                那也是前端程序读取到这个值，而后传递过来，而不是这里去读取
      * @param sort 排序参数
      */
     @BeforeFilter(method = RequestMethod.GET, value = "index")
-    public void initDefaultPageRequest( @RequestParam(required = false, value = "page", defaultValue = "0") int page,
-                                        @RequestParam(required = false, value = "size", defaultValue = "40") int size,
+    public void initDefaultPageRequest( @RequestParam(required = false, value = "page", defaultValue = "1") int page,
+                                        @RequestParam(required = false, value = "count", defaultValue = "40") int count,
                                         @RequestParam(required = false, value = "sort", defaultValue = "") String sort){
         Sort theSort = parseSort(sort);
-        pageRequest = new PageRequest(page, size, theSort);
+        pageRequest = new PageRequest(page - 1, count, theSort);
     }
 
     @AfterFilter(method =  RequestMethod.GET, value = "index")
@@ -87,9 +87,10 @@ public class ApplicationController<T extends Record> {
         if( indexPage == null ) return;
         response.setHeader(Page.TOTAL, String.valueOf(indexPage.getTotalElements()));
         response.setHeader(Page.PAGES, String.valueOf(indexPage.getTotalPages()));
-        response.setHeader(Page.NUMBER, String.valueOf(indexPage.getNumber()));
+        response.setHeader(Page.NUMBER, String.valueOf(indexPage.getNumber() + 1));
         response.setHeader(Page.REAL, String.valueOf(indexPage.getNumberOfElements()));
         response.setHeader(Page.SORT, String.valueOf(indexPage.getSort()));
+        response.setHeader(Page.COUNT, String.valueOf(indexPage.getSize()));
     }
 
     private Sort parseSort(String sort) {
