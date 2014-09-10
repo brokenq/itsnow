@@ -15,7 +15,7 @@ angular.module('Itsnow.Index', [
         $stateProvider
             .state('index', {
                 url: '',
-                templateUrl: 'main/main-container.tpl.html'
+                templateUrl: 'main/main-container.tpl.jade'
             });
 
         var menuList = [];

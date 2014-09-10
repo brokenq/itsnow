@@ -217,6 +217,7 @@ module.exports = function ( grunt ) {
      * the defaults here.
      */
     coffeelint: {
+      options: {max_line_length: 200},
       source: [ '<%= index_files.coffee %>', '<%= login_files.coffee %>' ],
       test: [ '<%= index_files.coffee_unit %>', '<%= login_files.coffee_unit %>' ]
     },
@@ -722,7 +723,7 @@ module.exports = function ( grunt ) {
     //'jade:source',              // 将src目录中的jade文件编译成为build目录中的html(由于现在html2js支持了jade，所以暂时不需要直接生成)
     'html2js',                    // 将src/build目录中的*.tpl.html编译成为build目录中的templates/*.js
     'jshint',                     // 检查src目录中的js语法
-    'coffeelint',                 // 检查src目录中的coffee语法
+    //'coffeelint',                 // 检查src目录中的coffee语法
     'coffee',                     // 将src目录中的coffee文件编译为build目录中的js
     'less:build',                 // 将src目录中的less文件编译为css
     'copy:build_assets',          // 将assets目录中的文件copy到build目录中的assets

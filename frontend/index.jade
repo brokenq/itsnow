@@ -1,6 +1,54 @@
 -var sysName = '<%=sysName%>'
 -var style  = '<%= style %>'
 -var scripts = [<% scripts.forEach( function(file){ print('"' + file + '",') }); %>]
+mixin dropdown_toggle(icon, badge, number)
+  a.dropdown-toggle(data-toggle="dropdown", href="#")
+    i(class=icon)
+    span.badge(class="badge-#{badge}")= number
+
+mixin dropdown_header(icon, text)
+  li.dropdown-header
+    i(class="icon-#{icon}")
+    | #{text}
+
+mixin task_progress(text, progress)
+  li
+    a(href="#")
+      .clearfix
+        span.pull-left= text
+        span.pull-right= progress
+      .progress.progress-mini
+        .progress-bar(style="width:#{progress}")
+mixin notification(text, btn, icon, badge, number)
+  li
+    a(href="#")
+      .clearfix
+        span.pull-left
+          i.btn.btn-xs.no-hover(class="btn-#{btn} icon-#{icon}")
+          | #{text}
+        span.pull-right.badge(class="badge-#{badge}")= number
+mixin message(user, text, time, avatar)
+  li
+    a(href="#")
+      img.msg-photo(src="assets/#{avatar}.png",alt="#{user}'s Avatar")
+      span.msg-body
+        span.msg-title
+          span.blue= user
+          | #{text}
+        span.msg-time
+          i.icon-time
+          span= time
+mixin profile_link(text, icon, action)
+  li
+    a(href="#", ng-click=action)
+      i(class="icon-#{icon}")
+      | #{text}
+mixin summary(text)
+  li
+    a(href="#")
+      | #{text}
+      i.icon-arrow-right
+
 !!! 5
 html
   head(lang="zh-CN")
@@ -22,151 +70,42 @@ html
       .navbar-container#navbar-container
         .navbar-header.pull-left
           a.navbar-brand(href="#")
-            small
-              i.icon-leaf
-              | ItsNow ITIL Platform
+            i.icon-leaf
+            | ItsNow ITIL Platform
 
         .navbar-header.pull-right(role="navigation")
           ul.nav.ace-nav
             li.grey
-              a.dropdown-toggle(data-toggle="dropdown",href="#")
-                i.icon-tasks
-                span.badge.badge-grey 4
+              +dropdown_toggle("icon-tasks", "grey", 4)
               ul.pull-right.dropdown-navbar.dropdown-menu.dropdown-caret.dropdown-close
-                li.dropdown-header
-                  i.icon-ok
-                  | 4 Tasks to complete
-
-                li
-                  a(href="#")
-                    .clearfix
-                      span.pull-left Software Update
-                      span.pull-right 65%
-
-                    .progress.progress-mini
-                      .progress-bar(style="width:65%")
-                li
-                  a(href="#")
-                    .clearfix
-                      span.pull-left Hardware Upgrade
-                      span.pull-right 35%
-
-                    .progress.progress-mini
-                      .progress-bar.progress-bar-danger(style="width:35%")
-
-                li
-                  a(href="#")
-                    .clearfix
-                      span.pull-left Unit Testing
-                      span.pull-right 15%
-
-                    .progress.progress-mini
-                      .progress-bar.progress-bar-warning(style="width:15%")
-
-                li
-                  a(href="#")
-                    .clearfix
-                      span.pull-left Bug Fixes
-                      span.pull-right 90%
-
-                    .progress.progress-mini.progress-striped.active
-                      .progress-bar.progress-bar-success(style="width:90%")
-
-                li
-                  a(href="#")
-                    | See tasks with details
-                    i.icon-arrow-right
+                +dropdown_header("ok", "4 Tasks to complete")
+                +task_progress("Software Update", "65%")
+                +task_progress("Hardware Upgrade", "37%")
+                +task_progress("Unit Testing", "15%")
+                +task_progress("Bug Fixes", "90%")
+                +summary("See tasks with details")
 
             li.purple
-              a.dropdown-toggle(data-toggle="dropdown", href="#")
-                i.icon-bell-alt.icon-animated-bell
-                span.badge.badge-important 8
-
+              +dropdown_toggle("icon-bell-alt icon-animated-bell" ,"important", 8)
               ul.pull-right.dropdown-navbar.navbar-pink.dropdown-menu.dropdown-caret.dropdown-close
-                li.dropdown-header
-                  i.icon-warning-sign
-                  | 8 Notifications
-
-                li
-                  a(href="#")
-                    .clearfix
-                      span.pull-left
-                        i.btn.btn-xs.no-hover.btn-pink.icon-comment
-                        | New Comments
-                      span.pull-right.badge.badge-info +12
-
+                +dropdown_header("warning-sign", "8 Notifications")
+                +notification("New Comments", "pink", "comment", "+12")
                 li
                   a(href="#")
                     i.btn.btn-xs.btn-primary.icon-user
                     | Bob just signed up as an editor ...
-
-                li
-                  a(href="#")
-                    .clearfix
-                      span.pull-left
-                        i.btn.btn-xs.no-hover.btn-success.icon-shopping-cart
-                        | New Orders
-                      span.pull-right.badge.badge-success +8
-
-                li
-                  a(href="#")
-                    .clearfix
-                      span.pull-left
-                        i.btn.btn-xs.no-hover.btn-info.icon-twitter
-                        | Followers
-                      span.pull-right.badge.badge-info +11
-
-                li
-                  a(href="#")
-                    | See all notifications
-                    i.icon-arrow-right
+                +notification("New Orders", "success", "success", "+8")
+                +notification("Followers", "info", "info", "+11")
+                +summary("See all notifications")
 
             li.green
-              a.dropdown-toggle(data-toggle="dropdown", href="#")
-                i.icon-envelope.icon-animated-vertical
-                span.badge.badge-success 5
+              +dropdown_toggle("icon-envelope icon-animated-vertical", "success", 5)
 
               ul.pull-right.dropdown-navbar.dropdown-menu.dropdown-caret.dropdown-close
-                li.dropdown-header
-                  i.icon-envelope-alt
-                  | 5 Messages
-
-                li
-                  a(href="#")
-                    img.msg-photo(src="assets/avatar.png",alt="Alex's Avatar")
-                    span.msg-body
-                      span.msg-title
-                        span.blue Alex:
-                        | Ciao sociis natoque penatibus et auctor ...
-
-                      span.msg-time
-                        i.icon-time
-                        span a moment ago
-
-                li
-                  a(href="#")
-                    img.msg-photo(src="assets/avatar3.png", alt="Susan's Avatar")
-                    span.msg-body
-                      span.msg-title
-                        span.blue Susan:
-                        | Vestibulum id ligula porta felis euismod ...
-
-                      span.msg-time
-                        i.icon-time
-                        span 20 minutes ago
-
-                li
-                  a(href="#")
-                    img.msg-photo(src="assets/avatar4.png",alt="Bob's Avatar")
-                    span.msg-body
-                      span.msg-title
-                        span.blue Bob:
-                        | Nullam quis risus eget urna mollis ornare ...
-
-                      span.msg-time
-                        i.icon-time
-                        span 3:15 pm
-
+                +dropdown_header("envelope-alt", "5 Messages")
+                +message("Alex", "Ciao sociis natoque penatibus et auctor ...", "a moment ago", "avatar")
+                +message("Susan", "Vestibulum id ligula porta felis euismod ...", "20 minutes ago", "avatar3")
+                +message("Bob", "Nullam quis risus eget urna mollis ornare ...", "3:15 pm", "avatar4")
                 li
                   a(href="inbox.html")
                     | See all messages
@@ -182,21 +121,9 @@ html
                 i.icon-caret-down
 
               ul.user-menu.pull-right.dropdown-menu.dropdown-yellow.dropdown-caret.dropdown-close
-                li
-                  a(href="#")
-                    i.icon-cog
-                    | 设置
-
-                li
-                  a(href="#")
-                    i.icon-user
-                    | 个人资料
-
+                +profile_link("设置", "cog", "")
+                +profile_link("个人资料", "user", "")
                 li.divider
-
-                li
-                  a(href="#", ng-click="logout()")
-                    i.icon-off
-                    | 注销
+                +profile_link("注销", "off", "logout")
     // 主体内容
     div(ui-view)
