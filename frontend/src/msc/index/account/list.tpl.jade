@@ -1,6 +1,20 @@
 .container(ng-controller="AccountListCtrl")
-  table.table(ng-table)
-    tr(ng-repeat="account in accounts")
+  table.table(template-pagination="customPager",ng-table="tableParams")
+    tr(ng-repeat="account in $data")
       td(data-title="'SN'") {{account.sn}}
       td(data-title="'Name'") {{account.name}}
       td(data-title="'Domain'") {{account.domain}}
+
+script(type="text/ng-template",id="customPager")
+  mixin page_button(size)
+    button.btn.btn-default(type="button", ng-class="{'active':params.size() == #{size}}", ng-click="params.size(#{size})")= size
+  ul.pager.ng-cloak
+    li(ng-repeat="page in pages", ng-klass="{'disabled': !page.active, 'previous': page.type == 'prev', 'next': page.type == 'next'}", ng-show="page.type == 'prev' || page.type == 'next'", ng-switch="page.type")
+      a(ng-switch-when="prev", ng-click="params.page(page.number)", href="") &laquo; Previous
+      a(ng-switch-when="next", ng-click="params.page(page.number)", href="") Next &raquo;
+    li
+      .btn-group
+        +page_button(10)
+        +page_button(25)
+        +page_button(50)
+        +page_button(100)

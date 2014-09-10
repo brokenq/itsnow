@@ -103,10 +103,10 @@ module.exports = {
 //    '../vendor/angular/angular-csp.css',
       '../vendor/bootstrap/dist/css/bootstrap-theme.css',
       '../vendor/ace-bootstrap/css/*.css',
-      '../vendor/ng-table/ng-table.css',
       '../vendor/ng-grid/ng-grid.css',
       '../vendor/angular-dialog-service/dialogs.css',
-      '../vendor/angular-ui-tree/dist/angular-ui-tree.min.css'
+      '../vendor/angular-ui-tree/dist/angular-ui-tree.min.css',
+      '../vendor/ng-table/ng-table.css'
 //    '../vendor/fuelux/dist/css/fuelux.css'
     ],
     assets: [

@@ -29,7 +29,7 @@
         <target.name>itsnow</target.name>
         <target.title>Itsnow</target.title>
         <target.version>${project.version}</target.version>
-        <target.app>${target.name}-app-${target.version}</target.app>
+        <target.index>${target.name}-index-${target.version}</target.index>
         <target.login>${target.name}-login-${target.version}</target.login>
         <grunt.exec>grunt</grunt.exec>
     </properties>
@@ -87,7 +87,7 @@
     "name":    "${target.name}",
     "title":   "${target.title}",
     "version": "${target.version}",
-    "app":     "${target.app}",
+    "index":   "${target.index}",
     "login":   "${target.login}"
 }
 
