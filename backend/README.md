@@ -270,7 +270,7 @@ CREATE TABLE contract_details (
 
 备注：三个magic field(id, created_at, updated_at)各自处理策略不同:
 
-  1. id: 应该在Repository#create(Model)的方法上增加：`@SelectKey(statement="call identity()", keyProperty="id", before=false, resultType=long.class)`
+  1. id: 应该在Repository#create(Model)的方法上增加：`@Options(useGeneratedKeys = true,keyColumn = "id")`
       以便Mybatis自动为创建的对象设置id
   2. created_at: 由Service实现者(manager)设置对应的createdAt属性，由Repository的mapping语句写入
   3. updated_at: 与created_at的策略类似，也是在创建/更新时由service负责设置值，由repository负责写入

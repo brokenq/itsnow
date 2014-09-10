@@ -37,7 +37,7 @@ public class CommonContractsController extends SessionSupportController<Contract
     /**
      * <h2>查看当前用户所服务的企业所有合同</h2>
      * <p/>
-     * GET /api/contracts?page={int}&size={int}&order={string}
+     * GET /api/contracts?page={int}&count={int}&order={string}
      *
      * @return 合同列表，其中的合同信息不包括Contract Detail
      */

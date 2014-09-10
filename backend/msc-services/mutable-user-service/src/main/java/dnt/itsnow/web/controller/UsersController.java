@@ -28,7 +28,7 @@ public class UsersController extends SessionSupportController<User> {
     /**
      * <h2>查询用户列表</h2>
      * <p/>
-     * GET /admin/api/users?keyword=theKeyWord&page=1
+     * GET /admin/api/users?keyword=theKeyWord&page={int}&count={int}
      *
      * @param keyword 用户特征词，可能没有
      * @return 查询结果

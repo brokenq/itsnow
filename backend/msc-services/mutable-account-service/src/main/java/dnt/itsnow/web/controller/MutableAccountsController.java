@@ -43,7 +43,7 @@ public class MutableAccountsController extends SessionSupportController<Account>
     /**
      * <h2>查看所有账户</h2>
      * <p/>
-     * GET /admin/api/accounts?type={msc|msu|msp|*}&page={int}&size={int}
+     * GET /admin/api/accounts?type={msc|msu|msp|*}&page={int}&count={int}
      *
      * @param type 账户类型，取值可以为 msc, msu, msp
      * @return 账户列表
