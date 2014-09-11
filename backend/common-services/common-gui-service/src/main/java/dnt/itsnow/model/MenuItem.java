@@ -19,7 +19,6 @@ import java.util.Collections;
 public class MenuItem extends Record implements Comparable<MenuItem>{
 
     // 父菜单ID
-    @JsonIgnore
     private Long parentId;
     @JsonIgnore
     // 父菜单

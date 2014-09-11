@@ -15,27 +15,8 @@ angular.module('Itsnow.Index', [
         $stateProvider
             .state('index', {
                 url: '',
-                templateUrl: 'main/main-container.tpl.jade'
+                templateUrl: 'main/container.tpl.jade'
             });
-
-        var menuList = [];
-        $.ajax({
-            async: false,
-            type : "GET",
-            url : "/api/menu_items?tree=false",
-            dataType : 'json',
-            success : function(data) {
-                menuList = data;
-            }
-        });
-
-        for(var i =0 ;i < menuList.length; i++){
-            var item = menuList[i];
-            $stateProvider.state(item.state, {
-                    url: item.url,
-                    templateUrl: item.templateUrl
-                });
-        }
   })
 
   // 登录/登出

@@ -106,7 +106,7 @@ module.exports = function ( grunt ) {
      */
     jade: {
       source: {
-        files: {'<%= build_dir %>': ['**/*.jade']},
+        files: {'<%= build_dir %>': ['index/main/menus.jade']},
         options: {
           basePath: '.'
         }

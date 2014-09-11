@@ -3,6 +3,14 @@
  */
 var userApp = angular.module('MscIndex.User', ['ngGrid','ngResource']);
 
+userApp.config(function($stateProvider){
+  $stateProvider
+    .state('index.user', {
+      url: '/user',
+      templateUrl: 'user/list-user.tpl.html'
+    });
+});
+
 // 封装$http
 userApp.factory('UserService', ['$resource', function ($resource) {
   return $resource('/admin/api/users', null, {

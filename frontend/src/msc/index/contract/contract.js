@@ -3,6 +3,14 @@
  */
 var contractApp = angular.module('MscIndex.Contract', ['ngGrid','ngResource']);
 
+contractApp.config(function($stateProvider){
+  $stateProvider
+    .state('index.contract', {
+      url: '/contract',
+      templateUrl: 'contract/list-contract.tpl.html'
+    });
+});
+
 // 封装$http
 contractApp.factory('ContractService', ['$resource', function ($resource) {
   return $resource('/api/contracts', null, {

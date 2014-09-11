@@ -3,6 +3,14 @@
  */
 var slaApp = angular.module('MscIndex.SLA', ['ngGrid','ngResource']);
 
+slaApp.config(function($stateProvider){
+  $stateProvider
+    .state('index.sla', {
+      url: '/sla',
+      templateUrl: 'sla/list-sla.tpl.html'
+    });
+});
+
 var SlaListCtrl = ['$scope', '$http', 'SlaService', function ($scope, $http, SlaService) {
     $scope.filterOptions = {
         filterText: "",

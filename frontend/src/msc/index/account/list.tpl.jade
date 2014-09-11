@@ -45,7 +45,7 @@ mixin select_all()
 
   table.table(template-pagination="customPager",ng-table="tableParams")
     tr(ng-repeat="account in $data")
-      td(width="30" style="text-align: left" header="'ng-table/headers/checkbox.html'")
+      td(width="30" style="text-align: left" header="'ngTableCheckboxHeader'")
         input(type="checkbox" ng-model="checkboxes.items[account.sn]")
       td(data-title="'名称'") {{account.name}}
       td(data-title="'子域名'") {{account.domain | formatSubDomain}}
@@ -53,7 +53,7 @@ mixin select_all()
       td(data-title="'联系人电话'") account.user.phone
       td(data-title="'状态'") {{ account.status | formatAccountStatus}}
 
-script(type="text/ng-template", id="ng-table/headers/checkbox.html")
+script(type="text/ng-template")#ngTableCheckboxHeader
   +select_all()
 script(type="text/ng-template")#customPager
   ul.pager.ng-cloak

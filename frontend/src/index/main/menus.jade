@@ -1,17 +1,28 @@
 //   Main container parts: menu component
-mixin menu_template()
-  a(ui-sref="{{menu.state}}", ng-class="{'dropdown-toggle':true}")
-    i(ng-class="{'icon-desktop':true}")
-    span(ng-class="{'menu-text':true}") {{menu.name}}
-    b(ng-class="{'arrow icon-angle-down':true}")
-  ul.submenu(ng-model="menu.children", ui-tree-nodes )
-    li(ng-repeat="menu in menu.children", ui-tree-node, ng-include="'nodes_renderer.html'", data-nodrag)
 
-div(ng-controller="MenuCtrl")
-  script(type="text/ng-template",id="nodes_renderer.html")
-    +menu_template()
-  div(ui-tree)
-    ul.nav.nav-list(ui-tree-nodes, ng-model="menuList")#tree-root
-      li(ng-repeat="menu in menuList", ui-tree-node, ng-include="'nodes_renderer.html'", data-nodrag)
+// 这个mixin是angular在运行时进行模板替换，并不是jade在编译期进行jade -> html变换
+
+mixin menu_item_content
+  i.icon-double-angle-right(class="{{menuItem.css}}", ng-if="menuItem.parentId")
+  i(class="{{menuItem.css}}", ng-if="!menuItem.parentId")
+  span {{menuItem.name}}
+
+mixin menu_item_iteration(variableName)
+  li(ng-repeat="menuItem in #{variableName}", ng-include="'menu-item-template'")
+
+mixin menu_item_template
+  a(ui-sref="{{menuItem.state}}" ng-if="!menuItem.children")
+    +menu_item_content
+  a.dropdown-toggle(href="#" ng-if="menuItem.children")
+    +menu_item_content
+    b.arrow.icon-angle-down
+  ul.submenu(ng-if="menuItem.children")
+    +menu_item_iteration('menuItem.children')
+
+ul.nav.nav-list(ng-controller="MenuCtrl")
+  +menu_item_iteration('topMenuItems')
 .sidebar-collapse#sidebar-collapse
   i.icon-double-angle-left(data-icon1="icon-double-angle-left", data-icon2="icon-double-angle-right")
+
+script(type="text/ng-template")#menu-item-template
+  +menu_item_template
