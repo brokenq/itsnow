@@ -3,40 +3,18 @@
  */
 package dnt.itsnow.model;
 
-import dnt.itsnow.platform.model.Record;
-
 /**
  * <h1>节假日</h1>
+ * <p></p>
  */
-public class Holiday extends Record{
-    private String name;
-    private String description;
-    private String calendar;//节日日历
-    private String rule;//节日规则
+public class Holiday extends ConfigItem{
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getCalendar() {
-        return calendar;
-    }
-
-    public void setCalendar(String calendar) {
-        this.calendar = calendar;
-    }
+    //节日规则
+    private String rule;
+    // 开始时间
+    private String startedAt;
+    // 结束时间
+    private String endAt;
 
     public String getRule() {
         return rule;
@@ -45,4 +23,30 @@ public class Holiday extends Record{
     public void setRule(String rule) {
         this.rule = rule;
     }
+
+    public String getStartedAt() {
+        return startedAt;
+    }
+
+    public void setStartedAt(String startedAt) {
+        this.startedAt = startedAt;
+    }
+
+    public String getEndAt() {
+        return endAt;
+    }
+
+    public void setEndAt(String endAt) {
+        this.endAt = endAt;
+    }
+
+    @Override
+    public String toString() {
+        return "Holiday{" +
+                "rule='" + rule + '\'' +
+                ", startedAt='" + startedAt + '\'' +
+                ", endAt='" + endAt + '\'' +
+                '}';
+    }
+
 }

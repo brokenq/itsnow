@@ -3,21 +3,24 @@
 
 CREATE TABLE staffs (
   id            INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  department_id INT(10) UNSIGNED NOT NULL,
-  user_id       INT(10) UNSIGNED,
-  no            VARCHAR(50)      NOT NULL,
-  type          VARCHAR(50)      NOT NULL DEFAULT 'employee',
-  nick_name     VARCHAR(100),
+  name          VARCHAR(100),
+  no             VARCHAR(50)    NOT NULL,
+  mobile_phone VARCHAR(50),
+  fixed_phone  VARCHAR(50),
   email         VARCHAR(100),
-  title         VARCHAR(100)     NOT NULL,
+  title         VARCHAR(100)    NOT NULL,
+  type          VARCHAR(50)     NOT NULL DEFAULT 'employee',
   status        VARCHAR(50),
-  created_at    TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at    TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id)          REFERENCES itsnow_msc.users(id)
+  description  VARCHAR(500),
+  user_id       INT(10) UNSIGNED,
+  site_dept_id INT(10) UNSIGNED,
+  created_at   TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at   TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (site_dept_id) REFERENCES site_depts (id)
+--   ,FOREIGN KEY (user_id) REFERENCES users (id)
 );
-
 
 -- //@UNDO
 -- SQL to undo the change goes here.
 
-DROP TABLE staffs;
+DROP TABLE IF EXISTS staffs;

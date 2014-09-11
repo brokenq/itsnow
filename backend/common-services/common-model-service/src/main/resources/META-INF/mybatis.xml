@@ -18,5 +18,7 @@
 
         <typeAlias type="dnt.itsnow.model.SLA" alias="SLA"/>
         <typeAlias type="dnt.itsnow.model.SLO" alias="SLO"/>
+
+        <typeAlias type="dnt.itsnow.model.ProcessDictionary" alias="ProcessDictionary"/>
     </typeAliases>
 </configuration>

@@ -7,7 +7,7 @@
     <parent>
         <groupId>dnt.itsnow</groupId>
         <artifactId>backend</artifactId>
-        <version>0.1.7-SNAPSHOT</version>
+        <version>0.1.6-SNAPSHOT</version>
     </parent>
 
     <artifactId>msu-services</artifactId>
@@ -19,6 +19,7 @@
     <modules>
         <module>msu-incident-service</module>
         <module>msu-gui-service</module>
+        <module>msu-workflow-service</module>
     </modules>
 
     <dependencies>
@@ -29,6 +30,10 @@
         <dependency>
             <groupId>dnt.itsnow</groupId>
             <artifactId>common-model-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dnt.itsnow</groupId>
+            <artifactId>general-model-service</artifactId>
         </dependency>
     </dependencies>
 

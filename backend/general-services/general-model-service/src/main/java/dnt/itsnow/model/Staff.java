@@ -7,21 +7,56 @@ package dnt.itsnow.model;
  * <h1>MSP或者MSU的员工</h1>
  */
 public class Staff extends ConfigItem {
-    //该员工的工号
+    // 该员工的工号
     private String no;
-    //该员工在公司的别名，就像许多人，虽然有中文，但在公司大家都叫他Steven
-    //private String nickName;
-    //该员工的工作邮件,与user的mail未必一样
+    // 移动电话
+    private String mobilePhone;
+    // 固定电话
+    private String fixedPhone;
+    // 该员工的工作邮件,与user的mail未必一样
     private String email;
-    //岗位，职位
+    // 岗位，职位
     private String title;
-    //员工状态
-    private StaffStatus status;
-
+    // 合同工，正式工
+    private String type;
+    // 在职，离职
+    private String status;
     //所属部门
     private Department department;
     //该员工对应的用户，可能没有
     private User user;
+
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
+    }
+
+    public String getFixedPhone() {
+        return fixedPhone;
+    }
+
+    public void setFixedPhone(String fixedPhone) {
+        this.fixedPhone = fixedPhone;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public String getNo() {
         return no;
@@ -55,14 +90,6 @@ public class Staff extends ConfigItem {
         this.title = title;
     }
 
-    public StaffStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(StaffStatus status) {
-        this.status = status;
-    }
-
     public Department getDepartment() {
         return department;
     }
@@ -77,5 +104,20 @@ public class Staff extends ConfigItem {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @Override
+    public String toString() {
+        return "Staff{" +
+                "no='" + no + '\'' +
+                ", mobilePhone='" + mobilePhone + '\'' +
+                ", fixedPhone='" + fixedPhone + '\'' +
+                ", email='" + email + '\'' +
+                ", title='" + title + '\'' +
+                ", type='" + type + '\'' +
+                ", status='" + status + '\'' +
+                ", department=" + department +
+                ", user=" + user +
+                '}';
     }
 }
