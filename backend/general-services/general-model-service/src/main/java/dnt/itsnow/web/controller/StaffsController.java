@@ -4,6 +4,7 @@
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.Staff;
+import dnt.itsnow.model.WorkTime;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,77 +12,77 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * <h1>Staffs Controller</h1>
+ * <h1>WorkTime Controller</h1>
  */
 @RestController
-@RequestMapping("/api/staffs")
+@RequestMapping("/api/workTimes")
 public class StaffsController extends SessionSupportController<Staff> {
-    Staff staff;
+    WorkTime workTime;
 
     /**
-     * <h2>获得所有的员工</h2>
+     * <h2>获得所有的工作时间</h2>
      *
-     * GET /api/staffs
+     * GET /api/workTimes
      *
-     * @return 员工
+     * @return 工作时间
      */
     @RequestMapping
-    public List<Staff> index(){
+    public List<WorkTime> index(){
         return null;
     }
 
     /**
-     * <h2>查看一个员工</h2>
+     * <h2>查看一个工作时间</h2>
      *
-     * GET /api/staffs/{no}
+     * GET /api/workTimes/{no}
      *
      * @return 服务目录
      */
     @RequestMapping("{no}")
-    public Staff show(){
-        return staff;
+    public WorkTime show(){
+        return workTime;
     }
 
     /**
-     * <h2>创建一个员工</h2>
+     * <h2>创建一个工作时间</h2>
      *
-     * POST /api/staffs
+     * POST /api/workTimes
      *
-     * @return 新建的员工
+     * @return 新建的工作时间
      */
     @RequestMapping(method = RequestMethod.POST)
-    public Staff create(@Valid @RequestBody Staff staff){
-        return staff;
+    public WorkTime create(@Valid @RequestBody WorkTime workTime){
+        return workTime;
     }
 
     /**
-     * <h2>更新一个员工</h2>
+     * <h2>更新一个工作时间</h2>
      *
-     * PUT /api/staffs/{sn}
+     * PUT /api/workTimes/{sn}
      *
-     * @return 被更新的员工
+     * @return 被更新的工作时间
      */
     @RequestMapping(value = "{no}", method = RequestMethod.PUT)
-    public Staff update(@Valid @RequestBody Staff staff){
-        this.staff.apply(staff);
+    public WorkTime update(@Valid @RequestBody WorkTime workTime){
+        this.workTime.apply(workTime);
         //TODO SAVE IT
-        return this.staff;
+        return this.workTime;
     }
 
     /**
-     * <h2>删除一个员工</h2>
+     * <h2>删除一个工作时间</h2>
      *
-     * DELETE /api/staffs/{sn}
+     * DELETE /api/workTimes/{sn}
      *
-     * @return 被删除的员工
+     * @return 被删除的工作时间
      */
     @RequestMapping(value = "{no}", method = RequestMethod.DELETE)
-    public Staff destroy(){
+    public WorkTime destroy(){
         return null;
     }
 
     @BeforeFilter({"show", "update", "destroy"})
-    public void initStaff(@PathVariable("no") String no){
-        staff = null;//find it by sn
+    public void initWorkTime(@PathVariable("no") String no){
+        workTime = null;//find it by sn
     }
 }

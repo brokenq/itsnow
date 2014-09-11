@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dnt.itsnow.repository.SiteRepository">
+
+    <resultMap id="siteResult" type="Site">
+        <id property="id" column="id"/>
+        <result property="sn" column="sn"/>
+        <result property="name" column="name"/>
+        <result property="address" column="address"/>
+        <result property="description" column="description"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <!-- 一对一关系 -->
+        <association property="workTime" column="work_time_id" javaType="WorkTime">
+            <id property="id" column="workTimeId"/>
+            <result property="sn" column="workTimeSn"/>
+            <result property="name" column="workTimeName"/>
+            <result property="workDays" column="workTimeWorkDays"/>
+            <result property="startedAt" column="workTimeStartedAt"/>
+            <result property="endedAt" column="workTimeEndedAt"/>
+        </association>
+        <!-- 多对一关系 -->
+        <association property="processDictionary" column="process_dictionary_id" javaType="ProcessDictionary">
+            <id property="id" column="dictionaryId"/>
+            <result property="code" column="dictionaryCode"/>
+            <result property="name" column="dictionaryName"/>
+            <result property="level" column="dictionaryLevel"/>
+            <result property="levelName" column="dictionaryLevelName"/>
+            <result property="state" column="dictionaryState"/>
+            <result property="type" column="dictionaryType"/>
+        </association>
+        <!-- 多对多关系 -->
+        <collection property="departments" ofType="Department">
+            <id property="id" column="departmentId" />
+            <result property="name" column="departmentName" />
+            <!--<result property="parent_id" column="parent_id" />-->
+            <result property="sn" column="departmentSn" />
+            <result property="description" column="departmentDescription" />
+        </collection>
+    </resultMap>
+
+    <select id="findBySn" parameterType="string" resultType="Site" resultMap="siteResult">
+        select s.id, s.sn, s.name, s.address, s.description, s.created_at, s.updated_at,
+        w.id as workTimeId, w.sn as workTimeSn, w.name as workTimeName, w.work_days as workTimeWorkDays, w.started_at as workTimeStartedAt, w.ended_at as workTimeEndedAt,
+        p.id as dictionaryId, p.code as dictionaryCode, p.name as dictionaryName, p.level as dictionaryLevel, p.level_name as dictionaryLevelName, p.state as dictionaryState, p.type as dictionaryType,
+        d.id as departmentId, d.name as departmentName, d.sn as departmentSn, d.description as departmentDescription
+        from sites s
+        left join work_times w on s.work_time_id=w.id
+        left join process_dictionaries p on s.process_dictionary_id=p.id
+        left join site_depts sd on s.id = sd.site_id
+        left join departments d on sd.dept_id = d.id
+        where s.sn=#{sn}
+    </select>
+
+    <select id="find" parameterType="string" resultType="Site" resultMap="siteResult">
+        select s.id, s.sn, s.name, s.address, s.description, s.created_at, s.updated_at,
+        w.id as workTimeId, w.sn as workTimeSn, w.name as workTimeName, w.work_days as workTimeWorkDays, w.started_at as workTimeStartedAt, w.ended_at as workTimeEndedAt,
+        p.id as dictionaryId, p.code as dictionaryCode, p.name as dictionaryName, p.level as dictionaryLevel, p.level_name as dictionaryLevelName, p.state as dictionaryState, p.type as dictionaryType,
+        d.id as departmentId, d.name as departmentName, d.sn as departmentSn, d.description as departmentDescription
+        from sites s
+        left join work_times w on s.work_time_id=w.id
+        left join process_dictionaries p on s.process_dictionary_id=p.id
+        left join site_depts sd on s.id = sd.site_id
+        left join departments d on sd.dept_id = d.id
+        order by ${sort} ${dir} limit #{offset}, #{size}
+    </select>
+
+
+    <select id="findByKeyword" parameterType="string" resultType="Site" resultMap="siteResult">
+        select s.id, s.sn, s.name, s.address, s.description, s.created_at, s.updated_at,
+        w.id as workTimeId, w.sn as workTimeSn, w.name as workTimeName, w.work_days as workTimeWorkDays, w.started_at as workTimeStartedAt, w.ended_at as workTimeEndedAt,
+        p.id as dictionaryId, p.code as dictionaryCode, p.name as dictionaryName, p.level as dictionaryLevel, p.level_name as dictionaryLevelName, p.state as dictionaryState, p.type as dictionaryType,
+        d.id as departmentId, d.name as departmentName, d.sn as departmentSn, d.description as departmentDescription
+        from sites s
+        left join work_times w on s.work_time_id=w.id
+        left join process_dictionaries p on s.process_dictionary_id=p.id
+        left join site_depts sd on s.id = sd.site_id
+        left join departments d on sd.dept_id = d.id
+        where s.name like #{keyword} or s.sn like #{keyword}
+        order by ${sort} ${dir} limit #{offset}, #{size}
+    </select>
+
+</mapper>

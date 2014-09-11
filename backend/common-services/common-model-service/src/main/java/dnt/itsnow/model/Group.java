@@ -15,11 +15,14 @@ package dnt.itsnow.model;
  */
 public class Group extends ConfigItem {
 
-    public String getGroupName(){
-        return super.getName();
-    }
-
-    public void setGroupName(String name){
-        setName(name);
+    @Override
+    public String toString() {
+        return "Group{" +
+                "id=" + super.getId() +
+                ", name='" + super.getName() + '\'' +
+                ", description='" + super.getDescription() + '\'' +
+                ", createdAt=" + super.getCreatedAt() +
+                ", updatedAt=" + super.getUpdatedAt() +
+                '}';
     }
 }

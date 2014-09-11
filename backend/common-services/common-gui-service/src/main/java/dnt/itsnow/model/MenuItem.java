@@ -132,7 +132,7 @@ public class MenuItem extends Record {
 
     public void setParent(MenuItem parent) {
         this.parent = parent;
-        if( this.parent != null ){
+        if (this.parent != null) {
             this.parent.addChild(this);
         }
     }
@@ -145,9 +145,29 @@ public class MenuItem extends Record {
         this.children = children;
     }
 
-    void addChild(MenuItem child){
-        if(this.children == null ) this.children = new ArrayList<MenuItem>();
-        if(!this.children.contains(child)) this.children.add(child);
+    void addChild(MenuItem child) {
+        if (this.children == null) {
+            this.children = new ArrayList<MenuItem>();
+        }
+        if (!this.children.contains(child)) {
+            this.children.add(child);
+        }
     }
 
+    @Override
+    public String toString() {
+        return "MenuItem{" +
+                "parentId=" + parentId +
+                ", parent=" + parent +
+                ", name='" + name + '\'' +
+                ", state='" + state + '\'' +
+                ", url='" + url + '\'' +
+                ", templateUrl='" + templateUrl + '\'' +
+                ", css='" + css + '\'' +
+                ", description='" + description + '\'' +
+                ", position=" + position +
+                ", shortcut='" + shortcut + '\'' +
+                ", children=" + children +
+                '}';
+    }
 }

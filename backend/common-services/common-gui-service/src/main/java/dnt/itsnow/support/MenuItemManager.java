@@ -27,8 +27,8 @@ public class MenuItemManager extends Bean implements MenuItemService {
         }
         if( parent != null )
             menuItem.setParentId(parent.getId());
-        long id = repository.create(menuItem);
-        return repository.findById(id);
+        repository.create(menuItem);
+        return menuItem;
     }
 
     @Override
@@ -46,8 +46,8 @@ public class MenuItemManager extends Bean implements MenuItemService {
         if(menuItem==null){
             throw new MenuItemException("Menu item entry can not be empty");
         }
-        long id = repository.update(menuItem);
-        return repository.findById(id);
+        repository.update(menuItem);
+        return menuItem;
     }
 
     @Override
@@ -63,14 +63,14 @@ public class MenuItemManager extends Bean implements MenuItemService {
     public List<MenuItem> findAll(boolean tree) {
         logger.debug("Finding all of menu items");
         List<MenuItem> menuItemList = repository.findAll();
-        if( tree ) menuItemList = this.buildChildren(menuItemList);
+        if( tree ) menuItemList = this.buildTree(menuItemList);
         return menuItemList;
     }
 
     @Override
     public List<MenuItem> findAllByParent(MenuItem parent, boolean tree) {
         List<MenuItem> all = repository.findAll();
-        this.buildChildren(all);
+        this.buildTree(all);
         // Filter by parent
         Iterator<MenuItem> iterator = all.iterator();
         while (iterator.hasNext()) {
@@ -93,7 +93,7 @@ public class MenuItemManager extends Bean implements MenuItemService {
         //TODO 现在的算法效率很低
         if(path.endsWith("/")) path = path.substring(0, path.length()-1);
         List<MenuItem> all = repository.findAll();
-        this.buildChildren(all);
+        this.buildTree(all);
         for (MenuItem item : all) {
             if( item.getPath().equals(path)) return item;
         }
@@ -106,7 +106,7 @@ public class MenuItemManager extends Bean implements MenuItemService {
      * @param menuItems the menu items
      * @return the top menu items with children
      */
-    private List<MenuItem> buildChildren(List<MenuItem> menuItems){
+    private List<MenuItem> buildTree(List<MenuItem> menuItems){
         Map<Long, MenuItem> map = new HashMap<Long, MenuItem>();
         for (MenuItem item : menuItems) {
             map.put(item.getId(), item);

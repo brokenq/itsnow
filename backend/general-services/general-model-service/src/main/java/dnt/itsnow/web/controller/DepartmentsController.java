@@ -3,8 +3,14 @@
  */
 package dnt.itsnow.web.controller;
 
+import dnt.itsnow.Exception.DepartmentException;
 import dnt.itsnow.model.Department;
+import dnt.itsnow.model.Site;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
+import dnt.itsnow.platform.web.exception.WebClientSideException;
+import dnt.itsnow.service.DepartmentService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -16,72 +22,118 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/departments")
 public class DepartmentsController extends SessionSupportController<Department> {
-    Department department;
+
+    @Autowired
+    private DepartmentService departmentService;
+
+    private Department department;
 
     /**
-     * <h2>获得所有的部门</h2>
+     * <h2>获得所有的地点</h2>
      *
      * GET /api/departments
      *
-     * @return 部门
+     * @return 地点列表
      */
     @RequestMapping
-    public List<Department> index(){
-        return null;
+    public List<Department> index(@RequestParam(value = "keyword", required = false) String keyword){
+        logger.debug("Listing Department");
+
+        indexPage = departmentService.findAll(keyword, pageRequest);
+
+        logger.debug("Listed Department number {}", indexPage.getNumber());
+        return indexPage.getContent();
     }
 
     /**
-     * <h2>查看一个部门</h2>
+     * <h2>查看一个地点</h2>
      *
-     * GET /api/departments/{no}
+     * GET /api/departments/{sn}
      *
-     * @return 部门
+     * @return 地点
      */
-    @RequestMapping("{no}")
+    @RequestMapping("/{sn}")
     public Department show(){
+        if (department == null) {
+            throw new WebClientSideException(HttpStatus.BAD_REQUEST, "The department no must be specified");
+        }
         return department;
     }
 
     /**
-     * <h2>创建一个部门</h2>
+     * <h2>创建一个地点</h2>
      *
      * POST /api/departments
      *
-     * @return 新建的部门
+     * @return 新建的地点
      */
     @RequestMapping(method = RequestMethod.POST)
     public Department create(@Valid @RequestBody Department department){
+        logger.info("Creating {}", department.getName());
+
+        try {
+            department = departmentService.create(department);
+        } catch (DepartmentException e) {
+            throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+
+        logger.info("Created  {}", department.getName());
         return department;
     }
 
     /**
-     * <h2>更新一个部门</h2>
+     * <h2>更新一个地点</h2>
      *
      * PUT /api/departments/{sn}
      *
-     * @return 被更新的部门
+     * @return 被更新的地点
      */
-    @RequestMapping(value = "{no}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{sn}", method = RequestMethod.PUT)
     public Department update(@Valid @RequestBody Department department){
+
+        logger.info("Updateing {}", department.getName());
+
+        if (department == null) {
+            throw new WebClientSideException(HttpStatus.BAD_REQUEST, "The department no must be specified");
+        }
+
         this.department.apply(department);
-        //TODO SAVE IT
+        try {
+            departmentService.update(department);
+        } catch (DepartmentException e) {
+            throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+
+        logger.info("Updated {}", department.getName());
+
         return this.department;
     }
 
     /**
-     * <h2>删除一个部门</h2>
+     * <h2>删除一个地点</h2>
      *
      * DELETE /api/departments/{sn}
      *
-     * @return 被删除的部门
+     * @return 被删除的地点
      */
-    @RequestMapping(value = "{no}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{sn}", method = RequestMethod.DELETE)
     public Department destroy(){
-        return null;
+
+        if (department == null) {
+            throw new WebClientSideException(HttpStatus.BAD_REQUEST, "The department no must be specified");
+        }
+
+        try {
+            departmentService.destroy(department);
+        } catch (DepartmentException e) {
+            throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+        return department;
     }
 
     @BeforeFilter({"show", "update", "destroy"})
-    public void initDepartment(@PathVariable("no") String no){
-        department = null;//find it by sn
+    public void initDepartment(@PathVariable("sn") String sn){
+
+        this.department = departmentService.findBySn(sn);//find it by sn
     }
 }

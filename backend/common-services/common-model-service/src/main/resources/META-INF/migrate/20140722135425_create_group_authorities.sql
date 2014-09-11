@@ -2,14 +2,14 @@
 -- Migration SQL that makes the change goes here.
 
 CREATE TABLE group_authorities (
-    group_id  INT(10) UNSIGNED NOT NULL,
+    id         INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    group_id  INT(10) UNSIGNED  NOT NULL,
     authority VARCHAR(255)     NOT NULL,
-    FOREIGN   KEY (group_id)   REFERENCES groups(id)
+    FOREIGN KEY (group_id) REFERENCES groups (id),
+    FOREIGN KEY (authority) REFERENCES roles (name)
 );
-
 
 -- //@UNDO
 -- SQL to undo the change goes here.
 
-
-DROP TABLE group_authorities;
+DROP TABLE IF EXISTS group_authorities;

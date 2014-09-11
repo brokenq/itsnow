@@ -19,6 +19,7 @@
     <modules>
         <module>msp-incident-service</module>
         <module>msp-gui-service</module>
+        <module>msp-workflow-service</module>
     </modules>
 
     <dependencies>
@@ -29,6 +30,10 @@
         <dependency>
             <groupId>dnt.itsnow</groupId>
             <artifactId>common-model-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dnt.itsnow</groupId>
+            <artifactId>general-model-service</artifactId>
         </dependency>
     </dependencies>
 
