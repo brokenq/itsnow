@@ -32,6 +32,10 @@
             <groupId>dnt.itsnow</groupId>
             <artifactId>common-model-service</artifactId>
         </dependency>
+        <dependency>
+            <groupId>dnt.itsnow</groupId>
+            <artifactId>general-model-service</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
