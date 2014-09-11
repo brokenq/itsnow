@@ -1,7 +1,7 @@
 -- // create_process_dictionary
 -- Migration SQL that makes the change goes here.
 
-CREATE TABLE private_service_items (
+CREATE TABLE IF NOT EXISTS private_service_items (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
   catalog_id int(10) unsigned NOT NULL,
   catalog_type varchar(20) NOT NULL DEFAULT 'public',

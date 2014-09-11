@@ -1,7 +1,7 @@
 -- // create_process_dictionary
 -- Migration SQL that makes the change goes here.
 
-CREATE TABLE process_dictionaries (
+CREATE TABLE IF NOT EXISTS process_dictionaries (
   id           INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
   code         VARCHAR(255)     NOT NULL,
   name         VARCHAR(255)     NOT NULL,

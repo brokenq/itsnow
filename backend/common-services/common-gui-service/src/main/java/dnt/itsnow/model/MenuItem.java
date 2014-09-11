@@ -47,6 +47,8 @@ public class MenuItem extends Record implements Comparable<MenuItem>{
     // 子菜单
     private List<MenuItem> children;
 
+    private String path;
+
     public String getPath() {
         if (parent == null) {
             return "/" + getName();

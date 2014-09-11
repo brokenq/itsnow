@@ -1,7 +1,7 @@
 -- // create_departments
 -- Migration SQL that makes the change goes here.
 
-CREATE TABLE departments
+CREATE TABLE IF NOT EXISTS departments
 (
    id           INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
    sn           VARCHAR(20)      NOT NULL,

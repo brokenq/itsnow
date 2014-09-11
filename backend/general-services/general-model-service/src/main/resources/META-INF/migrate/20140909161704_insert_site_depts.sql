@@ -1,6 +1,6 @@
 -- // insert_process_dictionaries
 -- Migration SQL that makes the change goes here.
-
+DELETE FROM site_depts;
 INSERT INTO site_depts (id, site_id, dept_id) VALUES
 (1, 1, 1),
 (2, 1, 2),

@@ -1,6 +1,6 @@
 -- // insert_process_dictionaries
 -- Migration SQL that makes the change goes here.
-
+DELETE FROM act_re_procdef;
 INSERT INTO act_re_procdef
 (id_, rev_, category_, name_, key_, version_, deployment_id_, description_, tenant_id_) VALUES
 ('1', 1, '类别一', '引擎一',  '100',  1, '1', 'it is test.', '1'),

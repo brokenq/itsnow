@@ -1,5 +1,6 @@
 -- // insert public_service_catalogs
 -- Migration SQL that makes the change goes here.
+DELETE FROM public_service_catalogs;
 INSERT INTO public_service_catalogs(parent_id, sn, title, description, icon)
 VALUES
  (NULL, 'SC_100', 'Hardware', 'Services related to hardware purchase, upgrading RAM, requesting a laptop or a desktop', '/assets/sc/hardware.png'),

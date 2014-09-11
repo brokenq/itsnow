@@ -1,7 +1,7 @@
 -- // create_process_dictionary
 -- Migration SQL that makes the change goes here.
 
-CREATE TABLE act_re_procdef (
+CREATE TABLE IF NOT EXISTS act_re_procdef (
   id_                   varchar(64) NOT NULL,
   rev_                  int(11) DEFAULT NULL,
   category_            varchar(255) DEFAULT NULL,

@@ -1,6 +1,6 @@
 -- // insert_workflows
 -- Migration SQL that makes the change goes here.
-
+DELETE FROM workflows;
 INSERT INTO workflows
 (id, sn,    name,       description, act_re_procdef_id, service_item_id, service_item_type, process_dictionary_id) VALUES
 (1, '001', '工作流1',  '测试',     1,                 1,                 '1',               1),

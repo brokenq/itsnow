@@ -1,6 +1,6 @@
 -- // insert public_service_items
 -- Migration SQL that makes the change goes here.
-
+DELETE FROM public_service_items;
 SET @SC100 = (SELECT id FROM public_service_catalogs where sn = 'SC_100');
 SET @SC101 = (SELECT id FROM public_service_catalogs where sn = 'SC_101');
 SET @SC102 = (SELECT id FROM public_service_catalogs where sn = 'SC_102');

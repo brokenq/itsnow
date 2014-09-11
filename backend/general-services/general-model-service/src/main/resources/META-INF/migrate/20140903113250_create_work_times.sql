@@ -1,9 +1,9 @@
 -- // create_work_times
 -- Migration SQL that makes the change goes here.
 
-CREATE TABLE work_times (
+CREATE TABLE IF NOT EXISTS work_times (
    id           INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-   sn           VARCHAR(10)    NOT NULL,
+   sn           VARCHAR(10)     NOT NULL,
    name         VARCHAR(255)    NOT NULL,
    work_days   VARCHAR(255)    NOT NULL,
    started_at  VARCHAR(10)     NOT NULL,

@@ -1,6 +1,6 @@
 -- // insert_process_dictionaries
 -- Migration SQL that makes the change goes here.
-
+DELETE FROM process_dictionaries;
 INSERT INTO process_dictionaries(id, code, name, level, level_name, state, type) VALUES
 (1, 'inc001', '优先级',   'high',   '高', '1', '1'),
 (2, 'inc002', '优先级',   'middle', '中', '1', '1'),

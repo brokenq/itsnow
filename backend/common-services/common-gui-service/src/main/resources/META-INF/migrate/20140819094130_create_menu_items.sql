@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS menu_items (
   parent_id    INT(10) UNSIGNED,
   name        VARCHAR(100)     NOT NULL,
   state        VARCHAR(100)     NOT NULL UNIQUE,
-  url          VARCHAR(100)     NOT NULL UNIQUE,
+  url          VARCHAR(100)     NOT NULL,
   template_url VARCHAR(255)     NOT NULL,
   css          VARCHAR(100),
   position    INT(10) UNSIGNED,
