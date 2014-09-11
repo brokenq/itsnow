@@ -156,7 +156,12 @@ module.exports = function ( grunt ) {
       index: {
         options: {
           base: 'index',
-          module: 'Index.Templates'
+          module: 'Index.Templates',
+          // 因为 main container的这个tpl有include其他jade文件
+          // 所以其需要指定 options.jade.filename
+          // see: https://github.com/karlgoldstein/grunt-html2js/pull/48
+          // 如果这里有多个在不同目录下的 tpl.jade include 其他jade，这将会玩不转
+          jade: {filename: 'index/main/main-container.tpl.jade'}
         },
         src: [ '<%= index_files.index_tpl %>' ],
         dest: '<%= build_dir %>/templates/index.js'
