@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dnt.itsnow.repository.DepartmentRepository">
+    <resultMap id="departmentResult" type="Department">
+        <id property="id" column="id"/>
+        <result property="sn" column="sn"/>
+        <result property="name" column="name"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="description" column="description"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <!-- 多对多关系 -->
+        <collection property="sites" ofType="Site">
+            <id property="id" column="siteId"/>
+            <result property="sn" column="siteSn"/>
+            <result property="name" column="siteName"/>
+            <result property="address" column="siteAddress"/>
+            <result property="description" column="siteDescription"/>
+        </collection>
+    </resultMap>
+
+    <select id="findBySn" parameterType="string" resultType="Department" resultMap="departmentResult">
+        select d.id, d.sn, d.name, d.parent_id, d.description, d.created_at, d.updated_at,
+        s.id as siteId, s.sn as siteSn, s.name as siteName, s.address as siteAddress, s.description as siteDescription
+        from departments d
+        left join site_depts sd on  d.id = sd.dept_id
+        left join sites s on sd.site_id = s.id
+        where d.sn=#{sn}
+    </select>
+
+    <select id="find" parameterType="string" resultType="Department" resultMap="departmentResult">
+        select d.id, d.sn, d.name, d.parent_id, d.description, d.created_at, d.updated_at,
+        s.id as siteId, s.sn as siteSn, s.name as siteName, s.address as siteAddress, s.description as siteDescription
+        from departments d
+        left join site_depts sd on  d.id = sd.dept_id
+        left join sites s on sd.site_id = s.id
+        order by ${sort} ${dir} limit #{offset}, #{size}
+    </select>
+
+    <select id="findByKeyword" parameterType="string" resultType="Department" resultMap="departmentResult">
+        select d.id, d.sn, d.name, d.parent_id, d.description, d.created_at, d.updated_at,
+        s.id as siteId, s.sn as siteSn, s.name as siteName, s.address as siteAddress, s.description as siteDescription
+        from departments d
+        left join site_depts sd on  d.id = sd.dept_id
+        left join sites s on sd.site_id = s.id
+        where d.name like #{keyword} or d.sn like #{keyword}
+        order by ${sort} ${dir} limit #{offset}, #{size}
+    </select>
+
+</mapper>

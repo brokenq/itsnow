@@ -2,25 +2,23 @@
 -- Migration SQL that makes the change goes here.
 
 CREATE TABLE users (
-  id               INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  id                INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
   account_id       INT(20) UNSIGNED,
-  username         VARCHAR(25)   NOT NULL,
-  nick_name        VARCHAR(25),
-  email            VARCHAR(255),
-  phone            VARCHAR(50),
-  password         VARCHAR(255)  NOT NULL,
-  enabled          BOOLEAN       NOT NULL DEFAULT TRUE,
-  expired          BOOLEAN       NOT NULL DEFAULT FALSE,
-  locked           BOOLEAN       NOT NULL DEFAULT FALSE,
-  password_expired BOOLEAN       NOT NULL DEFAULT FALSE,
-  created_at       TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at       TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (account_id) REFERENCES accounts(id),
-  UNIQUE  KEY (username)
+  username          VARCHAR(25)     NOT NULL PRIMARY KEY,
+  nick_name         VARCHAR(25),
+  email             VARCHAR(255),
+  phone             VARCHAR(50),
+  password          VARCHAR(255)   NOT NULL,
+  enabled           BOOLEAN          NOT NULL DEFAULT TRUE,
+  expired           BOOLEAN          NOT NULL DEFAULT FALSE,
+  locked             BOOLEAN         NOT NULL DEFAULT FALSE,
+  password_expired BOOLEAN          NOT NULL DEFAULT FALSE,
+  created_at        TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at        TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (account_id) REFERENCES accounts(id)
 );
-
 
 -- //@UNDO
 -- SQL to undo the change goes here.
 
-DROP TABLE users;
+DROP TABLE IF EXISTS users;

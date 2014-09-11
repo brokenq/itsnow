@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dnt.itsnow.repository.WorkflowRepository">
+    <resultMap id="workflowResult" type="Workflow">
+        <id property="id" column="id"/>
+        <result property="sn" column="sn"/>
+        <result property="name" column="name"/>
+        <result property="serviceTtemType" column="service_item_type"/>
+        <result property="description" column="description"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <!-- 一对多关系 -->
+        <association property="actReProcdef" column="act_re_procdef_id" javaType="ActReProcdef">
+            <id property="id_" column="id_"/>
+            <result property="rev_" column="rev_"/>
+            <result property="category_" column="category_"/>
+            <result property="name_" column="name_"/>
+            <result property="key_" column="key_"/>
+            <result property="version_" column="version_"/>
+            <result property="deploymentId_" column="deploymentId_"/>
+            <result property="resourceName_" column="resourceName_"/>
+            <result property="hasStartFormKey_" column="hasStartFormKey_"/>
+            <result property="suspensionState_" column="suspensionState_"/>
+        </association>
+        <association property="serviceItem" column="service_item_id" javaType="ServiceItem">
+            <id property="id" column="serviceItemId"/>
+            <result property="title" column="serviceItemTitle"/>
+            <result property="brief" column="serviceItemBrief"/>
+            <result property="icon" column="serviceItemIcon"/>
+            <result property="description" column="serviceItemDescription"/>
+        </association>
+        <association property="processDictionary" column="process_dictionary_id" javaType="ProcessDictionary">
+            <id property="id" column="dictionaryId"/>
+            <result property="code" column="dictionaryCode"/>
+            <result property="name" column="dictionaryName"/>
+            <result property="level" column="dictionaryLevel"/>
+            <result property="levelName" column="dictionaryLevelName"/>
+            <result property="state" column="dictionaryState"/>
+            <result property="type" column="dictionaryType"/>
+        </association>
+    </resultMap>
+
+    <select id="findBySn" parameterType="string" resultType="Workflow" resultMap="workflowResult">
+        select flow.id, flow.sn, flow.name, flow.service_item_type, flow.description, flow.created_at, flow.updated_at,
+        p.id as dictionaryId, p.code as dictionaryCode, p.name as dictionaryName, p.level as dictionaryLevel, p.level_name as dictionaryLevelName, p.state as dictionaryState, p.type as dictionaryType,
+        serviceItem.id as serviceItemId, serviceItem.title as serviceItemTitle, serviceItem.brief as serviceItemBrief, serviceItem.icon as serviceItemIcon, serviceItem.description as serviceItemDescription
+        from workflows flow
+        left join act_re_procdef a on flow.act_re_procdef_id = a.id_
+        left join process_dictionaries p on flow.process_dictionary_id=p.id
+        <if test="serviceTtemType == 1">
+          left join public_service_items serviceItem on flow.service_item_id = serviceItem.id
+        </if>
+        <if test="serviceTtemType == 0">
+          left join private_service_items serviceItem on flow.service_item_id = serviceItem.id
+        </if>
+        where flow.sn=#{sn}
+    </select>
+
+    <select id="find" parameterType="string" resultType="Workflow" resultMap="workflowResult">
+        select flow.id, flow.sn, flow.name, flow.service_item_type, flow.description, flow.created_at, flow.updated_at,
+        p.id as dictionaryId, p.code as dictionaryCode, p.name as dictionaryName, p.level as dictionaryLevel, p.level_name as dictionaryLevelName, p.state as dictionaryState, p.type as dictionaryType,
+        serviceItem.id as serviceItemId, serviceItem.title as serviceItemTitle, serviceItem.brief as serviceItemBrief, serviceItem.icon as serviceItemIcon, serviceItem.description as serviceItemDescription
+        from workflows flow
+        left join act_re_procdef a on flow.act_re_procdef_id = a.id_
+        left join process_dictionaries p on flow.process_dictionary_id=p.id
+        <if test="serviceTtemType == 1">
+          left join public_service_items serviceItem on flow.service_item_id = serviceItem.id
+        </if>
+        <if test="serviceTtemType == 0">
+          left join private_service_items serviceItem on flow.service_item_id = serviceItem.id
+        </if>
+        order by ${sort} ${dir} limit #{offset}, #{size}
+    </select>
+
+    <select id="findByKeyword" parameterType="string" resultType="Workflow" resultMap="workflowResult">
+        select flow.id, flow.sn, flow.name, flow.service_item_type, flow.description, flow.created_at, flow.updated_at,
+        p.id as dictionaryId, p.code as dictionaryCode, p.name as dictionaryName, p.level as dictionaryLevel, p.level_name as dictionaryLevelName, p.state as dictionaryState, p.type as dictionaryType,
+        serviceItem.id as serviceItemId, serviceItem.title as serviceItemTitle, serviceItem.brief as serviceItemBrief, serviceItem.icon as serviceItemIcon, serviceItem.description as serviceItemDescription
+        from workflows flow
+        left join act_re_procdef a on flow.act_re_procdef_id = a.id_
+        left join process_dictionaries p on flow.process_dictionary_id=p.id
+        <if test="serviceTtemType == 1">
+          left join public_service_items serviceItem on flow.service_item_id = serviceItem.id
+        </if>
+        <if test="serviceTtemType == 0">
+          left join private_service_items serviceItem on flow.service_item_id = serviceItem.id
+        </if>
+        where flow.name like #{keyword} or flow.sn like #{keyword}
+        order by ${sort} ${dir} limit #{offset}, #{size}
+    </select>
+
+</mapper>

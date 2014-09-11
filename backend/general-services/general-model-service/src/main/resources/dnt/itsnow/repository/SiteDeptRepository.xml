@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dnt.itsnow.repository.SiteDeptRepository">
+    <resultMap id="siteDeptResult" type="SiteDept">
+        <id property="id" column="id"/>
+        <!-- 一对多关系 -->
+        <association property="site" column="site_id" javaType="Site">
+            <id property="id" column="siteId"/>
+            <result property="sn" column="siteSn"/>
+            <result property="name" column="siteName"/>
+            <result property="address" column="siteAddress"/>
+            <result property="description" column="siteDescription"/>
+        </association>
+        <!-- 一对多关系 -->
+        <association property="department" column="dept_id" javaType="Department">
+            <id property="id" column="departmentId"/>
+            <result property="sn" column="departmentSn"/>
+            <result property="name" column="departmentName"/>
+            <result property="description" column="departmentDescription"/>
+        </association>
+    </resultMap>
+
+    <select id="findById" parameterType="long" resultType="SiteDept" resultMap="siteDeptResult">
+        select sd.id,
+        s.id as siteId, s.sn as siteSn, s.name as siteName, s.address as siteAddress, s.description as siteDescription,
+        d.id as departmentId, d.sn as departmentSn, d.name as departmentName, d.description as departmentDescription
+        from site_depts sd
+        left join departments d on d.id = sd.dept_id
+        left join sites s on sd.site_id = s.id
+        where sd.id=#{id}
+    </select>
+
+</mapper>

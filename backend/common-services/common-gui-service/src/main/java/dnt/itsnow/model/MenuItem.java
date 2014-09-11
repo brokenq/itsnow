@@ -47,6 +47,8 @@ public class MenuItem extends Record implements Comparable<MenuItem>{
     // 子菜单
     private List<MenuItem> children;
 
+    private String path;
+
     public String getPath() {
         if (parent == null) {
             return "/" + getName();
@@ -156,4 +158,20 @@ public class MenuItem extends Record implements Comparable<MenuItem>{
       return (int)(this.position - another.position);
     }
 
+    @Override
+    public String toString() {
+        return "MenuItem{" +
+                "parentId=" + parentId +
+                ", parent=" + parent +
+                ", name='" + name + '\'' +
+                ", state='" + state + '\'' +
+                ", url='" + url + '\'' +
+                ", templateUrl='" + templateUrl + '\'' +
+                ", css='" + css + '\'' +
+                ", description='" + description + '\'' +
+                ", position=" + position +
+                ", shortcut='" + shortcut + '\'' +
+                ", children=" + children +
+                '}';
+    }
 }

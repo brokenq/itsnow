@@ -11,32 +11,32 @@ import java.util.List;
 public interface MenuItemService {
 
     /**
-     * 创建菜单
+     * <h2>创建菜单</h2>
      *
-     * @param parent
-     * @param menuItem
+     * @param parent 父菜单
+     * @param menuItem 菜单实体类
      * @return MenuItem
      * @throws MenuItemException
      */
     public MenuItem create(MenuItem parent, MenuItem menuItem) throws MenuItemException;
 
     /**
-     * 删除菜单（逻辑删除）
-     * @param id
+     * <h2>删除菜单（逻辑删除）</h2>
+     * @param id 菜单ID
      * @throws MenuItemException
      */
     public void destroy(Long id) throws MenuItemException;
 
     /**
-     * 修改菜单
-     * @param menuItem
+     * <h2>修改菜单</h2>
+     * @param menuItem 菜单实体类
      * @return MenuItem
      * @throws MenuItemException
      */
     public MenuItem update(MenuItem menuItem) throws MenuItemException;
 
     /**
-     * 查询菜单
+     * <h2>查询菜单</h2>
      * @param id the menu id
      * @return MenuItem
      * @throws MenuItemException
@@ -44,13 +44,24 @@ public interface MenuItemService {
     public MenuItem find(Long id) throws MenuItemException;
 
     /**
-     * 加载所有菜单
+     * <h2>加载所有菜单</h2>
      * @return List<MenuItem>
      * @param tree return as tree structure
      */
     public List<MenuItem> findAll(boolean tree);
 
-    MenuItem findByPath(String path);
+    /**
+     * <h2>根据Path查找菜单项</h2>
+     * @param path 菜单的Path
+     * @return
+     */
+    public MenuItem findByPath(String path);
 
-    List<MenuItem> findAllByParent(MenuItem parent, boolean tree);
+    /**
+     * <h2>查找此父菜单下所有的菜单</h2>
+     * @param parent 父菜单项
+     * @param tree 是否为树结构标识
+     * @return
+     */
+    public List<MenuItem> findAllByParent(MenuItem parent, boolean tree);
 }

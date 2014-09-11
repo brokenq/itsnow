@@ -4,6 +4,7 @@ import dnt.itsnow.config.MenuItemsControllerConfig;
 import dnt.itsnow.model.MenuItem;
 import dnt.itsnow.service.MenuItemService;
 import dnt.itsnow.test.controller.ApplicationControllerTest;
+import dnt.support.JsonSupport;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,8 +41,9 @@ public class MenuItemsControllerTest extends ApplicationControllerTest {
         menuItemList = new ArrayList<MenuItem>();
         menuItem = new MenuItem();
         this.menuItem.setId(1L);
-        this.menuItem.setName("用户");
+        this.menuItem.setName("user");
         this.menuItem.setState("index.user");
+        this.menuItem.setUrl("/index.user");
         this.menuItem.setTemplateUrl("user/list-user.tpl.html");
         this.menuItem.setPosition(0L);
         this.menuItem.setShortcut("Shift+Ctrl+A");
@@ -73,25 +75,22 @@ public class MenuItemsControllerTest extends ApplicationControllerTest {
 
     }
 
-    @Test
-    public void testUpdate() throws Exception {
+//    @Test
+//    public void testUpdate() throws Exception {
+////        expect(commonMenuItemService.findAll(true)).andReturn(menuItemList);
+//
+//        expect(commonMenuItemService.update(anyObject(MenuItem.class))).andReturn(menuItem);
+//        replay(commonMenuItemService);
+//
+//        MockHttpServletRequestBuilder request = put("/api/menu_items/SLA").content(requestJson());
+//        decorate(request);
+//
+//        ResultActions result = this.browser.perform(request);
+//        decorate(result).andExpect(status().isOk());
+//    }
 
-        expect(commonMenuItemService.findAll(true))
-                .andReturn(menuItemList);
-
-        replay(commonMenuItemService);
-
-        // 准备 Mock Request
-        menuItem.setName("企业用户");
-        MockHttpServletRequestBuilder request = put("/api/menu_items", menuItem);
-        request = decorate(request);
-
-        // 执行
-        ResultActions result = this.browser.perform(request);
-
-        // 对业务结果的验证
-        decorate(result).andExpect(status().isOk());
-
+    protected String requestJson(){
+        return JsonSupport.toJSONString(menuItem);
     }
 
     // 每次测试结束之后再验证
