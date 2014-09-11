@@ -43,8 +43,8 @@ module.exports = {
     coffee_unit: [ 'lib/**/*.spec.coffee', 'login/**/*.spec.coffee', 'msc/login/**/*.spec.coffee'],
 
     lib_tpl: [ 'lib/**/*.tpl.html', 'lib/**/*.tpl.jade' ],
-    login_tpl: [ 'login/**/*.tpl.html', 'login/**/*.tpl.html' ],
-    ms_tpl: [ 'msc/login/**/*.tpl.html', 'msc/login/**/*.tpl.html' ],
+    login_tpl: [ 'login/**/*.tpl.html', 'login/**/*.tpl.jade' ],
+    ms_tpl: [ 'msc/login/**/*.tpl.html', 'msc/login/**/*.tpl.jade' ],
 
     less: 'less/login.less'
   },
