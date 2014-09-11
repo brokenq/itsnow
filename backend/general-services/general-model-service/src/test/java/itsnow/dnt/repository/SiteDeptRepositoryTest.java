@@ -14,6 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * <h1>测试SiteRepository的Mybatis的Mapping配置是否正确</h1>
@@ -44,19 +45,17 @@ public class SiteDeptRepositoryTest {
 
     @Test
     public void testDelete() throws Exception {
-        long id = 6L;
-        SiteDept siteDept = siteDeptRepository.findById(id);
-        Assert.assertNotNull(siteDept);
-        siteDeptRepository.deleteDeptAndSiteRelationByDeptId(siteDept.getDepartment().getId());
-        siteDept = siteDeptRepository.findById(id);
-
+        List<SiteDept> siteDepts = siteDeptRepository.findAll();
+        Assert.assertNotNull(siteDepts);
+        siteDeptRepository.deleteDeptAndSiteRelationByDeptId(siteDepts.get(0).getDepartment().getId());
+        SiteDept siteDept = siteDeptRepository.findById(siteDepts.get(0).getId());
         Assert.assertNull(siteDept);
     }
 
     @Test
     public void testUpdate() throws Exception {
-        long id = 1L;
-        SiteDept siteDept = siteDeptRepository.findById(id);
+        List<SiteDept> siteDepts = siteDeptRepository.findAll();
+        SiteDept siteDept = siteDepts.get(0);
 
         Department department = departmentRepository.findBySn("002");
         siteDept.setDepartment(department);
