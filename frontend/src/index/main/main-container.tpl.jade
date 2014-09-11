@@ -10,12 +10,11 @@ mixin menu_template()
   ul.submenu(ng-model="menu.children", ui-tree-nodes )
     li(ng-repeat="menu in menu.children", ui-tree-node, ng-include="'nodes_renderer.html'", data-nodrag)
 mixin check_option(key, value)
-  .script.hide
-    | script(type="text/javascript")
-    |  try{
-    |    ace.settings.check(key, value)
-    |  }catch(e){
-    |  }
+  script(type="text/javascript").
+    try{
+      ace.settings.check('#{key}', '#{value}')
+    }catch(e){
+    }
 mixin ace_checkbox(id, text)
   div
     input.ace.ace-checkbox-2(type="checkbox", id="ace-settings-#{id}")
@@ -57,13 +56,9 @@ mixin ace_checkbox(id, text)
           li
             i.icon-home.home-icon
             a(href="#") 首页
-          li
-            a(href="#") 其他
+          li: a(href="#") 其他
           li.active 空白
-      .page-content
-        .row
-          .col-xs-12
-            div(ui-view)
+      .page-content: .row: .col-xs-12: div(ui-view)
 
     .ace-settings-container#ace-settings-container
       .btn.btn-app.btn-xs.btn-warning.ace-settings-btn#ace-settings-btn
