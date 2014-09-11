@@ -47,8 +47,8 @@
           d.icon        AS detail_icon,
           d.created_at  AS detail_created_at,
           d.updated_at  AS detail_updated_at
-      FROM contracts c
-      LEFT OUTER JOIN contract_details d ON c.id = d.contract_id
+      FROM itsnow_msc.contracts c
+      LEFT OUTER JOIN itsnow_msc.contract_details d ON c.id = d.contract_id
       WHERE c.sn = #{sn}
     </select>
 
