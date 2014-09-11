@@ -39,65 +39,95 @@ public class MenuItemsController extends ApplicationController {
      * <h2>展示用户菜单</h2>
      * <p></p>
      * GET /api/menu_items/{path}?tree={bool}
+     *
      * @return 菜单项列表
      */
     @RequestMapping
     @ResponseBody
-    public List<MenuItem> index(@RequestParam( value = "tree", defaultValue = "true") boolean tree){
+    public List<MenuItem> index(@RequestParam(value = "tree", defaultValue = "true") boolean tree) {
         logger.debug("Listing menuItem");
-        if(target == null )
-            return menuItemService.findAll(tree);
-        else
-            return menuItemService.findAllByParent(target, tree);
+
+        List<MenuItem> list;
+        if (target == null) {
+            list = menuItemService.findAll(tree);
+        } else {
+            list = menuItemService.findAllByParent(target, tree);
+        }
+
+        logger.debug("Listed menuItem number {}", list.size());
+        return list;
     }
 
     /**
      * <h2>创建用户菜单</h2>
      * <p></p>
      * POST /api/menu_items/{path}
+     *
      * @param menuItem MenuItem实例
      * @return created menu item
      */
     @RequestMapping(method = RequestMethod.POST)
-    public MenuItem create(@RequestBody @Valid MenuItem menuItem){
-        try{
-            return menuItemService.create(target, menuItem);
-        }catch(MenuItemException e){
+    @ResponseBody
+    public MenuItem create(@RequestBody @Valid MenuItem menuItem) {
+        logger.info("Creating {}", menuItem.getName());
+
+        MenuItem aMenuItem;
+        try {
+            aMenuItem = menuItemService.create(target, menuItem);
+        } catch (MenuItemException e) {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
+
+        logger.info("Created  {}", aMenuItem.getName());
+        return aMenuItem;
     }
 
     /**
      * <h2>修改用户菜单</h2>
      * <p></p>
      * PUT /api/menu_items/{path}
+     *
      * @param menuItem MenuItem实例
      * @return updated menu item
      */
-    @RequestMapping(value = "{id}",method = RequestMethod.PUT)
-    public MenuItem update(@PathVariable("id") Long id, @RequestBody @Valid MenuItem menuItem){
-        if( target == null ) throw new WebClientSideException(HttpStatus.BAD_REQUEST, "The menu item path must be specified");
-        try{
+    @RequestMapping(method = RequestMethod.PUT)
+    @ResponseBody
+    public MenuItem update(@RequestBody @Valid MenuItem menuItem) {
+        logger.info("Updating {}", menuItem.getName());
+
+        if (target == null) {
+            throw new WebClientSideException(HttpStatus.BAD_REQUEST, "The menu item path must be specified");
+        }
+
+        MenuItem aMenuItem;
+        try {
             target.apply(menuItem);
-            return   menuItemService.update(target);
-        }catch(MenuItemException e){
+            aMenuItem = menuItemService.update(target);
+        } catch (MenuItemException e) {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
+
+        logger.info("Updated  {}", aMenuItem);
+        return aMenuItem;
     }
 
+    /**
+     * <h2>获取Request中的path</h2>
+     * @param request 请求
+     */
     @BeforeFilter
-    protected void initTargetMenu(HttpServletRequest request){
+    protected void initTargetMenu(HttpServletRequest request) {
 
         String path = (String) request.getAttribute(
                 HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
-        String bestMatchPattern = (String ) request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
+        String bestMatchPattern = (String) request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
 
         AntPathMatcher apm = new AntPathMatcher();
         String finalPath = apm.extractPathWithinPattern(bestMatchPattern, path);
 
-        if(StringUtils.isNotBlank(finalPath)){
+        if (StringUtils.isNotBlank(finalPath)) {
             this.target = menuItemService.findByPath(finalPath);
-        }else{
+        } else {
             this.target = null;
         }
     }
