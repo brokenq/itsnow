@@ -1,0 +1,17 @@
+//   Main container parts: shortcuts
+mixin shortcut(btn, icon)
+  button.btn(class="btn-#{btn}")
+    i(class="icon-#{icon}")
+.sidebar-shortcuts#sidebar-shortcuts
+  .sidebar-shortcuts-large#sidebar-shortcuts-large
+    +shortcut("success", "signal")
+    +shortcut("info", "pencil")
+    +shortcut("warning", "group")
+    +shortcut("danger", "cogs")
+  .sidebar-shortcuts-mini#sidebar-shortcuts-mini
+    span.btn.btn-success
+    span.btn.btn-info
+    span.btn.btn-warning
+    span.btn.btn-danger
+
+

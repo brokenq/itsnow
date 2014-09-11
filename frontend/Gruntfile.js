@@ -156,7 +156,12 @@ module.exports = function ( grunt ) {
       index: {
         options: {
           base: 'index',
-          module: 'Index.Templates'
+          module: 'Index.Templates',
+          // 因为 main container的这个tpl有include其他jade文件
+          // 所以其需要指定 options.jade.filename
+          // see: https://github.com/karlgoldstein/grunt-html2js/pull/48
+          // 如果这里有多个在不同目录下的 tpl.jade include 其他jade，这将会玩不转
+          jade: {filename: 'index/main/main-container.tpl.jade'}
         },
         src: [ '<%= index_files.index_tpl %>' ],
         dest: '<%= build_dir %>/templates/index.js'
@@ -299,6 +304,15 @@ module.exports = function ( grunt ) {
             flatten: true
           }
        ]
+      },
+      build_jade: {
+        files: [
+          {
+            src: [ '<%=index_files.jade%>','<%=login_files.jade%>' ],
+            dest: '<%= build_dir %>/',
+            expand: true
+          }
+        ]
       },
       build_index_js: {
         files: [
@@ -729,6 +743,7 @@ module.exports = function ( grunt ) {
     'copy:build_assets',          // 将assets目录中的文件copy到build目录中的assets
     'copy:build_vendor_assets',   // 将vendor的assets copy到build目录中的assets
     'copy:build_vendor_js',       // 将src目录中的js文件copy到build目录中
+    'copy:build_jade',            // 将src目录中的非模板的jade文件copy到build目录
     'copy:build_index_js',
     'copy:build_login_js',
     'concat:build_index_css',     // 合并build目录中所有的css文件为一个文件（与deploy环境一致)

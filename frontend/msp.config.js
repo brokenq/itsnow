@@ -21,6 +21,7 @@ module.exports = {
    */
   index_files: {
     js: [ 'lib/**/*.js', 'index/**/*.js', 'msp/index/**/*.js', '!**/*.spec.js' ],
+    jade: [ 'lib/**/*.jade', 'index/**/*.jade', 'msp/index/**/*.jade', '!**/*.tpl.jade' ],
     js_unit: [ 'lib/**/*.spec.js', 'index/**/*.spec.js', 'msp/index/**/*.spec.js'],
 
     coffee: [ 'lib/**/*.coffee', 'index/**/*.coffee', 'msp/index/**/*.coffee', '!**/*.spec.coffee' ],
@@ -35,6 +36,7 @@ module.exports = {
 
   login_files: {
     js: [ 'lib/**/*.js', 'login/**/*.js', 'msp/login/**/*.js', '!**/*.spec.js'],
+    jade: [ 'lib/**/*.jade', 'login/**/*.jade', 'msp/login/**/*.jade', '!**/*.tpl.jade'],
     js_unit: [ 'lib/**/*.spec.js', 'login/**/*.spec.js', 'msp/login/**/*.spec.js'],
 
     coffee: [ 'lib/**/*.coffee', 'login/**/*.coffee', 'msp/login/**/*.coffee', '!**/*.spec.coffee' ],

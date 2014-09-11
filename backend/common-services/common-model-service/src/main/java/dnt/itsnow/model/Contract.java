@@ -3,6 +3,7 @@
  */
 package dnt.itsnow.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import dnt.itsnow.platform.model.Record;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -23,10 +24,12 @@ public class Contract extends Record {
     //合同甲方，服务采购方
     @NotNull
     private Long msuAccountId;
+    @JsonIgnore
     private MsuAccount msuAccount;
     //合同乙方，服务供应方
     //@NotBlank
     private Long mspAccountId;
+    @JsonIgnore
     private MspAccount mspAccount;
     // MSU 是否批准
     @NotNull
@@ -36,6 +39,7 @@ public class Contract extends Record {
     private ContractStatus mspStatus;
 
     //合同明细
+    @JsonIgnore
     private List<ContractDetail> details;
 
     public String getSn() {
@@ -110,10 +114,12 @@ public class Contract extends Record {
         return null;
     }
 
+    @JsonIgnore
     public boolean isApprovedByMsu() {
         return msuStatus.isApproved();
     }
 
+    @JsonIgnore
     public boolean isApprovedByMsp() {
         return mspStatus.isApproved();
     }

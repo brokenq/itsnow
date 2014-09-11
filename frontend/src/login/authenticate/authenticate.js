@@ -14,7 +14,7 @@ angular
       views: {
         "login": {
           controller: 'AuthenticateCtrl as authenticate',
-          templateUrl: 'authenticate/authenticate.tpl.html'
+          templateUrl: 'authenticate/authenticate.tpl.jade'
         }
       },
       data: { pageTitle: '登录' }

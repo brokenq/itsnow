@@ -1,0 +1,17 @@
+//   Main container parts: menu component
+mixin menu_template()
+  a(ui-sref="{{menu.state}}", ng-class="{'dropdown-toggle':true}")
+    i(ng-class="{'icon-desktop':true}")
+    span(ng-class="{'menu-text':true}") {{menu.name}}
+    b(ng-class="{'arrow icon-angle-down':true}")
+  ul.submenu(ng-model="menu.children", ui-tree-nodes )
+    li(ng-repeat="menu in menu.children", ui-tree-node, ng-include="'nodes_renderer.html'", data-nodrag)
+
+div(ng-controller="MenuCtrl")
+  script(type="text/ng-template",id="nodes_renderer.html")
+    +menu_template()
+  div(ui-tree)
+    ul.nav.nav-list(ui-tree-nodes, ng-model="menuList")#tree-root
+      li(ng-repeat="menu in menuList", ui-tree-node, ng-include="'nodes_renderer.html'", data-nodrag)
+.sidebar-collapse#sidebar-collapse
+  i.icon-double-angle-left(data-icon1="icon-double-angle-left", data-icon2="icon-double-angle-right")

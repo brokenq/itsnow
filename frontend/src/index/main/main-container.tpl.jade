@@ -1,24 +1,10 @@
 doctype html
-mixin shortcut(btn, icon)
-  button.btn(class="btn-#{btn}")
-    i(class="icon-#{icon}")
-mixin menu_template()
-  a(ui-sref="{{menu.state}}", ng-class="{'dropdown-toggle':true}")
-    i(ng-class="{'icon-desktop':true}")
-    span(ng-class="{'menu-text':true}") {{menu.name}}
-    b(ng-class="{'arrow icon-angle-down':true}")
-  ul.submenu(ng-model="menu.children", ui-tree-nodes )
-    li(ng-repeat="menu in menu.children", ui-tree-node, ng-include="'nodes_renderer.html'", data-nodrag)
 mixin check_option(key, value)
   script(type="text/javascript").
     try{
       ace.settings.check('#{key}', '#{value}')
     }catch(e){
     }
-mixin ace_checkbox(id, text)
-  div
-    input.ace.ace-checkbox-2(type="checkbox", id="ace-settings-#{id}")
-    label.lbl(for="ace-settings-#{id}")= text
 
 .main-container#main-container
   +check_option('main-container', 'fixed')
@@ -27,54 +13,15 @@ mixin ace_checkbox(id, text)
       span.menu-text
     .sidebar#sidebar
       +check_option('sidebar', 'fixed')
-      .sidebar-shortcuts#sidebar-shortcuts
-        .sidebar-shortcuts-large#sidebar-shortcuts-large
-          +shortcut("success", "signal")
-          +shortcut("info", "pencil")
-          +shortcut("warning", "group")
-          +shortcut("danger", "cogs")
-        .sidebar-shortcuts-mini#sidebar-shortcuts-mini
-          span.btn.btn-success
-          span.btn.btn-info
-          span.btn.btn-warning
-          span.btn.btn-danger
-      //Menu Component
-      div(ng-controller="MenuCtrl")
-        script(type="text/ng-template",id="nodes_renderer.html")
-          +menu_template()
-        div(ui-tree)
-          ul.nav.nav-list(ui-tree-nodes, ng-model="menuList")#tree-root
-            li(ng-repeat="menu in menuList", ui-tree-node, ng-include="'nodes_renderer.html'", data-nodrag)
-      .sidebar-collapse#sidebar-collapse
-        i.icon-double-angle-left(data-icon1="icon-double-angle-left", data-icon2="icon-double-angle-right")
+      include shortcuts
+      include menus
       +check_option('sidebar', 'collapsed')
 
     .main-content
-      .breadcrumbs#breadcrumbs
-        +check_option('breadcrumbs', 'fixed')
-        ul.breadcrumb
-          li
-            i.icon-home.home-icon
-            a(href="#") 首页
-          li: a(href="#") 其他
-          li.active 空白
+      include breadcrumbs
       .page-content: .row: .col-xs-12: div(ui-view)
 
-    .ace-settings-container#ace-settings-container
-      .btn.btn-app.btn-xs.btn-warning.ace-settings-btn#ace-settings-btn
-        i.icon-cog.bigger-150
-      .ace-settings-box#ace-settings-box
-        div
-          div.pull-left
-            select.hide#skin-colorpicker
-              option(data-skin="default", value="#438EB9") #438EB9
-              option(data-skin="skin-1", value="#222A2D") #222A2D
-              option(data-skin="skin-2", value="#C6487E") #C6487E
-              option(data-skin="skin-3", value="#D0D0D0") #D0D0D0
-          span &nbsp; 选择主题
-        +ace_checkbox("navbar", "固定导航")
-        +ace_checkbox("sidebar", "固定侧栏")
-        +ace_checkbox("breadcrumbs", "固定上下文")
+    include page_settings
 
   a.btn-scroll-up.btn.btn-sm.btn-inverse(href="#")#btn-scroll-up
     i.icon-double-angle-up.icon-only.bigger-110

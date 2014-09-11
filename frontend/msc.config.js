@@ -21,6 +21,7 @@ module.exports = {
    */
   index_files: {
     js: [ 'lib/**/*.js', 'index/**/*.js', 'msc/index/**/*.js', '!**/*.spec.js' ],
+    jade: [ 'lib/**/*.jade', 'index/**/*.jade', 'msc/index/**/*.jade', '!**/*.tpl.jade' ],
     js_unit: [ 'lib/**/*.spec.js', 'index/**/*.spec.js', 'msc/index/**/*.spec.js'],
 
     coffee: [ 'lib/**/*.coffee', 'index/**/*.coffee', 'msc/index/**/*.coffee', '!**/*.spec.coffee' ],
@@ -35,14 +36,15 @@ module.exports = {
 
   login_files: {
     js: [ 'lib/**/*.js', 'login/**/*.js', 'msc/login/**/*.js', '!**/*.spec.js'],
+    jade: [ 'lib/**/*.jade', 'login/**/*.jade', 'msc/login/**/*.jade', '!**/*.tpl.jade'],
     js_unit: [ 'lib/**/*.spec.js', 'login/**/*.spec.js', 'msc/login/**/*.spec.js'],
 
     coffee: [ 'lib/**/*.coffee', 'login/**/*.coffee', 'msc/login/**/*.coffee', '!**/*.spec.coffee' ],
     coffee_unit: [ 'lib/**/*.spec.coffee', 'login/**/*.spec.coffee', 'msc/login/**/*.spec.coffee'],
 
     lib_tpl: [ 'lib/**/*.tpl.html', 'lib/**/*.tpl.jade' ],
-    login_tpl: [ 'login/**/*.tpl.html', 'login/**/*.tpl.html' ],
-    ms_tpl: [ 'msc/login/**/*.tpl.html', 'msc/login/**/*.tpl.html' ],
+    login_tpl: [ 'login/**/*.tpl.html', 'login/**/*.tpl.jade' ],
+    ms_tpl: [ 'msc/login/**/*.tpl.html', 'msc/login/**/*.tpl.jade' ],
 
     less: 'less/login.less'
   },
