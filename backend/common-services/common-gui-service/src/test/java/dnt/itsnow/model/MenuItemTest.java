@@ -28,7 +28,6 @@ public class MenuItemTest {
         this.menuItem.setId(1L);
         this.menuItem.setName("用户");
         this.menuItem.setState("index.user");
-        this.menuItem.setTemplateUrl("user/list-user.tpl.html");
         this.menuItem.setPosition(0L);
         this.menuItem.setShortcut("Shift+Ctrl+A");
         this.menuItem.setDescription("This is a test.");
@@ -48,8 +47,6 @@ public class MenuItemTest {
     public void testCorrectMenuItemIsValid() throws Exception {
         menuItem.setName("用户");
         menuItem.setState("index.user");
-        menuItem.setUrl("index.user");
-        menuItem.setTemplateUrl("index.user");
         Set<ConstraintViolation<MenuItem>> violations = validator.validate(menuItem);
         Assert.assertTrue(violations == null || violations.isEmpty());
     }

@@ -30,11 +30,6 @@ public class MenuItem extends Record implements Comparable<MenuItem>{
     // 菜单对应的angular state
     @NotBlank
     private String state;
-    @NotBlank
-    private String url;
-    // 菜单对应的angular templateUrl
-    @NotBlank
-    private String templateUrl;
     // 菜单的样式
     private String css;
     // 菜单的描述
@@ -56,28 +51,12 @@ public class MenuItem extends Record implements Comparable<MenuItem>{
         }
     }
 
-    public String getTemplateUrl() {
-        return templateUrl;
-    }
-
-    public void setTemplateUrl(String templateUrl) {
-        this.templateUrl = templateUrl;
-    }
-
     public String getState() {
         return state;
     }
 
     public void setState(String state) {
         this.state = state;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 
     public Long getPosition() {
@@ -164,8 +143,6 @@ public class MenuItem extends Record implements Comparable<MenuItem>{
                 ", parent=" + parent +
                 ", name='" + name + '\'' +
                 ", state='" + state + '\'' +
-                ", url='" + url + '\'' +
-                ", templateUrl='" + templateUrl + '\'' +
                 ", css='" + css + '\'' +
                 ", description='" + description + '\'' +
                 ", position=" + position +

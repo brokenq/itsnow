@@ -43,8 +43,6 @@ public class MenuItemsControllerTest extends ApplicationControllerTest {
         this.menuItem.setId(1L);
         this.menuItem.setName("user");
         this.menuItem.setState("index.user");
-        this.menuItem.setUrl("/index.user");
-        this.menuItem.setTemplateUrl("user/list-user.tpl.html");
         this.menuItem.setPosition(0L);
         this.menuItem.setShortcut("Shift+Ctrl+A");
         this.menuItem.setDescription("This is a test.");
