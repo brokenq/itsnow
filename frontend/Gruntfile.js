@@ -300,6 +300,15 @@ module.exports = function ( grunt ) {
           }
        ]
       },
+      build_jade: {
+        files: [
+          {
+            src: [ '<%=index_files.jade%>','<%=login_files.jade%>' ],
+            dest: '<%= build_dir %>/',
+            expand: true
+          }
+        ]
+      },
       build_index_js: {
         files: [
           {
@@ -729,6 +738,7 @@ module.exports = function ( grunt ) {
     'copy:build_assets',          // 将assets目录中的文件copy到build目录中的assets
     'copy:build_vendor_assets',   // 将vendor的assets copy到build目录中的assets
     'copy:build_vendor_js',       // 将src目录中的js文件copy到build目录中
+    'copy:build_jade',            // 将src目录中的非模板的jade文件copy到build目录
     'copy:build_index_js',
     'copy:build_login_js',
     'concat:build_index_css',     // 合并build目录中所有的css文件为一个文件（与deploy环境一致)

@@ -10,39 +10,6 @@ mixin dropdown_header(icon, text)
   li.dropdown-header
     i(class="icon-#{icon}")
     | #{text}
-
-mixin task_progress(text, progress)
-  li
-    a(href="#")
-      .clearfix
-        span.pull-left= text
-        span.pull-right= progress
-      .progress.progress-mini
-        .progress-bar(style="width:#{progress}")
-mixin notification(text, btn, icon, badge, number)
-  li
-    a(href="#")
-      .clearfix
-        span.pull-left
-          i.btn.btn-xs.no-hover(class="btn-#{btn} icon-#{icon}")
-          | #{text}
-        span.pull-right.badge(class="badge-#{badge}")= number
-mixin message(user, text, time, avatar)
-  li
-    a(href="#")
-      img.msg-photo(src="assets/#{avatar}.png",alt="#{user}'s Avatar")
-      span.msg-body
-        span.msg-title
-          span.blue= user
-          | #{text}
-        span.msg-time
-          i.icon-time
-          span= time
-mixin profile_link(text, icon, action)
-  li
-    a(href="#", ng-click=action)
-      i(class="icon-#{icon}")
-      | #{text}
 mixin summary(text)
   li
     a(href="#")
@@ -77,55 +44,9 @@ html
 
         .navbar-header.pull-right(role="navigation")
           ul.nav.ace-nav
-            li.grey
-              +dropdown_toggle("icon-tasks", "grey", 4)
-              ul.pull-right.dropdown-navbar.dropdown-menu.dropdown-caret.dropdown-close
-                +dropdown_header("ok", "4 Tasks to complete")
-                +task_progress("Software Update", "65%")
-                +task_progress("Hardware Upgrade", "37%")
-                +task_progress("Unit Testing", "15%")
-                +task_progress("Bug Fixes", "90%")
-                +summary("See tasks with details")
-
-            li.purple
-              +dropdown_toggle("icon-bell-alt icon-animated-bell" ,"important", 8)
-              ul.pull-right.dropdown-navbar.navbar-pink.dropdown-menu.dropdown-caret.dropdown-close
-                +dropdown_header("warning-sign", "8 Notifications")
-                +notification("New Comments", "pink", "comment", "+12")
-                li
-                  a(href="#")
-                    i.btn.btn-xs.btn-primary.icon-user
-                    | Bob just signed up as an editor ...
-                +notification("New Orders", "success", "success", "+8")
-                +notification("Followers", "info", "info", "+11")
-                +summary("See all notifications")
-
-            li.green
-              +dropdown_toggle("icon-envelope icon-animated-vertical", "success", 5)
-
-              ul.pull-right.dropdown-navbar.dropdown-menu.dropdown-caret.dropdown-close
-                +dropdown_header("envelope-alt", "5 Messages")
-                +message("Alex", "Ciao sociis natoque penatibus et auctor ...", "a moment ago", "avatar")
-                +message("Susan", "Vestibulum id ligula porta felis euismod ...", "20 minutes ago", "avatar3")
-                +message("Bob", "Nullam quis risus eget urna mollis ornare ...", "3:15 pm", "avatar4")
-                li
-                  a(href="inbox.html")
-                    | See all messages
-                    i.icon-arrow-right
-
-            li.light-blue(ng-controller="IndexCtrl")
-              a.dropdown-toggle(data-toggle="dropdown", href="#")
-                img.nav-user-photo(src="assets/user.jpg", alt="Jason's Photo")
-                span.user-info
-                  small 欢迎,
-                  | {{user.username}}
-
-                i.icon-caret-down
-
-              ul.user-menu.pull-right.dropdown-menu.dropdown-yellow.dropdown-caret.dropdown-close
-                +profile_link("设置", "cog", "")
-                +profile_link("个人资料", "user", "")
-                li.divider
-                +profile_link("注销", "off", "logout")
+            include index/main/tasks.jade
+            include index/main/notifications.jade
+            include index/main/messages.jade
+            include index/main/profile.jade
     // 主体内容
     div(ui-view)
