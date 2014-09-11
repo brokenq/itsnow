@@ -48,6 +48,12 @@ mixin summary(text)
     a(href="#")
       | #{text}
       i.icon-arrow-right
+mixin check_option(key, value)
+  script(type="text/javascript").
+    try{
+      ace.settings.check('#{key}', '#{value}')
+    }catch(e){
+    }
 
 !!! 5
 html
@@ -61,11 +67,7 @@ html
       script(type="text/javascript", src=js)
   body(ng-app="Itsnow.#{sysName}Index")
     .navbar.navbar-default#navbar
-      script(type="text/javascript")
-        try {
-          ace.settings.check('navbar', 'fixed')
-        } catch (e) {
-        }
+      +check_option('navbar', 'fixed')
 
       .navbar-container#navbar-container
         .navbar-header.pull-left

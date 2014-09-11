@@ -18,7 +18,8 @@ mixin page_navs()
     +nav_link("next", "step-forward", "下一页")
 mixin page_size_button(count)
   button.btn.btn-default(type="button", ng-class="{'active':params.count() == #{count}}", ng-click="params.count(#{count})")= count
-
+mixin select_all()
+  input(type="checkbox", ng-model="checkboxes.checked", name="filter-checkbox", value="")#select_all
 
 .container(ng-controller="AccountListCtrl")
 
@@ -39,15 +40,21 @@ mixin page_size_button(count)
       .nav-search#nav-search
         form.form-search
           span.input-icon
-            input.nav-search-input(type="text", placeholder="Search ...",autocomplete="off")#nav-search-input
+            input.nav-search-input(type="text", placeholder="名称或者子域名...",autocomplete="off")#nav-search-input
             i.icon-search.nav-search-icon
 
   table.table(template-pagination="customPager",ng-table="tableParams")
     tr(ng-repeat="account in $data")
-      td(data-title="'SN'") {{account.sn}}
-      td(data-title="'Name'") {{account.name}}
-      td(data-title="'Domain'") {{account.domain}}
+      td(width="30" style="text-align: left" header="'ng-table/headers/checkbox.html'")
+        input(type="checkbox" ng-model="checkboxes.items[account.sn]")
+      td(data-title="'名称'") {{account.name}}
+      td(data-title="'子域名'") {{account.domain | formatSubDomain}}
+      td(data-title="'联系人'") account.user.nickName
+      td(data-title="'联系人电话'") account.user.phone
+      td(data-title="'状态'") {{ account.status | formatAccountStatus}}
 
+script(type="text/ng-template", id="ng-table/headers/checkbox.html")
+  +select_all()
 script(type="text/ng-template")#customPager
   ul.pager.ng-cloak
     +page_navs()

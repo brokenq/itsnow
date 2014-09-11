@@ -1678,10 +1678,10 @@ blockquote.pull-right {
 }
 .nav-search .nav-search-input {
   border: 1px solid #6fb3e0;
-  width: 152px;
-  height: 28px !important;
+  width: 252px;
+  height: 30px !important;
   border-radius: 4px !important;
-  font-size: 13px;
+  font-size: 15px;
   color: #666666 !important;
   z-index: 11;
   -webkit-transition: width ease .15s;
