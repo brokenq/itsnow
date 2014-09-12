@@ -35,6 +35,7 @@ public class User extends ConfigItem
     private String phone;
     @NotBlank
     private String password;
+    @JsonIgnore
     @NotBlank
     private String repeatPassword;
 
