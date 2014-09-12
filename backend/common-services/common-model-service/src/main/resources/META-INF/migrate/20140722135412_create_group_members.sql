@@ -3,9 +3,10 @@
 
 CREATE TABLE group_members (
   id         INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  username  VARCHAR(50)     NOT NULL,
-  group_id  INT(10) UNSIGNED NOT NULL,
-  FOREIGN KEY (group_id) REFERENCES groups (id)
+  user_id   INT(10) UNSIGNED NOT NULL,
+  group_id  INT(10) UNSIGNED NOT NULL
+--   FOREIGN KEY (group_id) REFERENCES groups (id),
+--   FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
 

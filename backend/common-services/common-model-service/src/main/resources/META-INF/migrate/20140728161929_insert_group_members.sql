@@ -8,6 +8,11 @@ SET @reporters_name = 'reporters';
 SET @first_line = 'first_line';
 SET @second_line = 'second_line';
 
+SET @steven_li_id = (SELECT id FROM itsnow_msc.users where username = 'steve.li');
+SET @sharp_liu_id = (SELECT id FROM itsnow_msc.users where username = 'sharp.liu');
+SET @jacky_cao_id = (SELECT id FROM itsnow_msc.users where username = 'jacky.cao');
+SET @rose_zhou_id = (SELECT id FROM itsnow_msc.users where username = 'rose.zhou');
+
 SET @administrator_gid = (SELECT id from groups where name = @admins_name);
 SET @guest_gid = (SELECT id from groups where name = @guests_name);
 SET @monitor_gid = (SELECT id from groups where name = @monitors_name);
@@ -15,24 +20,24 @@ SET @reporter_gid = (SELECT id from groups where name = @reporters_name);
 SET @first_line_gid = (SELECT id from groups where name = @first_line);
 SET @second_line_gid = (SELECT id from groups where name = @second_line);
 
-INSERT INTO group_members(username, group_id) VALUES
-('admin', @administrator_gid),
-('admin', @monitor_gid),
-('admin', @reporter_gid),
-('root',  @administrator_gid),
-('root',  @monitor_gid),
-('root',  @reporter_gid),
-('steve.li',   @reporter_gid),
-('jason.wang', @monitor_gid),
-('stone.xin',  @reporter_gid),
-('jacky.cao',  @monitor_gid),
-('smile.tian', @monitor_gid),
-('sharp.liu',  @reporter_gid),
-('mike.wei',   @monitor_gid),
-('jacky.cao',  @first_line_gid),
-('jay.xiong',  @second_line_gid),
-('steve.li',  @first_line_gid),
-('jason.wang',  @second_line_gid)
+INSERT INTO group_members(user_id, group_id) VALUES
+(@steven_li_id, @administrator_gid),
+(@steven_li_id, @monitor_gid),
+(@steven_li_id, @reporter_gid),
+(@steven_li_id,  @administrator_gid),
+(@steven_li_id,  @monitor_gid),
+(@steven_li_id,  @reporter_gid),
+(@sharp_liu_id,   @reporter_gid),
+(@sharp_liu_id, @monitor_gid),
+(@sharp_liu_id,  @reporter_gid),
+(@jacky_cao_id,  @monitor_gid),
+(@jacky_cao_id, @monitor_gid),
+(@jacky_cao_id,  @reporter_gid),
+(@rose_zhou_id,   @monitor_gid),
+(@rose_zhou_id,  @first_line_gid),
+(@rose_zhou_id,  @second_line_gid),
+(@rose_zhou_id,  @first_line_gid),
+(@rose_zhou_id,  @second_line_gid)
 ;
 
 -- //@UNDO

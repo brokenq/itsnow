@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dnt.itsnow.repository.StaffRepository">
+
+    <resultMap id="staffResult" type="Staff">
+        <id property="id" column="id"/>
+        <result property="no" column="no"/>
+        <result property="name" column="name"/>
+        <result property="mobile_phone" column="mobilePhone"/>
+        <result property="fixed_phone" column="fixedPhone"/>
+        <result property="email" column="email"/>
+        <result property="title" column="title"/>
+        <result property="type" column="type"/>
+        <result property="status" column="status"/>
+        <result property="description" column="description"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <!-- 一对一关系 -->
+        <association property="user" column="user_id" javaType="User">
+            <id property="id" column="userId"/>
+            <result property="email" column="userEmail"/>
+            <result property="phone" column="userPhone"/>
+            <result property="enabled" column="userEnabled"/>
+            <result property="expired" column="userExpired"/>
+            <result property="locked" column="userLocked"/>
+        </association>
+        <!-- 多对一关系 -->
+        <association property="site" column="site_id" javaType="Site">
+            <id property="id" column="siteId"/>
+            <result property="sn" column="siteSn"/>
+            <result property="name" column="siteName"/>
+            <result property="address" column="siteAddress"/>
+            <result property="description" column="siteDescription"/>
+        </association>
+        <!-- 多对一关系 -->
+        <association property="department" column="dept_id" javaType="Department">
+            <id property="id" column="deptId"/>
+            <result property="sn" column="deptSn"/>
+            <result property="name" column="deptName"/>
+            <result property="description" column="deptDescription"/>
+        </association>
+    </resultMap>
+
+    <select id="findByNo" parameterType="string" resultType="Staff" resultMap="staffResult">
+        select stf.id, stf.no, stf.name, stf.mobile_phone, stf.fixed_phone, stf.email, stf.title, stf.type, stf.status, stf.description, stf.created_at, stf.updated_at,
+        u.id as userId, u.email as userEmail, u.phone as userPhone, u.enabled as userEnabled, u.expired as userEnabled, u.locked as userLocked,
+        s.id as siteId, s.sn as siteSn, s.name as siteName, s.address as siteAddress, s.description as siteDescription,
+        d.id as deptId, d.sn as deptSn, d.name as deptName, d.description as deptDescription
+        from staffs stf
+        left join users u on stf.user_id = u.id
+        left join sites s on stf.site_id = s.id
+        left join departments d on stf.dept_id = d.id
+        where stf.no=#{no}
+    </select>
+
+    <select id="find" parameterType="string" resultType="Staff" resultMap="staffResult">
+        select stf.id, stf.no, stf.name, stf.mobile_phone, stf.fixed_phone, stf.email, stf.title, stf.type, stf.status, stf.description, stf.created_at, stf.updated_at,
+        u.id as userId, u.email as userEmail, u.phone as userPhone, u.enabled as userEnabled, u.expired as userEnabled, u.locked as userLocked,
+        s.id as siteId, s.sn as siteSn, s.name as siteName, s.address as siteAddress, s.description as siteDescription,
+        d.id as deptId, d.sn as deptSn, d.name as deptName, d.description as deptDescription
+        from staffs stf
+        left join users u on stf.user_id = u.id
+        left join sites s on stf.site_id = s.id
+        left join departments d on stf.dept_id = d.id
+        order by ${sort} ${dir} limit #{offset}, #{size}
+    </select>
+
+
+    <select id="findByKeyword" parameterType="string" resultType="Staff" resultMap="staffResult">
+        select stf.id, stf.no, stf.name, stf.mobile_phone, stf.fixed_phone, stf.email, stf.title, stf.type, stf.status, stf.description, stf.created_at, stf.updated_at,
+        u.id as userId, u.email as userEmail, u.phone as userPhone, u.enabled as userEnabled, u.expired as userEnabled, u.locked as userLocked,
+        s.id as siteId, s.sn as siteSn, s.name as siteName, s.address as siteAddress, s.description as siteDescription,
+        d.id as deptId, d.sn as deptSn, d.name as deptName, d.description as deptDescription
+        from staffs stf
+        left join users u on stf.user_id = u.id
+        left join sites s on stf.site_id = s.id
+        left join departments d on stf.dept_id = d.id
+        where stf.name like #{keyword}
+        order by ${sort} ${dir} limit #{offset}, #{size}
+    </select>
+
+</mapper>

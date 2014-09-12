@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ContextConfiguration(classes = MspWorkflowsControllerConfig.class)
-public class WorkflowsControllerTest extends SessionSupportedControllerTest {
+public class MspWorkflowsControllerTest extends SessionSupportedControllerTest {
 
     @Autowired
     CommonUserService userService;
