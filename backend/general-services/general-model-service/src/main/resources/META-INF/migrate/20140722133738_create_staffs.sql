@@ -15,8 +15,8 @@ CREATE TABLE staffs (
   user_id       INT(10) UNSIGNED,
   site_dept_id INT(10) UNSIGNED,
   created_at   TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at   TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (site_dept_id) REFERENCES site_depts (id)
+  updated_at   TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP
+--   FOREIGN KEY (site_dept_id) REFERENCES site_depts (id)
 --   ,FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
