@@ -8,10 +8,10 @@ import org.apache.ibatis.annotations.Insert;
  */
 public interface ActivitiSyncRepository {
 
-    @Insert("INSERT INTO ACT_ID_GROUP(ID_,NAME_,TYPE_) SELECT group_name,group_name,'group' FROM itsnow_msc.groups WHERE group_name NOT IN (SELECT ID_ FROM ACT_ID_GROUP)")
+    @Insert("INSERT INTO ACT_ID_GROUP(ID_,NAME_,TYPE_) SELECT name,name,'group' FROM itsnow_msc.groups WHERE name NOT IN (SELECT ID_ FROM ACT_ID_GROUP)")
     int insertGroups();
 
-    @Delete("DELETE FROM ACT_ID_GROUP WHERE ID_ NOT IN (select group_name FROM itsnow_msc.groups)")
+    @Delete("DELETE FROM ACT_ID_GROUP WHERE ID_ NOT IN (select name FROM itsnow_msc.groups)")
     int deleteGroups();
 
     @Insert("INSERT INTO ACT_ID_USER(ID_,EMAIL_) SELECT username,email FROM itsnow_msc.users WHERE username not in (select ID_ FROM ACT_ID_USER)")
