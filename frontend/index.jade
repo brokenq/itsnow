@@ -23,7 +23,7 @@ mixin check_option(key, value)
     }
 
 !!! 5
-html
+html(ng-app="Itsnow.#{sysName}Index")
   head(lang="zh-CN")
     title(ng-bind="pageTitle")
     meta(charset="utf-8")
@@ -32,7 +32,7 @@ html
     link(rel="stylesheet", type="text/css", href=style)
     each js in scripts
       script(type="text/javascript", src=js)
-  body(ng-app="Itsnow.#{sysName}Index")
+  body
     .navbar.navbar-default#navbar
       +check_option('navbar', 'fixed')
 
@@ -44,9 +44,27 @@ html
 
         .navbar-header.pull-right(role="navigation")
           ul.nav.ace-nav
-            include index/tasks
-            include index/notifications
-            include index/messages
-            include index/profile
+            include index/parts/tasks
+            include index/parts/notifications
+            include index/parts/messages
+            include index/parts/profile
     // 主体内容
-    div(ui-view)
+    .main-container#main-container
+      +check_option('main-container', 'fixed')
+      .main-container-inner
+        a.menu-toggler#menu-toggler(href="#")
+          span.menu-text
+        .sidebar#sidebar
+          +check_option('sidebar', 'fixed')
+          include index/parts/shortcuts
+          include index/parts/menus
+          +check_option('sidebar', 'collapsed')
+
+        .main-content
+          include index/parts/breadcrumbs
+          .page-content: .row: .col-xs-12: div(ui-view)
+
+        include index/parts/page_settings
+
+      a.btn-scroll-up.btn.btn-sm.btn-inverse(href="#")#btn-scroll-up
+        i.icon-double-angle-up.icon-only.bigger-110

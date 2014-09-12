@@ -4,12 +4,15 @@ angular.module('MscIndex.Account', ['ngTable','ngResource'])
     $stateProvider.state 'index.accounts',
       url: '/accounts',
       templateUrl: 'account/list.tpl.jade'
+      data: {pageTitle: '帐户管理'}
     $stateProvider.state 'index.accounts.msu',
       url: '/msu',
       templateUrl: 'account/list.tpl.jade'
+      data: {pageTitle: '企业帐户管理'}
     $stateProvider.state 'index.accounts.msp',
       url: '/msp',
       templateUrl: 'account/list.tpl.jade'
+      data: {pageTitle: '服务商帐户管理'}
 
   .factory('AccountService', ['$resource', ($resource) ->
     $resource("/admin/api/accounts")

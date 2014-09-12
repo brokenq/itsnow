@@ -15,7 +15,8 @@ angular.module('Itsnow.Index', [
         $stateProvider
             .state('index', {
                 url: '',
-                templateUrl: 'main/container.tpl.jade'
+                templateUrl: 'dashboard/dashboard.tpl.jade',
+                data: {pageTitle: 'Itsnow'}
             });
   })
 
@@ -33,14 +34,28 @@ angular.module('Itsnow.Index', [
       });
   }])
 
-  .controller('IndexCtrl', ['$scope',  'SessionService', '$window',
-    function ($scope, sessionService, $window) {
+  .controller('IndexCtrl', ['$rootScope', '$scope', '$state',  'SessionService', '$window',
+    function ($rootScope, $scope, $state, sessionService, $window) {
+      $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
+        // Record current breadcrumbs
+        var breadcrumb = toState;
+        var breadcrumbs = [breadcrumb];
+        var last = breadcrumb.name.lastIndexOf('.');
+        var pageTitle = breadcrumb.data.pageTitle;
+        $rootScope.breadcrumbs = breadcrumbs;
+        while(last > 0 ){
+          breadcrumb = $state.get(breadcrumb.name.substring(0, last));
+          breadcrumbs.push(breadcrumb);
+          pageTitle = pageTitle + " | " + (breadcrumb.data.pageTitle || "未命名") ;
+          last = breadcrumb.name.lastIndexOf('.');
+        }
+        $rootScope.pageTitle = pageTitle;
+      });
       $scope.logout = function(){
         sessionService.logout(function(){
           $window.location.href='/login.html';
         });
       };
-
   }])
 
   // 获取用户信息

@@ -161,7 +161,7 @@ module.exports = function ( grunt ) {
           // 所以其需要指定 options.jade.filename
           // see: https://github.com/karlgoldstein/grunt-html2js/pull/48
           // 如果这里有多个在不同目录下的 tpl.jade include 其他jade，这将会玩不转
-          jade: {filename: 'index/main/main-container.tpl.jade'}
+          jade: {filename: 'index/dashboard/dashboard.tpl.jade'}
         },
         src: [ '<%= index_files.index_tpl %>' ],
         dest: '<%= build_dir %>/templates/index.js'
