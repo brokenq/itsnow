@@ -1,4 +1,4 @@
-Itsnow 版本发布
+﻿Itsnow 版本发布
 =================
 
 统一规定如下:
@@ -34,8 +34,8 @@ git@happyonroad.net:insight/itsnow.git Rel-x.y.z 标签(tag)
 ```sh
   cd path/to/itsnow
   mvn -Pdnt,with-itsnow-msc package
-  mvn -Pdnt,with-itsnow-msp package
-  mvn -Pdnt,with-itsnow-msu package
+  mvn -Pdnt,with-itsnow-general,with-itsnow-msp package
+  mvn -Pdnt,with-itsnow-general,with-itsnow-msu package
 ```
 
   * 集成测试（以msc的集成测试为例，msp, msu 均需要单独参照执行）
@@ -63,8 +63,8 @@ git@happyonroad.net:insight/itsnow.git Rel-x.y.z 标签(tag)
 
 ```sh
   mvn -Pdnt,with-itsnow-msc package
-  mvn -Pdnt,with-itsnow-msp package
-  mvn -Pdnt,with-itsnow-msu package
+  mvn -Pdnt,with-itsnow-general,with-itsnow-msp package
+  mvn -Pdnt,with-itsnow-general,with-itsnow-msu package
 ```
 7. 将对master的修改提交到origin上（origin会执行单元测试以及集成测试）
 8. 检查CI上各个子系统是否通过Sprint Build
@@ -123,6 +123,33 @@ git@happyonroad.net:insight/itsnow.git Rel-x.y.z 标签(tag)
 1. [msc-0.1.6](http://ci.dnt.com.cn/repository/download/Itsnow_Sprint_Build_MSC/3832:id/msc-0.1.6.zip)
 2. [msp-0.1.6](http://ci.dnt.com.cn/repository/download/Itsnow_SprintBuild_MSP/3833:id/msp-0.1.6.zip)
 3. [msu-0.1.6](http://ci.dnt.com.cn/repository/download/Itsnow_SprintBuild_MSU/3834:id/msu-0.1.6.zip)
+
+4. 系统演示地址
+-----------
+
+暂未部署
+
+0.1.7 发布说明
+=================
+
+1. 新增特性
+-----------
+
+1. Frontend 完成注册form以及account列表展示
+2. Backend 完成签约流程
+3. Backend 完成故障流程
+4. Backend 完成部分系统配置功能
+
+2. 问题修复
+-----------
+
+
+3. 交付物地址
+--------------
+
+1. [msc-0.1.7](http://ci.dnt.com.cn/repository/download/Itsnow_Sprint_Build_MSC/3832:id/msc-0.1.7.zip)
+2. [msp-0.1.7](http://ci.dnt.com.cn/repository/download/Itsnow_SprintBuild_MSP/3833:id/msp-0.1.7.zip)
+3. [msu-0.1.7](http://ci.dnt.com.cn/repository/download/Itsnow_SprintBuild_MSU/3834:id/msu-0.1.7.zip)
 
 4. 系统演示地址
 -----------
