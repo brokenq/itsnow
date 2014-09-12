@@ -9,5 +9,6 @@
         <typeAlias type="dnt.itsnow.model.Workflow" alias="Workflow"/>
         <typeAlias type="dnt.itsnow.model.ActReProcdef" alias="ActReProcdef"/>
         <typeAlias type="dnt.itsnow.model.ServiceItem" alias="ServiceItem"/>
+        <typeAlias type="dnt.itsnow.model.Staff" alias="Staff"/>
     </typeAliases>
 </configuration>
