@@ -28,7 +28,6 @@ public class StaffRepositoryTest {
     @Test
     public void testCreate() throws Exception {
         Staff staff = new Staff();
-        staff.setId(1L);
         staff.setNo("008");
         staff.setName("王二麻子");
         staff.setMobilePhone("15901968888");
