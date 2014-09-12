@@ -3,10 +3,9 @@
 .breadcrumbs#breadcrumbs
   +check_option('breadcrumbs', 'fixed')
   ul.breadcrumb
-    li(ng-repeat="breadcrumb in breadcrumbs")
     li
       i.icon-home.home-icon
-      a(href="#") 首页
-    li: a(href="#") 其他
-    li.active 空白
+      a(href="/index.html") 首页
+    li(ng-repeat="breadcrumb in breadcrumbs")
+      a(ui-sref="{{breadcrumb.name}}") {{breadcrumb.data.pageTitle}}
 
