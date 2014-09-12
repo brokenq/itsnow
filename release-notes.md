@@ -73,8 +73,9 @@ git@happyonroad.net:insight/itsnow.git Rel-x.y.z 标签(tag)
 9. 打标签: `git tag Rel-x.y.z`
 10. 提交新标签: `git push --tags`
 11. 开辟新版本: `git co -b Dev-x.y.z+1`
-12. 提交新的开发分支: `git push -u origin Dev-x.y.z+1:Dev-x.y.z+1`
-13. 修改Itsnow CI的Continuous Build [version参数](http://ci.dnt.com.cn/admin/editBuildParams.html?id=buildType:itsnow_Continuous_Build)
+12. 修改新版本号: 替换所有版本号 x.y.z 为 x.y.z+1-SNAPSHOT
+13. 提交新的开发分支: `git push -u origin Dev-x.y.z+1:Dev-x.y.z+1`
+14. 修改Itsnow CI的Continuous Build [version参数](http://ci.dnt.com.cn/admin/editBuildParams.html?id=buildType:itsnow_Continuous_Build)
 
 收尾工作:
 
