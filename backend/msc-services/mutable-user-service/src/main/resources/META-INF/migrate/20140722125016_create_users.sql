@@ -15,7 +15,8 @@ CREATE TABLE users (
   password_expired BOOLEAN          NOT NULL DEFAULT FALSE,
   created_at        TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at        TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (account_id) REFERENCES accounts(id)
+  FOREIGN KEY (account_id) REFERENCES accounts(id),
+  UNIQUE KEY username (username)
 );
 
 -- //@UNDO
