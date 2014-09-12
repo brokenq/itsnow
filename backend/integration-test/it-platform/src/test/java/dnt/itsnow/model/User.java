@@ -3,10 +3,7 @@
  */
 package dnt.itsnow.model;
 
-import org.springframework.security.core.GrantedAuthority;
-
 import java.sql.Timestamp;
-import java.util.Set;
 
 /**
  * <h1>测试对user信息的解析</h1>
@@ -17,6 +14,7 @@ public class User {
     private String email;
     private String phone;
     private String password;
+    private String repeatPassword;
     private String accountId;
     private boolean enabled;
     private boolean expired;
@@ -127,6 +125,14 @@ public class User {
 
     public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getRepeatPassword() {
+        return repeatPassword;
+    }
+
+    public void setRepeatPassword(String repeatPassword) {
+        this.repeatPassword = repeatPassword;
     }
 
     public String getDescription() {
