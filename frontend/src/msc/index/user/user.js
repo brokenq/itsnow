@@ -5,20 +5,16 @@ var userApp = angular.module('MscIndex.User', ['ngGrid','ngResource']);
 
 userApp.config(function($stateProvider){
   $stateProvider
-    .state('index.user', {
+    .state('user', {
       url: '/user',
-      templateUrl: 'user/list-user.tpl.html'
+      templateUrl: 'user/list-user.tpl.html',
+      data: {pageTitle: '用户管理'}
     });
 });
 
 // 封装$http
 userApp.factory('UserService', ['$resource', function ($resource) {
-  return $resource('/admin/api/users', null, {
-    list: {
-      method: 'GET',
-      isArray: true
-    }
-  });
+  return $resource('/admin/api/users');
 }]);
 
 var UserListCtrl = ['$scope', '$http', 'UserService',
@@ -55,14 +51,14 @@ var UserListCtrl = ['$scope', '$http', 'UserService',
             var data;
             if (searchText) {
                 var ft = searchText.toLowerCase();
-                userService.list(function(largeLoad){
+                userService.query(function(largeLoad){
                     data = largeLoad.filter(function (item) {
                         return JSON.stringify(item).toLowerCase().indexOf(ft) != -1;
                     });
                     $scope.setPagingData(data, page, pageSize);
                 });
             } else {
-                userService.list(function(largeLoad){
+                userService.query(function(largeLoad){
                     $scope.setPagingData(largeLoad, page, pageSize);
                 });
             }

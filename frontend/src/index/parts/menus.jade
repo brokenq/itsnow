@@ -11,9 +11,9 @@ mixin menu_item_iteration(variableName)
   li(ng-repeat="menuItem in #{variableName}", ng-include="'menu-item-template'")
 
 mixin menu_item_template
-  a(ui-sref="{{menuItem.state}}" ng-if="!menuItem.children")
+  a(ui-sref="{{menuItem.state}}", ng-if="!menuItem.children")
     +menu_item_content
-  a.dropdown-toggle(href="#" ng-if="menuItem.children")
+  a.dropdown-toggle(href="#", ng-if="menuItem.children")
     +menu_item_content
     b.arrow.icon-angle-down
   ul.submenu(ng-if="menuItem.children")

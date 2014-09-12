@@ -62,7 +62,7 @@ html(ng-app="Itsnow.#{sysName}Index")
 
         .main-content
           include index/parts/breadcrumbs
-          .page-content: .row: .col-xs-12: div(ui-view)
+          .page-content: .row: .col-xs-12: div(ui-view ng-controller='IndexCtrl')
 
         include index/parts/page_settings
 

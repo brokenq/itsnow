@@ -10,14 +10,15 @@ angular.module('Itsnow.Index', [
     'Index.Table'
 ])
   .config(function ($httpProvider, $stateProvider, $urlRouterProvider) {
-        $urlRouterProvider.otherwise('');
+        $urlRouterProvider.otherwise('dashboard');
 
-        $stateProvider
-            .state('index', {
-                url: '',
+        $stateProvider.state('dashboard', {
+                url: '/dashboard',
                 templateUrl: 'dashboard/dashboard.tpl.jade',
-                data: {pageTitle: 'Itsnow'}
-            });
+                data: {pageTitle: '总览'}
+        });
+
+
   })
 
   // 登录/登出
@@ -41,12 +42,12 @@ angular.module('Itsnow.Index', [
         var breadcrumb = toState;
         var breadcrumbs = [breadcrumb];
         var last = breadcrumb.name.lastIndexOf('.');
-        var pageTitle = breadcrumb.data.pageTitle;
+        var pageTitle = (breadcrumb.data || {pageTitle: "未命名"}).pageTitle;
         $rootScope.breadcrumbs = breadcrumbs;
         while(last > 0 ){
           breadcrumb = $state.get(breadcrumb.name.substring(0, last));
           breadcrumbs.push(breadcrumb);
-          pageTitle = pageTitle + " | " + (breadcrumb.data.pageTitle || "未命名") ;
+          pageTitle = pageTitle + " | " + (breadcrumb.data || {pageTitle: "未命名"}).pageTitle;
           last = breadcrumb.name.lastIndexOf('.');
         }
         $rootScope.pageTitle = pageTitle;

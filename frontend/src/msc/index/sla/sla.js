@@ -5,9 +5,10 @@ var slaApp = angular.module('MscIndex.SLA', ['ngGrid','ngResource']);
 
 slaApp.config(function($stateProvider){
   $stateProvider
-    .state('index.sla', {
+    .state('sla', {
       url: '/sla',
-      templateUrl: 'sla/list-sla.tpl.html'
+      templateUrl: 'sla/list-sla.tpl.html',
+      data:{pageTitle: "SLA管理"}
     });
 });
 

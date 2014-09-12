@@ -5,20 +5,16 @@ var contractApp = angular.module('MscIndex.Contract', ['ngGrid','ngResource']);
 
 contractApp.config(function($stateProvider){
   $stateProvider
-    .state('index.contract', {
+    .state('contract', {
       url: '/contract',
-      templateUrl: 'contract/list-contract.tpl.html'
+      templateUrl: 'contract/list-contract.tpl.html',
+      data: {pageTitle: '合同管理'}
     });
 });
 
 // 封装$http
 contractApp.factory('ContractService', ['$resource', function ($resource) {
-  return $resource('/api/contracts', null, {
-    list: {
-      method: 'GET',
-      isArray: true
-    }
-  });
+  return $resource('/api/contracts');
 }]);
 
 var ContractListCtrl = ['$scope', 'ContractService',
@@ -52,7 +48,7 @@ var ContractListCtrl = ['$scope', 'ContractService',
             ];
             if (searchText) {
 //                var ft = searchText.toLowerCase();
-//                contractService.list(function(largeLoad){
+//                contractService.query(function(largeLoad){
 //                    data = largeLoad.filter(function (item) {
 //                        return JSON.stringify(item).toLowerCase().indexOf(ft) != -1;
 //                    });
@@ -60,7 +56,7 @@ var ContractListCtrl = ['$scope', 'ContractService',
 //                });
                   $scope.setPagingData(data, page, pageSize);
             } else {
-//                contractService.list(function(largeLoad){
+//                contractService.query(function(largeLoad){
 //                    $scope.setPagingData(largeLoad, page, pageSize);
 //                });
                   $scope.setPagingData(data, page, pageSize);
