@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS sites (
   work_time_id            INT(10) UNSIGNED,
   process_dictionary_id INT(10) UNSIGNED,
   created_at              TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at              TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at              TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP
 --   FOREIGN KEY (work_time_id) REFERENCES work_times (id)
 --   ,FOREIGN KEY (process_dictionary_id) REFERENCES process_dictionaries (id)
 );
