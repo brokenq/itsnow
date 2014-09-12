@@ -1,6 +1,6 @@
 {
   "name": "itsnow",
-  "version": "0.1.7",
+  "version": "0.1.8-SNAPSHOT",
   "devDependencies": {
     "angular": "~1.2",
     "angular-resource": "~1.2",

@@ -7,7 +7,7 @@ CREATE TABLE user_roles
    username  VARCHAR(255) NOT NULL,
    authority VARCHAR(255) NOT NULL,
    FOREIGN KEY (authority) REFERENCES roles (name),
-   FOREIGN KEY (username) REFERENCES users (username);
+   FOREIGN KEY (username) REFERENCES users (username)
 );
 
 -- //@UNDO

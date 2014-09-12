@@ -1,6 +1,7 @@
 package dnt.itsnow.repository;
 
 import dnt.itsnow.model.Department;
+import dnt.itsnow.model.Site;
 import dnt.itsnow.model.SiteDept;
 import org.apache.ibatis.annotations.*;
 
@@ -16,7 +17,7 @@ public interface SiteDeptRepository {
             "(#{site.id}, #{department.id})")
     public void create(SiteDept siteDept);
 
-    public void createByBatch(SiteDept siteDept);
+    public List<SiteDept> findAll();
 
     /**
      * 根据地址ID删除地点与部门关系表

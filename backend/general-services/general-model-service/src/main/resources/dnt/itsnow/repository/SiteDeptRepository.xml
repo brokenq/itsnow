@@ -22,6 +22,15 @@
         </association>
     </resultMap>
 
+    <select id="findAll" resultType="SiteDept" resultMap="siteDeptResult">
+        select sd.id,
+        s.id as siteId, s.sn as siteSn, s.name as siteName, s.address as siteAddress, s.description as siteDescription,
+        d.id as departmentId, d.sn as departmentSn, d.name as departmentName, d.description as departmentDescription
+        from site_depts sd
+        left join departments d on d.id = sd.dept_id
+        left join sites s on sd.site_id = s.id
+    </select>
+
     <select id="findById" parameterType="long" resultType="SiteDept" resultMap="siteDeptResult">
         select sd.id,
         s.id as siteId, s.sn as siteSn, s.name as siteName, s.address as siteAddress, s.description as siteDescription,
