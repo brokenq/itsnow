@@ -356,6 +356,15 @@ module.exports = function ( grunt ) {
         ]
 
       },
+      compile_jade: {
+        files: [
+          {
+            src: [ '<%=index_files.jade%>','<%=login_files.jade%>' ],
+            dest: '<%= deploy_dir %>/',
+            expand: true
+          }
+        ]
+      },
       compile_assets: {
         files: [
           {
@@ -772,6 +781,7 @@ module.exports = function ( grunt ) {
     'cssmin:index',              //压缩css文件
     'cssmin:login',
     'login:compile',             // 将实际输出目录的scripts,style变量设置到 login.jade 文件中
+    'copy:compile_jade',
     'jade:login2',               // 编译deploy_dir下的login.jade为login.html
     'index:compile',
     'jade:index2',               // 编译deploy_dir下的index.jade为index.html
