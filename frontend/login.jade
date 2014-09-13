@@ -1,5 +1,5 @@
 -var sysName = '<%=sysName%>'
--var style  = '<%= style %>'
+-var styles = [<% styles.forEach( function(file){ print('"' + file + '",') }); %>]
 -var scripts = [<% scripts.forEach( function(file){ print('"' + file + '",') }); %>]
 !!! 5
 html(lang="zh-CN", ng-app="Itsnow.#{sysName}Login")
@@ -8,7 +8,8 @@ html(lang="zh-CN", ng-app="Itsnow.#{sysName}Login")
     meta(name="description", content="用户登录应用")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     link(rel="icon", type="image/icon", href="/assets/favicon.ico")
-    link(rel="stylesheet", type="text/css", href=style)
+    each style in styles
+      link(rel="stylesheet", type="text/css", href=style)
     each js in scripts
       script(type="text/javascript", src=js)
     title 系统登录 - ItsNow ITIL Platform
