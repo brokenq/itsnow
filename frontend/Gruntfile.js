@@ -547,8 +547,12 @@ module.exports = function ( grunt ) {
           '<%= index_files.js %>'
         ],
         styles: [
-          '<%= vendor_files.built_css%>',
-          '<%= build_dir %>/assets/<%= target.index %>.css'
+          // TODO 现在这个写法是有问题的，我们定义的css最先被加载，具有最低的优先级
+          // 主要是因为bootstrap被我们的less文件引用
+          // 而ace改写了bootstrap的默认css，需要优先级更高
+          // 为了解决这个问题，应该将ace的css改为less，并由 index/login的less文件import
+          '<%= build_dir %>/assets/<%= target.index %>.css',
+          '<%= vendor_files.built_css%>'
         ]
       },
 
@@ -581,8 +585,8 @@ module.exports = function ( grunt ) {
           '<%= login_files.js %>'
         ],
         styles: [
-          '<%= vendor_files.built_css%>',
-          '<%= build_dir %>/assets/<%= target.login %>.css'
+          '<%= build_dir %>/assets/<%= target.login %>.css',
+          '<%= vendor_files.built_css%>'
         ]
       },
 
@@ -799,7 +803,7 @@ module.exports = function ( grunt ) {
     'index:compile',
     'jade:index2',               // 编译deploy_dir下的index.jade为index.html
     'clean:deploy_extra',        // 清除deploy目录多余的文件
-    'cleanempty:deploy',         // 清除deploy目录中的空目录
+    'cleanempty:deploy'          // 清除deploy目录中的空目录
   ]);
 
   var BuildDir = function(dir){
