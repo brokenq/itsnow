@@ -36,7 +36,7 @@ public class GeneralContractManager extends CommonContractManager implements Gen
                 throw new ContractException("The contract has been approved by msu");
             }
         }
-        facade.put("/admin/api/contracts/{}/approve", contract.getSn());
+        facade.put("/admin/api/contracts/"+sn+"/approve", contract.getSn());
         contract = repository.findBySn(sn);//update it after put
         logger.info("Approved  {} {}", account, sn);
         return contract;
@@ -55,16 +55,16 @@ public class GeneralContractManager extends CommonContractManager implements Gen
                 throw new ServiceException("The contract has been rejected by msu");
             }
         }
-        facade.put("/admin/api/contracts/{}/reject", contract.getSn());
+        facade.put("/admin/api/contracts/"+sn+"/reject", contract.getSn());
         contract = repository.findBySn(sn);//update it after put
         logger.info("Rejected  {} {}", account, sn);
         return contract;
     }
 
     @Override
-    public ContractDetail updateDetail(ContractDetail detail) {
+    public ContractDetail updateDetail(ContractDetail detail, String sn) {
         logger.info("Updating {}", detail);
-        ContractDetail contractDetail = facade.putWithObject("/admin/api/contracts/{}/details/{}",
+        ContractDetail contractDetail = facade.putWithObject("/admin/api/contracts/"+sn+"/details/{}",
                 detail, detail.getContract().getSn(), detail.getId());
         logger.info("Updated  {}", detail);
         return contractDetail;

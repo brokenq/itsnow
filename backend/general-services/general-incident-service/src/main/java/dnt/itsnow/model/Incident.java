@@ -1,6 +1,7 @@
 package dnt.itsnow.model;
 
 import dnt.itsnow.platform.model.Record;
+import org.hibernate.validator.constraints.NotBlank;
 
 import java.sql.Timestamp;
 
@@ -9,7 +10,9 @@ import java.sql.Timestamp;
  */
 public class Incident extends Record {
 
+    @NotBlank
     private String number;//'故障单号，系统自动生成，生成规则:INC20140801111700001'
+    @NotBlank
     private String requesterName;//'请求人'
     private String requesterLocation;//'请求人所处的地区'
     private String requesterEmail;//'请求人的email'
@@ -22,7 +25,9 @@ public class Incident extends Record {
     private String requestType;//'请求类型：email,phone,web'
     private String ciType;//'CI类型'
     private String ci;//'CI'
+    @NotBlank
     private String requestDescription;//'故障描述'
+    @NotBlank
     private String createdBy;//'创建人'
     private String updatedBy;//'更新人'
     private String assignedUser;//'分配用户'

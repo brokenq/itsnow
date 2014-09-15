@@ -21,12 +21,12 @@ mixin page_size_button(count)
 mixin select_all()
   input(type="checkbox", ng-model="checkboxes.checked", name="filter-checkbox", value="")#select_all
 
-.container(ng-controller="CatalogListCtrl")
+.container(ng-controller="ContractListCtrl")
 
   .btn-toolbar(role="toolbar")
     .btn-group
       +tool_button("#", "refresh", "")
-      +tool_button("#", "create", "新增")
+      +tool_button("#", "create", "新建")
       +tool_button("#", "edit", "编辑")
     .btn-group
       button.btn.btn-default.dropdown-toggle(type="button",data-toggle="dropdown")
@@ -38,19 +38,19 @@ mixin select_all()
       .nav-search#nav-search
         form.form-search
           span.input-icon
-            input.nav-search-input(type="text", placeholder="服务目录名称...",autocomplete="off")#nav-search-input
+            input.nav-search-input(type="text", placeholder="合同名称...",autocomplete="off")#nav-search-input
             i.icon-search.nav-search-icon
 
   table.table(template-pagination="customPager",ng-table="tableParams")
-    tr(ng-repeat="catalog in $data")
+    tr(ng-repeat="contract in $data")
       td(width="30" style="text-align: left" header="'ngTableCheckboxHeader'")
-        input(type="checkbox" ng-model="checkboxes.items[catalog.sn]")
-      td(data-title="'名称'") {{catalog.sn}}
-      td(data-title="'标题'") {{catalog.title}}
-      td(data-title="'描述'") {{catalog.description}}
-      td(data-title="'父ID'") {{catalog.parentId}}
-      td(data-title="'创建时间'") {{catalog.createdAt | formatTime}}
-      td(data-title="'更新时间'") {{catalog.updatedAt | formatTime}}
+        input(type="checkbox" ng-model="checkboxes.items[contract.sn]")
+      td(data-title="'名称'") {{contract.sn}}
+      td(data-title="'状态'") {{contract.msuStatus | formatContractStatus}}
+      td(data-title="'服务商'") {{contract.mspAccount.name}}
+      td(data-title="'服务商状态'") {{contract.mspStatus | formatContractStatus}}
+      td(data-title="'创建时间'") {{contract.createdAt | formatTime}}
+      td(data-title="'更新时间'") {{contract.updatedAt | formatTime}}
 
 
 script(type="text/ng-template")#ngTableCheckboxHeader

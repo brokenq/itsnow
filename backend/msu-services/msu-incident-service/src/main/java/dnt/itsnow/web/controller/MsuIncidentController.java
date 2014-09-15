@@ -39,8 +39,7 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
      *
      * @return  Incident列表
      */
-    @RequestMapping()
-    @ResponseBody
+    @RequestMapping
     public List<Incident> index(@RequestParam(value = "key", required = false) String key) {
 
         //根据实例查询对应表单数据
@@ -106,14 +105,16 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
         return msuIncidentManager.processIncident(instanceId,taskId,currentUser.getUsername(),incident);
     }
 
+    @Override
     @BeforeFilter(method = RequestMethod.GET, value = {"index","indexClosed"})
     public void initDefaultPageRequest( @RequestParam(required = false, value = "page", defaultValue = "0") int page,
                                         @RequestParam(required = false, value = "size", defaultValue = "40") int size,
                                         @RequestParam(required = false, value = "sort", defaultValue = "") String sort){
         //Sort theSort = null;
-        pageRequest = new PageRequest(page, size, null);
+        pageRequest = new PageRequest(page-1, size, null);
     }
 
+    @Override
     @AfterFilter(method =  RequestMethod.GET, value = {"index","indexClosed"})
     public void renderPageToHeader(HttpServletResponse response){
         if( indexPage == null ) return;
