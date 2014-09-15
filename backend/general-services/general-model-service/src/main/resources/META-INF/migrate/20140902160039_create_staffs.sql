@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS staffs (
   site_id      INT(10) UNSIGNED,
   dept_id      INT(10) UNSIGNED,
   created_at   TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at   TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at   TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP
 --   ,FOREIGN KEY (user_id) REFERENCES users (id)
 );
 

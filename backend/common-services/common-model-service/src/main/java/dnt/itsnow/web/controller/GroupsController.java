@@ -35,21 +35,15 @@ public class GroupsController extends SessionSupportController<Group> {
 
     private Group group;
 
-    /**
-     * <h2>获得所有的流程字典</h2>
-     *
-     * GET /api/groups
-     *
-     * @return 字典列表
-     */
+    // 虽然也是index，但这里不需要分页，application controller 也不会错
     @RequestMapping
-    public List<Group> index(@RequestParam(value = "keyword", required = false) String keyword){
-        logger.debug("Listing Group");
+    public List<Group> index(@RequestParam("q") String q){
+        return service.search(q);
+    }
 
-        indexPage = service.findAll(keyword, pageRequest);
-
-        logger.debug("Listed Group number {}", indexPage.getNumber());
-        return indexPage.getContent();
+    @RequestMapping("/{name}")
+    public Group group(@PathVariable("name") String name){
+        return service.find(name);
     }
 
     /**

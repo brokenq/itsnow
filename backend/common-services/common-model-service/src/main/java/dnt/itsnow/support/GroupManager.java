@@ -20,18 +20,18 @@ import java.util.List;
 public class GroupManager extends Bean implements GroupService {
 
     @Autowired
-    private GroupRepository roleRepository;
+    private GroupRepository repository;
 
     @Override
     public Page<Group> findAll(String keyword, Pageable pageable) {
         logger.debug("Finding role by keyword: {}", keyword);
         if(StringUtils.isBlank(keyword)){
-            int total = roleRepository.count();
-            List<Group> roles = roleRepository.find("updated_at", "desc", pageable.getOffset(), pageable.getPageSize());
+            int total = repository.count();
+            List<Group> roles = repository.find("updated_at", "desc", pageable.getOffset(), pageable.getPageSize());
             return new DefaultPage<Group>(roles, pageable, total);
         }else{
-            int total = roleRepository.countByKeyword("%"+keyword+"%");
-            List<Group> roles = roleRepository.findByKeyword("%"+keyword+"%","updated_at","desc", pageable.getOffset(), pageable.getPageSize());
+            int total = repository.countByKeyword("%"+keyword+"%");
+            List<Group> roles = repository.findByKeyword("%"+keyword+"%","updated_at","desc", pageable.getOffset(), pageable.getPageSize());
             return new DefaultPage<Group>(roles, pageable, total);
         }
     }
@@ -40,7 +40,7 @@ public class GroupManager extends Bean implements GroupService {
     public Group findBySn(String sn) {
         logger.debug("Finding Group by sn: {}", sn);
 
-        return roleRepository.findBySn(sn);
+        return repository.findBySn(sn);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class GroupManager extends Bean implements GroupService {
         }
         role.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         role.setUpdatedAt(role.getCreatedAt());
-        roleRepository.create(role);
+        repository.create(role);
 
         return role;
     }
@@ -62,7 +62,7 @@ public class GroupManager extends Bean implements GroupService {
         if(role==null){
             throw new GroupException("Group entry can not be empty.");
         }
-        roleRepository.update(role);
+        repository.update(role);
 
         return role;
     }
@@ -73,7 +73,17 @@ public class GroupManager extends Bean implements GroupService {
         if(role==null){
             throw new GroupException("Group entry can not be empty.");
         }
-        roleRepository.delete(role.getSn());
+        repository.delete(role.getSn());
         return role;
+    }
+
+    @Override
+    public List<Group> search(String keyword) {
+        return repository.findAllByKeyword(keyword);
+    }
+
+    @Override
+    public Group find(String name) {
+        return repository.findByName(name);
     }
 }

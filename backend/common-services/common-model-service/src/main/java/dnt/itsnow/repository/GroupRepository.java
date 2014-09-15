@@ -1,9 +1,11 @@
 package dnt.itsnow.repository;
 
 import dnt.itsnow.model.Group;
+import dnt.itsnow.model.GroupAuthority;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * <h1>Group Repository</h1>
@@ -15,8 +17,8 @@ import java.util.List;
 public interface GroupRepository {
 
     @Options(useGeneratedKeys = true, keyColumn = "id")
-    @Insert("INSERT INTO groups (sn, name, description, created_at, updated_at) VALUES " +
-            "(#{sn}, #{name}, #{description}, #{createdAt}, #{updatedAt})")
+    @Insert("INSERT INTO groups (sn, group_name, description, created_at, updated_at) VALUES " +
+            "(#{sn}, #{group_name}, #{description}, #{createdAt}, #{updatedAt})")
     public void create(Group group);
 
     @Delete("DELETE FROM groups WHERE sn = #{sn}")
@@ -24,7 +26,7 @@ public interface GroupRepository {
 
     @Update("UPDATE groups SET " +
             " sn                    = #{sn}, " +
-            " name                  = #{name}, " +
+            " group_name                  = #{name}, " +
             " description           = #{description}," +
             " created_at            = #{createdAt}, " +
             " updated_at            = #{updatedAt} " +
@@ -49,5 +51,21 @@ public interface GroupRepository {
                                      @Param("offset") int offset,
                                      @Param("size") int size);
 
+    @Select("SELECT * FROM groups WHERE UPPER(name) LIKE UPPER('%#{keyword}%')")
+    List<Group> findAllByKeyword(@Param("keyword") String keyword);
+
     public Group findBySn(@Param("sn") String sn);
+
+    @Select("SELECT * FROM groups WHERE UPPER(group_name) = UPPER(#{name})")
+    Group findByName(@Param("name") String name);
+
+    @Select(" SELECT ga.authority, g.group_name" +
+            " FROM group_authorities ga " +
+            " INNER JOIN groups g ON ga.group_id = g.id " +
+            " INNER JOIN group_members gm ON gm.group_id = g.id" +
+            " WHERE UPPER(gm.username) = UPPER(#{username})" +
+            " GROUP BY ga.authority, g.group_name"
+    )
+    Set<GroupAuthority> findUserAuthorities(@Param("username") String username);
+
 }

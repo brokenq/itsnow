@@ -5,6 +5,8 @@ import dnt.itsnow.model.Group;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 
+import java.util.List;
+
 /**
  * <h1>Service</h1>
  */
@@ -19,5 +21,9 @@ public interface GroupService {
     public Group update(Group group) throws GroupException;
 
     public Group destroy(Group group) throws GroupException;
+
+    List<Group> search(String keyword);
+
+    Group find(String name);
 
 }
