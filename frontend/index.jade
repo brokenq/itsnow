@@ -1,5 +1,5 @@
 -var sysName = '<%=sysName%>'
--var style  = '<%= style %>'
+-var styles = [<% styles.forEach( function(file){ print('"' + file + '",') }); %>]
 -var scripts = [<% scripts.forEach( function(file){ print('"' + file + '",') }); %>]
 mixin dropdown_toggle(icon, badge, number)
   a.dropdown-toggle(data-toggle="dropdown", href="#")
@@ -22,14 +22,15 @@ mixin check_option(key, value)
     }catch(e){
     }
 
-!!! 5
+doctype html
 html(ng-app="Itsnow.#{sysName}Index")
   head(lang="zh-CN")
     title(ng-bind="pageTitle")
     meta(charset="utf-8")
     meta(name="viewport", content="width=device-width, initial-scale=1")
     link(rel="icon", type="image/icon", href="/assets/favicon.ico")
-    link(rel="stylesheet", type="text/css", href=style)
+    each style in styles
+      link(rel="stylesheet", type="text/css", href=style)
     each js in scripts
       script(type="text/javascript", src=js)
   body

@@ -43,7 +43,6 @@ angular.module('Itsnow.Index', [
         var breadcrumbs = [breadcrumb];
         var last = breadcrumb.name.lastIndexOf('.');
         var pageTitle = (breadcrumb.data || {pageTitle: "未命名"}).pageTitle;
-        $rootScope.breadcrumbs = breadcrumbs;
         while(last > 0 ){
           breadcrumb = $state.get(breadcrumb.name.substring(0, last));
           breadcrumbs.push(breadcrumb);
@@ -51,6 +50,7 @@ angular.module('Itsnow.Index', [
           last = breadcrumb.name.lastIndexOf('.');
         }
         $rootScope.pageTitle = pageTitle;
+        $rootScope.breadcrumbs = breadcrumbs.reverse();
       });
       $scope.logout = function(){
         sessionService.logout(function(){
