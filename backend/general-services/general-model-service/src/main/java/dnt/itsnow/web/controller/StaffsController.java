@@ -1,88 +1,135 @@
-/**
- * xiongjie on 14-8-1.
- */
 package dnt.itsnow.web.controller;
 
+import dnt.itsnow.Exception.StaffException;
 import dnt.itsnow.model.Staff;
-import dnt.itsnow.model.WorkTime;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
+import dnt.itsnow.platform.web.exception.WebClientSideException;
+import dnt.itsnow.service.StaffService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 /**
- * <h1>WorkTime Controller</h1>
+ * <h1>Staffs Controller</h1>
  */
 @RestController
-@RequestMapping("/api/workTimes")
+@RequestMapping("/api/staffs")
 public class StaffsController extends SessionSupportController<Staff> {
-    WorkTime workTime;
+
+    @Autowired
+    private StaffService staffService;
+
+    private Staff staff;
 
     /**
-     * <h2>获得所有的工作时间</h2>
+     * <h2>获得所有的地点</h2>
      *
-     * GET /api/workTimes
+     * GET /api/staffs
      *
-     * @return 工作时间
+     * @return 地点列表
      */
     @RequestMapping
-    public List<WorkTime> index(){
-        return null;
+    public List<Staff> index(@RequestParam(value = "keyword", required = false) String keyword){
+        logger.debug("Listing Staff");
+
+        indexPage = staffService.findAll(keyword, pageRequest);
+
+        logger.debug("Listed Staff number {}", indexPage.getNumber());
+        return indexPage.getContent();
     }
 
     /**
-     * <h2>查看一个工作时间</h2>
+     * <h2>查看一个地点</h2>
      *
-     * GET /api/workTimes/{no}
+     * GET /api/staffs/{no}
      *
-     * @return 服务目录
+     * @return 地点
      */
-    @RequestMapping("{no}")
-    public WorkTime show(){
-        return workTime;
+    @RequestMapping("/{no}")
+    public Staff show(){
+        if (staff == null) {
+            throw new WebClientSideException(HttpStatus.BAD_REQUEST, "The staff no must be specified");
+        }
+        return staff;
     }
 
     /**
-     * <h2>创建一个工作时间</h2>
+     * <h2>创建一个地点</h2>
      *
-     * POST /api/workTimes
+     * POST /api/staffs
      *
-     * @return 新建的工作时间
+     * @return 新建的地点
      */
     @RequestMapping(method = RequestMethod.POST)
-    public WorkTime create(@Valid @RequestBody WorkTime workTime){
-        return workTime;
+    public Staff create(@Valid @RequestBody Staff staff){
+        logger.info("Creating {}", staff.getName());
+
+        try {
+            staff = staffService.create(staff);
+        } catch (StaffException e) {
+            throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+
+        logger.info("Created  {}", staff.getName());
+        return staff;
     }
 
     /**
-     * <h2>更新一个工作时间</h2>
+     * <h2>更新一个地点</h2>
      *
-     * PUT /api/workTimes/{sn}
+     * PUT /api/staffs/{no}
      *
-     * @return 被更新的工作时间
+     * @return 被更新的地点
      */
-    @RequestMapping(value = "{no}", method = RequestMethod.PUT)
-    public WorkTime update(@Valid @RequestBody WorkTime workTime){
-        this.workTime.apply(workTime);
-        //TODO SAVE IT
-        return this.workTime;
+    @RequestMapping(value = "/{no}", method = RequestMethod.PUT)
+    public Staff update(@Valid @RequestBody Staff staff){
+
+        logger.info("Updateing {}", staff.getName());
+
+        if (staff == null) {
+            throw new WebClientSideException(HttpStatus.BAD_REQUEST, "The staff no must be specified");
+        }
+
+        this.staff.apply(staff);
+        try {
+            staffService.update(staff);
+        } catch (StaffException e) {
+            throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+
+        logger.info("Updated {}", staff.getName());
+
+        return this.staff;
     }
 
     /**
-     * <h2>删除一个工作时间</h2>
+     * <h2>删除一个地点</h2>
      *
-     * DELETE /api/workTimes/{sn}
+     * DELETE /api/staffs/{no}
      *
-     * @return 被删除的工作时间
+     * @return 被删除的地点
      */
-    @RequestMapping(value = "{no}", method = RequestMethod.DELETE)
-    public WorkTime destroy(){
-        return null;
+    @RequestMapping(value = "/{no}", method = RequestMethod.DELETE)
+    public Staff destroy(){
+
+        if (staff == null) {
+            throw new WebClientSideException(HttpStatus.BAD_REQUEST, "The staff no must be specified");
+        }
+
+        try {
+            staffService.destroy(staff);
+        } catch (StaffException e) {
+            throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+        return staff;
     }
 
     @BeforeFilter({"show", "update", "destroy"})
-    public void initWorkTime(@PathVariable("no") String no){
-        workTime = null;//find it by sn
+    public void initStaff(@PathVariable("no") String no){
+
+        this.staff = staffService.findByNo(no);//find it by no
     }
 }

@@ -1,13 +1,12 @@
 package dnt.itsnow.support;
 
-import dnt.itsnow.exception.MenuItemException;
 import dnt.itsnow.exception.ProcessDictionaryException;
 import dnt.itsnow.model.ProcessDictionary;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.repository.ProcessDictionaryRepository;
-import dnt.itsnow.service.ProcessDictionarySerivce;
+import dnt.itsnow.service.ProcessDictionaryService;
 import dnt.spring.Bean;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,7 @@ import java.util.List;
 /**
  * <h1>流程字典服务实现类</h1>
  */
-public class ProcessDictionaryManager extends Bean implements ProcessDictionarySerivce {
+public class ProcessDictionaryManager extends Bean implements ProcessDictionaryService {
 
     @Autowired
     private ProcessDictionaryRepository repository;

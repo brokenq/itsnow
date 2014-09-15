@@ -7,7 +7,7 @@ import dnt.itsnow.config.ProcessDictionaryManagerConfig;
 import dnt.itsnow.model.ProcessDictionary;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.util.PageRequest;
-import dnt.itsnow.service.ProcessDictionarySerivce;
+import dnt.itsnow.service.ProcessDictionaryService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +29,7 @@ public class ProcessDictionaryManagerTest {
     ProcessDictionary dictionary;
 
     @Autowired
-    ProcessDictionarySerivce service;
+    ProcessDictionaryService service;
 
     @Before
     public void setUp() throws Exception {

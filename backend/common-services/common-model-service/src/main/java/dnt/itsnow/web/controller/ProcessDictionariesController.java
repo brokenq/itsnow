@@ -7,7 +7,7 @@ import dnt.itsnow.exception.ProcessDictionaryException;
 import dnt.itsnow.model.ProcessDictionary;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
-import dnt.itsnow.service.ProcessDictionarySerivce;
+import dnt.itsnow.service.ProcessDictionaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +31,7 @@ import java.util.List;
 public class ProcessDictionariesController extends SessionSupportController<ProcessDictionary> {
 
     @Autowired
-    private ProcessDictionarySerivce service;
+    private ProcessDictionaryService service;
 
     private ProcessDictionary processDictionary;
 

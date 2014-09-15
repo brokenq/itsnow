@@ -17,10 +17,32 @@ import java.util.List;
  */
 public class Role extends ConfigItem {
 
+    @NotBlank
+    private String sn;
+
+    private List<Group> groups;
+
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
+    }
+
+    public String getSn() {
+        return sn;
+    }
+
+    public void setSn(String sn) {
+        this.sn = sn;
+    }
+
     @Override
     public String toString() {
         return "Role{" +
                 "id=" + super.getId() +
+                ", sn='" + getSn() + '\'' +
                 ", name='" + super.getName() + '\'' +
                 ", description='" + super.getDescription() + '\'' +
                 ", createdAt=" + super.getCreatedAt() +
