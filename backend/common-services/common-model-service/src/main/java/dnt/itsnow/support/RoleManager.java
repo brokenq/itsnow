@@ -1,12 +1,12 @@
 package dnt.itsnow.support;
 
-import dnt.itsnow.exception.GroupException;
-import dnt.itsnow.model.Group;
+import dnt.itsnow.exception.RoleException;
+import dnt.itsnow.model.Role;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.platform.util.DefaultPage;
-import dnt.itsnow.repository.GroupRepository;
-import dnt.itsnow.service.GroupService;
+import dnt.itsnow.repository.RoleRepository;
+import dnt.itsnow.service.RoleService;
 import dnt.spring.Bean;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,37 +17,37 @@ import java.util.List;
 /**
  * <h1>类功能说明</h1>
  */
-public class GroupManager extends Bean implements GroupService {
+public class RoleManager extends Bean implements RoleService {
 
     @Autowired
-    private GroupRepository roleRepository;
+    private RoleRepository roleRepository;
 
     @Override
-    public Page<Group> findAll(String keyword, Pageable pageable) {
+    public Page<Role> findAll(String keyword, Pageable pageable) {
         logger.debug("Finding role by keyword: {}", keyword);
         if(StringUtils.isBlank(keyword)){
             int total = roleRepository.count();
-            List<Group> roles = roleRepository.find("updated_at", "desc", pageable.getOffset(), pageable.getPageSize());
-            return new DefaultPage<Group>(roles, pageable, total);
+            List<Role> roles = roleRepository.find("updated_at", "desc", pageable.getOffset(), pageable.getPageSize());
+            return new DefaultPage<Role>(roles, pageable, total);
         }else{
             int total = roleRepository.countByKeyword("%"+keyword+"%");
-            List<Group> roles = roleRepository.findByKeyword("%"+keyword+"%","updated_at","desc", pageable.getOffset(), pageable.getPageSize());
-            return new DefaultPage<Group>(roles, pageable, total);
+            List<Role> roles = roleRepository.findByKeyword("%"+keyword+"%","updated_at","desc", pageable.getOffset(), pageable.getPageSize());
+            return new DefaultPage<Role>(roles, pageable, total);
         }
     }
 
     @Override
-    public Group findBySn(String sn) {
-        logger.debug("Finding Group by sn: {}", sn);
+    public Role findBySn(String sn) {
+        logger.debug("Finding Role by sn: {}", sn);
 
         return roleRepository.findBySn(sn);
     }
 
     @Override
-    public Group create(Group role) throws GroupException {
+    public Role create(Role role) throws RoleException {
         logger.info("Creating role {}", role);
         if(role == null){
-            throw new GroupException("Group entry can not be empty.");
+            throw new RoleException("Role entry can not be empty.");
         }
         role.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         role.setUpdatedAt(role.getCreatedAt());
@@ -57,10 +57,10 @@ public class GroupManager extends Bean implements GroupService {
     }
 
     @Override
-    public Group update(Group role) throws GroupException {
+    public Role update(Role role) throws RoleException {
         logger.info("Updating role {}", role);
         if(role==null){
-            throw new GroupException("Group entry can not be empty.");
+            throw new RoleException("Role entry can not be empty.");
         }
         roleRepository.update(role);
 
@@ -68,10 +68,10 @@ public class GroupManager extends Bean implements GroupService {
     }
 
     @Override
-    public Group destroy(Group role) throws GroupException {
+    public Role destroy(Role role) throws RoleException {
         logger.warn("Deleting role {}", role);
         if(role==null){
-            throw new GroupException("Group entry can not be empty.");
+            throw new RoleException("Role entry can not be empty.");
         }
         roleRepository.delete(role.getSn());
         return role;

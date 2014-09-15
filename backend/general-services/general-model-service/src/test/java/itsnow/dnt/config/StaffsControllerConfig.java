@@ -1,22 +1,22 @@
-package dnt.itsnow.config;
+package itsnow.dnt.config;
 
 import dnt.itsnow.service.CommonUserService;
-import dnt.itsnow.service.ProcessDictionaryService;
+import dnt.itsnow.service.StaffService;
 import dnt.itsnow.test.config.ApplicationControllerConfig;
-import dnt.itsnow.web.controller.ProcessDictionariesController;
+import dnt.itsnow.web.controller.StaffsController;
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class ProcessDictionariesControllerConfig extends ApplicationControllerConfig {
+public class StaffsControllerConfig extends ApplicationControllerConfig {
 
     // Mocked service beans
 
     @Bean
-    public ProcessDictionaryService processDictionarySerivce(){
-        return EasyMock.createMock(ProcessDictionaryService.class);
+    public StaffService staffSerivce(){
+        return EasyMock.createMock(StaffService.class);
     }
 
     @Bean
@@ -26,8 +26,8 @@ public class ProcessDictionariesControllerConfig extends ApplicationControllerCo
     }
 
     @Bean
-    public ProcessDictionariesController processDictionariesController(){
-        return new ProcessDictionariesController();
+    public StaffsController staffsController(){
+        return new StaffsController();
     }
 
 }

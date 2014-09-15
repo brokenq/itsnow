@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Import;
  */
 @Configuration
 @Import(DatabaseConfig.class)
-public class RoleRepositoryConfig extends RepositoryConfigWithH2 {
+public class GroupRepositoryConfig extends RepositoryConfigWithH2 {
 
     protected String[] sqlScripts() {
         return new String[]{

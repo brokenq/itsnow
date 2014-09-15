@@ -13,7 +13,6 @@ public interface ProcessDictionaryRepository {
     @Options(useGeneratedKeys = true, keyColumn = "id")
     @Insert("INSERT INTO process_dictionaries (code, name, level, level_name, state, type, description, created_at, updated_at) VALUES " +
             "(#{code}, #{name}, #{level}, #{levelName}, #{state}, #{type}, #{description} ,#{createdAt}, #{updatedAt})")
-    @SelectKey(statement = "call identity()", keyProperty = "id", before = false, resultType = long.class)
     public void create(ProcessDictionary dictionary);
 
     @Delete("DELETE FROM process_dictionaries WHERE code = #{sn}")
@@ -30,7 +29,6 @@ public interface ProcessDictionaryRepository {
             " created_at  = #{createdAt}, " +
             " updated_at  = #{updatedAt} " +
             " WHERE id    = #{id} ")
-    @SelectKey(statement = "call identity()", keyProperty = "id", before = false, resultType = long.class)
     public void update(ProcessDictionary dictionary);
 
     @Select("select count(0) from process_dictionaries")

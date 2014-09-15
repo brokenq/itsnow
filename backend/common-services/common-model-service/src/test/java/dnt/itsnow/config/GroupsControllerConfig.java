@@ -1,22 +1,22 @@
 package dnt.itsnow.config;
 
 import dnt.itsnow.service.CommonUserService;
-import dnt.itsnow.service.ProcessDictionaryService;
+import dnt.itsnow.service.GroupService;
 import dnt.itsnow.test.config.ApplicationControllerConfig;
-import dnt.itsnow.web.controller.ProcessDictionariesController;
+import dnt.itsnow.web.controller.GroupsController;
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class ProcessDictionariesControllerConfig extends ApplicationControllerConfig {
+public class GroupsControllerConfig extends ApplicationControllerConfig {
 
     // Mocked service beans
 
     @Bean
-    public ProcessDictionaryService processDictionarySerivce(){
-        return EasyMock.createMock(ProcessDictionaryService.class);
+    public GroupService groupService(){
+        return EasyMock.createMock(GroupService.class);
     }
 
     @Bean
@@ -26,8 +26,8 @@ public class ProcessDictionariesControllerConfig extends ApplicationControllerCo
     }
 
     @Bean
-    public ProcessDictionariesController processDictionariesController(){
-        return new ProcessDictionariesController();
+    public GroupsController groupsController(){
+        return new GroupsController();
     }
 
 }

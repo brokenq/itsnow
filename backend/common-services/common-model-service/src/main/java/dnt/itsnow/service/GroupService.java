@@ -1,17 +1,23 @@
-/**
- * xiongjie on 14-7-23.
- */
 package dnt.itsnow.service;
 
+import dnt.itsnow.exception.GroupException;
 import dnt.itsnow.model.Group;
-
-import java.util.List;
+import dnt.itsnow.platform.service.Page;
+import dnt.itsnow.platform.service.Pageable;
 
 /**
- * <h1>Group services</h1>
+ * <h1>Service</h1>
  */
 public interface GroupService {
-    List<Group> search(String keyword);
 
-    Group find(String name);
+    public Page<Group> findAll(String keyword, Pageable pageable);
+
+    public Group findBySn(String sn);
+
+    public Group create(Group group) throws GroupException;
+
+    public Group update(Group group) throws GroupException;
+
+    public Group destroy(Group group) throws GroupException;
+
 }

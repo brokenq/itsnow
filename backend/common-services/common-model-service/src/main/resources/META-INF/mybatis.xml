@@ -9,6 +9,7 @@
 
         <typeAlias type="dnt.itsnow.model.User" alias="User"/>
         <typeAlias type="dnt.itsnow.model.Group" alias="Group"/>
+        <typeAlias type="dnt.itsnow.model.Role" alias="Role"/>
 
         <typeAlias type="dnt.itsnow.model.PublicServiceCatalog" alias="PublicServiceCatalog"/>
         <typeAlias type="dnt.itsnow.model.PublicServiceItem" alias="PublicServiceItem"/>
