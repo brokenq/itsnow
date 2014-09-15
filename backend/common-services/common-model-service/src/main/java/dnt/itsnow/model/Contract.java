@@ -24,12 +24,12 @@ public class Contract extends Record {
     //合同甲方，服务采购方
     @NotNull
     private Long msuAccountId;
-    @JsonIgnore
+    //@JsonIgnore
     private MsuAccount msuAccount;
     //合同乙方，服务供应方
     //@NotBlank
     private Long mspAccountId;
-    @JsonIgnore
+    //@JsonIgnore
     private MspAccount mspAccount;
     // MSU 是否批准
     @NotNull

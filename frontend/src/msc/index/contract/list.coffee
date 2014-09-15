@@ -17,8 +17,14 @@ angular.module('MscIndex.Contract', ['ngTable','ngResource'])
     (status) ->
       return "邀约" if status == 'Draft'
       return "已批准" if status == 'Valid'
+      return "应约" if status == 'Purposed'
       return "被拒绝" if status == 'Rejected'
   )
+.filter('formatTime', ->
+  (time) ->
+    date = new Date(time)
+    return date.toLocaleString()
+)
   .controller 'ContractListCtrl',['$scope', '$location', '$timeout', 'ngTableParams', 'ContractService',($scope, $location, $timeout, ngTableParams, contractService)->
     options =
       page:  1,           # show first page
