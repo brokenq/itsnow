@@ -4,6 +4,7 @@
 package dnt.itsnow.it;
 
 import dnt.itsnow.model.CsrfToken;
+import junit.framework.Assert;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -373,6 +374,14 @@ public abstract class AbstractTest implements RestOperations {
         }
     }
 
+    public void delete(String url, HttpEntity<?> request, Object... uriVariables) throws RestClientException {
+        try {
+            exchange(url, HttpMethod.DELETE, request, Object.class, uriVariables);
+        } finally {
+            this.posted();
+        }
+    }
+
     @Override
     public void delete(String url, Map<String, ?> uriVariables) throws RestClientException {
         try {
@@ -487,6 +496,23 @@ public abstract class AbstractTest implements RestOperations {
         }
     }
 
+    ////////////////////////////////////////////////////////
+    // 其他方法
+    ////////////////////////////////////////////////////////
+
+    protected void validateIndexHeader(HttpHeaders headers){
+        Assert.assertTrue(headers.containsKey("total"));
+        Assert.assertTrue(headers.containsKey("pages"));
+        Assert.assertTrue(headers.containsKey("number"));
+        Assert.assertTrue(headers.containsKey("real"));
+        Assert.assertTrue(headers.containsKey("sort"));
+        Assert.assertTrue(headers.containsKey("count"));
+    }
+
+    ////////////////////////////////////////////////////////
+    // 私有辅助方法
+    ////////////////////////////////////////////////////////
+
     private void posted() {
         this.posted = true;
     }
@@ -506,11 +532,11 @@ public abstract class AbstractTest implements RestOperations {
         }
     }
 
-    static interface Callback<T> {
+    public static interface Callback<T> {
         T perform(HttpHeaders headers);
     }
 
-    static interface Job {
+    public static interface Job {
         void perform(HttpHeaders headers);
     }
 

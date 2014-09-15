@@ -4,7 +4,9 @@
 package dnt.itsnow.model;
 
 import dnt.support.DefaultHostAddress;
+import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotNull;
 import java.util.Properties;
 
 /**
@@ -12,19 +14,25 @@ import java.util.Properties;
  */
 public class ItsnowHost extends ConfigItem
 {
-    private DefaultHostAddress address;
+    @NotNull
+    private String address;
     private HostStatus status = HostStatus.Planing;
     //这台主机一般能部署多少个Itsnow Process
-    private Integer    capacity;
+    private int    capacity;
     //这台主机的配置项，一般为CPU、内存、磁盘空间大小等
     private Properties configuration;
 
+    @Override
+    @NotNull
+    public String getName() {
+        return super.getName();
+    }
 
-    public DefaultHostAddress getAddress() {
+    public String getAddress() {
         return address;
     }
 
-    public void setAddress(DefaultHostAddress address) {
+    public void setAddress(String address) {
         this.address = address;
     }
 
@@ -36,11 +44,11 @@ public class ItsnowHost extends ConfigItem
         this.status = status;
     }
 
-    public Integer getCapacity() {
+    public int getCapacity() {
         return capacity;
     }
 
-    public void setCapacity(Integer capacity) {
+    public void setCapacity(int capacity) {
         this.capacity = capacity;
     }
 
@@ -50,5 +58,32 @@ public class ItsnowHost extends ConfigItem
 
     public void setConfiguration(Properties configuration) {
         this.configuration = configuration;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ItsnowHost)) return false;
+        if (!super.equals(o)) return false;
+
+        ItsnowHost that = (ItsnowHost) o;
+
+        if (capacity != that.capacity) return false;
+        if (address != null ? !address.equals(that.address) : that.address != null) return false;
+        if (configuration != null ? !configuration.equals(that.configuration) : that.configuration != null)
+            return false;
+        if (status != that.status) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (address != null ? address.hashCode() : 0);
+        result = 31 * result + status.hashCode();
+        result = 31 * result + capacity;
+        result = 31 * result + (configuration != null ? configuration.hashCode() : 0);
+        return result;
     }
 }

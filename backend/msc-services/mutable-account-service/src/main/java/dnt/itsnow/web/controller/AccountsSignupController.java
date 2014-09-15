@@ -23,7 +23,7 @@ import javax.validation.Valid;
  * <h1>MSC/MSU注册</h1>
  * <pre>
  * <b>HTTP     URI                            方法       含义  </b>
- * # POST      /api/accounts                create     通过注册创建帐号
+ * # POST      /public/accounts              create     通过注册创建帐号
  * </pre>
  * 之所以单独搞一个控制器，是因为它与 MutableAccountController 中定义的其他方法有不同的使用者
  * 没法在同一个控制器/rest resource下进行分别授权

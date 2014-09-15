@@ -3,14 +3,10 @@
  */
 package dnt.itsnow.model;
 
-import java.sql.Timestamp;
-
 /**
- * <h1>测试对user信息的解析</h1>
+ * <h1>对应于User的Client Json解析对象</h1>
  */
-public class User {
-    private long id;
-    private String username;
+public class ClientUser extends ClientConfigItem{
     private String email;
     private String phone;
     private String password;
@@ -20,31 +16,13 @@ public class User {
     private boolean expired;
     private boolean locked;
     private boolean passwordExpired;
-    private Timestamp createdAt, updatedAt;
-    private String description;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getUsername() {
-        return username;
+        return getName();
     }
 
     public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getName(){
-        return username;
-    }
-
-    public void setName(String name){
-        setUsername(name);
+        this.setName(username);
     }
 
     public String getEmail() {
@@ -111,35 +89,11 @@ public class User {
         this.passwordExpired = passwordExpired;
     }
 
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Timestamp getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Timestamp updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
     public String getRepeatPassword() {
         return repeatPassword;
     }
 
     public void setRepeatPassword(String repeatPassword) {
         this.repeatPassword = repeatPassword;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 }

@@ -3,7 +3,7 @@
  */
 package dnt.itsnow.it;
 
-import dnt.itsnow.model.User;
+import dnt.itsnow.model.ClientUser;
 import junit.framework.Assert;
 import org.junit.Test;
 import org.springframework.http.HttpEntity;
@@ -17,11 +17,11 @@ public class ProfileTest extends AbstractTest{
     // 测试用户读取自身profile的url
     @Test
     public void testGetProfile() throws Exception {
-        User user = withLoginUser(new Callback<User>() {
+        ClientUser user = withLoginUser(new Callback<ClientUser>() {
             @Override
-            public User perform(HttpHeaders headers) {
+            public ClientUser perform(HttpHeaders headers) {
                 HttpEntity request = new HttpEntity(headers);
-                return getForObject("/api/profile", User.class, request);
+                return getForObject("/api/profile", ClientUser.class, request);
             }
         });
         Assert.assertNotNull(user);
