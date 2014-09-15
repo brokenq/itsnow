@@ -4,10 +4,10 @@
 CREATE TABLE user_roles
 (
    id         INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-   username  VARCHAR(255) NOT NULL,
-   authority VARCHAR(255) NOT NULL,
-   FOREIGN KEY (authority) REFERENCES roles (name),
-   FOREIGN KEY (username) REFERENCES users (username)
+   user_id   INT(10) UNSIGNED NOT NULL,
+   role_id   INT(10) UNSIGNED NOT NULL,
+   FOREIGN KEY (role_id) REFERENCES roles (id),
+   FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
 -- //@UNDO

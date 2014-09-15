@@ -1,10 +1,10 @@
 -- // insert_group_authorities
 -- Migration SQL that makes the change goes here.
 
-SET @administrator_gid = (SELECT id from groups where name = 'administrators');
-SET @guest_gid = (SELECT id from groups where name = 'guests');
-SET @monitor_gid = (SELECT id from groups where name = 'monitors');
-SET @reporter_gid = (SELECT id from groups where name = 'reporters');
+SET @administrator_gid = (SELECT id from groups where group_name = 'administrators');
+SET @guest_gid = (SELECT id from groups where group_name = 'guests');
+SET @monitor_gid = (SELECT id from groups where group_name = 'monitors');
+SET @reporter_gid = (SELECT id from groups where group_name = 'reporters');
 
 INSERT INTO group_authorities(group_id, authority) VALUES
 (@administrator_gid, 'ROLE_ADMIN'),

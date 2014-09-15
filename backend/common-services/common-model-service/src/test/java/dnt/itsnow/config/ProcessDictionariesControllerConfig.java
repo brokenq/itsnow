@@ -1,7 +1,7 @@
 package dnt.itsnow.config;
 
 import dnt.itsnow.service.CommonUserService;
-import dnt.itsnow.service.ProcessDictionarySerivce;
+import dnt.itsnow.service.ProcessDictionaryService;
 import dnt.itsnow.test.config.ApplicationControllerConfig;
 import dnt.itsnow.web.controller.ProcessDictionariesController;
 import org.easymock.EasyMock;
@@ -15,8 +15,8 @@ public class ProcessDictionariesControllerConfig extends ApplicationControllerCo
     // Mocked service beans
 
     @Bean
-    public ProcessDictionarySerivce processDictionarySerivce(){
-        return EasyMock.createMock(ProcessDictionarySerivce.class);
+    public ProcessDictionaryService processDictionarySerivce(){
+        return EasyMock.createMock(ProcessDictionaryService.class);
     }
 
     @Bean

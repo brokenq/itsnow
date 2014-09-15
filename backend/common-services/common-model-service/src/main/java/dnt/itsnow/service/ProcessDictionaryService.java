@@ -8,7 +8,7 @@ import dnt.itsnow.platform.service.Pageable;
 /**
  * <h1>流程字典Service</h1>
  */
-public interface ProcessDictionarySerivce {
+public interface ProcessDictionaryService {
     public Page<ProcessDictionary> findAll(String keyword, Pageable pageable);
 
     public ProcessDictionary findBySn(String sn);

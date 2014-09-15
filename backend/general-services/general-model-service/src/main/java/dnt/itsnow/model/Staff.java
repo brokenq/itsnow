@@ -1,19 +1,22 @@
-/**
- * xiongjie on 14-7-22.
- */
 package dnt.itsnow.model;
+
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  * <h1>MSP或者MSU的员工</h1>
  */
 public class Staff extends ConfigItem {
     // 该员工的工号
+    @NotBlank
     private String no;
     // 移动电话
     private String mobilePhone;
     // 固定电话
     private String fixedPhone;
     // 该员工的工作邮件,与user的mail未必一样
+    @Email
     private String email;
     // 岗位，职位
     private String title;
@@ -23,8 +26,18 @@ public class Staff extends ConfigItem {
     private String status;
     //所属部门
     private Department department;
+    //所属地点
+    private Site site;
     //该员工对应的用户，可能没有
     private User user;
+
+    public Site getSite() {
+        return site;
+    }
+
+    public void setSite(Site site) {
+        this.site = site;
+    }
 
     public String getMobilePhone() {
         return mobilePhone;
@@ -108,16 +121,18 @@ public class Staff extends ConfigItem {
 
     @Override
     public String toString() {
-        return "Staff{" +
-                "no='" + no + '\'' +
-                ", mobilePhone='" + mobilePhone + '\'' +
-                ", fixedPhone='" + fixedPhone + '\'' +
-                ", email='" + email + '\'' +
-                ", title='" + title + '\'' +
-                ", type='" + type + '\'' +
-                ", status='" + status + '\'' +
-                ", department=" + department +
-                ", user=" + user +
-                '}';
+        final StringBuffer sb = new StringBuffer("Staff{");
+        sb.append("no='").append(no).append('\'');
+        sb.append(", mobilePhone='").append(mobilePhone).append('\'');
+        sb.append(", fixedPhone='").append(fixedPhone).append('\'');
+        sb.append(", email='").append(email).append('\'');
+        sb.append(", title='").append(title).append('\'');
+        sb.append(", type='").append(type).append('\'');
+        sb.append(", status='").append(status).append('\'');
+        sb.append(", department=").append(department);
+        sb.append(", site=").append(site);
+        sb.append(", user=").append(user);
+        sb.append('}');
+        return sb.toString();
     }
 }

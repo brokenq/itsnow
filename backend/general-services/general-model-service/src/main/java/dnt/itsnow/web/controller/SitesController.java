@@ -1,6 +1,3 @@
-/**
- * xiongjie on 14-8-1.
- */
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.Exception.SiteException;

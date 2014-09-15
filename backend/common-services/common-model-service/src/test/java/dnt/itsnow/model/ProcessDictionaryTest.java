@@ -25,18 +25,17 @@ public class ProcessDictionaryTest {
     @Before
     public void setUp() throws Exception {
         dictionary = new ProcessDictionary();
-        this.dictionary.setId(1L);
-        this.dictionary.setName("用户");
-        this.dictionary.setState("index.user");
-        this.dictionary.setDescription("This is a test.");
-        this.dictionary.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        this.dictionary.setUpdatedAt(this.dictionary.getCreatedAt());
+        dictionary.setId(1L);
+        dictionary.setName("用户");
+        dictionary.setState("index.user");
+        dictionary.setDescription("This is a test.");
+        dictionary.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        dictionary.setUpdatedAt(dictionary.getCreatedAt());
     }
 
     @Test
     public void testJson() throws Exception {
         String json = JsonSupport.toJSONString(dictionary);
-        System.out.println(json);
         Assert.assertNotNull(json);
     }
 

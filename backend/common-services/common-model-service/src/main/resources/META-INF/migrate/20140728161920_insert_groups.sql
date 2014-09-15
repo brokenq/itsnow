@@ -1,13 +1,13 @@
 -- // insert_groups
 -- Migration SQL that makes the change goes here.
-
-INSERT INTO groups(name) VALUES
-('administrators'),
-('guests'),
-('monitors'),
-('reporters'),
-('first_line'),
-('second_line');
+DELETE FROM groups;
+INSERT INTO groups(sn, group_name) VALUES
+('001', 'administrators'),
+('002', 'guests'),
+('003', 'monitors'),
+('004', 'reporters'),
+('005', 'first_line'),
+('006', 'second_line');
 
 -- //@UNDO
 -- SQL to undo the change goes here.
