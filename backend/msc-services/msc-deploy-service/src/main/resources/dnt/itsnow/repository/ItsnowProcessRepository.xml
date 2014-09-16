@@ -37,14 +37,36 @@
             JOIN accounts a ON p.account_id = a.id
         WHERE p.name = #{name}
     </select>
-    <resultMap id="processResult" type="ItsnowProcess" autoMapping="true">
+
+    <select id="countByKeyword" resultType="int">
+        SELECT COUNT(0) FROM itsnow_processes
+        <if test="keyword != null">
+            WHERE name LIKE #{keyword}
+            OR description LIKE #{keyword}
+            OR wd like #{keyword}
+        </if>
+    </select>
+
+    <select id="findAllByKeyword" resultMap="basicProcessResult" >
+        SELECT * FROM itsnow_processes
+        <if test="keyword != null">
+            WHERE name LIKE #{keyword}
+            OR description LIKE #{keyword}
+            OR wd like #{keyword}
+        </if>
+    </select>
+
+    <resultMap id="processResult" type="ItsnowProcess" extends="basicProcessResult">
+        <association property="account" columnPrefix="account_" resultMap="dnt.itsnow.repository.CommonAccountRepository.accountResult"/>
+        <association property="host" columnPrefix="host_" resultMap="dnt.itsnow.repository.ItsnowHostRepository.hostResult"/>
+        <association property="schema" columnPrefix="schema_" resultMap="dnt.itsnow.repository.ItsnowSchemaRepository.schemaResult"/>
+    </resultMap>
+
+    <resultMap id="basicProcessResult" type="ItsnowProcess" autoMapping="true">
         <result column="configuration" property="configuration" typeHandler="dnt.itsnow.util.PropertiesHandler"/>
         <result column="account_id" property="accountId"/>
         <result column="host_id" property="hostId"/>
         <result column="schema_id" property="schemaId"/>
-        <association property="account" columnPrefix="account_" resultMap="dnt.itsnow.repository.CommonAccountRepository.accountResult"/>
-        <association property="host" columnPrefix="host_" resultMap="dnt.itsnow.repository.ItsnowHostRepository.hostResult"/>
-        <association property="schema" columnPrefix="schema_" resultMap="dnt.itsnow.repository.ItsnowSchemaRepository.schemaResult"/>
     </resultMap>
 
 </mapper>
