@@ -82,5 +82,4 @@ public class CommonContractsController extends SessionSupportController<Contract
         return contract;
     }
 
-
 }

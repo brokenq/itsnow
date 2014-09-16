@@ -1,17 +1,16 @@
 /**
- * xiongjie on 14-7-31.
+ * @author XiongJie, Date: 14-9-3
  */
 package dnt.itsnow.config;
 
 import dnt.itsnow.service.CommonAccountService;
 
-/**
- * <h1>Class Usage</h1>
- */
-public class GeneralModelServiceConfig extends DefaultGeneralServiceConfig {
+/** The mutable contract service config */
+public class MutableContractServiceConfig extends DefaultMutableServiceConfig{
     @Override
     public void defineServices() {
         super.defineServices();
+        //importService(MutableAccountService.class);
         importService(CommonAccountService.class);
     }
 }

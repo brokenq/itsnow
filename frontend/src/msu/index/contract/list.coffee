@@ -1,5 +1,5 @@
 # List contracts
-angular.module('MscIndex.Contract', ['ngTable','ngResource'])
+angular.module('MsuIndex.Contract', ['ngTable','ngResource'])
   .config ($stateProvider)->
     $stateProvider.state 'contracts',
       url: '/contracts',
@@ -11,7 +11,7 @@ angular.module('MscIndex.Contract', ['ngTable','ngResource'])
       data: {pageTitle: '合同管理'}
 
   .factory('ContractService', ['$resource', ($resource) ->
-    $resource("/admin/api/contracts")
+    $resource("/api/contracts")
   ])
   .filter('formatContractStatus', ->
     (status) ->

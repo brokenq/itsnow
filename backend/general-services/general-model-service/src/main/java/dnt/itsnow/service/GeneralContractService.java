@@ -65,5 +65,5 @@ public interface GeneralContractService extends CommonContractService {
      *
      * @param detail 明细
      */
-    ContractDetail updateDetail(ContractDetail detail) throws ServiceException;
+    ContractDetail updateDetail(ContractDetail detail, String sn) throws ServiceException;
 }

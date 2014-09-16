@@ -111,6 +111,15 @@ module.exports = {
       '../vendor/angular-ui-tree/dist/angular-ui-tree.min.css'
 //    '../vendor/fuelux/dist/css/fuelux.css'
     ],
+    built_css: [
+      '<%= build_dir %>/assets/bootstrap-theme.css',
+      '<%= build_dir %>/assets/ace*.css',
+      '<%= build_dir %>/assets/ng-grid.css',
+      '<%= build_dir %>/assets/dialogs.css',
+      '<%= build_dir %>/assets/angular-ui-tree.min.css',
+      '<%= build_dir %>/assets/ng-table.css'
+    ],
+
     assets: [
       '../vendor/font-awesome/fonts/*.*',
       '../vendor/bootstrap/dist/fonts/*.*',

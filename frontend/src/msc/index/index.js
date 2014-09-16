@@ -7,5 +7,6 @@ angular.module('Itsnow.MscIndex', [
   'MscIndex.Account',
   'MscIndex.User',
   'MscIndex.SLA',
-  'MscIndex.Contract'
+  'MscIndex.Contract',
+  'MscIndex.ServiceCatalog'
 ]);

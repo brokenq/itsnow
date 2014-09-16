@@ -59,7 +59,7 @@ public class GeneralContractDetailsController extends SessionSupportController {
         // 因为这个contract被加载时已经load了所有的明细
         ContractDetail updated;
         try {
-            updated = contractService.updateDetail(detail);
+            updated = contractService.updateDetail(detail,currentContract.getSn());
         } catch (ServiceException e) {
             throw new WebClientSideException(HttpStatus.NOT_ACCEPTABLE,
                     "the contract detail can't be updated:" + e.getMessage());
