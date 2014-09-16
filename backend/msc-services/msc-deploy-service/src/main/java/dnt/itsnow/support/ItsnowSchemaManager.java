@@ -3,13 +3,62 @@
  */
 package dnt.itsnow.support;
 
+import dnt.itsnow.exception.ItsnowSchemaException;
+import dnt.itsnow.exception.SystemInvokeException;
+import dnt.itsnow.model.ItsnowSchema;
+import dnt.itsnow.repository.ItsnowSchemaRepository;
 import dnt.itsnow.service.ItsnowSchemaService;
+import dnt.itsnow.service.SystemInvokeService;
 import dnt.spring.Bean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.sql.Timestamp;
 
 /**
  * <h1>Itsnow Schema Manager</h1>
  */
 @Service
 public class ItsnowSchemaManager extends Bean implements ItsnowSchemaService {
+    @Autowired
+    ItsnowSchemaRepository repository;
+    @Autowired
+    SystemInvokeService systemInvokeService;
+
+    @Override
+    public ItsnowSchema create(ItsnowSchema creating) throws ItsnowSchemaException {
+        logger.info("Creating itsnow schema: {}", creating);
+        creating.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        creating.setUpdatedAt(creating.getUpdatedAt());
+        String job = systemInvokeService.addJob(creating.createJob());
+        try {
+            systemInvokeService.waitJobFinished(job);
+        } catch (SystemInvokeException e) {
+            throw new ItsnowSchemaException("Can't create schema for :" + creating, e);
+        }
+        repository.create(creating);
+        logger.info("Created  itsnow schema: {}", creating);
+        return creating;
+    }
+
+    @Override
+    public void delete(ItsnowSchema schema) throws ItsnowSchemaException {
+        logger.warn("Deleting itsnow schema: {}", schema);
+        String job = systemInvokeService.addJob(schema.dropJob());
+        try {
+            systemInvokeService.waitJobFinished(job);
+        } catch (SystemInvokeException e) {
+            throw new ItsnowSchemaException("Can't drop schema for :" + schema, e);
+        }
+        repository.delete(schema);
+        logger.warn("Deleted  itsnow schema: {}", schema);
+    }
+
+    @Override
+    public ItsnowSchema findByName(String name) {
+        logger.debug("Finding schema by name: {}", name);
+        ItsnowSchema schema = repository.findByName(name);
+        logger.debug("Found   schema by name: {}", schema);
+        return schema;
+    }
 }

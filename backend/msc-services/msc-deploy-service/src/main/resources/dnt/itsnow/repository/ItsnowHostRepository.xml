@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--不要用 type != '*' 这种， mybatis 会根据 '*' 认为 type 为 long类型，而后无法解析-->
+<mapper namespace="dnt.itsnow.repository.ItsnowHostRepository">
+    <resultMap id="hostResult" type="ItsnowHost" autoMapping="true">
+        <result column="configuration" property="configuration" typeHandler="dnt.itsnow.util.PropertiesHandler"/>
+    </resultMap>
+
+    <select id="countByKeyword" resultType="int">
+        SELECT COUNT(0) FROM itsnow_hosts
+        <if test="keyword != null">
+            <where>
+                UPPER(name) LIKE UPPER(#{keyword})
+                OR UPPER(address) LIKE UPPER(#{keyword})
+                OR UPPER(description) LIKE UPPER(#{keyword})
+            </where>
+        </if>
+    </select>
+
+    <select id="findAllByKeyword" resultMap="hostResult">
+        SELECT * FROM itsnow_hosts
+        <if test="keyword != null">
+            <where>
+                UPPER(name) LIKE UPPER(#{keyword})
+                OR UPPER(address) LIKE UPPER(#{keyword})
+                OR UPPER(description) LIKE UPPER(#{keyword})
+            </where>
+        </if>
+        <if test="pageRequest.sort != null">
+            ORDER BY #{pageRequest.sort}
+        </if>
+        <trim prefix="LIMIT" prefixOverrides=",">
+            <if test="pageRequest.offset > 0">#{pageRequest.offset}</if>
+            <if test="pageRequest.pageSize > 0">, #{pageRequest.pageSize}</if>
+        </trim>
+    </select>
+</mapper>

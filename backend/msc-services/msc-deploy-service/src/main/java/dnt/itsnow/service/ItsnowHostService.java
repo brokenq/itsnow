@@ -8,6 +8,8 @@ import dnt.itsnow.model.ItsnowHost;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.util.PageRequest;
 
+import java.util.List;
+
 /**
  * <h1>Itsnow Host Service</h1>
  */
@@ -19,7 +21,7 @@ public interface ItsnowHostService {
      *
      * @return 数据库主机
      */
-    Page<ItsnowHost> findAllDbHosts();
+    List<ItsnowHost> findAllDbHosts();
 
     ItsnowHost findByAddress(String address);
 

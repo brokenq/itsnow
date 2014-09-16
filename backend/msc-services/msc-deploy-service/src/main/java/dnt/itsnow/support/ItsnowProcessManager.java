@@ -4,6 +4,7 @@
 package dnt.itsnow.support;
 
 import dnt.itsnow.exception.ItsnowProcessException;
+import dnt.itsnow.exception.ItsnowSchemaException;
 import dnt.itsnow.exception.SystemInvokeException;
 import dnt.itsnow.model.ItsnowHost;
 import dnt.itsnow.model.ItsnowProcess;
@@ -68,8 +69,12 @@ public class ItsnowProcessManager extends Bean implements ItsnowProcessService {
             throw new ItsnowProcessException("Can't deploy itsnow process for " + creating, e);
         }
         //要求schema service 创建相应的schema
-        ItsnowSchema schema = schemaService.create(creating.getSchema());
-        creating.setSchema(schema);
+        try {
+            ItsnowSchema schema = schemaService.create(creating.getSchema());
+            creating.setSchema(schema);
+        } catch (ItsnowSchemaException e) {
+            throw new ItsnowProcessException("Can't create schema for process", e );
+        }
 
         creating.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         creating.setUpdatedAt(creating.getCreatedAt());
@@ -83,7 +88,11 @@ public class ItsnowProcessManager extends Bean implements ItsnowProcessService {
         logger.warn("Deleting itsnow process: {}", process);
         if( process.getStatus() != ProcessStatus.Stopped)
             throw new ItsnowProcessException("Can't destroy the non-stopped process with status = " + process.getStatus());
-        schemaService.delete(process.getSchema());
+        try {
+            schemaService.delete(process.getSchema());
+        } catch (ItsnowSchemaException e) {
+            throw new ItsnowProcessException("Can't destroy the schema used by the process", e);
+        }
         String job = systemInvokeService.addJob(process.createUndeployJob());
         try{
             systemInvokeService.waitJobFinished(job);

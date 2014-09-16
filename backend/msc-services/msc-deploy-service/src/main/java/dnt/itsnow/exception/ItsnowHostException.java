@@ -12,4 +12,9 @@ public class ItsnowHostException extends ServiceException {
     public ItsnowHostException(String message) {
         super(message);
     }
+
+    public ItsnowHostException(String message, Exception cause) {
+        super(message);
+        initCause(cause);
+    }
 }

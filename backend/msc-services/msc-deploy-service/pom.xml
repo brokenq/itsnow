@@ -15,5 +15,10 @@
     <description>
         The deployment service of MSC, for msu/msp subsystem.
     </description>
-    
+    <dependencies>
+        <dependency>
+            <groupId>dnt.itsnow</groupId>
+            <artifactId>mutable-account-service</artifactId>
+        </dependency>
+    </dependencies>
 </project>

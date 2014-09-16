@@ -3,6 +3,7 @@
  */
 package dnt.itsnow.service;
 
+import dnt.itsnow.exception.ItsnowSchemaException;
 import dnt.itsnow.model.ItsnowSchema;
 
 /**
@@ -15,14 +16,14 @@ public interface ItsnowSchemaService {
      * @param creating 被创建的schema
      * @return 创建成功之后的schema
      */
-    ItsnowSchema create(ItsnowSchema creating);
+    ItsnowSchema create(ItsnowSchema creating) throws ItsnowSchemaException;
 
     /**
      * <h2>删除特定的数据库schema</h2>
      *
      * @param schema 数据库schema对象
      */
-    void delete(ItsnowSchema schema);
+    void delete(ItsnowSchema schema) throws ItsnowSchemaException;
 
     /**
      * <h2>根据名称查找到数据库schema对象</h2>

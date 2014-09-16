@@ -70,4 +70,12 @@ public class ItsnowSchema extends ConfigItem {
         result = 31 * result + (configuration != null ? configuration.hashCode() : 0);
         return result;
     }
+
+    public SystemJob createJob() {
+        return new SystemJob(getHost(), null, "create_schema.sh " + getName());
+    }
+
+    public SystemJob dropJob() {
+        return new SystemJob(getHost(), null, "drop_schema.sh " + getName());
+    }
 }
