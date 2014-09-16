@@ -1,6 +1,6 @@
 package dnt.itsnow.web.controller;
 
-import dnt.itsnow.Exception.StaffException;
+import dnt.itsnow.exception.StaffException;
 import dnt.itsnow.model.Staff;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;

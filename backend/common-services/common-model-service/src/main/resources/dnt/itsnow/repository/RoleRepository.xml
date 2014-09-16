@@ -4,49 +4,20 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="dnt.itsnow.repository.RoleRepository">
 
-    <resultMap id="roleResult" type="Role">
+    <resultMap id="userResult" type="User">
         <id property="id" column="id"/>
-        <result property="sn" column="sn"/>
         <result property="name" column="name"/>
         <result property="description" column="description"/>
         <result property="createdAt" column="created_at"/>
         <result property="updatedAt" column="updated_at"/>
-        <!-- 多对多关系 -->
-        <collection property="groups" ofType="Group">
-            <id property="id" column="groupId" />
-            <result property="sn" column="groupSn" />
-            <result property="name" column="groupName" />
-            <result property="description" column="groupDescription" />
-        </collection>
     </resultMap>
 
-    <select id="findBySn" parameterType="string" resultType="Role" resultMap="roleResult">
-        select r.id, r.sn, r.name, r.description, r.created_at, r.updated_at,
-        g.id as groupId, g.sn as groupSn, g.name as groupName, g.description as groupDescription
+    <select id="showUser" parameterType="string" resultType="User" resultMap="userResult">
+        select u.id, u.name, u.description, u.created_at, u.updated_at
         from roles r
-        left join group_roles gr on r.id = gr.role_id
-        left join groups g on gr.group_id = g.id
-        where r.sn=#{sn}
-    </select>
-
-    <select id="find" parameterType="string" resultType="Role" resultMap="roleResult">
-        select r.id, r.sn, r.name, r.description, r.created_at, r.updated_at,
-        g.id as groupId, g.sn as groupSn, g.name as groupName, g.description as groupDescription
-        from roles r
-        left join group_roles gr on r.id = gr.role_id
-        left join groups g on gr.group_id = g.id
-        order by ${sort} ${dir} limit #{offset}, #{size}
-    </select>
-
-
-    <select id="findByKeyword" parameterType="string" resultType="Role" resultMap="roleResult">
-        select r.id, r.sn, r.name, r.description, r.created_at, r.updated_at,
-        g.id as groupId, g.sn as groupSn, g.name as groupName, g.description as groupDescription
-        from roles r
-        left join group_roles gr on r.id = gr.role_id
-        left join groups g on gr.group_id = g.id
-        where r.name like #{keyword} or r.sn like #{keyword}
-        order by ${sort} ${dir} limit #{offset}, #{size}
+        left join authority a on r.name = a.authority
+        left join users u on u.username = a.username
+        where r.name=#{sn}
     </select>
 
 </mapper>

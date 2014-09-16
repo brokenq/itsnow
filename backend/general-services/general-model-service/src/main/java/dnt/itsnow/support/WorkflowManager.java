@@ -1,6 +1,6 @@
 package dnt.itsnow.support;
 
-import dnt.itsnow.Exception.WorkflowException;
+import dnt.itsnow.exception.WorkflowException;
 import dnt.itsnow.model.Workflow;
 import dnt.itsnow.repository.WorkflowRepository;
 import dnt.itsnow.service.WorkflowService;

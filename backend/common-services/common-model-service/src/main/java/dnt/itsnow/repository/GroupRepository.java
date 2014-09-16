@@ -18,7 +18,7 @@ public interface GroupRepository {
 
     @Options(useGeneratedKeys = true, keyColumn = "id")
     @Insert("INSERT INTO groups (sn, group_name, description, created_at, updated_at) VALUES " +
-            "(#{sn}, #{group_name}, #{description}, #{createdAt}, #{updatedAt})")
+            "(#{sn}, #{name}, #{description}, #{createdAt}, #{updatedAt})")
     public void create(Group group);
 
     @Delete("DELETE FROM groups WHERE sn = #{sn}")
@@ -42,7 +42,7 @@ public interface GroupRepository {
             @Param("offset") int offset,
             @Param("size") int size);
 
-    @Select("select count(*) from groups where name like #{keyword} or sn like #{keyword}")
+    @Select("select count(*) from groups where group_name like #{keyword} or sn like #{keyword}")
     public int countByKeyword(@Param("keyword") String keyword);
 
     public List<Group> findByKeyword(@Param("keyword") String keyword,
@@ -51,7 +51,7 @@ public interface GroupRepository {
                                      @Param("offset") int offset,
                                      @Param("size") int size);
 
-    @Select("SELECT * FROM groups WHERE UPPER(name) LIKE UPPER('%#{keyword}%')")
+    @Select("SELECT * FROM groups WHERE UPPER(group_name) LIKE UPPER('%#{keyword}%')")
     List<Group> findAllByKeyword(@Param("keyword") String keyword);
 
     public Group findBySn(@Param("sn") String sn);

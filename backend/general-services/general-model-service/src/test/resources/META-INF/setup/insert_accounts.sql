@@ -1,3 +1,4 @@
+-- SET SCHEMA itsnow_msc;
 
 TRUNCATE TABLE accounts;
 

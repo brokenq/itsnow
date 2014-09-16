@@ -1,5 +1,6 @@
 -- // create_users
 -- Migration SQL that makes the change goes here.
+-- SET SCHEMA itsnow_msc;
 DROP TABLE IF EXISTS users;
 CREATE TABLE IF NOT EXISTS users (
   id                INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,

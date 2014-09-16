@@ -22,16 +22,6 @@ public class Group extends ConfigItem {
     @NotBlank
     private String sn;
 
-    private List<Role> roles;
-
-    public List<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
-    }
-
     public String getSn() {
         return sn;
     }

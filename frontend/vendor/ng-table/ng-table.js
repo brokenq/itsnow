@@ -479,10 +479,6 @@ var ngTableController = ['$scope', 'ngTableParams', '$timeout', function ($scope
     })();
 
     $scope.$watch('params.$params', function (newParams, oldParams) {
-        //Jay Xiong bugfix for compliant with params changed to number by outside
-        if(typeof($scope.params) !== 'object' ){
-          return;
-        }
         $scope.params.settings().$scope = $scope;
 
         if (!angular.equals(newParams.filter, oldParams.filter)) {
@@ -645,20 +641,16 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
                             pagination: (attrs.templatePagination ? attrs.templatePagination : 'ng-table/pager.html')
                         };
                         var headerTemplate = thead.length > 0 ? thead : angular.element(document.createElement('thead')).attr('ng-include', 'templates.header');
-                        var paginationRow = angular.element(document.createElement('tr'))
-                                .append(angular.element(document.createElement('td'))
-                                    .attr({
-                                        'ng-table-pagination': 'params',
-                                        'template-url': 'templates.pagination',
-                                        'colspan': columns.length
-                                    })),
-                            paginationTemplate = angular.element(document.createElement('tfoot')).append(paginationRow);
+                        var paginationTemplate = angular.element(document.createElement('div')).attr({
+                            'ng-table-pagination': 'params',
+                            'template-url': 'templates.pagination'
+                        });
 
                         element.find('thead').remove();
 
                         element.addClass('ng-table')
                             .prepend(headerTemplate)
-                            .append(paginationTemplate);
+                            .after(paginationTemplate);
 
                         $compile(headerTemplate)(scope);
                         $compile(paginationTemplate)(scope);
@@ -696,10 +688,6 @@ app.directive('ngTablePagination', ['$compile',
             link: function (scope, element, attrs) {
 
                 scope.params.settings().$scope.$on('ngTableAfterReloadData', function () {
-                  //Jay Xiong bugfix for compliant with params changed to number by outside
-                  if(typeof(scope.params) !== 'object' ){
-                    return;
-                  }
                     scope.pages = scope.params.generatePagesArray(scope.params.page(), scope.params.total(), scope.params.count());
                 }, true);
 
