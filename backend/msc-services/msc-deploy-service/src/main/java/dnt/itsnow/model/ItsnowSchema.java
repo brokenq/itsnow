@@ -13,7 +13,7 @@ import java.util.Properties;
  */
 public class ItsnowSchema extends ConfigItem {
     @NotNull
-    private Integer hostId;
+    private Long hostId;
     @JsonIgnore
     private ItsnowHost host;
     private Properties configuration;
@@ -24,11 +24,11 @@ public class ItsnowSchema extends ConfigItem {
         return super.getName();
     }
 
-    public Integer getHostId() {
+    public Long getHostId() {
         return hostId;
     }
 
-    public void setHostId(Integer hostId) {
+    public void setHostId(Long hostId) {
         this.hostId = hostId;
     }
 

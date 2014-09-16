@@ -21,15 +21,7 @@
     </select>
 
     <resultMap id="userWithAccount" type="User" autoMapping="true">
-        <association property="account" resultMap="accountResult" columnPrefix="account_"/>
-    </resultMap>
-
-    <resultMap id="accountResult" type="Account" autoMapping="true">
-        <discriminator column="type" javaType="string">
-            <case value="msc" resultType="MscAccount"/>
-            <case value="msu" resultType="MsuAccount"/>
-            <case value="msp" resultType="MspAccount"/>
-        </discriminator>
+        <association property="account" resultMap="dnt.itsnow.repository.CommonAccountRepository.accountResult" columnPrefix="account_"/>
     </resultMap>
 
 </mapper>

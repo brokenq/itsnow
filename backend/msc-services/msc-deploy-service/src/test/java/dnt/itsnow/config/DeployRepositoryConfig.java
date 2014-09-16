@@ -15,21 +15,25 @@ import org.springframework.context.annotation.Import;
  */
 @Configuration
 @Import(DatabaseConfig.class)
-public class DeployRepositoryConfig extends RepositoryConfigWithH2 implements BeanFilter {
+public class DeployRepositoryConfig extends RepositoryConfigWithH2  {
 
     protected String[] sqlScripts() {
         return new String[]{
                 "classpath:META-INF/migrate/20140722112724_create_accounts.sql@up",
+                "classpath:META-INF/migrate/20140722125016_create_users.sql@up",
                 "classpath:META-INF/migrate/20140827112025_create_itsnow_hosts.sql@up",
                 "classpath:META-INF/migrate/20140827112030_create_itsnow_schemas.sql@up",
                 "classpath:META-INF/migrate/20140827112032_create_itsnow_processes.sql@up",
                 "classpath:META-INF/migrate/20140728142611_insert_accounts.sql@up",
+                "classpath:META-INF/migrate/20140728143025_insert_users.sql@up",
                 "classpath:META-INF/migrate/20140827112047_insert_itsnow_hosts.sql@up",
                 "classpath:META-INF/migrate/20140827142537_insert_itsnow_schemas.sql@up",
-                "classpath:META-INF/migrate/20140827142851_insert_itsnow_processes.sql@up"
+                "classpath:META-INF/migrate/20140827142851_insert_itsnow_processes.sql@up",
+                "classpath:META-INF/setup/update_msc_account_user_id.sql"
         };
     }
 
+/*
     public BeanFilter repositoryFilter(){
         return this;
     }
@@ -38,4 +42,5 @@ public class DeployRepositoryConfig extends RepositoryConfigWithH2 implements Be
     public boolean accept(String beanName, BeanDefinition definition) {
         return !beanName.equals("commonAccountRepository");
     }
+*/
 }

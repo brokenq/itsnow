@@ -14,7 +14,8 @@ import java.util.List;
  */
 public interface ItsnowHostRepository {
     int countByKeyword(@Param("keyword") String keyword);
-
+    // 默认语句不需要对varchar字符串做uppper/lower转换
+    // Mysql默认charset = utf8, collation为utf_general_ci, 大小写不敏感
     List<ItsnowHost> findAllByKeyword(@Param("keyword") String keyword,
                                       @Param("pageRequest") PageRequest pageRequest);
 
@@ -28,7 +29,7 @@ public interface ItsnowHostRepository {
 
     @Select("SELECT * FROM itsnow_hosts WHERE id = #{id}")
     @ResultMap("hostResult")
-    ItsnowHost findById(Integer id);
+    ItsnowHost findById(Long id);
 
     @Insert("INSERT INTO itsnow_hosts(name, address, capacity, status, configuration, description, created_at, updated_at) " +
             "VALUES (#{name}, #{address}, #{capacity}, #{status}, #{configuration,typeHandler=dnt.itsnow.util.PropertiesHandler}, #{description}, #{createdAt}, #{updatedAt})")

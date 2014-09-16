@@ -3,9 +3,6 @@
  */
 package dnt.itsnow.model;
 
-import dnt.support.DefaultHostAddress;
-import org.hibernate.validator.constraints.NotEmpty;
-
 import javax.validation.constraints.NotNull;
 import java.util.Properties;
 

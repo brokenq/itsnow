@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--不要用 type != '*' 这种， mybatis 会根据 '*' 认为 type 为 long类型，而后无法解析-->
+<mapper namespace="dnt.itsnow.repository.ItsnowProcessRepository">
+    <select id="findByName" resultMap="processResult">
+        SELECT p.*,
+            a.id            AS account_id,
+            a.user_id       AS account_user_id,
+            a.sn            AS account_sn,
+            a.domain        AS account_domain,
+            a.name          AS account_name,
+            a.type          AS account_type,
+            a.status        AS account_status,
+            a.created_at    AS account_created_at,
+            a.updated_at    AS account_updated_at,
+            h.id            AS host_id,
+            h.name          AS host_name,
+            h.address       AS host_address,
+            h.capacity      AS host_capacity,
+            h.status        AS host_status,
+            h.configuration AS host_configuration ,
+            h.description   AS host_description ,
+            h.created_at    AS host_created_at,
+            h.updated_at    AS host_updated_at,
+            s.id            AS schema_id,
+            s.host_id       AS schema_host_id,
+            s.name          AS schema_name,
+            s.configuration AS schema_configuration ,
+            s.description   AS schema_description ,
+            s.created_at    AS schema_created_at,
+            s.updated_at    AS schema_updated_at
+        FROM itsnow_processes p
+            JOIN itsnow_hosts h ON p.host_id = h.id
+            JOIN itsnow_schemas s ON p.schema_id = s.id
+            JOIN accounts a ON p.account_id = a.id
+        WHERE p.name = #{name}
+    </select>
+    <resultMap id="processResult" type="ItsnowProcess" autoMapping="true">
+        <result column="configuration" property="configuration" typeHandler="dnt.itsnow.util.PropertiesHandler"/>
+        <result column="account_id" property="accountId"/>
+        <result column="host_id" property="hostId"/>
+        <result column="schema_id" property="schemaId"/>
+        <association property="account" columnPrefix="account_" resultMap="dnt.itsnow.repository.CommonAccountRepository.accountResult"/>
+        <association property="host" columnPrefix="host_" resultMap="dnt.itsnow.repository.ItsnowHostRepository.hostResult"/>
+        <association property="schema" columnPrefix="schema_" resultMap="dnt.itsnow.repository.ItsnowSchemaRepository.schemaResult"/>
+    </resultMap>
+
+</mapper>

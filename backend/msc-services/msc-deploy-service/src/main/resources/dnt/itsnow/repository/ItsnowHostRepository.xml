@@ -12,9 +12,9 @@
         SELECT COUNT(0) FROM itsnow_hosts
         <if test="keyword != null">
             <where>
-                UPPER(name) LIKE UPPER(#{keyword})
-                OR UPPER(address) LIKE UPPER(#{keyword})
-                OR UPPER(description) LIKE UPPER(#{keyword})
+                name LIKE #{keyword}
+                OR address LIKE #{keyword}
+                OR description LIKE #{keyword}
             </where>
         </if>
     </select>
@@ -23,9 +23,9 @@
         SELECT * FROM itsnow_hosts
         <if test="keyword != null">
             <where>
-                UPPER(name) LIKE UPPER(#{keyword})
-                OR UPPER(address) LIKE UPPER(#{keyword})
-                OR UPPER(description) LIKE UPPER(#{keyword})
+                name LIKE #{keyword}
+                OR address LIKE #{keyword}
+                OR description LIKE #{keyword}
             </where>
         </if>
         <if test="pageRequest.sort != null">

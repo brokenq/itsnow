@@ -6,6 +6,7 @@ package dnt.itsnow.platform.repository.support;
 import dnt.itsnow.platform.repository.RepositoryScanner;
 import dnt.itsnow.platform.util.BeanFilter;
 import dnt.spring.Bean;
+import dnt.util.StringUtils;
 import org.apache.ibatis.builder.xml.XMLConfigBuilder;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.plugin.Interceptor;
@@ -13,9 +14,11 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.type.TypeHandler;
 import org.mybatis.spring.mapper.ClassPathMapperScanner;
+import org.mybatis.spring.mapper.MapperFactoryBean;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.ScannedGenericBeanDefinition;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
@@ -123,7 +126,18 @@ public class MybatisRepositoryScanner extends Bean implements RepositoryScanner 
         scanner.setIncludeAnnotationConfig(false);
         scanner.registerFilters();
         int count = scanner.scan(packages);
-        logger.debug("Scanned {} mybatis repositories", count);
+        if( logger.isDebugEnabled()){
+            logger.debug("Scanned {} mybatis repositories", count);
+
+            String[] names = scanner.getRegistry().getBeanDefinitionNames();
+            for (String beanName : names) {
+                BeanDefinition beanDefinition = scanner.getRegistry().getBeanDefinition(beanName);
+                if( (beanDefinition instanceof ScannedGenericBeanDefinition) &&
+                    ((ScannedGenericBeanDefinition) beanDefinition).getBeanClass() == MapperFactoryBean.class){
+                    logger.debug("\tFound repository: {}", beanDefinition.getPropertyValues().get("mapperInterface") );
+                }
+            }
+        }
         return count;
     }
 

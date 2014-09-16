@@ -23,9 +23,9 @@ public class ItsnowProcessTest extends ValidatorSupport{
     public void setUp() throws Exception {
         process = new ItsnowProcess();
         process.setName("TestProcess");
-        process.setAccountId(1);
-        process.setHostId(1);
-        process.setSchemaId(1);
+        process.setAccountId(1L);
+        process.setHostId(1L);
+        process.setSchemaId(1L);
         process.setWd("/opt/releases/itsnow");
         Properties configuration = new Properties();
         configuration.setProperty("jmx.port", "8071");

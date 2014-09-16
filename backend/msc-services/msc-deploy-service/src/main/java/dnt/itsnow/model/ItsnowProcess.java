@@ -12,13 +12,13 @@ import java.util.Properties;
 public class ItsnowProcess extends ConfigItem{
     //Process的类型根据Account可以得知
     @NotNull
-    private Integer accountId;
+    private Long accountId;
     private Account account;
     @NotNull
-    private Integer hostId;
+    private Long hostId;
     private ItsnowHost host;
     @NotNull
-    private Integer schemaId;
+    private Long schemaId;
     private ItsnowSchema schema;
 
     private ProcessStatus status;
@@ -41,11 +41,11 @@ public class ItsnowProcess extends ConfigItem{
         this.account = account;
     }
 
-    public Integer getAccountId() {
+    public Long getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(Integer accountId) {
+    public void setAccountId(Long accountId) {
         this.accountId = accountId;
     }
 
@@ -57,11 +57,11 @@ public class ItsnowProcess extends ConfigItem{
         this.host = host;
     }
 
-    public Integer getHostId() {
+    public Long getHostId() {
         return hostId;
     }
 
-    public void setHostId(Integer hostId) {
+    public void setHostId(Long hostId) {
         this.hostId = hostId;
     }
 
@@ -73,11 +73,11 @@ public class ItsnowProcess extends ConfigItem{
         this.schema = schema;
     }
 
-    public Integer getSchemaId() {
+    public Long getSchemaId() {
         return schemaId;
     }
 
-    public void setSchemaId(Integer schemaId) {
+    public void setSchemaId(Long schemaId) {
         this.schemaId = schemaId;
     }
 

@@ -268,7 +268,19 @@ CREATE TABLE contract_details (
     D. 自身表名，列名均小写，underscore方式，参考前言规范
     E. 一般业务模型(实体，非关联表)，均应该增加 id(主键), created_at(记录创建时间), updated_at(记录更新时间)等缺省字段
 
-备注：三个magic field(id, created_at, updated_at)各自处理策略不同:
+备注A:
+
+  1. 系统创建数据库schema时，在mysql里面设置了默认的字符集为utf8
+    `CREATE DATABASE itsnow_xxx DEFAULT CHARACTER SET UTF8;`
+     而Mysql UTF8对应的默认整理方式(collation)为 `utf8_general_ci`, 这是一个大小写不敏感的字符方式
+     如果要大小写敏感，则需要指定整理方式为`utf8_bin`
+
+  2. 但在测试时，H2数据库需要在列定义时将类型指定为 VARCHAR_IGNORECASE，如:
+     `CREATE TABLE test(name VARCHAR_IGNORECASE(10) NOT NULL)`
+     但这个类型不被MySQL所支持，所以，在测试用例中，如果复用了正式代码中的migrate scripts，则不需要进行ignore case方面的测试
+
+
+备注B: 三个magic field(id, created_at, updated_at)各自处理策略不同:
 
   1. id: 应该在Repository#create(Model)的方法上增加：`@Options(useGeneratedKeys = true,keyColumn = "id")`
       以便Mybatis自动为创建的对象设置id

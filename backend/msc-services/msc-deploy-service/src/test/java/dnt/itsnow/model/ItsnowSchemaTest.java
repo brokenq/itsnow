@@ -23,7 +23,7 @@ public class ItsnowSchemaTest extends ValidatorSupport {
     public void setUp() throws Exception {
         schema = new ItsnowSchema();
         schema.setName("TestSchema");
-        schema.setHostId(1);
+        schema.setHostId(1L);
         Properties configuration = new Properties();
         configuration.setProperty("db.user", "itsnow");
         configuration.setProperty("db.pwd", "secret");

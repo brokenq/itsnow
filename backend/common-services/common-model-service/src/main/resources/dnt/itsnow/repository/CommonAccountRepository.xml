@@ -7,9 +7,12 @@
 
     <resultMap id="accountResult" type="Account" autoMapping="true">
         <discriminator column="type" javaType="string">
-            <case value="msc" resultType="MscAccount"/>
-            <case value="msu" resultType="MsuAccount"/>
-            <case value="msp" resultType="MspAccount"/>
+            <case value="msc" resultType="MscAccount" resultMap="basicAccountResult"/>
+            <case value="msu" resultType="MsuAccount" resultMap="basicAccountResult"/>
+            <case value="msp" resultType="MspAccount" resultMap="basicAccountResult"/>
         </discriminator>
+    </resultMap>
+    <resultMap id="basicAccountResult" type="Account" autoMapping="true">
+        <result column="user_id" property="userId"/>
     </resultMap>
 </mapper>

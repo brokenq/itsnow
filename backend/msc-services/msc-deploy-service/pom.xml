@@ -20,5 +20,9 @@
             <groupId>dnt.itsnow</groupId>
             <artifactId>mutable-account-service</artifactId>
         </dependency>
+        <dependency>
+            <groupId>dnt.itsnow</groupId>
+            <artifactId>mutable-user-service</artifactId>
+        </dependency>
     </dependencies>
 </project>

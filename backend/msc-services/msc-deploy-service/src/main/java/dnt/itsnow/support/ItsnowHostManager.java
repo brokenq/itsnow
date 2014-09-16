@@ -52,7 +52,7 @@ public class ItsnowHostManager extends Bean implements ItsnowHostService {
     }
 
     @Override
-    public ItsnowHost findById(Integer hostId) {
+    public ItsnowHost findById(Long hostId) {
         logger.debug("Finding itsnow host by id: {}", hostId);
         ItsnowHost host = repository.findById(hostId);
         logger.debug("Found   itsnow host: {}", host);

@@ -32,7 +32,7 @@ public class ItsnowSchemaRepositoryTest {
     public void setUp() throws Exception {
         schema = new ItsnowSchema();
         schema.setName("itsnow_test");
-        schema.setHostId(1);
+        schema.setHostId(1L);
         schema.setDescription("The test schema");
         Properties configuration = new Properties();
         configuration.setProperty("user", "itsnow");

@@ -25,7 +25,7 @@ public interface ItsnowHostService {
 
     ItsnowHost findByAddress(String address);
 
-    ItsnowHost findById(Integer hostId);
+    ItsnowHost findById(Long hostId);
 
     ItsnowHost create(ItsnowHost creating) throws ItsnowHostException;
 
