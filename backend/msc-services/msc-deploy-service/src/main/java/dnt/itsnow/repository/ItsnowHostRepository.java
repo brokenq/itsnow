@@ -32,7 +32,7 @@ public interface ItsnowHostRepository {
 
     @Insert("INSERT INTO itsnow_hosts(name, address, capacity, status, configuration, description, created_at, updated_at) " +
             "VALUES (#{name}, #{address}, #{capacity}, #{status}, #{configuration,typeHandler=dnt.itsnow.util.PropertiesHandler}, #{description}, #{createdAt}, #{updatedAt})")
-    @Options(useGeneratedKeys = true, keyColumn = "id")
+    @Options(useGeneratedKeys = true)
     void create(ItsnowHost creating);
 
     @Delete("DELETE FROM itsnow_hosts WHERE address = #{address}")
