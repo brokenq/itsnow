@@ -2,9 +2,11 @@ package dnt.itsnow.support;
 
 import dnt.itsnow.exception.RoleException;
 import dnt.itsnow.model.Role;
+import dnt.itsnow.model.User;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.platform.util.DefaultPage;
+import dnt.itsnow.repository.CommonUserRepository;
 import dnt.itsnow.repository.RoleRepository;
 import dnt.itsnow.service.RoleService;
 import dnt.spring.Bean;
@@ -21,17 +23,20 @@ public class RoleManager extends Bean implements RoleService {
 
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private CommonUserRepository userRepository;
 
     @Override
     public Page<Role> findAll(String keyword, Pageable pageable) {
         logger.debug("Finding role by keyword: {}", keyword);
         if(StringUtils.isBlank(keyword)){
             int total = roleRepository.count();
-            List<Role> roles = roleRepository.find("updated_at", "desc", pageable.getOffset(), pageable.getPageSize());
+//            List<Role> roles = roleRepository.find("updated_at", "desc", pageable.getOffset(), pageable.getPageSize());
+            List<Role> roles = roleRepository.findAll("updated_at", "desc", pageable.getOffset(), pageable.getPageSize());
             return new DefaultPage<Role>(roles, pageable, total);
         }else{
             int total = roleRepository.countByKeyword("%"+keyword+"%");
-            List<Role> roles = roleRepository.findByKeyword("%"+keyword+"%","updated_at","desc", pageable.getOffset(), pageable.getPageSize());
+            List<Role> roles = roleRepository.findAllByKeyword("%" + keyword + "%", "updated_at", "desc", pageable.getOffset(), pageable.getPageSize());
             return new DefaultPage<Role>(roles, pageable, total);
         }
     }
@@ -76,4 +81,5 @@ public class RoleManager extends Bean implements RoleService {
         roleRepository.delete(role.getSn());
         return role;
     }
+
 }

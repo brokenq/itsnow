@@ -35,12 +35,6 @@ public class GroupRepositoryTest {
         group.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         group.setUpdatedAt(group.getCreatedAt());
 
-        Role role = new Role();
-        role.setId(1L);
-        List<Role> roles = new ArrayList<Role>();
-        roles.add(role);
-        group.setRoles(roles);
-
         repository.create(group);
         Assert.notNull(group.getId());
     }

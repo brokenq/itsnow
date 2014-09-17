@@ -1,6 +1,6 @@
 package dnt.itsnow.support;
 
-import dnt.itsnow.Exception.DepartmentException;
+import dnt.itsnow.exception.DepartmentException;
 import dnt.itsnow.model.Department;
 import dnt.itsnow.model.Site;
 import dnt.itsnow.model.SiteDept;

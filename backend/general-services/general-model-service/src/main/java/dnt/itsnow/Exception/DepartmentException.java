@@ -1,4 +1,4 @@
-package dnt.itsnow.Exception;
+package dnt.itsnow.exception;
 
 import dnt.itsnow.platform.service.ServiceException;
 

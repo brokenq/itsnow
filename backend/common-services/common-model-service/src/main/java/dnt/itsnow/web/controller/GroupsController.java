@@ -37,28 +37,13 @@ public class GroupsController extends SessionSupportController<Group> {
 
     // 虽然也是index，但这里不需要分页，application controller 也不会错
     @RequestMapping
-    public List<Group> index(@RequestParam("q") String q){
+    public List<Group> index(@RequestParam(value = "q", required = false) String q){
         return service.search(q);
     }
 
     @RequestMapping("/{name}")
     public Group group(@PathVariable("name") String name){
         return service.find(name);
-    }
-
-    /**
-     * <h2>查看一个字典</h2>
-     *
-     * GET /api/groups/{sn}
-     *
-     * @return 地点
-     */
-    @RequestMapping("/{sn}")
-    public Group show(){
-        if (group == null) {
-            throw new WebClientSideException(HttpStatus.BAD_REQUEST, "The group no must be specified");
-        }
-        return group;
     }
 
     /**

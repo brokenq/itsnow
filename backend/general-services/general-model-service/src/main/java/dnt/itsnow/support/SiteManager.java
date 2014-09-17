@@ -1,6 +1,6 @@
 package dnt.itsnow.support;
 
-import dnt.itsnow.Exception.SiteException;
+import dnt.itsnow.exception.SiteException;
 import dnt.itsnow.model.Department;
 import dnt.itsnow.model.Site;
 import dnt.itsnow.model.SiteDept;
@@ -13,6 +13,8 @@ import dnt.itsnow.service.SiteService;
 import dnt.spring.Bean;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -20,6 +22,8 @@ import java.util.List;
 /**
  * <h1>类功能说明</h1>
  */
+@Service
+@Transactional
 public class SiteManager extends Bean implements SiteService {
 
     @Autowired

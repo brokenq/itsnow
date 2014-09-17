@@ -38,19 +38,19 @@ public class RoleRepositoryTest {
 
     @Test
     public void testDelete() throws Exception {
-        List<Role> roles = repository.find("updated_at", "desc", 0, 1);
+        List<Role> roles = repository.findAll("updated_at", "desc", 0, 1);
         Role role = roles.get(0);
-        repository.delete(role.getSn());
-        Assert.isNull(repository.findBySn(role.getSn()));
+        repository.delete(role.getName());
+        Assert.isNull(repository.findBySn(role.getName()));
     }
 
     @Test
     public void testUpdate() throws Exception {
-        List<Role> roles = repository.find("updated_at", "desc", 0, 1);
+        List<Role> roles = repository.findAll("updated_at", "desc", 0, 1);
         Role role = roles.get(0);
         role.setDescription("Hello World!");
         repository.update(role);
-        role = repository.findBySn(role.getSn());
+        role = repository.findBySn(role.getName());
         Assert.isTrue(role.getDescription().equals("Hello World!"));
     }
 
@@ -61,7 +61,7 @@ public class RoleRepositoryTest {
 
     @Test
     public void testFind() throws Exception {
-        Assert.notNull(repository.find("updated_at", "desc",  0, 10));
+        Assert.notNull(repository.findAll("updated_at", "desc",  0, 10));
     }
 
     @Test
@@ -71,14 +71,14 @@ public class RoleRepositoryTest {
 
     @Test
     public void testFindByKeyword() throws Exception {
-        Assert.notNull(repository.findByKeyword("%001%","updated_at","desc", 0, 10));
+        Assert.notNull(repository.findAllByKeyword("%001%","updated_at","desc", 0, 10));
     }
 
     @Test
     public void testFindBySn() throws Exception {
-        List<Role> roles = repository.find("updated_at", "desc", 0, 1);
+        List<Role> roles = repository.findAll("updated_at", "desc", 0, 1);
         Role role = roles.get(0);
-        Assert.notNull(repository.findBySn(role.getSn()));
+        Assert.notNull(repository.findBySn(role.getName()));
         Assert.isNull(repository.findBySn("1000000"));
     }
 

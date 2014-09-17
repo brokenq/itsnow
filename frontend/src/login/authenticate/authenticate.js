@@ -23,7 +23,7 @@ angular
 
   .controller('AuthenticateCtrl', ['$scope', '$http', 'SessionService',
     function ($scope, $http, sessionService) {
-      $scope.credential = {username: 'jacky.cao', password: 'secret', remember: true};
+      $scope.credential = {username: 'admin', password: 'secret', remember: true};
 
       $scope.challenge = function () {
         sessionService.challenge($scope.credential, function(){

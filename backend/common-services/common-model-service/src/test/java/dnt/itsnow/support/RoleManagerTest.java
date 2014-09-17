@@ -47,7 +47,7 @@ public class RoleManagerTest {
         Page<Role> staffs = service.findAll("", pageRequest);
         Role role = staffs.getContent().get(0);
 
-        Assert.assertNotNull(service.findBySn(role.getSn()));
+        Assert.assertNotNull(service.findBySn(role.getName()));
         Assert.assertNull(service.findBySn("10000"));
     }
 
@@ -70,7 +70,7 @@ public class RoleManagerTest {
         Page<Role> roles = service.findAll("", pageRequest);
         Role role = roles.getContent().get(0);
         service.destroy(role);
-        Assert.assertNull(service.findBySn(role.getSn()));
+        Assert.assertNotNull(service.findBySn(role.getName()));
     }
 
     @Test
@@ -79,7 +79,7 @@ public class RoleManagerTest {
         Role role = roles.getContent().get(0);
         role.setDescription("Hello World!");
         service.update(role);
-        role = service.findBySn(role.getSn());
+        role = service.findBySn(role.getName());
         Assert.assertTrue(role.getDescription() == "Hello World!");
     }
 

@@ -58,8 +58,10 @@ public class GroupsControllerTest extends SessionSupportedControllerTest {
     @Test
     public void testIndex() throws Exception {
 
-        expect(groupService.findAll(anyString(), isA(PageRequest.class)))
-                .andReturn(new DefaultPage<Group>(groups));
+        expect(groupService.search(anyString())).andReturn(groups);
+
+//        expect(groupService.findAll(anyString(), isA(PageRequest.class)))
+//                .andReturn(new DefaultPage<Group>(groups));
 
         // 准备 Mock Request
         MockHttpServletRequestBuilder request = get("/api/groups");
@@ -78,10 +80,10 @@ public class GroupsControllerTest extends SessionSupportedControllerTest {
     @Test
     public void testShow() throws Exception {
 
-        expect(groupService.findBySn("010")).andReturn(group);
+        expect(groupService.find("user")).andReturn(group);
 
         // 准备 Mock Request
-        MockHttpServletRequestBuilder request = get("/api/groups/010");
+        MockHttpServletRequestBuilder request = get("/api/groups/user");
         request = decorate(request);
 
         replay(groupService);
@@ -96,11 +98,11 @@ public class GroupsControllerTest extends SessionSupportedControllerTest {
 
     @Test
     public void testUpdate() throws Exception {
-        expect(groupService.findBySn("010")).andReturn(group);
+        expect(groupService.findBySn("user")).andReturn(group);
         expect(groupService.update(anyObject(Group.class))).andReturn(group);
         replay(groupService);
 
-        MockHttpServletRequestBuilder request = put("/api/groups/010").content(accountJson());
+        MockHttpServletRequestBuilder request = put("/api/groups/user").content(accountJson());
         decorate(request);
 
         ResultActions result = this.browser.perform(request);
@@ -110,13 +112,13 @@ public class GroupsControllerTest extends SessionSupportedControllerTest {
 
     @Test
     public void testDestroy() throws Exception {
-        expect(groupService.findBySn("010")).andReturn(group);
+        expect(groupService.findBySn("user")).andReturn(group);
         expect(groupService.destroy(anyObject(Group.class))).andReturn(group);
         expectLastCall().once();
 
         replay(groupService);
 
-        URI uri = new URI("/api/groups/010");
+        URI uri = new URI("/api/groups/user");
 
         MockHttpServletRequestBuilder request = delete(uri);
         decorate(request);

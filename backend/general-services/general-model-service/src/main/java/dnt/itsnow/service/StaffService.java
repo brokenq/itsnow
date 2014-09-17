@@ -1,6 +1,6 @@
 package dnt.itsnow.service;
 
-import dnt.itsnow.Exception.StaffException;
+import dnt.itsnow.exception.StaffException;
 import dnt.itsnow.model.Staff;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;

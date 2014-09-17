@@ -1,6 +1,6 @@
 package dnt.itsnow.service;
 
-import dnt.itsnow.Exception.WorkflowException;
+import dnt.itsnow.exception.WorkflowException;
 import dnt.itsnow.model.Workflow;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;

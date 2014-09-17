@@ -4,9 +4,9 @@
 // incident实体类
 // 故障单Module
 
-angular.module('MspIndex.Incident', [
-  'MspIndex.Incident.Model',
-  'MspIndex.Incident.Service'
+angular.module('MspApp.Incident', [
+  'MspApp.Incident.Model',
+  'MspApp.Incident.Service'
 ])
 
     // 新建故障单

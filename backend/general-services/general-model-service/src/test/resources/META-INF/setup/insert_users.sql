@@ -1,5 +1,7 @@
 -- // insert_users
 -- Migration SQL that makes the change goes here.
+-- SET SCHEMA itsnow_msc;
+
 DELETE FROM users;
 SET @MSC_ID = (SELECT id from accounts where sn = 'msc');
 SET @MSU001 = (SELECT id from accounts where sn = 'msu_001');
