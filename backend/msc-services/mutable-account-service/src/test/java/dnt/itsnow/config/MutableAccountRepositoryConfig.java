@@ -19,10 +19,16 @@ public class MutableAccountRepositoryConfig extends RepositoryConfigWithH2 imple
 
     protected String[] sqlScripts() {
         return new String[]{
-                "classpath:META-INF/setup/prepare_schema.sql",
                 "classpath:META-INF/migrate/20140722112724_create_accounts.sql@up",
-                "classpath:META-INF/migrate/20140728142611_insert_accounts.sql@up"
+                "classpath:META-INF/migrate/20140722125016_create_users.sql@up",
+                "classpath:META-INF/migrate/20140728142611_insert_accounts.sql@up",
+                "classpath:META-INF/migrate/20140728143025_insert_users.sql@up",
         };
+    }
+
+    @Override
+    protected String dbSchema() {
+        return "itsnow_msc";
     }
 
     public BeanFilter repositoryFilter(){

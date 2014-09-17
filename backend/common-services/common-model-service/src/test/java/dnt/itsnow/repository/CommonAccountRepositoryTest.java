@@ -5,6 +5,7 @@ package dnt.itsnow.repository;
 
 import dnt.itsnow.config.CommonAccountRepositoryConfig;
 import dnt.itsnow.model.Account;
+import dnt.itsnow.model.MscAccount;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,5 +53,7 @@ public class CommonAccountRepositoryTest {
         Assert.notNull(account);
         Assert.notNull(account.getUserId());
         Assert.notNull(account.getUser());
+        //TODO discriminator does not work
+        //Assert.isTrue(account instanceof MscAccount);
     }
 }

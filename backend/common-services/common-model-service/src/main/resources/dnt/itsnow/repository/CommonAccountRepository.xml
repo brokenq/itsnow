@@ -20,7 +20,7 @@
                u.created_at AS user_created_at,
                u.updated_at AS user_updated_at
         FROM itsnow_msc.accounts a
-        JOIN itsnow_msc.users u on a.user_id = u.id
+        LEFT JOIN itsnow_msc.users u on a.user_id = u.id
     </sql>
     <select id="findByName" resultMap="accountWithUserResult">
         <include refid="selectAccounts"/>

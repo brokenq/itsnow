@@ -32,8 +32,10 @@ public class H2AsMySqlEmbeddedDsConfigurer extends Bean implements EmbeddedDatab
         try {
             //noinspection unchecked
             properties.setDriverClass((Class<? extends Driver>) Class.forName("org.h2.Driver"));
-            String url = format("jdbc:h2:mem:%s;INIT=CREATE SCHEMA IF NOT EXISTS %s;SCHEMA=%s;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false;MODE=MySQL", 
-                                databaseName, this.schema, this.schema);
+            // 不能将 schema = %s 设置为连接字符串的属性，因为它的优先级会高于init指令
+            // 所以需要将设置schema放到init语句中
+            String url = format("jdbc:h2:mem:%s;INIT=CREATE SCHEMA IF NOT EXISTS %s\\;SET SCHEMA %s;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false;MODE=MySQL",
+                                databaseName, this.schema.toUpperCase(), this.schema);
             properties.setUrl(url);
             properties.setUsername("sa");
             properties.setPassword("");

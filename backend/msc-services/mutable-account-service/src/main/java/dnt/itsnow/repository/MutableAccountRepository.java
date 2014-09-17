@@ -43,7 +43,7 @@ public interface MutableAccountRepository extends CommonAccountRepository {
      */
     @Insert("INSERT INTO itsnow_msc.accounts(sn, name, domain, type, status, created_at, updated_at) " +
             "VALUES(#{sn}, #{name}, #{domain}, #{type}, #{status}, #{createdAt}, #{updatedAt})")
-    @Options(useGeneratedKeys = true,keyColumn = "id")
+    @Options(useGeneratedKeys = true)
     void create(Account account);
 
     /**
@@ -59,7 +59,7 @@ public interface MutableAccountRepository extends CommonAccountRepository {
             " user_id = #{userId}," +
             " updated_at = #{updatedAt}" +
             " WHERE id = #{id}")
-    void update(Account account);
+    int update(Account account);
 
     /**
      * <h2>批准帐户</h2>

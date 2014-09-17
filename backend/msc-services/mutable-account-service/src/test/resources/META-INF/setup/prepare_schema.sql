@@ -1,2 +1,0 @@
-CREATE SCHEMA IF NOT EXISTS itsnow_msc;
-SET SCHEMA itsnow_msc;
