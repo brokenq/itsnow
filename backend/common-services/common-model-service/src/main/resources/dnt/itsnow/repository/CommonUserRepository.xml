@@ -19,8 +19,10 @@
         WHERE UPPER(u.username) = UPPER(#{username})
 
     </select>
-
-    <resultMap id="userWithAccount" type="User" autoMapping="true">
+    <resultMap id="userResult" type="User" autoMapping="true">
+        <result column="account_id" property="accountId"/>
+    </resultMap>
+    <resultMap id="userWithAccount" type="User" extends="userResult">
         <association property="account" resultMap="dnt.itsnow.repository.CommonAccountRepository.accountResult" columnPrefix="account_"/>
     </resultMap>
 

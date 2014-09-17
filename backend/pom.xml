@@ -153,6 +153,7 @@
                 <version>${project.version}</version>
             </dependency>
 
+
             <!--message-bus,redis,cache-service -->
             <dependency>
                 <groupId>dnt.components</groupId>

@@ -28,8 +28,7 @@ public class DeployRepositoryConfig extends RepositoryConfigWithH2  {
                 "classpath:META-INF/migrate/20140728143025_insert_users.sql@up",
                 "classpath:META-INF/migrate/20140827112047_insert_itsnow_hosts.sql@up",
                 "classpath:META-INF/migrate/20140827142537_insert_itsnow_schemas.sql@up",
-                "classpath:META-INF/migrate/20140827142851_insert_itsnow_processes.sql@up",
-                "classpath:META-INF/setup/update_msc_account_user_id.sql"
+                "classpath:META-INF/migrate/20140827142851_insert_itsnow_processes.sql@up"
         };
     }
 

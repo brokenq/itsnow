@@ -4,6 +4,7 @@
 package dnt.itsnow.repository;
 
 import dnt.itsnow.config.CommonAccountRepositoryConfig;
+import dnt.itsnow.model.Account;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,20 +27,30 @@ public class CommonAccountRepositoryTest {
 
     @Test
     public void testFindByName() throws Exception {
-        Assert.notNull(repository.findByName("Itsnow Carrier"));
+        Account account = repository.findByName("Itsnow Carrier");
+        validateAccount(account);
         Assert.isNull(repository.findByName("Not Exist"));
     }
 
     @Test
     public void testFindBySn() throws Exception {
-        Assert.notNull(repository.findBySn("msc"));
+        Account account = repository.findBySn("msc");
+        validateAccount(account);
         Assert.isNull(repository.findBySn("bad"));
     }
 
     @Test
     public void testFindById() throws Exception {
-        Long mscId = repository.findBySn("msc").getId();
-        Assert.notNull(repository.findById(mscId));
+        Account msc = repository.findBySn("msc");
+        Long mscId = msc.getId();
+        Account account = repository.findById(mscId);
+        validateAccount(account);
         Assert.isNull(repository.findById(100L));
+    }
+
+    protected void validateAccount(Account account) {
+        Assert.notNull(account);
+        Assert.notNull(account.getUserId());
+        Assert.notNull(account.getUser());
     }
 }

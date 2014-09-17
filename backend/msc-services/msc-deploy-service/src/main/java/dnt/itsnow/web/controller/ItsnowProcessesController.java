@@ -93,7 +93,7 @@ public class ItsnowProcessesController extends SessionSupportController<ItsnowPr
      * <p/>
      * DELETE /admin/api/processes/{name}
      */
-    @RequestMapping("{name}")
+    @RequestMapping(value = "{name}", method = RequestMethod.DELETE)
     public void destroy() {
         logger.debug("Destroying {}", currentProcess);
         try {
@@ -109,7 +109,7 @@ public class ItsnowProcessesController extends SessionSupportController<ItsnowPr
      * PUT /admin/api/processes/{name}/start
      * Response: 启动进程的任务描述符
      */
-    @RequestMapping("{name}/start")
+    @RequestMapping(value = "{name}/start", method = RequestMethod.PUT)
     public String start(){
         logger.info("Starting {}", currentProcess.getName());
         try {
@@ -127,7 +127,7 @@ public class ItsnowProcessesController extends SessionSupportController<ItsnowPr
      * PUT /admin/api/processes/{name}/stop
      * Response: 停止进程的任务描述符
      */
-    @RequestMapping("{name}/stop")
+    @RequestMapping(value = "{name}/stop", method = RequestMethod.PUT)
     public String stop(){
         logger.info("Stopping {}", currentProcess.getName());
         try {
@@ -145,7 +145,7 @@ public class ItsnowProcessesController extends SessionSupportController<ItsnowPr
      * <p/>
      * PUT /admin/api/processes/{name}/cancel/{job}
      */
-    @RequestMapping("{name}/cancel/{job}")
+    @RequestMapping(value = "{name}/cancel/{job}", method = RequestMethod.PUT)
     public void cancel(@PathVariable("job") String job){
         logger.info("Cancel {}'s job {}", currentProcess.getName(), job);
         try {

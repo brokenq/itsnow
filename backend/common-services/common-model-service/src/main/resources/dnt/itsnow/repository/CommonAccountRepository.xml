@@ -4,6 +4,40 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--不要用 type != '*' 这种， mybatis 会根据 '*' 认为 type 为 long类型，而后无法解析-->
 <mapper namespace="dnt.itsnow.repository.CommonAccountRepository">
+    <sql id="selectAccounts">
+        SELECT a.*,
+               u.id         AS user_id,
+               u.account_id AS user_account_id,
+               u.username   AS user_username,
+               u.nick_name  AS user_nick_name,
+               u.email      AS user_email,
+               u.phone      AS user_phone,
+               u.password   AS user_password,
+               u.enabled    AS user_enabled,
+               u.expired    AS user_expired,
+               u.locked     AS user_locked,
+               u.password_expired AS user_password_expired,
+               u.created_at AS user_created_at,
+               u.updated_at AS user_updated_at
+        FROM itsnow_msc.accounts a
+        JOIN itsnow_msc.users u on a.user_id = u.id
+    </sql>
+    <select id="findByName" resultMap="accountWithUserResult">
+        <include refid="selectAccounts"/>
+        <where>a.name = #{name}</where>
+    </select>
+    <select id="findBySn" resultMap="accountWithUserResult">
+        <include refid="selectAccounts"/>
+        <where>a.sn = #{sn}</where>
+    </select>
+    <select id="findById" resultMap="accountWithUserResult">
+        <include refid="selectAccounts"/>
+        <where>a.id = #{id}</where>
+    </select>
+
+    <resultMap id="accountWithUserResult" type="Account" extends="accountResult" autoMapping="true">
+        <association property="user" columnPrefix="user_" resultMap="dnt.itsnow.repository.CommonUserRepository.userResult"/>
+    </resultMap>
 
     <resultMap id="accountResult" type="Account" autoMapping="true">
         <discriminator column="type" javaType="string">

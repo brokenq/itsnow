@@ -30,6 +30,11 @@
             <artifactId>spring-test</artifactId>
             <scope>compile</scope>
         </dependency>
+
+        <!--
+        没法测试阶段增加对 msc 的 mutable 模块的依赖
+        这样会导致循环依赖(因为 mutable 模块依赖 common 模块)
+        -->
     </dependencies>
     
     <build>

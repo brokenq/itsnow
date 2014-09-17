@@ -19,10 +19,12 @@
         <dependency>
             <groupId>dnt.itsnow</groupId>
             <artifactId>mutable-account-service</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>dnt.itsnow</groupId>
             <artifactId>mutable-user-service</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

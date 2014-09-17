@@ -21,7 +21,9 @@ public class CommonAccountRepositoryConfig extends RepositoryConfigWithH2 {
         return new String[]{
                 "classpath:META-INF/setup/prepare_schema.sql",
                 "classpath:META-INF/setup/create_accounts.sql",
+                "classpath:META-INF/setup/create_users.sql",
                 "classpath:META-INF/setup/insert_accounts.sql",
+                "classpath:META-INF/setup/insert_users.sql",
                 "classpath:META-INF/setup/activate_schema.sql"
         };
     }

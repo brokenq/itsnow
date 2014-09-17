@@ -89,7 +89,7 @@ public class ItsnowHostsController extends SessionSupportController<ItsnowHost>{
      * <p/>
      * DELETE /admin/api/hosts/{address}
      */
-    @RequestMapping("{address}")
+    @RequestMapping(value = "{address}", method = RequestMethod.DELETE)
     public void destroy() {
         logger.debug("Destroying {}", currentHost);
         try {

@@ -64,6 +64,10 @@ public class ItsnowHostManager extends Bean implements ItsnowHostService {
         logger.info("Creating host {}", creating);
         creating.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         creating.setUpdatedAt(creating.getCreatedAt());
+        //TODO 未来有可能需要在create主机之后，执行脚本，将主机环境配置好
+        // 实际的流程是，it，运营人员开好一个虚拟机，而后通过msc的界面输入该虚拟机的信息
+        // 通过调用本api创建itsnow的主机，而后本api就会自动配置该主机
+        // 配置的环境内容包括: java, mysql, redis, msc, msu, msp的部署
         repository.create(creating);
         logger.info("Created  host {}", creating);
         return creating;

@@ -13,7 +13,6 @@ import java.util.Set;
 /**
  * <h1>查询用户的仓库接口</h1>
  *
- * TODO 编写测试用例
  */
 public interface CommonUserRepository {
     //@Select("SELECT * FROM itsnow_msc.users where UPPER(username) = UPPER(#{username})")

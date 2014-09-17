@@ -6,7 +6,7 @@ package dnt.itsnow.support;
 import org.junit.Test;
 
 /**
- * Description here
+ * Test itsnow schema manager
  */
 public class ItsnowSchemaManagerTest {
     @Test
