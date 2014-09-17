@@ -142,7 +142,7 @@ public class SitesControllerTest extends SessionSupportedControllerTest {
     @Test
     public void testDestroy() throws Exception {
         expect(siteService.findBySn("001")).andReturn(site);
-        expect(siteService.destroy(anyObject(Site.class))).andReturn(site);
+        siteService.destroy(anyObject(Site.class));
         expectLastCall().once();
 
         replay(siteService);

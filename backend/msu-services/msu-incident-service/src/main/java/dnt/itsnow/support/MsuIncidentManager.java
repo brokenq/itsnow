@@ -49,12 +49,19 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService {
 
     private static final String LISTENER = "listener";
 
+    static String appSn = System.getProperty("app.id");
+
+    static String mspSn = "msp_001";
+
     public static String getSendChannel() {
-        return "MSU-001-TO-MSP-001";
+        if(mspSn == null){
+            //Todo find mspSn from Contract
+        }
+        return appSn + "-TO-"+mspSn;
     }
 
     public static String getListenChannel() {
-        return  "MSP-001-TO-MSU-001";
+        return  appSn + "-LISTENER";
     }
 
     /**

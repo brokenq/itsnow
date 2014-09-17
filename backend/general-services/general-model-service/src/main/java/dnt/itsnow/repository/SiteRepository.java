@@ -33,7 +33,7 @@ public interface SiteRepository {
     @Select("select count(0) from sites")
     public int count();
 
-    public List<Site> find(
+    public List<Site> findAll(
             @Param("sort") String sort,
             @Param("dir") String dir,
             @Param("offset") int offset,
@@ -42,7 +42,7 @@ public interface SiteRepository {
     @Select("select count(*) from sites where name like #{keyword} or sn like #{keyword}")
     public int countByKeyword(@Param("keyword") String keyword);
 
-    public List<Site> findByKeyword(@Param("keyword") String keyword,
+    public List<Site> findAllByKeyword(@Param("keyword") String keyword,
                                     @Param("sort") String sort,
                                     @Param("dir") String dir,
                                     @Param("offset") int offset,

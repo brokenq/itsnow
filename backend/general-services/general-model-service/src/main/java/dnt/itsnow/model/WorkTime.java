@@ -20,10 +20,10 @@ public class WorkTime extends ConfigItem {
     private String workDays;
     // 开始时间，如 8:00
     @NotBlank
-    private String startedAt;
+    private String startAt;
     // 结束时间，如 18:00
     @NotBlank
-    private String endedAt;
+    private String endAt;
 
     public String getSn() {
         return sn;
@@ -41,20 +41,20 @@ public class WorkTime extends ConfigItem {
         this.workDays = workDays;
     }
 
-    public String getStartedAt() {
-        return startedAt;
+    public String getStartAt() {
+        return startAt;
     }
 
-    public void setStartedAt(String startedAt) {
-        this.startedAt = startedAt;
+    public void setStartAt(String startAt) {
+        this.startAt = startAt;
     }
 
-    public String getEndedAt() {
-        return endedAt;
+    public String getEndAt() {
+        return endAt;
     }
 
-    public void setEndedAt(String endedAt) {
-        this.endedAt = endedAt;
+    public void setEndAt(String endAt) {
+        this.endAt = endAt;
     }
 
     @Override
@@ -62,8 +62,8 @@ public class WorkTime extends ConfigItem {
         final StringBuffer sb = new StringBuffer("WorkTime{");
         sb.append("sn='").append(sn).append('\'');
         sb.append(", workDays='").append(workDays).append('\'');
-        sb.append(", startedAt='").append(startedAt).append('\'');
-        sb.append(", endedAt='").append(endedAt).append('\'');
+        sb.append(", startAt='").append(startAt).append('\'');
+        sb.append(", endAt='").append(endAt).append('\'');
         sb.append('}');
         return sb.toString();
     }

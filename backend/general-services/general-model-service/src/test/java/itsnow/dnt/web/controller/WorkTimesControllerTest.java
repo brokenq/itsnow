@@ -46,8 +46,8 @@ public class WorkTimesControllerTest extends SessionSupportedControllerTest {
         workTime.setSn("plan11");
         workTime.setName("工作日计划十一");
         workTime.setWorkDays("1,2,4,5,6");
-        workTime.setStartedAt("9:00");
-        workTime.setEndedAt("17:30");
+        workTime.setStartAt("9:00");
+        workTime.setEndAt("17:30");
         workTime.setDescription("This is a test.");
         workTime.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         workTime.setUpdatedAt(workTime.getCreatedAt());

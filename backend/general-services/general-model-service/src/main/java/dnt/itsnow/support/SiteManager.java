@@ -20,7 +20,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 /**
- * <h1>类功能说明</h1>
+ * <h1>地点业务实现类</h1>
  */
 @Service
 @Transactional
@@ -35,13 +35,16 @@ public class SiteManager extends Bean implements SiteService {
     @Override
     public Page<Site> findAll(String keyword, Pageable pageable) {
         logger.debug("Finding site by keyword: {}", keyword);
+
         if(StringUtils.isBlank(keyword)){
             int total = siteRepository.count();
-            List<Site> sites = siteRepository.find("updated_at", "desc", pageable.getOffset(), pageable.getPageSize());
+            List<Site> sites = siteRepository.findAll("updated_at", "desc", pageable.getOffset(), pageable.getPageSize());
+            logger.debug("Finded site by keyword: {}", keyword);
             return new DefaultPage<Site>(sites, pageable, total);
         }else{
             int total = siteRepository.countByKeyword("%"+keyword+"%");
-            List<Site> sites = siteRepository.findByKeyword("%"+keyword+"%","updated_at","desc", pageable.getOffset(), pageable.getPageSize());
+            List<Site> sites = siteRepository.findAllByKeyword("%"+keyword+"%","updated_at","desc", pageable.getOffset(), pageable.getPageSize());
+            logger.debug("Finded site by keyword: {}", keyword);
             return new DefaultPage<Site>(sites, pageable, total);
         }
     }
@@ -49,8 +52,9 @@ public class SiteManager extends Bean implements SiteService {
     @Override
     public Site findBySn(String sn) {
         logger.debug("Finding Site by sn: {}", sn);
-
-        return siteRepository.findBySn(sn);
+        Site site = siteRepository.findBySn(sn);
+        logger.debug("Finded Site by sn: {}", sn);
+        return site;
     }
 
     @Override
@@ -66,7 +70,7 @@ public class SiteManager extends Bean implements SiteService {
         for(Department department : site.getDepartments()){
             siteDeptRepository.create(new SiteDept(site, department));
         }
-
+        logger.info("Created site {}", site);
         return site;
     }
 
@@ -78,6 +82,7 @@ public class SiteManager extends Bean implements SiteService {
         }
         siteRepository.update(site);
 
+        siteDeptRepository.deleteSiteAndDeptRelationBySiteId(site.getId());
         for(Department department : site.getDepartments()){
             siteDeptRepository.create(new SiteDept(site, department));
         }
@@ -86,13 +91,12 @@ public class SiteManager extends Bean implements SiteService {
     }
 
     @Override
-    public Site destroy(Site site) throws SiteException {
+    public void destroy(Site site) throws SiteException {
         logger.warn("Deleting site {}", site);
         if(site==null){
             throw new SiteException("Site entry can not be empty.");
         }
         siteDeptRepository.deleteSiteAndDeptRelationBySiteId(site.getId());
         siteRepository.delete(site.getSn());
-        return site;
     }
 }

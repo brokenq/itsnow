@@ -6,7 +6,7 @@ import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.platform.web.annotation.AfterFilter;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
-import dnt.itsnow.support.MsuIncidentManager;
+import dnt.itsnow.service.MsuIncidentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +30,7 @@ import java.util.List;
 public class MsuIncidentController extends SessionSupportController<Incident> {
 
     @Autowired
-    MsuIncidentManager msuIncidentManager;
+    MsuIncidentService msuIncidentService;
 
     /**
      * <h2>查询所有当前用户的故障单列表</h2>
@@ -43,7 +43,7 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
     public List<Incident> index(@RequestParam(value = "key", required = false) String key) {
 
         //根据实例查询对应表单数据
-        indexPage = msuIncidentManager.findByUserAndKey(currentUser.getUsername(), key, pageRequest);
+        indexPage = msuIncidentService.findByUserAndKey(currentUser.getUsername(), key, pageRequest);
         return indexPage.getContent();
     }
 
@@ -59,7 +59,7 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
     public List<Incident> indexClosed(@RequestParam(value = "key", required = false) String key) {
 
         //根据实例查询对应表单数据
-        indexPage = msuIncidentManager.findAllClosedByUserAndKey(currentUser.getUsername(), key, pageRequest);
+        indexPage = msuIncidentService.findAllClosedByUserAndKey(currentUser.getUsername(), key, pageRequest);
         return indexPage.getContent();
     }
 
@@ -77,7 +77,7 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
     public MsuIncident query(@PathVariable("instanceId") String instanceId,
                                     @RequestParam(value = "withHistory", required = false) boolean withHistory) {
 
-       return msuIncidentManager.findByInstanceId(instanceId,withHistory);
+       return msuIncidentService.findByInstanceId(instanceId,withHistory);
     }
 
     /**
@@ -90,7 +90,7 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
     @RequestMapping(value = "/start",method = RequestMethod.POST)
     @ResponseBody
     public MsuIncident start(@RequestBody @Valid Incident incident){
-        return msuIncidentManager.startIncident(mainAccount.getName(), this.currentUser.getUsername(),incident);
+        return msuIncidentService.startIncident(mainAccount.getName(), this.currentUser.getUsername(),incident);
     }
 
     /**
@@ -105,7 +105,7 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
     @RequestMapping(value = "/{instanceId}/{taskId}/complete",method = RequestMethod.PUT)
     @ResponseBody
     public MsuIncident complete(@PathVariable("instanceId") String instanceId,@PathVariable("taskId") String taskId,@RequestBody @Valid Incident incident){
-        return msuIncidentManager.processIncident(instanceId,taskId,currentUser.getUsername(),incident);
+        return msuIncidentService.processIncident(instanceId,taskId,currentUser.getUsername(),incident);
     }
 
     @Override

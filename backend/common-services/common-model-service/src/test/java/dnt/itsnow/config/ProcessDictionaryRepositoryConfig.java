@@ -17,7 +17,8 @@ public class ProcessDictionaryRepositoryConfig extends RepositoryConfigWithH2 {
 
     protected String[] sqlScripts() {
         return new String[]{
-                "classpath:META-INF/migrate/20140901144647_create_process_dictionaries.sql@up",
+                "classpath:META-INF/migrate/20140720144647_create_process_dictionaries.sql@up",
+                "classpath:META-INF/setup/initialization.sql@up",
                 "classpath:META-INF/migrate/20140904124504_insert_process_dictionaries.sql@up"
         };
     }

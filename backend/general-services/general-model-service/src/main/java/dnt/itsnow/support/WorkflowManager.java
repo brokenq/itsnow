@@ -6,12 +6,14 @@ import dnt.itsnow.repository.WorkflowRepository;
 import dnt.itsnow.service.WorkflowService;
 import dnt.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 
 /**
  * <h1>类功能说明</h1>
  */
+@Service
 public class WorkflowManager extends Bean implements WorkflowService {
 
     @Autowired

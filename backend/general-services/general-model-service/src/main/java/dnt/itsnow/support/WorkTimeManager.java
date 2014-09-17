@@ -10,6 +10,7 @@ import dnt.itsnow.service.WorkTimeService;
 import dnt.spring.Bean;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.List;
 /**
  * <h1>工作时间服务实现类</h1>
  */
+@Service
 public class WorkTimeManager extends Bean implements WorkTimeService {
 
     @Autowired
