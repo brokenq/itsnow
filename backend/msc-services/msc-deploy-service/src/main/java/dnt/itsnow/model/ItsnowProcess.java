@@ -4,6 +4,7 @@
 package dnt.itsnow.model;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.Properties;
 
 /**
@@ -28,6 +29,8 @@ public class ItsnowProcess extends ConfigItem{
     private Properties configuration;
 
     @NotNull
+    // 由于name会用作url path中的identify，所以不能包括 .,/,\等
+    @Pattern(regexp = "[\\w|\\d|\\-|_]+")
     @Override
     public String getName() {
         return super.getName();

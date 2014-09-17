@@ -21,12 +21,13 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 /**
  * <h1>Itsnow hosts web controller</h1>
  * <pre>
- * <b>HTTP     URI                       方法       含义  </b>
- * GET    /admin/api/hosts               index     列出所有主机，支持过滤，分页，排序等
- * GET    /admin/api/hosts/{address}     show      查看特定的主机信息
- * POST   /admin/api/hosts               create    创建主机资源
- * PUT    /admin/api/hosts/{address}     update    修改主机信息
- * DELETE /admin/api/hosts/{address}     destroy   删除特定的主机信息
+ * <b>HTTP     URI               方法       含义  </b>
+ * GET    /admin/api/hosts       index     列出所有主机，支持过滤，分页，排序等
+ * GET    /admin/api/hosts/dbs   db_index  列出所有数据库主机
+ * GET    /admin/api/hosts/{id}  show      查看特定的主机信息
+ * POST   /admin/api/hosts       create    创建主机资源
+ * PUT    /admin/api/hosts/{id}  update    修改主机信息
+ * DELETE /admin/api/hosts/{id}  destroy   删除特定的主机信息
  * </pre>
  */
 @RestController
@@ -35,6 +36,7 @@ public class ItsnowHostsController extends SessionSupportController<ItsnowHost>{
     @Autowired
     ItsnowHostService hostService;
     ItsnowHost currentHost;
+
 
     /**
      * <h2>查看所有的主机资源</h2>
@@ -53,11 +55,31 @@ public class ItsnowHostsController extends SessionSupportController<ItsnowHost>{
     }
 
     /**
-     * <h2>查看特定主机资源</h2>
+     * <h2>查看所有的主机资源</h2>
      * <p/>
-     * GET /admin/api/hosts/{address}
+     * GET /admin/api/hosts/dbs
+     *
+     * @return 主机列表
      */
-    @RequestMapping("{address}")
+    @RequestMapping("dbs")
+    public List<ItsnowHost> db_index() {
+        logger.debug("Listing itsnow db hosts");
+        List<ItsnowHost> dbHosts = hostService.findAllDbHosts();
+        logger.debug("Found   itsnow db hosts {}", dbHosts.size());
+        return dbHosts;
+    }
+
+    /**
+     * <h2>查看特定主机资源</h2>
+     *
+     * 备注：由于地址包括点号，
+     *  GET /admin/api/hosts/192.168.0.100 会被理解为
+     *  URI = /admin/api/hosts/192.168.0, format = 100
+     * 所以地址用id做参数表达，而不是地址这个更有意义的数值
+     * <p/>
+     * GET /admin/api/hosts/{id}
+     */
+    @RequestMapping("{id}")
     public ItsnowHost show() {
         logger.debug("Viewed  {}", currentHost);
         return currentHost;
@@ -87,9 +109,9 @@ public class ItsnowHostsController extends SessionSupportController<ItsnowHost>{
     /**
      * <h2>删除特定主机资源</h2>
      * <p/>
-     * DELETE /admin/api/hosts/{address}
+     * DELETE /admin/api/hosts/{id}
      */
-    @RequestMapping(value = "{address}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
     public void destroy() {
         logger.debug("Destroying {}", currentHost);
         try {
@@ -101,10 +123,10 @@ public class ItsnowHostsController extends SessionSupportController<ItsnowHost>{
 
 
     @BeforeFilter({"show", "start", "stop", "cancel", "destroy"})
-    public void initCurrentHost(@PathVariable("address") String address){
-        logger.debug("Finding itsnow host {}", address);
-        currentHost = hostService.findByAddress(address);
+    public void initCurrentHost(@PathVariable("id") Long id){
+        logger.debug("Finding itsnow host id = {}", id);
+        currentHost = hostService.findById(id);
         if( currentHost == null )
-            throw new WebClientSideException(NOT_FOUND, "Can't find the itsnow host with address = " + address);
+            throw new WebClientSideException(NOT_FOUND, "Can't find the itsnow host with id = " + id);
     }
 }

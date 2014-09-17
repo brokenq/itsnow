@@ -48,6 +48,16 @@ public class ItsnowProcessTest extends ValidatorSupport{
     }
 
     @Test
+    public void testNamePattern() throws Exception {
+        process.setName("invalid/name");
+        Set<ConstraintViolation<ItsnowProcess>> violations = validator.validate(process);
+        Assert.assertFalse(violations.isEmpty());
+        process.setName("invalid.name");
+        violations = validator.validate(process);
+        Assert.assertFalse(violations.isEmpty());
+    }
+
+    @Test
     public void testRequireWd() throws Exception {
         process.setWd(null);
         Set<ConstraintViolation<ItsnowProcess>> violations = validator.validate(process);
