@@ -35,8 +35,8 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
     /**
      * <h2>查询所有当前用户的故障单列表</h2>
      * <p/>
-     * GET /api/incidents
-     *
+     * GET /api/msu-incidents
+     * @param key 查询关键字
      * @return  Incident列表
      */
     @RequestMapping
@@ -50,8 +50,8 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
     /**
      * <h2>查询当前用户的已关闭故障单列表</h2>
      * <p/>
-     * GET /api/incidents/closed
-     *
+     * GET /api/msu-incidents/closed
+     * @param key 查询关键字
      * @return  Incident列表
      */
     @RequestMapping(value = "/closed")
@@ -59,7 +59,7 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
     public List<Incident> indexClosed(@RequestParam(value = "key", required = false) String key) {
 
         //根据实例查询对应表单数据
-        indexPage = msuIncidentManager.findClosedByUserAndKey(currentUser.getUsername(), key, pageRequest);
+        indexPage = msuIncidentManager.findAllClosedByUserAndKey(currentUser.getUsername(), key, pageRequest);
         return indexPage.getContent();
     }
 
@@ -67,8 +67,9 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
     /**
      * <h2>查询流程实例ID对应的故障单信息</h2>
      * <p/>
-     * GET /api/incidents/{instanceId}
-     *
+     * GET /api/msu-incidents/{instanceId}
+     * @param instanceId 流程实例ID
+     * @param withHistory 是否返回历史信息
      * @return 故障单信息以及当前的task列表
      */
     @RequestMapping(value = "/{instanceId}")
@@ -82,9 +83,9 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
     /**
      * <h2>启动MSU Incident流程实例</h2>
      * <p/>
-     * POST /api/incidents/start
-     *
-     * @return 创建之后的流程实例信息
+     * POST /api/msu-incidents/start
+     * @param incident 故障表单
+     * @return 故障信息
      */
     @RequestMapping(value = "/start",method = RequestMethod.POST)
     @ResponseBody
@@ -95,8 +96,10 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
     /**
      * <h2>完成流程中的task，提交表单数据</h2>
      * <p/>
-     * PUT /api/incidents/{instanceId}/{taskId}/complete
+     * PUT /api/msu-incidents/{instanceId}/{taskId}/complete
+     * @param instanceId 流程实例ID
      * @param taskId    任务ID
+     * @param incident 故障表单
      * @return MsuIncident
      */
     @RequestMapping(value = "/{instanceId}/{taskId}/complete",method = RequestMethod.PUT)

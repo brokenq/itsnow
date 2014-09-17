@@ -3,11 +3,13 @@ package dnt.itsnow.model;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.task.Task;
 
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MsuIncident {
 
+    @NotNull
     Incident incident;
 
     List<MsuIncidentTask> tasksList;
@@ -50,4 +52,17 @@ public class MsuIncident {
             tasksList.add(t);
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MsuIncident that = (MsuIncident) o;
+
+        if (!incident.equals(that.incident)) return false;
+
+        return true;
+    }
+
 }

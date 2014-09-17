@@ -1,13 +1,19 @@
 package dnt.itsnow.model;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 /**
  * Created by jacky on 2014/9/10.
  */
 public class MsuIncidentTask {
 
+    @NotBlank
     String taskId;
+    @NotBlank
     String taskName;
+    @NotBlank
     String taskDescription;
+
     String taskAssignee;
 
     public String getTaskId() {
@@ -54,4 +60,12 @@ public class MsuIncidentTask {
         return true;
     }
 
+    @Override
+    public int hashCode() {
+        int result = taskId != null ? taskId.hashCode() : 0;
+        result = 31 * result + (taskName != null ? taskName.hashCode() : 0);
+        result = 31 * result + (taskDescription != null ? taskDescription.hashCode() : 0);
+        result = 31 * result + (taskAssignee != null ? taskAssignee.hashCode() : 0);
+        return result;
+    }
 }
