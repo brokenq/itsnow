@@ -5,6 +5,7 @@ package dnt.itsnow.model;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Set;
 
@@ -20,6 +21,7 @@ public class Site extends ConfigItem {
     @NotBlank
     private String address;//TODO Address未来需要细化模型
     //工作时间
+    @NotNull
     private WorkTime workTime;
     // 流程字典
     private ProcessDictionary processDictionary;

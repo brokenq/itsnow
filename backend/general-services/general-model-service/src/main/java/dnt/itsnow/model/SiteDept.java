@@ -9,7 +9,6 @@ package dnt.itsnow.model;
  */
 public class SiteDept {
 
-    private Long id;
     private Site site;
     private Department department;
 
@@ -19,14 +18,6 @@ public class SiteDept {
     public SiteDept(Site site, Department department) {
         this.site = site;
         this.department = department;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Site getSite() {

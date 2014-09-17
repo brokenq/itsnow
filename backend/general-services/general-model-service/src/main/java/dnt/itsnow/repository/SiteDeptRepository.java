@@ -12,7 +12,6 @@ import java.util.List;
  */
 public interface SiteDeptRepository {
 
-    @Options(useGeneratedKeys = true, keyColumn = "id")
     @Insert("INSERT INTO site_depts (site_id, dept_id) VALUES " +
             "(#{site.id}, #{department.id})")
     public void create(SiteDept siteDept);
@@ -33,11 +32,4 @@ public interface SiteDeptRepository {
     @Delete("DELETE FROM site_depts WHERE dept_id = #{deptId}")
     public void deleteDeptAndSiteRelationByDeptId(@Param("deptId") long deptId);
 
-    @Update("UPDATE site_depts SET " +
-            " site_id  = #{site.id}, " +
-            " dept_id  = #{department.id} " +
-            " WHERE id = #{id} ")
-    public void update(SiteDept siteDept);
-
-    public SiteDept findById(@Param("id") long id);
 }

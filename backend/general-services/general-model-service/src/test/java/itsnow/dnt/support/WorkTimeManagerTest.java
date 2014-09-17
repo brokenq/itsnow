@@ -59,8 +59,8 @@ public class WorkTimeManagerTest {
         workTime.setSn("plan10");
         workTime.setName("工作日计划十");
         workTime.setWorkDays("1,2,4,5,6");
-        workTime.setStartedAt("9:00");
-        workTime.setEndedAt("17:30");
+        workTime.setStartAt("9:00");
+        workTime.setEndAt("17:30");
         workTime.setDescription("It's test.");
         workTime.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         workTime.setUpdatedAt(workTime.getCreatedAt());

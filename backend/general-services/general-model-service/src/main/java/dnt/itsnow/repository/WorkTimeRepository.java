@@ -11,8 +11,8 @@ import java.util.List;
 public interface WorkTimeRepository {
 
     @Options(useGeneratedKeys = true, keyColumn = "id")
-    @Insert("INSERT INTO work_times (sn, name, work_days, started_at, ended_at, description, created_at, updated_at) VALUES " +
-            "(#{sn}, #{name}, #{workDays}, #{startedAt}, #{endedAt}, #{description} ,#{createdAt}, #{updatedAt})")
+    @Insert("INSERT INTO work_times (sn, name, work_days, start_at, end_at, description, created_at, updated_at) VALUES " +
+            "(#{sn}, #{name}, #{workDays}, #{startAt}, #{endAt}, #{description} ,#{createdAt}, #{updatedAt})")
     public void create(WorkTime workTime);
 
     @Delete("DELETE FROM work_times WHERE sn = #{sn}")
@@ -22,8 +22,8 @@ public interface WorkTimeRepository {
             " sn          = #{sn}, " +
             " name        = #{name}, " +
             " work_days   = #{workDays}," +
-            " started_at  = #{startedAt}," +
-            " ended_at    = #{endedAt}," +
+            " start_at  = #{startAt}," +
+            " end_at    = #{endAt}," +
             " description = #{description}, " +
             " created_at  = #{createdAt}, " +
             " updated_at  = #{updatedAt} " +
