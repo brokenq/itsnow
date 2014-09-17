@@ -56,30 +56,4 @@ public interface MsuIncidentRepository {
             " WHERE `msu_instance_id` = #{msuInstanceId};")
     void update(Incident incident);
 
-    @Update("UPDATE `msu_incidents` SET "+
-            "msu_status = #{msuStatus} "+
-            "WHERE msu_instance_id = #{msuInstanceId};")
-    void updateStatus(@Param("msuInstanceId") String msuInstanceId,@Param("msuStatus") String msuStatus);
-
-    @Update("UPDATE `msu_incidents` SET " +
-            "response_time = CURRENT_TIMESTAMP " +
-            "WHERE msu_instance_id = #{msuInstanceId};")
-    void updateResponseTime(@Param("msuInstanceId") String msuInstanceId);
-
-    @Update("UPDATE `msu_incidents` SET " +
-            "resolve_time = CURRENT_TIMESTAMP " +
-            "WHERE msu_instance_id = #{msuInstanceId};")
-    void updateResolveTime(@Param("msuInstanceId") String msuInstanceId);
-
-    @Update("UPDATE `msu_incidents` SET " +
-            "close_time = CURRENT_TIMESTAMP " +
-            "WHERE msu_instance_id = #{msuInstanceId};")
-    void updateCloseTime(@Param("msuInstanceId") String msuInstanceId);
-
-    @Update("UPDATE `msu_incidents` SET " +
-            "close_time = CURRENT_TIMESTAMP," +
-            "close_code = #{closeCode} " +
-            "WHERE id = #{id}")
-    void close(Incident incident);
-
 }

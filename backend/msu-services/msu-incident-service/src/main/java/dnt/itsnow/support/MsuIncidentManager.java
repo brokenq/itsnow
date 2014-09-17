@@ -18,6 +18,7 @@ import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -27,6 +28,7 @@ import java.util.*;
 
 
 @Service
+@Transactional
 public class MsuIncidentManager extends Bean implements MsuIncidentService {
 
     @Autowired
@@ -55,6 +57,9 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService {
         return  "MSP-001-TO-MSU-001";
     }
 
+    /**
+     * <h2>初始化动作，添加事件监听器以及注册消息通道</h2>
+     */
     @Override
     protected void performStart() {
         this.autoDeployment();
@@ -63,11 +68,17 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService {
         messageBus.subscribe(LISTENER, getListenChannel(), msuEventListener);
     }
 
+    /**
+     * <h2>销毁前动作，注销消息通道</h2>
+     */
     @Override
     protected void performStop() {
         messageBus.unsubscribe(LISTENER);
     }
 
+    /**
+     * <h2>自动部署流程</h2>
+     */
     private void autoDeployment() {
         String path = "bpmn/"+PROCESS_KEY+".bpmn20.xml";
         try {
@@ -77,11 +88,18 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService {
             activitiEngineService.deploySingleProcess(is,PROCESS_KEY,PROCESS_KEY);
             is.close();
         }catch(Exception e){
-            logger.warn("error:{}",e);
+            logger.warn("Error deploy process:{} {}",PROCESS_KEY,e.getMessage());
         }
     }
 
-
+    /**
+     * <h2>根据用户名和流程KEY查询故障列表</h2>
+     *
+     * @param username  用户名
+     * @param keyword  流程定义KEY
+     * @param pageable 分页请求
+     * @return 故障分页数据
+     */
     @Override
     public Page<Incident> findByUserAndKey(String username, String keyword, Pageable pageable){
 
@@ -108,8 +126,16 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService {
         }
     }
 
+    /**
+     * <h2>根据用户名和流程KEY查询已关闭故障列表</h2>
+     *
+     * @param username  用户名
+     * @param keyword  流程定义KEY
+     * @param pageable 分页请求
+     * @return 已关闭故障分页数据
+     */
     @Override
-    public Page<Incident> findClosedByUserAndKey(String username, String keyword, Pageable pageable){
+    public Page<Incident> findAllClosedByUserAndKey(String username, String keyword, Pageable pageable){
 
         //查询当前用户已完成的流程列表
         List<HistoricProcessInstance> historicProcessInstanceList =  activitiEngineService.queryTasksFinished(username, PROCESS_KEY);
@@ -131,6 +157,13 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService {
         }
     }
 
+    /**
+     * <h2>根据流程实例ID查询故障</h2>
+     *
+     * @param instanceId  流程实例ID
+     * @param withHistory  是否返回历史数据
+     * @return 单条故障数据
+     */
     @Override
     public MsuIncident findByInstanceId(String instanceId,boolean withHistory){
         MsuIncident msuIncident = new MsuIncident();
@@ -147,14 +180,21 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService {
         return msuIncident;
     }
 
+    /**
+     * <h2>启动故障流程</h2>
+     *
+     * @param accountName  帐户名
+     * @param username  用户名
+     * @param incident  故障表单数据
+     * @return 故障表单
+     */
     @Override
     public MsuIncident startIncident(String accountName,String username,Incident incident){
         MsuIncident msuIncident = new MsuIncident();
 
         //start incident process
         ProcessInstance processInstance = activitiEngineService.startProcessInstanceByKey(PROCESS_KEY, null, username);
-        //activitiEngineService.addEventListener( msuEventListener);
-        //create incident object and persist it
+
         incident.setNumber("INC"+df.format(new Date()));
         incident.setMsuStatus(IncidentStatus.New);
         incident.setCreatedBy(username);
@@ -166,15 +206,21 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService {
         msuIncidentRepository.create(incident);
 
         msuIncident.setIncident(incident);
-
         return msuIncident;
     }
 
+    /**
+     * <h2>处理故障流程，可执行的动作包括签收，分析，解决，关闭</h2>
+     *
+     * @param instanceId  流程实例ID
+     * @param taskId    任务ID
+     * @param username  用户名
+     * @param incident  故障表单数据
+     * @return 故障表单数据以及任务信息
+     */
     @Override
     public MsuIncident processIncident(String instanceId,String taskId,String username,Incident incident){
         MsuIncident msuIncident = new MsuIncident();
-        //Task task = activitiEngineService.queryTask(taskId);
-        //Incident incident1 = msuIncidentRepository.findByInstanceId(task.getProcessInstanceId());
         incident.setUpdatedBy(username);
         msuIncidentRepository.update(incident);
 
