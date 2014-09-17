@@ -6,7 +6,10 @@ import dnt.itsnow.model.Site;
 import dnt.itsnow.model.WorkTime;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.util.PageRequest;
+import dnt.itsnow.service.DepartmentService;
+import dnt.itsnow.service.ProcessDictionaryService;
 import dnt.itsnow.service.SiteService;
+import dnt.itsnow.service.WorkTimeService;
 import itsnow.dnt.config.SiteManagerConfig;
 import org.junit.Assert;
 import org.junit.Before;
@@ -34,6 +37,15 @@ public class SiteManagerTest {
     @Autowired
     SiteService service;
 
+    @Autowired
+    ProcessDictionaryService dictionaryService;
+
+    @Autowired
+    DepartmentService departmentService;
+
+    @Autowired
+    WorkTimeService workTimeService;
+
     @Before
     public void setUp() throws Exception {
         pageRequest = new PageRequest(0, 1);
@@ -42,10 +54,8 @@ public class SiteManagerTest {
 
     @Test
     public void testFindAll() throws Exception {
-
-        Page<Site> sites = service.findAll("钱", pageRequest);
-        Assert.assertNotNull(sites.getTotalElements());
-        Assert.assertNotNull(sites.getNumberOfElements());
+        Page<Site> sites = service.findAll("厂", pageRequest);
+        Assert.assertTrue(sites.getContent().size() > 0);
     }
 
     @Test
@@ -64,21 +74,13 @@ public class SiteManagerTest {
         site.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         site.setUpdatedAt(site.getCreatedAt());
 
-        ProcessDictionary dictionary = new ProcessDictionary();
-        dictionary.setId(1L);
+        ProcessDictionary dictionary = dictionaryService.findBySn("001");
         site.setProcessDictionary(dictionary);
 
-        WorkTime workTime = new WorkTime();
-        workTime.setId(1L);
+        WorkTime workTime = workTimeService.findBySn("plan1");
         site.setWorkTime(workTime);
 
-        Department department = new Department();
-        department.setId(1L);
-        department.setSn("006");
-        department.setName("后勤保障部");
-        department.setDescription("It's test.");
-        department.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        department.setUpdatedAt(department.getCreatedAt());
+        Department department = departmentService.findBySn("001");
         List<Department> departments = new ArrayList<Department>();
         departments.add(department);
         site.setDepartments(departments);
@@ -102,20 +104,14 @@ public class SiteManagerTest {
         Site site = service.findBySn(sn);
         site.setDescription("it's a update test");
 
-        Department department = new Department();
-        department.setId(1L);
-        department.setSn("006");
-        department.setName("后勤保障部");
-        department.setDescription("It's test.");
-        department.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        department.setUpdatedAt(department.getCreatedAt());
+        Department department = departmentService.findBySn("002");
         List<Department> departments = new ArrayList<Department>();
         departments.add(department);
         site.setDepartments(departments);
 
         service.update(site);
         site = service.findBySn(sn);
-        Assert.assertTrue(site.getDescription() == "it's a update test");
+        Assert.assertTrue(site.getDescription().equals("it's a update test"));
     }
 
 }

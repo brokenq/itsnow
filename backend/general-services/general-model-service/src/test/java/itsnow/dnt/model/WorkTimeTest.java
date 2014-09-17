@@ -25,8 +25,8 @@ public class WorkTimeTest {
         this.workTime.setSn("plan1");
         this.workTime.setName("工作日计划一");
         this.workTime.setWorkDays("1,2,3,4,5");
-        this.workTime.setStartedAt("9:00");
-        this.workTime.setEndedAt("17:30");
+        this.workTime.setStartAt("9:00");
+        this.workTime.setEndAt("17:30");
         this.workTime.setDescription("This is a test.");
         this.workTime.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         this.workTime.setUpdatedAt(this.workTime.getCreatedAt());

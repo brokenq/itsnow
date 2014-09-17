@@ -18,8 +18,8 @@
             <result property="sn" column="workTimeSn"/>
             <result property="name" column="workTimeName"/>
             <result property="workDays" column="workTimeWorkDays"/>
-            <result property="startedAt" column="workTimeStartedAt"/>
-            <result property="endedAt" column="workTimeEndedAt"/>
+            <result property="startAt" column="workTimeStartAt"/>
+            <result property="endAt" column="workTimeEndAt"/>
         </association>
         <!-- 多对一关系 -->
         <association property="processDictionary" column="process_dictionary_id" javaType="ProcessDictionary">
@@ -41,9 +41,9 @@
         </collection>
     </resultMap>
 
-    <select id="findBySn" parameterType="string" resultType="Site" resultMap="siteResult">
+    <sql id="selectSite">
         select s.id, s.sn, s.name, s.address, s.description, s.created_at, s.updated_at,
-        w.id as workTimeId, w.sn as workTimeSn, w.name as workTimeName, w.work_days as workTimeWorkDays, w.started_at as workTimeStartedAt, w.ended_at as workTimeEndedAt,
+        w.id as workTimeId, w.sn as workTimeSn, w.name as workTimeName, w.work_days as workTimeWorkDays, w.start_at as workTimeStartAt, w.end_at as workTimeEndAt,
         p.id as dictionaryId, p.code as dictionaryCode, p.name as dictionaryName, p.level as dictionaryLevel, p.level_name as dictionaryLevelName, p.state as dictionaryState, p.type as dictionaryType,
         d.id as departmentId, d.name as departmentName, d.sn as departmentSn, d.description as departmentDescription
         from sites s
@@ -51,33 +51,21 @@
         left join process_dictionaries p on s.process_dictionary_id=p.id
         left join site_depts sd on s.id = sd.site_id
         left join departments d on sd.dept_id = d.id
+    </sql>
+
+    <select id="findBySn" parameterType="string" resultType="Site" resultMap="siteResult">
+        <include refid="selectSite"/>
         where s.sn=#{sn}
     </select>
 
-    <select id="find" parameterType="string" resultType="Site" resultMap="siteResult">
-        select s.id, s.sn, s.name, s.address, s.description, s.created_at, s.updated_at,
-        w.id as workTimeId, w.sn as workTimeSn, w.name as workTimeName, w.work_days as workTimeWorkDays, w.started_at as workTimeStartedAt, w.ended_at as workTimeEndedAt,
-        p.id as dictionaryId, p.code as dictionaryCode, p.name as dictionaryName, p.level as dictionaryLevel, p.level_name as dictionaryLevelName, p.state as dictionaryState, p.type as dictionaryType,
-        d.id as departmentId, d.name as departmentName, d.sn as departmentSn, d.description as departmentDescription
-        from sites s
-        left join work_times w on s.work_time_id=w.id
-        left join process_dictionaries p on s.process_dictionary_id=p.id
-        left join site_depts sd on s.id = sd.site_id
-        left join departments d on sd.dept_id = d.id
+    <select id="findAll" parameterType="string" resultType="Site" resultMap="siteResult">
+        <include refid="selectSite"/>
         order by ${sort} ${dir} limit #{offset}, #{size}
     </select>
 
 
-    <select id="findByKeyword" parameterType="string" resultType="Site" resultMap="siteResult">
-        select s.id, s.sn, s.name, s.address, s.description, s.created_at, s.updated_at,
-        w.id as workTimeId, w.sn as workTimeSn, w.name as workTimeName, w.work_days as workTimeWorkDays, w.started_at as workTimeStartedAt, w.ended_at as workTimeEndedAt,
-        p.id as dictionaryId, p.code as dictionaryCode, p.name as dictionaryName, p.level as dictionaryLevel, p.level_name as dictionaryLevelName, p.state as dictionaryState, p.type as dictionaryType,
-        d.id as departmentId, d.name as departmentName, d.sn as departmentSn, d.description as departmentDescription
-        from sites s
-        left join work_times w on s.work_time_id=w.id
-        left join process_dictionaries p on s.process_dictionary_id=p.id
-        left join site_depts sd on s.id = sd.site_id
-        left join departments d on sd.dept_id = d.id
+    <select id="findAllByKeyword" parameterType="string" resultType="Site" resultMap="siteResult">
+        <include refid="selectSite"/>
         where s.name like #{keyword} or s.sn like #{keyword}
         order by ${sort} ${dir} limit #{offset}, #{size}
     </select>

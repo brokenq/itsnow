@@ -1,8 +1,6 @@
 package itsnow.dnt.model;
 
-import dnt.itsnow.model.Account;
 import dnt.itsnow.model.Site;
-import dnt.itsnow.model.WorkTime;
 import dnt.support.JsonSupport;
 import junit.framework.Assert;
 import org.junit.Before;
@@ -49,7 +47,8 @@ public class SiteTest {
     public void testJson() throws Exception {
         String json = JsonSupport.toJSONString(site);
         System.out.println(json);
-        Assert.assertNotNull(json);
+        Site parsed = JsonSupport.parseJson(json, Site.class);
+        Assert.assertEquals(Site.class, parsed.getClass());
     }
 
 }

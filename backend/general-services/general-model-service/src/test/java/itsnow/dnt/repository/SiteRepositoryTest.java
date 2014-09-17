@@ -3,8 +3,10 @@ package itsnow.dnt.repository;
 import dnt.itsnow.model.ProcessDictionary;
 import dnt.itsnow.model.Site;
 import dnt.itsnow.model.WorkTime;
+import dnt.itsnow.repository.ProcessDictionaryRepository;
 import dnt.itsnow.repository.SiteDeptRepository;
 import dnt.itsnow.repository.SiteRepository;
+import dnt.itsnow.repository.WorkTimeRepository;
 import itsnow.dnt.config.SiteRepositoryConfig;
 import org.junit.Assert;
 import org.junit.Test;
@@ -29,6 +31,12 @@ public class SiteRepositoryTest {
     SiteRepository repository;
 
     @Autowired
+    ProcessDictionaryRepository dictionaryRepository;
+
+    @Autowired
+    WorkTimeRepository workTimeRepository;
+
+    @Autowired
     SiteDeptRepository siteDeptRepository;
 
     @Test
@@ -36,16 +44,18 @@ public class SiteRepositoryTest {
         Site site = new Site();
         site.setSn("100");
         site.setName("大众四厂");
-        ProcessDictionary dictionary = new ProcessDictionary();
-        dictionary.setId(1L);
+
+        ProcessDictionary dictionary = dictionaryRepository.findByCode("001");
         site.setProcessDictionary(dictionary);
-        WorkTime workTime = new WorkTime();
-        workTime.setId(1L);
+
+        WorkTime workTime = workTimeRepository.findBySn("plan1");
         site.setWorkTime(workTime);
+
         site.setDescription("It's test.");
         site.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         site.setUpdatedAt(site.getCreatedAt());
         repository.create(site);
+
         Assert.assertNotNull(site.getId());
     }
 
@@ -77,7 +87,7 @@ public class SiteRepositoryTest {
 
     @Test
     public void testFind() throws Exception {
-        List<Site> sites = repository.find("updated_at", "desc",  0, 10);
+        List<Site> sites = repository.findAll("updated_at", "desc",  0, 10);
         Assert.assertNotNull(sites);
     }
 
@@ -88,7 +98,7 @@ public class SiteRepositoryTest {
 
     @Test
     public void testFindByKeyword() throws Exception {
-        Assert.assertNotNull(repository.findByKeyword("%工厂%","updated_at","desc", 0, 10));
+        Assert.assertNotNull(repository.findAllByKeyword("%工厂%","updated_at","desc", 0, 10));
     }
 
     @Test
