@@ -100,7 +100,7 @@ public class ItsnowProcessManager extends Bean implements ItsnowProcessService {
             throw new ItsnowProcessException("Can't un-deploy itsnow process for {}", e);
         }
         repository.deleteByName(process.getName());
-        logger.info("Deleted  itsnow process: {}", process);
+        logger.warn("Deleted  itsnow process: {}", process);
     }
 
     @Override

@@ -10,6 +10,7 @@ import dnt.itsnow.model.ItsnowHost;
 import dnt.itsnow.model.SystemJob;
 import dnt.itsnow.repository.ItsnowHostRepository;
 import dnt.itsnow.service.SystemInvokeService;
+import dnt.itsnow.util.DeployFixture;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,8 +20,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
-
-import java.util.Properties;
 
 import static org.easymock.EasyMock.*;
 
@@ -45,15 +44,7 @@ public class ItsnowHostManagerTest {
 
     @Before
     public void setUp() throws Exception {
-        host = new ItsnowHost();
-        host.setAddress("192.168.0.100");
-        host.setName("jay.itsnow.com");
-        host.setCapacity(10);
-        host.setDescription("A test itsnow host");
-        Properties configuration = new Properties();
-        configuration.setProperty("username", "root");
-        configuration.setProperty("password", "root1234");
-        host.setConfiguration(configuration);
+        host = DeployFixture.testHost();
     }
 
     @After

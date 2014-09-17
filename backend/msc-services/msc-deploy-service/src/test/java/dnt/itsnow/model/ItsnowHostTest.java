@@ -4,13 +4,13 @@
 package dnt.itsnow.model;
 
 import dnt.itsnow.test.model.ValidatorSupport;
+import dnt.itsnow.util.DeployFixture;
 import dnt.support.JsonSupport;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.validation.ConstraintViolation;
-import java.util.Properties;
 import java.util.Set;
 
 /**
@@ -21,13 +21,7 @@ public class ItsnowHostTest extends ValidatorSupport {
 
     @Before
     public void setUp() throws Exception {
-        host = new ItsnowHost();
-        host.setName("TestHost");
-        host.setAddress("192.168.0.10");
-        Properties configuration = new Properties();
-        configuration.setProperty("username", "root");
-        configuration.setProperty("password", "root123");
-        host.setConfiguration(configuration);
+        host = DeployFixture.testHost();
     }
 
     @Test

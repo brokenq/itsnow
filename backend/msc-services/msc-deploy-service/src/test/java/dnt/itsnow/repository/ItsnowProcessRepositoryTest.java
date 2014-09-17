@@ -6,6 +6,7 @@ package dnt.itsnow.repository;
 import dnt.itsnow.config.DeployRepositoryConfig;
 import dnt.itsnow.model.ItsnowProcess;
 import dnt.itsnow.platform.util.PageRequest;
+import dnt.itsnow.util.DeployFixture;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,13 +31,7 @@ public class ItsnowProcessRepositoryTest {
 
     @Before
     public void setUp() throws Exception {
-        process = new ItsnowProcess();
-        process.setName("itsnow-msu_001");
-        process.setAccountId(1L);
-        process.setHostId(1L);
-        process.setSchemaId(1L);
-        process.setWd("/opt/releases/msu_001");
-        process.setDescription("A test process");
+        process = DeployFixture.testProcess();
     }
 
     @Test

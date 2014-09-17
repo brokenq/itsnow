@@ -4,13 +4,13 @@
 package dnt.itsnow.model;
 
 import dnt.itsnow.test.model.ValidatorSupport;
+import dnt.itsnow.util.DeployFixture;
 import dnt.support.JsonSupport;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.validation.ConstraintViolation;
-import java.util.Properties;
 import java.util.Set;
 
 /**
@@ -21,17 +21,7 @@ public class ItsnowProcessTest extends ValidatorSupport{
 
     @Before
     public void setUp() throws Exception {
-        process = new ItsnowProcess();
-        process.setName("TestProcess");
-        process.setAccountId(1L);
-        process.setHostId(1L);
-        process.setSchemaId(1L);
-        process.setWd("/opt/releases/itsnow");
-        Properties configuration = new Properties();
-        configuration.setProperty("jmx.port", "8071");
-        configuration.setProperty("debug.port", "1071");
-        configuration.setProperty("rmi.port", "8098");
-        process.setConfiguration(configuration);
+        process = DeployFixture.testProcess();
     }
 
     @Test

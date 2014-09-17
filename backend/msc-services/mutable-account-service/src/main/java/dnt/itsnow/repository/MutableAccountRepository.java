@@ -54,9 +54,9 @@ public interface MutableAccountRepository extends CommonAccountRepository {
      * @param account 新建的账户
      */
     @Update("UPDATE itsnow_msc.accounts SET " +
-            " name = #{name}," +
-            " domain = #{domain}," +
-            " user_id = #{userId}," +
+            " name       = #{name}," +
+            " domain     = #{domain}," +
+            " user_id    = #{userId}," +
             " updated_at = #{updatedAt}" +
             " WHERE id = #{id}")
     int update(Account account);

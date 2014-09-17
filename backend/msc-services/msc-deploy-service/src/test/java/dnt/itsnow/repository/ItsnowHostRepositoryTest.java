@@ -6,6 +6,7 @@ package dnt.itsnow.repository;
 import dnt.itsnow.config.DeployRepositoryConfig;
 import dnt.itsnow.model.ItsnowHost;
 import dnt.itsnow.platform.util.PageRequest;
+import dnt.itsnow.util.DeployFixture;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,15 +33,7 @@ public class ItsnowHostRepositoryTest {
 
     @Before
     public void setUp() throws Exception {
-        host = new ItsnowHost();
-        host.setAddress("192.168.0.100");
-        host.setName("srv1.itsnow.com");
-        host.setCapacity(10);
-        host.setDescription("A test itsnow host");
-        Properties configuration = new Properties();
-        configuration.setProperty("username", "root");
-        configuration.setProperty("password", "root1234");
-        host.setConfiguration(configuration);
+        host = DeployFixture.testHost();
     }
 
     @Test

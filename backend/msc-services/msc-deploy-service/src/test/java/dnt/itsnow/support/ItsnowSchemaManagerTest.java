@@ -10,6 +10,7 @@ import dnt.itsnow.model.ItsnowSchema;
 import dnt.itsnow.model.SystemJob;
 import dnt.itsnow.repository.ItsnowSchemaRepository;
 import dnt.itsnow.service.SystemInvokeService;
+import dnt.itsnow.util.DeployFixture;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,8 +20,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
-
-import java.util.Properties;
 
 import static org.easymock.EasyMock.*;
 
@@ -44,14 +43,7 @@ public class ItsnowSchemaManagerTest {
 
     @Before
     public void setUp() throws Exception {
-        schema = new ItsnowSchema();
-        schema.setName("itsnow_test");
-        schema.setHostId(1L);
-        schema.setDescription("The test schema");
-        Properties configuration = new Properties();
-        configuration.setProperty("user", "itsnow");
-        configuration.setProperty("password", "secret");
-        schema.setConfiguration(configuration);
+        schema = DeployFixture.testSchema();
     }
 
     @After

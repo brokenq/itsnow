@@ -9,6 +9,7 @@ import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.service.ItsnowHostService;
 import dnt.itsnow.test.controller.SessionSupportedControllerTest;
+import dnt.itsnow.util.DeployFixture;
 import dnt.support.JsonSupport;
 import org.junit.After;
 import org.junit.Before;
@@ -20,14 +21,9 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Properties;
 
 import static org.easymock.EasyMock.*;
-import static org.easymock.EasyMock.anyString;
-import static org.easymock.EasyMock.isA;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -44,16 +40,7 @@ public class ItsnowHostsControllerTest extends SessionSupportedControllerTest {
 
     @Before
     public void setUp() throws Exception {
-        host = new ItsnowHost();
-        host.setAddress("192.168.0.100");
-        host.setName("jay.itsnow.com");
-        host.setCapacity(10);
-        host.setDescription("A test itsnow host");
-        Properties configuration = new Properties();
-        configuration.setProperty("username", "root");
-        configuration.setProperty("password", "root1234");
-        host.setConfiguration(configuration);
-
+        host = DeployFixture.testHost();
         hosts = new LinkedList<ItsnowHost>();
         hosts.add(host);
 

@@ -4,6 +4,8 @@
 package dnt.itsnow.config;
 
 import dnt.itsnow.repository.ItsnowProcessRepository;
+import dnt.itsnow.service.ItsnowHostService;
+import dnt.itsnow.service.ItsnowSchemaService;
 import dnt.itsnow.service.SystemInvokeService;
 import dnt.itsnow.support.ItsnowProcessManager;
 import org.easymock.EasyMock;
@@ -24,12 +26,22 @@ public class ItsnowProcessManagerConfig {
     //相关mock
 
     @Bean
-    public ItsnowProcessRepository schemaRepository(){
+    public ItsnowProcessRepository processRepository(){
         return EasyMock.createMock(ItsnowProcessRepository.class);
     }
 
     @Bean
     public SystemInvokeService systemInvokeService(){
         return EasyMock.createMock(SystemInvokeService.class);
+    }
+
+    @Bean
+    public ItsnowSchemaService schemaService(){
+        return EasyMock.createMock(ItsnowSchemaService.class);
+    }
+
+    @Bean
+    public ItsnowHostService hostService(){
+        return EasyMock.createMock(ItsnowHostService.class);
     }
 }

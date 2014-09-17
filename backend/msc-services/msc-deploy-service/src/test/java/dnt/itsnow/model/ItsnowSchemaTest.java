@@ -4,13 +4,13 @@
 package dnt.itsnow.model;
 
 import dnt.itsnow.test.model.ValidatorSupport;
+import dnt.itsnow.util.DeployFixture;
 import dnt.support.JsonSupport;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.validation.ConstraintViolation;
-import java.util.Properties;
 import java.util.Set;
 
 /**
@@ -21,13 +21,7 @@ public class ItsnowSchemaTest extends ValidatorSupport {
 
     @Before
     public void setUp() throws Exception {
-        schema = new ItsnowSchema();
-        schema.setName("TestSchema");
-        schema.setHostId(1L);
-        Properties configuration = new Properties();
-        configuration.setProperty("db.user", "itsnow");
-        configuration.setProperty("db.pwd", "secret");
-        schema.setConfiguration(configuration);
+        schema = DeployFixture.testSchema();
     }
 
     @Test

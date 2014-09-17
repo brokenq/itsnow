@@ -9,6 +9,7 @@ import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.service.ItsnowProcessService;
 import dnt.itsnow.test.controller.SessionSupportedControllerTest;
+import dnt.itsnow.util.DeployFixture;
 import dnt.support.JsonSupport;
 import org.junit.After;
 import org.junit.Before;
@@ -22,11 +23,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;
-import static org.easymock.EasyMock.replay;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Itsnow Processes Controller Test
@@ -41,13 +39,7 @@ public class ItsnowProcessesControllerTest extends SessionSupportedControllerTes
 
     @Before
     public void setUp() throws Exception {
-        process = new ItsnowProcess();
-        process.setName("itsnow-msu_001");
-        process.setAccountId(1L);
-        process.setHostId(1L);
-        process.setSchemaId(1L);
-        process.setWd("/opt/releases/msu_001");
-        process.setDescription("A test process");
+        process = DeployFixture.testProcess();
         processes = new LinkedList<ItsnowProcess>();
         processes.add(process);
     }
