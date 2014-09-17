@@ -65,4 +65,11 @@ public class MsuIncident {
         return true;
     }
 
+    @Override
+    public int hashCode() {
+        int result = incident != null ? incident.hashCode() : 0;
+        result = 31 * result + (tasksList != null ? tasksList.hashCode() : 0);
+        result = 31 * result + (historicActivityInstanceList != null ? historicActivityInstanceList.hashCode() : 0);
+        return result;
+    }
 }
