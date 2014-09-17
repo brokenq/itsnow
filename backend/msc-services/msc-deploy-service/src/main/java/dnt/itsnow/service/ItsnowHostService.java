@@ -29,5 +29,5 @@ public interface ItsnowHostService {
 
     ItsnowHost create(ItsnowHost creating) throws ItsnowHostException;
 
-    void delete(String address) throws ItsnowHostException;
+    void delete(ItsnowHost host) throws ItsnowHostException;
 }

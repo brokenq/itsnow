@@ -6,7 +6,6 @@ package dnt.itsnow.platform.web.controller;
 import dnt.itsnow.platform.web.model.RouteItem;
 import dnt.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,7 +15,10 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <h1>用于显示平台中所有已经映射的路由</h1>
@@ -46,29 +48,12 @@ public class RoutesController extends ApplicationController{
         response.setContentType(MediaType.TEXT_PLAIN_VALUE);
         Map<RequestMappingInfo, HandlerMethod> methods = mappings.getHandlerMethods();
         List<RouteItem> routeItems = new ArrayList<RouteItem>(methods.size());
-        for( RequestMappingInfo mapping : methods.keySet()){
-            String httpMethods = mapping.getMethodsCondition().toString();
-            httpMethods = StringUtils.substringBetween(httpMethods,"[","]");
-            if( httpMethods.equals("") ) httpMethods = "GET";
-            if( !StringUtils.containsIgnoreCase(httpMethods, method) ) continue;
-            String url = mapping.getPatternsCondition().toString();
-            url = StringUtils.substringBetween(url, "[", "]");
-            if( !StringUtils.containsIgnoreCase(url, pattern) ) continue;
-            HandlerMethod handler = methods.get(mapping);
-            Map<String,String> requestParams = new HashMap<String,String>();
-            for (MethodParameter parameter : handler.getMethodParameters()) {
-                RequestParam requestParam = parameter.getParameterAnnotation(RequestParam.class);
-                if(requestParam != null) requestParams.put(requestParam.value(), parameter.getParameterType().getSimpleName());
-            }
-            //固定的把 Application Controller 对 index 的 before filter增强加入到路由表达里面
-            // 照理来说，应该根据每个handler的method，找到其所有before/after filter，将相关filter的request params加入展示
-            // 现在先采用这个权宜之计
-            if( httpMethods.contains("GET") && handler.toString().contains("index") ){
-                requestParams.put("page", "int");
-                requestParams.put("size", "int");
-                requestParams.put("sort", "string");
-            }
-            RouteItem item = new RouteItem(httpMethods, url, handler.toString(), requestParams);
+        for (Map.Entry<RequestMappingInfo, HandlerMethod> entry : methods.entrySet()) {
+            RequestMappingInfo mapping = entry.getKey();
+            HandlerMethod handler = entry.getValue();
+            RouteItem item = RouteItem.fromMapping(mapping, handler);
+            if( !StringUtils.containsIgnoreCase(item.getUrl(), pattern) ) continue;
+            if( !StringUtils.containsIgnoreCase(item.getHttpMethod(), method) ) continue;
             item.showDetail(detail);
             routeItems.add(item);
         }

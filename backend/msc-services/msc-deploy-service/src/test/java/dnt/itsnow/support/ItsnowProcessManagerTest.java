@@ -6,19 +6,11 @@ package dnt.itsnow.support;
 import org.junit.Test;
 
 /**
- * Itsnow Process Manager Test
+ * <h1>Itsnow Process Manager Test</h1>
+ *
+ * find类的接口基本就是透传，暂时不需要进行测试
  */
 public class ItsnowProcessManagerTest {
-    @Test
-    public void testFindAll() throws Exception {
-
-    }
-
-    @Test
-    public void testFindByName() throws Exception {
-
-    }
-
     @Test
     public void testCreate() throws Exception {
 

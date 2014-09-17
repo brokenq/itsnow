@@ -4,7 +4,9 @@
 package dnt.itsnow.platform.web.support;
 
 import dnt.itsnow.platform.services.ServicePackageEvent;
+import dnt.itsnow.platform.web.SpringMvcConfig;
 import dnt.itsnow.platform.web.controller.ApplicationController;
+import dnt.itsnow.platform.web.model.RouteItem;
 import net.happyonroad.component.core.Component;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
@@ -86,8 +88,14 @@ public class ExtendedRequestMappingHandlerMapping extends RequestMappingHandlerM
            });
 
    		for (Method method : methods) {
-   			registerHandlerMethod(handler, method, mappings.get(method));
-   		}
+            RequestMappingInfo mapping = mappings.get(method);
+            registerHandlerMethod(handler, method, mapping);
+            HandlerMethod handlerMethod = getHandlerMethods().get(mapping);
+            RouteItem routeItem = RouteItem.fromMapping(mapping, handlerMethod);
+            routeItem.showDetail(true);
+            //Extended Request Mapping Handler Mapping's logger/info has been disabled
+            SpringMvcConfig.logger.info(routeItem);
+        }
    	}
 
     /**

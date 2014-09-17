@@ -154,7 +154,7 @@ public class ItsnowHostsControllerTest extends SessionSupportedControllerTest {
         host.setId(102L);
         // Service Mock 记录阶段
         expect(mockedService.findById(host.getId())).andReturn(host);
-        mockedService.delete(host.getAddress());
+        mockedService.delete(host);
         expectLastCall().once();
         // 准备 Mock Request
         MockHttpServletRequestBuilder request = delete("/admin/api/hosts/" + host.getId());

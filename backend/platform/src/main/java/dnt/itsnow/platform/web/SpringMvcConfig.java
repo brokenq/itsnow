@@ -34,7 +34,7 @@ import java.util.List;
 @EnableTransactionManagement
 @ComponentScan("dnt.itsnow.platform.web.controller")
 public class SpringMvcConfig extends WebMvcConfigurationSupport implements InitializingBean {
-    protected final Log logger = LogFactory.getLog(getClass());
+    public static final Log logger = LogFactory.getLog(SpringMvcConfig.class);
 
     @Override
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {

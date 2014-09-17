@@ -4,12 +4,14 @@
 package dnt.itsnow.support;
 
 import dnt.itsnow.exception.ItsnowHostException;
+import dnt.itsnow.exception.SystemInvokeException;
 import dnt.itsnow.model.ItsnowHost;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.repository.ItsnowHostRepository;
 import dnt.itsnow.service.ItsnowHostService;
+import dnt.itsnow.service.SystemInvokeService;
 import dnt.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,8 @@ import java.util.List;
 public class ItsnowHostManager extends Bean implements ItsnowHostService {
     @Autowired
     ItsnowHostRepository repository;
+    @Autowired
+    SystemInvokeService  systemInvokeService;
 
     @Override
     public Page<ItsnowHost> findAll(String keyword, PageRequest pageRequest) {
@@ -62,24 +66,34 @@ public class ItsnowHostManager extends Bean implements ItsnowHostService {
     @Override
     public ItsnowHost create(ItsnowHost creating) throws ItsnowHostException {
         logger.info("Creating host {}", creating);
-        creating.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        creating.setUpdatedAt(creating.getCreatedAt());
-        //TODO 未来有可能需要在create主机之后，执行脚本，将主机环境配置好
+        //需要在create主机之后，执行脚本，将主机环境配置好
         // 实际的流程是，it，运营人员开好一个虚拟机，而后通过msc的界面输入该虚拟机的信息
         // 通过调用本api创建itsnow的主机，而后本api就会自动配置该主机
         // 配置的环境内容包括: java, mysql, redis, msc, msu, msp的部署
+        systemInvokeService.addJob(creating.configJob());
+        // 这里不等待该任务结束，因为configure主机可能时间很长
+        // 采用主机状态管理方式，也就是刚刚创建的主机处于configure状态，configure好了之后处于ready状态
+        creating.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        creating.setUpdatedAt(creating.getCreatedAt());
         repository.create(creating);
         logger.info("Created  host {}", creating);
         return creating;
     }
 
     @Override
-    public void delete(String address) throws ItsnowHostException {
-        //如果有外键引用，会被拒绝
+    public void delete(ItsnowHost host) throws ItsnowHostException {
+        String quitJobId = systemInvokeService.addJob(host.quitJob());
         try {
-            repository.deleteByAddress(address);
+            systemInvokeService.waitJobFinished(quitJobId);
+        } catch (SystemInvokeException e) {
+            throw new ItsnowHostException("Can't quit host for " + host);
+        }
+        //TODO 如果有外键引用，会被拒绝，应该将底层的异常转换为合适的ItsnowHostException
+        // 能够通过异常很容易的告知用户host被哪个业务对象所引用
+        try {
+            repository.deleteByAddress(host.getAddress());
         } catch (Exception e) {
-            throw new ItsnowHostException("Can't delete itsnow host: " + address, e);
+            throw new ItsnowHostException("Can't delete itsnow host: " + host, e);
         }
     }
 }

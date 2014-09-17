@@ -126,7 +126,7 @@ public class MybatisRepositoryScanner extends Bean implements RepositoryScanner 
         scanner.setIncludeAnnotationConfig(false);
         scanner.registerFilters();
         int count = scanner.scan(packages);
-        if( logger.isDebugEnabled()){
+        if( count > 0 && logger.isDebugEnabled()){
             logger.debug("Scanned {} mybatis repositories", count);
 
             String[] names = scanner.getRegistry().getBeanDefinitionNames();
@@ -134,7 +134,7 @@ public class MybatisRepositoryScanner extends Bean implements RepositoryScanner 
                 BeanDefinition beanDefinition = scanner.getRegistry().getBeanDefinition(beanName);
                 if( (beanDefinition instanceof ScannedGenericBeanDefinition) &&
                     ((ScannedGenericBeanDefinition) beanDefinition).getBeanClass() == MapperFactoryBean.class){
-                    logger.debug("\tFound repository: {}", beanDefinition.getPropertyValues().get("mapperInterface") );
+                    logger.debug("\t{}", beanDefinition.getPropertyValues().get("mapperInterface") );
                 }
             }
         }

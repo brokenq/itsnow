@@ -28,14 +28,14 @@ public class ItsnowSchemaManager extends Bean implements ItsnowSchemaService {
     @Override
     public ItsnowSchema create(ItsnowSchema creating) throws ItsnowSchemaException {
         logger.info("Creating itsnow schema: {}", creating);
-        creating.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        creating.setUpdatedAt(creating.getUpdatedAt());
         String job = systemInvokeService.addJob(creating.createJob());
         try {
             systemInvokeService.waitJobFinished(job);
         } catch (SystemInvokeException e) {
             throw new ItsnowSchemaException("Can't create schema for :" + creating, e);
         }
+        creating.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        creating.setUpdatedAt(creating.getUpdatedAt());
         repository.create(creating);
         logger.info("Created  itsnow schema: {}", creating);
         return creating;

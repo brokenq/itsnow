@@ -115,7 +115,7 @@ public class ItsnowHostsController extends SessionSupportController<ItsnowHost>{
     public void destroy() {
         logger.debug("Destroying {}", currentHost);
         try {
-            hostService.delete(currentHost.getAddress());
+            hostService.delete(currentHost);
         } catch (ItsnowHostException e) {
             throw new WebClientSideException(NOT_ACCEPTABLE, e.getMessage());
         }

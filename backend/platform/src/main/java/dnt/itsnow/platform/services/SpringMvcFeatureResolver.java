@@ -3,12 +3,15 @@
  */
 package dnt.itsnow.platform.services;
 
+import dnt.itsnow.platform.web.controller.ApplicationController;
 import dnt.util.StringUtils;
 import net.happyonroad.component.container.feature.AbstractFeatureResolver;
 import net.happyonroad.component.core.Component;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
+import org.springframework.context.annotation.ScannedGenericBeanDefinition;
 
 import static org.springframework.context.ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS;
 
@@ -62,6 +65,24 @@ public class SpringMvcFeatureResolver extends AbstractFeatureResolver {
         scanner.setResourceLoader(application);
         scanner.setIncludeAnnotationConfig(false);
         int count = scanner.scan(StringUtils.split(webRepository, CONFIG_LOCATION_DELIMITERS));
-        logger.debug("Scanned {} controllers", count);
+        if(count > 0 && logger.isDebugEnabled()){
+            logger.debug("Scanned {} controllers", count);
+            String[] names = scanner.getRegistry().getBeanDefinitionNames();
+            for (String name : names) {
+                BeanDefinition definition = scanner.getRegistry().getBeanDefinition(name);
+                if( definition instanceof ScannedGenericBeanDefinition){
+                    ScannedGenericBeanDefinition sgbd = (ScannedGenericBeanDefinition) definition;
+                    Class<?> beanClass;
+                    try {
+                        beanClass = sgbd.resolveBeanClass(application.getClassLoader());
+                    } catch (ClassNotFoundException e) {
+                        continue;
+                    }
+                    if( beanClass != null && ApplicationController.class.isAssignableFrom(beanClass)){
+                        logger.debug("\t{}", beanClass.getName());
+                    }
+                }
+            }
+        }
     }
 }
