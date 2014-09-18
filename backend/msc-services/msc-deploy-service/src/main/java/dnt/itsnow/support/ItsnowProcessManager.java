@@ -23,17 +23,13 @@ import java.util.List;
  * <h1>Itsnow Process Manager</h1>
  */
 @Service
-public class ItsnowProcessManager extends Bean implements ItsnowProcessService {
+public class ItsnowProcessManager extends ItsnowResourceManager implements ItsnowProcessService {
     @Autowired
-    ItsnowProcessRepository repository;
+    ItsnowProcessRepository    repository;
     @Autowired
-    SystemJobService        systemJobService;
+    ItsnowHostService          hostService;
     @Autowired
-    SystemInvokeService     systemInvokeService;
-    @Autowired
-    ItsnowHostService       hostService;
-    @Autowired
-    ItsnowSchemaService     schemaService;
+    ItsnowSchemaService        schemaService;
 
     @Override
     public Page<ItsnowProcess> findAll(String keyword, PageRequest request) {
@@ -56,11 +52,11 @@ public class ItsnowProcessManager extends Bean implements ItsnowProcessService {
         if (host == null)
             throw new ItsnowProcessException("Can't find itsnow host with id = " + creating.getHostId() );
         creating.setHost(host);
-        SystemJob deployJob = systemJobService.deploy(creating);
-        String jobId = systemInvokeService.addJob(deployJob);
+        SystemInvocation deployJob = translator.deploy(creating);
+        String jobId = invokeService.addJob(deployJob);
         try {
             //任务完成才会返回，如果任务失败，则抛出异常
-            systemInvokeService.waitJobFinished(jobId);
+            invokeService.waitJobFinished(jobId);
         } catch (SystemInvokeException e) {
             throw new ItsnowProcessException("Can't deploy itsnow process for " + creating, e);
         }
@@ -90,10 +86,10 @@ public class ItsnowProcessManager extends Bean implements ItsnowProcessService {
             throw new ItsnowProcessException("Can't destroy the schema used by the process", e);
         }
 
-        SystemJob undeployJob = systemJobService.undeploy(process);
-        String jobId = systemInvokeService.addJob(undeployJob);
+        SystemInvocation undeployJob = translator.undeploy(process);
+        String jobId = invokeService.addJob(undeployJob);
         try{
-            systemInvokeService.waitJobFinished(jobId);
+            invokeService.waitJobFinished(jobId);
         }catch (SystemInvokeException e){
             throw new ItsnowProcessException("Can't un-deploy itsnow process for {}", e);
         }
@@ -106,8 +102,8 @@ public class ItsnowProcessManager extends Bean implements ItsnowProcessService {
         logger.info("Starting {}", process.getName());
         if( process.getStatus() != ProcessStatus.Stopped)
             throw new ItsnowProcessException("Can't start the process with status = " + process.getStatus());
-        SystemJob startJob = systemJobService.start(process);
-        return systemInvokeService.addJob(startJob);
+        SystemInvocation startJob = translator.start(process);
+        return invokeService.addJob(startJob);
     }
 
     @Override
@@ -117,20 +113,20 @@ public class ItsnowProcessManager extends Bean implements ItsnowProcessService {
             throw new ItsnowProcessException("Can't stop the stopped process");
         if( process.getStatus() == ProcessStatus.Stopping)
             throw new ItsnowProcessException("Can't stop the stopping process");
-        SystemJob stopJob = systemJobService.stop(process);
-        return systemInvokeService.addJob(stopJob);
+        SystemInvocation stopJob = translator.stop(process);
+        return invokeService.addJob(stopJob);
     }
 
     @Override
     public void cancel(ItsnowProcess process, String job) throws ItsnowProcessException {
-        boolean finished = systemInvokeService.isFinished(job);
+        boolean finished = invokeService.isFinished(job);
         if( finished )
             throw new ItsnowProcessException("The job " + job + " is finished already!");
-        systemInvokeService.cancelJob(job);
+        invokeService.cancelJob(job);
     }
 
     @Override
     public String[] follow(ItsnowProcess process, String job, int offset) {
-        return systemInvokeService.read(job, offset);
+        return invokeService.read(job, offset);
     }
 }

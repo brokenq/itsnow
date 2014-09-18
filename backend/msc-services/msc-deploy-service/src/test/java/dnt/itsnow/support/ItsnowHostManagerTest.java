@@ -7,7 +7,7 @@ import dnt.itsnow.config.ItsnowHostManagerConfig;
 import dnt.itsnow.exception.ItsnowHostException;
 import dnt.itsnow.exception.SystemInvokeException;
 import dnt.itsnow.model.ItsnowHost;
-import dnt.itsnow.model.SystemJob;
+import dnt.itsnow.model.SystemInvocation;
 import dnt.itsnow.repository.ItsnowHostRepository;
 import dnt.itsnow.service.SystemInvokeService;
 import dnt.itsnow.util.DeployFixture;
@@ -59,7 +59,7 @@ public class ItsnowHostManagerTest {
     @Test
     public void testCreate() throws Exception {
         String jobId = "config-host-job-id";
-        expect(systemInvokeService.addJob(isA(SystemJob.class))).andReturn(jobId);
+        expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
         hostRepository.create(host);
         expectLastCall().once();
 
@@ -74,7 +74,7 @@ public class ItsnowHostManagerTest {
     @Test
     public void testDelete() throws Exception {
         String jobId = "quit-host-job-id";
-        expect(systemInvokeService.addJob(isA(SystemJob.class))).andReturn(jobId);
+        expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
         systemInvokeService.waitJobFinished(jobId);
         expectLastCall().once();
         hostRepository.deleteByAddress(host.getAddress());
@@ -89,7 +89,7 @@ public class ItsnowHostManagerTest {
     @Test
     public void testDeleteFailureWhileCanNotQuitRealHost() throws Exception {
         String jobId = "quit-host-job-id";
-        expect(systemInvokeService.addJob(isA(SystemJob.class))).andReturn(jobId);
+        expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
         systemInvokeService.waitJobFinished(jobId);
         expectLastCall().andThrow(new SystemInvokeException("configuration error"));
 

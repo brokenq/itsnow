@@ -1,0 +1,70 @@
+/**
+ * Developer: Kadvin Date: 14-9-15 下午4:14
+ */
+package dnt.itsnow.service;
+
+import dnt.itsnow.exception.SystemInvokeException;
+import dnt.itsnow.listener.SystemInvocationListener;
+import dnt.itsnow.model.SystemInvocation;
+
+/**
+ * <h1>系统调用服务</h1>
+ * TODO 本模块，包括模型，可能需要抽取到平台中
+ */
+public interface SystemInvokeService {
+    /**
+     * <h2>调度一个系统调用的任务</h2>
+     *
+     * @param invocation 任务信息
+     * @return 任务描述符
+     */
+    String addJob(SystemInvocation invocation);
+
+    /**
+     * <h2>取消执行某个任务</h2>
+     * <p/>
+     * 只有进入队列，尚未执行的任务可以正常的cancel
+     * 如果任务已经在执行了，尝试interrupt，但不保证一定能取消
+     *
+     * @param invocationId 任务描述符
+     */
+    void cancelJob(String invocationId);
+
+    /**
+     * <h2>判断某个任务是否已经完成 </h2>
+     *
+     * @param invocationId 任务描述符
+     * @return 是否完成
+     */
+    boolean isFinished(String invocationId);
+
+    /**
+     * <h2>读取特定任务的输出信息   </h2>
+     *
+     * @param invocationId    任务描述符
+     * @param offset 开始位置
+     * @return 读到的内容
+     */
+    String[] read(String invocationId, int offset);
+
+    /**
+     * <h2>等待任务结束</h2>
+     *
+     * @param invocationId 任务描述符
+     */
+    void waitJobFinished(String invocationId) throws SystemInvokeException;
+
+    /**
+     * <h2>增加一个系统任务执行的监听器</h2>
+     *
+     * @param listener 监听器
+     */
+    void addListener(SystemInvocationListener listener);
+
+    /**
+     * <h2>取消特定监听器对系统任务执行的监听</h2>
+     *
+     * @param listener 监听器
+     */
+    void removeListener(SystemInvocationListener listener);
+}

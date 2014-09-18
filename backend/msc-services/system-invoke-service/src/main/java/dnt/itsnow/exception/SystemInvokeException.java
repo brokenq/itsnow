@@ -12,4 +12,9 @@ public class SystemInvokeException extends ServiceException {
     public SystemInvokeException(String message) {
         super(message);
     }
+
+    public SystemInvokeException(String message, Exception e) {
+        super(message);
+        initCause(e);
+    }
 }

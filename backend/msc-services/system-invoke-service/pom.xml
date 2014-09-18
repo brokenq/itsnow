@@ -10,25 +10,17 @@
         <version>0.1.8-SNAPSHOT</version>
     </parent>
 
-    <artifactId>msc-deploy-service</artifactId>
-    <name>MSC Deploy Service</name>
+    <artifactId>system-invoke-service</artifactId>
+
+    <name>System Invoke Service</name>
     <description>
-        The deployment service of MSC, for msu/msp subsystem.
+        Invoke the system script
     </description>
+
     <dependencies>
         <dependency>
-            <groupId>dnt.itsnow</groupId>
-            <artifactId>mutable-account-service</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>dnt.itsnow</groupId>
-            <artifactId>mutable-user-service</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>dnt.itsnow</groupId>
-            <artifactId>system-invoke-service</artifactId>
+            <groupId>dnt.components</groupId>
+            <artifactId>config</artifactId>
         </dependency>
     </dependencies>
 
@@ -40,7 +32,8 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Service-Config>dnt.itsnow.config.DeployServiceConfig</Service-Config>
+                            <App-Config>dnt.itsnow.config.SystemInvokeAppConfig</App-Config>
+                            <Service-Config>dnt.itsnow.config.SystemInvokeServiceConfig</Service-Config>
                         </manifestEntries>
                     </archive>
                 </configuration>

@@ -60,9 +60,11 @@ public class ItsnowProcessManagerTest {
         host.setId(1L);
         schema = DeployFixture.testSchema();
         schema.setId(1L);
+        schema.setHost(host);
         process = DeployFixture.testProcess();
         process.setSchema(schema);
         process.setStatus(ProcessStatus.Stopped);
+        process.setHost(host);
     }
 
     @After
@@ -85,7 +87,7 @@ public class ItsnowProcessManagerTest {
         expect(hostService.findById(host.getId())).andReturn(host);
         expect(schemaService.create(schema)).andReturn(schema);
         String jobId = "create-process-job-id";
-        expect(systemInvokeService.addJob(isA(SystemJob.class))).andReturn(jobId);
+        expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
         systemInvokeService.waitJobFinished(jobId);
         expectLastCall().once();
         repository.create(process);
@@ -106,7 +108,7 @@ public class ItsnowProcessManagerTest {
         schemaService.delete(schema);
         expectLastCall().once();
         String jobId = "delete-process-job-id";
-        expect(systemInvokeService.addJob(isA(SystemJob.class))).andReturn(jobId);
+        expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
         systemInvokeService.waitJobFinished(jobId);
         expectLastCall().once();
         repository.deleteByName(process.getName());
@@ -124,7 +126,7 @@ public class ItsnowProcessManagerTest {
     @Test
     public void testStart() throws Exception {
         String jobId = "start-process-job-id";
-        expect(systemInvokeService.addJob(isA(SystemJob.class))).andReturn(jobId);
+        expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
 
         replay(hostService);
         replay(schemaService);
@@ -139,7 +141,7 @@ public class ItsnowProcessManagerTest {
     public void testStop() throws Exception {
         process.setStatus(ProcessStatus.Running);
         String jobId = "stop-process-job-id";
-        expect(systemInvokeService.addJob(isA(SystemJob.class))).andReturn(jobId);
+        expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
 
         replay(hostService);
         replay(schemaService);

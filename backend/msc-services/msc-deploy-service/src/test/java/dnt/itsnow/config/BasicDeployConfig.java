@@ -4,8 +4,8 @@
 package dnt.itsnow.config;
 
 import dnt.itsnow.service.SystemInvokeService;
-import dnt.itsnow.service.SystemJobService;
-import dnt.itsnow.support.SystemJobManager;
+import dnt.itsnow.service.SystemInvocationTranslator;
+import dnt.itsnow.support.SystemInvocationTranslation;
 import org.easymock.EasyMock;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,8 +17,8 @@ import org.springframework.context.annotation.Configuration;
 public class BasicDeployConfig {
 
     @Bean
-    public SystemJobService jobService(){
-        return new SystemJobManager();
+    public SystemInvocationTranslator translator(){
+        return new SystemInvocationTranslation();
     }
 
     @Bean

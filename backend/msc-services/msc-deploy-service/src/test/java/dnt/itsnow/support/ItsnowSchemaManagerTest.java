@@ -7,7 +7,7 @@ import dnt.itsnow.config.ItsnowSchemaManagerConfig;
 import dnt.itsnow.exception.ItsnowSchemaException;
 import dnt.itsnow.exception.SystemInvokeException;
 import dnt.itsnow.model.ItsnowSchema;
-import dnt.itsnow.model.SystemJob;
+import dnt.itsnow.model.SystemInvocation;
 import dnt.itsnow.repository.ItsnowSchemaRepository;
 import dnt.itsnow.service.SystemInvokeService;
 import dnt.itsnow.util.DeployFixture;
@@ -44,6 +44,7 @@ public class ItsnowSchemaManagerTest {
     @Before
     public void setUp() throws Exception {
         schema = DeployFixture.testSchema();
+        schema.setHost(DeployFixture.testHost());
     }
 
     @After
@@ -57,7 +58,7 @@ public class ItsnowSchemaManagerTest {
     @Test
     public void testCreate() throws Exception {
         String jobId = "create-schema-job-id";
-        expect(systemInvokeService.addJob(isA(SystemJob.class))).andReturn(jobId);
+        expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
         systemInvokeService.waitJobFinished(jobId);
         expectLastCall().once();
         schemaRepository.create(schema);
@@ -74,7 +75,7 @@ public class ItsnowSchemaManagerTest {
     @Test
     public void testCreateFailureWhileCanNotCreateRealSchema() throws Exception {
         String jobId = "create-schema-job-id";
-        expect(systemInvokeService.addJob(isA(SystemJob.class))).andReturn(jobId);
+        expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
         systemInvokeService.waitJobFinished(jobId);
         expectLastCall().andThrow(new SystemInvokeException("configuration error"));
 
@@ -93,7 +94,7 @@ public class ItsnowSchemaManagerTest {
     @Test
     public void testDelete() throws Exception {
         String jobId = "delete-schema-job-id";
-        expect(systemInvokeService.addJob(isA(SystemJob.class))).andReturn(jobId);
+        expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
         systemInvokeService.waitJobFinished(jobId);
         expectLastCall().once();
         schemaRepository.delete(schema);
@@ -108,7 +109,7 @@ public class ItsnowSchemaManagerTest {
     @Test
     public void testDeleteFailureWhileCanNotDestroyRealSchema() throws Exception {
         String jobId = "delete-schema-job-id";
-        expect(systemInvokeService.addJob(isA(SystemJob.class))).andReturn(jobId);
+        expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
         systemInvokeService.waitJobFinished(jobId);
         expectLastCall().andThrow(new SystemInvokeException("configuration error"));
 

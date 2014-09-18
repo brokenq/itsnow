@@ -20,6 +20,7 @@
     </description>
 
     <modules>
+        <module>system-invoke-service</module>
         <module>msc-gui-service</module>
         <module>mutable-account-service</module>
         <module>mutable-user-service</module>
@@ -64,6 +65,11 @@
             <dependency>
                 <groupId>dnt.itsnow</groupId>
                 <artifactId>mutable-service_catalog-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dnt.itsnow</groupId>
+                <artifactId>system-invoke-service</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
