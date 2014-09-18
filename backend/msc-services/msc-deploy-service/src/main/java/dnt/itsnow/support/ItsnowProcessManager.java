@@ -6,18 +6,12 @@ package dnt.itsnow.support;
 import dnt.itsnow.exception.ItsnowProcessException;
 import dnt.itsnow.exception.ItsnowSchemaException;
 import dnt.itsnow.exception.SystemInvokeException;
-import dnt.itsnow.model.ItsnowHost;
-import dnt.itsnow.model.ItsnowProcess;
-import dnt.itsnow.model.ItsnowSchema;
-import dnt.itsnow.model.ProcessStatus;
+import dnt.itsnow.model.*;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.repository.ItsnowProcessRepository;
-import dnt.itsnow.service.ItsnowHostService;
-import dnt.itsnow.service.ItsnowProcessService;
-import dnt.itsnow.service.ItsnowSchemaService;
-import dnt.itsnow.service.SystemInvokeService;
+import dnt.itsnow.service.*;
 import dnt.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +26,8 @@ import java.util.List;
 public class ItsnowProcessManager extends Bean implements ItsnowProcessService {
     @Autowired
     ItsnowProcessRepository repository;
+    @Autowired
+    SystemJobService        systemJobService;
     @Autowired
     SystemInvokeService     systemInvokeService;
     @Autowired
@@ -57,14 +53,14 @@ public class ItsnowProcessManager extends Bean implements ItsnowProcessService {
     public ItsnowProcess create(ItsnowProcess creating) throws ItsnowProcessException {
         logger.info("Creating itsnow process: {}", creating);
         ItsnowHost host = hostService.findById(creating.getHostId());
-        if(host == null)
+        if (host == null)
             throw new ItsnowProcessException("Can't find itsnow host with id = " + creating.getHostId() );
         creating.setHost(host);
-
-        String job = systemInvokeService.addJob(creating.createDeployJob());
+        SystemJob deployJob = systemJobService.deploy(creating);
+        String jobId = systemInvokeService.addJob(deployJob);
         try {
             //任务完成才会返回，如果任务失败，则抛出异常
-            systemInvokeService.waitJobFinished(job);
+            systemInvokeService.waitJobFinished(jobId);
         } catch (SystemInvokeException e) {
             throw new ItsnowProcessException("Can't deploy itsnow process for " + creating, e);
         }
@@ -93,9 +89,11 @@ public class ItsnowProcessManager extends Bean implements ItsnowProcessService {
         } catch (ItsnowSchemaException e) {
             throw new ItsnowProcessException("Can't destroy the schema used by the process", e);
         }
-        String job = systemInvokeService.addJob(process.createUndeployJob());
+
+        SystemJob undeployJob = systemJobService.undeploy(process);
+        String jobId = systemInvokeService.addJob(undeployJob);
         try{
-            systemInvokeService.waitJobFinished(job);
+            systemInvokeService.waitJobFinished(jobId);
         }catch (SystemInvokeException e){
             throw new ItsnowProcessException("Can't un-deploy itsnow process for {}", e);
         }
@@ -108,7 +106,8 @@ public class ItsnowProcessManager extends Bean implements ItsnowProcessService {
         logger.info("Starting {}", process.getName());
         if( process.getStatus() != ProcessStatus.Stopped)
             throw new ItsnowProcessException("Can't start the process with status = " + process.getStatus());
-        return systemInvokeService.addJob(process.createStartJob());
+        SystemJob startJob = systemJobService.start(process);
+        return systemInvokeService.addJob(startJob);
     }
 
     @Override
@@ -118,7 +117,8 @@ public class ItsnowProcessManager extends Bean implements ItsnowProcessService {
             throw new ItsnowProcessException("Can't stop the stopped process");
         if( process.getStatus() == ProcessStatus.Stopping)
             throw new ItsnowProcessException("Can't stop the stopping process");
-        return systemInvokeService.addJob(process.createStopJob());
+        SystemJob stopJob = systemJobService.stop(process);
+        return systemInvokeService.addJob(stopJob);
     }
 
     @Override

@@ -116,21 +116,4 @@ public class ItsnowProcess extends ConfigItem{
         this.configuration = configuration;
     }
 
-    public SystemJob createStartJob() {
-        return new SystemJob(getHost(), getWd(), "bin/start.sh");
-    }
-
-    public SystemJob createStopJob() {
-        return new SystemJob(getHost(), getWd(), "bin/stop.sh");
-    }
-
-    public SystemJob createDeployJob() {
-        // null 代表在系统默认目录
-        return new SystemJob(getHost(), null, "system/deploy.sh " + getWd() + " " + getName());
-    }
-
-    public SystemJob createUndeployJob() {
-        // null 代表在系统默认目录
-        return new SystemJob(getHost(), null, "system/undeploy.sh " + getWd() + " " + getName());
-    }
 }

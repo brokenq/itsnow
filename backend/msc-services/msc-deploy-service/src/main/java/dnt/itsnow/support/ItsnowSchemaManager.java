@@ -6,9 +6,11 @@ package dnt.itsnow.support;
 import dnt.itsnow.exception.ItsnowSchemaException;
 import dnt.itsnow.exception.SystemInvokeException;
 import dnt.itsnow.model.ItsnowSchema;
+import dnt.itsnow.model.SystemJob;
 import dnt.itsnow.repository.ItsnowSchemaRepository;
 import dnt.itsnow.service.ItsnowSchemaService;
 import dnt.itsnow.service.SystemInvokeService;
+import dnt.itsnow.service.SystemJobService;
 import dnt.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,12 +25,15 @@ public class ItsnowSchemaManager extends Bean implements ItsnowSchemaService {
     @Autowired
     ItsnowSchemaRepository repository;
     @Autowired
-    SystemInvokeService systemInvokeService;
+    SystemJobService       systemJobService;
+    @Autowired
+    SystemInvokeService    systemInvokeService;
 
     @Override
     public ItsnowSchema create(ItsnowSchema creating) throws ItsnowSchemaException {
         logger.info("Creating itsnow schema: {}", creating);
-        String job = systemInvokeService.addJob(creating.createJob());
+        SystemJob createJob = systemJobService.create(creating);
+        String job = systemInvokeService.addJob(createJob);
         try {
             systemInvokeService.waitJobFinished(job);
         } catch (SystemInvokeException e) {
@@ -44,7 +49,8 @@ public class ItsnowSchemaManager extends Bean implements ItsnowSchemaService {
     @Override
     public void delete(ItsnowSchema schema) throws ItsnowSchemaException {
         logger.warn("Deleting itsnow schema: {}", schema);
-        String job = systemInvokeService.addJob(schema.dropJob());
+        SystemJob dropJob = systemJobService.drop(schema);
+        String job = systemInvokeService.addJob(dropJob);
         try {
             systemInvokeService.waitJobFinished(job);
         } catch (SystemInvokeException e) {

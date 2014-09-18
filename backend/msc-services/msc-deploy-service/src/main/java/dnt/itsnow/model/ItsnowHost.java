@@ -83,12 +83,4 @@ public class ItsnowHost extends ConfigItem
         result = 31 * result + (configuration != null ? configuration.hashCode() : 0);
         return result;
     }
-
-    public SystemJob configJob() {
-        return new SystemJob(this, "/opt", "provision_host.sh");
-    }
-
-    public SystemJob quitJob() {
-        return new SystemJob(this, "/opt", "quit_host.sh");
-    }
 }

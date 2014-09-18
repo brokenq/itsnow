@@ -6,12 +6,14 @@ package dnt.itsnow.support;
 import dnt.itsnow.exception.ItsnowHostException;
 import dnt.itsnow.exception.SystemInvokeException;
 import dnt.itsnow.model.ItsnowHost;
+import dnt.itsnow.model.SystemJob;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.repository.ItsnowHostRepository;
 import dnt.itsnow.service.ItsnowHostService;
 import dnt.itsnow.service.SystemInvokeService;
+import dnt.itsnow.service.SystemJobService;
 import dnt.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,8 @@ import java.util.List;
 public class ItsnowHostManager extends Bean implements ItsnowHostService {
     @Autowired
     ItsnowHostRepository repository;
+    @Autowired
+    SystemJobService     systemJobService;
     @Autowired
     SystemInvokeService  systemInvokeService;
 
@@ -66,11 +70,12 @@ public class ItsnowHostManager extends Bean implements ItsnowHostService {
     @Override
     public ItsnowHost create(ItsnowHost creating) throws ItsnowHostException {
         logger.info("Creating host {}", creating);
+        SystemJob configJob = systemJobService.config(creating);
         //需要在create主机之后，执行脚本，将主机环境配置好
         // 实际的流程是，it，运营人员开好一个虚拟机，而后通过msc的界面输入该虚拟机的信息
         // 通过调用本api创建itsnow的主机，而后本api就会自动配置该主机
         // 配置的环境内容包括: java, mysql, redis, msc, msu, msp的部署
-        systemInvokeService.addJob(creating.configJob());
+        systemInvokeService.addJob(configJob);
         // 这里不等待该任务结束，因为configure主机可能时间很长
         // 采用主机状态管理方式，也就是刚刚创建的主机处于configure状态，configure好了之后处于ready状态
         creating.setCreatedAt(new Timestamp(System.currentTimeMillis()));
@@ -82,7 +87,8 @@ public class ItsnowHostManager extends Bean implements ItsnowHostService {
 
     @Override
     public void delete(ItsnowHost host) throws ItsnowHostException {
-        String quitJobId = systemInvokeService.addJob(host.quitJob());
+        SystemJob quitJob = systemJobService.quit(host);
+        String quitJobId = systemInvokeService.addJob(quitJob);
         try {
             systemInvokeService.waitJobFinished(quitJobId);
         } catch (SystemInvokeException e) {

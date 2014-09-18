@@ -31,15 +31,4 @@ public class DeployRepositoryConfig extends RepositoryConfigWithH2  {
                 "classpath:META-INF/migrate/20140827142851_insert_itsnow_processes.sql@up"
         };
     }
-
-/*
-    public BeanFilter repositoryFilter(){
-        return this;
-    }
-
-    @Override
-    public boolean accept(String beanName, BeanDefinition definition) {
-        return !beanName.equals("commonAccountRepository");
-    }
-*/
 }
