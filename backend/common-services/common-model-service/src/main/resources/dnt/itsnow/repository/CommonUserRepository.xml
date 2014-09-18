@@ -22,7 +22,7 @@
     <resultMap id="userResult" type="User" autoMapping="true">
         <result column="account_id" property="accountId"/>
     </resultMap>
-    <resultMap id="userWithAccount" type="User" extends="userResult">
+    <resultMap id="userWithAccount" type="User" autoMapping="true">
         <association property="account" resultMap="dnt.itsnow.repository.CommonAccountRepository.accountResult" columnPrefix="account_"/>
     </resultMap>
 

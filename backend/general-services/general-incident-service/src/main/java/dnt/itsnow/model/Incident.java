@@ -6,7 +6,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import java.sql.Timestamp;
 
 /**
- * Created by jacky on 2014/7/28.
+ * <h1>Incident实体类</h1>
  */
 public class Incident extends Record {
 
@@ -305,5 +305,25 @@ public class Incident extends Record {
 
     public void setUpdatedBy(String updatedBy) {
         this.updatedBy = updatedBy;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Incident)) return false;
+        if (!super.equals(o)) return false;
+
+        Incident incident = (Incident) o;
+
+        if (!number.equals(incident.number)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + number.hashCode();
+        return result;
     }
 }

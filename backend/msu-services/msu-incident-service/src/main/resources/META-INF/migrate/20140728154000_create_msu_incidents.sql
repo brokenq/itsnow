@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS msu_incidents;
 CREATE TABLE msu_incidents (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
   number varchar(32) NOT NULL COMMENT '故障单号，系统自动生成，生成规则:INC20140801111700001',
@@ -36,9 +37,9 @@ CREATE TABLE msu_incidents (
   msp_status varchar(255) DEFAULT NULL COMMENT 'MSP当前状态',
   PRIMARY KEY (id),
   UNIQUE KEY number_UNIQUE (number)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+);
 
 
 -- //@UNDO
 
-DROP TABLE msu_incidents;
+DROP TABLE IF EXISTS msu_incidents;

@@ -3,7 +3,7 @@ package dnt.itsnow.model;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
- * Created by jacky on 2014/9/10.
+ * <h1>MsuIncidentTask实体类</h1>
  */
 public class MsuIncidentTask {
 

@@ -18,7 +18,7 @@ public interface MsuIncidentService {
      * @param pageable 分页请求
      * @return 故障分页数据
      */
-    Page<Incident> findByUserAndKey(String username, String keyword, Pageable pageable);
+    Page<Incident> findAllByUserAndKey(String username, String keyword, Pageable pageable);
 
     /**
      * <h2>根据用户名和流程KEY查询已关闭故障列表</h2>

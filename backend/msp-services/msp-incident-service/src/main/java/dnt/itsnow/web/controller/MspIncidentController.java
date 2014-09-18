@@ -6,7 +6,7 @@ import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.platform.web.annotation.AfterFilter;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
-import dnt.itsnow.support.MspIncidentManager;
+import dnt.itsnow.service.MspIncidentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * <h1>MSU Incident服务的控制器</h1>
  * <pre>
- * <b>HTTP     URI                                方法            含义  </b>
+ * <b>HTTP     URI                                    方法            含义  </b>
  * # GET      /api/msp-incidents/                     index           列出所有当前用户的故障单列表，支持过滤，分页，排序等
  * # GET      /api/msp-incidents/closed               indexClosed     列出当前用户已关闭故障单列表
  * # POST     /api/msp-incidents/start                start           启动故障流程实例
@@ -30,13 +30,13 @@ import java.util.List;
 public class MspIncidentController extends SessionSupportController<Incident> {
 
     @Autowired
-    MspIncidentManager mspIncidentManager;
+    MspIncidentService mspIncidentService;
 
     /**
      * <h2>查询所有当前用户的故障单列表</h2>
      * <p/>
      * GET /api/msp-incidents
-     *
+     * @param key 查询关键字
      * @return  Incident列表
      */
     @RequestMapping()
@@ -44,7 +44,7 @@ public class MspIncidentController extends SessionSupportController<Incident> {
     public List<Incident> index(@RequestParam(value = "key", required = false) String key) {
 
         //根据实例查询对应表单数据
-        indexPage = mspIncidentManager.findByUserAndKey(currentUser.getUsername(), key, pageRequest);
+        indexPage = mspIncidentService.findByUserAndKey(currentUser.getUsername(), key, pageRequest);
         return indexPage.getContent();
     }
 
@@ -52,7 +52,7 @@ public class MspIncidentController extends SessionSupportController<Incident> {
      * <h2>查询当前用户的已关闭故障单列表</h2>
      * <p/>
      * GET /api/msp-incidents/closed
-     *
+     * @param key 查询关键字
      * @return  Incident列表
      */
     @RequestMapping(value = "/closed")
@@ -60,7 +60,7 @@ public class MspIncidentController extends SessionSupportController<Incident> {
     public List<Incident> indexClosed(@RequestParam(value = "key", required = false) String key) {
 
         //根据实例查询对应表单数据
-        indexPage = mspIncidentManager.findClosedByUserAndKey(currentUser.getUsername(), key, pageRequest);
+        indexPage = mspIncidentService.findClosedByUserAndKey(currentUser.getUsername(), key, pageRequest);
         return indexPage.getContent();
     }
 
@@ -69,7 +69,8 @@ public class MspIncidentController extends SessionSupportController<Incident> {
      * <h2>查询流程实例ID对应的故障单信息</h2>
      * <p/>
      * GET /api/msp-incidents/{instanceId}
-     *
+     * @param instanceId 流程实例ID
+     * @param withHistory 是否返回历史记录
      * @return 故障单信息以及当前的task列表
      */
     @RequestMapping(value = "/{instanceId}")
@@ -77,20 +78,20 @@ public class MspIncidentController extends SessionSupportController<Incident> {
     public MspIncident query(@PathVariable("instanceId") String instanceId,
                              @RequestParam(value = "withHistory", required = false) boolean withHistory) {
 
-        return mspIncidentManager.findByInstanceId(instanceId,withHistory);
+        return mspIncidentService.findByInstanceId(instanceId,withHistory);
     }
 
     /**
      * <h2>启动MSU Incident流程实例</h2>
      * <p/>
      * POST /api/msp-incidents/start
-     *
+     * @param incident 故障表单
      * @return 创建之后的流程实例信息
      */
     @RequestMapping(value = "/start",method = RequestMethod.POST)
     @ResponseBody
     public MspIncident start(@RequestBody @Valid Incident incident){
-        return mspIncidentManager.startIncident(mainAccount.getName(), this.currentUser.getUsername(),incident);
+        return mspIncidentService.startIncident(mainAccount.getName(), this.currentUser.getUsername(),incident);
     }
 
     /**
@@ -98,12 +99,14 @@ public class MspIncidentController extends SessionSupportController<Incident> {
      * <p/>
      * PUT /api/msp-incidents/{instanceId}/{taskId}/complete
      * @param taskId    任务ID
+     * @param instanceId 流程实例ID
+     * @param incident 故障表单
      * @return MspIncident
      */
     @RequestMapping(value = "/{instanceId}/{taskId}/complete",method = RequestMethod.PUT)
     @ResponseBody
     public MspIncident complete(@PathVariable("instanceId") String instanceId,@PathVariable("taskId") String taskId,@RequestBody @Valid Incident incident){
-        return mspIncidentManager.processIncident(instanceId,taskId,currentUser.getUsername(),incident);
+        return mspIncidentService.processIncident(instanceId,taskId,currentUser.getUsername(),incident);
     }
 
 
@@ -124,7 +127,5 @@ public class MspIncidentController extends SessionSupportController<Incident> {
         response.setHeader(Page.REAL, String.valueOf(indexPage.getNumberOfElements()));
         response.setHeader(Page.SORT, String.valueOf(indexPage.getSort()));
     }
-
-
 
 }

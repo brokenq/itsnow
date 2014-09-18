@@ -17,6 +17,7 @@ import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -24,6 +25,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@Transactional
 public class MspEventListener extends Bean implements ActivitiEventListener, MessageListener {
 
     @Autowired
@@ -43,9 +45,13 @@ public class MspEventListener extends Bean implements ActivitiEventListener, Mes
     String accountName="DNT";
     String username = "jacky.cao";
 
+    /**
+     * 监听事件
+     * @param activitiEvent
+     */
     @Override
     public void onEvent(ActivitiEvent activitiEvent) {
-        logger.debug("msp incident event:{},pid {}",new Object[]{activitiEvent.getType().toString(),activitiEvent.getProcessInstanceId()});
+        logger.debug("msp incident event:{},pid {}", new Object[]{activitiEvent.getType().toString(), activitiEvent.getProcessInstanceId()});
         ProcessDefinition processDefinition = activitiEvent.getEngineServices().getRepositoryService().createProcessDefinitionQuery().processDefinitionId(activitiEvent.getProcessDefinitionId()).singleResult();
         if(!processDefinition.getKey().equals(MspIncidentManager.PROCESS_KEY))
             return;
@@ -56,31 +62,43 @@ public class MspEventListener extends Bean implements ActivitiEventListener, Mes
             logger.debug("task id:{},name:{},desc:{},assignee:{},time:{}", task.getId(), task.getName(), task.getDescription(), task.getAssignee(), task.getCreateTime());
 
             if(task.getDescription().equals(IncidentStatus.Assigned.toString())) {
-                this.processAssignedEvent(incident);
+                this.processAssignedOrResolvedOrClosedEvent(incident,IncidentStatus.Assigned);
             }else if(task.getDescription().equals(IncidentStatus.Accepted.toString())) {
-                this.processAcceptEvent(activitiEvent.getEngineServices(),task,incident);
+                this.processAcceptedOrAnalysisEvent(activitiEvent.getEngineServices(),task,incident,IncidentStatus.Accepted);
             }else if(task.getDescription().equals(IncidentStatus.Resolving.toString())){
-                this.processAnalysisEvent(activitiEvent.getEngineServices(), task, incident);
+                this.processAcceptedOrAnalysisEvent(activitiEvent.getEngineServices(), task, incident,IncidentStatus.Resolving);
             }else if(task.getDescription().equals(IncidentStatus.Resolved.toString())) {
-                this.processResolvedEvent(incident);
+                this.processAssignedOrResolvedOrClosedEvent(incident,IncidentStatus.Resolved);
             }else if(task.getDescription().equals(IncidentStatus.Closed.toString())) {
-                this.processCloseEvent(incident);
+                this.processAssignedOrResolvedOrClosedEvent(incident,IncidentStatus.Closed);
             }
             //send message to msu
             this.sendMessageToMsu(activitiEvent.getProcessInstanceId());
         }
     }
 
-    private void processAssignedEvent(Incident incident){
-        incident.setMspStatus(IncidentStatus.Assigned);
+    /**
+     * 处理分配/解决/关闭事件
+     * @param incident 故障表单
+     * @param incidentStatus 故障状态
+     */
+    private void processAssignedOrResolvedOrClosedEvent(Incident incident,IncidentStatus incidentStatus){
+        incident.setMspStatus(incidentStatus);
         incident.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         incident.setResolveTime(incident.getUpdatedAt());
         mspIncidentRepository.update(incident);
     }
 
-    private void processAcceptEvent(EngineServices engineServices,Task task,Incident incident){
+    /**
+     * 处理签收/分析事件
+     * @param engineServices 引擎服务
+     * @param task 任务
+     * @param incident 故障表单
+     * @param incidentStatus 故障状态
+     */
+    private void processAcceptedOrAnalysisEvent(EngineServices engineServices,Task task,Incident incident,IncidentStatus incidentStatus){
 
-        incident.setMspStatus(IncidentStatus.Accepted);
+        incident.setMspStatus(incidentStatus);
         incident.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         incident.setResponseTime(incident.getUpdatedAt());
         List<IdentityLink> identityLinkList = engineServices.getTaskService().getIdentityLinksForTask(task.getId());
@@ -94,35 +112,10 @@ public class MspEventListener extends Bean implements ActivitiEventListener, Mes
         mspIncidentRepository.update(incident);
     }
 
-    private void processAnalysisEvent(EngineServices engineServices,Task task,Incident incident){
-
-        incident.setMspStatus(IncidentStatus.Resolving);
-        incident.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-        List<IdentityLink> identityLinkList = engineServices.getTaskService().getIdentityLinksForTask(task.getId());
-        for(IdentityLink link:identityLinkList){
-            logger.debug("task assign type:{} user:{} group:{}",link.getType(),link.getUserId(),link.getGroupId());
-            incident.setAssignedGroup(link.getGroupId());
-        }
-        engineServices.getTaskService().setAssignee(task.getId(), incident.getUpdatedBy());
-
-        //update incident
-        mspIncidentRepository.update(incident);
-    }
-
-    private void processResolvedEvent(Incident incident){
-        incident.setMspStatus(IncidentStatus.Resolved);
-        incident.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-        incident.setResolveTime(incident.getUpdatedAt());
-        mspIncidentRepository.update(incident);
-    }
-
-    private void processCloseEvent(Incident incident){
-        incident.setMspStatus(IncidentStatus.Closed);
-        incident.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-        incident.setCloseTime(incident.getUpdatedAt());
-        mspIncidentRepository.update(incident);
-    }
-
+    /**
+     * 发送消息至MSU
+     * @param instanceId 流程实例ID
+     */
     private void sendMessageToMsu(String instanceId){
         Incident incident = mspIncidentRepository.findByInstanceId(instanceId);
         messageBus.publish(MspIncidentManager.getSendChannel(), JsonSupport.toJSONString(incident));
@@ -138,6 +131,11 @@ public class MspEventListener extends Bean implements ActivitiEventListener, Mes
         return false;
     }
 
+    /**
+     * 收到MSU发送过来的消息，新建或者更新故障表单
+     * @param channel 消息通道
+     * @param message 消息
+     */
     @Override
     public void onMessage(String channel, String message) {
         logger.debug("receive channel:{}, string message:{}",channel,message);
@@ -146,6 +144,10 @@ public class MspEventListener extends Bean implements ActivitiEventListener, Mes
         this.saveOrUpdateIncident(incident);
     }
 
+    /**
+     * 根据MSU的故障表单启动故障流程或者更新故障表单
+     * @param incident
+     */
     private void saveOrUpdateIncident(Incident incident){
         long count = mspIncidentRepository.countByMsuAccountNameAndInstanceId(incident.getMsuAccountName(),incident.getMsuInstanceId());
         if(count > 0){

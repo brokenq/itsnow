@@ -56,32 +56,6 @@ public interface MspIncidentRepository {
             " WHERE `msp_instance_id` = #{mspInstanceId};")
     void update(Incident incident);
 
-    @Update("UPDATE `msp_incidents` SET "+
-            "msp_status = #{mspStatus} "+
-            "WHERE msp_instance_id = #{mspInstanceId};")
-    void updateStatus(@Param("mspInstanceId") String mspInstanceId,@Param("mspStatus") String mspStatus);
-
-    @Update("UPDATE `msp_incidents` SET " +
-            "response_time = CURRENT_TIMESTAMP " +
-            "WHERE msp_instance_id = #{mspInstanceId};")
-    void updateResponseTime(@Param("mspInstanceId") String mspInstanceId);
-
-    @Update("UPDATE `msp_incidents` SET " +
-            "resolve_time = CURRENT_TIMESTAMP " +
-            "WHERE msp_instance_id = #{mspInstanceId};")
-    void updateResolveTime(@Param("mspInstanceId") String mspInstanceId);
-
-    @Update("UPDATE `msp_incidents` SET " +
-            "close_time = CURRENT_TIMESTAMP " +
-            "WHERE msp_instance_id = #{mspInstanceId};")
-    void updateCloseTime(@Param("mspInstanceId") String mspInstanceId);
-
-    @Update("UPDATE `msp_incidents` SET " +
-            "close_time = CURRENT_TIMESTAMP," +
-            "close_code = #{closeCode} " +
-            "WHERE id = #{id}")
-    void close(Incident incident);
-
     @Select("select count(0) from msp_incidents where msu_account_name = #{msuAccountName} and msu_instance_id = #{msuInstanceId}")
     long countByMsuAccountNameAndInstanceId(@Param("msuAccountName") String msuAccountName,
                                             @Param("msuInstanceId") String msuInstanceId);

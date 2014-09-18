@@ -18,6 +18,11 @@ public class MutableContractManager extends CommonContractManager implements Mut
     @Autowired
     MutableContractRepository mutableContractRepository;
 
+    /**
+     * 创建合同，目前只允许MSU创建
+     * @param contract 合同信息
+     * @return 创建后的合同信息
+     */
     @Override
     public Contract create(Contract contract) {
         contract.setCreatedAt(new Timestamp(System.currentTimeMillis()));
@@ -26,6 +31,11 @@ public class MutableContractManager extends CommonContractManager implements Mut
         return contract;
     }
 
+    /**
+     * 更新合同信息
+     * @param contract 合同信息
+     * @return 更新后的合同信息
+     */
     @Override
     public Contract update(Contract contract) {
         contract.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
@@ -33,6 +43,11 @@ public class MutableContractManager extends CommonContractManager implements Mut
         return contract;
     }
 
+    /**
+     * MSP投标，更新合同状态
+     * @param contract 合同信息
+     * @return 更新后的合同信息
+     */
     @Override
     public Contract bid(Contract contract) {
         contract.setMspStatus(ContractStatus.Purposed);
@@ -41,6 +56,11 @@ public class MutableContractManager extends CommonContractManager implements Mut
         return contract;
     }
 
+    /**
+     * MSU确认合同
+     * @param contract 合同信息
+     * @return 更新后的合同信息
+     */
     @Override
     public Contract approve(Contract contract) {
         contract.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
@@ -49,6 +69,11 @@ public class MutableContractManager extends CommonContractManager implements Mut
         return contract;
     }
 
+    /**
+     * MSU拒绝合同
+     * @param contract 合同信息
+     * @return 更新后的合同信息
+     */
     @Override
     public Contract reject(Contract contract) {
         contract.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
@@ -57,6 +82,10 @@ public class MutableContractManager extends CommonContractManager implements Mut
         return contract;
     }
 
+    /**
+     * 删除合同
+     * @param contract 合同信息
+     */
     @Override
     public void delete(Contract contract) {
         //delete contract

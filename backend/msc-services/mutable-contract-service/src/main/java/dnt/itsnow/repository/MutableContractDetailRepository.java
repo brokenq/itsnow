@@ -4,7 +4,7 @@ import dnt.itsnow.model.ContractDetail;
 import org.apache.ibatis.annotations.*;
 
 /**
- * Created by jacky on 2014/9/4.
+ * <h1>ContractDetail Repository</h1>.
  */
 public interface MutableContractDetailRepository {
 

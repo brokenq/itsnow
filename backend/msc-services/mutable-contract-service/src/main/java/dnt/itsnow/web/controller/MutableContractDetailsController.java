@@ -19,6 +19,13 @@ import java.util.List;
 
 /**
  * <h1>Contracts Controller</h1>
+ * * <pre>
+ * <b>HTTP     URI                                      方法       含义  </b>
+ * # GET      /admin/api/contracts/{sn}/details         index     列出所有合同详情，支持过滤，分页，排序等
+ * # POST     /admin/api/contracts/{sn}/details         create    创建合同详情
+ * # PUT      /admin/api/contracts/{sn}/details/{id}    update    修改合同详情，账户信息通过HTTP BODY提交
+ * # DELETE   /admin/api/contracts/{sn}/details/{id}    destroy   删除合同详情
+ *
  */
 @RestController
 @RequestMapping("/admin/api/contracts/{sn}/details")
@@ -36,7 +43,7 @@ public class MutableContractDetailsController extends SessionSupportController<C
     /**
      * <h2>查看当特定合同下的所有明细</h2>
      * <p/>
-     * GET /api/contracts/{sn}/details
+     * GET /admin/api/contracts/{sn}/details
      *
      * @return 合同明细列表
      */

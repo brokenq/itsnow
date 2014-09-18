@@ -7,6 +7,9 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <h1>MsuIncident实体类</h1>
+ */
 public class MsuIncident {
 
     @NotNull

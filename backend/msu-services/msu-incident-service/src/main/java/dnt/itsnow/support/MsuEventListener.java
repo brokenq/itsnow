@@ -26,10 +26,11 @@ public class MsuEventListener extends Bean implements ActivitiEventListener, Mes
     MessageBus messageBus;
 
     @Autowired
-    MsuIncidentRepository msuIncidentRepository;
+    MsuIncidentRepository repository;
 
     /**
      * <h2>接收Activiti流程事件，根据故障流程中不同的状态执行不同的操作</h2>
+     * @param activitiEvent 事件
      */
     @Override
     public void onEvent(ActivitiEvent activitiEvent) {
@@ -38,7 +39,7 @@ public class MsuEventListener extends Bean implements ActivitiEventListener, Mes
         if(!processDefinition.getKey().equals(MsuIncidentManager.PROCESS_KEY))
             return;
         Task task = activitiEvent.getEngineServices().getTaskService().createTaskQuery().processInstanceId(activitiEvent.getProcessInstanceId()).singleResult();
-        Incident incident = msuIncidentRepository.findByInstanceId(activitiEvent.getProcessInstanceId());
+        Incident incident = repository.findByInstanceId(activitiEvent.getProcessInstanceId());
 
         if(task != null) {
             logger.debug("task id:{},name:{},desc:{},assignee:{},time:{}", task.getId(), task.getName(), task.getDescription(), task.getAssignee(), task.getCreateTime());
@@ -77,7 +78,7 @@ public class MsuEventListener extends Bean implements ActivitiEventListener, Mes
         }
         engineServices.getTaskService().setAssignee(task.getId(), incident.getUpdatedBy());
         //update incident
-        msuIncidentRepository.update(incident);
+        repository.update(incident);
     }
 
     /**
@@ -90,7 +91,7 @@ public class MsuEventListener extends Bean implements ActivitiEventListener, Mes
         incident.setMsuStatus(incidentStatus);
         incident.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         incident.setResolveTime(incident.getUpdatedAt());
-        msuIncidentRepository.update(incident);
+        repository.update(incident);
     }
 
     /**
@@ -98,7 +99,7 @@ public class MsuEventListener extends Bean implements ActivitiEventListener, Mes
      * @param instanceId 流程实例ID
      */
     private void sendMessageToMsp(String instanceId){
-        Incident incident = msuIncidentRepository.findByInstanceId(instanceId);
+        Incident incident = repository.findByInstanceId(instanceId);
         messageBus.publish(MsuIncidentManager.getSendChannel(), JsonSupport.toJSONString(incident));
     }
 
@@ -130,7 +131,7 @@ public class MsuEventListener extends Bean implements ActivitiEventListener, Mes
      * @param incident 故障表单数据
      */
     private void updateIncident(Incident incident){
-        msuIncidentRepository.update(incident);
+        repository.update(incident);
     }
 
     @Override

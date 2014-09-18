@@ -2,8 +2,6 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.Incident;
 import dnt.itsnow.model.MsuIncident;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.platform.web.annotation.AfterFilter;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.service.MsuIncidentService;
@@ -30,7 +28,7 @@ import java.util.List;
 public class MsuIncidentController extends SessionSupportController<Incident> {
 
     @Autowired
-    MsuIncidentService msuIncidentService;
+    MsuIncidentService service;
 
     /**
      * <h2>查询所有当前用户的故障单列表</h2>
@@ -43,7 +41,7 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
     public List<Incident> index(@RequestParam(value = "key", required = false) String key) {
 
         //根据实例查询对应表单数据
-        indexPage = msuIncidentService.findByUserAndKey(currentUser.getUsername(), key, pageRequest);
+        indexPage = service.findAllByUserAndKey(currentUser.getUsername(), key, pageRequest);
         return indexPage.getContent();
     }
 
@@ -54,12 +52,12 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
      * @param key 查询关键字
      * @return  Incident列表
      */
-    @RequestMapping(value = "/closed")
+    @RequestMapping("closed")
     @ResponseBody
     public List<Incident> indexClosed(@RequestParam(value = "key", required = false) String key) {
 
         //根据实例查询对应表单数据
-        indexPage = msuIncidentService.findAllClosedByUserAndKey(currentUser.getUsername(), key, pageRequest);
+        indexPage = service.findAllClosedByUserAndKey(currentUser.getUsername(), key, pageRequest);
         return indexPage.getContent();
     }
 
@@ -72,12 +70,12 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
      * @param withHistory 是否返回历史信息
      * @return 故障单信息以及当前的task列表
      */
-    @RequestMapping(value = "/{instanceId}")
+    @RequestMapping("{instanceId}")
     @ResponseBody
     public MsuIncident query(@PathVariable("instanceId") String instanceId,
                                     @RequestParam(value = "withHistory", required = false) boolean withHistory) {
 
-       return msuIncidentService.findByInstanceId(instanceId,withHistory);
+       return service.findByInstanceId(instanceId,withHistory);
     }
 
     /**
@@ -87,10 +85,10 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
      * @param incident 故障表单
      * @return 故障信息
      */
-    @RequestMapping(value = "/start",method = RequestMethod.POST)
+    @RequestMapping(value = "start",method = RequestMethod.POST)
     @ResponseBody
     public MsuIncident start(@RequestBody @Valid Incident incident){
-        return msuIncidentService.startIncident(mainAccount.getName(), this.currentUser.getUsername(),incident);
+        return service.startIncident(mainAccount.getName(), this.currentUser.getUsername(),incident);
     }
 
     /**
@@ -102,10 +100,10 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
      * @param incident 故障表单
      * @return MsuIncident
      */
-    @RequestMapping(value = "/{instanceId}/{taskId}/complete",method = RequestMethod.PUT)
+    @RequestMapping(value = "{instanceId}/{taskId}/complete",method = RequestMethod.PUT)
     @ResponseBody
     public MsuIncident complete(@PathVariable("instanceId") String instanceId,@PathVariable("taskId") String taskId,@RequestBody @Valid Incident incident){
-        return msuIncidentService.processIncident(instanceId,taskId,currentUser.getUsername(),incident);
+        return service.processIncident(instanceId,taskId,currentUser.getUsername(),incident);
     }
 
     @Override
@@ -113,19 +111,13 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
     public void initDefaultPageRequest( @RequestParam(required = false, value = "page", defaultValue = "0") int page,
                                         @RequestParam(required = false, value = "size", defaultValue = "40") int size,
                                         @RequestParam(required = false, value = "sort", defaultValue = "") String sort){
-        //Sort theSort = null;
-        pageRequest = new PageRequest(page-1, size, null);
+        super.initDefaultPageRequest(page,size,sort);
     }
 
     @Override
     @AfterFilter(method =  RequestMethod.GET, value = {"index","indexClosed"})
     public void renderPageToHeader(HttpServletResponse response){
-        if( indexPage == null ) return;
-        response.setHeader(Page.TOTAL, String.valueOf(indexPage.getTotalElements()));
-        response.setHeader(Page.PAGES, String.valueOf(indexPage.getTotalPages()));
-        response.setHeader(Page.NUMBER, String.valueOf(indexPage.getNumber()));
-        response.setHeader(Page.REAL, String.valueOf(indexPage.getNumberOfElements()));
-        response.setHeader(Page.SORT, String.valueOf(indexPage.getSort()));
+        super.renderPageToHeader(response);
     }
 
 }
