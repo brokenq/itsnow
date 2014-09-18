@@ -4,7 +4,7 @@ import dnt.itsnow.model.Contract;
 import org.apache.ibatis.annotations.*;
 
 /**
- * Created by jacky on 2014/9/4.
+ * <h1>Contract Repository</h1>
  */
 public interface MutableContractRepository extends CommonContractRepository{
 
@@ -38,7 +38,7 @@ public interface MutableContractRepository extends CommonContractRepository{
     /**
      * <h2>MSP投标</h2>
      *
-     * 将合同的msp状态修改为 Valid
+     * 将合同的msp状态修改为 Proposed
      *
      * @param contract 被修改的合同对象
      */

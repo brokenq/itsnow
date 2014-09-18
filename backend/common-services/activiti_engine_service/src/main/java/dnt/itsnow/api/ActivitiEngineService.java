@@ -79,4 +79,5 @@ public interface ActivitiEngineService {
 
     void addEventListener(ActivitiEventListener listenerToAdd,ActivitiEventType activitiEventType);
 
+    void removeEventListener(ActivitiEventListener listenerToRemove);
 }

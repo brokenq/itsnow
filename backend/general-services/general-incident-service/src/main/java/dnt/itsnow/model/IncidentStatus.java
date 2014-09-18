@@ -1,7 +1,7 @@
 package dnt.itsnow.model;
 
 /**
- * Created by jacky on 2014/8/5.
+ * <H1>IncidentStatus枚举</H1>
  */
 public enum IncidentStatus {
     New,Assigned,Accepted,Resolving,Resolved,Closed

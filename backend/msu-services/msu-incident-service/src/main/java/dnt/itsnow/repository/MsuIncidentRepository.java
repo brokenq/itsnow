@@ -11,17 +11,19 @@ import java.util.List;
  */
 public interface MsuIncidentRepository {
 
-    @Select("select * from msu_incidents where msu_instance_id = #{id}")
+    @Select("SELECT * FROM msu_incidents WHERE msu_instance_id = #{id}")
     Incident findByInstanceId(@Param("id") String id);
 
-    List<Incident> findAllByInstanceIds(@Param("ids")List<String> ids,@Param("keyword")String keyword,@Param("pageable")Pageable pageable);
+    List<Incident> findAllByInstanceIds(@Param("ids")List<String> ids,
+                                        @Param("keyword")String keyword,
+                                        @Param("pageable")Pageable pageable);
 
     @Options(useGeneratedKeys = true,keyColumn = "id")
-    @Insert("INSERT INTO `msu_incidents` (`number`,`msu_instance_id`,`requester_name`,`requester_location`,`requester_email`,`requester_phone`," +
-            "`service_catalog`,`category`,`impact`,`urgency`,`priority`,`request_type`," +
-            "`ci_type`,`ci`,`request_description`,`created_at`,`updated_at`," +
-            "`created_by`,`updated_by`,`assigned_user`,`assigned_group`,`response_time`,`resolve_time`," +
-            "`close_time`,`solution`,`close_code`,`msu_status`,`msu_account_name`)" +
+    @Insert("INSERT INTO msu_incidents (number,msu_instance_id,requester_name,requester_location,requester_email,requester_phone," +
+            "service_catalog,category,impact,urgency,priority,request_type," +
+            "ci_type,ci,request_description,created_at,updated_at," +
+            "created_by,updated_by,assigned_user,assigned_group,response_time,resolve_time," +
+            "close_time,solution,close_code,msu_status,msu_account_name)" +
             " VALUES (#{number},#{msuInstanceId},#{requesterName},#{requesterLocation},#{requesterEmail},#{requesterPhone}," +
             "#{serviceCatalog},#{category},#{impact},#{urgency},#{priority},#{requestType}," +
             "#{ciType},#{ci},#{requestDescription},#{createdAt},#{updatedAt}," +
@@ -30,30 +32,30 @@ public interface MsuIncidentRepository {
     void create(Incident incident);
 
     @Update("UPDATE msu_incidents SET " +
-            "`requester_location` = #{requesterLocation},`requester_name` = #{requesterName},"+
-            "`requester_email` = #{requesterEmail},`requester_phone` = #{requesterPhone},"+
-            "`request_type` = #{requestType},"+
-            "`service_catalog` = #{serviceCatalog}," +
-            "`category` = #{category}," +
-            "`impact` = #{impact}," +
-            "`urgency` = #{urgency}," +
-            "`priority` = #{priority}," +
-            "`ci_type` = #{ciType}," +
-            "`ci` = #{ci}," +
-            "`updated_at` = #{updatedAt}," +
-            "`updated_by` = #{updatedBy}," +
-            "`assigned_user` = #{assignedUser}," +
-            "`assigned_group` = #{assignedGroup}," +
-            "`response_time` = #{responseTime},"+
-            "`resolve_time` = #{resolveTime},"+
-            "`close_time` = #{closeTime},"+
-            "`solution` = #{solution},"+
-            "`msu_status` = #{msuStatus},"+
-            "`close_code` = #{closeCode}, "+
-            "`msp_account_name` = #{mspAccountName}, "+
-            "`msp_instance_id` = #{mspInstanceId}, "+
-            "`msp_status` = #{mspStatus} "+
-            " WHERE `msu_instance_id` = #{msuInstanceId};")
+            "requester_location = #{requesterLocation},requester_name = #{requesterName},"+
+            "requester_email = #{requesterEmail},requester_phone = #{requesterPhone},"+
+            "request_type = #{requestType},"+
+            "service_catalog = #{serviceCatalog}," +
+            "category = #{category}," +
+            "impact = #{impact}," +
+            "urgency = #{urgency}," +
+            "priority = #{priority}," +
+            "ci_type = #{ciType}," +
+            "ci = #{ci}," +
+            "updated_at = #{updatedAt}," +
+            "updated_by = #{updatedBy}," +
+            "assigned_user = #{assignedUser}," +
+            "assigned_group = #{assignedGroup}," +
+            "response_time = #{responseTime},"+
+            "resolve_time = #{resolveTime},"+
+            "close_time = #{closeTime},"+
+            "solution = #{solution},"+
+            "msu_status = #{msuStatus},"+
+            "close_code = #{closeCode}, "+
+            "msp_account_name = #{mspAccountName}, "+
+            "msp_instance_id = #{mspInstanceId}, "+
+            "msp_status = #{mspStatus} "+
+            " WHERE msu_instance_id = #{msuInstanceId};")
     void update(Incident incident);
 
 }

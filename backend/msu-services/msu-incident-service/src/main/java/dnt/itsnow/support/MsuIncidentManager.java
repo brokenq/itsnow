@@ -17,9 +17,12 @@ import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ResourceLoaderAware;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.sql.Timestamp;
@@ -29,15 +32,26 @@ import java.util.*;
 
 @Service
 @Transactional
-public class MsuIncidentManager extends Bean implements MsuIncidentService {
+public class MsuIncidentManager extends Bean implements MsuIncidentService,ResourceLoaderAware {
+
+    public static final String PROCESS_KEY = "msu_incident";
+    private static final String LISTENER = "listener";
+    private static String appSn = System.getProperty("app.id");
+    private static String mspSn = "msp_001";
+
+    private static final String ROLE_LINE_ONE = "ROLE_LINE_ONE";
+    private static final String ROLE_LINE_TWO = "ROLE_LINE_TWO";
+    private static final String CAN_PROCESS = "canProcess";
+    private static final String HARDWARE_ERROR = "hardwareError";
+    private static final String RESOLVED = "resolved";
+
+    SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 
     @Autowired
-    MsuIncidentRepository msuIncidentRepository;
+    MsuIncidentRepository repository;
 
     @Autowired
     ActivitiEngineService activitiEngineService;
-
-    SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 
     @Autowired
     MsuEventListener msuEventListener;
@@ -45,13 +59,7 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService {
     @Autowired
     MessageBus messageBus;
 
-    public static final String PROCESS_KEY = "msu_incident";
-
-    private static final String LISTENER = "listener";
-
-    static String appSn = System.getProperty("app.id");
-
-    static String mspSn = "msp_001";
+    private ResourceLoader resourceLoader;
 
     public static String getSendChannel() {
         if(mspSn == null){
@@ -69,7 +77,11 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService {
      */
     @Override
     protected void performStart() {
-        this.autoDeployment();
+        try{
+            this.autoDeployment();
+        }catch(IOException e){
+            logger.error("Auto deploy error:{}",e.getMessage());
+        }
         activitiEngineService.addEventListener(msuEventListener, ActivitiEventType.ACTIVITY_COMPLETED);
         //add message-bus listener
         messageBus.subscribe(LISTENER, getListenChannel(), msuEventListener);
@@ -80,22 +92,27 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService {
      */
     @Override
     protected void performStop() {
+        activitiEngineService.removeEventListener(msuEventListener);
         messageBus.unsubscribe(LISTENER);
     }
 
     /**
      * <h2>自动部署流程</h2>
      */
-    private void autoDeployment() {
+    private void autoDeployment() throws IOException {
         String path = "bpmn/"+PROCESS_KEY+".bpmn20.xml";
+        InputStream is = null;
         try {
-            URL url = this.getClass().getClassLoader().getResource(path);
+            URL url = this.resourceLoader.getResource(path).getURL();
             assert url != null;
-            InputStream is = url.openStream();
+            is = url.openStream();
             activitiEngineService.deploySingleProcess(is,PROCESS_KEY,PROCESS_KEY);
-            is.close();
+
         }catch(Exception e){
             logger.warn("Error deploy process:{} {}",PROCESS_KEY,e.getMessage());
+        }finally{
+            if(is != null)
+                is.close();
         }
     }
 
@@ -108,7 +125,7 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService {
      * @return 故障分页数据
      */
     @Override
-    public Page<Incident> findByUserAndKey(String username, String keyword, Pageable pageable){
+    public Page<Incident> findAllByUserAndKey(String username, String keyword, Pageable pageable){
 
         Set<Task> tasks = new HashSet<Task>();
         //查询分配给当前用户的任务列表
@@ -120,12 +137,12 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService {
         for(Task task:tasks){
             ids.add(task.getProcessInstanceId());
         }
-        logger.debug("instance ids:"+ids.toString());
+        logger.debug("instance ids:{}",ids.toString());
         int total = ids.size();
         if(total > 0){
             if(keyword == null)
                 keyword = "";
-            List<Incident> incidents = msuIncidentRepository.findAllByInstanceIds(ids,keyword,pageable);
+            List<Incident> incidents = repository.findAllByInstanceIds(ids,keyword,pageable);
             return new DefaultPage<Incident>(incidents,pageable,total);
         }else {
             List<Incident> incidents = new ArrayList<Incident>();
@@ -151,12 +168,12 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService {
         for(HistoricProcessInstance processInstance:historicProcessInstanceList){
             ids.add(processInstance.getId());
         }
-        logger.debug("instance ids:"+ids.toString());
+        logger.debug("instance ids：{}",ids.toString());
         int total = ids.size();
         if(total > 0){
             if(keyword == null)
                 keyword = "";
-            List<Incident> incidents = msuIncidentRepository.findAllByInstanceIds(ids,keyword,pageable);
+            List<Incident> incidents = repository.findAllByInstanceIds(ids,keyword,pageable);
             return new DefaultPage<Incident>(incidents,pageable,total);
         }else {
             List<Incident> incidents = new ArrayList<Incident>();
@@ -174,7 +191,7 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService {
     @Override
     public MsuIncident findByInstanceId(String instanceId,boolean withHistory){
         MsuIncident msuIncident = new MsuIncident();
-        Incident incident = msuIncidentRepository.findByInstanceId(instanceId);
+        Incident incident = repository.findByInstanceId(instanceId);
         msuIncident.setIncident(incident);
         List<Task> tasks = activitiEngineService.queryTasksByInstanceId(instanceId);
 
@@ -210,7 +227,7 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService {
         incident.setMsuAccountName(accountName);
         incident.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         incident.setUpdatedAt(incident.getCreatedAt());
-        msuIncidentRepository.create(incident);
+        repository.create(incident);
 
         msuIncident.setIncident(incident);
         return msuIncident;
@@ -229,19 +246,19 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService {
     public MsuIncident processIncident(String instanceId,String taskId,String username,Incident incident){
         MsuIncident msuIncident = new MsuIncident();
         incident.setUpdatedBy(username);
-        msuIncidentRepository.update(incident);
+        repository.update(incident);
 
         Map<String, String> taskVariables = new HashMap<String, String>();
         if(incident.getMsuStatus().equals(IncidentStatus.Accepted)){
-            if("ROLE_LINE_ONE".equals(incident.getAssignedGroup()))
-                taskVariables.put("canProcess",incident.getCanProcess()+"");
-            else if("ROLE_LINE_TWO".equals(incident.getAssignedGroup()))
-                taskVariables.put("hardwareError",incident.getHardwareError()+"");
+            if(ROLE_LINE_ONE.equals(incident.getAssignedGroup()))
+                taskVariables.put(CAN_PROCESS,incident.getCanProcess()+"");
+            else if(ROLE_LINE_TWO.equals(incident.getAssignedGroup()))
+                taskVariables.put(HARDWARE_ERROR,incident.getHardwareError()+"");
             else
                 logger.debug("incident msu status not match {}",incident);
         }
         else if(incident.getMsuStatus().equals(IncidentStatus.Resolving))
-            taskVariables.put("resolved",incident.getResolved()+"");
+            taskVariables.put(RESOLVED,incident.getResolved()+"");
 
         activitiEngineService.completeTask(taskId,taskVariables,username);
 
@@ -249,4 +266,8 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService {
         return msuIncident;
     }
 
+    @Override
+    public void setResourceLoader(ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
+    }
 }

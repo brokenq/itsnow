@@ -6,11 +6,13 @@
     <select id="findAllByInstanceIds" resultType="Incident">
         <bind name="pattern" value="'%' + keyword + '%' "/>
         SELECT * FROM msu_incidents
-        WHERE (msu_instance_id IN
-        <foreach item="item" index="index" collection="ids"
-                 open="(" separator="," close=")">
-            #{item}
-        </foreach>)
+        <if test="!ids.isEmpty()">
+            WHERE (msu_instance_id IN
+            <foreach item="item" index="index" collection="ids"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>)
+        </if>
         <if test="keyword != ''">
             AND ((requester_name LIKE #{pattern})
             OR (request_description LIKE #{pattern})
