@@ -47,12 +47,20 @@ public class MsuIncidentTest extends ValidatorSupport{
         incident.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         incident.setUpdatedAt(incident.getCreatedAt());
         msuIncident.setIncident(incident);
+        msuIncident.setResult("success");
 
     }
 
     @Test
     public void testIncidentConstraints() throws Exception {
         msuIncident.setIncident(null);
+        Set<ConstraintViolation<MsuIncident>> violations = validator.validate(msuIncident);
+        Assert.assertFalse(violations.isEmpty());
+    }
+
+    @Test
+    public void testResultConstraints() throws Exception {
+        msuIncident.setResult(null);
         Set<ConstraintViolation<MsuIncident>> violations = validator.validate(msuIncident);
         Assert.assertFalse(violations.isEmpty());
     }

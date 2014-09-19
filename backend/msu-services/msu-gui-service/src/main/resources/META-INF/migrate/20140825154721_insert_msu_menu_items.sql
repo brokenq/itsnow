@@ -22,9 +22,9 @@ INSERT INTO menu_items(id, parent_id, name, state, position, css) VALUES
 (33, 3, '字典管理', 'services.dict',    1, 'icon-book'),
 (34, 3, '流程管理', 'services.workflow',1, 'icon-task'),
 
-(41, 4, '新建故障',   'incidents.create', 1, 'icon-fire'),
-(42, 4, '我的故障单', 'incidents.opened',     2, 'icon-eye-open'),
-(43, 4, '已关闭故障', 'incidents.closed', 3, 'icon-eye-close');
+(41, 4, '新建故障',   'incidents-create', 1, 'icon-fire'),
+(42, 4, '我的故障单', 'incidents-opened',     2, 'icon-eye-open'),
+(43, 4, '已关闭故障', 'incidents-closed', 3, 'icon-eye-close');
 
 -- //@UNDO
 -- SQL to undo the change goes here.

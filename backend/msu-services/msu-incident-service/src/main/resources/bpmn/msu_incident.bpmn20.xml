@@ -29,7 +29,7 @@
     <userTask id="second_line_accpet_incident" name="secondline accept_incident" activiti:candidateGroups="ROLE_LINE_TWO">
       <documentation>Accepted</documentation>
     </userTask>
-    <userTask id="secondline-analysis-incident" name="secondline analysis_incident" activiti:candidateGroups="second_line">
+    <userTask id="secondline-analysis-incident" name="secondline analysis_incident" activiti:candidateGroups="ROLE_LINE_TWO">
       <documentation>Resolving</documentation>
       <extensionElements>
         <activiti:formProperty id="hardwareError" name="hardwareError" type="boolean"></activiti:formProperty>
