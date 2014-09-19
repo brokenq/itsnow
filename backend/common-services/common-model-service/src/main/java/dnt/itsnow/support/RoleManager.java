@@ -2,7 +2,6 @@ package dnt.itsnow.support;
 
 import dnt.itsnow.exception.RoleException;
 import dnt.itsnow.model.Role;
-import dnt.itsnow.model.User;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.platform.util.DefaultPage;
@@ -12,6 +11,7 @@ import dnt.itsnow.service.RoleService;
 import dnt.spring.Bean;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -19,6 +19,7 @@ import java.util.List;
 /**
  * <h1>类功能说明</h1>
  */
+@Service
 public class RoleManager extends Bean implements RoleService {
 
     @Autowired

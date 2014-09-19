@@ -2,7 +2,6 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.exception.RoleException;
 import dnt.itsnow.model.Role;
-import dnt.itsnow.model.User;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.platform.web.exception.WebServerSideException;
