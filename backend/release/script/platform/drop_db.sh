@@ -1,0 +1,25 @@
+#!/bin/sh
+
+#
+# Usage: drop_db.sh schema user
+# 
+#  schema:   the schema name, such as itsnow_msu_001
+#  user:   the owner user name of this schema
+#
+if [ ! $1 ]; then
+  echo "You should provide schema name as first argument"
+  exit 1
+fi
+if [ ! $2 ]; then
+  echo "You should provide owner user name of this schema as second argument"
+  exit 2
+fi
+schema=$1
+user=$2
+mysql_pwd=`cat /root/.mysql_pwd`
+mysql -uroot -p$mysql_pwd <<SQL
+  DROP DATABASE IF EXISTS $schema ;
+  REVOKE SELECT ON itsnow_msc.* FROM '$user'@'localhost' ;
+  DROP USER '$user'@'localhost' ;
+SQL
+echo "Drop the database(schema) = $schema and user $user"
