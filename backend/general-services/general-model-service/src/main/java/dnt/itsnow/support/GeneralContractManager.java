@@ -8,11 +8,12 @@ import dnt.itsnow.model.Account;
 import dnt.itsnow.model.Contract;
 import dnt.itsnow.model.ContractDetail;
 import dnt.itsnow.model.ContractStatus;
-import dnt.itsnow.platform.remote.service.RestFacade;
 import dnt.itsnow.platform.service.ServiceException;
 import dnt.itsnow.service.GeneralContractService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestOperations;
 
 /**
  *  <h1> The general contract manager</h1>
@@ -22,21 +23,23 @@ import org.springframework.stereotype.Service;
 @Service
 public class GeneralContractManager extends CommonContractManager implements GeneralContractService {
     @Autowired
-    RestFacade facade;
+    @Qualifier("mscRestTemplate")
+    RestOperations facade;
+
     @Override
     public Contract approve(Account account, String sn) throws ServiceException {
         logger.info("Approving {} {}", account, sn);
         Contract contract = findByAccountAndSn(account, sn, true);
-        if( account.isMsu() ){
-            if( contract.isApprovedByMsu() ){
+        if (account.isMsu()) {
+            if (contract.isApprovedByMsu()) {
                 throw new ContractException("The contract has been approved by msu");
             }
-        }else if (account.isMsp() ){
-            if( contract.isApprovedByMsp() ){
+        } else if (account.isMsp()) {
+            if (contract.isApprovedByMsp()) {
                 throw new ContractException("The contract has been approved by msu");
             }
         }
-        facade.put("/admin/api/contracts/"+sn+"/approve", contract.getSn());
+        facade.put("/admin/api/contracts/{}/approve", null, contract.getSn());
         contract = repository.findBySn(sn);//update it after put
         logger.info("Approved  {} {}", account, sn);
         return contract;
@@ -55,7 +58,7 @@ public class GeneralContractManager extends CommonContractManager implements Gen
                 throw new ServiceException("The contract has been rejected by msu");
             }
         }
-        facade.put("/admin/api/contracts/"+sn+"/reject", contract.getSn());
+        facade.put("/admin/api/contracts/{}/reject", null, contract.getSn());
         contract = repository.findBySn(sn);//update it after put
         logger.info("Rejected  {} {}", account, sn);
         return contract;
@@ -64,10 +67,10 @@ public class GeneralContractManager extends CommonContractManager implements Gen
     @Override
     public ContractDetail updateDetail(ContractDetail detail, String sn) {
         logger.info("Updating {}", detail);
-        ContractDetail contractDetail = facade.putWithObject("/admin/api/contracts/"+sn+"/details/{}",
+        facade.put("/admin/api/contracts/{}/details/{}",
                 detail, detail.getContract().getSn(), detail.getId());
         logger.info("Updated  {}", detail);
-        return contractDetail;
+        return detail;
     }
 
     @Override
@@ -76,7 +79,7 @@ public class GeneralContractManager extends CommonContractManager implements Gen
         Contract contract = findByAccountAndSn(account, sn, true);
         contract.setMspStatus(ContractStatus.Purposed);
         contract.setMspAccountId(account.getId());
-        contract = facade.putWithObject("/admin/api/contracts/"+sn+"/bid",contract);
+        facade.put("/admin/api/contracts/{}/bid", contract, contract.getSn());
         logger.info("Msp bid contract {}", contract);
         return contract;
     }
@@ -85,7 +88,7 @@ public class GeneralContractManager extends CommonContractManager implements Gen
     public Contract create(Account account, Contract contract) throws ServiceException{
         contract.setMsuStatus(ContractStatus.Draft);
         contract.setMsuAccountId(account.getId());
-        contract = facade.putWithObject("/admin/api/contracts",contract);
+        facade.put("/admin/api/contracts",contract);
         logger.info("Created  {}", contract);
         return contract;
     }
