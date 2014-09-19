@@ -4,7 +4,7 @@
 
 angular.module('Itsnow.MspIndex', [
   'Itsnow.Index',
-  'Lib.Templates',
+  'MspIndex.Templates',
   'MspApp.System',
   'MspApp.Incident'
 ]);

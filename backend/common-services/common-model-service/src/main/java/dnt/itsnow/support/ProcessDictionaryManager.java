@@ -10,6 +10,7 @@ import dnt.itsnow.service.ProcessDictionaryService;
 import dnt.spring.Bean;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.List;
 /**
  * <h1>流程字典服务实现类</h1>
  */
+@Service
 public class ProcessDictionaryManager extends Bean implements ProcessDictionaryService {
 
     @Autowired

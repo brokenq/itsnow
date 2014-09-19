@@ -1,13 +1,13 @@
 # List System
-angular.module('System.Site', ['ngTable','ngResource'])
+angular.module('System.Role', ['ngTable','ngResource'])
   .config ($stateProvider)->
-    $stateProvider.state 'system.site',
-      url: '/site',
-      templateUrl: 'system/site/list.tpl.jade'
-      data: {pageTitle: '地点管理'}
+    $stateProvider.state 'system.authority',
+      url: '/authority',
+      templateUrl: 'system/authority/list.tpl.jade'
+      data: {pageTitle: '权限管理'}
 
   .factory('SiteService', ['$resource', ($resource) ->
-    $resource("/api/sites")
+    $resource("/api/authorities")
   ])
 
   .controller 'SiteListCtrl',['$scope', '$location', '$timeout', 'ngTableParams', 'SiteService',($scope, $location, $timeout, ngTableParams, siteService)->
@@ -21,22 +21,22 @@ angular.module('System.Site', ['ngTable','ngResource'])
         siteService.query(params.url(), (data, headers) ->
           $timeout(->
             params.total(headers('total'))
-            $defer.resolve($scope.site = data)
+            $defer.resolve($scope.accounts = data)
           , 500)
         )
     $scope.tableParams = new ngTableParams(angular.extend(options, $location.search()), args)
     $scope.checkboxes = { 'checked': false, items: {} }
     # watch for check all checkbox
     $scope.$watch 'checkboxes.checked', (value)->
-      angular.forEach $scope.site, (item)->
+      angular.forEach $scope.accounts, (item)->
         $scope.checkboxes.items[item.sn] = value if angular.isDefined(item.sn)
     # watch for data checkboxes
     $scope.$watch('checkboxes.items', (values) ->
-      return if !$scope.site
+      return if !$scope.accounts
       checked = 0
       unchecked = 0
-      total = $scope.site.length
-      angular.forEach $scope.site, (item)->
+      total = $scope.accounts.length
+      angular.forEach $scope.accounts, (item)->
         checked   +=  ($scope.checkboxes.items[item.sn]) || 0
         unchecked += (!$scope.checkboxes.items[item.sn]) || 0
       $scope.checkboxes.checked = (checked == total) if (unchecked == 0) || (checked == 0)

@@ -1,8 +1,6 @@
 -- // insert_workflows
 -- Migration SQL that makes the change goes here.
 
-DELETE FROM staffs;
-
 SET @USER1 = (SELECT id from users where username = 'admin');
 SET @USER2 = (SELECT id from users where username = 'root');
 
@@ -11,6 +9,8 @@ SET @SITE2 = (SELECT id from sites where sn = '002');
 
 SET @DEPT1 = (SELECT id from departments where sn = '001');
 SET @DEPT2 = (SELECT id from departments where sn = '002');
+
+DELETE FROM staffs;
 
 INSERT INTO staffs
 (no,    name,    mobile_phone,      fixed_phone, email,               title,     type,        status, user_id, site_id, dept_id) VALUES

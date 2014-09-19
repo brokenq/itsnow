@@ -2,11 +2,8 @@ package dnt.itsnow.service;
 
 import dnt.itsnow.exception.RoleException;
 import dnt.itsnow.model.Role;
-import dnt.itsnow.model.User;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
-
-import java.util.List;
 
 /**
  * <h1>流程字典Service</h1>
