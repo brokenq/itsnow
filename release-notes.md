@@ -156,3 +156,31 @@ git@happyonroad.net:insight/itsnow.git Rel-x.y.z 标签(tag)
 -----------
 
 暂未部署
+
+0.1.8 发布说明
+=================
+
+1. 新增特性
+-----------
+
+1. Frontend 服务目录管理
+2. Frontend 故障流程
+3. Backend 实现MSC中MSU/P注册流程
+4. Backend 部署运行环境支持
+5. Backend 实现MSC中MSU/P注册的脚本开发工作
+
+2. 问题修复
+-----------
+
+
+3. 交付物地址
+--------------
+
+1. [msc-0.1.8](http://ci.dnt.com.cn/repository/download/Itsnow_Sprint_Build_MSC/3832:id/msc-0.1.8.zip)
+2. [msp-0.1.8](http://ci.dnt.com.cn/repository/download/Itsnow_SprintBuild_MSP/3833:id/msp-0.1.8.zip)
+3. [msu-0.1.8](http://ci.dnt.com.cn/repository/download/Itsnow_SprintBuild_MSU/3834:id/msu-0.1.8.zip)
+
+4. 系统演示地址
+-----------
+
+暂未部署
