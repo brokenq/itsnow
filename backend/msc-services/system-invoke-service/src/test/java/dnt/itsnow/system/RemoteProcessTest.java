@@ -3,42 +3,51 @@
  */
 package dnt.itsnow.system;
 
-import dnt.itsnow.model.LocalInvocation;
+import dnt.itsnow.model.RemoteInvocation;
+import dnt.util.StringUtils;
 import junit.framework.Assert;
 import org.apache.commons.io.IOUtils;
+import org.junit.Before;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.List;
 
 /**
- * <h1>测试对本地命令的调用</h1>
+ * <h1>测试对远程命令的调用</h1>
  */
 public class RemoteProcessTest extends AbstractProcessTest {
+    String remoteHost = "happyonroad.net";
+    String remoteDir = "/opt/system/test";
+
+    //we need setup authorized relationship
+    @Before
+    public void setUpScript() throws Exception {
+        File testSh = new File(System.getProperty("APP_HOME"), "script/msc/test.sh");
+        String[] sshCommands = new String[]{"ssh", "root@" + remoteHost, "mkdir -p "+ remoteDir + ""};
+        String[] scpCommands = new String[]{"scp", testSh.getAbsolutePath(), "root@"+ remoteHost + ":" + remoteDir};
+        java.lang.Process mkdir = Runtime.getRuntime().exec(sshCommands);
+        if( mkdir.waitFor() != 0 )
+            throw new Exception("Can't execute: " + StringUtils.join(sshCommands, " ") + ", exit code: " + mkdir.exitValue());
+        java.lang.Process scp = Runtime.getRuntime().exec(scpCommands);
+        if( scp.waitFor() != 0 )
+            throw new Exception("Can't execute: " + StringUtils.join(scpCommands, " ") + ", exit code: " + mkdir.exitValue());
+    }
 
     @Test
-    public void testInvokeLocalCommand() throws Exception {
-        LocalInvocation invocation = new LocalInvocation() {
+    public void testInvokeRemoteCommand() throws Exception {
+        RemoteInvocation invocation = new RemoteInvocation(remoteHost, remoteDir) {
             @Override
             public int perform(Process process) throws Exception {
                 return process.run("./test.sh", "hello", "world");
             }
         };
-        invocation.setId("local-invocation");
-        LocalProcess localProcess = new LocalProcess(invocation, executorService);
-        invocation.perform(localProcess);
-        final File stdoutFile = new File(System.getProperty("APP_HOME"), "tmp/" + invocation.getOutFileName());
-        final File stderrFile = new File(System.getProperty("APP_HOME"), "tmp/" + invocation.getErrFileName());
-
-        FileInputStream stdout = new FileInputStream(stdoutFile);
-        List<String> outLines = IOUtils.readLines(stdout);
-        stdout.close();
-        Assert.assertEquals(1, outLines.size());
-        Assert.assertEquals("hello world", outLines.get(0));
-
-        FileInputStream stderr = new FileInputStream(stderrFile);
-        List<String> errLines = IOUtils.readLines(stderr);
-        stderr.close();
-        Assert.assertTrue(errLines.isEmpty());
+        invocation.setId("remote-invocation");
+        RemoteProcess process = new RemoteProcess(invocation, executorService);
+        int exitCode = invocation.perform(process);
+        Assert.assertEquals(0, exitCode);
+        Assert.assertEquals("hello world", process.getOutput());
+        Assert.assertEquals("", process.getError());
     }
 }

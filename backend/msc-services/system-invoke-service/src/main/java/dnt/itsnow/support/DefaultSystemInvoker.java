@@ -42,7 +42,8 @@ public class DefaultSystemInvoker extends Bean implements SystemInvoker {
                 invoke(invocation.getNext());
             }
         } else {
-            throw new SystemInvokeException("Got exit code " + result + " while invoke: " + invocation);
+            throw new SystemInvokeException("Got exit code " + result + " while invoke: " + invocation
+                                            + ", reason is: " + process.getError());
         }
     }
 

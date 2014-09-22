@@ -16,9 +16,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Description here
+ * The abstract process test
  */
-public class AbstractProcessTest {
+public abstract class AbstractProcessTest {
     protected ExecutorService executorService;
 
     @Before
@@ -37,8 +37,8 @@ public class AbstractProcessTest {
             //需要保证该文件有被执行的权限 (chmod +x script/test.sh)
             Runtime.getRuntime().exec("chmod +x " + testShellFile.getAbsolutePath());
         } finally {
-            klassResource.close();
-            tmpResource.close();
+            IOUtils.closeQuietly(klassResource);
+            IOUtils.closeQuietly(tmpResource);
         }
         executorService = Executors.newFixedThreadPool(2);
     }
