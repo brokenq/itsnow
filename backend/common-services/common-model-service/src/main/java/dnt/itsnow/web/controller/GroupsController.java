@@ -37,8 +37,13 @@ public class GroupsController extends SessionSupportController<Group> {
 
     // 虽然也是index，但这里不需要分页，application controller 也不会错
     @RequestMapping
-    public List<Group> index(@RequestParam(value = "q", required = false) String q){
-        return service.search(q);
+    public List<Group> index(@RequestParam(value = "keyword", required = false) String keyword) {
+        logger.debug("Listing group keyword:{}" + keyword);
+
+        indexPage = service.findAll(keyword, pageRequest);
+
+        logger.debug("Listed group number {}", indexPage.getNumber());
+        return indexPage.getContent();
     }
 
     @RequestMapping("/{name}")

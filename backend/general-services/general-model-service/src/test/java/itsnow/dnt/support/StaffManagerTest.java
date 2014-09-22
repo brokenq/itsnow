@@ -87,8 +87,7 @@ public class StaffManagerTest {
 
     @Test
     public void testDestroy() throws Exception {
-        Page<Staff> staffs = service.findAll("", pageRequest);
-        Staff staff = staffs.getContent().get(0);
+        Staff staff = service.findByNo("007");
         service.destroy(staff);
         Assert.assertNull(service.findByNo(staff.getNo()));
     }

@@ -41,7 +41,7 @@ public class GroupRepositoryTest {
 
     @Test
     public void testDelete() throws Exception {
-        List<Group> groups = repository.find("updated_at", "desc", 0, 1);
+        List<Group> groups = repository.findAll("updated_at", "desc", 0, 1);
         Group group = groups.get(0);
         repository.delete(group.getSn());
         Assert.isNull(repository.findBySn(group.getSn()));
@@ -49,7 +49,7 @@ public class GroupRepositoryTest {
 
     @Test
     public void testUpdate() throws Exception {
-        List<Group> groups = repository.find("updated_at", "desc", 0, 1);
+        List<Group> groups = repository.findAll("updated_at", "desc", 0, 1);
         Group group = groups.get(0);
         group.setDescription("Hello World!");
         repository.update(group);
@@ -64,7 +64,7 @@ public class GroupRepositoryTest {
 
     @Test
     public void testFind() throws Exception {
-        Assert.notNull(repository.find("updated_at", "desc",  0, 10));
+        Assert.notNull(repository.findAll("updated_at", "desc",  0, 10));
     }
 
     @Test
@@ -74,12 +74,12 @@ public class GroupRepositoryTest {
 
     @Test
     public void testFindByKeyword() throws Exception {
-        Assert.notNull(repository.findByKeyword("%s%","updated_at","desc", 0, 10));
+        Assert.notNull(repository.findAllByKeyword("%s%","updated_at","desc", 0, 10));
     }
 
     @Test
     public void testFindBySn() throws Exception {
-        List<Group> groups = repository.find("updated_at", "desc", 0, 1);
+        List<Group> groups = repository.findAll("updated_at", "desc", 0, 1);
         Group group = groups.get(0);
         Assert.notNull(repository.findBySn(group.getSn()));
         Assert.isNull(repository.findBySn("1000000"));

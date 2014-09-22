@@ -19,7 +19,8 @@ INSERT INTO staffs
 ('003', '孙三',  '15901968800',  '63578888', 'stone@126.com',  '工程师',  'employee', '0',   @USER2,  @SITE1,  @DEPT2),
 ('004', '李四',  '15901968800',  '63578888', 'stone@126.com',  '工程师',  'employee', '0',   @USER2,  @SITE1,  @DEPT2),
 ('005', '周五',  '15901968800',  '63578888', 'stone@126.com',  '工程师',  'employee', '1',   @USER2,  @SITE1,  @DEPT1),
-('006', '吴六',  '15901968800',  '63578888', 'stone@126.com',  '工程师',  'employee', '1',   @USER2,  @SITE1,  @DEPT1);
+('006', '吴六',  '15901968800',  '63578888', 'stone@126.com',  '工程师',  'employee', '1',   @USER2,  @SITE1,  @DEPT1),
+('007', '郑七',  '15901968800',  '63578888', 'stone@126.com',  '工程师',  'employee', '1',   @USER2,  @SITE1,  @DEPT1);
 
 -- //@UNDO
 -- SQL to undo the change goes here.

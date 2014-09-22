@@ -36,7 +36,7 @@ public interface GroupRepository {
     @Select("select count(0) from groups")
     public int count();
 
-    public List<Group> find(
+    public List<Group> findAll(
             @Param("sort") String sort,
             @Param("dir") String dir,
             @Param("offset") int offset,
@@ -45,14 +45,14 @@ public interface GroupRepository {
     @Select("select count(*) from groups where group_name like #{keyword} or sn like #{keyword}")
     public int countByKeyword(@Param("keyword") String keyword);
 
-    public List<Group> findByKeyword(@Param("keyword") String keyword,
+    public List<Group> findAllByKeyword(@Param("keyword") String keyword,
                                      @Param("sort") String sort,
                                      @Param("dir") String dir,
                                      @Param("offset") int offset,
                                      @Param("size") int size);
 
     @Select("SELECT * FROM groups WHERE UPPER(group_name) LIKE UPPER('%#{keyword}%')")
-    List<Group> findAllByKeyword(@Param("keyword") String keyword);
+    List<Group> searchAllByKeyword(@Param("keyword") String keyword);
 
     public Group findBySn(@Param("sn") String sn);
 
@@ -64,8 +64,7 @@ public interface GroupRepository {
             " INNER JOIN groups g ON ga.group_id = g.id " +
             " INNER JOIN group_members gm ON gm.group_id = g.id" +
             " WHERE UPPER(gm.username) = UPPER(#{username})" +
-            " GROUP BY ga.authority, g.group_name"
-    )
+            " GROUP BY ga.authority, g.group_name")
     Set<GroupAuthority> findUserAuthorities(@Param("username") String username);
 
 }
