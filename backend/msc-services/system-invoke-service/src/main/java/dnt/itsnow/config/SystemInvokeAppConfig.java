@@ -4,8 +4,10 @@
 package dnt.itsnow.config;
 
 import dnt.concurrent.StrategyExecutorService;
+import dnt.itsnow.platform.config.DefaultAppConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 import java.util.concurrent.ExecutorService;
 
@@ -13,6 +15,7 @@ import java.util.concurrent.ExecutorService;
  * <h1>系统调用模块的应用配置</h1>
  */
 @Configuration
+@Import(DefaultAppConfig.class)
 public class SystemInvokeAppConfig {
 
     @Bean(name = "systemInvokeExecutor")
