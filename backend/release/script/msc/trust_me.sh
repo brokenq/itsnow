@@ -25,8 +25,8 @@ password=$3
 file=`hostname`.pub
 
 sshpass -p $password scp ~/.ssh/id_rsa.pub $user@$host:/root/.ssh/$file
-sshpass -p $password ssh $user@$host cat /root/.ssh/$file >> /root/.ssh/authorized_keys
-sshpass -p $password ssh $user@$host rm -f /root/.ssh/$file
+sshpass -p $password ssh $user@$host "cat /root/.ssh/$file >> /root/.ssh/authorized_keys"
+sshpass -p $password ssh $user@$host "rm -f /root/.ssh/$file"
 
 ssh $user@$host ls /opt
 

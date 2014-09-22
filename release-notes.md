@@ -45,7 +45,7 @@ git@happyonroad.net:insight/itsnow.git Rel-x.y.z 标签(tag)
   chmod u+x db/migrate
   db/migrate up
   bin/itsnow-msc start
-  cd path/to/itsnow/backend/integration-test`
+  cd path/to/itsnow/backend/integration-test
   mvn -Pdnt,with-itsnow-msc package
 ```
   

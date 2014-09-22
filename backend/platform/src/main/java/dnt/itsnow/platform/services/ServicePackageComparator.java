@@ -28,7 +28,7 @@ class ServicePackageComparator implements Comparator<File> {
             return 30;
         } else if( name.contains("general-")) {
             return 50;
-        }else if (name.contains("mutable-")){
+        }else if (name.contains("mutable-") || name.contains("system-")){
             return 70;
         }else if (name.contains("msu-")){
             return 70;
@@ -46,6 +46,7 @@ class ServicePackageComparator implements Comparator<File> {
         if( name.contains("gui")) return 2;
         if( name.contains("model")) return 3;
         if( name.contains("deploy")) return 4;
+        if( name.contains("system")) return 5;
         if( name.contains("activiti")) return 5;
         if( name.contains("user")) return 6;
         if( name.contains("account")) return 7;

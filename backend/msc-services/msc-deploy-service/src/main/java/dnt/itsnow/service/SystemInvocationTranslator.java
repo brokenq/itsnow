@@ -18,7 +18,7 @@ public interface SystemInvocationTranslator {
      * @param host 刚刚建立的主机记录，该主机应该是系统运维人员刚刚配置好的机器(虚拟机)，上面尚未配置任何环境
      * @return 任务
      */
-    SystemInvocation config(ItsnowHost host);
+    SystemInvocation provision(ItsnowHost host);
 
     /**
      * <h2>创建一个主机下线的系统任务</h2>
@@ -26,7 +26,7 @@ public interface SystemInvocationTranslator {
      * @param host 需要下线的主机
      * @return 任务
      */
-    SystemInvocation quit(ItsnowHost host);
+    SystemInvocation delist(ItsnowHost host);
 
     /**
      * <h2>创建一个建立特定schema的系统任务</h2>

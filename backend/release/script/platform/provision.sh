@@ -10,20 +10,21 @@ cd /opt/system/
 yum groupinstall -y "Development Tools"
 yum install -y wget lsof vim telnet
 
+cd /opt/system/binaries
+
 # install jdk if needs
 
 # install redis
-cd /opt/system/binaries
 tar xvf redis-2.8.16.tar.gz
 cd redis-2.8.16
 make && make install
 echo "vm.overcommit_memory=1" >> /etc/sysctl.conf
 sysctl vm.overcommit_memory=1
 
-
-cd /opt/system/
-cp config/redis.conf /etc/
-cp config/redis /etc/init.d/
+# configure redis
+cd /opt/system/config
+cp redis.conf /etc/
+cp redis /etc/init.d/
 chkconfig --add redis
 chkconfig redis on
 service redis start
@@ -35,6 +36,7 @@ yum erase -y mariadb mariadb-libs
 ##  install mysql by rpm
 cd /opt/system/binaries
 rpm -ivh MySQL*.rpm
+
 ##  config mysql as service
 chkconfig mysql on
 ##  start mysql service

@@ -2,6 +2,7 @@ package dnt.itsnow.it; /**
  * Developer: Kadvin Date: 14-9-15 下午12:14
  */
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dnt.itsnow.model.ClientAccount;
 import dnt.itsnow.model.ClientAccountRegistration;
 import dnt.itsnow.model.ClientUser;
@@ -45,13 +46,14 @@ public class AccountsTest extends AbstractTest {
 
     @Test
     public void testSignup() throws Exception {
-        ClientAccountRegistration registration = new ClientAccountRegistration();
+        final ClientAccountRegistration registration = new ClientAccountRegistration();
         registration.setType("Enterprise");
         registration.setAsUser(true);
 
         ClientAccount account = new ClientAccount();
         account.setName("it-account");
         account.setDomain("it-domain");
+        account.setType("base");
         registration.setAccount(account);
 
         ClientUser user = new ClientUser();
@@ -62,7 +64,16 @@ public class AccountsTest extends AbstractTest {
         user.setRepeatPassword("123456");
         registration.setUser(user);
 
-        ClientAccount createdAccount = postForObject("/public/accounts", registration, ClientAccount.class);
+        String json = new ObjectMapper().writeValueAsString(registration);
+        System.out.println(json);
+
+        ClientAccount createdAccount = withCsrf(new Callback<ClientAccount>() {
+            @Override
+            public ClientAccount perform(HttpHeaders headers) {
+                HttpEntity<ClientAccountRegistration> request = new HttpEntity<ClientAccountRegistration>(registration, headers);
+                return postForObject("/public/accounts", request, ClientAccount.class);
+            }
+        });
         Assert.assertNotNull(createdAccount);
     }
 
