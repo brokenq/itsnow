@@ -29,12 +29,12 @@ public class GroupManager extends Bean implements GroupService {
         logger.debug("Finding role by keyword: {}", keyword);
         if(StringUtils.isBlank(keyword)){
             int total = repository.count();
-            List<Group> roles = repository.find("updated_at", "desc", pageable.getOffset(), pageable.getPageSize());
+            List<Group> roles = repository.findAll("updated_at", "desc", pageable.getOffset(), pageable.getPageSize());
             return new DefaultPage<Group>(roles, pageable, total);
         }else{
             int total = repository.countByKeyword("%"+keyword+"%");
-            List<Group> roles = repository.findByKeyword("%"+keyword+"%","updated_at","desc", pageable.getOffset(), pageable.getPageSize());
-            return new DefaultPage<Group>(roles, pageable, total);
+            List<Group> groups = repository.findAllByKeyword("%"+keyword+"%","updated_at","desc", pageable.getOffset(), pageable.getPageSize());
+            return new DefaultPage<Group>(groups, pageable, total);
         }
     }
 
@@ -81,7 +81,7 @@ public class GroupManager extends Bean implements GroupService {
 
     @Override
     public List<Group> search(String keyword) {
-        return repository.findAllByKeyword(keyword);
+        return repository.searchAllByKeyword(keyword);
     }
 
     @Override

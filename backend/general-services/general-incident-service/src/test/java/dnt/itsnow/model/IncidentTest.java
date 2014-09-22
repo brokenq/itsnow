@@ -31,7 +31,7 @@ public class IncidentTest extends ValidatorSupport{
         incident = new Incident();
         incident.setId(1L);
         incident.setRequestDescription("System halt");
-        incident.setRequesterName("admin");
+        //incident.setRequesterName("admin");
         incident.setCreatedBy("admin");
         incident.setMspStatus(IncidentStatus.New);
         incident.setNumber("INC20140915203300001");

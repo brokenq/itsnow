@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dnt.itsnow.repository.MspGroupRepository">
+
+    <resultMap id="groupResult" type="MspGroup">
+        <id property="id" column="id"/>
+        <result property="sn" column="sn"/>
+        <result property="name" column="group_name"/>
+        <result property="description" column="description"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <association property="user" column="user_id" javaType="User">
+            <result property="name" column="workTimeName"/>
+        </association>
+        <association property="department" column="dept_id" javaType="Department">
+            <result property="name" column="workTimeName"/>
+        </association>
+        <association property="site" column="site_id" javaType="Site">
+            <result property="name" column="workTimeName"/>
+        </association>
+    </resultMap>
+
+    <select id="findBySn" parameterType="string" resultType="MspGroup" resultMap="groupResult">
+        select g.id, g.sn, g.group_name, g.description, g.created_at, g.updated_at
+        from groups g
+        where g.sn=#{sn}
+    </select>
+
+    <select id="findAll" parameterType="string" resultType="MspGroup" resultMap="groupResult">
+        select g.id, g.sn, g.group_name, g.description, g.created_at, g.updated_at
+        from groups g
+        order by ${sort} ${dir} limit #{offset}, #{size}
+    </select>
+
+    <select id="findAllByKeyword" parameterType="string" resultType="MspGroup" resultMap="groupResult">
+        select g.id, g.sn, g.group_name, g.description, g.created_at, g.updated_at
+        from groups g
+        where g.group_name like #{keyword} or g.sn like #{keyword}
+        order by ${sort} ${dir} limit #{offset}, #{size}
+    </select>
+
+    <select id="findAllRelevantInfo" parameterType="string" resultType="MspGroup" resultMap="groupResult">
+        select g.id, g.sn, g.group_name, g.description, g.created_at, g.updated_at,
+        u.username,
+        d.name,
+        s.name
+        from groups g
+        left join itsnow_msc.users u on u.username = g.username
+        left join staffs stf on stf.user_id = u.id
+        left join department d on d.id = stf.dept_id
+        left join site s on s.id = stf.site_id
+        where g.group_name like #{keyword}
+        order by ${sort} ${dir} limit #{offset}, #{size}
+    </select>
+
+</mapper>

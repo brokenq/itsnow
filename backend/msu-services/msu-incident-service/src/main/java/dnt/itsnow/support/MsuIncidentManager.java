@@ -39,11 +39,11 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService,Resou
     private static String appSn = System.getProperty("app.id");
     private static String mspSn = "msp_001";
 
-    private static final String ROLE_LINE_ONE = "ROLE_LINE_ONE";
-    private static final String ROLE_LINE_TWO = "ROLE_LINE_TWO";
-    private static final String CAN_PROCESS = "canProcess";
-    private static final String HARDWARE_ERROR = "hardwareError";
-    private static final String RESOLVED = "resolved";
+    public static final String ROLE_LINE_ONE = "ROLE_LINE_ONE";
+    public static final String ROLE_LINE_TWO = "ROLE_LINE_TWO";
+    public static final String CAN_PROCESS = "canProcess";
+    public static final String HARDWARE_ERROR = "hardwareError";
+    public static final String RESOLVED = "resolved";
 
     SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 
@@ -263,6 +263,7 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService,Resou
         activitiEngineService.completeTask(taskId,taskVariables,username);
 
         msuIncident.setIncident(incident);
+        msuIncident.setResult("success");
         return msuIncident;
     }
 

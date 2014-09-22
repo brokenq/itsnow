@@ -58,10 +58,10 @@ public class GroupsControllerTest extends SessionSupportedControllerTest {
     @Test
     public void testIndex() throws Exception {
 
-        expect(groupService.search(anyString())).andReturn(groups);
+//        expect(groupService.search(anyString())).andReturn(groups);
 
-//        expect(groupService.findAll(anyString(), isA(PageRequest.class)))
-//                .andReturn(new DefaultPage<Group>(groups));
+        expect(groupService.findAll(anyString(), isA(PageRequest.class)))
+                .andReturn(new DefaultPage<Group>(groups));
 
         // 准备 Mock Request
         MockHttpServletRequestBuilder request = get("/api/groups");

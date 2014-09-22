@@ -20,6 +20,7 @@
         <module>msp-incident-service</module>
         <module>msp-gui-service</module>
         <module>msp-workflow-service</module>
+        <module>msp-group-service</module>
     </modules>
 
     <dependencies>

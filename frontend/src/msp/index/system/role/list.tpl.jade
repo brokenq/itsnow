@@ -21,7 +21,7 @@ mixin page_size_button(count)
 mixin select_all()
   input(type="checkbox", ng-model="checkboxes.checked", name="filter-checkbox", value="")#select_all
 
-.container(ng-controller="SiteListCtrl")
+.container(ng-controller="RoleListCtrl")
 
   .btn-toolbar(role="toolbar")
     .btn-group
@@ -40,7 +40,7 @@ mixin select_all()
       .nav-search#nav-search
         form.form-search
           span.input-icon
-            input.nav-search-input(type="text", placeholder="名称或者SN...",autocomplete="off")#nav-search-input
+            input.nav-search-input(type="text", placeholder="请输入角色名称...",autocomplete="off")#nav-search-input
             i.icon-search.nav-search-icon
 
   table.table(template-pagination="customPager",ng-table="tableParams")

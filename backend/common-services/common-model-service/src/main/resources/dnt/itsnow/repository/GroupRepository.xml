@@ -19,14 +19,13 @@
         where g.sn=#{sn}
     </select>
 
-    <select id="find" parameterType="string" resultType="Group" resultMap="groupResult">
+    <select id="findAll" parameterType="string" resultType="Group" resultMap="groupResult">
         select g.id, g.sn, g.group_name, g.description, g.created_at, g.updated_at
         from groups g
         order by ${sort} ${dir} limit #{offset}, #{size}
     </select>
 
-
-    <select id="findByKeyword" parameterType="string" resultType="Group" resultMap="groupResult">
+    <select id="findAllByKeyword" parameterType="string" resultType="Group" resultMap="groupResult">
         select g.id, g.sn, g.group_name, g.description, g.created_at, g.updated_at
         from groups g
         where g.group_name like #{keyword} or g.sn like #{keyword}

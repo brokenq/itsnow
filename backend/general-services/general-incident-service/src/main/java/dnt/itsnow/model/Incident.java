@@ -10,7 +10,7 @@ import java.sql.Timestamp;
  */
 public class Incident extends Record {
 
-    @NotBlank
+    //@NotBlank
     private String number;//'故障单号，系统自动生成，生成规则:INC20140801111700001'
     @NotBlank
     private String requesterName;//'请求人'
@@ -27,7 +27,7 @@ public class Incident extends Record {
     private String ci;//'CI'
     @NotBlank
     private String requestDescription;//'故障描述'
-    @NotBlank
+    //@NotBlank
     private String createdBy;//'创建人'
     private String updatedBy;//'更新人'
     private String assignedUser;//'分配用户'
@@ -320,10 +320,4 @@ public class Incident extends Record {
         return true;
     }
 
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + number.hashCode();
-        return result;
-    }
 }

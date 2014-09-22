@@ -51,7 +51,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
                 (ExpressionUrlAuthorizationConfigurer.ExpressionInterceptUrlRegistry) http.authorizeRequests();
         //谁在前，谁优先级高
         authenticated.antMatchers(HttpMethod.POST, "api/session").anonymous()
-                .antMatchers("/api/**").hasAnyRole("ADMIN", "MONITOR", "REPORTER", "USER")
+                .antMatchers("/api/**").hasAnyRole("ADMIN", "MONITOR", "REPORTER", "USER","LINE_ONE","LINE_TWO","ROLE_SERVICE_DESK")
                 .antMatchers("/admin/api/**").hasAnyRole("ADMIN")
                 .antMatchers("/monitor/api/**").hasAnyRole("MONITOR")
                 .antMatchers("/reporter/api/**").hasAnyRole("REPORTER")
