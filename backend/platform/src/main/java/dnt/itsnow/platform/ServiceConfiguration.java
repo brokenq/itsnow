@@ -3,7 +3,6 @@
  */
 package dnt.itsnow.platform;
 
-import dnt.itsnow.platform.remote.service.RestFacade;
 import dnt.itsnow.platform.service.AutoNumberService;
 import dnt.itsnow.platform.web.security.DelegateSecurityConfigurer;
 import net.happyonroad.spring.service.AbstractServiceConfig;
@@ -33,6 +32,5 @@ public class ServiceConfiguration extends AbstractServiceConfig {
 
         //一般工具服务
         exportService(AutoNumberService.class);
-        exportService(RestFacade.class);
     }
 }

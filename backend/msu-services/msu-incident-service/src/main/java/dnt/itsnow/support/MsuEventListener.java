@@ -45,13 +45,13 @@ public class MsuEventListener extends Bean implements ActivitiEventListener, Mes
             logger.debug("task id:{},name:{},desc:{},assignee:{},time:{}", task.getId(), task.getName(), task.getDescription(), task.getAssignee(), task.getCreateTime());
 
             if(task.getDescription().equals(IncidentStatus.Accepted.toString())) {
-                this.processAcceptedAndResolvingEvent(activitiEvent.getEngineServices(),task,incident,IncidentStatus.Accepted);
+                this.processAcceptedEvent(activitiEvent.getEngineServices(),task,incident);
             }else if(task.getDescription().equals(IncidentStatus.Resolving.toString())){
-                this.processAcceptedAndResolvingEvent(activitiEvent.getEngineServices(), task, incident,IncidentStatus.Resolving);
+                this.processResolvingEvent(activitiEvent.getEngineServices(), task, incident);
             }else if(task.getDescription().equals(IncidentStatus.Resolved.toString())) {
-                this.processResolvedAndClosedEvent(incident,IncidentStatus.Resolved);
+                this.processResolvedEvent(incident);
             }else if(task.getDescription().equals(IncidentStatus.Closed.toString())) {
-                this.processResolvedAndClosedEvent(incident,IncidentStatus.Closed);
+                this.processClosedEvent(incident);
             }
             //send message to msp
             this.sendMessageToMsp(activitiEvent.getProcessInstanceId());
@@ -59,16 +59,15 @@ public class MsuEventListener extends Bean implements ActivitiEventListener, Mes
     }
 
     /**
-     * <h2>处理签收和分析事件</h2>
+     * <h2>处理签收事件</h2>
      *
      * @param engineServices  流程引擎服务
      * @param task  流程任务
      * @param incident 故障表单
-     * @param incidentStatus 故障状态
      */
-    private void processAcceptedAndResolvingEvent(EngineServices engineServices,Task task,Incident incident,IncidentStatus incidentStatus){
+    private void processAcceptedEvent(EngineServices engineServices,Task task,Incident incident){
 
-        incident.setMsuStatus(incidentStatus);
+        incident.setMsuStatus(IncidentStatus.Accepted);
         incident.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         incident.setResponseTime(incident.getUpdatedAt());
         List<IdentityLink> identityLinkList = engineServices.getTaskService().getIdentityLinksForTask(task.getId());
@@ -82,15 +81,59 @@ public class MsuEventListener extends Bean implements ActivitiEventListener, Mes
     }
 
     /**
-     * <h2>处理解决和关闭事件</h2>
+     * <h2>处理分析事件</h2>
+     *
+     * @param engineServices  流程引擎服务
+     * @param task  流程任务
+     * @param incident 故障表单
+     */
+    private void processResolvingEvent(EngineServices engineServices,Task task,Incident incident){
+
+        if(incident.getAssignedGroup()!=null && incident.getAssignedGroup().equals(MsuIncidentManager.ROLE_LINE_ONE)){
+            if(incident.getCanProcess() != null && incident.getCanProcess() == true){
+                incident.setMsuStatus(IncidentStatus.Resolving);
+                engineServices.getTaskService().setAssignee(task.getId(), incident.getUpdatedBy());
+            }
+            else
+                incident.setMsuStatus(IncidentStatus.Assigned);
+        }
+        else if(incident.getAssignedGroup()!=null && incident.getAssignedGroup().equals(MsuIncidentManager.ROLE_LINE_TWO)){
+            incident.setMsuStatus(IncidentStatus.Resolving);
+        }
+        incident.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        incident.setResponseTime(incident.getUpdatedAt());
+
+        //update incident
+        repository.update(incident);
+    }
+
+    /**
+     * <h2>处理解决事件</h2>
      *
      * @param incident 故障表单
-     * @param incidentStatus 故障状态
      */
-    private void processResolvedAndClosedEvent(Incident incident,IncidentStatus incidentStatus ){
-        incident.setMsuStatus(incidentStatus);
+    private void processResolvedEvent(Incident incident ){
+
         incident.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-        incident.setResolveTime(incident.getUpdatedAt());
+        if(incident.getResolved()!=null && incident.getResolved() == true){
+            incident.setMsuStatus(IncidentStatus.Resolved);
+            incident.setResolveTime(incident.getUpdatedAt());
+        }
+        else{
+            incident.setMsuStatus(IncidentStatus.Assigned);
+        }
+        repository.update(incident);
+    }
+
+    /**
+     * <h2>处理关闭事件</h2>
+     *
+     * @param incident 故障表单
+     */
+    private void processClosedEvent(Incident incident ){
+        incident.setMsuStatus(IncidentStatus.Closed);
+        incident.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        incident.setCloseTime(incident.getUpdatedAt());
         repository.update(incident);
     }
 

@@ -3,7 +3,7 @@
  */
 package dnt.itsnow.config;
 
-import dnt.itsnow.platform.remote.service.RestFacade;
+import org.springframework.web.client.RestOperations;
 
 /**
  * <h1>
@@ -15,6 +15,6 @@ public class DefaultGeneralServiceConfig extends DefaultCommonServiceConfig {
     @Override
     public void defineServices() {
         super.defineServices();
-        importService(RestFacade.class);
+        importService(RestOperations.class, "msc", "mscRestTemplate");
     }
 }

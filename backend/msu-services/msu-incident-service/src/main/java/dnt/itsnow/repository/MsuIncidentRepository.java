@@ -54,7 +54,10 @@ public interface MsuIncidentRepository {
             "close_code = #{closeCode}, "+
             "msp_account_name = #{mspAccountName}, "+
             "msp_instance_id = #{mspInstanceId}, "+
-            "msp_status = #{mspStatus} "+
+            "can_process = #{canProcess}, "+
+            "resolved = #{resolved}, "+
+            "hardware_error = #{hardwareError}, "+
+            "close_code = #{closeCode} "+
             " WHERE msu_instance_id = #{msuInstanceId};")
     void update(Incident incident);
 

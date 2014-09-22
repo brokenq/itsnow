@@ -108,7 +108,7 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
 
     @Override
     @BeforeFilter(method = RequestMethod.GET, value = {"index","indexClosed"})
-    public void initDefaultPageRequest( @RequestParam(required = false, value = "page", defaultValue = "0") int page,
+    public void initDefaultPageRequest( @RequestParam(required = false, value = "page", defaultValue = "1") int page,
                                         @RequestParam(required = false, value = "size", defaultValue = "40") int size,
                                         @RequestParam(required = false, value = "sort", defaultValue = "") String sort){
         super.initDefaultPageRequest(page,size,sort);

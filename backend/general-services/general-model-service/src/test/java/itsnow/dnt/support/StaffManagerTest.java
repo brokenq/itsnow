@@ -45,7 +45,7 @@ public class StaffManagerTest {
 
     @Test
     public void testFindBySn() throws Exception {
-        Assert.assertNotNull(service.findByNo("001"));
+        Assert.assertNotNull(service.findByNo("005"));
         Assert.assertNull(service.findByNo("800"));
     }
 

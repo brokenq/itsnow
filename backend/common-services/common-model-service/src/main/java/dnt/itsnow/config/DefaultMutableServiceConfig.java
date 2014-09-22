@@ -3,8 +3,6 @@
  */
 package dnt.itsnow.config;
 
-import dnt.itsnow.platform.remote.service.RestFacade;
-
 /**
  * <h1>
  * 默认Mutable服务模块的服务配置
@@ -15,6 +13,5 @@ public class DefaultMutableServiceConfig extends DefaultCommonServiceConfig {
     @Override
     public void defineServices() {
         super.defineServices();
-        importService(RestFacade.class);
     }
 }
