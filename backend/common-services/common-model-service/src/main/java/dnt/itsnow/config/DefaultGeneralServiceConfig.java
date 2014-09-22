@@ -3,8 +3,6 @@
  */
 package dnt.itsnow.config;
 
-import org.springframework.web.client.RestOperations;
-
 /**
  * <h1>
  * 通用服务模块的服务配置
@@ -15,6 +13,5 @@ public class DefaultGeneralServiceConfig extends DefaultCommonServiceConfig {
     @Override
     public void defineServices() {
         super.defineServices();
-        importService(RestOperations.class, "msc", "mscRestTemplate");
     }
 }

@@ -14,6 +14,6 @@ public class GeneralModelServiceConfig extends DefaultGeneralServiceConfig {
     public void defineServices() {
         super.defineServices();
         importService(CommonAccountService.class);
-        exportService(RestOperations.class, "msc", "mscRestTemplate");
+        exportService(RestOperations.class);
     }
 }
