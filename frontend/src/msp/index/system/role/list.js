@@ -10,11 +10,11 @@ angular.module('System.Role', ['ngTable', 'ngResource'])
     })
 
     .factory('RoleService', ['$resource', function ($resource) {
-        $resource("/api/roles");
+        return $resource("/api/roles");
     }
     ])
 
-    .controller('RoleListCtrl', ['$scope', '$location', '$timeout', 'ngTableParams', 'RoleService', function ($scope, $location, $timeout, ngTableParams, roleService) {
+    .controller('RoleListCtrl', ['$scope', '$location', '$timeout', 'ngTableParams', 'RoleService', function ($scope, $location, $timeout, NgTableParams, roleService) {
         var options = {
             page: 1,           // show first page
             count: 10           // count per page
