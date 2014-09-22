@@ -6,7 +6,7 @@ package dnt.itsnow.model;
 /**
  * <h1>对应于Record的Client Json解析对象</h1>
  */
-public class ClientConfigItem {
+public class ClientConfigItem extends ClientRecord{
     private String name;
     private String description;
 
