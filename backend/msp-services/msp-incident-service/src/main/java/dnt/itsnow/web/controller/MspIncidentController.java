@@ -2,8 +2,6 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.Incident;
 import dnt.itsnow.model.MspIncident;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.platform.web.annotation.AfterFilter;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.service.MspIncidentService;
@@ -114,18 +112,12 @@ public class MspIncidentController extends SessionSupportController<Incident> {
     public void initDefaultPageRequest( @RequestParam(required = false, value = "page", defaultValue = "0") int page,
                                         @RequestParam(required = false, value = "size", defaultValue = "40") int size,
                                         @RequestParam(required = false, value = "sort", defaultValue = "") String sort){
-        //Sort theSort = null;
-        pageRequest = new PageRequest(page, size, null);
+        super.initDefaultPageRequest(page,size,sort);
     }
 
     @AfterFilter(method =  RequestMethod.GET, value = {"index","indexClosed"})
     public void renderPageToHeader(HttpServletResponse response){
-        if( indexPage == null ) return;
-        response.setHeader(Page.TOTAL, String.valueOf(indexPage.getTotalElements()));
-        response.setHeader(Page.PAGES, String.valueOf(indexPage.getTotalPages()));
-        response.setHeader(Page.NUMBER, String.valueOf(indexPage.getNumber()));
-        response.setHeader(Page.REAL, String.valueOf(indexPage.getNumberOfElements()));
-        response.setHeader(Page.SORT, String.valueOf(indexPage.getSort()));
+        super.renderPageToHeader(response);
     }
 
 }

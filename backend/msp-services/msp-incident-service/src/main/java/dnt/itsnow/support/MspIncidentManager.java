@@ -233,6 +233,7 @@ public class MspIncidentManager extends Bean implements MspIncidentService {
         Map<String, String> taskVariables = new HashMap<String, String>();
         activitiEngineService.completeTask(taskId,taskVariables,username);
         mspIncident.setIncident(incident);
+        mspIncident.setResult("success");
         return mspIncident;
     }
 
