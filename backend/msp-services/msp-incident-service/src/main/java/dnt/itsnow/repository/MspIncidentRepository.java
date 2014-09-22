@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.*;
 import java.util.List;
 
 /**
- * Created by jacky on 2014/7/28.
+ * <h1>Msp Incident Repository</h1>
  */
 public interface MspIncidentRepository {
 

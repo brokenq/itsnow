@@ -65,7 +65,7 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService,Resou
         if(mspSn == null){
             //Todo find mspSn from Contract
         }
-        return appSn + "-TO-"+mspSn;
+        return mspSn + "-LISTENER";
     }
 
     public static String getListenChannel() {

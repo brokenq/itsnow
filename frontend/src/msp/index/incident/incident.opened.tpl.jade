@@ -52,7 +52,7 @@ mixin select_all()
       td(data-title="'故障描述'") {{incident.requestDescription}}
       td(data-title="'状态'") {{incident.mspStatus | formatIncidentStatus}}
       td(data-title="'创建时间'") {{incident.createdAt | formatTime}}
-      td(data-title="'用户'") {{incident.msuAccountId}}
+      td(data-title="'用户'") {{incident.msuAccountName}}
       td(data-title="'用户状态'") {{incident.msuStatus | formatIncidentStatus}}
       td(class="rowTd")
         button(class="btn btn-default",id="editRowBtn{{incident.id}}",ng-click="setEditId(incident.id)")

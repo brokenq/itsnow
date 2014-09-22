@@ -51,6 +51,7 @@ public interface MsuIncidentRepository {
             "close_time = #{closeTime},"+
             "solution = #{solution},"+
             "msu_status = #{msuStatus},"+
+            "msp_status = #{mspStatus},"+
             "close_code = #{closeCode}, "+
             "msp_account_name = #{mspAccountName}, "+
             "msp_instance_id = #{mspInstanceId}, "+

@@ -85,7 +85,10 @@ public class MspEventListener extends Bean implements ActivitiEventListener, Mes
     private void processAssignedOrResolvedOrClosedEvent(Incident incident,IncidentStatus incidentStatus){
         incident.setMspStatus(incidentStatus);
         incident.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-        incident.setResolveTime(incident.getUpdatedAt());
+        if(incidentStatus == IncidentStatus.Resolved)
+            incident.setResolveTime(incident.getUpdatedAt());
+        else if(incidentStatus == IncidentStatus.Closed)
+            incident.setCloseTime(incident.getUpdatedAt());
         mspIncidentRepository.update(incident);
     }
 
