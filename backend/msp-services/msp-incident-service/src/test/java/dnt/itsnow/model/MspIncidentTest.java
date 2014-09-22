@@ -27,7 +27,7 @@ import java.util.Set;
  */
 public class MspIncidentTest extends ValidatorSupport{
 
-    MspIncident msuIncident;
+    MspIncident mspIncident;
 
     Incident incident;
 
@@ -37,7 +37,7 @@ public class MspIncidentTest extends ValidatorSupport{
 
     @Before
     public void setUp() throws Exception {
-        msuIncident = new MspIncident();
+        mspIncident = new MspIncident();
         incident = new Incident();
         incident.setId(1L);
         incident.setNumber("INC001");
@@ -46,29 +46,30 @@ public class MspIncidentTest extends ValidatorSupport{
         incident.setCreatedBy("admin");
         incident.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         incident.setUpdatedAt(incident.getCreatedAt());
-        msuIncident.setIncident(incident);
+        mspIncident.setIncident(incident);
+        mspIncident.setResult("success");
 
     }
 
     @Test
     public void testIncidentConstraints() throws Exception {
-        msuIncident.setIncident(null);
-        Set<ConstraintViolation<MspIncident>> violations = validator.validate(msuIncident);
+        mspIncident.setIncident(null);
+        Set<ConstraintViolation<MspIncident>> violations = validator.validate(mspIncident);
         Assert.assertFalse(violations.isEmpty());
     }
 
     @Test
     public void testTaskConstraints() throws Exception {
-        msuIncident.setTasksList(null);
-        Set<ConstraintViolation<MspIncident>> violations = validator.validate(msuIncident);
+        mspIncident.setTasksList(null);
+        Set<ConstraintViolation<MspIncident>> violations = validator.validate(mspIncident);
         Assert.assertTrue(violations.isEmpty());
     }
 
     @Test
     public void testJson() throws Exception {
-        String json = JsonSupport.toJSONString(msuIncident);
+        String json = JsonSupport.toJSONString(mspIncident);
         System.out.println(json);
         MspIncident parsed = JsonSupport.parseJson(json, MspIncident.class);
-        Assert.assertEquals(msuIncident, parsed);
+        Assert.assertEquals(mspIncident, parsed);
     }
 }
