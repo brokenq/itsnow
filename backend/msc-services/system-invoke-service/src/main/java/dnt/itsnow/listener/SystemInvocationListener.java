@@ -3,6 +3,7 @@
  */
 package dnt.itsnow.listener;
 
+import dnt.itsnow.exception.SystemInvokeException;
 import dnt.itsnow.model.SystemInvocation;
 
 import java.util.EventListener;
@@ -38,4 +39,12 @@ public interface SystemInvocationListener extends EventListener {
      * @param invocation 调用
      */
     void cancelled(SystemInvocation invocation);
+
+    /**
+     * 当一个系统调用失败时，本监听者将会被通过该接口通知到
+     *
+     * @param invocation 调用
+     * @param e exception
+     */
+    void failed(SystemInvocation invocation, SystemInvokeException e);
 }

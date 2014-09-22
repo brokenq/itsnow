@@ -3,6 +3,8 @@
  */
 package dnt.itsnow.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.util.Properties;
@@ -114,6 +116,12 @@ public class ItsnowProcess extends ConfigItem{
 
     public void setConfiguration(Properties configuration) {
         this.configuration = configuration;
+    }
+
+    @JsonIgnore
+    public String getHostAddress(){
+        if( host != null ) return host.getAddress();
+        return null;
     }
 
 }

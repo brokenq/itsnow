@@ -71,4 +71,10 @@ public class ItsnowSchema extends ConfigItem {
         return result;
     }
 
+    @JsonIgnore
+    public String getHostAddress(){
+        if( host != null ) return host.getAddress();
+        return null;
+    }
+
 }

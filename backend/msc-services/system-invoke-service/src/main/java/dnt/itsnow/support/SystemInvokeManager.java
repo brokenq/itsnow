@@ -8,6 +8,7 @@ import dnt.itsnow.exception.SystemInvokeException;
 import dnt.itsnow.listener.SystemInvocationListener;
 import dnt.itsnow.model.SystemInvocation;
 import dnt.itsnow.service.SystemInvokeService;
+import dnt.itsnow.service.SystemInvoker;
 import dnt.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -32,6 +33,8 @@ public class SystemInvokeManager extends Bean implements SystemInvokeService {
     @Autowired
     @Qualifier("systemInvokeExecutor")
     ExecutorService systemInvokeExecutor;
+    @Autowired
+    SystemInvoker systemInvoker;
 
     @Autowired
     @Qualifier("timeoutScheduler")
@@ -162,20 +165,31 @@ public class SystemInvokeManager extends Bean implements SystemInvokeService {
                 }
             });
             // perform real invocation
-
-            broadcast(new ListenerNotifier() {
-                @Override
-                public void notify(SystemInvocationListener listener) {
-                    listener.finished(invocation);
-                }
-            });
-            clean();
+            try {
+                systemInvoker.invoke(invocation);
+                broadcast(new ListenerNotifier() {
+                    @Override
+                    public void notify(SystemInvocationListener listener) {
+                        listener.finished(invocation);
+                    }
+                });
+            } catch (final SystemInvokeException e) {
+                logger.error("Failed to run:" + e.getMessage(), e);
+                broadcast(new ListenerNotifier() {
+                    @Override
+                    public void notify(SystemInvocationListener listener) {
+                        listener.failed(invocation, e);
+                    }
+                });
+            } finally {
+                clean();
+            }
         }
 
         public void cancel() {
             // TODO: TRY TO CANCEL this executing task
             // such as set the flag to break the while loop
-            // or execute a kill -9 for the started process
+            // or run a kill -9 for the started process
         }
 
         protected void clean() {

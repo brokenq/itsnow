@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# Usage provision_host.sh host
+# Usage prepare_host.sh host
 #
 
 if [ ! $1 ]; then

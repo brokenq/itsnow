@@ -14,7 +14,8 @@ import java.util.concurrent.ExecutorService;
  */
 @Configuration
 public class SystemInvokeAppConfig {
-    @Bean
+
+    @Bean(name = "systemInvokeExecutor")
     public ExecutorService systemInvokeExecutor(){
         return new StrategyExecutorService("system.invoke", "SystemInvocation");
     }
