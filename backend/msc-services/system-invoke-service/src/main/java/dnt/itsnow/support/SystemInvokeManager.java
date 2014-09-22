@@ -37,7 +37,6 @@ public class SystemInvokeManager extends Bean implements SystemInvokeService {
     SystemInvoker systemInvoker;
 
     @Autowired
-    @Qualifier("timeoutScheduler")
     protected TaskScheduler cleanScheduler;
 
     private Map<String, Future>             futures   = new ConcurrentHashMap<String, Future>();
