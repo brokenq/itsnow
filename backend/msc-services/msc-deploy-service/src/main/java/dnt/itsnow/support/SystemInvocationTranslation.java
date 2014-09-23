@@ -46,15 +46,15 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
                                  host.getConfiguration().getProperty("password")
                                 );
             }
-        }.next(new LocalInvocation() {
+        }.timeout("1m").next(new LocalInvocation() {
             public int perform(Process process) throws Exception {
                 return process.run("./prepare_host.sh", host.getAddress());
             }
-        }).next(new RemoteInvocation(host.getAddress()) {
+        }.timeout("2m")).next(new RemoteInvocation(host.getAddress()) {
             public int perform(Process ssh) throws Exception {
                 return ssh.run("./provision.sh");
             }
-        });
+        }.timeout("10m")); // 最后开通最长用时10分钟
     }
 
     @Override

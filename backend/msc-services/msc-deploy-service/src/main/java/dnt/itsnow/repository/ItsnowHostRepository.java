@@ -38,4 +38,7 @@ public interface ItsnowHostRepository {
 
     @Delete("DELETE FROM itsnow_hosts WHERE address = #{address}")
     void deleteByAddress(String address);
+
+    @Update("UPDATE itsnow_hosts SET status = #{status}, updated_at = #{updatedAt} WHERE id = #{id}")
+    void updateStatus(ItsnowHost host);
 }

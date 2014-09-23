@@ -24,6 +24,7 @@ public abstract class AbstractProcess<T extends SystemInvocation> implements Pro
     protected final ProcessBuilder builder = new ProcessBuilder();
     protected final ExecutorService systemInvokeExecutor;
     protected final T               invocation;
+    protected java.lang.Process     underlying;
 
     public AbstractProcess(T invocation, ExecutorService systemInvokeExecutor) {
         this.invocation = invocation;
@@ -44,10 +45,10 @@ public abstract class AbstractProcess<T extends SystemInvocation> implements Pro
         String[] realCommands = assembleCommand(command, args);
         builder.command(realCommands);
         try {
-            final java.lang.Process process = builder.start();
-            Future<?> stderrFuture = pipe(process.getErrorStream(), errorFile(), totalFile());
-            Future<?> stdoutFuture = pipe(process.getInputStream(), outFile(), totalFile());
-            int exitCode = process.waitFor();
+            underlying = builder.start();
+            Future<?> stderrFuture = pipe(underlying.getErrorStream(), errorFile(), totalFile());
+            Future<?> stdoutFuture = pipe(underlying.getInputStream(), outFile(), totalFile());
+            int exitCode = underlying.waitFor();
             stderrFuture.get();
             stdoutFuture.get();
             return exitCode;

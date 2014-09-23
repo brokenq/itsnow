@@ -18,6 +18,7 @@ import dnt.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.concurrent.ExecutorService;
 
@@ -57,8 +58,18 @@ public class DefaultSystemInvoker extends Bean implements SystemInvoker {
                 invoke(invocation.getNext());
             }
         } else {
-            throw new SystemInvokeException("Got exit code " + result + " while invoke: " + invocation
-                                            + ", reason is: " + process.getError());
+            String suffix = process.getError();
+            if(StringUtils.isEmpty(suffix)){
+                String output = process.getOutput();
+                if( StringUtils.isEmpty(output)){
+                    suffix = "no output or error";
+                }else{
+                    suffix = "output as below:\n " + output;
+                }
+            }else{
+                suffix = "error is: " + suffix;
+            }
+            throw new SystemInvokeException("Exit code " + result + " while invoke: " + invocation + ", " + suffix);
         }
     }
 

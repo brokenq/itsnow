@@ -4,6 +4,7 @@
 package dnt.itsnow.model;
 
 import dnt.itsnow.system.Process;
+import dnt.type.TimeInterval;
 import dnt.util.StringUtils;
 
 
@@ -21,7 +22,7 @@ public abstract class SystemInvocation {
     public SystemInvocation(String wd) {
         this.wd = wd;
         this.seq = 0;
-        setTimeout(1000 * 60 * 5);
+        timeout(1000 * 60 * 5);
     }
 
     public String getWd() {
@@ -41,8 +42,14 @@ public abstract class SystemInvocation {
         return timeout;
     }
 
-    public void setTimeout(long timeout) {
+    public SystemInvocation timeout(long timeout) {
         this.timeout = timeout;
+        return this;
+    }
+
+    public SystemInvocation timeout(String timeout) {
+        this.timeout = new TimeInterval(timeout).getMilliseconds();
+        return this;
     }
 
     public long totalTimeout() {

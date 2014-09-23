@@ -3,6 +3,9 @@
  */
 package dnt.itsnow.support;
 
+import dnt.itsnow.exception.SystemInvokeException;
+import dnt.itsnow.listener.SystemInvocationListener;
+import dnt.itsnow.model.SystemInvocation;
 import dnt.itsnow.service.SystemInvocationTranslator;
 import dnt.itsnow.service.SystemInvokeService;
 import dnt.spring.Bean;
@@ -11,9 +14,52 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * <h1>Default shared code between itsnow host/schema/process manager</h1>
  */
-public abstract class ItsnowResourceManager extends Bean {
+public abstract class ItsnowResourceManager extends Bean implements SystemInvocationListener {
     @Autowired
     SystemInvocationTranslator translator;
     @Autowired
     SystemInvokeService        invokeService;
+
+    @Override
+    protected void performStop() {
+        invokeService.addListener(this);
+    }
+
+    @Override
+    protected void performStart() {
+        invokeService.removeListener(this);
+    }
+
+    @Override
+    public void added(SystemInvocation invocation) {
+        logger.debug("{} added", invocation.getId());
+    }
+
+    @Override
+    public void started(SystemInvocation invocation) {
+        logger.debug("{} started", invocation.getId());
+
+    }
+
+    @Override
+    public void stepExecuted(SystemInvocation invocation) {
+        logger.debug("{} stepExecuted:{}", invocation.getId(), invocation.getSequence());
+    }
+
+    @Override
+    public void finished(SystemInvocation invocation) {
+        logger.debug("{} finished", invocation.getId());
+
+    }
+
+    @Override
+    public void cancelled(SystemInvocation invocation) {
+        logger.debug("{} cancelled", invocation.getId());
+    }
+
+    @Override
+    public void failed(SystemInvocation invocation, SystemInvokeException e) {
+        logger.debug("{} failed, because of {}", invocation.getId(), e.getMessage());
+
+    }
 }

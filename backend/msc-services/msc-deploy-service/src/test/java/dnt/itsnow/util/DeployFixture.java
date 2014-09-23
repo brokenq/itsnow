@@ -20,7 +20,7 @@ public class DeployFixture {
         host.setCapacity(10);
         host.setDescription("A test itsnow host");
         Properties configuration = new Properties();
-        configuration.setProperty("username", "root");
+        configuration.setProperty("user", "root");
         configuration.setProperty("password", "root1234");
         host.setConfiguration(configuration);
         return host;

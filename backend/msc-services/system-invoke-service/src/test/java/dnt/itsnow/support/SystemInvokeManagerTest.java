@@ -157,8 +157,8 @@ public class SystemInvokeManagerTest extends AbstractProcessTest {
 
     @Test
     public void testJobTimeout() throws Exception {
-        invocation.setTimeout(100);
-        invocation.getNext().setTimeout(100);
+        invocation.timeout(100);
+        invocation.getNext().timeout(100);
         String invocationId = systemInvokerManager.addJob(invocation);
         try {
             systemInvokerManager.waitJobFinished(invocationId);

@@ -34,7 +34,7 @@ public interface SystemInvocationListener extends EventListener {
     void stepExecuted(SystemInvocation invocation);
 
     /**
-     * 当一个系统调用完成时，本监听者将会被通过该接口通知到
+     * 当一个系统调用正常完成时，本监听者将会被通过该接口通知到
      *
      * @param invocation 调用
      */
