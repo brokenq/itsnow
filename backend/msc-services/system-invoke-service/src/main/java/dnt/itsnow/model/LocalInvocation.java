@@ -19,4 +19,9 @@ public abstract class LocalInvocation extends SystemInvocation{
         super(wd);
     }
 
+
+    @Override
+    public String toString() {
+        return String.format("%s@%d\n%s %s\n\n", id, seq, wd, getCommand());
+    }
 }

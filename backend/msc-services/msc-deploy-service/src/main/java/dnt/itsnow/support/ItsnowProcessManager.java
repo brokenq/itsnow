@@ -12,7 +12,6 @@ import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.repository.ItsnowProcessRepository;
 import dnt.itsnow.service.*;
-import dnt.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -118,15 +117,16 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
     }
 
     @Override
-    public void cancel(ItsnowProcess process, String job) throws ItsnowProcessException {
-        boolean finished = invokeService.isFinished(job);
+    public void cancel(ItsnowProcess process, String jobId) throws ItsnowProcessException {
+        boolean finished = invokeService.isFinished(jobId);
         if( finished )
-            throw new ItsnowProcessException("The job " + job + " is finished already!");
-        invokeService.cancelJob(job);
+            throw new ItsnowProcessException("The job " + jobId + " is finished already!");
+        invokeService.cancelJob(jobId);
     }
 
     @Override
-    public String[] follow(ItsnowProcess process, String job, int offset) {
-        return invokeService.read(job, offset);
+    public long follow(ItsnowProcess process, String jobId, long offset, List<String> result) {
+        logger.trace("Follow {}'s job: {}", process, jobId);
+        return invokeService.read(jobId, offset, result);
     }
 }
