@@ -1,6 +1,6 @@
 package dnt.itsnow.it;
 
-import dnt.itsnow.model.Incident;
+//import dnt.itsnow.model.Incident;
 import junit.framework.Assert;
 import org.junit.Test;
 import org.springframework.http.HttpEntity;
@@ -22,16 +22,16 @@ public class MsuIncidentTest extends AbstractTest {
                 .password("secret");
     }
 
-    @Test
-    public void testFindAllOpenedIncidents() throws Exception {
-        List<Incident> incidents = withLoginUser(new Callback<List<Incident>>() {
-            @Override
-            public List<Incident> perform(HttpHeaders headers) {
-                HttpEntity request = new HttpEntity(headers);
-                return getForObject("/api/msu-incidents", List.class, request);
-            }
-        });
-        Assert.assertNotNull(incidents);
-    }
+//    @Test
+//    public void testFindAllOpenedIncidents() throws Exception {
+//        List<Incident> incidents = withLoginUser(new Callback<List<Incident>>() {
+//            @Override
+//            public List<Incident> perform(HttpHeaders headers) {
+//                HttpEntity request = new HttpEntity(headers);
+//                return getForObject("/api/msu-incidents", List.class, request);
+//            }
+//        });
+//        Assert.assertNotNull(incidents);
+//    }
 
 }

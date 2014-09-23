@@ -44,7 +44,7 @@ public class Incident extends Record {
 
     private String msuInstanceId;//对应msu activiti的instanceId
     private String msuAccountName;//msu account name
-    private IncidentStatus msuStatus = IncidentStatus.Assigned;
+    private IncidentStatus msuStatus;
 
     //add msp msuInstanceId,msp msuStatus
     private String mspInstanceId;//msp instance id

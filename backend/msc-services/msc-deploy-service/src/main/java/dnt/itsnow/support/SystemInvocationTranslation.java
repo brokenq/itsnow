@@ -40,7 +40,7 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
         //   install redis/mysql etc
         return new LocalInvocation() {
             public int perform(Process process) throws Exception {
-                return process.run("trust_me.sh",
+                return process.run("./trust_me.sh",
                                  host.getAddress(),
                                  host.getConfiguration().getProperty("user"),
                                  host.getConfiguration().getProperty("password")
@@ -48,11 +48,11 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
             }
         }.next(new LocalInvocation() {
             public int perform(Process process) throws Exception {
-                return process.run("prepare_host.sh", host.getAddress());
+                return process.run("./prepare_host.sh", host.getAddress());
             }
         }).next(new RemoteInvocation(host.getAddress()) {
             public int perform(Process ssh) throws Exception {
-                return ssh.run("provision.sh");
+                return ssh.run("./provision.sh");
             }
         });
     }
@@ -62,12 +62,12 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
         return new RemoteInvocation(host.getAddress()) {
             @Override
             public int perform(Process process) throws Exception {
-                return process.run("delist.sh");
+                return process.run("./delist.sh");
             }
         }.next(new LocalInvocation() {
             @Override
             public int perform(Process process) throws Exception {
-                return process.run("delist_host.sh", host.getAddress());
+                return process.run("./delist_host.sh", host.getAddress());
             }
         });
     }
@@ -77,7 +77,7 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
         return new RemoteInvocation(schema.getHostAddress()){
             @Override
             public int perform(Process process) throws Exception {
-                return process.run("create_db.sh", schema.getName(),
+                return process.run("./create_db.sh", schema.getName(),
                                  schema.getConfiguration().getProperty("user"),
                                  schema.getConfiguration().getProperty("password"));
             }
@@ -89,7 +89,7 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
         return new RemoteInvocation(schema.getHostAddress()){
             @Override
             public int perform(Process process) throws Exception {
-                return process.run("drop_db.sh", schema.getName(),
+                return process.run("./drop_db.sh", schema.getName(),
                                  schema.getConfiguration().getProperty("user"));
             }
         };
@@ -104,7 +104,7 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
             // 1. 生成需要部署的msc/msu的目录(做好各种link/配置文件copy工作)
             @Override
             public int perform(Process process) throws Exception {
-                return process.run("prepare_deploy.sh",
+                return process.run("./prepare_deploy.sh",
                                    itsnowProcess.getAccount().getType().toLowerCase(),
                                    itsnowProcess.getName());
             }
@@ -121,7 +121,7 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
             //3. 实际开始部署
             @Override
             public int perform(Process process) throws Exception {
-                return process.run("deploy.sh",
+                return process.run("./deploy.sh",
                                    itsnowProcess.getAccount().getType().toLowerCase(),
                                    itsnowProcess.getName(), targetPath);
             }
@@ -136,7 +136,7 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
             // 而卸载之前的停止，清理等工作，也是需要外部执行(甚至应该是运营人员通过管理界面执行的）
             @Override
             public int perform(Process process) throws Exception {
-                return process.run("delist.sh", itsnowProcess.getName());
+                return process.run("./delist.sh", itsnowProcess.getName());
             }
         };
     }
@@ -146,7 +146,7 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
         return new RemoteInvocation(itsnowProcess.getHostAddress()) {
             @Override
             public int perform(Process process) throws Exception {
-                return process.run("start_ms.sh", itsnowProcess.getName());
+                return process.run("./start_ms.sh", itsnowProcess.getName());
             }
         };
     }
@@ -156,7 +156,7 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
         return new RemoteInvocation(itsnowProcess.getHostAddress()) {
             @Override
             public int perform(Process process) throws Exception {
-                return process.run("stop_ms.sh", itsnowProcess.getName());
+                return process.run("./stop_ms.sh", itsnowProcess.getName());
             }
         };
     }

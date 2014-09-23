@@ -19,13 +19,11 @@ public class RemoteProcess extends AbstractProcess<RemoteInvocation> {
     }
 
     @Override
-    protected String assembleCommand(String command, Object[] args) {
+    protected String[] assembleCommand(String command, Object[] args) {
         List<String> remoteCommands = getCommands(command, args);
-        String remoteCommand = StringUtils.join(remoteCommands, " ");
-        return String.format("ssh root@%s \"cd %s && %s\"",
-                             this.invocation.getHost(),
-                             this.invocation.getWd(),
-                             remoteCommand);
+        String remoteCommand = StringUtils.join(remoteCommands, " ") ;
+        remoteCommand = "cd " + this.invocation.getWd() + " && " + remoteCommand;
+        return new String[]{"ssh", "root@"+ this.invocation.getHost(), remoteCommand};
     }
 
 }

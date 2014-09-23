@@ -63,4 +63,12 @@ public abstract class SystemInvocation {
     public void recordCommand(String command) {
         this.command = command;
     }
+
+    public String getOutFileName(){
+        return getId() + "@" + seq + ".out";
+    }
+
+    public String getErrFileName(){
+        return getId() + "@" + seq + ".err";
+    }
 }

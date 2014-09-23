@@ -4,9 +4,9 @@
 package dnt.itsnow.system;
 
 import dnt.itsnow.model.LocalInvocation;
-import dnt.util.StringUtils;
 
 import java.io.File;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -20,8 +20,9 @@ public class LocalProcess extends AbstractProcess<LocalInvocation> {
     }
 
     @Override
-    protected String assembleCommand(String command, Object[] args) {
+    protected String[] assembleCommand(String command, Object[] args) {
         builder.directory(new File(invocation.getWd()));
-        return StringUtils.join(getCommands(command, args), " ");
+        List<String> commands = getCommands(command, args);
+        return commands.toArray(new String[commands.size()]);
     }
 }

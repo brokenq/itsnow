@@ -58,4 +58,11 @@ public class AccountRegistrationTest {
         AccountRegistration parsed = JsonSupport.parseJson(json, AccountRegistration.class);
         Assert.assertEquals(registration, parsed);
     }
+
+    @Test
+    public void testSerializationFromClient() throws Exception {
+        String json = "{\"type\":\"Enterprise\",\"asUser\":true,\"asProvider\":false,\"account\":{\"id\":null,\"createdAt\":null,\"updatedAt\":null,\"name\":\"it-account\",\"description\":null,\"type\":\"base\",\"sn\":null,\"domain\":\"it-domain\",\"userId\":null,\"status\":null},\"user\":{\"id\":null,\"createdAt\":null,\"updatedAt\":null,\"name\":\"it-user\",\"description\":null,\"email\":\"test@it.com\",\"phone\":\"12345678901\",\"password\":\"123456\",\"repeatPassword\":\"123456\",\"accountId\":null,\"enabled\":false,\"expired\":false,\"locked\":false,\"passwordExpired\":false,\"username\":\"it-user\"},\"attachments\":null}";
+        JsonSupport.parseJson(json, AccountRegistration.class);
+    }
+
 }
