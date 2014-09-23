@@ -15,9 +15,10 @@ import java.util.List;
 /**
  * <h1>MSU Incident服务的控制器</h1>
  * <pre>
- * <b>HTTP     URI                                方法            含义  </b>
+ * <b>HTTP     URI                                    方法            含义  </b>
  * # GET      /api/msu-incidents/                     index           列出所有当前用户的故障单列表，支持过滤，分页，排序等
  * # GET      /api/msu-incidents/closed               indexClosed     列出当前用户已关闭故障单列表
+ * # GET      /api/msu-incidents/created              indexCreated    列出当前用户创建的故障单列表
  * # POST     /api/msu-incidents/start                start           启动故障流程实例
  * # GET      /api/msu-incidents/{instanceId}         query           查询实例ID为{instanceId}的流程的状态，返回task信息
  * # PUT      /api/msu-incidents/{instanceId}/{taskId}/complete    complete        完成流程task
@@ -58,6 +59,22 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
 
         //根据实例查询对应表单数据
         indexPage = service.findAllClosedByUserAndKey(currentUser.getUsername(), key, pageRequest);
+        return indexPage.getContent();
+    }
+
+    /**
+     * <h2>查询当前用户的创建的故障单列表</h2>
+     * <p/>
+     * GET /api/msu-incidents/created
+     * @param key 查询关键字
+     * @return  Incident列表
+     */
+    @RequestMapping("created")
+    @ResponseBody
+    public List<Incident> indexCreated(@RequestParam(value = "key", required = false) String key) {
+
+        //根据实例查询对应表单数据
+        indexPage = service.findAllCreatedByUserAndKey(currentUser.getUsername(), key, pageRequest);
         return indexPage.getContent();
     }
 
@@ -107,7 +124,7 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
     }
 
     @Override
-    @BeforeFilter(method = RequestMethod.GET, value = {"index","indexClosed"})
+    @BeforeFilter(method = RequestMethod.GET, value = {"index","indexClosed","indexCreated"})
     public void initDefaultPageRequest( @RequestParam(required = false, value = "page", defaultValue = "1") int page,
                                         @RequestParam(required = false, value = "size", defaultValue = "40") int size,
                                         @RequestParam(required = false, value = "sort", defaultValue = "") String sort){
@@ -115,7 +132,7 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
     }
 
     @Override
-    @AfterFilter(method =  RequestMethod.GET, value = {"index","indexClosed"})
+    @AfterFilter(method =  RequestMethod.GET, value = {"index","indexClosed","indexCreated"})
     public void renderPageToHeader(HttpServletResponse response){
         super.renderPageToHeader(response);
     }
