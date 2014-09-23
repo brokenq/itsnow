@@ -6,19 +6,18 @@ package dnt.itsnow.system;
 import dnt.itsnow.model.RemoteInvocation;
 import dnt.util.StringUtils;
 import junit.framework.Assert;
-import org.apache.commons.io.IOUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.util.List;
 
 /**
  * <h1>测试对远程命令的调用</h1>
  */
+@Ignore("the ci or other developer's host isn't trusted by srv2")
 public class RemoteProcessTest extends AbstractProcessTest {
-    String remoteHost = "happyonroad.net";
+    String remoteHost = "srv2.itsnow.com";
     String remoteDir = "/opt/system/test";
 
     //we need setup authorized relationship
