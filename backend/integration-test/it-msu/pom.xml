@@ -18,10 +18,6 @@
             <groupId>dnt.itsnow</groupId>
             <artifactId>it-platform</artifactId>
         </dependency>
-        <dependency>
-            <groupId>dnt.itsnow</groupId>
-            <artifactId>general-incident-service</artifactId>
-        </dependency>
 
     </dependencies>
 
