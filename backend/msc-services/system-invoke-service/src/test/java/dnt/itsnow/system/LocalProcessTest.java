@@ -5,11 +5,13 @@ package dnt.itsnow.system;
 
 import dnt.itsnow.model.LocalInvocation;
 import junit.framework.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * <h1>测试对本地命令的调用</h1>
  */
+@Ignore
 public class LocalProcessTest extends AbstractProcessTest {
 
     @Test
