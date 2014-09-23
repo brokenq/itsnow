@@ -14,6 +14,7 @@ import dnt.itsnow.system.Process;
 import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -32,6 +33,7 @@ import java.util.concurrent.Semaphore;
 @ContextConfiguration(classes = SystemInvokeConfig.class)
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
+@Ignore("Need linux/osx, trusted by srv2.itsnow.com")
 public class SystemInvokeManagerTest extends AbstractProcessTest {
     private static  Logger logger = LoggerFactory.getLogger(SystemInvokeManagerTest.class);
 

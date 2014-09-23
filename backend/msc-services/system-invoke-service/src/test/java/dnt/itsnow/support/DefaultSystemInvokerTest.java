@@ -11,6 +11,7 @@ import dnt.itsnow.model.SystemInvocation;
 import dnt.itsnow.system.*;
 import dnt.itsnow.system.Process;
 import junit.framework.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(classes = SystemInvokeConfig.class)
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
+@Ignore("Need linux/osx, trusted by srv2.itsnow.com")
 public class DefaultSystemInvokerTest extends AbstractProcessTest {
 
     @Autowired
