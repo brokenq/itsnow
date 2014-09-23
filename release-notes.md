@@ -165,9 +165,13 @@ git@happyonroad.net:insight/itsnow.git Rel-x.y.z 标签(tag)
 
 1. Frontend 服务目录管理
 2. Frontend 故障流程
-3. Backend 实现MSC中MSU/P注册流程
-4. Backend 部署运行环境支持
-5. Backend 实现MSC中MSU/P注册的脚本开发工作
+3. Frontend 地点管理
+4. Frontend 部门管理
+5. Frontend 流程字典
+6. Frontend 工作时间管理
+7. Backend 实现MSC中MSU/P注册流程
+8. Backend 部署运行环境支持
+9. Backend 实现MSC中MSU/P注册的脚本开发工作
 
 2. 问题修复
 -----------
