@@ -61,10 +61,10 @@ angular.module('MsuIndex.IncidentOpened', ['ngTable', 'ngResource'])
                     {name: '重庆'}
                 ],
                 serviceCatalogModule : [
-                    {name: '天'},
-                    {name: '地'},
-                    {name: '人'},
-                    {name: '畜'}
+                    {name: 'Hardware'},
+                    {name: 'Software'},
+                    {name: 'Consult'},
+                    {name: 'Others'}
                 ],
                 impactModule : [
                     {name: '高'},
@@ -72,9 +72,9 @@ angular.module('MsuIndex.IncidentOpened', ['ngTable', 'ngResource'])
                     {name: '低'}
                 ],
                 categoryModule : [
-                    {name: '高'},
-                    {name: '中'},
-                    {name: '低'}
+                    {name: '硬件'},
+                    {name: '软件'},
+                    {name: '数据库'}
                 ],
                 urgencyModule : [
                     {name: '高'},
@@ -82,9 +82,9 @@ angular.module('MsuIndex.IncidentOpened', ['ngTable', 'ngResource'])
                     {name: '低'}
                 ],
                 ciModule : [
-                    {name: '高'},
-                    {name: '中'},
-                    {name: '低'}
+                    {name: 'hp-rp-5470-1'},
+                    {name: 'ibm-p550-1'},
+                    {name: 'dell-001'}
                 ],
                 priorityModule : [
                     {name: '高'},
@@ -92,12 +92,12 @@ angular.module('MsuIndex.IncidentOpened', ['ngTable', 'ngResource'])
                     {name: '低'}
                 ],
                 statusModule : [
-                    {name: 'New'},
-                    {name: 'Assigned'},
-                    {name: 'Accepted'},
-                    {name: 'Resolving'},
-                    {name: 'Resolved'},
-                    {name: 'Closed'}
+                    {id:'1',name: 'New',action:'新建',status:'已新建'},
+                    {id:'2',name: 'Assigned',action:'分派',status:'已分派'},
+                    {id:'3',name: 'Accepted',action:'签收',status:'已签收'},
+                    {id:'4',name: 'Resolving',action:'分析',status:'处理中'},
+                    {id:'5',name: 'Resolved',action:'处理',status:'已解决'},
+                    {id:'6',name: 'Closed',action:'关闭',status:'已关闭'}
                 ],
                 closeCodeModule : [
                     {name: '1'},

@@ -63,6 +63,8 @@ public interface ActivitiEngineService {
 
     List<HistoricProcessInstance> queryTasksFinished(String userName, String key);
 
+    List<HistoricProcessInstance> queryTasksStartedBy(String userName, String key);
+
     List<IdentityLink> queryTaskIdentity(String taskId);
 
     Task queryTask(String taskId);
