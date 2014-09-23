@@ -4,9 +4,13 @@
 package dnt.itsnow.support;
 
 import dnt.itsnow.exception.SystemInvokeException;
+import dnt.itsnow.listener.InvocationEventBroadcaster;
+import dnt.itsnow.listener.ListenerNotifier;
+import dnt.itsnow.listener.SystemInvocationListener;
 import dnt.itsnow.model.LocalInvocation;
 import dnt.itsnow.model.RemoteInvocation;
 import dnt.itsnow.model.SystemInvocation;
+import dnt.itsnow.service.SystemInvokeService;
 import dnt.itsnow.service.SystemInvoker;
 import dnt.itsnow.system.*;
 import dnt.itsnow.system.Process;
@@ -27,15 +31,26 @@ public class DefaultSystemInvoker extends Bean implements SystemInvoker {
     @Qualifier("systemInvokeExecutor")
     ExecutorService systemInvokeExecutor;
 
+    @Autowired
+    private InvocationEventBroadcaster broadcaster;
 
     @Override
-    public void invoke(SystemInvocation invocation) throws SystemInvokeException {
+    public void invoke(final SystemInvocation invocation) throws SystemInvokeException {
         Process process = createProcess(invocation);
+        invocation.bind(process);
         int result;
         try {
             result = invocation.perform(process);
+            broadcaster.broadcast(new ListenerNotifier() {
+                @Override
+                public void notify(SystemInvocationListener listener) {
+                    listener.stepExecuted(invocation);
+                }
+
+            });
         } catch (Exception e) {
-            throw new SystemInvokeException("Can't invoke " + invocation, e);
+            String message = e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage();
+            throw new SystemInvokeException("Can't invoke " + invocation + ", because of:" + message, e);
         }
         if (result == 0) {
             if (invocation.getNext() != null) {

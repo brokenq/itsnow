@@ -11,6 +11,7 @@ import dnt.itsnow.service.ItsnowProcessService;
 import dnt.itsnow.service.ItsnowSchemaService;
 import dnt.itsnow.service.SystemInvokeService;
 import dnt.itsnow.util.DeployFixture;
+import org.easymock.IAnswer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +23,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.easymock.EasyMock.*;
 import static org.easymock.EasyMock.expectLastCall;
@@ -173,15 +176,24 @@ public class ItsnowProcessManagerTest {
     public void testFollow() throws Exception {
         process.setStatus(ProcessStatus.Running);
         String jobId = "stop-process-job-id";
-        String[] lines = {"one", "two"};
-        expect(systemInvokeService.read(jobId, 0)).andReturn(lines);
+        final List<String> messages = new LinkedList<String>();
+        final String[] lines = {"one", "two"};
+        expect(systemInvokeService.read(jobId, 0 ,messages)).andAnswer(new IAnswer<Long>() {
+            @Override
+            public Long answer() throws Throwable {
+                messages.add(lines[0]);
+                messages.add(lines[1]);
+                return 8L;
+            }
+        });
 
         replay(hostService);
         replay(schemaService);
         replay(systemInvokeService);
         replay(repository);
 
-        String[] reads = service.follow(process, jobId, 0);
-        Assert.isTrue(Arrays.equals(lines, reads));
+        long offset = service.follow(process, jobId, 0L, messages);
+        Assert.isTrue(offset == 8L);
+        Assert.isTrue(messages.size()==2);
     }
 }

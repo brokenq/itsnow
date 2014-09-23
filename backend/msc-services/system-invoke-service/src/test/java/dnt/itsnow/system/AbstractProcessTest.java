@@ -3,6 +3,7 @@
  */
 package dnt.itsnow.system;
 
+import dnt.util.NamedThreadFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.After;
@@ -20,6 +21,8 @@ import java.util.concurrent.Executors;
  */
 public abstract class AbstractProcessTest {
     protected ExecutorService executorService;
+    protected static String remoteHost = "srv2.itsnow.com";
+    protected static String remoteDir  = "/opt/system/test";
 
     @Before
     public void setUp() throws Exception {
@@ -40,7 +43,7 @@ public abstract class AbstractProcessTest {
             IOUtils.closeQuietly(klassResource);
             IOUtils.closeQuietly(tmpResource);
         }
-        executorService = Executors.newFixedThreadPool(2);
+        executorService = Executors.newFixedThreadPool(2, new NamedThreadFactory("ProcessInvokeExecutor")) ;
     }
 
     @After

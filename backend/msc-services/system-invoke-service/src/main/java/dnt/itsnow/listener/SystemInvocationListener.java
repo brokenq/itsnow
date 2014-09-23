@@ -27,6 +27,13 @@ public interface SystemInvocationListener extends EventListener {
     void started(SystemInvocation invocation);
 
     /**
+     * 当某个系统调用的特定步骤被执行时，会发出该消息
+     *
+     * @param invocation 系统调用
+     */
+    void stepExecuted(SystemInvocation invocation);
+
+    /**
      * 当一个系统调用完成时，本监听者将会被通过该接口通知到
      *
      * @param invocation 调用
