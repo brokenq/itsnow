@@ -11,7 +11,7 @@ import org.junit.Test;
 /**
  * <h1>测试对本地命令的调用</h1>
  */
-@Ignore
+@Ignore("Windows need set SH in env.PATHEXT")
 public class LocalProcessTest extends AbstractProcessTest {
 
     @Test

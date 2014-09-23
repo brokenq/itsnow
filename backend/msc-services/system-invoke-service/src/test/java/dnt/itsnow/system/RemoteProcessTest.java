@@ -17,8 +17,6 @@ import java.io.File;
  */
 @Ignore("the ci or other developer's host isn't trusted by srv2")
 public class RemoteProcessTest extends AbstractProcessTest {
-    String remoteHost = "srv2.itsnow.com";
-    String remoteDir = "/opt/system/test";
 
     //we need setup authorized relationship
     @Before
@@ -39,14 +37,14 @@ public class RemoteProcessTest extends AbstractProcessTest {
         RemoteInvocation invocation = new RemoteInvocation(remoteHost, remoteDir) {
             @Override
             public int perform(Process process) throws Exception {
-                return process.run("./test.sh", "hello", "world");
+                return process.run("./test.sh", "hi", "itsnow");
             }
         };
         invocation.setId("remote-invocation");
         RemoteProcess process = new RemoteProcess(invocation, executorService);
         int exitCode = invocation.perform(process);
         Assert.assertEquals(0, exitCode);
-        Assert.assertEquals("hello world", process.getOutput());
+        Assert.assertEquals("hi itsnow", process.getOutput());
         Assert.assertEquals("", process.getError());
     }
 }
