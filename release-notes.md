@@ -66,7 +66,7 @@ git@happyonroad.net:insight/itsnow.git Rel-x.y.z 标签(tag)
   mvn -Pdnt,with-itsnow-general,with-itsnow-msp package
   mvn -Pdnt,with-itsnow-general,with-itsnow-msu package
 ```
-7. 将对master的修改提交到origin上（origin会执行单元测试以及集成测试）
+7. 将对master的修改提交到origin上（origin会执行单元测试以及集成测试）:`git push origin master`
 8. 检查CI上各个子系统是否通过Sprint Build
   8.1. 如果检查不通过，则要求相应开发人员解决问题，提交到Dev-x.y.z，而后从步骤2开始重复
   8.2. 如果检查通过，继续执行以下步骤
