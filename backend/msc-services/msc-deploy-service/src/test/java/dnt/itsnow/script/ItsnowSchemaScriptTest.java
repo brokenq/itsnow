@@ -4,10 +4,10 @@
 package dnt.itsnow.script;
 
 import dnt.itsnow.config.DeployScriptConfig;
-import dnt.itsnow.model.ItsnowHost;
-import dnt.itsnow.repository.ItsnowHostRepository;
+import dnt.itsnow.model.ItsnowSchema;
+import dnt.itsnow.repository.ItsnowSchemaRepository;
 import dnt.itsnow.service.SystemInvokeService;
-import dnt.itsnow.support.ItsnowHostManager;
+import dnt.itsnow.support.ItsnowSchemaManager;
 import dnt.itsnow.util.DeployFixture;
 import junit.framework.Assert;
 import org.junit.After;
@@ -22,7 +22,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.easymock.EasyMock.*;
 
 /**
- * <h1>测试主机相关脚本是否可以正确工作</h1>
+ * <h1>测试Schema相关脚本是否可以正确工作</h1>
  *
  * 本测试用例类似于集成测试用例，关注后台与脚本之间的集成
  *
@@ -39,26 +39,26 @@ import static org.easymock.EasyMock.*;
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
 // 跑这个测试用例需要：
-//  1. ~/.know_hosts里面不包含 被测试主机(srv2.itsnow.com)
-//  2. 被测试主机 不能 信任本机
-//  3. 被测试主机 不能 已经安装 mysql/redis
-public class ItsnowHostScriptTest {
+//  被测试主机(srv2.itsnow.com) 已经开通
+//   mysql/redis is ready
+//   msp/msu binaries is ready
+public class ItsnowSchemaScriptTest {
     @Autowired
-    ItsnowHostManager    manager;
+    ItsnowSchemaManager    manager;
     // Mocked object
     @Autowired
-    ItsnowHostRepository repository;
+    ItsnowSchemaRepository repository;
 
     @Autowired
     SystemInvokeService systemInvokeService;
 
-    ItsnowHost host;
+    ItsnowSchema schema;
 
 
     @Before
     public void setUp() throws Exception {
         System.setProperty("APP_HOME", "/opt/dnt/insight/itsnow/backend/release");
-        host = DeployFixture.deployHost();
+        schema = DeployFixture.deploySchema();
         manager.start();
     }
 
@@ -70,36 +70,26 @@ public class ItsnowHostScriptTest {
     }
 
     @Test
-    public void testCreateHost() throws Exception {
-        repository.create(host);
-        expectLastCall().once();
-        expect(repository.findByConfiguration(isA(String.class), isA(String.class))).andReturn(host);
-
-        repository.update(host);
+    public void testCreate() throws Exception {
+        repository.create(schema);
         expectLastCall().once();
 
         replay(repository);
 
-
-        manager.create(host);
-        String invocationId = host.getProperty(ItsnowHostManager.CREATE_INVOCATION_ID);
+        manager.create(schema);
+        String invocationId = schema.getProperty(ItsnowSchemaManager.CREATE_INVOCATION_ID);
         Assert.assertNotNull(invocationId);
-        systemInvokeService.waitJobFinished(invocationId);
-
     }
 
     @Test
-    public void testDeleteHost() throws Exception {
-        repository.update(host);
-        expectLastCall().once();
-        repository.deleteByAddress(host.getAddress());
+    public void testDelete() throws Exception {
+        repository.delete(schema);
         expectLastCall().once();
 
         replay(repository);
 
-        manager.delete(host);
-        String invocationId = host.getProperty(ItsnowHostManager.DELETE_INVOCATION_ID);
+        manager.delete(schema);
+        String invocationId = schema.getProperty(ItsnowSchemaManager.DELETE_INVOCATION_ID);
         Assert.assertNotNull(invocationId);
-
     }
 }

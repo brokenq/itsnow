@@ -19,13 +19,10 @@ if [ ! $3 ]; then
   exit 3
 fi
 
-echo "Process path is: $PATH"
-
 host=$1
 user=$2
-password=$3
+export SSHPASS=$3
 file=`hostname`.pub
-ssh_pass=`which sshpass`
 
 function echo_and_exec(){
   cmd="$@"
@@ -34,11 +31,11 @@ function echo_and_exec(){
 }
 
 function simple_ssh_exec(){
-  echo_and_exec ssh -o StrictHostKeyChecking=no -o LogLevel=quiet -o PasswordAuthentication=no $user@$host  $@
+  echo_and_exec ssh -o StrictHostKeyChecking=no -o PasswordAuthentication=no $user@$host  $@
 }
 
 function scp_exec(){
-  echo_and_exec $ssh_pass -p $password scp -o StrictHostKeyChecking=no -o LogLevel=quiet $1 $user@$host:$2
+  echo_and_exec sshpass -p $SSHPASS scp -o StrictHostKeyChecking=no $1 $user@$host:$2
   code=$?
   if [ $code -gt 0 ]; then
     echo "Can't exec \"$cmd\""
@@ -46,7 +43,7 @@ function scp_exec(){
   fi
 }
 function ssh_exec(){
-  echo_and_exec $ssh_pass -p $password ssh -o StrictHostKeyChecking=no -o LogLevel=quiet $user@$host $@
+  echo_and_exec sshpass -p $SSHPASS ssh -o StrictHostKeyChecking=no $user@$host $@
   code=$?
   if [ $code -gt 0 ]; then
     echo "Can't exec \"$cmd\""
@@ -54,7 +51,7 @@ function ssh_exec(){
   fi
 }
 
-# Try to connect
+# Test I'm trusted or not
 simple_ssh_exec ls /opt
 if [ $? -eq 0 ]; then
   echo "$host has trusted me(`hostname`)"
@@ -63,19 +60,20 @@ else
   echo "Making $host trust `hostname`..."
 fi
 
+# Test sshpass can work or not
+ssh_exec ls /opt
+# Perform real works
 scp_exec ~/.ssh/id_rsa.pub /root/.ssh/$file
 ssh_exec "/bin/cp -f /root/.ssh/authorized_keys /root/.ssh/authorized_keys.bak"
 ssh_exec "cat /root/.ssh/$file >> /root/.ssh/authorized_keys"
+ssh_exec "rm -f /root/.ssh/$file"
 
-#ssh_exec "rm -f /root/.ssh/$file"
-
+# verify trust relationship
 simple_ssh_exec ls /opt
 code=$?
-# verify trust relationship
-
 if [ $code -gt 0 ]; then
   echo "Failed to setup trust relationship"
   exit $code
 else
-  echo "$host trust me(`hostname`)"
+  echo "$host have trust me(`hostname`)"
 fi

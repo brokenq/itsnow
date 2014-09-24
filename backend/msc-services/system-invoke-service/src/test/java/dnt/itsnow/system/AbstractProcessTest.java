@@ -4,6 +4,7 @@
 package dnt.itsnow.system;
 
 import dnt.util.NamedThreadFactory;
+import dnt.util.StringUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.After;
@@ -43,6 +44,16 @@ public abstract class AbstractProcessTest {
             IOUtils.closeQuietly(klassResource);
             IOUtils.closeQuietly(tmpResource);
         }
+
+        String[] sshCommands = new String[]{"ssh", "root@" + remoteHost, "mkdir -p "+ remoteDir + ""};
+        String[] scpCommands = new String[]{"scp", testShellFile.getAbsolutePath(), "root@"+ remoteHost + ":" + remoteDir};
+        java.lang.Process mkdir = Runtime.getRuntime().exec(sshCommands);
+        if( mkdir.waitFor() != 0 )
+            throw new Exception("Can't execute: " + StringUtils.join(sshCommands, " ") + ", exit code: " + mkdir.exitValue());
+        java.lang.Process scp = Runtime.getRuntime().exec(scpCommands);
+        if( scp.waitFor() != 0 )
+            throw new Exception("Can't execute: " + StringUtils.join(scpCommands, " ") + ", exit code: " + mkdir.exitValue());
+
         executorService = Executors.newFixedThreadPool(2, new NamedThreadFactory("ProcessInvokeExecutor")) ;
     }
 

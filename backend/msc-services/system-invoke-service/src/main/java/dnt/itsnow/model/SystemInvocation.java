@@ -6,18 +6,24 @@ package dnt.itsnow.model;
 import dnt.itsnow.system.Process;
 import dnt.type.TimeInterval;
 import dnt.util.StringUtils;
+import org.apache.commons.io.IOUtils;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.List;
 
 
 /**
  * <h1>进行系统调用的任务</h1>
  */
 public abstract class SystemInvocation {
-    protected String id; // 任务标识符
-    protected int    seq;   // 任务序号
-    private long timeout ; // 任务超时(单位ms)
-    protected           SystemInvocation next;
-    protected           String           wd;
-    protected transient Process          process;
+    protected           String           id;      // 整体调用的标识符
+    protected           int              seq;     // 调用序号
+    private             long             timeout; // 超时(单位ms)
+    protected           SystemInvocation next;    // 下一个任务
+    protected           String           wd;      // 当前任务的working dir
+    protected transient Process          process; // 关联shell process
+    private             int              userFlag;// 用户设置的标记
 
     public SystemInvocation(String wd) {
         this.wd = wd;
@@ -35,7 +41,7 @@ public abstract class SystemInvocation {
 
     public void setId(String id) {
         this.id = id;
-        if(this.next != null ) this.next.setId(id);
+        if (this.next != null) this.next.setId(id);
     }
 
     public long getTimeout() {
@@ -53,7 +59,7 @@ public abstract class SystemInvocation {
     }
 
     public long totalTimeout() {
-        if( this.next == null ) return getTimeout();
+        if (this.next == null) return getTimeout();
         return getTimeout() + this.next.totalTimeout();
     }
 
@@ -77,16 +83,8 @@ public abstract class SystemInvocation {
         return next;
     }
 
-    public String getTotalFileName() {
+    String totalFileName() {
         return getId() + ".log";
-    }
-
-    public String getOutFileName() {
-        return getId() + "@" + seq + ".out";
-    }
-
-    public String getErrFileName() {
-        return getId() + "@" + seq + ".err";
     }
 
     public void bind(Process process) {
@@ -97,12 +95,40 @@ public abstract class SystemInvocation {
         return this.process;
     }
 
-    protected String getCommand(){
-        if( process == null ) return "<no execution>";
+    protected String getCommand() {
+        if (process == null) return "<no execution>";
         return StringUtils.join(process.getCommand(), " ");
     }
 
     public int getSequence() {
         return seq;
+    }
+
+    public File totalFile() {
+        return new File(System.getProperty("APP_HOME"), "tmp/" + this.totalFileName());
+    }
+
+    public List<String> getOutputs() {
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(totalFile());
+            return IOUtils.readLines(fis);
+        } catch (Exception e) {
+            return null;
+        } finally {
+            IOUtils.closeQuietly(fis);
+        }
+    }
+
+    public String getOutput() {
+        return StringUtils.join(getOutputs(), "\n");
+    }
+
+    public int getUserFlag() {
+        return userFlag;
+    }
+
+    public void setUserFlag(int userFlag) {
+        this.userFlag = userFlag;
     }
 }

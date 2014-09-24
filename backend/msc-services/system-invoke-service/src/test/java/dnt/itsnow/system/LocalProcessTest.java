@@ -26,7 +26,6 @@ public class LocalProcessTest extends AbstractProcessTest {
         LocalProcess process = new LocalProcess(invocation, executorService);
         int exitCode = invocation.perform(process);
         Assert.assertEquals(0, exitCode);
-        Assert.assertEquals("hello world", process.getOutput());
-        Assert.assertEquals("", process.getError());
+        Assert.assertEquals("hello world", invocation.getOutput());
     }
 }

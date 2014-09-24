@@ -5,13 +5,11 @@ package dnt.itsnow.config;
 
 import dnt.concurrent.StrategyExecutorService;
 import dnt.itsnow.repository.ItsnowHostRepository;
+import dnt.itsnow.repository.ItsnowProcessRepository;
+import dnt.itsnow.repository.ItsnowSchemaRepository;
 import dnt.itsnow.service.SystemInvocationTranslator;
-import dnt.itsnow.service.SystemInvokeService;
 import dnt.itsnow.service.SystemInvoker;
-import dnt.itsnow.support.DefaultSystemInvoker;
-import dnt.itsnow.support.ItsnowHostManager;
-import dnt.itsnow.support.SystemInvocationTranslation;
-import dnt.itsnow.support.SystemInvokeManager;
+import dnt.itsnow.support.*;
 import org.easymock.EasyMock;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -55,16 +53,41 @@ public class DeployScriptConfig {
         return new SystemInvocationTranslation();
     }
 
-    // 为Manager打得桩
+    // 为Host Manager打得桩
     @Bean
     public ItsnowHostRepository hostRepository(){
         return EasyMock.createMock(ItsnowHostRepository.class);
     }
 
-    // 被测试的入口(manager)
+    // 被测试的入口(host manager)
     @Bean
     public ItsnowHostManager hostManager(){
         return new ItsnowHostManager();
+    }
+
+
+    // 为Schema Manager打得桩
+    @Bean
+    public ItsnowSchemaRepository schemaRepository(){
+        return EasyMock.createMock(ItsnowSchemaRepository.class);
+    }
+
+    // 被测试的入口(schema manager)
+    @Bean
+    public ItsnowSchemaManager schemaManager(){
+        return new ItsnowSchemaManager();
+    }
+
+    // 为Process Manager打得桩
+    @Bean
+    public ItsnowProcessRepository processRepository(){
+        return EasyMock.createMock(ItsnowProcessRepository.class);
+    }
+
+    // 被测试的入口(process manager)
+    @Bean
+    public ItsnowProcessManager processManager(){
+        return new ItsnowProcessManager();
     }
 
 

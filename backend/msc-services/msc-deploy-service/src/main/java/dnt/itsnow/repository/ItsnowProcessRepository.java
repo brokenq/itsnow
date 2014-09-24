@@ -21,11 +21,49 @@ public interface ItsnowProcessRepository {
     //FIND 出来带上 host, schema, account等关联对象
     ItsnowProcess findByName(@Param("name") String name);
 
-    @Insert("INSERT INTO itsnow_processes(account_id, host_id, schema_id, name, configuration, description, created_at, updated_at)" +
-            " VALUES(#{accountId}, #{hostId}, #{schemaId}, #{name}, #{configuration, typeHandler=dnt.itsnow.util.PropertiesHandler}, #{description}, #{createdAt}, #{updatedAt})")
+    @Insert("INSERT INTO itsnow_processes(" +
+            "    account_id, " +
+            "    host_id, " +
+            "    schema_id, " +
+            "    name, " +
+            "    pid, " +
+            "    wd, " +
+            "    configuration, " +
+            "    description, " +
+            "    status, " +
+            "    created_at, " +
+            "    updated_at" +
+            ") VALUES(" +
+            "    #{accountId}, " +
+            "    #{hostId}, " +
+            "    #{schemaId}, " +
+            "    #{name}, " +
+            "    #{pid}, " +
+            "    #{wd}, " +
+            "    #{configuration, typeHandler=dnt.itsnow.util.PropertiesHandler}, " +
+            "    #{description}, " +
+            "    #{status}, " +
+            "    #{createdAt}, " +
+            "    #{updatedAt}" +
+            ")")
     @Options(useGeneratedKeys = true)
-    void create(ItsnowProcess creating);
+    void create(ItsnowProcess process);
 
     @Delete("DELETE FROM itsnow_processes WHERE name = #{name}")
     void deleteByName(@Param("name") String name);
+
+    @Update("UPDATE itsnow_processes SET " +
+            "  name          = #{name}, " +
+            "  pid           = #{pid}, " +
+            "  wd            = #{wd}, " +
+            "  configuration = #{configuration,typeHandler=dnt.itsnow.util.PropertiesHandler}, " +
+            "  description   = #{description}, " +
+            "  status        = #{status}, " +
+            "  updated_at    = #{updatedAt} " +
+            "WHERE id = #{id}")
+    void update(ItsnowProcess process);
+
+    @Select("SELECT * FROM itsnow_processes WHERE configuration REGEXP '\"${name}\" *: *\"?${value}\"?' limit 1")
+    @ResultMap("basicProcessResult")  //TODO processResult 会在 accountType 上出问题，待解决
+    ItsnowProcess findByConfiguration(@Param("name")String name, @Param("value")String value);
 }

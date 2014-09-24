@@ -17,18 +17,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * <h1>Itsnow Host Manager</h1>
  */
 @Service
 public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHostService {
+
     @Autowired
     ItsnowHostRepository repository;
-    private Map<String, Long> invocationOfHost = new HashMap<String, Long>();
 
     @Override
     public Page<ItsnowHost> findAll(String keyword, PageRequest pageRequest) {
@@ -69,31 +67,35 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
         logger.info("Creating host {}", creating);
 
         SystemInvocation configJob = translator.provision(creating);
+        configJob.setUserFlag(1);// 1 代表创建
         //需要在create主机之后，执行脚本，将主机环境配置好
         // 实际的流程是，it，运营人员开好一个虚拟机，而后通过msc的界面输入该虚拟机的信息
         // 通过调用本api创建itsnow的主机，而后本api就会自动配置该主机
         // 配置的环境内容包括: java, mysql, redis, msc, msu, msp的部署
-        String invocationId = invokeService.addJob(configJob);
         // 这里不等待该任务结束，因为configure主机可能时间很长
         // 采用主机状态管理方式，也就是刚刚创建的主机处于configure状态，configure好了之后处于ready状态
-        creating.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        creating.setUpdatedAt(creating.getCreatedAt());
+        String invocationId = invokeService.addJob(configJob);
+        creating.setProperty(CREATE_INVOCATION_ID, invocationId);
+        creating.creating();
         repository.create(creating);
         logger.info("Created  host {}", creating);
-        invocationOfHost.put(invocationId, creating.getId());
         return creating;
     }
 
 
-
     @Override
     public void delete(ItsnowHost host) throws ItsnowHostException {
-        SystemInvocation quitJob = translator.delist(host);
-        String quitJobId = invokeService.addJob(quitJob);
+        SystemInvocation delistJob = translator.delist(host);
+        delistJob.setUserFlag(-1);
+        String delistJobId = invokeService.addJob(delistJob);
+        host.setProperty(DELETE_INVOCATION_ID, delistJobId);
+        host.updating();
+        repository.update(host);
+        // 因为主机下线操作比较快，所以采用同步方式
         try {
-            invokeService.waitJobFinished(quitJobId);
+            invokeService.waitJobFinished(delistJobId);
         } catch (SystemInvokeException e) {
-            throw new ItsnowHostException("Can't quit host for " + host);
+            throw new ItsnowHostException("Can't delist host " + host, e);
         }
         //TODO 如果有外键引用，会被拒绝，应该将底层的异常转换为合适的ItsnowHostException
         // 能够通过异常很容易的告知用户host被哪个业务对象所引用
@@ -128,26 +130,21 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     }
 
     protected void whenInvocationDone(SystemInvocation invocation, HostStatus status) {
-        ItsnowHost host = getHostByInvocationId(invocation.getId());
+        ItsnowHost host;
+        if( invocation.getUserFlag() == 1){
+            host = getHostByInvocationId(CREATE_INVOCATION_ID, invocation.getId());
+        }else{
+            return;// 马上就要删除了，没必要再更新状态
+        }
         if( host == null ) return;//听到了别的消息，忽略
         logger.info("Update {} status as {}", host, status);
         host.setStatus(status);
-        host.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-        repository.updateStatus(host);
-        invocationOfHost.remove(invocation.getId());
+        host.updating();
+        repository.update(host);
     }
 
-    ItsnowHost getHostByInvocationId(String id) {
-        Long hostId = invocationOfHost.get(id);
-        if(hostId == null) return null;
-        return repository.findById(hostId);
+    ItsnowHost getHostByInvocationId(String propertyName, String propertyValue) {
+        return repository.findByConfiguration(propertyName, propertyValue);
     }
 
-    // Just for test
-    public String getInvocationId(Long hostId) {
-        for (Map.Entry<String, Long> entry : invocationOfHost.entrySet()) {
-            if(hostId.equals(entry.getValue())) return entry.getKey();
-        }
-        return null;
-    }
 }

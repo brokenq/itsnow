@@ -44,6 +44,21 @@ public class Record {
     }
 
     /**
+     * 标记本对象正在本创建
+     */
+    public void creating(){
+        setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        setUpdatedAt(getCreatedAt());
+    }
+
+    /**
+     * 标记本对象正在被更新
+     */
+    public void updating(){
+        setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+    }
+
+    /**
      * 将另外一个对象的属性设置到本对象上来
      *
      * @param another 另外一个对象

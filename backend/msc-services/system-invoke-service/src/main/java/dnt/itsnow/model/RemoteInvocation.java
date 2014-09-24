@@ -12,7 +12,7 @@ public abstract class RemoteInvocation extends SystemInvocation{
     private final String host;
 
     public RemoteInvocation(String address) {
-        this(address, "/opt/system/script");
+        this(address, "/opt/system/platform");
     }
 
     public RemoteInvocation(String address, String wd) {

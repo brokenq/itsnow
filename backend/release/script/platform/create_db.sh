@@ -31,4 +31,10 @@ mysql -uroot -p$mysql_pwd <<SQL
   GRANT ALL ON $schema.* TO '$user'@'localhost';
   GRANT SELECT ON itsnow_msc.* TO '$user'@'localhost';
 SQL
-echo "Created a new database(schema) = $schema for user $user"
+
+if [ $? -eq 0 ]; then
+  echo "Created a new database(schema) = $schema for user $user"
+else
+  echo "Failed to create the database $schema for user $user"
+  exit 1
+fi

@@ -54,8 +54,10 @@ public interface SystemInvokeService {
      * <h2>等待任务结束</h2>
      *
      * @param invocationId 任务描述符
+     * @return Result Code, 有时候，有些调用返回码错误，但没异常
+     * @throws dnt.itsnow.service.SystemInvokeService 异常
      */
-    void waitJobFinished(String invocationId) throws SystemInvokeException;
+    int waitJobFinished(String invocationId) throws SystemInvokeException;
 
     /**
      * <h2>增加一个系统任务执行的监听器</h2>

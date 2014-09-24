@@ -10,15 +10,14 @@ import dnt.itsnow.listener.SystemInvocationListener;
 import dnt.itsnow.model.LocalInvocation;
 import dnt.itsnow.model.RemoteInvocation;
 import dnt.itsnow.model.SystemInvocation;
-import dnt.itsnow.service.SystemInvokeService;
 import dnt.itsnow.service.SystemInvoker;
-import dnt.itsnow.system.*;
+import dnt.itsnow.system.LocalProcess;
 import dnt.itsnow.system.Process;
+import dnt.itsnow.system.RemoteProcess;
 import dnt.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import java.util.concurrent.ExecutorService;
 
@@ -36,7 +35,7 @@ public class DefaultSystemInvoker extends Bean implements SystemInvoker {
     private InvocationEventBroadcaster broadcaster;
 
     @Override
-    public void invoke(final SystemInvocation invocation) throws SystemInvokeException {
+    public int invoke(final SystemInvocation invocation) throws SystemInvokeException {
         Process process = createProcess(invocation);
         invocation.bind(process);
         int result;
@@ -55,21 +54,12 @@ public class DefaultSystemInvoker extends Bean implements SystemInvoker {
         }
         if (result == 0) {
             if (invocation.getNext() != null) {
-                invoke(invocation.getNext());
+                return invoke(invocation.getNext());
             }
+            return result;
         } else {
-            String suffix = process.getError();
-            if(StringUtils.isEmpty(suffix)){
-                String output = process.getOutput();
-                if( StringUtils.isEmpty(output)){
-                    suffix = "no output or error";
-                }else{
-                    suffix = "output as below:\n " + output;
-                }
-            }else{
-                suffix = "error is: " + suffix;
-            }
-            throw new SystemInvokeException("Exit code " + result + " while invoke: " + invocation + ", " + suffix);
+            String suffix = invocation.getOutput();
+            throw new SystemInvokeException("Exit code " + result + " while invoke: " + invocation + " " + suffix);
         }
     }
 

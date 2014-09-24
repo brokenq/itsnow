@@ -15,18 +15,21 @@ import org.springframework.beans.factory.annotation.Autowired;
  * <h1>Default shared code between itsnow host/schema/process manager</h1>
  */
 public abstract class ItsnowResourceManager extends Bean implements SystemInvocationListener {
+    public static final String CREATE_INVOCATION_ID = "createInvocationId";
+    public static final String DELETE_INVOCATION_ID = "deleteInvocationId";
+
     @Autowired
     SystemInvocationTranslator translator;
     @Autowired
     SystemInvokeService        invokeService;
 
     @Override
-    protected void performStop() {
+    protected void performStart() {
         invokeService.addListener(this);
     }
 
     @Override
-    protected void performStart() {
+    protected void performStop() {
         invokeService.removeListener(this);
     }
 

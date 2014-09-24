@@ -22,4 +22,10 @@ mysql -uroot -p$mysql_pwd <<SQL
   REVOKE SELECT ON itsnow_msc.* FROM '$user'@'localhost' ;
   DROP USER '$user'@'localhost' ;
 SQL
-echo "Drop the database(schema) = $schema and user $user"
+
+if [ $? -eq 0 ]; then
+  echo "Drop the database(schema) = $schema and user $user"
+else
+  echo "Failed to drop the database $schema and user $user"
+  exit 1
+fi

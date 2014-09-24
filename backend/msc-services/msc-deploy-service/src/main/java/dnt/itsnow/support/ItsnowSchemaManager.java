@@ -26,14 +26,14 @@ public class ItsnowSchemaManager extends ItsnowResourceManager implements Itsnow
     public ItsnowSchema create(ItsnowSchema creating) throws ItsnowSchemaException {
         logger.info("Creating itsnow schema: {}", creating);
         SystemInvocation createJob = translator.create(creating);
-        String job = invokeService.addJob(createJob);
+        String invocationId = invokeService.addJob(createJob);
         try {
-            invokeService.waitJobFinished(job);
+            invokeService.waitJobFinished(invocationId);
         } catch (SystemInvokeException e) {
             throw new ItsnowSchemaException("Can't create schema for :" + creating, e);
         }
-        creating.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        creating.setUpdatedAt(creating.getUpdatedAt());
+        creating.setProperty(CREATE_INVOCATION_ID, invocationId);
+        creating.creating();
         repository.create(creating);
         logger.info("Created  itsnow schema: {}", creating);
         return creating;
@@ -43,9 +43,10 @@ public class ItsnowSchemaManager extends ItsnowResourceManager implements Itsnow
     public void delete(ItsnowSchema schema) throws ItsnowSchemaException {
         logger.warn("Deleting itsnow schema: {}", schema);
         SystemInvocation dropJob = translator.drop(schema);
-        String job = invokeService.addJob(dropJob);
+        String invocationId = invokeService.addJob(dropJob);
+        schema.setProperty(DELETE_INVOCATION_ID, invocationId);
         try {
-            invokeService.waitJobFinished(job);
+            int result = invokeService.waitJobFinished(invocationId);
         } catch (SystemInvokeException e) {
             throw new ItsnowSchemaException("Can't drop schema for :" + schema, e);
         }

@@ -6,17 +6,15 @@ package dnt.itsnow.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.validation.constraints.NotNull;
-import java.util.Properties;
 
 /**
  * Itsnow DB Schema
  */
-public class ItsnowSchema extends ConfigItem {
+public class ItsnowSchema extends DeployResource {
     @NotNull
     private Long hostId;
     @JsonIgnore
     private ItsnowHost host;
-    private Properties configuration;
 
     @NotNull
     @Override
@@ -40,13 +38,6 @@ public class ItsnowSchema extends ConfigItem {
         this.host = host;
     }
 
-    public Properties getConfiguration() {
-        return configuration;
-    }
-
-    public void setConfiguration(Properties configuration) {
-        this.configuration = configuration;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -56,8 +47,7 @@ public class ItsnowSchema extends ConfigItem {
 
         ItsnowSchema that = (ItsnowSchema) o;
 
-        if (configuration != null ? !configuration.equals(that.configuration) : that.configuration != null)
-            return false;
+        //noinspection RedundantIfStatement
         if (hostId != null ? !hostId.equals(that.hostId) : that.hostId != null) return false;
 
         return true;
@@ -67,7 +57,6 @@ public class ItsnowSchema extends ConfigItem {
     public int hashCode() {
         int result = super.hashCode();
         result = 31 * result + (hostId != null ? hostId.hashCode() : 0);
-        result = 31 * result + (configuration != null ? configuration.hashCode() : 0);
         return result;
     }
 

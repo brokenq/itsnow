@@ -19,13 +19,15 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.List;
+
 /**
  * Test Default System Invoker
  */
 @ContextConfiguration(classes = SystemInvokeConfig.class)
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
-@Ignore("Need linux/osx, trusted by srv2.itsnow.com")
+//@Ignore("Need linux/osx, trusted by srv2.itsnow.com")
 public class DefaultSystemInvokerTest extends AbstractProcessTest {
 
     @Autowired
@@ -47,10 +49,9 @@ public class DefaultSystemInvokerTest extends AbstractProcessTest {
         invocation.setId("two-ok");
         systemInvoker.invoke(invocation);
 
-        Assert.assertEquals("", invocation.getProcess().getError());
-        Assert.assertEquals("hello world", invocation.getProcess().getOutput());
-        Assert.assertEquals("", invocation.getNext().getProcess().getError());
-        Assert.assertEquals("hi itsnow!", invocation.getNext().getProcess().getOutput());
+        List<String> lines = invocation.getOutputs();
+        Assert.assertEquals("hello world", lines.get(0));
+        Assert.assertEquals("hi itsnow!", lines.get(1));
     }
 
     @Test
@@ -74,10 +75,10 @@ public class DefaultSystemInvokerTest extends AbstractProcessTest {
             System.out.println(e.getMessage());
         }
 
-        Assert.assertEquals("", invocation.getProcess().getError());
-        Assert.assertEquals("hello world", invocation.getProcess().getOutput());
-        // 验证第二个有执行机会，但出错
-        Assert.assertNotNull(invocation.getNext().getProcess().getError());
+        List<String> lines = invocation.getOutputs();
+        Assert.assertTrue(lines.size() >= 2);
+        Assert.assertEquals("hello world", lines.get(0));
+        Assert.assertTrue(lines.get(1).contains("No such file or directory"));
     }
 
     @Test
@@ -101,7 +102,7 @@ public class DefaultSystemInvokerTest extends AbstractProcessTest {
             System.out.println(e.getMessage());
         }
 
-        Assert.assertNotNull(invocation.getProcess().getError());
+        Assert.assertTrue(invocation.getOutput().contains("No such file or directory"));
 
         // 验证第二个根本没有执行机会
         Assert.assertNull(invocation.getNext().getProcess());
@@ -128,7 +129,7 @@ public class DefaultSystemInvokerTest extends AbstractProcessTest {
             System.out.println(e.getMessage());
         }
 
-        Assert.assertNotNull(invocation.getProcess().getError());
+        Assert.assertTrue(invocation.getOutput().contains("No such file or directory"));
         // 验证第二个根本没有执行机会
         Assert.assertNull(invocation.getNext().getProcess());
     }

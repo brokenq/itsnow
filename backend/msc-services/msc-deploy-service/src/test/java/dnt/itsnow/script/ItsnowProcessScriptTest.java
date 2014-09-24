@@ -4,10 +4,12 @@
 package dnt.itsnow.script;
 
 import dnt.itsnow.config.DeployScriptConfig;
-import dnt.itsnow.model.ItsnowHost;
-import dnt.itsnow.repository.ItsnowHostRepository;
+import dnt.itsnow.model.ItsnowProcess;
+import dnt.itsnow.model.ProcessStatus;
+import dnt.itsnow.repository.ItsnowProcessRepository;
+import dnt.itsnow.repository.ItsnowSchemaRepository;
 import dnt.itsnow.service.SystemInvokeService;
-import dnt.itsnow.support.ItsnowHostManager;
+import dnt.itsnow.support.ItsnowProcessManager;
 import dnt.itsnow.util.DeployFixture;
 import junit.framework.Assert;
 import org.junit.After;
@@ -22,7 +24,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.easymock.EasyMock.*;
 
 /**
- * <h1>测试主机相关脚本是否可以正确工作</h1>
+ * <h1>测试Process相关脚本是否可以正确工作</h1>
  *
  * 本测试用例类似于集成测试用例，关注后台与脚本之间的集成
  *
@@ -39,67 +41,81 @@ import static org.easymock.EasyMock.*;
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
 // 跑这个测试用例需要：
-//  1. ~/.know_hosts里面不包含 被测试主机(srv2.itsnow.com)
-//  2. 被测试主机 不能 信任本机
-//  3. 被测试主机 不能 已经安装 mysql/redis
-public class ItsnowHostScriptTest {
+//  被测试主机(srv2.itsnow.com) 已经开通
+//   mysql/redis is ready
+//   msp/msu binaries is ready
+public class ItsnowProcessScriptTest {
     @Autowired
-    ItsnowHostManager    manager;
+    ItsnowProcessManager    manager;
     // Mocked object
     @Autowired
-    ItsnowHostRepository repository;
+    ItsnowProcessRepository repository;
+    @Autowired
+    ItsnowSchemaRepository  schemaRepository;
 
     @Autowired
     SystemInvokeService systemInvokeService;
 
-    ItsnowHost host;
+    ItsnowProcess process;
 
 
     @Before
     public void setUp() throws Exception {
         System.setProperty("APP_HOME", "/opt/dnt/insight/itsnow/backend/release");
-        host = DeployFixture.deployHost();
+        process = DeployFixture.deployProcess();
         manager.start();
     }
 
     @After
     public void tearDown() throws Exception {
         manager.stop();
+        verify(schemaRepository);
+        reset(schemaRepository);
         verify(repository);
         reset(repository);
     }
 
     @Test
-    public void testCreateHost() throws Exception {
-        repository.create(host);
-        expectLastCall().once();
-        expect(repository.findByConfiguration(isA(String.class), isA(String.class))).andReturn(host);
-
-        repository.update(host);
+    public void testCreate() throws Exception {
+        schemaRepository.create(process.getSchema());
         expectLastCall().once();
 
+        repository.create(process);
+        expectLastCall().once();
+
+        replay(schemaRepository);
         replay(repository);
 
-
-        manager.create(host);
-        String invocationId = host.getProperty(ItsnowHostManager.CREATE_INVOCATION_ID);
+        manager.create(process);
+        String invocationId = process.getProperty(ItsnowProcessManager.CREATE_INVOCATION_ID);
         Assert.assertNotNull(invocationId);
-        systemInvokeService.waitJobFinished(invocationId);
+    }
+
+    @Test
+    public void testDelete() throws Exception {
+        schemaRepository.delete(process.getSchema());
+        expectLastCall().once();
+        repository.deleteByName(process.getName());
+        expectLastCall().once();
+
+        replay(schemaRepository);
+        replay(repository);
+
+        process.setStatus(ProcessStatus.Stopped);
+        manager.delete(process);
+        String invocationId = process.getProperty(ItsnowProcessManager.DELETE_INVOCATION_ID);
+        Assert.assertNotNull(invocationId);
+    }
+
+    @Test
+    public void testStart() throws Exception {
+
 
     }
 
     @Test
-    public void testDeleteHost() throws Exception {
-        repository.update(host);
-        expectLastCall().once();
-        repository.deleteByAddress(host.getAddress());
-        expectLastCall().once();
+    public void testStop() throws Exception {
 
-        replay(repository);
-
-        manager.delete(host);
-        String invocationId = host.getProperty(ItsnowHostManager.DELETE_INVOCATION_ID);
-        Assert.assertNotNull(invocationId);
 
     }
 }

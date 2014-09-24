@@ -4,6 +4,7 @@
 package dnt.itsnow.repository;
 
 import dnt.itsnow.config.DeployRepositoryConfig;
+import dnt.itsnow.model.HostStatus;
 import dnt.itsnow.model.ItsnowHost;
 import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.util.DeployFixture;
@@ -16,6 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Properties;
 
@@ -96,5 +98,27 @@ public class ItsnowHostRepositoryTest {
     public void testFindAllDbHosts() throws Exception {
         List<ItsnowHost> msHosts = hostRepository.findAllDbHosts();
         Assert.assertTrue(msHosts.size() >= 1);
+    }
+
+    @Test
+    public void testUpdate() throws Exception {
+        ItsnowHost host = hostRepository.findByAddress("172.16.3.4");
+        host.setName("new name");
+        host.setStatus(HostStatus.Running);
+        host.updating();
+        hostRepository.update(host);
+
+    }
+
+    @Test
+    public void testFindByConfiguration() throws Exception {
+        ItsnowHost host = hostRepository.findByConfiguration("mem", "8g");
+        Assert.assertNotNull(host);
+    }
+
+    @Test
+    public void testFindAllByConfiguration() throws Exception {
+        List<ItsnowHost> hosts = hostRepository.findAllByConfiguration("mem", "8g");
+        Assert.assertEquals(2, hosts.size());
     }
 }
