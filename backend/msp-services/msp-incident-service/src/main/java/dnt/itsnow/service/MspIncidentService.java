@@ -21,6 +21,17 @@ public interface MspIncidentService {
     Page<Incident> findByUserAndKey(String username, String keyword, Pageable pageable);
 
     /**
+     * <h2>根据用户名和流程KEY查询该用户创建的故障列表</h2>
+     *
+     * @param username  用户名
+     * @param keyword  流程定义KEY
+     * @param pageable 分页请求
+     * @return 已关闭故障分页数据
+     */
+    Page<Incident> findAllCreatedByUserAndKey(String username, String keyword, Pageable pageable);
+
+
+    /**
      * <h2>根据用户名和流程KEY查询已关闭故障列表</h2>
      *
      * @param username  用户名
