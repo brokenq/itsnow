@@ -18,6 +18,7 @@ import java.util.List;
  * <b>HTTP     URI                                    方法            含义  </b>
  * # GET      /api/msp-incidents/                     index           列出所有当前用户的故障单列表，支持过滤，分页，排序等
  * # GET      /api/msp-incidents/closed               indexClosed     列出当前用户已关闭故障单列表
+ * # GET      /api/msp-incidents/created              indexCreated    列出当前用户创建故障单列表
  * # POST     /api/msp-incidents/start                start           启动故障流程实例
  * # GET      /api/msp-incidents/{instanceId}         query           查询实例ID为{instanceId}的流程的状态，返回task信息
  * # PUT      /api/msp-incidents/{instanceId}/{taskId}/complete    complete        完成流程task
@@ -28,7 +29,7 @@ import java.util.List;
 public class MspIncidentController extends SessionSupportController<Incident> {
 
     @Autowired
-    MspIncidentService mspIncidentService;
+    MspIncidentService service;
 
     /**
      * <h2>查询所有当前用户的故障单列表</h2>
@@ -42,7 +43,7 @@ public class MspIncidentController extends SessionSupportController<Incident> {
     public List<Incident> index(@RequestParam(value = "key", required = false) String key) {
 
         //根据实例查询对应表单数据
-        indexPage = mspIncidentService.findByUserAndKey(currentUser.getUsername(), key, pageRequest);
+        indexPage = service.findByUserAndKey(currentUser.getUsername(), key, pageRequest);
         return indexPage.getContent();
     }
 
@@ -58,7 +59,23 @@ public class MspIncidentController extends SessionSupportController<Incident> {
     public List<Incident> indexClosed(@RequestParam(value = "key", required = false) String key) {
 
         //根据实例查询对应表单数据
-        indexPage = mspIncidentService.findClosedByUserAndKey(currentUser.getUsername(), key, pageRequest);
+        indexPage = service.findClosedByUserAndKey(currentUser.getUsername(), key, pageRequest);
+        return indexPage.getContent();
+    }
+
+    /**
+     * <h2>查询当前用户的创建的故障单列表</h2>
+     * <p/>
+     * GET /api/msu-incidents/created
+     * @param key 查询关键字
+     * @return  Incident列表
+     */
+    @RequestMapping("created")
+    @ResponseBody
+    public List<Incident> indexCreated(@RequestParam(value = "key", required = false) String key) {
+
+        //根据实例查询对应表单数据
+        indexPage = service.findAllCreatedByUserAndKey(currentUser.getUsername(), key, pageRequest);
         return indexPage.getContent();
     }
 
@@ -76,7 +93,7 @@ public class MspIncidentController extends SessionSupportController<Incident> {
     public MspIncident query(@PathVariable("instanceId") String instanceId,
                              @RequestParam(value = "withHistory", required = false) boolean withHistory) {
 
-        return mspIncidentService.findByInstanceId(instanceId,withHistory);
+        return service.findByInstanceId(instanceId,withHistory);
     }
 
     /**
@@ -89,7 +106,7 @@ public class MspIncidentController extends SessionSupportController<Incident> {
     @RequestMapping(value = "/start",method = RequestMethod.POST)
     @ResponseBody
     public MspIncident start(@RequestBody @Valid Incident incident){
-        return mspIncidentService.startIncident(mainAccount.getName(), this.currentUser.getUsername(),incident);
+        return service.startIncident(mainAccount.getName(), this.currentUser.getUsername(),incident);
     }
 
     /**
@@ -104,18 +121,18 @@ public class MspIncidentController extends SessionSupportController<Incident> {
     @RequestMapping(value = "/{instanceId}/{taskId}/complete",method = RequestMethod.PUT)
     @ResponseBody
     public MspIncident complete(@PathVariable("instanceId") String instanceId,@PathVariable("taskId") String taskId,@RequestBody @Valid Incident incident){
-        return mspIncidentService.processIncident(instanceId,taskId,currentUser.getUsername(),incident);
+        return service.processIncident(instanceId,taskId,currentUser.getUsername(),incident);
     }
 
 
-    @BeforeFilter(method = RequestMethod.GET, value = {"index","indexClosed"})
-    public void initDefaultPageRequest( @RequestParam(required = false, value = "page", defaultValue = "0") int page,
+    @BeforeFilter(method = RequestMethod.GET, value = {"index","indexClosed","indexCreated"})
+    public void initDefaultPageRequest( @RequestParam(required = false, value = "page", defaultValue = "1") int page,
                                         @RequestParam(required = false, value = "size", defaultValue = "40") int size,
                                         @RequestParam(required = false, value = "sort", defaultValue = "") String sort){
         super.initDefaultPageRequest(page,size,sort);
     }
 
-    @AfterFilter(method =  RequestMethod.GET, value = {"index","indexClosed"})
+    @AfterFilter(method =  RequestMethod.GET, value = {"index","indexClosed","indexCreated"})
     public void renderPageToHeader(HttpServletResponse response){
         super.renderPageToHeader(response);
     }

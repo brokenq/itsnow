@@ -170,7 +170,7 @@ angular.module('MsuIndex.IncidentDetail', ['ngTable', 'ngResource'])
             }else {
                 msuCreateIncidentService.start($scope.incident, function () {
                     alert($scope.buttonLabel+"成功");
-                    $location.path('/opened');
+                    $location.path('/created');
                 });
             }
         };

@@ -63,20 +63,16 @@
                     <div class="col-sm-6">
                         <label class="col-sm-3 control-label no-padding-right" for="phone"> 联系电话 </label>
                         <div class="col-sm-9">
-                            <input type="text" id="phone" name="requestPhone" ng-model="incident.requesterPhone" placeholder="例如：1398888888" class="form-control" />
+                            <input type="text" id="phone" name="requestPhone" ng-model="incident.requesterPhone" required placeholder="例如：1398888888" class="form-control" />
+                            <span ng-show="newTroubleTicketForm.requestPhone.$error.required">必填</span>
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <label class="col-sm-3 control-label no-padding-right" for="email"> 邮箱 </label>
-
                         <div class="col-sm-9">
                             <input type="text" id="email" name="requestEmail" ng-model="incident.requesterEmail" required type="email" placeholder="例如：stone@gmail.com" class="form-control" />
-                            <span ng-show="!newTroubleTicketForm.requestEmail.$valid">有错</span>
-                            <span ng-show="newTroubleTicketForm.requestEmail.$error.required">必填</span>
-                            <span ng-show="newTroubleTicketForm.requestEmail.$error.email">地址不对</span>
                         </div>
                     </div>
-
                 </div>
 
                 <div class="form-group has-info">
