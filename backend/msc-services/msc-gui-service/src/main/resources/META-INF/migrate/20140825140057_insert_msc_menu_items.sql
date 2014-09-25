@@ -6,9 +6,11 @@ INSERT INTO menu_items(id, parent_id, name, state, position, css) VALUES
 (2, null, '合同管理',   'contracts',         1, 'icon-th-list'),
 (3, null, '服务管理',   'services',          2, 'icon-tag'),
 (4, null, '系统管理',   'system',            3, 'icon-tag'),
+
 (11,   1, '企业帐户',   'accounts.msu',      0, 'icon-tag'), 
 (12,   1, '服务商帐户', 'accounts.msp',      1, 'icon-tag'), 
-(13,   1, '服务进程',   'accounts.service',  2, 'icon-play'),
+(13,   1, '主机资源',   'hosts',             2, 'icon-cloud'),
+(14,   1, '服务进程',   'processes',         3, 'icon-play'),
 
 (21,   2, '合同管理',   'contracts.contract',3, 'icon-tag'),
 

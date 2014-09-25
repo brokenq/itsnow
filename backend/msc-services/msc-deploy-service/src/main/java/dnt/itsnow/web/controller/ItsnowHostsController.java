@@ -8,11 +8,14 @@ import dnt.itsnow.model.ItsnowHost;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.service.ItsnowHostService;
+import dnt.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.LinkedList;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
@@ -28,6 +31,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
  * POST   /admin/api/hosts       create    创建主机资源
  * PUT    /admin/api/hosts/{id}  update    修改主机信息
  * DELETE /admin/api/hosts/{id}  destroy   删除特定的主机信息
+ * GET    /admin/api/hosts/{id}/follow/{invocationId} follow    获取目标主机最新的任务信息
  * </pre>
  */
 @RestController
@@ -121,8 +125,30 @@ public class ItsnowHostsController extends SessionSupportController<ItsnowHost>{
         }
     }
 
+    /**
+     * <h2>查看特定任务的最新信息</h2>
+     * <p/>
+     * PUT /admin/api/hosts/{id}/follow/{invocationId}
+     * <pre>
+     * Response body:
+     *   返回从offset行开始的任务的输出信息，如果offset值不正确，则以错误响应
+     * Response Header:
+     *   offset: 下一次来获取信息应该传入的offset值
+     * </pre>
+     */
+    @RequestMapping("{id}/follow/{invocationId}")
+    public String follow( @PathVariable("invocationId") String invocationId,
+                          @RequestParam("offset") long offset,
+                          HttpServletResponse response){
+        logger.debug("Follow {} invocation {} from {}", currentHost, invocationId, offset);
+        List<String> body = new LinkedList<String>();
+        offset = hostService.follow(currentHost, invocationId, offset, body);
+        response.setHeader("offset", String.valueOf(offset));
+        return StringUtils.join(body, "\n");
+    }
 
-    @BeforeFilter({"show", "start", "stop", "cancel", "destroy"})
+
+    @BeforeFilter({"show", "start", "stop", "cancel", "destroy", "follow"})
     public void initCurrentHost(@PathVariable("id") Long id){
         logger.debug("Finding itsnow host id = {}", id);
         currentHost = hostService.findById(id);

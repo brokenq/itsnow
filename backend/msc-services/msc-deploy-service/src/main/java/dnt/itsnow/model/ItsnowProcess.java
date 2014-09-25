@@ -115,10 +115,12 @@ public class ItsnowProcess extends DeployResource{
         return null;
     }
 
+    @JsonIgnore
     public String getDisplayName() {
         return StringUtils.capitalize(getName());
     }
 
+    @JsonIgnore
     public String getIdentifier() {
         return getName().toLowerCase().replaceFirst("itsnow[_|-]", "");
     }

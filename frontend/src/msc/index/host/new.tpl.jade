@@ -1,0 +1,42 @@
+//   New host
+doctype html
+
+mixin form_field(name, label, icon, tip)
+  .form-group
+    label.col-xs-12.col-sm-3.control-label.no-padding-right(for="host_#{name}") #{label}
+    .col-xs-12.col-sm-5
+      span.block.input-icon.input-icon-right
+        input.form-control(id="host_#{name}", name="host.#{name}", ng-model="host.#{name}", ng-required,  ng-maxlength="20", type="text", placeholder="#{label}")
+        i(class="icon-#{icon}")
+    .help-block.col-xs-12.col-sm-reset.inline #{tip}
+mixin config_field(name, id, label, icon, tip)
+  .form-group
+    label.col-xs-12.col-sm-3.control-label.no-padding-right(for="configuration_#{id}") #{label}
+    .col-xs-12.col-sm-5
+      span.block.input-icon.input-icon-right
+        input.form-control(id="configuration_#{id}", name="configuration.#{name}", ng-model="host.configuration.#{name}", ng-required, ng-maxlength="20", type="text", placeholder="#{label}")
+        i(class="icon-#{icon}")
+    .help-block.col-xs-12.col-sm-reset.inline #{tip}
+
+.row(ng-controller="HostNewCtrl")
+  form.form-horizontal(name="newHostForm", novalidate, ng-model-options="{ updateOn: 'mousedown blur' }", role="form")
+    +form_field("name",     "主机名", "star", "主机名，不要用中文，尽量为简单的英文字符")
+    +form_field("address",  "地址",   "font", "主机地址，IP地址或者域名均可")
+    +form_field("capacity", "容量",   "th", "主机上可以部署多少个MSU/MSP实例")
+    +config_field("user",        "user",        "用户名",  "user",  "用户名，默认为root")
+    +config_field("password",    "password",    "密码",    "lock",  "以上用户的密码")
+    +config_field("msu_version", "msu_version", "MSU版本", "flag",  "部署的MSU的版本号")
+    +config_field("msp_version", "msu_version", "MSP版本", "flag",  "部署的MSP的版本号")
+
+    .row-fluid.actions
+      .col-xs-12.col-sm-3
+      .col-xs-12.col-sm-5
+        button.btn.btn-sm.btn-primary(ng-click="createHost()")
+          i.icon-ok
+          | 创建
+        button.btn.btn-sm.btn-link(ui-sref="hosts")
+          i.icon-remove
+          | 取消
+.row
+  pre.container-fluid
+    | {{host}}
