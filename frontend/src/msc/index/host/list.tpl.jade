@@ -47,7 +47,7 @@ mixin select_all()
       td(width="30" style="text-align: left" header="'ngTableCheckboxHeader'")
         input(type="checkbox" ng-model="checkboxes.items[host.id]")
       td(data-title="'名称'")
-        a(ng-click="viewHost(host.id)", href="#") {{host.name}}
+        a(ng-click="viewHost(host.id)", href="javascript:void(0)") {{host.name}}
       td(data-title="'地址'") {{host.address}}
       td(data-title="'容量'") {{host.capacity}}
       td(data-title="'配置'") {{host.configuration}}

@@ -7,7 +7,7 @@ angular.module('MscIndex.Process', ['ngTable','ngResource'])
       data: {pageTitle: '服务进程管理'}
 
   .factory('ProcessService', ['$resource', ($resource) ->
-    $resource("/admin/api/processes")
+    $resource("/admin/api/processes/:id", {id: "@id"})
   ])
   .filter('formatProcessStatus', ->
     (status) ->

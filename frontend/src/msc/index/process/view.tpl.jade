@@ -10,7 +10,7 @@ mixin form_field(name, label, icon, tip)
         i(class="icon-#{icon}")
     .help-block.col-xs-12.col-sm-reset.inline #{tip}
 
-.row
+.row(ng-controller="ProcessViewCtrl")
   form.form-horizontal(name="viewProcessForm", novalidate, ng-model-options="{ updateOn: 'mousedown blur' }", role="form")
     +form_field("name",     "主机地址", "star", "")
     +form_field("address",  "进程标识",   "star", "")
