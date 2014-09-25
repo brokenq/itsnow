@@ -76,9 +76,9 @@ public class CommonContractManager extends Bean implements CommonContractService
             if( account.isMsu() && !contract.getMsuAccountId().equals(account.getId())){
                 throw new ContractException(account + " should be MSU of the contract: " + contract);
             }
-            if(account.isMsp() && !contract.getMspAccountId().equals(account.getId())){
-                throw new ContractException(account + " should be MSP of the contract: " + contract);
-            }
+            //if(account.isMsp() && !contract.getMspAccountId().equals(account.getId())){
+            //    throw new ContractException(account + " should be MSP of the contract: " + contract);
+            //}
             this.formatContract(contract);
             return contract;
         //}

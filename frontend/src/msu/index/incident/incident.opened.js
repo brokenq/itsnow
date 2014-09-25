@@ -137,7 +137,7 @@ angular.module('MsuIndex.IncidentOpened', ['ngTable', 'ngResource'])
             $scope.editId = -1;
 
             var found = false;
-            $scope.setEditId =  function(pid) {
+            $scope.process =  function(pid) {
                 angular.forEach($scope.incidents,function(item){
                     if(item.id == pid){
                         found = true;
