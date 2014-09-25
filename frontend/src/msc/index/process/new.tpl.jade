@@ -1,0 +1,12 @@
+//   New host
+doctype html
+
+form.form-horizontal(name="newProcessForm", novalidate, ng-model-options="{ updateOn: 'mousedown blur' }", role="form")
+  .form-group
+    label.col-xs-12.col-sm-3.control-label.no-padding-right(for="registration_user_username") 用户名
+    .col-xs-12.col-sm-5
+      span.block.input-icon.input-icon-right
+        input.form-control#registration_user_username(name="registration.user.username", ng-model="registration.user.username", ng-required, ng-minlength="4", ng-maxlength="20", ng-pattern='/[\w|\d|_|.]+/', type="text",placeholder="用户名")
+        i.icon-user
+    .help-block.col-xs-12.col-sm-reset.inline
+      | 4-20位，英文，数字，下划线，点号组合

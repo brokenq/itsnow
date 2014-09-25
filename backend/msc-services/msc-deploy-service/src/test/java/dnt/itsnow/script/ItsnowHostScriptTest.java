@@ -12,6 +12,7 @@ import dnt.itsnow.util.DeployFixture;
 import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,7 @@ import static org.easymock.EasyMock.*;
 //  1. ~/.know_hosts里面不包含 被测试主机(srv2.itsnow.com)
 //  2. 被测试主机 不能 信任本机
 //  3. 被测试主机 不能 已经安装 mysql/redis
+@Ignore("Manual execution")
 public class ItsnowHostScriptTest {
     @Autowired
     ItsnowHostManager    manager;

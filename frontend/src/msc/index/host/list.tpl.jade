@@ -1,5 +1,5 @@
 mixin tool_button(action, icon, text)
-  button.btn.btn-default(type="button")
+  button.btn.btn-default(type="button", ui-sref=action)
     span.glyphicon(class="glyphicon-#{icon}")
     | #{text}
 mixin drop_button(action, icon, text)
@@ -21,15 +21,14 @@ mixin page_size_button(count)
 mixin select_all()
   input(type="checkbox", ng-model="checkboxes.checked", name="filter-checkbox", value="")#select_all
 
-.container(ng-controller="AccountListCtrl")
+.container(ng-controller="HostListCtrl")
 
   .btn-toolbar(role="toolbar")
     .btn-group
       +tool_button("#", "refresh", "")
     .btn-group
-      +tool_button("#", "ok", "批准")
-      +tool_button("#", "trash", "拒绝")
-      +tool_button("#", "plus", "分配服务")
+      +tool_button("host_new", "plus", "新增")
+      +tool_button("#", "pencil", "修改")
     .btn-group
       button.btn.btn-default.dropdown-toggle(type="button",data-toggle="dropdown")
         | 更多操作
@@ -40,18 +39,18 @@ mixin select_all()
       .nav-search#nav-search
         form.form-search
           span.input-icon
-            input.nav-search-input(type="text", placeholder="名称或者子域名...",autocomplete="off")#nav-search-input
+            input.nav-search-input(type="text", placeholder="名称/地址/配置...",autocomplete="off")#nav-search-input
             i.icon-search.nav-search-icon
 
   table.table(template-pagination="customPager",ng-table="tableParams")
-    tr(ng-repeat="account in $data")
+    tr(ng-repeat="host in $data")
       td(width="30" style="text-align: left" header="'ngTableCheckboxHeader'")
-        input(type="checkbox" ng-model="checkboxes.items[account.sn]")
-      td(data-title="'名称'") {{account.name}}
-      td(data-title="'子域名'") {{account.domain | formatSubDomain}}
-      td(data-title="'联系人'") account.user.nickName
-      td(data-title="'联系人电话'") account.user.phone
-      td(data-title="'状态'") {{ account.status | formatAccountStatus}}
+        input(type="checkbox" ng-model="checkboxes.items[host.id]")
+      td(data-title="'名称'") {{host.name}}
+      td(data-title="'地址'") {{host.address}}
+      td(data-title="'容量'") {{host.capacity}}
+      td(data-title="'配置'") {{host.configuration}}
+      td(data-title="'状态'") {{host.status | formatHostStatus}}
 
 script(type="text/ng-template")#ngTableCheckboxHeader
   +select_all()

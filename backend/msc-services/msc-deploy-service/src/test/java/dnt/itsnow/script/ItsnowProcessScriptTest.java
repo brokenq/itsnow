@@ -14,6 +14,7 @@ import dnt.itsnow.util.DeployFixture;
 import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,7 @@ import static org.easymock.EasyMock.*;
 //  被测试主机(srv2.itsnow.com) 已经开通
 //   mysql/redis is ready
 //   msp/msu binaries is ready
+@Ignore("Manual execution")
 public class ItsnowProcessScriptTest {
     @Autowired
     ItsnowProcessManager    manager;
