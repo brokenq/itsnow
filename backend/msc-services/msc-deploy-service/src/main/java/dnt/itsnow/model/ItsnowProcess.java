@@ -20,7 +20,7 @@ public class ItsnowProcess extends DeployResource{
     @NotNull
     private Long hostId;
     private ItsnowHost host;
-    @NotNull
+
     private Long schemaId;
     private ItsnowSchema schema;
 
