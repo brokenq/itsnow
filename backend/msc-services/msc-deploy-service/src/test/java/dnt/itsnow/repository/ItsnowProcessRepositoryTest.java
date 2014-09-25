@@ -53,6 +53,21 @@ public class ItsnowProcessRepositoryTest {
         Assert.assertNotNull(found.getAccountId());
         Assert.assertNotNull(found.getAccount());
         Assert.assertNotNull(found.getAccount().getUserId());
+        // 如果auto mapping 属性没设置，这些基本值也获取不到
+        Assert.assertNotNull(found.getName());
+        Assert.assertNotNull(found.getWd());
+    }
+
+    @Test
+    public void testUpdate() throws Exception {
+        ItsnowProcess found = repository.findByName("itsnow-msc");
+        found.setPid(100);
+        found.setWd("/opt/itsnow/itsnow_msc");
+        repository.update(found);
+
+        ItsnowProcess updated = repository.findByName("itsnow-msc");
+        Assert.assertEquals(found.getWd(), updated.getWd());
+        Assert.assertEquals(found.getPid(), updated.getPid());
     }
 
     @Test
@@ -101,5 +116,12 @@ public class ItsnowProcessRepositoryTest {
         Assert.assertNull(found.getSchema());
         Assert.assertNotNull(found.getAccountId());
         Assert.assertNull(found.getAccount());
+    }
+
+    @Test
+    public void testFindByConfiguration() throws Exception {
+        ItsnowProcess process = repository.findByConfiguration("http.port", "8071");
+        Assert.assertNotNull(process);
+
     }
 }

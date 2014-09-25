@@ -11,7 +11,7 @@ import org.junit.Test;
 /**
  * <h1>测试对本地命令的调用</h1>
  */
-@Ignore
+@Ignore("Windows need set SH in env.PATHEXT")
 public class LocalProcessTest extends AbstractProcessTest {
 
     @Test
@@ -26,7 +26,6 @@ public class LocalProcessTest extends AbstractProcessTest {
         LocalProcess process = new LocalProcess(invocation, executorService);
         int exitCode = invocation.perform(process);
         Assert.assertEquals(0, exitCode);
-        Assert.assertEquals("hello world", process.getOutput());
-        Assert.assertEquals("", process.getError());
+        Assert.assertEquals("hello world", invocation.getOutput());
     }
 }

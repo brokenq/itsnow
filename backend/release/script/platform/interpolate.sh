@@ -1,29 +1,30 @@
 #!/bin/sh
 
 #
-# Interpolate one properties file into another
+# Interpolate properties file by variables
 #
-#  Usage: interpolate.sh new.properties now.properties
+#  Usage: interpolate.sh now.properties variables.properties
 #
 if [ ! $1 ]; then
-  echo "You should provide new properties file as first argument"
+  echo "You should provide target properties file as first argument"
   exit 1
 fi
 if [ ! $2 ]; then
-  echo "You should provide target properties file as second argument"
+  echo "You should provide variables properties file as second argument"
   exit 2
 fi
-new=$1
-target=$2
+target=$1
+vars=$2
 
 interpolate(){
   key=$1
   value=$2
+  value=$(echo $value | sed s/\\//\\\\\\//g)
   #echo "interpolate $target with $key $value"
   sed -i "s/$key=.*/$key=$value/g" $target
 }
 
-for line in $(<$new) 
+for line in $(<$vars)
 do
   key=`echo $line | awk -F= '{print $1}'`
   value=`echo $line | awk -F= '{print $2}'`

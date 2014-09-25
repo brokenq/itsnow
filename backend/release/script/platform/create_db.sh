@@ -26,9 +26,16 @@ user=$2
 password=$3
 mysql_pwd=`cat /root/.mysql_pwd`
 mysql -uroot -p$mysql_pwd <<SQL
-  CREATE DATABASE $schema DEFAULT CHARACTER SET UTF8;
-  CREATE USER '$user'@'localhost' IDENTIFIED BY '$password';
-  GRANT ALL ON $schema.* TO '$user'@'localhost';
-  GRANT SELECT ON itsnow_msc.* TO '$user'@'localhost';
+  CREATE DATABASE IF NOT EXISTS $schema DEFAULT CHARACTER SET UTF8;
+  CREATE USER '$user'@'%' IDENTIFIED BY '$password';
+  GRANT ALL ON $schema.* TO '$user'@'%';
+  GRANT SELECT ON itsnow_msc.* TO '$user'@'%';
+  FLUSH PRIVILEGES;
 SQL
-echo "Created a new database(schema) = $schema for user $user"
+
+if [ $? -eq 0 ]; then
+  echo "Created a new database(schema) = $schema for user $user"
+else
+  echo "Failed to create the database $schema for user $user"
+  exit 1
+fi

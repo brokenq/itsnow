@@ -157,6 +157,11 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
         return processEngine.getHistoryService().createHistoricProcessInstanceQuery().involvedUser(userName).processDefinitionKey(key).finished().orderByProcessInstanceEndTime().desc().list();
     }
 
+    @Override
+    public List<HistoricProcessInstance> queryTasksStartedBy(String userName, String key){
+        return processEngine.getHistoryService().createHistoricProcessInstanceQuery().processDefinitionKey(key).startedBy(userName).orderByProcessInstanceStartTime().desc().list();
+    }
+
     public List<Task> queryTasksCandidateGroup(String groupName){
         return processEngine.getTaskService().createTaskQuery().taskCandidateGroup(groupName).list();
     }

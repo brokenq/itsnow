@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -168,11 +169,12 @@ public class ItsnowProcessesController extends SessionSupportController<ItsnowPr
      */
     @RequestMapping("{name}/follow/{job}")
     public String follow( @PathVariable("job") String job,
-                          @RequestParam("offset") int offset,
+                          @RequestParam("offset") long offset,
                           HttpServletResponse response){
         logger.debug("Follow {} job {} from {}", currentProcess.getName(), job, offset);
-        String[] body = processService.follow(currentProcess, job, offset);
-        response.setHeader("offset", String.valueOf(offset + body.length));
+        List<String> body = new LinkedList<String>();
+        offset = processService.follow(currentProcess, job, offset, body);
+        response.setHeader("offset", String.valueOf(offset));
         return StringUtils.join(body, "\n");
     }
 

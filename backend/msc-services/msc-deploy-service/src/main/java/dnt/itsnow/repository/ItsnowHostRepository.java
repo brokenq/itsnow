@@ -25,11 +25,11 @@ public interface ItsnowHostRepository {
 
     @Select("SELECT * FROM itsnow_hosts WHERE address = #{address}")
     @ResultMap("hostResult")
-    ItsnowHost findByAddress(String address);
+    ItsnowHost findByAddress(@Param("address")String address);
 
     @Select("SELECT * FROM itsnow_hosts WHERE id = #{id}")
     @ResultMap("hostResult")
-    ItsnowHost findById(Long id);
+    ItsnowHost findById(@Param("id")Long id);
 
     @Insert("INSERT INTO itsnow_hosts(name, address, capacity, status, configuration, description, created_at, updated_at) " +
             "VALUES (#{name}, #{address}, #{capacity}, #{status}, #{configuration,typeHandler=dnt.itsnow.util.PropertiesHandler}, #{description}, #{createdAt}, #{updatedAt})")
@@ -37,5 +37,25 @@ public interface ItsnowHostRepository {
     void create(ItsnowHost creating);
 
     @Delete("DELETE FROM itsnow_hosts WHERE address = #{address}")
-    void deleteByAddress(String address);
+    void deleteByAddress(@Param("address")String address);
+
+
+    @Update("UPDATE itsnow_hosts SET " +
+            "  name          = #{name}, " +
+            "  address       = #{address}, " +
+            "  capacity      = #{capacity}, " +
+            "  configuration = #{configuration,typeHandler=dnt.itsnow.util.PropertiesHandler}, " +
+            "  description   = #{description}, " +
+            "  status        = #{status}, " +
+            "  updated_at    = #{updatedAt} " +
+            "WHERE id = #{id}")
+    void update(ItsnowHost host);
+
+    @Select("SELECT * FROM itsnow_hosts WHERE configuration REGEXP '\"${name}\" *: *\"?${value}\"?' limit 1")
+    @ResultMap("hostResult")
+    ItsnowHost findByConfiguration(@Param("name")String name, @Param("value")String value);
+
+    @Select("SELECT * FROM itsnow_hosts WHERE configuration REGEXP '\"${name}\" *: *\"?${value}\"?'")
+    @ResultMap("hostResult")
+    List<ItsnowHost> findAllByConfiguration(@Param("name")String name, @Param("value") String value);
 }

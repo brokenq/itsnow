@@ -23,4 +23,4 @@ if [ $? -gt 0 ]; then
   exit 128
 fi
 
-ssh_exec rm -rf /opt/system/
+ssh_exec rm -rf /opt/system/ /opt/itsnow/

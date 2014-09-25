@@ -4,12 +4,16 @@
 package dnt.itsnow.support;
 
 import dnt.itsnow.exception.SystemInvokeException;
+import dnt.itsnow.listener.InvocationEventBroadcaster;
+import dnt.itsnow.listener.ListenerNotifier;
+import dnt.itsnow.listener.SystemInvocationListener;
 import dnt.itsnow.model.LocalInvocation;
 import dnt.itsnow.model.RemoteInvocation;
 import dnt.itsnow.model.SystemInvocation;
 import dnt.itsnow.service.SystemInvoker;
-import dnt.itsnow.system.*;
+import dnt.itsnow.system.LocalProcess;
 import dnt.itsnow.system.Process;
+import dnt.itsnow.system.RemoteProcess;
 import dnt.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -27,23 +31,38 @@ public class DefaultSystemInvoker extends Bean implements SystemInvoker {
     @Qualifier("systemInvokeExecutor")
     ExecutorService systemInvokeExecutor;
 
+    @Autowired
+    private InvocationEventBroadcaster broadcaster;
 
     @Override
-    public void invoke(SystemInvocation invocation) throws SystemInvokeException {
+    public int invoke(final SystemInvocation invocation) throws SystemInvokeException {
         Process process = createProcess(invocation);
+        invocation.bind(process);
         int result;
         try {
             result = invocation.perform(process);
+            broadcaster.broadcast(new ListenerNotifier() {
+                @Override
+                public void notify(SystemInvocationListener listener) {
+                    listener.stepExecuted(invocation);
+                }
+
+            });
         } catch (Exception e) {
-            throw new SystemInvokeException("Can't invoke " + invocation, e);
+            //避免在多个链式时对异常重复包装，也许需要修改该异常的 invocation chain 描述
+            // (或者不用，自身其实已经表达了, 但我现在没将其做成双向链)
+            if( e instanceof  SystemInvokeException ) throw (SystemInvokeException )e;
+            String message = e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage();
+            throw new SystemInvokeException("Can't invoke " + invocation + ", because of:" + message, e);
         }
         if (result == 0) {
             if (invocation.getNext() != null) {
-                invoke(invocation.getNext());
+                return invoke(invocation.getNext());
             }
+            return result;
         } else {
-            throw new SystemInvokeException("Got exit code " + result + " while invoke: " + invocation
-                                            + ", reason is: " + process.getError());
+            String suffix = invocation.getOutput();
+            throw new SystemInvokeException("Exit code " + result + " while invoke: " + invocation + " " + suffix);
         }
     }
 

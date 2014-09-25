@@ -20,7 +20,7 @@ public interface CommonContractRepository {
     @Select("SELECT count(0) FROM itsnow_msc.contracts WHERE msu_account_id = #{msuId}")
     long countByMsuAccountId(@Param("msuId") long msuId);
 
-    @Select("SELECT count(0) FROM itsnow_msc.contracts WHERE msp_account_id = #{mspId}")
+    @Select("SELECT count(0) FROM itsnow_msc.contracts WHERE msp_account_id = #{mspId} or msp_account_id is null")
     long countByMspAccountId(@Param("mspId") long mspId);
 
     @Select("SELECT count(0) FROM itsnow_msc.contracts")

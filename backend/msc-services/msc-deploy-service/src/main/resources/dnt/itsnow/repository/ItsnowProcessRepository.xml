@@ -56,7 +56,8 @@
         </if>
     </select>
 
-    <resultMap id="processResult" type="ItsnowProcess" extends="basicProcessResult">
+    <!--注意： autoMapping 无法从extends的result map中继承-->
+    <resultMap id="processResult" type="ItsnowProcess" extends="basicProcessResult" autoMapping="true">
         <association property="account" columnPrefix="account_" resultMap="dnt.itsnow.repository.CommonAccountRepository.accountResult"/>
         <association property="host" columnPrefix="host_" resultMap="dnt.itsnow.repository.ItsnowHostRepository.hostResult"/>
         <association property="schema" columnPrefix="schema_" resultMap="dnt.itsnow.repository.ItsnowSchemaRepository.schemaResult"/>

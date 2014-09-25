@@ -42,7 +42,7 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
     public static final String ROLE_LINE_ONE = "ROLE_LINE_ONE";
     public static final String ROLE_LINE_TWO = "ROLE_LINE_TWO";
     @Autowired
-    MspIncidentRepository mspIncidentRepository;
+    MspIncidentRepository repository;
 
     @Autowired
     ActivitiEngineService activitiEngineService;
@@ -138,7 +138,30 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
         if(total > 0){
             if(keyword == null)
                 keyword = "";
-            List<Incident> incidents = mspIncidentRepository.findAllByInstanceIds(ids,keyword,pageable);
+            List<Incident> incidents = repository.findAllByInstanceIds(ids,keyword,pageable);
+            return new DefaultPage<Incident>(incidents,pageable,total);
+        }else {
+            List<Incident> incidents = new ArrayList<Incident>();
+            return new DefaultPage<Incident>(incidents, pageable, total);
+        }
+    }
+
+    @Override
+    public Page<Incident> findAllCreatedByUserAndKey(String username, String keyword, Pageable pageable) {
+        //查询当前用户创建的流程列表
+        logger.debug("Finding all incidents createdBy:{}",username);
+        List<HistoricProcessInstance> historicProcessInstanceList =  activitiEngineService.queryTasksStartedBy(username, PROCESS_KEY);
+
+        List<String> ids = new ArrayList<String>();
+        for(HistoricProcessInstance processInstance:historicProcessInstanceList){
+            ids.add(processInstance.getId());
+        }
+        logger.debug("instance ids：{}",ids.toString());
+        int total = ids.size();
+        if(total > 0){
+            if(keyword == null)
+                keyword = "";
+            List<Incident> incidents = repository.findAllByInstanceIds(ids,keyword,pageable);
             return new DefaultPage<Incident>(incidents,pageable,total);
         }else {
             List<Incident> incidents = new ArrayList<Incident>();
@@ -169,7 +192,7 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
         if(total > 0){
             if(keyword == null)
                 keyword = "";
-            List<Incident> incidents = mspIncidentRepository.findAllByInstanceIds(ids,keyword,pageable);
+            List<Incident> incidents = repository.findAllByInstanceIds(ids,keyword,pageable);
             return new DefaultPage<Incident>(incidents,pageable,total);
         }else {
             List<Incident> incidents = new ArrayList<Incident>();
@@ -187,7 +210,7 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
     @Override
     public MspIncident findByInstanceId(String instanceId,boolean withHistory){
         MspIncident mspIncident = new MspIncident();
-        Incident incident = mspIncidentRepository.findByInstanceId(instanceId);
+        Incident incident = repository.findByInstanceId(instanceId);
         mspIncident.setIncident(incident);
         List<Task> tasks = activitiEngineService.queryTasksByInstanceId(instanceId);
 
@@ -227,7 +250,7 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
         incident.setMspAccountName(accountName);
         incident.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         incident.setUpdatedAt(incident.getCreatedAt());
-        mspIncidentRepository.create(incident);
+        repository.create(incident);
 
         mspIncident.setIncident(incident);
 
@@ -247,9 +270,9 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
     public MspIncident processIncident(String instanceId,String taskId,String username,Incident incident){
         MspIncident mspIncident = new MspIncident();
         //Task task = activitiEngineService.queryTask(taskId);
-        //Incident incident1 = mspIncidentRepository.findByInstanceId(task.getProcessInstanceId());
+        //Incident incident1 = repository.findByInstanceId(task.getProcessInstanceId());
         incident.setUpdatedBy(username);
-        mspIncidentRepository.update(incident);
+        repository.update(incident);
         Map<String, String> taskVariables = new HashMap<String, String>();
         activitiEngineService.completeTask(taskId,taskVariables,username);
         mspIncident.setIncident(incident);

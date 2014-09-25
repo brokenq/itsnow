@@ -4,20 +4,17 @@
 package dnt.itsnow.model;
 
 import javax.validation.constraints.NotNull;
-import java.util.Properties;
 
 /**
  * The itsnow host which can service for MSC/MSU/MSP
  */
-public class ItsnowHost extends ConfigItem
+public class ItsnowHost extends DeployResource
 {
     @NotNull
     private String address;
     private HostStatus status = HostStatus.Planing;
     //这台主机一般能部署多少个Itsnow Process
     private int    capacity;
-    //这台主机的配置项，一般为CPU、内存、磁盘空间大小等
-    private Properties configuration;
 
     @Override
     @NotNull
@@ -49,14 +46,6 @@ public class ItsnowHost extends ConfigItem
         this.capacity = capacity;
     }
 
-    public Properties getConfiguration() {
-        return configuration;
-    }
-
-    public void setConfiguration(Properties configuration) {
-        this.configuration = configuration;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -67,8 +56,7 @@ public class ItsnowHost extends ConfigItem
 
         if (capacity != that.capacity) return false;
         if (address != null ? !address.equals(that.address) : that.address != null) return false;
-        if (configuration != null ? !configuration.equals(that.configuration) : that.configuration != null)
-            return false;
+        //noinspection RedundantIfStatement
         if (status != that.status) return false;
 
         return true;
@@ -80,7 +68,6 @@ public class ItsnowHost extends ConfigItem
         result = 31 * result + (address != null ? address.hashCode() : 0);
         result = 31 * result + status.hashCode();
         result = 31 * result + capacity;
-        result = 31 * result + (configuration != null ? configuration.hashCode() : 0);
         return result;
     }
 }

@@ -181,6 +181,29 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService,Resou
         }
     }
 
+    @Override
+    public Page<Incident> findAllCreatedByUserAndKey(String username, String keyword, Pageable pageable) {
+        //查询当前用户创建的流程列表
+        logger.debug("Finding all incidents createdBy:{}",username);
+        List<HistoricProcessInstance> historicProcessInstanceList =  activitiEngineService.queryTasksStartedBy(username, PROCESS_KEY);
+
+        List<String> ids = new ArrayList<String>();
+        for(HistoricProcessInstance processInstance:historicProcessInstanceList){
+            ids.add(processInstance.getId());
+        }
+        logger.debug("instance ids：{}",ids.toString());
+        int total = ids.size();
+        if(total > 0){
+            if(keyword == null)
+                keyword = "";
+            List<Incident> incidents = repository.findAllByInstanceIds(ids,keyword,pageable);
+            return new DefaultPage<Incident>(incidents,pageable,total);
+        }else {
+            List<Incident> incidents = new ArrayList<Incident>();
+            return new DefaultPage<Incident>(incidents, pageable, total);
+        }
+    }
+
     /**
      * <h2>根据流程实例ID查询故障</h2>
      *

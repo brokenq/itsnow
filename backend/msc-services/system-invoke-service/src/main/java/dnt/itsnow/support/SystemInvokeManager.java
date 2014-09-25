@@ -5,30 +5,30 @@ package dnt.itsnow.support;
 
 import dnt.concurrent.OnceTrigger;
 import dnt.itsnow.exception.SystemInvokeException;
+import dnt.itsnow.listener.InvocationEventBroadcaster;
+import dnt.itsnow.listener.ListenerNotifier;
 import dnt.itsnow.listener.SystemInvocationListener;
 import dnt.itsnow.model.SystemInvocation;
 import dnt.itsnow.service.SystemInvokeService;
 import dnt.itsnow.service.SystemInvoker;
 import dnt.spring.Bean;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.*;
+import java.util.concurrent.*;
 
 /**
  * <h1>系统调用服务</h1>
  */
 @Service
-public class SystemInvokeManager extends Bean implements SystemInvokeService {
+public class SystemInvokeManager extends Bean implements SystemInvokeService, InvocationEventBroadcaster {
     private Set<SystemInvocationListener> listeners = new LinkedHashSet<SystemInvocationListener>();
     @Autowired
     @Qualifier("systemInvokeExecutor")
@@ -39,7 +39,7 @@ public class SystemInvokeManager extends Bean implements SystemInvokeService {
     @Autowired
     protected TaskScheduler cleanScheduler;
 
-    private Map<String, Future>             futures   = new ConcurrentHashMap<String, Future>();
+    private Map<String, Future<Integer>>             futures   = new ConcurrentHashMap<String, Future<Integer>>();
     private Map<String, InvocationExecutor> executors = new ConcurrentHashMap<String, InvocationExecutor>();
 
     @Override
@@ -57,11 +57,13 @@ public class SystemInvokeManager extends Bean implements SystemInvokeService {
         invocation.setId(UUID.randomUUID().toString());
         InvocationExecutor executor = createExecutor(invocation);
         executors.put(invocation.getId(), executor);
-        Future<?> future = systemInvokeExecutor.submit(executor);
+        Future<Integer> future = systemInvokeExecutor.submit(executor);
         futures.put(invocation.getId(), future);
 
         InvocationKiller killer = createKiller(executor, future);
-        OnceTrigger trigger = new OnceTrigger(System.currentTimeMillis() + invocation.getTimeout());
+        long timeout = invocation.totalTimeout();
+        OnceTrigger trigger = new OnceTrigger(System.currentTimeMillis() + timeout);
+        logger.debug("Schedule invocation killer after: {} ms", timeout);
         cleanScheduler.schedule(killer, trigger);
 
         broadcast(new ListenerNotifier() {
@@ -92,22 +94,46 @@ public class SystemInvokeManager extends Bean implements SystemInvokeService {
     }
 
     @Override
-    public void waitJobFinished(String invocationId) throws SystemInvokeException {
-        Future future = futures.get(invocationId);
-        if( future == null ) return;
+    public int waitJobFinished(String invocationId) throws SystemInvokeException {
+        Future<Integer> future = futures.get(invocationId);
+        InvocationExecutor executor = executors.get(invocationId);
+        if( future == null || executor == null) return 0;
+        //最多等任务原先设置的最大超时时间
+        long timeout = executor.invocation.totalTimeout();
         try {
-            //TODO 是不是应该有个默认的最大等待时长?
-            future.get();
+            return future.get(timeout, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             throw new SystemInvokeException("Interrupted while wait", e);
         } catch (ExecutionException e) {
             throw new SystemInvokeException("Execution failed while wait", e);
+        } catch (TimeoutException e) {
+            throw new SystemInvokeException("Execution timeout: " + timeout + " while wait", e);
+        } catch (CancellationException e) {
+            throw new SystemInvokeException("Execution timeout: " + timeout + " while wait", e);
         }
     }
 
     @Override
-    public String[] read(String invocationId, int offset) {
-        return new String[0];
+    public long read(String invocationId, long offset, final List<String> result) {
+        File logFile = new File(System.getProperty("APP_HOME"), "tmp/" + invocationId + ".log");
+        if( !logFile.exists() ) return offset;
+        FileInputStream stream = null;
+        List<String> lines = null;
+        try {
+            stream = new FileInputStream(logFile);
+            IOUtils.skip(stream, offset);
+            lines = IOUtils.readLines(stream);
+        } catch (IOException e) {
+            return offset;
+        } finally {
+            IOUtils.closeQuietly(stream);
+        }
+        result.addAll(lines);
+        long newOffset = offset;
+        for (String line : lines) {
+            newOffset += line.getBytes().length + 1;
+        }
+        return newOffset;
     }
 
     ////////////////////////////////////////////////////////////////////
@@ -123,7 +149,7 @@ public class SystemInvokeManager extends Bean implements SystemInvokeService {
         return new InvocationKiller(executor, future);
     }
 
-    void broadcast(ListenerNotifier notifier){
+    public void broadcast(ListenerNotifier notifier){
         for (SystemInvocationListener listener : listeners) {
             try {
                 notifier.notify(listener);
@@ -134,6 +160,7 @@ public class SystemInvokeManager extends Bean implements SystemInvokeService {
     }
 
     protected void cancel(Future future, final InvocationExecutor executor) {
+        logger.trace("Cancel {}/{}", future, executor);
         if( future.isDone() ) return;
         if( future.isCancelled() ) return;
         executor.cancel();
@@ -148,7 +175,7 @@ public class SystemInvokeManager extends Bean implements SystemInvokeService {
     }
 
 
-    class InvocationExecutor implements Runnable{
+    class InvocationExecutor implements Callable<Integer>{
         private final SystemInvocation invocation;
 
         public InvocationExecutor(SystemInvocation invocation) {
@@ -156,7 +183,7 @@ public class SystemInvokeManager extends Bean implements SystemInvokeService {
         }
 
         @Override
-        public void run() {
+        public Integer call() {
             broadcast(new ListenerNotifier() {
                 @Override
                 public void notify(SystemInvocationListener listener) {
@@ -165,23 +192,25 @@ public class SystemInvokeManager extends Bean implements SystemInvokeService {
             });
             // perform real invocation
             try {
-                systemInvoker.invoke(invocation);
+                int result = systemInvoker.invoke(invocation);
+                clean();
                 broadcast(new ListenerNotifier() {
                     @Override
                     public void notify(SystemInvocationListener listener) {
                         listener.finished(invocation);
                     }
                 });
+                return result;
             } catch (final SystemInvokeException e) {
                 logger.error("Failed to run:" + e.getMessage(), e);
+                clean();
                 broadcast(new ListenerNotifier() {
                     @Override
                     public void notify(SystemInvocationListener listener) {
                         listener.failed(invocation, e);
                     }
                 });
-            } finally {
-                clean();
+                return 1;
             }
         }
 
@@ -213,7 +242,4 @@ public class SystemInvokeManager extends Bean implements SystemInvokeService {
         }
     }
 
-    static interface ListenerNotifier {
-        void notify(SystemInvocationListener listener);
-    }
 }

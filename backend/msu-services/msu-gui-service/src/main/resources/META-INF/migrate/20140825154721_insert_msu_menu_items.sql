@@ -23,8 +23,9 @@ INSERT INTO menu_items(id, parent_id, name, state, position, css) VALUES
 (34, 3, '流程管理', 'workflow',1, 'icon-task'),
 
 (41, 4, '新建故障',   'incidents-create', 1, 'icon-fire'),
-(42, 4, '我的故障单', 'incidents-opened',     2, 'icon-eye-open'),
-(43, 4, '已关闭故障', 'incidents-closed', 3, 'icon-eye-close');
+(42, 4, '我创建的故障单', 'incidents-created',     2, 'icon-eye-open'),
+(43, 4, '我的故障单', 'incidents-opened',     3, 'icon-eye-open'),
+(44, 4, '已关闭故障', 'incidents-closed', 4, 'icon-eye-close');
 
 -- //@UNDO
 -- SQL to undo the change goes here.

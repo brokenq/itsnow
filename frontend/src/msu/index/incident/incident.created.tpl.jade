@@ -1,0 +1,66 @@
+mixin tool_button(action, icon, text)
+  button.btn.btn-default(type="button")
+    span.glyphicon(class="glyphicon-#{icon}")
+    | #{text}
+mixin drop_button(action, icon, text)
+  li
+    a(href=action)
+      span.glyphicon(class="glyphicon-#{icon}")
+      | #{text}
+mixin nav_link(value, icon, text)
+  a(ng-switch-when=value, ng-click="params.page(page.number)", href="")
+    span.glyphicon(class="glyphicon-#{icon}")
+    | #{text}
+// 由于IDEA/WebStorm等在script tag内对jade的解析有问题，所以将这段会仅在IDE中出错的抽取到mixin中
+mixin page_navs()
+  li(ng-repeat="page in pages", ng-klass="{'disabled': !page.active, 'previous': page.type == 'prev', 'next': page.type == 'next'}", ng-show="page.type == 'prev' || page.type == 'next'", ng-switch="page.type")
+    +nav_link("prev", "step-backward", "上一页")
+    +nav_link("next", "step-forward", "下一页")
+mixin page_size_button(count)
+  button.btn.btn-default(type="button", ng-class="{'active':params.count() == #{count}}", ng-click="params.count(#{count})")= count
+mixin select_all()
+  input(type="checkbox", ng-model="checkboxes.checked", name="filter-checkbox", value="")#select_all
+
+.container(ng-controller="CreatedIncidentListCtrl")
+
+  .btn-toolbar(role="toolbar")
+    .btn-group
+      +tool_button("#", "refresh", "")
+    .btn-group
+      button.btn.btn-default.dropdown-toggle(type="button",data-toggle="dropdown")
+        | 更多操作
+        span.caret
+      ul.dropdown-menu(role="menu")
+    .btn-group.pull-right
+      .nav-search#nav-search
+        form.form-search
+          span.input-icon
+            input.nav-search-input(type="text", placeholder="故障描述...",autocomplete="off")#nav-search-input
+            i.icon-search.nav-search-icon
+
+  table.table(template-pagination="customPager",ng-table="tableParams")
+    tr(ng-repeat="incident in $data")
+      td(width="30" style="text-align: left" header="'ngTableCheckboxHeader'")
+        input(type="checkbox" ng-model="checkboxes.items[incident.id]")
+      td(data-title="'故障单号'") {{incident.number}}
+      td(data-title="'请求人'") {{incident.requesterName}}
+      td(data-title="'分类'") {{incident.category}}
+      td(data-title="'优先级'") {{incident.priority}}
+      td(data-title="'故障描述'") {{incident.requestDescription}}
+      td(data-title="'状态'") {{incident.msuStatus | formatIncidentStatus}}
+      td(data-title="'创建时间'") {{incident.createdAt | formatTime}}
+      td(data-title="'关闭时间'") {{incident.closeTime | formatTime}}
+      td(data-title="'服务商'") {{incident.mspAccountId}}
+
+script(type="text/ng-template")#ngTableCheckboxHeader
+  +select_all()
+script(type="text/ng-template")#customPager
+  ul.pager.ng-cloak
+    +page_navs()
+    li
+      .btn-group
+        +page_size_button(5)
+        +page_size_button(10)
+        +page_size_button(25)
+        +page_size_button(50)
+        +page_size_button(100)

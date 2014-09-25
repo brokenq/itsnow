@@ -8,6 +8,8 @@ import dnt.itsnow.model.ItsnowProcess;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.util.PageRequest;
 
+import java.util.List;
+
 /**
  * <h1>Itsnow Process Service</h1>
  */
@@ -68,7 +70,7 @@ public interface ItsnowProcessService {
      * @param process 被读取的进程对象
      * @param job     正在/已经 执行的任务描述符
      * @param offset  信息的offset
-     * @return 读取到的信息
+     * @return 当前的位置，也是下次来读的始点
      */
-    String[] follow(ItsnowProcess process, String job, int offset);
+    long follow(ItsnowProcess process, String job, long offset, List<String> result);
 }

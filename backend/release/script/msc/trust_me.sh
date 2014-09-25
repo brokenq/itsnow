@@ -21,18 +21,59 @@ fi
 
 host=$1
 user=$2
-password=$3
+export SSHPASS=$3
 file=`hostname`.pub
 
-sshpass -p $password scp ~/.ssh/id_rsa.pub $user@$host:/root/.ssh/$file
-sshpass -p $password ssh $user@$host "cat /root/.ssh/$file >> /root/.ssh/authorized_keys"
-sshpass -p $password ssh $user@$host "rm -f /root/.ssh/$file"
+function echo_and_exec(){
+  cmd="$@"
+  echo $cmd
+  ${cmd}
+}
 
-ssh $user@$host ls /opt
+function simple_ssh_exec(){
+  echo_and_exec ssh -o StrictHostKeyChecking=no -o PasswordAuthentication=no $user@$host  $@
+}
 
-if [ $? -gt 0 ]; then
-  echo "Failed to setup trust relationship"
-  exit 128
+function scp_exec(){
+  echo_and_exec sshpass -p $SSHPASS scp -o StrictHostKeyChecking=no $1 $user@$host:$2
+  code=$?
+  if [ $code -gt 0 ]; then
+    echo "Can't exec \"$cmd\""
+    exit $code
+  fi
+}
+function ssh_exec(){
+  echo_and_exec sshpass -p $SSHPASS ssh -o StrictHostKeyChecking=no $user@$host $@
+  code=$?
+  if [ $code -gt 0 ]; then
+    echo "Can't exec \"$cmd\""
+    exit $code
+  fi
+}
+
+# Test I'm trusted or not
+simple_ssh_exec ls /opt
+if [ $? -eq 0 ]; then
+  echo "$host has trusted me(`hostname`)"
+  exit 0
 else
-  echo "$host trust me(`hostname`)"
+  echo "Making $host trust `hostname`..."
+fi
+
+# Test sshpass can work or not
+ssh_exec ls /opt
+# Perform real works
+scp_exec ~/.ssh/id_rsa.pub /root/.ssh/$file
+ssh_exec "/bin/cp -f /root/.ssh/authorized_keys /root/.ssh/authorized_keys.bak"
+ssh_exec "cat /root/.ssh/$file >> /root/.ssh/authorized_keys"
+ssh_exec "rm -f /root/.ssh/$file"
+
+# verify trust relationship
+simple_ssh_exec ls /opt
+code=$?
+if [ $code -gt 0 ]; then
+  echo "Failed to setup trust relationship"
+  exit $code
+else
+  echo "$host have trust me(`hostname`)"
 fi

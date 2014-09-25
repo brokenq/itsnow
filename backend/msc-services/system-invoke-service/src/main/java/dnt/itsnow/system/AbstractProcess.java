@@ -5,11 +5,11 @@ package dnt.itsnow.system;
 
 import dnt.itsnow.exception.SystemInvokeException;
 import dnt.itsnow.model.SystemInvocation;
-import dnt.util.StringUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -20,9 +20,10 @@ import java.util.concurrent.Future;
  * <h1>The abstract shell inherited by local/remote shell</h1>
  */
 public abstract class AbstractProcess<T extends SystemInvocation> implements Process {
-    protected final ProcessBuilder builder = new ProcessBuilder();
-    protected final ExecutorService  systemInvokeExecutor;
-    protected final T invocation;
+    protected final  ProcessBuilder builder = new ProcessBuilder();
+    protected final ExecutorService   systemInvokeExecutor;
+    protected final T                 invocation;
+    protected       java.lang.Process underlying;
 
     public AbstractProcess(T invocation, ExecutorService systemInvokeExecutor) {
         this.invocation = invocation;
@@ -41,78 +42,86 @@ public abstract class AbstractProcess<T extends SystemInvocation> implements Pro
     @Override
     public int run(String command, Object... args) throws SystemInvokeException {
         String[] realCommands = assembleCommand(command, args);
-        invocation.recordCommand(StringUtils.join(realCommands," "));
-        builder.command(realCommands);
+        builder.command(realCommands).redirectErrorStream(true);
+        File logFile = invocation.totalFile();
         try {
-            final java.lang.Process process = builder.start();
-            Future<?> stderrFuture = pipe(process.getErrorStream(), errorFile());
-            Future<?> stdoutFuture = pipe(process.getInputStream(), outFile());
-            int exitCode = process.waitFor();
-            stderrFuture.get();
+            underlying = builder.start();
+            Future<?> stdoutFuture = pipe(underlying.getInputStream(), logFile);
+            int exitCode = underlying.waitFor();
             stdoutFuture.get();
             return exitCode;
         } catch (IOException e) {
+            recordError(e, logFile);
             throw new SystemInvokeException("Can't run the command: " + command, e);
         } catch (InterruptedException e) {
+            recordError(e, logFile);
             throw new SystemInvokeException("Command execution is interrupted", e);
         } catch (ExecutionException e) {
+            recordError(e, logFile);
             throw new SystemInvokeException("Command execution exception", e);
         }
     }
 
-    protected File outFile() {
-        return new File(System.getProperty("APP_HOME"), "tmp/" + this.invocation.getOutFileName());
-    }
-
-    protected File errorFile() {
-        return new File(System.getProperty("APP_HOME"), "tmp/" + this.invocation.getErrFileName());
-    }
-
-    @Override
-    public String getOutput() {
-        FileInputStream fis = null;
+    private void recordError(Exception e, File file) {
+        FileOutputStream fos = null;
         try {
-            fis = new FileInputStream(outFile());
-            return StringUtils.join(IOUtils.readLines(fis), "\n");
-        } catch (Exception e) {
-            return null;
+            fos = new FileOutputStream(file, true);
+            recordError(e, fos, 0);
+        } catch (Exception e1) {
+            //ignore
         } finally {
-            IOUtils.closeQuietly(fis);
+            IOUtils.closeQuietly(fos);
         }
     }
 
-    @Override
-    public String getError() {
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(errorFile());
-            return StringUtils.join(IOUtils.readLines(fis), "\n");
-        } catch (Exception e) {
-            return null;
-        } finally {
-            IOUtils.closeQuietly(fis);
+    private void recordError(Throwable e, OutputStream outputStream, int indent) throws IOException {
+        for (int i = 0; i < indent; i++)
+            IOUtils.write("\t", outputStream);
+        IOUtils.write(e.getClass().getName().getBytes(), outputStream);
+        IOUtils.write(":", outputStream);
+        IOUtils.write(e.getLocalizedMessage().getBytes(Charset.forName("UTF8")), outputStream);
+        IOUtils.write("\n", outputStream);
+        if (e.getCause() != null && e.getCause() != e) {
+            recordError(e.getCause(), outputStream, indent + 1);
         }
     }
+
 
     protected abstract String[] assembleCommand(String command, Object[] args);
 
-    private Future<?> pipe(final InputStream src, final File file) {
-        return systemInvokeExecutor.submit(new Runnable() {
-            public void run() {
-                FileOutputStream dest = null;
-                try {
-                    if( !file.exists() ) FileUtils.touch(file);
-                    dest = new FileOutputStream(file, true);
-                    byte[] buffer = new byte[1024];
-                    for (int n = 0; n != -1; n = src.read(buffer)) {
-                        dest.write(buffer, 0, n);
-                    }
-                } catch (IOException e) { // just exit
-                } finally {
-                    IOUtils.closeQuietly(dest);
-                }
-            }
-        });
+    public List<String> getCommand() {
+        return builder.command();
     }
 
+    private Future<?> pipe(final InputStream src, final File file) {
+        return systemInvokeExecutor.submit(new Redirector(src, file));
+    }
+
+}
+
+class Redirector implements Runnable {
+    private final InputStream src;
+    private final File        file;
+
+    public Redirector(InputStream src, File file) {
+        this.src = src;
+        this.file = file;
+    }
+
+    public void run() {
+        FileOutputStream dest = null;
+        try {
+            if (!file.exists()) FileUtils.touch(file);
+            dest = new FileOutputStream(file, true);
+            byte[] buffer = new byte[1024];
+            for (int n = 0; n != -1; n = src.read(buffer)) {
+                dest.write(buffer, 0, n);
+            }
+            // TODO make program know progress
+        } catch (IOException e) {
+            // just exit
+        } finally {
+            IOUtils.closeQuietly(dest);
+        }
+    }
 }
