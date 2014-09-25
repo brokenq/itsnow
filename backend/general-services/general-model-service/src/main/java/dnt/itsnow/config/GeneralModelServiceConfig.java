@@ -4,6 +4,7 @@
 package dnt.itsnow.config;
 
 import dnt.itsnow.service.CommonAccountService;
+import dnt.itsnow.service.WorkflowService;
 import org.springframework.web.client.RestOperations;
 
 /**
@@ -15,5 +16,6 @@ public class GeneralModelServiceConfig extends DefaultGeneralServiceConfig {
         super.defineServices();
         importService(CommonAccountService.class);
         exportService(RestOperations.class);
+        exportService(WorkflowService.class);
     }
 }

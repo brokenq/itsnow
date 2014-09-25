@@ -1,0 +1,10 @@
+DELETE FROM staffs;
+DELETE FROM itsnow_msc.users;
+DELETE FROM itsnow_msc.accounts;
+DELETE FROM authorities;
+DELETE FROM roles;
+DELETE FROM site_depts;
+DELETE FROM departments;
+DELETE FROM sites;
+DELETE FROM work_times;
+DELETE FROM process_dictionaries;

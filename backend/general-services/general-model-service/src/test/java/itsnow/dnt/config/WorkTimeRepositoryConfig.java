@@ -19,7 +19,7 @@ public class WorkTimeRepositoryConfig extends RepositoryConfigWithH2 {
         return new String[]{
                 "classpath:META-INF/migrate/20140721113250_create_work_times.sql@up",
                 "classpath:META-INF/setup/initialization.sql",
-                "classpath:META-INF/setup/20140909105404_insert_work_times.sql@up"
+                "classpath:META-INF/setup/insert_work_times.sql@up"
         };
     }
 }

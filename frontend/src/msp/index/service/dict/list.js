@@ -5,7 +5,7 @@ angular.module('Service.Dict', ['ngTable', 'ngResource'])
         $stateProvider.state('dict', {
             url: '/dict',
             templateUrl: 'service/dict/list.tpl.jade',
-            data: {pageTitle: '角色管理'}
+            data: {pageTitle: '流程字典管理'}
         });
     })
 

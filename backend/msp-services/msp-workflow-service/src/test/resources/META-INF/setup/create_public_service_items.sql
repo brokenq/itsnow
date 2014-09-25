@@ -1,7 +1,8 @@
 -- // create_process_dictionary
 -- Migration SQL that makes the change goes here.
 
-CREATE TABLE IF NOT EXISTS public_service_items (
+CREATE SCHEMA IF NOT EXISTS itsnow_msc;
+CREATE TABLE IF NOT EXISTS itsnow_msc.public_service_items (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
   catalog_id int(10) unsigned NOT NULL,
   title varchar(255) NOT NULL,
@@ -18,4 +19,4 @@ CREATE TABLE IF NOT EXISTS public_service_items (
 -- //@UNDO
 -- SQL to undo the change goes here.
 
-DROP TABLE IF EXISTS public_service_items;
+DROP TABLE IF EXISTS itsnow_msc.public_service_items;

@@ -121,22 +121,24 @@ angular.module('MsuIndex.IncidentDetail', ['ngTable', 'ngResource'])
         $scope.buttonLabel = '新建';
         var promise;
 
-        if($rootScope.incident == null)
-            $scope.incident = {number:'INC001',createdBy:'admin'};
+        if($rootScope.incident == null) {
+            $scope.incident = {number: 'INC001', createdBy: 'admin'};
+        }
 
         function getActionButton(status) {
-            if(status == 'Assigned')
+            if(status == 'Assigned'){
                 return '分配';
-            else if(status == 'Accepted')
+            }else if(status == 'Accepted'){
                 return '签收';
-            else if(status == 'Resolving')
+            }else if(status == 'Resolving'){
                 return '分析';
-            else if(status == 'Resolved')
-                return '解决'
-            else if(status == 'Closed')
+            }else if(status == 'Resolved'){
+                return '解决';
+            }else if(status == 'Closed'){
                 return '关闭';
-            else
+            }else{
                 return '新建';
+            }
         }
 
         if($scope.action == 'detail'){

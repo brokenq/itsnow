@@ -42,7 +42,7 @@
         </association>
     </resultMap>
 
-    <select id="findBySn" parameterType="string" resultType="Workflow" resultMap="workflowResult">
+    <sql id="selectWorkflow">
         select flow.id, flow.sn, flow.name, flow.service_item_type, flow.description, flow.created_at, flow.updated_at,
         p.id as dictionaryId, p.code as dictionaryCode, p.name as dictionaryName, p.level as dictionaryLevel, p.level_name as dictionaryLevelName, p.state as dictionaryState, p.type as dictionaryType,
         serviceItem.id as serviceItemId, serviceItem.title as serviceItemTitle, serviceItem.brief as serviceItemBrief, serviceItem.icon as serviceItemIcon, serviceItem.description as serviceItemDescription
@@ -50,43 +50,25 @@
         left join act_re_procdef a on flow.act_re_procdef_id = a.id_
         left join process_dictionaries p on flow.process_dictionary_id=p.id
         <if test="serviceTtemType == 1">
-          left join public_service_items serviceItem on flow.service_item_id = serviceItem.id
+            left join itsnow_msc.public_service_items serviceItem on flow.service_item_id = serviceItem.id
         </if>
         <if test="serviceTtemType == 0">
-          left join private_service_items serviceItem on flow.service_item_id = serviceItem.id
+            left join private_service_items serviceItem on flow.service_item_id = serviceItem.id
         </if>
+    </sql>
+
+    <select id="findBySn" parameterType="string" resultType="Workflow" resultMap="workflowResult">
+        <include refid="selectWorkflow"/>
         where flow.sn=#{sn}
     </select>
 
     <select id="find" parameterType="string" resultType="Workflow" resultMap="workflowResult">
-        select flow.id, flow.sn, flow.name, flow.service_item_type, flow.description, flow.created_at, flow.updated_at,
-        p.id as dictionaryId, p.code as dictionaryCode, p.name as dictionaryName, p.level as dictionaryLevel, p.level_name as dictionaryLevelName, p.state as dictionaryState, p.type as dictionaryType,
-        serviceItem.id as serviceItemId, serviceItem.title as serviceItemTitle, serviceItem.brief as serviceItemBrief, serviceItem.icon as serviceItemIcon, serviceItem.description as serviceItemDescription
-        from workflows flow
-        left join act_re_procdef a on flow.act_re_procdef_id = a.id_
-        left join process_dictionaries p on flow.process_dictionary_id=p.id
-        <if test="serviceTtemType == 1">
-          left join public_service_items serviceItem on flow.service_item_id = serviceItem.id
-        </if>
-        <if test="serviceTtemType == 0">
-          left join private_service_items serviceItem on flow.service_item_id = serviceItem.id
-        </if>
+        <include refid="selectWorkflow"/>
         order by ${sort} ${dir} limit #{offset}, #{size}
     </select>
 
     <select id="findByKeyword" parameterType="string" resultType="Workflow" resultMap="workflowResult">
-        select flow.id, flow.sn, flow.name, flow.service_item_type, flow.description, flow.created_at, flow.updated_at,
-        p.id as dictionaryId, p.code as dictionaryCode, p.name as dictionaryName, p.level as dictionaryLevel, p.level_name as dictionaryLevelName, p.state as dictionaryState, p.type as dictionaryType,
-        serviceItem.id as serviceItemId, serviceItem.title as serviceItemTitle, serviceItem.brief as serviceItemBrief, serviceItem.icon as serviceItemIcon, serviceItem.description as serviceItemDescription
-        from workflows flow
-        left join act_re_procdef a on flow.act_re_procdef_id = a.id_
-        left join process_dictionaries p on flow.process_dictionary_id=p.id
-        <if test="serviceTtemType == 1">
-          left join public_service_items serviceItem on flow.service_item_id = serviceItem.id
-        </if>
-        <if test="serviceTtemType == 0">
-          left join private_service_items serviceItem on flow.service_item_id = serviceItem.id
-        </if>
+        <include refid="selectWorkflow"/>
         where flow.name like #{keyword} or flow.sn like #{keyword}
         order by ${sort} ${dir} limit #{offset}, #{size}
     </select>

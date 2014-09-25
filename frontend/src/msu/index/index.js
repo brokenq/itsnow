@@ -9,5 +9,7 @@ angular.module('Itsnow.MsuIndex', [
   'MsuIndex.ServiceCatalog',
   'MsuIndex.IncidentDetail',
   'MsuIndex.IncidentOpened',
-  'MsuIndex.IncidentClosed'
+  'MsuIndex.IncidentClosed',
+  'MsuIndex.System',
+  'MsuIndex.Service'
 ]);

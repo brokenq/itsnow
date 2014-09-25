@@ -1,6 +1,8 @@
 package itsnow.dnt.support;
 
 import dnt.itsnow.model.*;
+import dnt.itsnow.platform.service.Page;
+import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.service.WorkflowService;
 import itsnow.dnt.config.WorkflowManagerConfig;
 import org.junit.Assert;
@@ -22,6 +24,8 @@ import java.sql.Timestamp;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class WorkflowManagerTest {
 
+    PageRequest pageRequest;
+
     @Autowired
     WorkflowService service;
 
@@ -29,6 +33,9 @@ public class WorkflowManagerTest {
 
     @Before
     public void setup() {
+
+        pageRequest = new PageRequest(0, 1);
+
         workflow = new Workflow();
         workflow.setName("工作流程一");
         workflow.setDescription("It's test.");
@@ -62,6 +69,17 @@ public class WorkflowManagerTest {
     @Test
     public void testUpdate() throws Exception {
         Assert.assertNotNull(service.update(workflow));
+    }
+
+    @Test
+    public void findAll() throws Exception {
+        Page<Workflow> workflows =  service.findAll("%工作%", pageRequest, "1");
+        Assert.assertTrue(workflows.getContent().size()>0);
+    }
+
+    @Test
+    public void findBySn() throws Exception {
+        Assert.assertNotNull(service.findBySn("001", "1"));
     }
 
 }

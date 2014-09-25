@@ -26,7 +26,7 @@ public class DepartmentRepositoryConfig extends RepositoryConfigWithH2 {
                 "classpath:META-INF/setup/initialization.sql",
 
                 "classpath:META-INF/migrate/20140904124504_insert_process_dictionaries.sql@up",
-                "classpath:META-INF/setup/20140909105404_insert_work_times.sql@up",
+                "classpath:META-INF/setup/insert_work_times.sql@up",
                 "classpath:META-INF/migrate/20140909150904_insert_sites.sql@up",
                 "classpath:META-INF/migrate/20140909152504_insert_departments.sql@up",
                 "classpath:META-INF/migrate/20140909161704_insert_site_depts.sql@up"
