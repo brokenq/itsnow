@@ -86,8 +86,8 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
             @Override
             public int perform(Process process) throws Exception {
                 return process.run("./create_db.sh", schema.getName(),
-                                   schema.getConfiguration().getProperty("user"),
-                                   schema.getConfiguration().getProperty("password"));
+                                   schema.getProperty("user"),
+                                   schema.getProperty("password"));
             }
         };
     }
@@ -98,7 +98,7 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
             @Override
             public int perform(Process process) throws Exception {
                 return process.run("./drop_db.sh", schema.getName(),
-                                   schema.getConfiguration().getProperty("user"));
+                                   schema.getProperty("user"));
             }
         };
     }
