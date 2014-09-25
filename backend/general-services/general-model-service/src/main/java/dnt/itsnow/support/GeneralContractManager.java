@@ -39,7 +39,7 @@ public class GeneralContractManager extends CommonContractManager implements Gen
                 throw new ContractException("The contract has been approved by msu");
             }
         }
-        facade.put("/admin/api/contracts/{}/approve", null, contract.getSn());
+        facade.put("/admin/api/contracts/{sn}/approve", null, contract.getSn());
         contract = repository.findBySn(sn);//update it after put
         logger.info("Approved  {} {}", account, sn);
         return contract;
@@ -50,15 +50,15 @@ public class GeneralContractManager extends CommonContractManager implements Gen
         logger.info("Rejecting {} {}", account, sn);
         Contract contract = findByAccountAndSn(account, sn, true);
         if( account.isMsu() ){
-            if( !contract.isApprovedByMsu() ){
-                throw new ServiceException("The contract has been rejected by msu");
-            }
+            //if( !contract.isApprovedByMsu() ){
+            //    throw new ServiceException("The contract has been rejected by msu");
+            //}
         }else if (account.isMsp() ){
             if( !contract.isApprovedByMsp() ){
                 throw new ServiceException("The contract has been rejected by msu");
             }
         }
-        facade.put("/admin/api/contracts/{}/reject", null, contract.getSn());
+        facade.put("/admin/api/contracts/{sn}/reject", null, contract.getSn());
         contract = repository.findBySn(sn);//update it after put
         logger.info("Rejected  {} {}", account, sn);
         return contract;
@@ -67,7 +67,7 @@ public class GeneralContractManager extends CommonContractManager implements Gen
     @Override
     public ContractDetail updateDetail(ContractDetail detail, String sn) {
         logger.info("Updating {}", detail);
-        facade.put("/admin/api/contracts/{}/details/{}",
+        facade.put("/admin/api/contracts/{sn}/details/{}",
                 detail, detail.getContract().getSn(), detail.getId());
         logger.info("Updated  {}", detail);
         return detail;
@@ -79,7 +79,7 @@ public class GeneralContractManager extends CommonContractManager implements Gen
         Contract contract = findByAccountAndSn(account, sn, true);
         contract.setMspStatus(ContractStatus.Purposed);
         contract.setMspAccountId(account.getId());
-        facade.put("/admin/api/contracts/{}/bid", contract, contract.getSn());
+        facade.put("/admin/api/contracts/{sn}/bid", contract, contract.getSn());
         logger.info("Msp bid contract {}", contract);
         return contract;
     }
@@ -88,7 +88,7 @@ public class GeneralContractManager extends CommonContractManager implements Gen
     public Contract create(Account account, Contract contract) throws ServiceException{
         contract.setMsuStatus(ContractStatus.Draft);
         contract.setMsuAccountId(account.getId());
-        facade.put("/admin/api/contracts",contract);
+        facade.postForEntity("/admin/api/contracts",contract,Contract.class);
         logger.info("Created  {}", contract);
         return contract;
     }

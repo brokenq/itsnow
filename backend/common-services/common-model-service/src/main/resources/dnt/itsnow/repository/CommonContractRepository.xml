@@ -26,7 +26,7 @@
     </select>
     <select id="findAllByMspAccountId" resultType="Contract">
         SELECT * FROM itsnow_msc.contracts
-        WHERE (msp_account_id = #{mspId})
+        WHERE (msp_account_id = #{mspId} OR msp_account_id is null)
         <if test="pageable.sort != null">
             ORDER BY #{pageable.sort}
         </if>

@@ -2,6 +2,7 @@
  * The MSP Application
  */
 
-angular.module('MspApp.Service', [
-  'Service.Dict'
+angular.module('MspIndex.Service', [
+  'Service.Dict',
+  'Service.Workflow'
 ]);

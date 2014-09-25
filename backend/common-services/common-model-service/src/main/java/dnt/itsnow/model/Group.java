@@ -22,6 +22,8 @@ public class Group extends ConfigItem {
     @NotBlank
     private String sn;
 
+    private List<GroupDetail> details;
+
     public String getSn() {
         return sn;
     }
@@ -30,15 +32,20 @@ public class Group extends ConfigItem {
         this.sn = sn;
     }
 
+    public List<GroupDetail> getDetails() {
+        return details;
+    }
+
+    public void setDetails(List<GroupDetail> details) {
+        this.details = details;
+    }
+
     @Override
     public String toString() {
-        return "Group{" +
-                "id=" + super.getId() +
-                ", sn='" + getSn() + '\'' +
-                ", name='" + super.getName() + '\'' +
-                ", description='" + super.getDescription() + '\'' +
-                ", createdAt=" + super.getCreatedAt() +
-                ", updatedAt=" + super.getUpdatedAt() +
-                '}';
+        final StringBuffer sb = new StringBuffer("Group{");
+        sb.append("sn='").append(sn).append('\'');
+        sb.append(", details=").append(details);
+        sb.append('}');
+        return sb.toString();
     }
 }

@@ -1,10 +1,13 @@
 package itsnow.dnt.web.controller;
 
-import dnt.itsnow.model.*;
+import dnt.itsnow.model.ActReProcdef;
+import dnt.itsnow.model.ProcessDictionary;
+import dnt.itsnow.model.ServiceItem;
+import dnt.itsnow.model.Workflow;
 import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.service.CommonUserService;
-import dnt.itsnow.service.MspWorkflowService;
+import dnt.itsnow.service.WorkflowService;
 import dnt.itsnow.test.controller.SessionSupportedControllerTest;
 import dnt.support.JsonSupport;
 import itsnow.dnt.config.MspWorkflowsControllerConfig;
@@ -32,7 +35,7 @@ public class MspWorkflowsControllerTest extends SessionSupportedControllerTest {
     CommonUserService userService;
 
     @Autowired
-    MspWorkflowService mspWorkflowService;
+    WorkflowService workflowService;
 
     Workflow workflow;
 
@@ -61,19 +64,19 @@ public class MspWorkflowsControllerTest extends SessionSupportedControllerTest {
         workflows = new ArrayList<Workflow>();
         workflows.add(workflow);
 
-        reset(mspWorkflowService);
+        reset(workflowService);
     }
 
     @Test
     public void testIndex() throws Exception {
-        expect(mspWorkflowService.findAll(anyString(), isA(PageRequest.class)))
+        expect(workflowService.findAll(anyString(), isA(PageRequest.class), anyString()))
                 .andReturn(new DefaultPage<Workflow>(workflows));
 
         // 准备 Mock Request
-        MockHttpServletRequestBuilder request = get("/api/mspWorkflows");
+        MockHttpServletRequestBuilder request = get("/api/msp-workflows");
         request = decorate(request);
 
-        replay(mspWorkflowService);
+        replay(workflowService);
 
         // 执行
         ResultActions result = this.browser.perform(request);
@@ -84,13 +87,13 @@ public class MspWorkflowsControllerTest extends SessionSupportedControllerTest {
 
     @Test
     public void testShow() throws Exception {
-        expect(mspWorkflowService.findBySn("001")).andReturn(workflow);
+        expect(workflowService.findBySn("001", "0")).andReturn(workflow);
 
         // 准备 Mock Request
-        MockHttpServletRequestBuilder request = get("/api/mspWorkflows/001");
+        MockHttpServletRequestBuilder request = get("/api/msp-workflows/001");
         request = decorate(request);
 
-        replay(mspWorkflowService);
+        replay(workflowService);
 
         // 执行
         ResultActions result = this.browser.perform(request);
@@ -101,10 +104,10 @@ public class MspWorkflowsControllerTest extends SessionSupportedControllerTest {
 
     @Test
     public void testCreate() throws Exception {
-        expect(mspWorkflowService.create(anyObject(Workflow.class))).andReturn(workflow);
-        replay(mspWorkflowService);
+        expect(workflowService.create(anyObject(Workflow.class))).andReturn(workflow);
+        replay(workflowService);
 
-        MockHttpServletRequestBuilder request = post("/api/mspWorkflows").content(requestJson());
+        MockHttpServletRequestBuilder request = post("/api/msp-workflows").content(requestJson());
         decorate(request);
 
         ResultActions result = this.browser.perform(request);
@@ -113,11 +116,11 @@ public class MspWorkflowsControllerTest extends SessionSupportedControllerTest {
 
     @Test
     public void testUpdate() throws Exception {
-        expect(mspWorkflowService.findBySn("001")).andReturn(workflow);
-        expect(mspWorkflowService.update(anyObject(Workflow.class))).andReturn(workflow);
-        replay(mspWorkflowService);
+        expect(workflowService.findBySn("001", "0")).andReturn(workflow);
+        expect(workflowService.update(anyObject(Workflow.class))).andReturn(workflow);
+        replay(workflowService);
 
-        MockHttpServletRequestBuilder request = put("/api/mspWorkflows/001").content(requestJson());
+        MockHttpServletRequestBuilder request = put("/api/msp-workflows/001").content(requestJson());
         decorate(request);
 
         ResultActions result = this.browser.perform(request);
@@ -126,13 +129,13 @@ public class MspWorkflowsControllerTest extends SessionSupportedControllerTest {
 
     @Test
     public void testDestroy() throws Exception {
-        expect(mspWorkflowService.findBySn("001")).andReturn(workflow);
-        expect(mspWorkflowService.destroy(anyObject(Workflow.class))).andReturn(workflow);
+        expect(workflowService.findBySn("001", "0")).andReturn(workflow);
+        expect(workflowService.destroy(anyObject(Workflow.class))).andReturn(workflow);
         expectLastCall().once();
 
-        replay(mspWorkflowService);
+        replay(workflowService);
 
-        URI uri = new URI("/api/mspWorkflows/001");
+        URI uri = new URI("/api/msp-workflows/001");
 
         MockHttpServletRequestBuilder request = delete(uri);
         decorate(request);
@@ -147,7 +150,7 @@ public class MspWorkflowsControllerTest extends SessionSupportedControllerTest {
     @After
     public void tearDown() throws Exception {
         // 对Mock的Expectations进行验证
-        verify(mspWorkflowService);
+        verify(workflowService);
     }
 
 }

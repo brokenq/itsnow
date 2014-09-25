@@ -1,8 +1,9 @@
 -- // create_users
 -- Migration SQL that makes the change goes here.
 -- SET SCHEMA itsnow_msc;
-DROP TABLE IF EXISTS users;
-CREATE TABLE IF NOT EXISTS users (
+CREATE SCHEMA IF NOT EXISTS itsnow_msc;
+DROP TABLE IF EXISTS itsnow_msc.users;
+CREATE TABLE IF NOT EXISTS itsnow_msc.users (
   id                INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
   account_id       INT(20) UNSIGNED,
   username          VARCHAR(25)     NOT NULL UNIQUE,
@@ -22,4 +23,4 @@ CREATE TABLE IF NOT EXISTS users (
 -- //@UNDO
 -- SQL to undo the change goes here.
 
-DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS itsnow_msc.users;

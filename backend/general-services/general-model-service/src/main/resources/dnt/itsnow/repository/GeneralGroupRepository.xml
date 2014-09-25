@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dnt.itsnow.repository.GeneralGroupRepository">
+
+    <resultMap id="groupResult" type="Group">
+        <id property="id" column="id"/>
+        <result property="sn" column="sn"/>
+        <result property="name" column="group_name"/>
+        <result property="description" column="description"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <collection property="details" ofType="GroupDetail">
+            <result property="username" column="username"/>
+            <result property="deptName" column="deptName"/>
+            <result property="siteName" column="siteName"/>
+        </collection>
+    </resultMap>
+
+    <select id="findBySn" parameterType="string" resultMap="groupResult">
+        select g.id, g.sn, g.group_name, g.description, g.created_at, g.updated_at
+        from groups g
+        where g.sn=#{sn}
+    </select>
+
+    <select id="findAll" parameterType="string" resultMap="groupResult">
+        select g.id, g.sn, g.group_name, g.description, g.created_at, g.updated_at
+        from groups g
+        order by ${sort} ${dir} limit #{offset}, #{size}
+    </select>
+
+    <select id="findAllByKeyword" parameterType="string" resultMap="groupResult">
+        select g.id, g.sn, g.group_name, g.description, g.created_at, g.updated_at
+        from groups g
+        where g.group_name like #{keyword} or g.sn like #{keyword}
+        order by ${sort} ${dir} limit #{offset}, #{size}
+    </select>
+
+    <select id="countByRelevantInfo" parameterType="string" resultType="int">
+        select count(*) from groups g
+        left join group_members gm on gm.group_name = g.group_name
+        left join itsnow_msc.users u on u.username = gm.username
+        left join staffs stf on stf.user_id = u.id
+        left join departments d on d.id = stf.dept_id
+        left join sites s on s.id = stf.site_id
+        where g.group_name like #{keyword}
+    </select>
+
+    <select id="findAllRelevantInfo" parameterType="string" resultMap="groupResult">
+        select g.id, g.sn, g.group_name, g.description, g.created_at, g.updated_at,
+        u.username,
+        d.name deptName,
+        s.name siteName
+        from groups g
+        left join group_members gm on gm.group_name = g.group_name
+        left join itsnow_msc.users u on u.username = gm.username
+        left join staffs stf on stf.user_id = u.id
+        left join departments d on d.id = stf.dept_id
+        left join sites s on s.id = stf.site_id
+        where g.group_name like #{keyword}
+        order by ${sort} ${dir} limit #{offset}, #{size}
+    </select>
+
+</mapper>

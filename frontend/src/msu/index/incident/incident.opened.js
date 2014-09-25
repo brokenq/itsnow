@@ -110,7 +110,7 @@ angular.module('MsuIndex.IncidentOpened', ['ngTable', 'ngResource'])
     })
 
     .controller('IncidentListCtrl', [
-        '$rootScope','$scope','$state', '$location', '$timeout', 'ngTableParams', 'IncidentService', function($rootScope,$scope,$state, $location, $timeout, ngTableParams, incidentService) {
+        '$rootScope','$scope','$state', '$location', '$timeout', 'ngTableParams', 'IncidentService', function($rootScope,$scope,$state, $location, $timeout, NgTableParams, incidentService) {
             var args, options;
             options = {
                 page: 1,
@@ -128,7 +128,7 @@ angular.module('MsuIndex.IncidentOpened', ['ngTable', 'ngResource'])
                     });
                 }
             };
-            $scope.tableParams = new ngTableParams(angular.extend(options, $location.search()), args);
+            $scope.tableParams = new NgTableParams(angular.extend(options, $location.search()), args);
             $scope.checkboxes = {
                 'checked': false,
                 items: {}
@@ -137,7 +137,7 @@ angular.module('MsuIndex.IncidentOpened', ['ngTable', 'ngResource'])
             $scope.editId = -1;
 
             var found = false;
-            $scope.setEditId =  function(pid) {
+            $scope.process =  function(pid) {
                 angular.forEach($scope.incidents,function(item){
                     if(item.id == pid){
                         found = true;
@@ -154,7 +154,7 @@ angular.module('MsuIndex.IncidentOpened', ['ngTable', 'ngResource'])
                 else{
                     $state.go('incidents-create',{action:'create'});
                 }
-            }
+            };
 
             $scope.$watch('checkboxes.checked', function(value) {
                 return angular.forEach($scope.incidents, function(item) {

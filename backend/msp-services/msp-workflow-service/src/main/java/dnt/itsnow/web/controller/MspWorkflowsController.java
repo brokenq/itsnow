@@ -4,7 +4,7 @@ import dnt.itsnow.exception.WorkflowException;
 import dnt.itsnow.model.Workflow;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
-import dnt.itsnow.service.MspWorkflowService;
+import dnt.itsnow.service.WorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -16,11 +16,11 @@ import java.util.List;
  * <h1>Workflows Controller</h1>
  */
 @RestController
-@RequestMapping("/api/mspWorkflows")
+@RequestMapping("/api/msp-workflows")
 public class MspWorkflowsController extends SessionSupportController<Workflow> {
 
     @Autowired
-    private MspWorkflowService mspWorkflowService;
+    private WorkflowService service;
 
     private Workflow workflow;
 
@@ -35,7 +35,7 @@ public class MspWorkflowsController extends SessionSupportController<Workflow> {
     public List<Workflow> index(@RequestParam(value = "keyword", required = false) String keyword){
         logger.debug("Listing Workflow");
 
-        indexPage = mspWorkflowService.findAll(keyword, pageRequest);
+        indexPage = service.findAll(keyword, pageRequest, "0");
 
         logger.debug("Listed Workflow number {}", indexPage.getNumber());
         return indexPage.getContent();
@@ -68,7 +68,7 @@ public class MspWorkflowsController extends SessionSupportController<Workflow> {
         logger.info("Creating {}", workflow.getName());
 
         try {
-            workflow = mspWorkflowService.create(workflow);
+            workflow = service.create(workflow);
         } catch (WorkflowException e) {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
@@ -95,7 +95,7 @@ public class MspWorkflowsController extends SessionSupportController<Workflow> {
 
         this.workflow.apply(workflow);
         try {
-            mspWorkflowService.update(workflow);
+            service.update(workflow);
         } catch (WorkflowException e) {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
@@ -120,7 +120,7 @@ public class MspWorkflowsController extends SessionSupportController<Workflow> {
         }
 
         try {
-            mspWorkflowService.destroy(workflow);
+            service.destroy(workflow);
         } catch (WorkflowException e) {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
@@ -130,6 +130,6 @@ public class MspWorkflowsController extends SessionSupportController<Workflow> {
     @BeforeFilter({"show", "update", "destroy"})
     public void initWorkflow(@PathVariable("sn") String sn){
 
-        this.workflow = mspWorkflowService.findBySn(sn);//find it by sn
+        this.workflow = service.findBySn(sn, "0");//find it by sn
     }
 }

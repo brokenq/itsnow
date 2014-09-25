@@ -116,14 +116,25 @@ public class MscRestTemplate implements RestOperations {
             withCsrf(new Callback<URI>() {
                 public URI perform(HttpHeaders headers) {
                     final HttpEntity request = new HttpEntity(headers);
-                    ResponseEntity<String> response = postForEntity("/api/session?username={username}&password={password}",
-                            request, String.class, configuration.getUsername(), configuration.getPassword());
-                    //登录成功之后，改变session
-                    String newCookies = response.getHeaders().getFirst("Set-Cookie");
-                    if (newCookies != null ) {
-                        configuration.sessionCookies(newCookies);
+
+                    try {
+                        HttpEntity newRequest = newRequest(request, headers);
+                        ResponseEntity<String> response = template.postForEntity(assemble("/api/session?username={username}&password={password}"),
+                                request, String.class, configuration.getUsername(), configuration.getPassword());
+                        String newCookies = response.getHeaders().getFirst("Set-Cookie");
+                        if (newCookies != null ) {
+                            configuration.sessionCookies(newCookies);
+                        }
+                        return response.getHeaders().getLocation();
+                    } finally {
+                        posted();
                     }
-                    return response.getHeaders().getLocation();
+
+
+                    //ResponseEntity<String> response = postForEntity("/api/session?username={username}&password={password}",
+                    //        request, String.class, configuration.getUsername(), configuration.getPassword());
+                    //登录成功之后，改变session
+
                 }
             });
             configuration.logined();
@@ -196,17 +207,17 @@ public class MscRestTemplate implements RestOperations {
     }
 
     public <T> ResponseEntity<T> getForEntity(final String url, final Class<T> responseType, final HttpEntity request, final Object... uriVariables) throws RestClientException {
-        return withLoginUser(new Callback<ResponseEntity<T>>() {
-            @Override
-            public ResponseEntity<T> perform(HttpHeaders headers) {
+        //return withLoginUser(new Callback<ResponseEntity<T>>() {
+            //@Override
+            //public ResponseEntity<T> perform(HttpHeaders headers) {
                 try {
-                    HttpEntity<?> request = new HttpEntity<Object>(headers);
+                    //HttpEntity<?> request = new HttpEntity<Object>(headers);
                     return template.exchange(assemble(url), HttpMethod.GET, request, responseType, uriVariables);
                 } finally {
                     normal();
                 }
-            }
-        });
+            //}
+        //});
     }
 
     @Override
@@ -375,7 +386,7 @@ public class MscRestTemplate implements RestOperations {
             public ResponseEntity<T> perform(HttpHeaders headers) {
                 try {
                     HttpEntity newRequest = newRequest(request, headers);
-                    return template.postForEntity(assemble(url), request, responseType, uriVariables);
+                    return template.postForEntity(assemble(url), newRequest, responseType, uriVariables);
                 } finally {
                     posted();
                 }

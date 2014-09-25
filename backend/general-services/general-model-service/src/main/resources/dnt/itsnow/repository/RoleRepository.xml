@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dnt.itsnow.repository.RoleRepository">
+
+    <resultMap id="roleResult" type="GeneralRole">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <!-- 一对多关系 -->
+        <collection property="details" ofType="GeneralRoleDetail">
+            <result property="username" column="username"/>
+            <result property="deptName" column="deptName"/>
+            <result property="siteName" column="siteName"/>
+        </collection>
+    </resultMap>
+
+    <sql id="selectRole">
+        SELECT DISTINCT r.id,
+                        r.name,
+                        r.description,
+                        r.created_at,
+                        r.updated_at
+        FROM   roles r,
+               itsnow_msc.accounts acc
+               LEFT JOIN itsnow_msc.users u
+                      ON acc.id = u.account_id
+               LEFT JOIN authorities a
+                      ON u.username = a.username
+        WHERE  r.name = a.authority
+        <if test="accountId != null">
+               AND acc.id = #{accountId}
+        </if>
+    </sql>
+
+    <select id="count" resultType="int">
+        SELECT Count(*)
+        FROM  (
+        <include refid="selectRole"/>
+        ) rr
+    </select>
+
+    <select id="findAll" resultMap="roleResult">
+        <include refid="selectRole"/>
+        order by ${sort} ${dir} limit #{offset}, #{size}
+    </select>
+
+    <select id="countByKeyword" resultType="int">
+        SELECT Count(*)
+        FROM  (
+        <include refid="selectRole"/>
+        AND r.name like #{keyword}
+        ) rr
+    </select>
+
+    <select id="findAllByKeyword" resultMap="roleResult">
+        <include refid="selectRole"/>
+        AND r.name like #{keyword}
+        order by ${sort} ${dir} limit #{offset}, #{size}
+    </select>
+
+    <select id="countByRelevantInfo" parameterType="string" resultType="int">
+        select count(*) from roles r
+        left join authorities a on r.name = a.authority
+        left join itsnow_msc.users u on u.username = a.username
+        left join staffs stf on stf.user_id = u.id
+        left join departments d on d.id = stf.dept_id
+        left join sites s on s.id = stf.site_id
+        where r.name like #{keyword}
+    </select>
+
+    <select id="findAllRelevantInfo" parameterType="string" resultMap="roleResult">
+        select r.id, r.name, r.description, r.created_at, r.updated_at,
+        u.username,
+        d.name deptName,
+        s.name siteName
+        from roles r
+        left join authorities a on r.name = a.authority
+        left join itsnow_msc.users u on u.username = a.username
+        left join staffs stf on stf.user_id = u.id
+        left join departments d on d.id = stf.dept_id
+        left join sites s on s.id = stf.site_id
+        where r.name like #{keyword}
+        order by ${sort} ${dir} limit #{offset}, #{size}
+    </select>
+
+</mapper>

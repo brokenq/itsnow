@@ -16,17 +16,6 @@
         Msp Workflow Service implements,provide spi to frontend..
     </description>
 
-    <dependencies>
-        <dependency>
-            <groupId>dnt.itsnow</groupId>
-            <artifactId>activiti_engine_service</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>dnt.itsnow</groupId>
-            <artifactId>general-incident-service</artifactId>
-        </dependency>
-    </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -35,7 +24,11 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Default-Config>S,A,D,W</Default-Config>
+                            <!--<Service-Config>dnt.itsnow.config.DefaultCommonServiceConfig</Service-Config>-->
+                            <Service-Config>dnt.itsnow.config.MspWorkflowServiceConfig</Service-Config>
+                            <App-Config>dnt.itsnow.platform.config.DefaultAppConfig</App-Config>
+                            <DB-Repository>dnt.itsnow.repository</DB-Repository>
+                            <Web-Repository>dnt.itsnow.web.controller</Web-Repository>
                         </manifestEntries>
                     </archive>
                 </configuration>

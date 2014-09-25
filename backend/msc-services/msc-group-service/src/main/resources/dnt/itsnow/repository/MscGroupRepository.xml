@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dnt.itsnow.repository.MscGroupRepository">
+
+    <resultMap id="groupResult" type="Group">
+        <id property="id" column="id"/>
+        <result property="sn" column="sn"/>
+        <result property="name" column="group_name"/>
+        <result property="description" column="description"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <collection property="details" ofType="GroupDetail">
+            <result property="username" column="username"/>
+        </collection>
+    </resultMap>
+
+    <select id="findBySn" parameterType="string" resultMap="groupResult">
+        select g.id, g.sn, g.group_name, g.description, g.created_at, g.updated_at
+        from groups g
+        where g.sn=#{sn}
+    </select>
+
+    <select id="findAll" parameterType="string" resultMap="groupResult">
+        select g.id, g.sn, g.group_name, g.description, g.created_at, g.updated_at
+        from groups g
+        order by ${sort} ${dir} limit #{offset}, #{size}
+    </select>
+
+    <select id="findAllByKeyword" parameterType="string" resultMap="groupResult">
+        select g.id, g.sn, g.group_name, g.description, g.created_at, g.updated_at
+        from groups g
+        where g.group_name like #{keyword} or g.sn like #{keyword}
+        order by ${sort} ${dir} limit #{offset}, #{size}
+    </select>
+
+    <select id="countByRelevantInfo" parameterType="string" resultType="int">
+        select count(*) from groups g
+        left join group_members gm on gm.group_name = g.group_name
+        left join users u on u.username = gm.username
+        where g.group_name like #{keyword}
+    </select>
+
+    <select id="findAllRelevantInfo" parameterType="string" resultMap="groupResult">
+        select g.id, g.sn, g.group_name, g.description, g.created_at, g.updated_at,
+        u.username
+        from groups g
+        left join group_members gm on gm.group_name = g.group_name
+        left join users u on u.username = gm.username
+        where g.group_name like #{keyword}
+        order by ${sort} ${dir} limit #{offset}, #{size}
+    </select>
+
+</mapper>

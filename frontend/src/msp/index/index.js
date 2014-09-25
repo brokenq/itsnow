@@ -10,6 +10,6 @@ angular.module('Itsnow.MspIndex', [
   'MspIndex.IncidentDetail',
   'MspIndex.IncidentOpened',
   'MspIndex.IncidentClosed',
-  'MspApp.System',
-  'MspApp.Service'
+  'MspIndex.System',
+  'MspIndex.Service'
 ]);

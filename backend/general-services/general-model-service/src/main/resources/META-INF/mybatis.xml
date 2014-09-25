@@ -11,6 +11,8 @@
         <typeAlias type="dnt.itsnow.model.ServiceItem" alias="ServiceItem"/>
         <typeAlias type="dnt.itsnow.model.Staff" alias="Staff"/>
         <typeAlias type="dnt.itsnow.model.Group" alias="Group"/>
-        <typeAlias type="dnt.itsnow.model.MspGroup" alias="MspGroup"/>
+        <typeAlias type="dnt.itsnow.model.GroupDetail" alias="GroupDetail"/>
+        <typeAlias type="dnt.itsnow.model.GeneralRole" alias="GeneralRole"/>
+        <typeAlias type="dnt.itsnow.model.GeneralRoleDetail" alias="GeneralRoleDetail"/>
     </typeAliases>
 </configuration>
