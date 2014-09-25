@@ -4,10 +4,6 @@ angular.module('MscIndex.User', ['ngTable','ngResource', 'MscIndex.User.Detail']
       url: '/system',
       templateUrl: 'user/list.tpl.jade'
       data: {pageTitle: '系统管理'}
-    $stateProvider.state 'system.role',
-      url: '/role',
-      templateUrl: 'user/list.tpl.jade'
-      data: {pageTitle: '角色管理'}
     $stateProvider.state 'system.user',
       url: '/user',
       templateUrl: 'user/list.tpl.jade'

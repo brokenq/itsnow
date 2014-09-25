@@ -13,5 +13,6 @@ angular.module('Itsnow.MscIndex', [
   'MscIndex.User',
   'MscIndex.SLA',
   'MscIndex.Contract',
-  'MscIndex.ServiceCatalog'
+  'MscIndex.ServiceCatalog',
+  'MscIndex.System'
 ]);

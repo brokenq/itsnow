@@ -11,6 +11,7 @@ import dnt.itsnow.service.ItsnowProcessService;
 import dnt.itsnow.service.ItsnowSchemaService;
 import dnt.itsnow.service.SystemInvokeService;
 import dnt.itsnow.util.DeployFixture;
+import org.apache.commons.io.FileUtils;
 import org.easymock.IAnswer;
 import org.junit.After;
 import org.junit.Before;
@@ -22,6 +23,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,7 +34,7 @@ import static org.easymock.EasyMock.expectLastCall;
 /**
  * <h1>Itsnow Process Manager Test</h1>
  *
- * find类的接口基本就是透传，暂时不需要进行测试
+ * find*的接口基本就是透传，暂时不需要进行测试
  */
 @ContextConfiguration(classes = ItsnowProcessManagerConfig.class)
 @ActiveProfiles("test")
@@ -59,6 +61,8 @@ public class ItsnowProcessManagerTest {
 
     @Before
     public void setUp() throws Exception {
+        System.setProperty("APP_HOME", System.getProperty("java.io.tmpdir"));
+        FileUtils.forceMkdir(new File(System.getProperty("APP_HOME"), "tmp"));
         host = DeployFixture.testHost();
         host.setId(1L);
         schema = DeployFixture.testSchema();
@@ -87,12 +91,10 @@ public class ItsnowProcessManagerTest {
 
     @Test
     public void testCreate() throws Exception {
-        expect(hostService.findById(host.getId())).andReturn(host);
         expect(schemaService.create(schema)).andReturn(schema);
         String jobId = "create-process-job-id";
         expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
-        systemInvokeService.waitJobFinished(jobId);
-        expectLastCall().once();
+        expect(systemInvokeService.waitJobFinished(jobId)).andReturn(0) ;
         repository.create(process);
         expectLastCall().once();
 
@@ -112,8 +114,7 @@ public class ItsnowProcessManagerTest {
         expectLastCall().once();
         String jobId = "delete-process-job-id";
         expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
-        systemInvokeService.waitJobFinished(jobId);
-        expectLastCall().once();
+        expect(systemInvokeService.waitJobFinished(jobId)).andReturn(0) ;
         repository.deleteByName(process.getName());
         expectLastCall().once();
 
@@ -130,6 +131,8 @@ public class ItsnowProcessManagerTest {
     public void testStart() throws Exception {
         String jobId = "start-process-job-id";
         expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
+        repository.update(process);
+        expectLastCall().once();
 
         replay(hostService);
         replay(schemaService);
@@ -145,6 +148,8 @@ public class ItsnowProcessManagerTest {
         process.setStatus(ProcessStatus.Running);
         String jobId = "stop-process-job-id";
         expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
+        repository.update(process);
+        expectLastCall().once();
 
         replay(hostService);
         replay(schemaService);

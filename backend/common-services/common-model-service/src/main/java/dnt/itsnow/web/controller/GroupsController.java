@@ -26,8 +26,8 @@ import java.util.List;
  *  DELETE   /api/groups/{sn}      delete    删除指定的流程字典记录
  * </pre>
  */
-@RestController
-@RequestMapping("/api/groups")
+//@RestController
+//@RequestMapping("/api/groups")
 public class GroupsController extends SessionSupportController<Group> {
 
     @Autowired

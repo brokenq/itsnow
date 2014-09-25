@@ -20,6 +20,7 @@
         <!-- 一对一关系 -->
         <association property="user" column="user_id" javaType="User">
             <id property="id" column="userId"/>
+            <result property="name" column="userName"/>
             <result property="email" column="userEmail"/>
             <result property="phone" column="userPhone"/>
             <result property="enabled" column="userEnabled"/>
@@ -43,40 +44,30 @@
         </association>
     </resultMap>
 
-    <select id="findByNo" parameterType="string" resultType="Staff" resultMap="staffResult">
+    <sql id="selectStaff">
         select stf.id, stf.no, stf.name, stf.mobile_phone, stf.fixed_phone, stf.email, stf.title, stf.type, stf.status, stf.description, stf.created_at, stf.updated_at,
-        u.id as userId, u.email as userEmail, u.phone as userPhone, u.enabled as userEnabled, u.expired as userEnabled, u.locked as userLocked,
+        u.id as userId, u.username as userName, u.email as userEmail, u.phone as userPhone, u.enabled as userEnabled, u.expired as userEnabled, u.locked as userLocked,
         s.id as siteId, s.sn as siteSn, s.name as siteName, s.address as siteAddress, s.description as siteDescription,
         d.id as deptId, d.sn as deptSn, d.name as deptName, d.description as deptDescription
         from staffs stf
-        left join users u on stf.user_id = u.id
+        left join itsnow_msc.users u on stf.user_id = u.id
         left join sites s on stf.site_id = s.id
         left join departments d on stf.dept_id = d.id
+    </sql>
+
+    <select id="findByNo" parameterType="string" resultMap="staffResult">
+        <include refid="selectStaff"/>
         where stf.no=#{no}
     </select>
 
-    <select id="find" parameterType="string" resultType="Staff" resultMap="staffResult">
-        select stf.id, stf.no, stf.name, stf.mobile_phone, stf.fixed_phone, stf.email, stf.title, stf.type, stf.status, stf.description, stf.created_at, stf.updated_at,
-        u.id as userId, u.email as userEmail, u.phone as userPhone, u.enabled as userEnabled, u.expired as userEnabled, u.locked as userLocked,
-        s.id as siteId, s.sn as siteSn, s.name as siteName, s.address as siteAddress, s.description as siteDescription,
-        d.id as deptId, d.sn as deptSn, d.name as deptName, d.description as deptDescription
-        from staffs stf
-        left join users u on stf.user_id = u.id
-        left join sites s on stf.site_id = s.id
-        left join departments d on stf.dept_id = d.id
+    <select id="find" parameterType="string" resultMap="staffResult">
+        <include refid="selectStaff"/>
         order by ${sort} ${dir} limit #{offset}, #{size}
     </select>
 
 
-    <select id="findByKeyword" parameterType="string" resultType="Staff" resultMap="staffResult">
-        select stf.id, stf.no, stf.name, stf.mobile_phone, stf.fixed_phone, stf.email, stf.title, stf.type, stf.status, stf.description, stf.created_at, stf.updated_at,
-        u.id as userId, u.email as userEmail, u.phone as userPhone, u.enabled as userEnabled, u.expired as userEnabled, u.locked as userLocked,
-        s.id as siteId, s.sn as siteSn, s.name as siteName, s.address as siteAddress, s.description as siteDescription,
-        d.id as deptId, d.sn as deptSn, d.name as deptName, d.description as deptDescription
-        from staffs stf
-        left join users u on stf.user_id = u.id
-        left join sites s on stf.site_id = s.id
-        left join departments d on stf.dept_id = d.id
+    <select id="findByKeyword" parameterType="string" resultMap="staffResult">
+        <include refid="selectStaff"/>
         where stf.name like #{keyword}
         order by ${sort} ${dir} limit #{offset}, #{size}
     </select>

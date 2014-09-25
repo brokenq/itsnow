@@ -11,5 +11,7 @@ angular.module('Itsnow.MsuIndex', [
   'MsuIndex.IncidentDetail',
   'MsuIndex.IncidentCreated',
   'MsuIndex.IncidentOpened',
-  'MsuIndex.IncidentClosed'
+  'MsuIndex.IncidentClosed',
+  'MsuIndex.System',
+  'MsuIndex.Service'
 ]);

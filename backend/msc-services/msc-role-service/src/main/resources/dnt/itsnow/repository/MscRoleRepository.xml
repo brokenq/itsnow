@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dnt.itsnow.repository.MscRoleRepository">
+
+    <resultMap id="roleResult" type="MscRole">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <!-- 一对多关系 -->
+        <collection property="users" ofType="User">
+            <id property="id" column="userId"/>
+            <result property="name" column="userName"/>
+        </collection>
+    </resultMap>
+
+    <select id="countByRelevantInfo" parameterType="string" resultType="int">
+        select count(*) from roles r
+        left join authorities a on r.name = a.authority
+        left join users u on u.username = a.username
+        where r.name like #{keyword}
+    </select>
+
+    <select id="findAllRelevantInfo" parameterType="string" resultMap="roleResult">
+        select r.id, r.name, r.description, r.created_at, r.updated_at,
+        u.id as userId, u.username as userName
+        from roles r
+        left join authorities a on r.name = a.authority
+        left join users u on u.username = a.username
+        where r.name like #{keyword}
+        order by ${sort} ${dir} limit #{offset}, #{size}
+    </select>
+
+</mapper>

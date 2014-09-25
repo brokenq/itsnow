@@ -20,8 +20,8 @@ INSERT INTO menu_items(id, parent_id, name, state, position, css) VALUES
 
 (31, 3, '服务目录', 'services.catalog', 0, 'icon-th'),
 (32, 3, 'SLA管理', 'services.sla',      1, 'icon-eye-open'),
-(33, 3, '字典管理', 'services.dict',    1, 'icon-book'),
-(34, 3, '流程管理', 'services.workflow',1, 'icon-task'),
+(33, 3, '字典管理', 'dict',    1, 'icon-book'),
+(34, 3, '流程管理', 'workflow',1, 'icon-task'),
 
 (41, 4, '新建故障',   'incidents-create', 1, 'icon-fire'),
 (42, 4, '我的故障单', 'incidents-opened',     2, 'icon-eye-open'),

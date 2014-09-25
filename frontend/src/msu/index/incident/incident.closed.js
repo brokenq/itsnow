@@ -44,7 +44,7 @@ angular.module('MsuIndex.IncidentClosed', ['ngTable', 'ngResource'])
         };
     })
     .controller('ClosedIncidentListCtrl', [
-        '$scope', '$location', '$timeout', 'ngTableParams', 'ClosedIncidentService', function($scope, $location, $timeout, ngTableParams, closedIncidentService) {
+        '$scope', '$location', '$timeout', 'ngTableParams', 'ClosedIncidentService', function($scope, $location, $timeout, NgTableParams, closedIncidentService) {
             var args, options;
             options = {
                 page: 1,
@@ -62,7 +62,7 @@ angular.module('MsuIndex.IncidentClosed', ['ngTable', 'ngResource'])
                     });
                 }
             };
-            $scope.tableParams = new ngTableParams(angular.extend(options, $location.search()), args);
+            $scope.tableParams = new NgTableParams(angular.extend(options, $location.search()), args);
             $scope.checkboxes = {
                 'checked': false,
                 items: {}

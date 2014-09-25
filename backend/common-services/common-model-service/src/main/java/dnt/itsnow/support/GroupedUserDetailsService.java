@@ -46,7 +46,7 @@ public class GroupedUserDetailsService implements CommonUserService, UserDetails
     @Override
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userService.loadUserByUsername(username);
-//        user.addAuthorities(groupRepository.findUserAuthorities(username));
+        user.addAuthorities(groupRepository.findUserAuthorities(username));
         return user;
     }
 

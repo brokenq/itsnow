@@ -4,7 +4,7 @@ import dnt.itsnow.exception.WorkflowException;
 import dnt.itsnow.model.Workflow;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
-import dnt.itsnow.service.MsuWorkflowService;
+import dnt.itsnow.service.WorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -16,11 +16,11 @@ import java.util.List;
  * <h1>Workflows Controller</h1>
  */
 @RestController
-@RequestMapping("/api/mspWorkflows")
+@RequestMapping("/api/msu-workflows")
 public class MsuWorkflowsController extends SessionSupportController<Workflow> {
 
     @Autowired
-    private MsuWorkflowService msuWorkflowService;
+    private WorkflowService service;
 
     private Workflow workflow;
 
@@ -35,7 +35,7 @@ public class MsuWorkflowsController extends SessionSupportController<Workflow> {
     public List<Workflow> index(@RequestParam(value = "keyword", required = false) String keyword){
         logger.debug("Listing Workflow");
 
-        indexPage = msuWorkflowService.findAll(keyword, pageRequest);
+        indexPage = service.findAll(keyword, pageRequest, "0");
 
         logger.debug("Listed Workflow number {}", indexPage.getNumber());
         return indexPage.getContent();
@@ -44,7 +44,7 @@ public class MsuWorkflowsController extends SessionSupportController<Workflow> {
     /**
      * <h2>查看一个地点</h2>
      *
-     * GET /api/workflows/{sn}
+     * GET /api/msu-workflows/{sn}
      *
      * @return 地点
      */
@@ -68,7 +68,7 @@ public class MsuWorkflowsController extends SessionSupportController<Workflow> {
         logger.info("Creating {}", workflow.getName());
 
         try {
-            workflow = msuWorkflowService.create(workflow);
+            workflow = service.create(workflow);
         } catch (WorkflowException e) {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
@@ -80,7 +80,7 @@ public class MsuWorkflowsController extends SessionSupportController<Workflow> {
     /**
      * <h2>更新一个地点</h2>
      *
-     * PUT /api/workflows/{sn}
+     * PUT /api/msu-workflows/{sn}
      *
      * @return 被更新的地点
      */
@@ -95,7 +95,7 @@ public class MsuWorkflowsController extends SessionSupportController<Workflow> {
 
         this.workflow.apply(workflow);
         try {
-            msuWorkflowService.update(workflow);
+            service.update(workflow);
         } catch (WorkflowException e) {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
@@ -108,7 +108,7 @@ public class MsuWorkflowsController extends SessionSupportController<Workflow> {
     /**
      * <h2>删除一个地点</h2>
      *
-     * DELETE /api/workflows/{sn}
+     * DELETE /api/msu-workflows/{sn}
      *
      * @return 被删除的地点
      */
@@ -120,7 +120,7 @@ public class MsuWorkflowsController extends SessionSupportController<Workflow> {
         }
 
         try {
-            msuWorkflowService.destroy(workflow);
+            service.destroy(workflow);
         } catch (WorkflowException e) {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
@@ -130,6 +130,6 @@ public class MsuWorkflowsController extends SessionSupportController<Workflow> {
     @BeforeFilter({"show", "update", "destroy"})
     public void initWorkflow(@PathVariable("sn") String sn){
 
-        this.workflow = msuWorkflowService.findBySn(sn);//find it by sn
+        this.workflow = service.findBySn(sn, "0");//find it by sn
     }
 }

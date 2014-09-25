@@ -73,21 +73,22 @@ public class DeployFixture {
         process.setWd("/opt/releases/msu_001");
         process.setDescription("A test process");
         process.creating();
-        return process;
-    }
 
-    public static ItsnowProcess deployProcess() {
-        ItsnowProcess process = testProcess();
-        process.setName("itsnow_msu_100");
         process.setAccountId(1L);
+        MsuAccount account = new MsuAccount();
+        account.setId(1L);
+        account.setDomain("msu_100");
+        process.setAccount(account);
         process.setProperty("rmi.port", "1234");
         process.setProperty("jmx.port", "4321");
         process.setProperty("debug.port", "5322");
         process.setProperty("http.port", "8012");
 
-        MsuAccount account = new MsuAccount();
-        account.setDomain("msu_100");
-        process.setAccount(account);
+        return process;
+    }
+
+    public static ItsnowProcess deployProcess() {
+        ItsnowProcess process = testProcess();
 
 
         ItsnowSchema schema = deploySchema();

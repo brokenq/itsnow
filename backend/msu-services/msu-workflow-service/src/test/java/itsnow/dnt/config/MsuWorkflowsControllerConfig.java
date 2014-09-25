@@ -1,7 +1,7 @@
 package itsnow.dnt.config;
 
 import dnt.itsnow.service.CommonUserService;
-import dnt.itsnow.service.MsuWorkflowService;
+import dnt.itsnow.service.WorkflowService;
 import dnt.itsnow.test.config.ApplicationControllerConfig;
 import dnt.itsnow.web.controller.MsuWorkflowsController;
 import org.easymock.EasyMock;
@@ -15,8 +15,8 @@ public class MsuWorkflowsControllerConfig extends ApplicationControllerConfig {
     // Mocked service beans
 
     @Bean
-    public MsuWorkflowService mspWorkflowSerivce(){
-        return EasyMock.createMock(MsuWorkflowService.class);
+    public WorkflowService workflowSerivce(){
+        return EasyMock.createMock(WorkflowService.class);
     }
 
     @Bean

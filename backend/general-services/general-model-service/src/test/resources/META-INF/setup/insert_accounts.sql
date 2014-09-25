@@ -1,8 +1,6 @@
 -- SET SCHEMA itsnow_msc;
 
-TRUNCATE TABLE accounts;
-
-INSERT INTO accounts(sn, name, domain, type, status)
+INSERT INTO itsnow_msc.accounts(sn, name, domain, type, status)
 VALUES
  ('msc',     'Itsnow Carrier', 'www',     'msc', 'Valid'),
  ('msu_001', 'Shanghai VW',    'csvw',    'msu', 'Valid'),

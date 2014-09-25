@@ -17,7 +17,6 @@ import java.util.List;
  */
 public class Role extends ConfigItem {
 
-    @NotBlank
     private String sn;
 
     public String getSn() {

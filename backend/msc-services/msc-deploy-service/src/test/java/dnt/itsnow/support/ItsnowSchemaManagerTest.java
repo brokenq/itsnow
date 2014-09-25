@@ -31,12 +31,12 @@ import static org.easymock.EasyMock.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ItsnowSchemaManagerTest {
     @Autowired
-    ItsnowSchemaManager    schemaManager;
+    ItsnowSchemaManager manager;
 
     @Autowired
-    ItsnowSchemaRepository schemaRepository;
+    ItsnowSchemaRepository repository;
     @Autowired
-    SystemInvokeService systemInvokeService;
+    SystemInvokeService    systemInvokeService;
 
     ItsnowSchema schema;
 
@@ -51,23 +51,22 @@ public class ItsnowSchemaManagerTest {
     public void tearDown() throws Exception {
         verify(systemInvokeService);
         reset(systemInvokeService);
-        verify(schemaRepository);
-        reset(schemaRepository);
+        verify(repository);
+        reset(repository);
     }
 
     @Test
     public void testCreate() throws Exception {
         String jobId = "create-schema-job-id";
         expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
-        systemInvokeService.waitJobFinished(jobId);
-        expectLastCall().once();
-        schemaRepository.create(schema);
+        expect(systemInvokeService.waitJobFinished(jobId)).andReturn(0);
+        repository.create(schema);
         expectLastCall().once();
 
         replay(systemInvokeService);
-        replay(schemaRepository);
+        replay(repository);
 
-        ItsnowSchema created = schemaManager.create(schema);
+        ItsnowSchema created = manager.create(schema);
         Assert.notNull(created.getCreatedAt());
         Assert.notNull(created.getUpdatedAt());
     }
@@ -76,15 +75,14 @@ public class ItsnowSchemaManagerTest {
     public void testCreateFailureWhileCanNotCreateRealSchema() throws Exception {
         String jobId = "create-schema-job-id";
         expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
-        systemInvokeService.waitJobFinished(jobId);
-        expectLastCall().andThrow(new SystemInvokeException("configuration error"));
+        expect(systemInvokeService.waitJobFinished(jobId)).andThrow(new SystemInvokeException("configuration error"));
 
         replay(systemInvokeService);
-        replay(schemaRepository);
+        replay(repository);
 
 
         try {
-            schemaManager.create(schema);
+            manager.create(schema);
             throw new Exception("It should failed!");
         } catch (ItsnowSchemaException e) {
             Assert.hasText("Can't create schema", e.getMessage());
@@ -95,30 +93,28 @@ public class ItsnowSchemaManagerTest {
     public void testDelete() throws Exception {
         String jobId = "delete-schema-job-id";
         expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
-        systemInvokeService.waitJobFinished(jobId);
-        expectLastCall().once();
-        schemaRepository.delete(schema);
+        expect(systemInvokeService.waitJobFinished(jobId)).andReturn(0);
+        repository.delete(schema);
         expectLastCall().once();
 
         replay(systemInvokeService);
-        replay(schemaRepository);
+        replay(repository);
 
-        schemaManager.delete(schema);
+        manager.delete(schema);
     }
 
     @Test
     public void testDeleteFailureWhileCanNotDestroyRealSchema() throws Exception {
         String jobId = "delete-schema-job-id";
         expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
-        systemInvokeService.waitJobFinished(jobId);
-        expectLastCall().andThrow(new SystemInvokeException("configuration error"));
+        expect(systemInvokeService.waitJobFinished(jobId)).andThrow(new SystemInvokeException("configuration error"));
 
         replay(systemInvokeService);
-        replay(schemaRepository);
+        replay(repository);
 
 
         try {
-            schemaManager.delete(schema);
+            manager.delete(schema);
             throw new Exception("It should failed!");
         } catch (ItsnowSchemaException e) {
             Assert.hasText("Can't drop schema", e.getMessage());

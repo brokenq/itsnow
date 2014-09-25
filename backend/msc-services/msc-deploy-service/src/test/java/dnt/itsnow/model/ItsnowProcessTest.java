@@ -69,13 +69,6 @@ public class ItsnowProcessTest extends ValidatorSupport{
     }
 
     @Test
-    public void testRequireSchemaId() throws Exception {
-        process.setSchemaId(null);
-        Set<ConstraintViolation<ItsnowProcess>> violations = validator.validate(process);
-        Assert.assertFalse(violations.isEmpty());
-    }
-
-    @Test
     public void testSerialization() throws Exception {
         String json = JsonSupport.toJSONString(process);
         System.out.println(json);
