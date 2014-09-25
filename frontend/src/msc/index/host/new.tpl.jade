@@ -18,7 +18,7 @@ mixin config_field(name, id, label, icon, tip)
         i(class="icon-#{icon}")
     .help-block.col-xs-12.col-sm-reset.inline #{tip}
 
-.row
+.row(ng-controller="HostNewCtrl")
   form.form-horizontal(name="newHostForm", novalidate, ng-model-options="{ updateOn: 'mousedown blur' }", role="form")
     +form_field("name",     "主机名", "star", "主机名，不要用中文，尽量为简单的英文字符")
     +form_field("address",  "地址",   "font", "主机地址，IP地址或者域名均可")
@@ -31,7 +31,7 @@ mixin config_field(name, id, label, icon, tip)
     .row-fluid.actions
       .col-xs-12.col-sm-3
       .col-xs-12.col-sm-5
-        button.btn.btn-sm.btn-primary(ng-click="submit()")
+        button.btn.btn-sm.btn-primary(ng-click="createHost()")
           i.icon-ok
           | 创建
         button.btn.btn-sm.btn-link(ui-sref="hosts")

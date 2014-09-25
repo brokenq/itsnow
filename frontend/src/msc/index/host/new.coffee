@@ -16,16 +16,23 @@ angular.module('MscIndex.HostNew', ['ngResource'])
         configuration:
           user: "root"
           password: "secret"
-          'msu_version': "0.1.9"
-          'msp_version': "0.1.9"
+          msu_version: "0.1.9"
+          msp_version: "0.1.9"
 
-      $scope.submit ->
+      $scope.createHost = ->
         feedback = (content) ->
           alert content
         success = ->
           $state.go 'hosts'
         failure = (response)->
           feedback response.statusText
-        hostService.save($scope.host, success, failure)
+        host = $scope.host
+        msu_version = host.configuration.msu_version
+        msp_version = host.configuration.msp_version
+        delete host.configuration.msu_version
+        delete host.configuration.msp_version
+        host.configuration['msu.version'] = msu_version
+        host.configuration['msp.version'] = msp_version
+        hostService.save(host, success, failure)
   ]
 

@@ -7,6 +7,7 @@ angular.module('Itsnow.MscIndex', [
   'MscIndex.Account',
   'MscIndex.Host',
   'MscIndex.HostNew',
+  'MscIndex.HostView',
   'MscIndex.Process',
   'MscIndex.ProcessNew',
   'MscIndex.User',

@@ -30,4 +30,14 @@ public interface ItsnowHostService {
     ItsnowHost create(ItsnowHost creating) throws ItsnowHostException;
 
     void delete(ItsnowHost host) throws ItsnowHostException;
+
+    /**
+     * 读取一个主机相关任务的最新信息
+     *
+     * @param host    被读取的主机对象
+     * @param job     正在/已经 执行的任务描述符
+     * @param offset  信息的offset
+     * @return 当前的位置，也是下次来读的始点
+     */
+    long follow(ItsnowHost host, String job, long offset, List<String> result);
 }

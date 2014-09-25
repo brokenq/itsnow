@@ -106,6 +106,11 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
         }
     }
 
+    @Override
+    public long follow(ItsnowHost host, String jobId, long offset, List<String> result) {
+        logger.trace("Follow {}'s job: {}", host, jobId);
+        return invokeService.read(jobId, offset, result);
+    }
 
     //////////////////////////////////////////////////////////////////////////////
     // 监听 主机配置任务的执行情况，并通过repository更新相应的host状态

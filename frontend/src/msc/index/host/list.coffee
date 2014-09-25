@@ -7,7 +7,7 @@ angular.module('MscIndex.Host', ['ngTable','ngResource'])
       data: {pageTitle: '主机管理'}
 
   .factory('HostService', ['$resource', ($resource) ->
-    $resource("/admin/api/hosts")
+    $resource("/admin/api/hosts/:id", {id: "@id"})
   ])
   .filter('formatHostStatus', ->
     (status) ->
@@ -16,7 +16,7 @@ angular.module('MscIndex.Host', ['ngTable','ngResource'])
       return "有故障" if status == 'Abnormal'
       return "已关机" if status == 'Shutdown'
   )
-  .controller 'HostListCtrl',['$scope', '$location', '$timeout', 'ngTableParams', 'HostService',($scope, $location, $timeout, ngTableParams, hostService)->
+  .controller 'HostListCtrl',['$scope', '$location', '$state', '$timeout', 'ngTableParams', 'HostService',($scope, $location, $state, $timeout, ngTableParams, hostService)->
     options =
       page:  1,           # show first page
       count: 10           # count per page
@@ -49,5 +49,8 @@ angular.module('MscIndex.Host', ['ngTable','ngResource'])
       # grayed checkbox
       angular.element(document.getElementById("select_all")).prop("indeterminate", (checked != 0 && unchecked != 0));
     , true)
+
+    $scope.viewHost = (hostId)->
+      $state.go 'host_view', {id: hostId}
   ]
 
