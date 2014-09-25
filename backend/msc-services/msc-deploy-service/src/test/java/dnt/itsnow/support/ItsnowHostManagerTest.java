@@ -35,7 +35,7 @@ public class ItsnowHostManagerTest {
     @Autowired
     ItsnowHostManager    hostManager;
     @Autowired
-    ItsnowHostRepository hostRepository;
+    ItsnowHostRepository repository;
     @Autowired
     SystemInvokeService  systemInvokeService;
 
@@ -52,19 +52,19 @@ public class ItsnowHostManagerTest {
         verify(systemInvokeService);
         reset(systemInvokeService);
 
-        verify(hostRepository);
-        reset(hostRepository);
+        verify(repository);
+        reset(repository);
     }
 
     @Test
     public void testCreate() throws Exception {
         String jobId = "config-host-job-id";
         expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
-        hostRepository.create(host);
+        repository.create(host);
         expectLastCall().once();
 
         replay(systemInvokeService);
-        replay(hostRepository);
+        replay(repository);
 
         ItsnowHost created = hostManager.create(host);
         Assert.notNull(created.getCreatedAt());
@@ -75,13 +75,14 @@ public class ItsnowHostManagerTest {
     public void testDelete() throws Exception {
         String jobId = "quit-host-job-id";
         expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
-        systemInvokeService.waitJobFinished(jobId);
+        expect(systemInvokeService.waitJobFinished(jobId)).andReturn(0);
+        repository.update(host);
         expectLastCall().once();
-        hostRepository.deleteByAddress(host.getAddress());
+        repository.deleteByAddress(host.getAddress());
         expectLastCall().once();
 
         replay(systemInvokeService);
-        replay(hostRepository);
+        replay(repository);
 
         hostManager.delete(host);
     }
@@ -90,11 +91,12 @@ public class ItsnowHostManagerTest {
     public void testDeleteFailureWhileCanNotQuitRealHost() throws Exception {
         String jobId = "quit-host-job-id";
         expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
-        systemInvokeService.waitJobFinished(jobId);
-        expectLastCall().andThrow(new SystemInvokeException("configuration error"));
+        expect(systemInvokeService.waitJobFinished(jobId)).andThrow(new SystemInvokeException("configuration error"));
+        repository.update(host);
+        expectLastCall().once();
 
         replay(systemInvokeService);
-        replay(hostRepository);
+        replay(repository);
 
 
         try {

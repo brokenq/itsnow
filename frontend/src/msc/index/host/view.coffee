@@ -17,8 +17,9 @@ angular.module('MscIndex.HostView', ['ngResource'])
             host.creationLog = log
       # Do nothing now
       $scope.deleteHost = (hostId)->
-        hostService.delete {id: hostId}, ->
+        hostService.delete({id: hostId}, ->
           $state.go 'hosts'
+        )
 
   ]
 
