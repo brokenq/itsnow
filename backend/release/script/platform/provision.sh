@@ -14,6 +14,13 @@ yum install -y wget lsof vim telnet
 cd /opt/system/binaries
 
 # install jdk if needs
+java=`which java`
+if [ "$java" == "" ]; then
+  java="/usr/local/java/bin/java"
+fi
+if [ "$java" != "/bin/java" ]; then
+  ln -s $java /bin/java
+fi
 
 # install redis
 echo "Install redis..."
@@ -73,3 +80,14 @@ fi
 echo $new_pwd > /root/.mysql_pwd
 
 echo "MySQL password reset and store in /root/.mysql_pwd"
+
+echo "Temp solution for mysql master/slave replication"
+script_dir=$(cd `dirname $0` && pwd )
+$script_dir/create_db.sh itsnow_msc itsnow secret
+mysql -uitsnow -psecret -Ditsnow_msc < $script_dir/itsnow_msc.sql
+if [ $? -eq 0 ]; then
+  echo "Replication of itsnow_msc created!"
+else
+  echo "Failed to create itsnow_msc replication"
+  exit 1
+fi

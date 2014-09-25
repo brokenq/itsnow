@@ -120,6 +120,6 @@ public class ItsnowProcess extends DeployResource{
     }
 
     public String getIdentifier() {
-        return getName().replace("itsnow\\?", "");
+        return getName().toLowerCase().replaceFirst("itsnow[_|-]", "");
     }
 }

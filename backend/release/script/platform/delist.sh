@@ -10,6 +10,7 @@ echo "Mysql stopped"
 echo "Uninstall mysql"
 rpm -qa | grep MySQL | xargs rpm -e
 rm -f ~/.mysql_*
+rm -rf /var/lib/mysql
 echo "Mysql uninstalled"
 
 echo "Stop redis"

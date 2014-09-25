@@ -109,13 +109,35 @@ public class ItsnowProcessScriptTest {
 
     @Test
     public void testStart() throws Exception {
+        expect(repository.findByConfiguration(isA(String.class), isA(String.class))).andReturn(process);
+        expect(repository.findByConfiguration(isA(String.class), isA(String.class))).andReturn(process);
+        repository.update(process);
+        expectLastCall().anyTimes();
 
+        replay(schemaRepository);
+        replay(repository);
 
+        process.setStatus(ProcessStatus.Stopped);
+        manager.start(process);
+        String invocationId = process.getProperty(ItsnowProcessManager.START_INVOCATION_ID);
+        Assert.assertNotNull(invocationId);
+        systemInvokeService.waitJobFinished(invocationId);
     }
 
     @Test
     public void testStop() throws Exception {
+        expect(repository.findByConfiguration(isA(String.class), isA(String.class))).andReturn(process);
+        expect(repository.findByConfiguration(isA(String.class), isA(String.class))).andReturn(process);
+        repository.update(process);
+        expectLastCall().anyTimes();
 
+        replay(schemaRepository);
+        replay(repository);
 
+        process.setStatus(ProcessStatus.Running);
+        manager.stop(process);
+        String invocationId = process.getProperty(ItsnowProcessManager.STOP_INVOCATION_ID);
+        Assert.assertNotNull(invocationId);
+        systemInvokeService.waitJobFinished(invocationId);
     }
 }

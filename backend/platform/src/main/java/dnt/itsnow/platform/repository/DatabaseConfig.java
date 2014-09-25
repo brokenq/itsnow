@@ -48,8 +48,9 @@ public class DatabaseConfig {
         if(StringUtils.isBlank(appId) || "<undefined>".equalsIgnoreCase(appId)){
             throw new ApplicationContextException("the app id is not defined");
         }
-        String dbName = "itsnow_" + appId;
-        System.setProperty("app.db", dbName);
+
+        String dbName = System.getProperty("db.name", "itsnow_" + appId);
+        System.setProperty("db.name", dbName);
         String dbUrl = String.format("jdbc:mysql://%s:%s/%s", dbHost, dbPort, dbName);
         dataSource.setUrl(dbUrl);
         dataSource.setUsername(dbUser);

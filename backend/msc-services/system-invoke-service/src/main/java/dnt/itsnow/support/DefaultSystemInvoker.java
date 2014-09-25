@@ -49,6 +49,9 @@ public class DefaultSystemInvoker extends Bean implements SystemInvoker {
 
             });
         } catch (Exception e) {
+            //避免在多个链式时对异常重复包装，也许需要修改该异常的 invocation chain 描述
+            // (或者不用，自身其实已经表达了, 但我现在没将其做成双向链)
+            if( e instanceof  SystemInvokeException ) throw (SystemInvokeException )e;
             String message = e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage();
             throw new SystemInvokeException("Can't invoke " + invocation + ", because of:" + message, e);
         }

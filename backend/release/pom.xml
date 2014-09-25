@@ -21,8 +21,8 @@
         <rmi.port>1083</rmi.port>
         <http.port>8070</http.port>
         <app.id>platform</app.id>
-        <app.db>itsnow_${app.id}</app.db>
         <app.name>Itsnow-${app.id}</app.name>
+        <db.name>itsnow_${app.id}</db.name>
     </properties>
 
     <dependencies>

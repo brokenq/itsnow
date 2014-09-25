@@ -19,8 +19,9 @@ user=$2
 mysql_pwd=`cat /root/.mysql_pwd`
 mysql -uroot -p$mysql_pwd <<SQL
   DROP DATABASE IF EXISTS $schema ;
-  REVOKE SELECT ON itsnow_msc.* FROM '$user'@'localhost' ;
-  DROP USER '$user'@'localhost' ;
+  REVOKE SELECT ON itsnow_msc.* FROM '$user'@'%' ;
+  DROP USER IF EXISTS '$user'@'%' ;
+  FLUSH PRIVILEGES;
 SQL
 
 if [ $? -eq 0 ]; then

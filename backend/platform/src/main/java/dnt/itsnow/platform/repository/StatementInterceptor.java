@@ -24,7 +24,7 @@ public class StatementInterceptor implements Interceptor {
     public Object intercept(Invocation invocation) throws Throwable {
         StatementHandler statementHandler = (StatementHandler)invocation.getTarget();
         BoundSql boundSql = statementHandler.getBoundSql();
-        boundSql.setAdditionalParameter("schema", System.getProperty("app.db"));
+        boundSql.setAdditionalParameter("schema", System.getProperty("db.name"));
         return invocation.proceed();
     }
 
