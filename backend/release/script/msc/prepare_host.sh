@@ -29,7 +29,7 @@ fi
 
 ssh_exec mkdir -p /opt/system/platform /opt/system/binaries /opt/system/config
 echo "copy platform script to $target:/opt/system/platform"
-scp $msc_home/script/platform/*.sh root@$target:/opt/system/platform/
+scp $msc_home/script/platform/* root@$target:/opt/system/platform/
 echo "copy binaries to $target:/opt/system/binaries"
 scp /opt/system/binaries/* root@$target:/opt/system/binaries/
 echo "copy config to $target:/opt/system/config"

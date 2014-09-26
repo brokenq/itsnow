@@ -10,14 +10,14 @@ angular.module('MscIndex.HostNew', ['ngResource'])
     ($scope, $location, $state, hostService)->
       # Do nothing now
       $scope.host =
-        name: ""
-        address: ""
+        name: "srv2"
+        address: "srv2"
         capacity: 50
         configuration:
           user: "root"
           password: "secret"
-          msu_version: "0.1.9"
-          msp_version: "0.1.9"
+          msu_version: "0.1.9-SNAPSHOT"
+          msp_version: "0.1.9-SNAPSHOT"
 
       $scope.createHost = ->
         feedback = (content) ->
