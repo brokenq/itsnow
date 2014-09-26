@@ -53,9 +53,12 @@ cp $folder/$type/db/migrate/environments/* $instance/db/migrate/environments
 cp $folder/$type/db/migrate/environments/development.properties $instance/db/migrate/environments/production.properties
 
 cp -r $type/config/* $instance/config/
-base_list="boot lib script repository webapp"
+base_list="boot lib script repository"
 for file in $base_list; do
   ln -s $folder/$type/$file    $instance/$file
 done
+
+echo "Copy webapp to overide jetty webresource check alias constraint"
+cp -r $type/webapp $instance/
 
 echo "$folder/$instance created"
