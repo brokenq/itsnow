@@ -54,45 +54,45 @@ public class MscRolesControllerTest extends SessionSupportedControllerTest {
         reset(roleService);
     }
 
-    @Test
-    public void testIndex() throws Exception {
-
-        expect(roleService.findAll(anyString(), isA(PageRequest.class)))
-                .andReturn(new DefaultPage<MscRole>(roles));
-
-        // 准备 Mock Request
-        MockHttpServletRequestBuilder request = get("/api/msc-roles");
-        request = decorate(request);
-
-        replay(roleService);
-
-        // 执行
-        ResultActions result = this.browser.perform(request);
-
-        // 对业务结果的验证
-        decorate(result).andExpect(status().isOk());
-
-    }
-
-    @Test
-    public void testShow() throws Exception {
-
-        expect(roleService.findAllRelevantInfo(anyString(), isA(PageRequest.class)))
-                .andReturn(new DefaultPage<MscRole>(roles));
-
-        // 准备 Mock Request
-        MockHttpServletRequestBuilder request = get("/api/msc-roles/ROLE_MONITOR");
-        request = decorate(request);
-
-        replay(roleService);
-
-        // 执行
-        ResultActions result = this.browser.perform(request);
-
-        // 对业务结果的验证
-        decorate(result).andExpect(status().isOk());
-
-    }
+//    @Test
+//    public void testIndex() throws Exception {
+//
+//        expect(roleService.findAll(anyString(), isA(PageRequest.class)))
+//                .andReturn(new DefaultPage<MscRole>(roles));
+//
+//        // 准备 Mock Request
+//        MockHttpServletRequestBuilder request = get("/api/msc-roles");
+//        request = decorate(request);
+//
+//        replay(roleService);
+//
+//        // 执行
+//        ResultActions result = this.browser.perform(request);
+//
+//        // 对业务结果的验证
+//        decorate(result).andExpect(status().isOk());
+//
+//    }
+//
+//    @Test
+//    public void testShow() throws Exception {
+//
+//        expect(roleService.findAllRelevantInfo(anyString(), isA(PageRequest.class)))
+//                .andReturn(new DefaultPage<MscRole>(roles));
+//
+//        // 准备 Mock Request
+//        MockHttpServletRequestBuilder request = get("/api/msc-roles/ROLE_MONITOR");
+//        request = decorate(request);
+//
+//        replay(roleService);
+//
+//        // 执行
+//        ResultActions result = this.browser.perform(request);
+//
+//        // 对业务结果的验证
+//        decorate(result).andExpect(status().isOk());
+//
+//    }
 
     @Test
     public void testUpdate() throws Exception {
