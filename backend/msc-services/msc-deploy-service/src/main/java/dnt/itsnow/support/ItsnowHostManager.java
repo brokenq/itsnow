@@ -15,6 +15,7 @@ import dnt.itsnow.repository.ItsnowHostRepository;
 import dnt.itsnow.service.ItsnowHostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.List;
  * <h1>Itsnow Host Manager</h1>
  */
 @Service
+@Transactional
 public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHostService {
 
     @Autowired

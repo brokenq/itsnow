@@ -11,6 +11,7 @@ import dnt.itsnow.repository.ItsnowSchemaRepository;
 import dnt.itsnow.service.ItsnowSchemaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 
@@ -18,6 +19,7 @@ import java.sql.Timestamp;
  * <h1>Itsnow Schema Manager</h1>
  */
 @Service
+@Transactional
 public class ItsnowSchemaManager extends ItsnowResourceManager implements ItsnowSchemaService {
     @Autowired
     ItsnowSchemaRepository     repository;
