@@ -12,6 +12,7 @@ import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -55,7 +56,8 @@ public class DelayedRequestResponseBodyMethodProcessor implements HandlerMethodR
 
     public void handleAfterDelay() throws Exception {
         try {
-            for (Element call : this.delayed) {
+            ArrayList<Element> loop = new ArrayList<Element>(this.delayed);
+            for (Element call : loop) {
                 wrapped.handleReturnValue(call.returnValue, call.returnType, call.mavContainer, call.webRequest);
             }
         } finally {
