@@ -23,7 +23,7 @@ host=$1
 user=$2
 export SSHPASS=$3
 file=`hostname`.pub
-test=ls / > /dev/null
+test="ls / > /dev/null"
 
 function echo_and_exec(){
   cmd="$@"
