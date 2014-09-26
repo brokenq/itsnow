@@ -77,7 +77,7 @@ public class MscRolesControllerTest extends SessionSupportedControllerTest {
     @Test
     public void testShow() throws Exception {
 
-        expect(mscRoleService.findAllRelevantInfo(anyString(), isA(PageRequest.class)))
+        expect(mscRoleService.findAllRelevantInfo(anyString(), anyObject(PageRequest.class)))
                 .andReturn(new DefaultPage<Role>(roles));
 
         // 准备 Mock Request
