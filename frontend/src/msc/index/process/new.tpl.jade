@@ -1,12 +1,56 @@
-//   New host
+//   New process
 doctype html
 
-form.form-horizontal(name="newProcessForm", novalidate, ng-model-options="{ updateOn: 'mousedown blur' }", role="form")
+mixin form_field(name, label, icon, tip, pattern, maxLength)
   .form-group
-    label.col-xs-12.col-sm-3.control-label.no-padding-right(for="registration_user_username") 用户名
+    label.col-xs-12.col-sm-3.control-label.no-padding-right(for="process_#{name}") #{label}
     .col-xs-12.col-sm-5
       span.block.input-icon.input-icon-right
-        input.form-control#registration_user_username(name="registration.user.username", ng-model="registration.user.username", ng-required, ng-minlength="4", ng-maxlength="20", ng-pattern='/[\w|\d|_|.]+/', type="text",placeholder="用户名")
-        i.icon-user
-    .help-block.col-xs-12.col-sm-reset.inline
-      | 4-20位，英文，数字，下划线，点号组合
+        input.form-control(id="process_#{name}", name="process.#{name}", ng-model="process.#{name}", ng-required,  ng-maxlength="#{maxLength}", type="text", placeholder="#{label}", ng-pattern="#{pattern}")
+        i(class="icon-#{icon}")
+    .help-block.col-xs-12.col-sm-reset.inline #{tip}
+mixin config_field(name, id, label, icon, tip, readonly, maxLength)
+  .form-group
+    label.col-xs-12.col-sm-3.control-label.no-padding-right(for="process_#{id}") #{label}
+    .col-xs-12.col-sm-5
+      span.block.input-icon.input-icon-right
+        input.form-control(id="process_#{id}", name="process.#{name}", ng-model="process.#{name}", ng-required, ng-maxlength="#{maxLength}", type="text", placeholder="#{label}", readonly="#{readonly}")
+        i(class="icon-#{icon}")
+    .help-block.col-xs-12.col-sm-reset.inline #{tip}
+mixin selector(name, label, datas, tip)
+  .form-group
+    label.col-xs-12.col-sm-3.control-label.no-padding-right(for="process_#{name}") #{label}
+    .col-xs-12.col-sm-5
+      select.form-control(ng-model="process.#{name}")
+        option(ng-repeat="data in #{datas}", value="{{data.id}}") {{data.name}}
+    .help-block.col-xs-12.col-sm-reset.inline #{tip}
+.row(ng-controller="ProcessNewCtrl")
+  form.form-horizontal(name="newProcessForm", novalidate, ng-model-options="{ updateOn: 'mousedown blur' }", role="form")
+    +form_field("name", "进程名称", "star", "", "/itsnow_(.)+/", "20")
+    +selector("accountId", "所属企业", "accounts", "")
+    +selector("hostId", "主机名", "hosts", "请选择可用容量较高的主机")
+    +config_field("wd", "", "工作目录", "star", "自动分配的工作目录", "readonly", "35")
+    +form_field("description", "主机描述",   "star", "", "", "20")
+    +form_field("configuration.rmi_port", "配置RMI端口",   "star", "", "", "20")
+    +form_field("configuration.jmx_port", "配置JMX端口",   "star", "", "", "20")
+    +form_field("configuration.debug_port", "配置DEBUG端口",   "star", "", "", "20")
+    +form_field("configuration.http_port", "配置HTTP端口",   "star", "", "", "20")
+    +selector("schema.hostId", "数据库主机", "hosts", "")
+    +form_field("schema.name", "数据库名",   "star", "", "", "20")
+    +form_field("schema.configuration.user", "数据库用户名",   "star", "", "", "20")
+    +form_field("schema.configuration.password", "数据库密码",   "star", "", "", "20")
+    +form_field("schema.configuration.port", "数据库端口",   "star", "", "", "20")
+    +form_field("schema.description", "数据库描述",   "star", "", "", "20")
+
+    .row-fluid.actions
+      .col-xs-12.col-sm-3
+      .col-xs-12.col-sm-5
+        button.btn.btn-sm.btn-primary(ng-click="createProcess()")
+          i.icon-ok
+          | 创建服务进程
+        button.btn.btn-sm.btn-link(ui-sref="processes")
+          i.icon-remove
+          | 取消
+.row
+  pre.container-fluid
+    | {{host}}

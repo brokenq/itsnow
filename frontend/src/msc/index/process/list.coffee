@@ -7,7 +7,7 @@ angular.module('MscIndex.Process', ['ngTable','ngResource'])
       data: {pageTitle: '服务进程管理'}
 
   .factory('ProcessService', ['$resource', ($resource) ->
-    $resource("/admin/api/processes")
+    $resource("/admin/api/processes/:name", {name: "@name"})
   ])
   .filter('formatProcessStatus', ->
     (status) ->
@@ -17,7 +17,8 @@ angular.module('MscIndex.Process', ['ngTable','ngResource'])
       return "停止中" if status == 'Stopping'
       return "有故障" if status == 'Abnormal'
   )
-  .controller 'ProcessListCtrl',['$scope', '$location', '$timeout', 'ngTableParams', 'ProcessService',($scope, $location, $timeout, ngTableParams, processService)->
+  .controller 'ProcessListCtrl',['$scope', '$location', '$timeout', 'ngTableParams', 'ProcessService', '$state',
+  ($scope, $location, $timeout, ngTableParams, processService, $state)->
     options =
       page:  1,           # show first page
       count: 10           # count per page
@@ -50,5 +51,9 @@ angular.module('MscIndex.Process', ['ngTable','ngResource'])
       # grayed checkbox
       angular.element(document.getElementById("select_all")).prop("indeterminate", (checked != 0 && unchecked != 0));
     , true)
+
+
+    $scope.viewProcess = (processName)->
+      $state.go 'process_view', {name: processName}
   ]
 

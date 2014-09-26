@@ -1,0 +1,39 @@
+//   view process
+doctype html
+
+mixin form_field(name, label, icon, tip)
+  .form-group
+    label.col-xs-12.col-sm-3.control-label.no-padding-right(for="process_#{name}") #{label}
+    .col-xs-12.col-sm-5
+      span.block.input-icon.input-icon-right
+        input.form-control(id="process_#{name}", name="process.#{name}", ng-model="process.#{name}", type="text", readonly="readonly")
+        i(class="icon-#{icon}")
+    .help-block.col-xs-12.col-sm-reset.inline #{tip}
+mixin logger(log)
+  .form-group
+    label.col-xs-12.col-sm-3.control-label.no-padding-right 日志信息
+    .col-xs-12.col-sm-5
+      pre {{process.#{log}}}
+
+.row(ng-controller="ProcessViewCtrl")
+  form.form-horizontal(name="viewProcessForm", novalidate, ng-model-options="{ updateOn: 'mousedown blur' }", role="form")
+    +form_field("name",     "进程名称", "star", "")
+    +form_field("address",  "主机地址",   "star", "")
+    +form_field("wd", "工作目录",   "star", "")
+    +form_field("configuration.rmi_port", "配置RMI端口",   "star", "")
+    +form_field("configuration.jmx_port", "配置JMX端口",   "star", "")
+    +form_field("configuration.debug_port", "配置DEBUG端口",   "star", "")
+    +form_field("configuration.http_port", "配置HTTP端口",   "star", "")
+    +logger("creationLog")
+    +logger("startLog")
+    +logger("stopLog")
+
+  .row-fluid.actions
+    .col-xs-12.col-sm-3
+    .col-xs-12.col-sm-5
+      button.btn.btn-sm.btn-primary(ng-click="deleteProcess(process.name)")
+        i.icon-ok
+        | 删除
+      button.btn.btn-sm.btn-link(ui-sref="processes")
+        i.icon-remove
+        | 返回

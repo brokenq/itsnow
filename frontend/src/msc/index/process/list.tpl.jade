@@ -52,8 +52,9 @@ mixin select_all()
     tr(ng-repeat="process in $data")
       td(width="30" style="text-align: left" header="'ngTableCheckboxHeader'")
         input(type="checkbox" ng-model="checkboxes.items[process.sn]")
+      td(data-title="'进程标识'")
+        a(ng-click="viewProcess(process.name)", href="javascript:void(0)") {{process.name}}
       td(data-title="'企业名称'") {{process.accountId}}
-      td(data-title="'进程标识'") {{process.name}}
       td(data-title="'主机'") {{process.hostId}}
       td(data-title="'工作目录'") {{process.wd}}
       td(data-title="'配置'") {{process.configuration}}
