@@ -16,7 +16,7 @@ ssh_exec(){
 }
 
 # 测试到目标主机的互信关系是否建立
-ssh_exec "ls /opt"
+ssh_exec "ls /opt > /dev/null"
 
 if [ $? -gt 0 ]; then
   echo "Can't ssh $target by ssh, please setup authenticate relation"
