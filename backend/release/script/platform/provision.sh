@@ -4,6 +4,8 @@
 # Usage provision.sh mysql_pwd
 #
 
+script_dir=$(cd `dirname $0` && pwd )
+
 echo "Stop the firewalld for dev phase"
 systemctl stop firewalld
 
@@ -85,7 +87,6 @@ echo $new_pwd > /root/.mysql_pwd
 echo "MySQL password reset and store in /root/.mysql_pwd"
 
 echo "Temp solution for mysql master/slave replication"
-script_dir=$(cd `dirname $0` && pwd )
 $script_dir/create_db.sh itsnow_msc itsnow secret
 mysql -uitsnow -psecret -Ditsnow_msc < $script_dir/itsnow_msc.sql
 if [ $? -eq 0 ]; then
