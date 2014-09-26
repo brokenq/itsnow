@@ -4,6 +4,9 @@
 # Usage provision.sh mysql_pwd
 #
 
+echo "Stop the firewalld for dev phase"
+systemctl stop firewalld
+
 cd /opt/system/
 
 # install prerequires

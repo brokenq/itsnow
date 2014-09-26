@@ -257,6 +257,7 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
     File nginxVars(ItsnowProcess process) {
         Properties props = new Properties();
         props.setProperty("instance", process.getName());
+        props.setProperty("type", process.getAccount().getType());
         props.setProperty("host", process.getHostAddress());
         props.setProperty("port", process.getProperty("http.port"));
         props.setProperty("domain", process.getAccount().getDomain());
