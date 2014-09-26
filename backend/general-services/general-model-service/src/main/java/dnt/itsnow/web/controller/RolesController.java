@@ -1,7 +1,7 @@
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.exception.RoleException;
-import dnt.itsnow.model.GeneralRole;
+import dnt.itsnow.model.Role;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.service.RoleService;
@@ -25,12 +25,12 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/roles")
-public class RolesController extends SessionSupportController<GeneralRole> {
+public class RolesController extends SessionSupportController<Role> {
 
     @Autowired
     private RoleService service;
 
-    private GeneralRole role;
+    private Role role;
 
     /**
      * <h2>获得所有的角色</h2>
@@ -40,12 +40,12 @@ public class RolesController extends SessionSupportController<GeneralRole> {
      * @return 角色列表
      */
     @RequestMapping
-    public List<GeneralRole> index(@RequestParam(value = "keyword", required = false) String keyword) {
-        logger.debug("Listing GeneralRole keyword:{}" + keyword);
+    public List<Role> index(@RequestParam(value = "keyword", required = false) String keyword) {
+        logger.debug("Listing Role keyword:{}" + keyword);
 
         indexPage = service.findAll(mainAccount.getId(), keyword, pageRequest);
 
-        logger.debug("Listed GeneralRole number {}", indexPage.getNumber());
+        logger.debug("Listed Role number {}", indexPage.getNumber());
         return indexPage.getContent();
     }
 
@@ -56,8 +56,8 @@ public class RolesController extends SessionSupportController<GeneralRole> {
      *
      * @return 角色
      */
-    @RequestMapping("{name}")
-    public List<GeneralRole> show(@PathVariable("name") String name) {
+    @RequestMapping(value="{name}", method = RequestMethod.GET)
+    public List<Role> show(@PathVariable("name") String name) {
         logger.debug("Listing group groupName:{}" + name);
 
         indexPage = service.findAllRelevantInfo(name, pageRequest);
@@ -74,7 +74,7 @@ public class RolesController extends SessionSupportController<GeneralRole> {
      * @return 新建的角色
      */
     @RequestMapping(method = RequestMethod.POST)
-    public GeneralRole create(@Valid @RequestBody GeneralRole role) {
+    public Role create(@Valid @RequestBody Role role) {
         logger.info("Creating {}", role.getName());
 
         try {
@@ -95,7 +95,7 @@ public class RolesController extends SessionSupportController<GeneralRole> {
      * @return 被更新的角色
      */
     @RequestMapping(value = "{name}", method = RequestMethod.PUT)
-    public GeneralRole update(@Valid @RequestBody GeneralRole role) {
+    public Role update(@Valid @RequestBody Role role) {
 
         logger.info("Updateing {}", role.getName());
 
@@ -123,7 +123,7 @@ public class RolesController extends SessionSupportController<GeneralRole> {
      * @return 被删除的角色
      */
     @RequestMapping(value = "{name}", method = RequestMethod.DELETE)
-    public GeneralRole destroy() {
+    public Role destroy() {
 
         if (role == null) {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, "The role no must be specified");

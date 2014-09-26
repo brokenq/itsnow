@@ -19,6 +19,8 @@ public class Role extends ConfigItem {
 
     private String sn;
 
+    private List<RoleDetail> details;
+
     public String getSn() {
         return sn;
     }
@@ -27,15 +29,20 @@ public class Role extends ConfigItem {
         this.sn = sn;
     }
 
+    public List<RoleDetail> getDetails() {
+        return details;
+    }
+
+    public void setDetails(List<RoleDetail> details) {
+        this.details = details;
+    }
+
     @Override
     public String toString() {
-        return "Role{" +
-                "id=" + super.getId() +
-                ", sn='" + getSn() + '\'' +
-                ", name='" + super.getName() + '\'' +
-                ", description='" + super.getDescription() + '\'' +
-                ", createdAt=" + super.getCreatedAt() +
-                ", updatedAt=" + super.getUpdatedAt() +
-                '}';
+        final StringBuffer sb = new StringBuffer("Role{");
+        sb.append("sn='").append(sn).append('\'');
+        sb.append(", details=").append(details);
+        sb.append('}');
+        return sb.toString();
     }
 }

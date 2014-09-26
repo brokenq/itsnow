@@ -2,6 +2,7 @@
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <typeAliases>
-        <typeAlias type="dnt.itsnow.model.MscRole" alias="MscRole"/>
+        <typeAlias type="dnt.itsnow.model.Role" alias="Role"/>
+        <typeAlias type="dnt.itsnow.model.RoleDetail" alias="RoleDetail"/>
     </typeAliases>
 </configuration>

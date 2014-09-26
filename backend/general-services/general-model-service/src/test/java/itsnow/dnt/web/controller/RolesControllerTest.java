@@ -1,6 +1,6 @@
 package itsnow.dnt.web.controller;
 
- import dnt.itsnow.model.GeneralRole;
+ import dnt.itsnow.model.Role;
 import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.service.CommonUserService;
@@ -34,21 +34,21 @@ public class RolesControllerTest extends SessionSupportedControllerTest {
     @Autowired
     RoleService roleService;
 
-    GeneralRole role;
+    Role role;
 
-    List<GeneralRole> roles;
+    List<Role> roles;
 
     @Before
     public void setup() {
 
-        role = new GeneralRole();
+        role = new Role();
         role.setId(1L);
         role.setName("ROLE_MONITOR");
         role.setDescription("This is a test.");
         role.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         role.setUpdatedAt(role.getCreatedAt());
 
-        roles = new ArrayList<GeneralRole>();
+        roles = new ArrayList<Role>();
         roles.add(role);
 
         reset(roleService);
@@ -58,7 +58,7 @@ public class RolesControllerTest extends SessionSupportedControllerTest {
     public void testIndex() throws Exception {
 
         expect(roleService.findAll(anyLong(), anyString(), isA(PageRequest.class)))
-                .andReturn(new DefaultPage<GeneralRole>(roles));
+                .andReturn(new DefaultPage<Role>(roles));
 
         // 准备 Mock Request
         MockHttpServletRequestBuilder request = get("/api/roles");
@@ -78,7 +78,7 @@ public class RolesControllerTest extends SessionSupportedControllerTest {
     public void testShow() throws Exception {
 
         expect(roleService.findAllRelevantInfo(anyString(), isA(PageRequest.class)))
-                .andReturn(new DefaultPage<GeneralRole>(roles));
+                .andReturn(new DefaultPage<Role>(roles));
 
         // 准备 Mock Request
         MockHttpServletRequestBuilder request = get("/api/roles/ROLE_MONITOR");
@@ -97,7 +97,7 @@ public class RolesControllerTest extends SessionSupportedControllerTest {
     @Test
     public void testUpdate() throws Exception {
         expect(roleService.findByName("ROLE_MONITOR")).andReturn(role);
-        expect(roleService.update(anyObject(GeneralRole.class))).andReturn(role);
+        expect(roleService.update(anyObject(Role.class))).andReturn(role);
         replay(roleService);
 
         MockHttpServletRequestBuilder request = put("/api/roles/ROLE_MONITOR").content(accountJson());
@@ -111,7 +111,7 @@ public class RolesControllerTest extends SessionSupportedControllerTest {
     @Test
     public void testDestroy() throws Exception {
         expect(roleService.findByName("ROLE_MONITOR")).andReturn(role);
-        expect(roleService.destroy(anyObject(GeneralRole.class))).andReturn(role);
+        expect(roleService.destroy(anyObject(Role.class))).andReturn(role);
         expectLastCall().once();
 
         replay(roleService);

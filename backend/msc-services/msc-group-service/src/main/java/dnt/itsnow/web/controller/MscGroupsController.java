@@ -45,7 +45,7 @@ public class MscGroupsController extends SessionSupportController<Group> {
         return indexPage.getContent();
     }
 
-    @RequestMapping("/detail/{name}")
+    @RequestMapping(value="{name}", method = RequestMethod.GET)
     public List<Group> show(@PathVariable("name") String name) {
         logger.debug("Listing group groupName:{}" + name);
 

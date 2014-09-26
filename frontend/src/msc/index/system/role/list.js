@@ -83,7 +83,7 @@ angular.module('System.Role', ['ngTable', 'ngResource'])
                 roleDetailService.query(params.url(), roleName, function (data, headers) {
                         $timeout(function () {
                                 params.total(headers('total'));
-                                $defer.resolve($scope.detailRoles = data.length>0 ? data[0].users : data);
+                                $defer.resolve($scope.detailRoles = data.length>0 ? data[0].details : data);
                             },
                             500
                         );

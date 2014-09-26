@@ -1,6 +1,6 @@
 package dnt.itsnow.repository;
 
-import dnt.itsnow.model.GeneralRole;
+import dnt.itsnow.model.Role;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -13,7 +13,7 @@ public interface RoleRepository {
     @Options(useGeneratedKeys = true, keyColumn = "id")
     @Insert("INSERT INTO roles ( name, description, created_at, updated_at) VALUES " +
             "( #{name}, #{description}, #{createdAt}, #{updatedAt})")
-    public void create(GeneralRole dictionary);
+    public void create(Role dictionary);
 
     @Delete("DELETE FROM roles WHERE name = #{sn}")
     public void delete(@Param("sn") String sn);
@@ -24,11 +24,11 @@ public interface RoleRepository {
             " created_at  = #{createdAt}, " +
             " updated_at  = #{updatedAt} " +
             " WHERE id    = #{id} ")
-    public void update(GeneralRole dictionary);
+    public void update(Role dictionary);
 
     public int count(@Param("accountId") long accountId);
 
-    public List<GeneralRole> findAll(
+    public List<Role> findAll(
             @Param("accountId") long accountId,
             @Param("sort") String sort,
             @Param("dir") String dir,
@@ -39,7 +39,7 @@ public interface RoleRepository {
             @Param("accountId") long accountId,
             @Param("keyword") String keyword);
 
-    public List<GeneralRole> findAllByKeyword(
+    public List<Role> findAllByKeyword(
             @Param("accountId") long accountId,
             @Param("keyword") String keyword,
             @Param("sort") String sort,
@@ -49,13 +49,13 @@ public interface RoleRepository {
 
     public int countByRelevantInfo(@Param("keyword") String keyword);
 
-    public List<GeneralRole> findAllRelevantInfo(@Param("keyword") String keyword,
+    public List<Role> findAllRelevantInfo(@Param("keyword") String keyword,
                                              @Param("sort") String sort,
                                              @Param("dir") String dir,
                                              @Param("offset") int offset,
                                              @Param("size") int size);
 
     @Select("SELECT * FROM roles WHERE name = #{name}")
-    public GeneralRole findByName(@Param("name") String name);
+    public Role findByName(@Param("name") String name);
 
 }

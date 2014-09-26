@@ -1,6 +1,6 @@
 package itsnow.dnt.repository;
 
-import dnt.itsnow.model.GeneralRole;
+import dnt.itsnow.model.Role;
 import dnt.itsnow.repository.RoleRepository;
 import itsnow.dnt.config.RoleRepositoryConfig;
 import org.junit.Test;
@@ -27,7 +27,7 @@ public class RoleRepositoryTest {
 
     @Test
     public void testCreate() throws Exception {
-        GeneralRole role = new GeneralRole();
+        Role role = new Role();
         role.setSn("008");
         role.setName("用户");
         role.setDescription("This is a test.");
@@ -39,14 +39,14 @@ public class RoleRepositoryTest {
 
     @Test
     public void testDelete() throws Exception {
-        GeneralRole role = repository.findByName("ROLE_GUEST");
+        Role role = repository.findByName("ROLE_GUEST");
         repository.delete(role.getName());
         Assert.isNull(repository.findByName(role.getName()));
     }
 
     @Test
     public void testUpdate() throws Exception {
-        GeneralRole role = repository.findByName("ROLE_ADMIN");
+        Role role = repository.findByName("ROLE_ADMIN");
         role.setDescription("Hello World!");
         repository.update(role);
         role = repository.findByName(role.getName());

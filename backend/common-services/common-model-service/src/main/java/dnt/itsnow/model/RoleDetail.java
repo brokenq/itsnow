@@ -3,8 +3,9 @@ package dnt.itsnow.model;
 /**
  * <h1>类功能说明</h1>
  */
-public class GeneralRoleDetail extends Group {
+public class RoleDetail extends Group {
 
+    public String accountName;
     public String username;
     public String deptName;
     public String siteName;
@@ -12,11 +13,20 @@ public class GeneralRoleDetail extends Group {
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("GeneralRoleDetail{");
-        sb.append("username='").append(username).append('\'');
+        sb.append("accountName='").append(accountName).append('\'');
+        sb.append(", username='").append(username).append('\'');
         sb.append(", deptName='").append(deptName).append('\'');
         sb.append(", siteName='").append(siteName).append('\'');
         sb.append('}');
         return sb.toString();
+    }
+
+    public String getAccountName() {
+        return accountName;
+    }
+
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
     }
 
     public String getUsername() {

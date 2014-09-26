@@ -1,7 +1,7 @@
 package dnt.itsnow.support;
 
 import dnt.itsnow.exception.RoleException;
-import dnt.itsnow.model.GeneralRole;
+import dnt.itsnow.model.Role;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.platform.util.DefaultPage;
@@ -25,40 +25,40 @@ public class RoleManager extends Bean implements RoleService {
     private RoleRepository roleRepository;
 
     @Override
-    public Page<GeneralRole> findAll(Long accountId, String keyword, Pageable pageable) {
+    public Page<Role> findAll(Long accountId, String keyword, Pageable pageable) {
         logger.debug("Finding role by keyword: {}", keyword);
         if(StringUtils.isBlank(keyword)){
             int total = roleRepository.count(accountId);
-            List<GeneralRole> roles = roleRepository.findAll(accountId, "updated_at", "desc", pageable.getOffset(), pageable.getPageSize());
-            return new DefaultPage<GeneralRole>(roles, pageable, total);
+            List<Role> roles = roleRepository.findAll(accountId, "updated_at", "desc", pageable.getOffset(), pageable.getPageSize());
+            return new DefaultPage<Role>(roles, pageable, total);
         }else{
             int total = roleRepository.countByKeyword(accountId, "%"+keyword+"%");
-            List<GeneralRole> roles = roleRepository.findAllByKeyword(accountId, "%" + keyword + "%", "updated_at", "desc", pageable.getOffset(), pageable.getPageSize());
-            return new DefaultPage<GeneralRole>(roles, pageable, total);
+            List<Role> roles = roleRepository.findAllByKeyword(accountId, "%" + keyword + "%", "updated_at", "desc", pageable.getOffset(), pageable.getPageSize());
+            return new DefaultPage<Role>(roles, pageable, total);
         }
     }
 
     @Override
-    public Page<GeneralRole> findAllRelevantInfo(String keyword, Pageable pageable) {
+    public Page<Role> findAllRelevantInfo(String keyword, Pageable pageable) {
         logger.debug("Manager Finding group by keyword: {}, Offset: {}, PageSize: {}", keyword, pageable.getOffset(), pageable.getPageSize());
         int total = roleRepository.countByRelevantInfo("%" + keyword + "%");
-        List<GeneralRole> roles = roleRepository.findAllRelevantInfo("%" + keyword + "%", "updated_at", "desc", pageable.getOffset(), pageable.getPageSize());
+        List<Role> roles = roleRepository.findAllRelevantInfo("%" + keyword + "%", "updated_at", "desc", pageable.getOffset(), pageable.getPageSize());
         logger.debug("Manager Finded group by keyword: {}, size is {}", keyword, roles.size());
-        return new DefaultPage<GeneralRole>(roles, pageable, total);
+        return new DefaultPage<Role>(roles, pageable, total);
     }
 
     @Override
-    public GeneralRole findByName(String name) {
-        logger.debug("Finding GeneralRole by name: {}", name);
+    public Role findByName(String name) {
+        logger.debug("Finding Role by name: {}", name);
 
         return roleRepository.findByName(name);
     }
 
     @Override
-    public GeneralRole create(GeneralRole role) throws RoleException {
+    public Role create(Role role) throws RoleException {
         logger.info("Creating role {}", role);
         if(role == null){
-            throw new RoleException("GeneralRole entry can not be empty.");
+            throw new RoleException("Role entry can not be empty.");
         }
         role.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         role.setUpdatedAt(role.getCreatedAt());
@@ -68,10 +68,10 @@ public class RoleManager extends Bean implements RoleService {
     }
 
     @Override
-    public GeneralRole update(GeneralRole role) throws RoleException {
+    public Role update(Role role) throws RoleException {
         logger.info("Updating role {}", role);
         if(role==null){
-            throw new RoleException("GeneralRole entry can not be empty.");
+            throw new RoleException("Role entry can not be empty.");
         }
         roleRepository.update(role);
 
@@ -79,10 +79,10 @@ public class RoleManager extends Bean implements RoleService {
     }
 
     @Override
-    public GeneralRole destroy(GeneralRole role) throws RoleException {
+    public Role destroy(Role role) throws RoleException {
         logger.warn("Deleting role {}", role);
         if(role==null){
-            throw new RoleException("GeneralRole entry can not be empty.");
+            throw new RoleException("Role entry can not be empty.");
         }
         roleRepository.delete(role.getSn());
         return role;

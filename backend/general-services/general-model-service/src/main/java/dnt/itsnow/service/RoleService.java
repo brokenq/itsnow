@@ -1,7 +1,7 @@
 package dnt.itsnow.service;
 
 import dnt.itsnow.exception.RoleException;
-import dnt.itsnow.model.GeneralRole;
+import dnt.itsnow.model.Role;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 
@@ -16,16 +16,16 @@ public interface RoleService {
      * @param pageable 分页类
      * @return
      */
-    public Page<GeneralRole> findAll(Long accountId,String keyword, Pageable pageable);
+    public Page<Role> findAll(Long accountId,String keyword, Pageable pageable);
 
-    public Page<GeneralRole> findAllRelevantInfo(String keyword, Pageable pageable);
+    public Page<Role> findAllRelevantInfo(String keyword, Pageable pageable);
 
     /**
      * <h2>根据SN查找角色</h2>
      * @param name 角色名称
      * @return
      */
-    public GeneralRole findByName(String name);
+    public Role findByName(String name);
 
     /**
      * <h2>创建角色</h2>
@@ -33,7 +33,7 @@ public interface RoleService {
      * @return
      * @throws RoleException
      */
-    public GeneralRole create(GeneralRole role) throws RoleException;
+    public Role create(Role role) throws RoleException;
 
     /**
      * <h2>更新角色</h2>
@@ -41,7 +41,7 @@ public interface RoleService {
      * @return
      * @throws RoleException
      */
-    public GeneralRole update(GeneralRole role) throws RoleException;
+    public Role update(Role role) throws RoleException;
 
     /**
      * <h2>删除角色</h2>
@@ -49,6 +49,6 @@ public interface RoleService {
      * @return
      * @throws RoleException
      */
-    public GeneralRole destroy(GeneralRole role) throws RoleException;
+    public Role destroy(Role role) throws RoleException;
 
 }

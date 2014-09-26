@@ -1,7 +1,7 @@
 package dnt.itsnow.service;
 
 import dnt.itsnow.exception.MscRoleException;
-import dnt.itsnow.model.MscRole;
+import dnt.itsnow.model.Role;
 import dnt.itsnow.model.User;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
@@ -17,16 +17,16 @@ public interface MscRoleService {
      * @param pageable 分页类
      * @return
      */
-    public Page<MscRole> findAll(String keyword, Pageable pageable);
+    public Page<Role> findAll(String keyword, Pageable pageable);
 
-    public Page<MscRole> findAllRelevantInfo(String keyword, Pageable pageable);
+    public Page<Role> findAllRelevantInfo(String keyword, Pageable pageable);
 
     /**
      * <h2>根据SN查找角色</h2>
      * @param name 角色名称
      * @return
      */
-    public MscRole findByName(String name);
+    public Role findByName(String name);
 
     /**
      * <h2>创建角色</h2>
@@ -34,7 +34,7 @@ public interface MscRoleService {
      * @return
      * @throws MscRoleException
      */
-    public MscRole create(MscRole role) throws MscRoleException;
+    public Role create(Role role) throws MscRoleException;
 
     /**
      * <h2>更新角色</h2>
@@ -42,7 +42,7 @@ public interface MscRoleService {
      * @return
      * @throws MscRoleException
      */
-    public MscRole update(MscRole role) throws MscRoleException;
+    public Role update(Role role) throws MscRoleException;
 
     /**
      * <h2>删除角色</h2>
@@ -50,6 +50,6 @@ public interface MscRoleService {
      * @return
      * @throws MscRoleException
      */
-    public MscRole destroy(MscRole role) throws MscRoleException;
+    public Role destroy(Role role) throws MscRoleException;
 
 }

@@ -1,7 +1,7 @@
 package dnt.itsnow.repository;
 
 import dnt.itsnow.config.MscRoleRepositoryConfig;
-import dnt.itsnow.model.MscRole;
+import dnt.itsnow.model.Role;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class MscRoleRepositoryTest {
 
     @Test
     public void testCreate() throws Exception {
-        MscRole role = new MscRole();
+        Role role = new Role();
         role.setSn("008");
         role.setName("用户");
         role.setDescription("This is a test.");
@@ -38,16 +38,16 @@ public class MscRoleRepositoryTest {
 
     @Test
     public void testDelete() throws Exception {
-        List<MscRole> roles = repository.findAll("updated_at", "desc", 0, 1);
-        MscRole role = roles.get(0);
+        List<Role> roles = repository.findAll("updated_at", "desc", 0, 1);
+        Role role = roles.get(0);
         repository.delete(role.getName());
         Assert.isNull(repository.findByName(role.getName()));
     }
 
     @Test
     public void testUpdate() throws Exception {
-        List<MscRole> roles = repository.findAll("updated_at", "desc", 0, 1);
-        MscRole role = roles.get(0);
+        List<Role> roles = repository.findAll("updated_at", "desc", 0, 1);
+        Role role = roles.get(0);
         role.setDescription("Hello World!");
         repository.update(role);
         role = repository.findByName(role.getName());
@@ -86,8 +86,8 @@ public class MscRoleRepositoryTest {
 
     @Test
     public void testFindBySn() throws Exception {
-        List<MscRole> roles = repository.findAll("updated_at", "desc", 0, 1);
-        MscRole role = roles.get(0);
+        List<Role> roles = repository.findAll("updated_at", "desc", 0, 1);
+        Role role = roles.get(0);
         Assert.notNull(repository.findByName(role.getName()));
         Assert.isNull(repository.findByName("1000000"));
     }
