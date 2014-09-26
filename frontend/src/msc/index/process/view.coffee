@@ -27,10 +27,20 @@ angular.module('MscIndex.ProcessView', ['ngResource'])
           url = "/admin/api/processes/" + process.name + "/follow/" + invokeId + "?offset=0"
           $http.get(url).success (log) ->
             process.stopLog = log
-      # Do nothing now
+
       $scope.deleteProcess = (processName)->
         processService.delete({name: processName}, ->
           $state.go 'processes'
         )
+
+      $scope.startProcess = (processName)->
+        url = "/admin/api/processes/" + processName + "/start"
+        $http.put(url).success () ->
+          $state.go 'processes'
+
+      $scope.stopProcess = (processName)->
+        url = "/admin/api/processes/" + processName + "/stop"
+        $http.put(url).success () ->
+          $state.go 'processes'
   ]
 
