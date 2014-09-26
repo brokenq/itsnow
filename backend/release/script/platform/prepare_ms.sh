@@ -13,10 +13,18 @@ if [ ! $2 ]; then
   echo "You should provide the artifact version(like 0.1.8) "
   exit 2
 fi
+
 utype=`echo "$1" | tr "[:lower:]" "[:upper:]"`
 ltype=`echo "$1" | tr "[:upper:]" "[:lower:]"`
 version=$2
 file=$ltype-$version.zip
+
+if [[ "$version" =~ SNAPSHOT$ ]]; then
+  target="http://$CI/guestAuth/repository/download/itsnow_Continuous_Build/.lastFinished/$file"
+else
+  target="http://$CI/guestAuth/repository/download/Itsnow_Sprint_Build_$utype/.lastFinished/$file"
+fi
+
 
 if [ ! $3 ]; then
   folder="/opt/itsnow"
@@ -25,7 +33,6 @@ else
 fi
 mkdir -p $folder
 
-target=http://$CI/guestAuth/repository/download/Itsnow_Sprint_Build_$utype/.lastFinished/$file
 echo "Downloading $target"
 wget $target -O $folder/$file
 
@@ -48,5 +55,3 @@ rm -f $ltype
 
 # Make the link to the version
 ln -s $zip_path $ltype
-
-
