@@ -6,12 +6,6 @@ angular.module('MscIndex.ProcessNew', ['ngResource'])
       templateUrl: 'process/new.tpl.jade'
       data: {pageTitle: '分配服务进程'}
 
-  .factory('AccountService', ['$resource', ($resource) ->
-    $resource("/admin/api/accounts")
-  ])
-  .factory('HostService', ['$resource', ($resource) ->
-    $resource("/admin/api/hosts")
-  ])
   .controller 'ProcessNewCtrl', ['$scope', '$location', '$timeout', 'ProcessService', 'AccountService', 'HostService'
     ($scope, $location, $timeout, processService, accountService, hostService)->
       $scope.process =
