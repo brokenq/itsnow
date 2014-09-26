@@ -36,7 +36,8 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
 
     public static final String PROCESS_KEY = "msp_incident";
     private static final String LISTENER = "listener";
-    private static String appSn = System.getProperty("app.id");
+    //private static String appSn = System.getProperty("app.id");
+    private static String appSn = "msp_001";
     private static String msuSn = "msu_001";
 
     public static final String ROLE_LINE_ONE = "ROLE_LINE_ONE";
