@@ -20,10 +20,10 @@ import java.util.List;
  * <pre>
  * <b>HTTP    URI                 方法      含义  </b>
  *  GET      /api/msc-groups           index     列出所有的流程字典，并且分页显示
- *  GET      /api/msc-groups/{sn}      show      列出特定的流程字典记录
+ *  GET      /api/msc-groups/{name}    show      列出特定的流程字典记录
  *  POST     /api/msc-groups/          create    创建一个流程字典
- *  PUT      /api/msc-groups/{sn}      update    修改一个指定的流程字典
- *  DELETE   /api/msc-groups/{sn}      delete    删除指定的流程字典记录
+ *  PUT      /api/msc-groups/{name}    update    修改一个指定的流程字典
+ *  DELETE   /api/msc-groups/{name}    delete    删除指定的流程字典记录
  * </pre>
  */
 @RestController
@@ -45,7 +45,7 @@ public class MscGroupsController extends SessionSupportController<Group> {
         return indexPage.getContent();
     }
 
-    @RequestMapping("{name}")
+    @RequestMapping("/detail/{name}")
     public List<Group> show(@PathVariable("name") String name) {
         logger.debug("Listing group groupName:{}" + name);
 

@@ -84,7 +84,7 @@ public class MscGroupsControllerTest extends SessionSupportedControllerTest {
                 .andReturn(new DefaultPage<Group>(groups));
 
         // 准备 Mock Request
-        MockHttpServletRequestBuilder request = get("/api/msc-groups/administrators");
+        MockHttpServletRequestBuilder request = get("/api/msc-groups/detail/administrators");
         request = decorate(request);
 
         replay(groupService);

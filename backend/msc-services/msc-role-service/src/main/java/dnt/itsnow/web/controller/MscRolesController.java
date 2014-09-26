@@ -56,7 +56,7 @@ public class MscRolesController extends SessionSupportController<MscRole> {
      *
      * @return 角色
      */
-    @RequestMapping("{name}")
+    @RequestMapping("/detail/{name}")
     public List<MscRole> show(@PathVariable("name") String name) {
         logger.debug("Listing group groupName:{}" + name);
 

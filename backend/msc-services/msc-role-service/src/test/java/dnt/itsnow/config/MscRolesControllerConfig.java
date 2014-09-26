@@ -15,7 +15,7 @@ public class MscRolesControllerConfig extends ApplicationControllerConfig {
     // Mocked service beans
 
     @Bean
-    public MscRoleService roleService(){
+    public MscRoleService mscRoleService(){
         return EasyMock.createMock(MscRoleService.class);
     }
 

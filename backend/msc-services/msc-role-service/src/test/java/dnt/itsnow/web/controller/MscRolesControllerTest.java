@@ -27,14 +27,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ContextConfiguration(classes = MscRolesControllerConfig.class)
-@Ignore("By xiongjie, for 9/30 demo integration")
+//@Ignore("By xiongjie, for 9/30 demo integration")
 public class MscRolesControllerTest extends SessionSupportedControllerTest {
 
     @Autowired
     CommonUserService userService;
 
     @Autowired
-    MscRoleService roleService;
+    MscRoleService mscRoleService;
 
     MscRole role;
 
@@ -53,54 +53,54 @@ public class MscRolesControllerTest extends SessionSupportedControllerTest {
         roles = new ArrayList<MscRole>();
         roles.add(role);
 
-        reset(roleService);
+        reset(mscRoleService);
     }
 
-//    @Test
-//    public void testIndex() throws Exception {
-//
-//        expect(roleService.findAll(anyString(), isA(PageRequest.class)))
-//                .andReturn(new DefaultPage<MscRole>(roles));
-//
-//        // 准备 Mock Request
-//        MockHttpServletRequestBuilder request = get("/api/msc-roles");
-//        request = decorate(request);
-//
-//        replay(roleService);
-//
-//        // 执行
-//        ResultActions result = this.browser.perform(request);
-//
-//        // 对业务结果的验证
-//        decorate(result).andExpect(status().isOk());
-//
-//    }
-//
-//    @Test
-//    public void testShow() throws Exception {
-//
-//        expect(roleService.findAllRelevantInfo(anyString(), isA(PageRequest.class)))
-//                .andReturn(new DefaultPage<MscRole>(roles));
-//
-//        // 准备 Mock Request
-//        MockHttpServletRequestBuilder request = get("/api/msc-roles/ROLE_MONITOR");
-//        request = decorate(request);
-//
-//        replay(roleService);
-//
-//        // 执行
-//        ResultActions result = this.browser.perform(request);
-//
-//        // 对业务结果的验证
-//        decorate(result).andExpect(status().isOk());
-//
-//    }
+    @Test
+    public void testIndex() throws Exception {
+
+        expect(mscRoleService.findAll(anyString(), isA(PageRequest.class)))
+                .andReturn(new DefaultPage<MscRole>(roles));
+
+        // 准备 Mock Request
+        MockHttpServletRequestBuilder request = get("/api/msc-roles");
+        request = decorate(request);
+
+        replay(mscRoleService);
+
+        // 执行
+        ResultActions result = this.browser.perform(request);
+
+        // 对业务结果的验证
+        decorate(result).andExpect(status().isOk());
+
+    }
+
+    @Test
+    public void testShow() throws Exception {
+
+        expect(mscRoleService.findAllRelevantInfo(anyString(), isA(PageRequest.class)))
+                .andReturn(new DefaultPage<MscRole>(roles));
+
+        // 准备 Mock Request
+        MockHttpServletRequestBuilder request = get("/api/msc-roles/detail/ROLE_MONITOR");
+        request = decorate(request);
+
+        replay(mscRoleService);
+
+        // 执行
+        ResultActions result = this.browser.perform(request);
+
+        // 对业务结果的验证
+        decorate(result).andExpect(status().isOk());
+
+    }
 
     @Test
     public void testUpdate() throws Exception {
-        expect(roleService.findByName("ROLE_MONITOR")).andReturn(role);
-        expect(roleService.update(anyObject(MscRole.class))).andReturn(role);
-        replay(roleService);
+        expect(mscRoleService.findByName("ROLE_MONITOR")).andReturn(role);
+        expect(mscRoleService.update(anyObject(MscRole.class))).andReturn(role);
+        replay(mscRoleService);
 
         MockHttpServletRequestBuilder request = put("/api/msc-roles/ROLE_MONITOR").content(accountJson());
         decorate(request);
@@ -112,11 +112,11 @@ public class MscRolesControllerTest extends SessionSupportedControllerTest {
 
     @Test
     public void testDestroy() throws Exception {
-        expect(roleService.findByName("ROLE_MONITOR")).andReturn(role);
-        expect(roleService.destroy(anyObject(MscRole.class))).andReturn(role);
+        expect(mscRoleService.findByName("ROLE_MONITOR")).andReturn(role);
+        expect(mscRoleService.destroy(anyObject(MscRole.class))).andReturn(role);
         expectLastCall().once();
 
-        replay(roleService);
+        replay(mscRoleService);
 
         URI uri = new URI("/api/msc-roles/ROLE_MONITOR");
 
@@ -134,7 +134,7 @@ public class MscRolesControllerTest extends SessionSupportedControllerTest {
     @After
     public void tearDown() throws Exception {
         // 对Mock的Expectations进行验证
-        verify(roleService);
+        verify(mscRoleService);
     }
 
 }
