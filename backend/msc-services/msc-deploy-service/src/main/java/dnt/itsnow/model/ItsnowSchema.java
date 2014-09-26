@@ -11,9 +11,7 @@ import javax.validation.constraints.NotNull;
  * Itsnow DB Schema
  */
 public class ItsnowSchema extends DeployResource {
-    @NotNull
     private Long hostId;
-    @JsonIgnore
     private ItsnowHost host;
 
     @NotNull
