@@ -55,3 +55,5 @@ rm -f $ltype
 
 # Make the link to the version
 ln -s $zip_path $ltype
+
+echo "$ltype $version prepared"
