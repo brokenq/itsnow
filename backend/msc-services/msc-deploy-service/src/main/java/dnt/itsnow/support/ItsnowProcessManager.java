@@ -57,26 +57,24 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
     @Override
     public ItsnowProcess create(ItsnowProcess creating) throws ItsnowProcessException {
         logger.info("Creating itsnow process: {}", creating);
+        // 设定如下前提:
+        //   由外部/控制器,测试程序负责完成 process 模型的准备
+        // (主要是process -> account, process -> host, process -> schema, schema -> host)
+        if (creating.getHost() == null)
+            throw new ItsnowProcessException("You must specify the host where run the process " + creating );
+        if (creating.getSchema() == null )
+            throw new ItsnowProcessException("You must specify the schema where store the data for " + creating );
 
-        ItsnowHost host;
-        if( creating.getHost() != null )
-            host = creating.getHost();
-        else if( creating.getSchema().getHost() != null )
-            host = creating.getSchema().getHost();
-        else
-            host = hostService.findById(creating.getHostId());
-
-        if (host == null)
-            throw new ItsnowProcessException("Can't find itsnow host with id = " + creating.getHostId() );
-        creating.setHost(host);
-
-        //要求schema service 创建相应的schema
-        try {
-            ItsnowSchema schema = schemaService.create(creating.getSchema());
-            creating.setSchema(schema);
-        } catch (ItsnowSchemaException e) {
-            throw new ItsnowProcessException("Can't create schema " + creating.getSchema().getName()
-                                             + " for process " + creating.getName(), e );
+        // 支持两种schema情况，一种是已经创建好的
+        // 一种是界面指定的，这将会自动通过 schema service 创建相应的schema对象
+        if( creating.getSchema().isNew()) {
+            try {
+                ItsnowSchema schema = schemaService.create(creating.getSchema());
+                creating.setSchema(schema);
+            } catch (ItsnowSchemaException e) {
+                throw new ItsnowProcessException("Can't create schema " + creating.getSchema().getName()
+                                                 + " for process " + creating.getName(), e );
+            }
         }
 
         SystemInvocation deployJob = translator.deploy(creating);

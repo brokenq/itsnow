@@ -34,4 +34,11 @@ public interface ItsnowSchemaService {
     ItsnowSchema findByName(String name);
 
 
+    /**
+     * <h2>根据ID查找到数据库schema对象</h2>
+     *
+     * @param schemaId schemaID
+     * @return 查找到的数据库schema对象
+     */
+    ItsnowSchema findById(long schemaId);
 }

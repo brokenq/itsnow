@@ -24,7 +24,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -72,6 +71,7 @@ public class ItsnowProcessManagerTest {
         process.setSchema(schema);
         process.setStatus(ProcessStatus.Stopped);
         process.setHost(host);
+        process.setAccount(DeployFixture.testAccount());
     }
 
     @After
@@ -91,7 +91,6 @@ public class ItsnowProcessManagerTest {
 
     @Test
     public void testCreate() throws Exception {
-        expect(schemaService.create(schema)).andReturn(schema);
         String jobId = "create-process-job-id";
         expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
         expect(systemInvokeService.waitJobFinished(jobId)).andReturn(0) ;

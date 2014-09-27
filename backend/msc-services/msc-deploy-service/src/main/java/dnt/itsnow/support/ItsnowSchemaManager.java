@@ -63,4 +63,12 @@ public class ItsnowSchemaManager extends ItsnowResourceManager implements Itsnow
         logger.debug("Found   schema by name: {}", schema);
         return schema;
     }
+
+    @Override
+    public ItsnowSchema findById(long schemaId) {
+        logger.debug("Finding schema by id: {}", schemaId);
+        ItsnowSchema schema = repository.findById(schemaId);
+        logger.debug("Found   schema by id: {}", schema);
+        return schema;
+    }
 }

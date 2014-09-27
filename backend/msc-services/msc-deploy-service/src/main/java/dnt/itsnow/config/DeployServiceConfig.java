@@ -3,6 +3,7 @@
  */
 package dnt.itsnow.config;
 
+import dnt.itsnow.service.CommonAccountService;
 import dnt.itsnow.service.SystemInvokeService;
 
 /**
@@ -13,5 +14,6 @@ public class DeployServiceConfig extends DefaultMutableServiceConfig{
     public void defineServices() {
         super.defineServices();
         importService(SystemInvokeService.class);
+        importService(CommonAccountService.class);
     }
 }
