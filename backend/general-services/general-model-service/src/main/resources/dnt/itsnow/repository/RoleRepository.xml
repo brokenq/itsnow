@@ -4,14 +4,15 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="dnt.itsnow.repository.RoleRepository">
 
-    <resultMap id="roleResult" type="GeneralRole">
+    <resultMap id="roleResult" type="Role">
         <id property="id" column="id"/>
         <result property="name" column="name"/>
         <result property="description" column="description"/>
         <result property="createdAt" column="created_at"/>
         <result property="updatedAt" column="updated_at"/>
         <!-- 一对多关系 -->
-        <collection property="details" ofType="GeneralRoleDetail">
+        <collection property="details" ofType="RoleDetail">
+            <result property="accountName" column="accountName"/>
             <result property="username" column="username"/>
             <result property="deptName" column="deptName"/>
             <result property="siteName" column="siteName"/>
@@ -76,13 +77,15 @@
         select r.id, r.name, r.description, r.created_at, r.updated_at,
         u.username,
         d.name deptName,
-        s.name siteName
+        s.name siteName,
+        acc.name accountName
         from roles r
         left join authorities a on r.name = a.authority
         left join itsnow_msc.users u on u.username = a.username
         left join staffs stf on stf.user_id = u.id
         left join departments d on d.id = stf.dept_id
         left join sites s on s.id = stf.site_id
+        left join itsnow_msc.accounts acc on acc.user_id = u.id
         where r.name like #{keyword}
         order by ${sort} ${dir} limit #{offset}, #{size}
     </select>

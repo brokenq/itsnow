@@ -17,4 +17,20 @@
         MSC Group Manage
     </description>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Default-Config>S,A,D,W</Default-Config>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>

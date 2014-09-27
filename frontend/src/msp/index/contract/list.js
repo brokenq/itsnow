@@ -46,7 +46,7 @@ angular.module('MspIndex.Contract', ['ngTable', 'ngResource']).config(function($
   };
 }).controller('ContractListCtrl', [
   '$scope', '$location', '$timeout', 'ngTableParams', 'ContractService','BidService',
-        function($scope, $location, $timeout, ngTableParams, contractService,bidService) {
+        function($scope, $location, $timeout, NgTableParams, contractService,bidService) {
     var args, options;
     options = {
       page: 1,
@@ -75,7 +75,7 @@ angular.module('MspIndex.Contract', ['ngTable', 'ngResource']).config(function($
             }
         });
     };
-    $scope.tableParams = new ngTableParams(angular.extend(options, $location.search()), args);
+    $scope.tableParams = new NgTableParams(angular.extend(options, $location.search()), args);
     $scope.checkboxes = {
       'checked': false,
       items: {}

@@ -10,7 +10,6 @@ import dnt.itsnow.test.controller.SessionSupportedControllerTest;
 import dnt.support.JsonSupport;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -27,7 +26,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ContextConfiguration(classes = MscGroupsControllerConfig.class)
-@Ignore("By xiongjie, for 9/30 demo integration")
 public class MscGroupsControllerTest extends SessionSupportedControllerTest {
 
     @Autowired
@@ -82,11 +80,11 @@ public class MscGroupsControllerTest extends SessionSupportedControllerTest {
     @Test
     public void testShow() throws Exception {
 
-        expect(groupService.findAllRelevantInfo(anyString(), isA(PageRequest.class)))
+        expect(groupService.findAllRelevantInfo(anyString(), anyObject(PageRequest.class)))
                 .andReturn(new DefaultPage<Group>(groups));
 
         // 准备 Mock Request
-        MockHttpServletRequestBuilder request = get("/api/msc-groups/detail/administrators");
+        MockHttpServletRequestBuilder request = get("/api/msc-groups/administrators");
         request = decorate(request);
 
         replay(groupService);

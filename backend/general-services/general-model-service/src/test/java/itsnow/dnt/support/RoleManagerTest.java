@@ -1,6 +1,6 @@
 package itsnow.dnt.support;
 
-import dnt.itsnow.model.GeneralRole;
+import dnt.itsnow.model.Role;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.service.RoleService;
@@ -36,13 +36,13 @@ public class RoleManagerTest {
 
     @Test
     public void testFindAll() throws Exception {
-        Page<GeneralRole> roles = service.findAll(4L, "", pageRequest);
+        Page<Role> roles = service.findAll(4L, "", pageRequest);
         Assert.assertNotNull(roles.getContent());
     }
 
     @Test
     public void testFindAllRelevantInfo() throws Exception {
-        Page<GeneralRole> roles = service.findAllRelevantInfo("ROLE_ADMIN", pageRequest);
+        Page<Role> roles = service.findAllRelevantInfo("ROLE_ADMIN", pageRequest);
         Assert.assertTrue(roles.getContent().size()>0);
     }
 
@@ -54,7 +54,7 @@ public class RoleManagerTest {
 
     @Test
     public void testCreate() throws Exception {
-        GeneralRole role = new GeneralRole();
+        Role role = new Role();
         role.setSn("009");
         role.setName("用户");
         role.setDescription("This is a test.");
@@ -67,14 +67,14 @@ public class RoleManagerTest {
 
     @Test
     public void testDestroy() throws Exception {
-        GeneralRole role = service.findByName("ROLE_REPORTER");
+        Role role = service.findByName("ROLE_REPORTER");
         service.destroy(role);
         Assert.assertNotNull(service.findByName(role.getName()));
     }
 
     @Test
     public void testUpdate() throws Exception {
-        GeneralRole role = service.findByName("ROLE_ADMIN");
+        Role role = service.findByName("ROLE_ADMIN");
         role.setDescription("Hello World!");
         service.update(role);
         role = service.findByName(role.getName());

@@ -40,7 +40,7 @@ public class MscGroupManager extends Bean implements MscGroupService {
 
     @Override
     public Page<Group> findAllRelevantInfo(String keyword, Pageable pageable) {
-        logger.debug("Manager Finding group by keyword: {}, Offset: {}, PageSize: {}", keyword, pageable.getOffset(), pageable.getPageSize());
+        logger.debug("Manager Finding group by keyword: {}", keyword);
         int total = repository.countByRelevantInfo("%" + keyword + "%");
         List<Group> groups = repository.findAllRelevantInfo("%" + keyword + "%", "updated_at", "desc", pageable.getOffset(), pageable.getPageSize());
         logger.debug("Manager Finded group by keyword: {}, size is {}", keyword, groups.size());

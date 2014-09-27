@@ -1,7 +1,7 @@
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.config.MscRolesControllerConfig;
-import dnt.itsnow.model.MscRole;
+import dnt.itsnow.model.Role;
 import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.service.CommonUserService;
@@ -10,7 +10,6 @@ import dnt.itsnow.test.controller.SessionSupportedControllerTest;
 import dnt.support.JsonSupport;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -27,7 +26,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ContextConfiguration(classes = MscRolesControllerConfig.class)
-//@Ignore("By xiongjie, for 9/30 demo integration")
 public class MscRolesControllerTest extends SessionSupportedControllerTest {
 
     @Autowired
@@ -36,21 +34,21 @@ public class MscRolesControllerTest extends SessionSupportedControllerTest {
     @Autowired
     MscRoleService mscRoleService;
 
-    MscRole role;
+    Role role;
 
-    List<MscRole> roles;
+    List<Role> roles;
 
     @Before
     public void setup() {
 
-        role = new MscRole();
+        role = new Role();
         role.setId(1L);
         role.setName("ROLE_MONITOR");
         role.setDescription("This is a test.");
         role.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         role.setUpdatedAt(role.getCreatedAt());
 
-        roles = new ArrayList<MscRole>();
+        roles = new ArrayList<Role>();
         roles.add(role);
 
         reset(mscRoleService);
@@ -60,7 +58,7 @@ public class MscRolesControllerTest extends SessionSupportedControllerTest {
     public void testIndex() throws Exception {
 
         expect(mscRoleService.findAll(anyString(), isA(PageRequest.class)))
-                .andReturn(new DefaultPage<MscRole>(roles));
+                .andReturn(new DefaultPage<Role>(roles));
 
         // 准备 Mock Request
         MockHttpServletRequestBuilder request = get("/api/msc-roles");
@@ -79,11 +77,11 @@ public class MscRolesControllerTest extends SessionSupportedControllerTest {
     @Test
     public void testShow() throws Exception {
 
-        expect(mscRoleService.findAllRelevantInfo(anyString(), isA(PageRequest.class)))
-                .andReturn(new DefaultPage<MscRole>(roles));
+        expect(mscRoleService.findAllRelevantInfo(anyString(), anyObject(PageRequest.class)))
+                .andReturn(new DefaultPage<Role>(roles));
 
         // 准备 Mock Request
-        MockHttpServletRequestBuilder request = get("/api/msc-roles/detail/ROLE_MONITOR");
+        MockHttpServletRequestBuilder request = get("/api/msc-roles/ROLE_MONITOR");
         request = decorate(request);
 
         replay(mscRoleService);
@@ -99,7 +97,7 @@ public class MscRolesControllerTest extends SessionSupportedControllerTest {
     @Test
     public void testUpdate() throws Exception {
         expect(mscRoleService.findByName("ROLE_MONITOR")).andReturn(role);
-        expect(mscRoleService.update(anyObject(MscRole.class))).andReturn(role);
+        expect(mscRoleService.update(anyObject(Role.class))).andReturn(role);
         replay(mscRoleService);
 
         MockHttpServletRequestBuilder request = put("/api/msc-roles/ROLE_MONITOR").content(accountJson());
@@ -113,7 +111,7 @@ public class MscRolesControllerTest extends SessionSupportedControllerTest {
     @Test
     public void testDestroy() throws Exception {
         expect(mscRoleService.findByName("ROLE_MONITOR")).andReturn(role);
-        expect(mscRoleService.destroy(anyObject(MscRole.class))).andReturn(role);
+        expect(mscRoleService.destroy(anyObject(Role.class))).andReturn(role);
         expectLastCall().once();
 
         replay(mscRoleService);

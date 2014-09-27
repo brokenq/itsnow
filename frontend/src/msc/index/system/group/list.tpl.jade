@@ -27,15 +27,17 @@ mixin select_all()
     .btn-group
       +tool_button("#", "refresh", "")
     .btn-group
-      +tool_button("#", "ok", "批准")
-      +tool_button("#", "trash", "拒绝")
-      +tool_button("#", "plus", "分配服务")
-    .btn-group
-      button.btn.btn-default.dropdown-toggle(type="button",data-toggle="dropdown")
-        | 更多操作
-        span.caret
-      ul.dropdown-menu(role="menu")
-        +drop_button("#", "remove", "删除")
+        +tool_button("#", "new", "新建")
+        +tool_button("#", "edit", "编辑")
+        +tool_button("#", "remove", "删除")
+        +tool_button("#", "addUser", "添加用户")
+        +tool_button("#", "removeUser", "删除用户")
+    //.btn-group
+    //  button.btn.btn-default.dropdown-toggle(type="button",data-toggle="dropdown")
+    //    | 更多操作
+    //    span.caret
+    //  ul.dropdown-menu(role="menu")
+    //    +drop_button("#", "remove", "删除")
     .btn-group.pull-right
       .nav-search#nav-search
         form.form-search

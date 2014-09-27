@@ -1,7 +1,7 @@
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.exception.MscRoleException;
-import dnt.itsnow.model.MscRole;
+import dnt.itsnow.model.Role;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.service.MscRoleService;
@@ -25,12 +25,12 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/msc-roles")
-public class MscRolesController extends SessionSupportController<MscRole> {
+public class MscRolesController extends SessionSupportController<Role> {
 
     @Autowired
     private MscRoleService service;
 
-    private MscRole role;
+    private Role role;
 
     /**
      * <h2>获得所有的角色</h2>
@@ -40,12 +40,12 @@ public class MscRolesController extends SessionSupportController<MscRole> {
      * @return 角色列表
      */
     @RequestMapping
-    public List<MscRole> index(@RequestParam(value = "keyword", required = false) String keyword) {
-        logger.debug("Listing MscRole keyword:{}" + keyword);
+    public List<Role> index(@RequestParam(value = "keyword", required = false) String keyword) {
+        logger.debug("Listing Role keyword:{}" + keyword);
 
         indexPage = service.findAll(keyword, pageRequest);
 
-        logger.debug("Listed MscRole number {}", indexPage.getNumber());
+        logger.debug("Listed Role number {}", indexPage.getNumber());
         return indexPage.getContent();
     }
 
@@ -56,8 +56,8 @@ public class MscRolesController extends SessionSupportController<MscRole> {
      *
      * @return 角色
      */
-    @RequestMapping("/detail/{name}")
-    public List<MscRole> show(@PathVariable("name") String name) {
+    @RequestMapping(value="{name}", method = RequestMethod.GET)
+    public List<Role> show(@PathVariable("name") String name) {
         logger.debug("Listing group groupName:{}" + name);
 
         indexPage = service.findAllRelevantInfo(name, pageRequest);
@@ -74,7 +74,7 @@ public class MscRolesController extends SessionSupportController<MscRole> {
      * @return 新建的角色
      */
     @RequestMapping(method = RequestMethod.POST)
-    public MscRole create(@Valid @RequestBody MscRole dictionary) {
+    public Role create(@Valid @RequestBody Role dictionary) {
         logger.info("Creating {}", dictionary.getName());
 
         try {
@@ -95,7 +95,7 @@ public class MscRolesController extends SessionSupportController<MscRole> {
      * @return 被更新的角色
      */
     @RequestMapping(value = "{name}", method = RequestMethod.PUT)
-    public MscRole update(@Valid @RequestBody MscRole dictionary) {
+    public Role update(@Valid @RequestBody Role dictionary) {
 
         logger.info("Updateing {}", dictionary.getName());
 
@@ -123,7 +123,7 @@ public class MscRolesController extends SessionSupportController<MscRole> {
      * @return 被删除的角色
      */
     @RequestMapping(value = "{name}", method = RequestMethod.DELETE)
-    public MscRole destroy() {
+    public Role destroy() {
 
         if (role == null) {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, "The role no must be specified");

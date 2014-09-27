@@ -18,6 +18,25 @@
         </collection>
     </resultMap>
 
+    <sql id="selectGroup">
+        SELECT DISTINCT g.id,
+        g.sn,
+        g.name,
+        g.description,
+        g.created_at,
+        g.updated_at
+        FROM   group g,
+        itsnow_msc.accounts acc
+        LEFT JOIN itsnow_msc.users u
+        ON acc.id = u.account_id
+        LEFT JOIN group_members gm
+        ON u.username = gm.username
+        WHERE  g.id = gm.group_id
+        <if test="accountId != null">
+            AND acc.id = #{accountId}
+        </if>
+    </sql>
+
     <select id="findBySn" parameterType="string" resultMap="groupResult">
         select g.id, g.sn, g.group_name, g.description, g.created_at, g.updated_at
         from groups g
