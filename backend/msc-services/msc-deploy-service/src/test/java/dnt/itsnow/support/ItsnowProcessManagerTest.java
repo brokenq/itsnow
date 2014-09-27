@@ -109,12 +109,12 @@ public class ItsnowProcessManagerTest {
 
     @Test
     public void testDelete() throws Exception {
-        schemaService.delete(schema);
-        expectLastCall().once();
         String jobId = "delete-process-job-id";
         expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
         expect(systemInvokeService.waitJobFinished(jobId)).andReturn(0) ;
         repository.deleteByName(process.getName());
+        expectLastCall().once();
+        schemaService.delete(schema);
         expectLastCall().once();
 
         replay(hostService);

@@ -100,12 +100,6 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
         logger.warn("Deleting itsnow process: {}", process);
         if( process.getStatus() != ProcessStatus.Stopped)
             throw new ItsnowProcessException("Can't destroy the non-stopped process with status = " + process.getStatus());
-        try {
-            schemaService.delete(process.getSchema());
-        } catch (ItsnowSchemaException e) {
-            throw new ItsnowProcessException("Can't destroy the schema used by the process", e);
-        }
-
         SystemInvocation undeployJob = translator.undeploy(process);
         undeployJob.setUserFlag(UNDEPLOY_FLAG);
         String invocationId = invokeService.addJob(undeployJob);
@@ -116,6 +110,12 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
             throw new ItsnowProcessException("Can't un-deploy itsnow process for {}", e);
         }
         repository.deleteByName(process.getName());
+        try {
+            schemaService.delete(process.getSchema());
+        } catch (ItsnowSchemaException e) {
+            throw new ItsnowProcessException("Can't destroy the schema used by the process", e);
+        }
+
         logger.warn("Deleted  itsnow process: {}", process);
     }
 
