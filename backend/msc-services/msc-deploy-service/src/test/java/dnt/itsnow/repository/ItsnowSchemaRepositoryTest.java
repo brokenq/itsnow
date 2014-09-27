@@ -43,6 +43,18 @@ public class ItsnowSchemaRepositoryTest {
         ItsnowSchema found = schemaRepository.findByName("itsnow_msc");
         Assert.assertNotNull(found);
         Assert.assertNotNull(found.getConfiguration());
+        Assert.assertNotNull(found.getHost());
+        Assert.assertNotNull(found.getHostId());
+        Assert.assertEquals("root", found.getConfiguration().getProperty("user"));
+    }
+
+    @Test
+    public void testFindById() throws Exception {
+        ItsnowSchema found = schemaRepository.findById(1);
+        Assert.assertNotNull(found);
+        Assert.assertNotNull(found.getConfiguration());
+        Assert.assertNotNull(found.getHost());
+        Assert.assertNotNull(found.getHostId());
         Assert.assertEquals("root", found.getConfiguration().getProperty("user"));
     }
 
