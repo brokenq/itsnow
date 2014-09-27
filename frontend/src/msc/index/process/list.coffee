@@ -11,7 +11,7 @@ angular.module('MscIndex.Process', ['ngTable','ngResource'])
   ])
   .filter('formatProcessStatus', ->
     (status) ->
-      return "已关机" if status == 'Stopped'
+      return "已停止" if status == 'Stopped'
       return "启动中" if status == 'Starting'
       return "运行中" if status == 'Running'
       return "停止中" if status == 'Stopping'
