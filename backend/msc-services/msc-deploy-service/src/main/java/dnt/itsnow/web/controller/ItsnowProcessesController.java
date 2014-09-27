@@ -117,6 +117,7 @@ public class ItsnowProcessesController extends SessionSupportController<ItsnowPr
             Account account = findAccount(creating.getAccountId());
             creating.setAccount(account);
             ItsnowHost host = findHost(creating.getHostId());
+            creating.setHost(host);
             Long schemaId = creating.getSchemaId();
             if( schemaId != null && schemaId > 0 ){
                 findSchema(schemaId);

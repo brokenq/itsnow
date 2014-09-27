@@ -209,6 +209,7 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
         props.setProperty("app.name", process.getDisplayName());
         props.setProperty("app.id", process.getIdentifier());
         props.setProperty("db.host", schema.getHostAddress());
+        props.setProperty("db.name", schema.getName());
         props.setProperty("db.user", schema.getProperty("user"));
         props.setProperty("db.password", schema.getProperty("password"));
         props.setProperty("db.port", port);

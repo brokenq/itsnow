@@ -70,7 +70,7 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
         if( creating.getSchema().isNew()) {
             try {
                 ItsnowSchema schema = schemaService.create(creating.getSchema());
-                creating.setSchema(schema);
+                creating.setSchemaId(schema.getId());
             } catch (ItsnowSchemaException e) {
                 throw new ItsnowProcessException("Can't create schema " + creating.getSchema().getName()
                                                  + " for process " + creating.getName(), e );

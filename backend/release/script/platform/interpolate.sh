@@ -21,7 +21,7 @@ interpolate(){
   value=$2
   value=$(echo $value | sed s/\\//\\\\\\//g)
   #echo "interpolate $target with $key $value"
-  sed -i "s/$key=.*/$key=$value/g" $target
+  sed -i "s/$key=[a-zA-Z0-9_|\\-]\+/$key=$value/g" $target
 }
 
 for line in $(<$vars)
