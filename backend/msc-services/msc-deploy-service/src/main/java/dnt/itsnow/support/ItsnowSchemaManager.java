@@ -48,7 +48,7 @@ public class ItsnowSchemaManager extends ItsnowResourceManager implements Itsnow
         String invocationId = invokeService.addJob(dropJob);
         schema.setProperty(DELETE_INVOCATION_ID, invocationId);
         try {
-            int result = invokeService.waitJobFinished(invocationId);
+            invokeService.waitJobFinished(invocationId);
         } catch (SystemInvokeException e) {
             throw new ItsnowSchemaException("Can't drop schema for :" + schema, e);
         }
