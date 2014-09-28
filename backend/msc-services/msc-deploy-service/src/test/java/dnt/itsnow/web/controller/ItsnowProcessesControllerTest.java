@@ -4,10 +4,16 @@
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.config.DeployControllerConfig;
+import dnt.itsnow.model.Account;
+import dnt.itsnow.model.ItsnowHost;
 import dnt.itsnow.model.ItsnowProcess;
+import dnt.itsnow.model.ItsnowSchema;
 import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.util.PageRequest;
+import dnt.itsnow.service.CommonAccountService;
+import dnt.itsnow.service.ItsnowHostService;
 import dnt.itsnow.service.ItsnowProcessService;
+import dnt.itsnow.service.ItsnowSchemaService;
 import dnt.itsnow.test.controller.SessionSupportedControllerTest;
 import dnt.itsnow.util.DeployFixture;
 import dnt.support.JsonSupport;
@@ -32,9 +38,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = DeployControllerConfig.class)
 public class ItsnowProcessesControllerTest extends SessionSupportedControllerTest {
     @Autowired
-    ItsnowProcessService      mockedService;
+    ItsnowProcessService mockedService;
+    @Autowired
+    CommonAccountService accountService;
+    @Autowired
+    ItsnowHostService    hostService;
+    @Autowired
+    ItsnowSchemaService  schemaService;
 
-    ItsnowProcess    process;
+    Account      account;
+    ItsnowHost   host;
+    ItsnowSchema schema;
+
+    ItsnowProcess       process;
     List<ItsnowProcess> processes;
 
     @Before
@@ -42,6 +58,18 @@ public class ItsnowProcessesControllerTest extends SessionSupportedControllerTes
         process = DeployFixture.testProcess();
         processes = new LinkedList<ItsnowProcess>();
         processes.add(process);
+
+        account = DeployFixture.testAccount();
+
+        host = DeployFixture.testHost();
+        host.setId(1L);
+
+        schema = DeployFixture.testSchema();
+        schema.setHost(host);
+        schema.setHostId(host.getId());
+        schema.setId(process.getSchemaId());
+
+        process.setSchema(schema);
     }
 
     @After
@@ -96,6 +124,9 @@ public class ItsnowProcessesControllerTest extends SessionSupportedControllerTes
 
     @Test
     public void testCreate() throws Exception {
+        expect(accountService.findById(account.getId())).andReturn(account);
+        expect(hostService.findById(host.getId())).andReturn(host);
+        expect(schemaService.findById(schema.getId())).andReturn(schema);
         // Service Mock 记录阶段
         expect(mockedService.create(isA(ItsnowProcess.class))).andReturn(process);
         // 准备 Mock Request
@@ -104,12 +135,22 @@ public class ItsnowProcessesControllerTest extends SessionSupportedControllerTes
 
         // Mock 准备播放
         replay(mockedService);
+        replay(accountService);
+        replay(hostService);
+        replay(schemaService);
 
         // 执行
         ResultActions result = this.browser.perform(request);
 
         // 对业务结果的验证
         decorate(result).andExpect(status().isOk());
+
+        verify(accountService);
+        reset(accountService);
+        verify(hostService);
+        reset(hostService);
+        verify(schemaService);
+        reset(schemaService);
     }
 
     @Test

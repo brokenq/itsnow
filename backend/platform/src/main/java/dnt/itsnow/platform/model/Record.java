@@ -3,6 +3,7 @@
  */
 package dnt.itsnow.platform.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.beanutils.BeanUtils;
 
@@ -87,5 +88,10 @@ public class Record {
     @Override
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
+    }
+
+    @JsonIgnore
+    public boolean isNew() {
+        return id == null || id <= 0 ;
     }
 }

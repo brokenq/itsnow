@@ -30,8 +30,9 @@ fi
 # install redis
 echo "Install redis..."
 tar xvf redis-2.8.16.tar.gz
-cd redis-2.8.16
-make && make install
+# install compiled instead of make from source
+cp redis-2.8.16/redis-* /usr/local/bin/
+
 echo "vm.overcommit_memory=1" >> /etc/sysctl.conf
 sysctl vm.overcommit_memory=1
 

@@ -209,10 +209,12 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
         props.setProperty("app.name", process.getDisplayName());
         props.setProperty("app.id", process.getIdentifier());
         props.setProperty("db.host", schema.getHostAddress());
+        props.setProperty("db.name", schema.getName());
         props.setProperty("db.user", schema.getProperty("user"));
         props.setProperty("db.password", schema.getProperty("password"));
         props.setProperty("db.port", port);
         // http jmx redis configuration is stored in process configuration
+        // 有个 redis.local.index(1-31) 必须与其他实例不一样
         //props.setProperty("http.port", process.getProperty("http.port"));
         return createProperties(props, "now.vars");
     }

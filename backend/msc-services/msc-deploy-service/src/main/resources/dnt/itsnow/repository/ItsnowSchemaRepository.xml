@@ -4,7 +4,35 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--不要用 type != '*' 这种， mybatis 会根据 '*' 认为 type 为 long类型，而后无法解析-->
 <mapper namespace="dnt.itsnow.repository.ItsnowSchemaRepository">
+    <sql id="selectSchema">
+        SELECT s.*,
+            h.id            AS host_id,
+            h.name          AS host_name,
+            h.address       AS host_address,
+            h.capacity      AS host_capacity,
+            h.status        AS host_status,
+            h.configuration AS host_configuration ,
+            h.description   AS host_description ,
+            h.created_at    AS host_created_at,
+            h.updated_at    AS host_updated_at
+        FROM itsnow_schemas s
+            JOIN itsnow_hosts h ON s.host_id = h.id
+    </sql>
+    <select id="findByName" resultMap="schemaResult">
+        <include refid="selectSchema"/>
+        <where>
+            s.name = #{name}
+        </where>
+    </select>
+    <select id="findById" resultMap="schemaResult">
+        <include refid="selectSchema"/>
+        <where>
+            s.id = #{id}
+        </where>
+    </select>
     <resultMap id="schemaResult" type="ItsnowSchema" autoMapping="true">
         <result column="configuration" property="configuration" typeHandler="dnt.itsnow.util.PropertiesHandler"/>
+        <result column="host_id" property="hostId"/>
+        <association property="host" columnPrefix="host_" resultMap="dnt.itsnow.repository.ItsnowHostRepository.hostResult"/>
     </resultMap>
 </mapper>

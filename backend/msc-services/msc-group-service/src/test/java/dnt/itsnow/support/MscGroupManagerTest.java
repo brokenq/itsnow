@@ -53,6 +53,7 @@ public class MscGroupManagerTest {
 
     @Test
     public void testCreate() throws Exception {
+
         Group group = new Group();
         group.setId(1L);
         group.setSn("009");
@@ -62,6 +63,7 @@ public class MscGroupManagerTest {
         group.setUpdatedAt(group.getCreatedAt());
 
         service.create(group);
+
         Assert.assertNotNull(group.getId());
     }
 

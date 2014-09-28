@@ -4,10 +4,16 @@
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.exception.ItsnowProcessException;
+import dnt.itsnow.model.Account;
+import dnt.itsnow.model.ItsnowHost;
 import dnt.itsnow.model.ItsnowProcess;
+import dnt.itsnow.model.ItsnowSchema;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
+import dnt.itsnow.service.CommonAccountService;
+import dnt.itsnow.service.ItsnowHostService;
 import dnt.itsnow.service.ItsnowProcessService;
+import dnt.itsnow.service.ItsnowSchemaService;
 import dnt.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,8 +42,16 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/api/processes")
 public class ItsnowProcessesController extends SessionSupportController<ItsnowProcess> {
+    static String template = "Can't find the %s id = %d";
     @Autowired
     ItsnowProcessService processService;
+    @Autowired
+    CommonAccountService accountService;
+    @Autowired
+    ItsnowHostService    hostService;
+    @Autowired
+    ItsnowSchemaService  schemaService;
+
     //current operating process shared between filter and controller method
     ItsnowProcess currentProcess;
 
@@ -50,7 +64,7 @@ public class ItsnowProcessesController extends SessionSupportController<ItsnowPr
      * @return 进程列表
      */
     @RequestMapping
-    public List<ItsnowProcess> index( @RequestParam(value = "keyword", required = false) String keyword ) {
+    public List<ItsnowProcess> index(@RequestParam(value = "keyword", required = false) String keyword) {
         logger.debug("Listing itsnow processes");
         indexPage = processService.findAll(keyword, pageRequest);
         logger.debug("Found   itsnow processes {}", indexPage.getTotalElements());
@@ -70,16 +84,52 @@ public class ItsnowProcessesController extends SessionSupportController<ItsnowPr
 
     /**
      * <h2>创建(分配)服务进程</h2>
-     * <p/>
      * POST /admin/api/processes
+     * <p/>
      *
+     * 输入的数据如下:
+     * <pre>
+     * {
+     *   name: "itsnow_baidu"
+     *   accountId: "6"
+     *   hostId: "15"
+     *   schema{
+     *     name: "itsnow_baidu"
+     *     hostId: "15"
+     *     configuration: {user:baidu, password:random, port:3306}
+     *     description: "the db description"
+     *   }
+     *   configuration: {
+     *     "rmi.port": "1234", "jmx.port": "2345", ...
+     *   }
+     *   wd: "/opt/itsnow/itsnow_baidu"
+     *   description: "the host description"
+     * }
+     * </pre>
      * @param creating 通过http post body以JSON等方式提交的数据
      * @return 刚刚创建的进程对象信息
      */
     @RequestMapping(method = RequestMethod.POST)
-    public ItsnowProcess create(@Valid @RequestBody ItsnowProcess creating){
+    public ItsnowProcess create(@Valid @RequestBody ItsnowProcess creating) {
         logger.info("Creating {} Itsnow Process {}", creating);
-        try{
+        try {
+            // 将输入的id引用转换为已有的对象
+            Account account = findAccount(creating.getAccountId());
+            creating.setAccount(account);
+            ItsnowHost host = findHost(creating.getHostId());
+            creating.setHost(host);
+            Long schemaId = creating.getSchemaId();
+            if( schemaId != null && schemaId > 0 ){
+                findSchema(schemaId);
+            }else{
+                ItsnowSchema schema = creating.getSchema();
+                if(schema.getHostId().equals(host.getId())){
+                    schema.setHost(host);
+                }else{
+                    ItsnowHost schemaHost = findHost(schema.getHostId());
+                    schema.setHost(schemaHost);
+                }
+            }
             // 可能会抛出重名的异常(重名由数据库uk保证)
             currentProcess= processService.create(creating);
             logger.info("Created  {} Itsnow Process {} ", currentProcess);
@@ -187,5 +237,24 @@ public class ItsnowProcessesController extends SessionSupportController<ItsnowPr
             throw new WebClientSideException(HttpStatus.NOT_FOUND, "Can't find the itsnow process with name = " + name);
     }
 
+
+    protected Account findAccount(long accountId) {
+        Account account = accountService.findById(accountId);
+        if( account == null )
+            throw new WebClientSideException(HttpStatus.NOT_FOUND, String.format(template, "account", accountId));
+        return account;
+    }
+
+    protected ItsnowHost findHost(long hostId) {
+        ItsnowHost host = hostService.findById(hostId);
+        if( host == null )
+            throw new WebClientSideException(HttpStatus.NOT_FOUND, String.format(template, "host", hostId));
+        return host;
+    }
+
+    protected void findSchema(long schemaId) {
+        ItsnowSchema schema = schemaService.findById(schemaId);
+        if( schema == null ) throw new WebClientSideException(HttpStatus.NOT_FOUND, String.format(template, "schema", schemaId));
+    }
 
 }

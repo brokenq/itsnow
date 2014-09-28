@@ -43,6 +43,7 @@ done
 cp $folder/$type/bin/itsnow-* $instance/bin/itsnow-$id
 cp $folder/$type/bin/*.sh $instance/bin/
 chmod +x $instance/bin/*.sh
+chmod +x $instance/bin/itsnow-$id
 
 echo "Prepare db folder for $instance"
 db_list="db/bin db/lib db/LICENSE db/NOTICE db/migrate/drivers db/migrate/scripts db/migrate/README "

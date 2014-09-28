@@ -12,16 +12,20 @@ import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.repository.ItsnowProcessRepository;
 import dnt.itsnow.service.*;
+import dnt.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * <h1>Itsnow Process Manager</h1>
  */
 @Service
+@Transactional
 public class ItsnowProcessManager extends ItsnowResourceManager implements ItsnowProcessService {
     public static final String START_INVOCATION_ID = "startInvocationId";
     public static final String STOP_INVOCATION_ID = "stopInvocationId";
@@ -40,41 +44,50 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
 
     @Override
     public Page<ItsnowProcess> findAll(String keyword, PageRequest request) {
-        logger.debug("Listing itsnow process by keyword: {} at {}", keyword, request);
+        logger.debug("Listing itsnow processes by keyword: {} at {}", keyword, request);
         int total = repository.countByKeyword(keyword);
-        List<ItsnowProcess> hits = repository.findAllByKeyword(keyword, request);
-        return new DefaultPage<ItsnowProcess>(hits, request, total);
+        List<ItsnowProcess> hits;
+        if( total == 0 ){
+            hits = new ArrayList<ItsnowProcess>();
+        }else{
+            if(StringUtils.isNotBlank(keyword)) keyword = "%" + keyword + "%";
+            else keyword = null;
+            hits = repository.findAllByKeyword(keyword, request);
+        }
+        DefaultPage<ItsnowProcess> page = new DefaultPage<ItsnowProcess>(hits, request, total);
+        logger.debug("Listed  itsnow processes {}", page);
+        return page;
     }
 
     @Override
     public ItsnowProcess findByName(String name) {
         logger.debug("Finding itsnow process by name: {}", name);
-        return repository.findByName(name);
+        ItsnowProcess process = repository.findByName(name);
+        logger.debug("Found   itsnow process {}", process);
+        return process;
     }
 
     @Override
     public ItsnowProcess create(ItsnowProcess creating) throws ItsnowProcessException {
         logger.info("Creating itsnow process: {}", creating);
+        // 设定如下前提:
+        //   由外部/控制器,测试程序负责完成 process 模型的准备
+        // (主要是process -> account, process -> host, process -> schema, schema -> host)
+        if (creating.getHost() == null)
+            throw new ItsnowProcessException("You must specify the host where run the process " + creating );
+        if (creating.getSchema() == null )
+            throw new ItsnowProcessException("You must specify the schema where store the data for " + creating );
 
-        ItsnowHost host;
-        if( creating.getHost() != null )
-            host = creating.getHost();
-        else if( creating.getSchema().getHost() != null )
-            host = creating.getSchema().getHost();
-        else
-            host = hostService.findById(creating.getHostId());
-
-        if (host == null)
-            throw new ItsnowProcessException("Can't find itsnow host with id = " + creating.getHostId() );
-        creating.setHost(host);
-
-        //要求schema service 创建相应的schema
-        try {
-            ItsnowSchema schema = schemaService.create(creating.getSchema());
-            creating.setSchema(schema);
-        } catch (ItsnowSchemaException e) {
-            throw new ItsnowProcessException("Can't create schema " + creating.getSchema().getName()
-                                             + " for process " + creating.getName(), e );
+        // 支持两种schema情况，一种是已经创建好的
+        // 一种是界面指定的，这将会自动通过 schema service 创建相应的schema对象
+        if( creating.getSchema().isNew()) {
+            try {
+                ItsnowSchema schema = schemaService.create(creating.getSchema());
+                creating.setSchemaId(schema.getId());
+            } catch (ItsnowSchemaException e) {
+                throw new ItsnowProcessException("Can't create schema " + creating.getSchema().getName()
+                                                 + " for process " + creating.getName(), e );
+            }
         }
 
         SystemInvocation deployJob = translator.deploy(creating);
@@ -100,12 +113,6 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
         logger.warn("Deleting itsnow process: {}", process);
         if( process.getStatus() != ProcessStatus.Stopped)
             throw new ItsnowProcessException("Can't destroy the non-stopped process with status = " + process.getStatus());
-        try {
-            schemaService.delete(process.getSchema());
-        } catch (ItsnowSchemaException e) {
-            throw new ItsnowProcessException("Can't destroy the schema used by the process", e);
-        }
-
         SystemInvocation undeployJob = translator.undeploy(process);
         undeployJob.setUserFlag(UNDEPLOY_FLAG);
         String invocationId = invokeService.addJob(undeployJob);
@@ -116,12 +123,18 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
             throw new ItsnowProcessException("Can't un-deploy itsnow process for {}", e);
         }
         repository.deleteByName(process.getName());
+        try {
+            schemaService.delete(process.getSchema());
+        } catch (ItsnowSchemaException e) {
+            throw new ItsnowProcessException("Can't destroy the schema used by the process", e);
+        }
+
         logger.warn("Deleted  itsnow process: {}", process);
     }
 
     @Override
     public String start(ItsnowProcess process) throws ItsnowProcessException {
-        logger.info("Starting {}", process.getName());
+        logger.info("Starting {}", process);
         if( process.getStatus() != ProcessStatus.Stopped)
             throw new ItsnowProcessException("Can't start the process with status = " + process.getStatus());
         // 因为启动一个系统可能是一个比较慢的事情，所以采用异步方式，任务启动之后就返回
@@ -131,6 +144,7 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
         String invocationId = invokeService.addJob(startJob);
         process.setProperty(START_INVOCATION_ID, invocationId);
         repository.update(process);
+        logger.debug("Starting {} with invocation id {}", process, invocationId);
         return invocationId;
     }
 
@@ -145,6 +159,7 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
         String invocationId = invokeService.addJob(stopJob);
         process.setProperty(STOP_INVOCATION_ID, invocationId);
         repository.update(process);
+        logger.debug("Stopping {} with invocation id {}", process, invocationId);
         return invocationId;
     }
 
@@ -154,6 +169,7 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
         if( finished )
             throw new ItsnowProcessException("The job " + jobId + " is finished already!");
         invokeService.cancelJob(jobId);
+        logger.debug("{} invocation {} is cancelled", process, jobId);
     }
 
     @Override

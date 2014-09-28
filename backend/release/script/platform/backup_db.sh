@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Usage:  backup_db.sql schema path/to/store
+# Usage:  backup_db.sql schema path/to/store(optional)  file_name(optional)
 #   
 # Backup the mysql database to specified path
 #
@@ -17,9 +17,14 @@ if [ ! $2 ]; then
 else 
   dir=$2
 fi
-# Today db file name
-today=`date +%Y_%m_%d`
-file="$dir/$today-$schema.gz"
+mkdir -p $dir
+if [ ! $3 ]; then
+  # Today db file name
+  today=`date +%Y_%m_%d`
+  file="$dir/$today-$schema.gz"
+else
+  file=$dir/$3
+fi
 mysql_pwd=`cat /root/.mysql_pwd`
 
 echo "Backup $schema $today"

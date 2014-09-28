@@ -33,7 +33,7 @@ public class DefaultServiceConfig extends AbstractServiceConfig {
         importService(AutoNumberService.class);
 
         //redis,message-bus,cache-service
-        importService(CacheService.class,System.getProperty("messaging.provider"),"cacheService");
-        importService(MessageBus.class,System.getProperty("cache.provider"),"messageBus");
+        importService(CacheService.class,System.getProperty("messaging.provider"), "globalCacheService");
+        importService(MessageBus.class,System.getProperty("cache.provider"), "globalMessageBus");
     }
 }

@@ -14,6 +14,7 @@ if [ ! $1 ]; then
   exit 1
 fi
 instance=$1
+id=$(echo $instance | sed s/itsnow.\\?//)
 
 if [ $2 ]; then
   folder=$2
@@ -24,6 +25,6 @@ fi
 
 # /bin/rm -f $folder/$instance
 # do not real deleted while testing
-/bin/mv -f $folder/$instance $folder/deleted
+/bin/mv -f $folder/$instance $folder/deleted_$id
 
 echo "$folder/$instance is removed!"

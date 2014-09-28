@@ -20,7 +20,7 @@ version=$2
 file=$ltype-$version.zip
 
 if [[ "$version" =~ SNAPSHOT$ ]]; then
-  target="http://$CI/guestAuth/repository/download/itsnow_Continuous_Build/.lastFinished/$file"
+  target="http://$CI/guestAuth/repository/download/Itsnow_Continuous_Build/.lastFinished/$file"
 else
   target="http://$CI/guestAuth/repository/download/Itsnow_Sprint_Build_$utype/.lastFinished/$file"
 fi
@@ -55,3 +55,5 @@ rm -f $ltype
 
 # Make the link to the version
 ln -s $zip_path $ltype
+
+echo "$ltype $version prepared"

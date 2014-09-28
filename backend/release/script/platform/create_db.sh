@@ -26,7 +26,7 @@ user=$2
 password=$3
 mysql_pwd=`cat /root/.mysql_pwd`
 mysql -uroot -p$mysql_pwd <<SQL
-  CREATE DATABASE IF NOT EXISTS $schema DEFAULT CHARACTER SET UTF8;
+  CREATE DATABASE $schema DEFAULT CHARACTER SET UTF8;
   CREATE USER '$user'@'%' IDENTIFIED BY '$password';
   GRANT ALL ON $schema.* TO '$user'@'%';
   GRANT SELECT ON itsnow_msc.* TO '$user'@'%';

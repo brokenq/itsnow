@@ -11,6 +11,7 @@ import dnt.itsnow.repository.ItsnowSchemaRepository;
 import dnt.itsnow.service.ItsnowSchemaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 
@@ -18,6 +19,7 @@ import java.sql.Timestamp;
  * <h1>Itsnow Schema Manager</h1>
  */
 @Service
+@Transactional
 public class ItsnowSchemaManager extends ItsnowResourceManager implements ItsnowSchemaService {
     @Autowired
     ItsnowSchemaRepository     repository;
@@ -46,7 +48,7 @@ public class ItsnowSchemaManager extends ItsnowResourceManager implements Itsnow
         String invocationId = invokeService.addJob(dropJob);
         schema.setProperty(DELETE_INVOCATION_ID, invocationId);
         try {
-            int result = invokeService.waitJobFinished(invocationId);
+            invokeService.waitJobFinished(invocationId);
         } catch (SystemInvokeException e) {
             throw new ItsnowSchemaException("Can't drop schema for :" + schema, e);
         }
@@ -59,6 +61,14 @@ public class ItsnowSchemaManager extends ItsnowResourceManager implements Itsnow
         logger.debug("Finding schema by name: {}", name);
         ItsnowSchema schema = repository.findByName(name);
         logger.debug("Found   schema by name: {}", schema);
+        return schema;
+    }
+
+    @Override
+    public ItsnowSchema findById(long schemaId) {
+        logger.debug("Finding schema by id: {}", schemaId);
+        ItsnowSchema schema = repository.findById(schemaId);
+        logger.debug("Found   schema by id: {}", schema);
         return schema;
     }
 }

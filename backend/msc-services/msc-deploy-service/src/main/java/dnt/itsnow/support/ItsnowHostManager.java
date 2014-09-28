@@ -13,16 +13,19 @@ import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.repository.ItsnowHostRepository;
 import dnt.itsnow.service.ItsnowHostService;
+import dnt.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * <h1>Itsnow Host Manager</h1>
  */
 @Service
+@Transactional
 public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHostService {
 
     @Autowired
@@ -32,7 +35,14 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     public Page<ItsnowHost> findAll(String keyword, PageRequest pageRequest) {
         logger.debug("Listing itsnow hosts by keyword: {} at {}", keyword, pageRequest);
         int total = repository.countByKeyword(keyword);
-        List<ItsnowHost> hits = repository.findAllByKeyword(keyword, pageRequest);
+        List<ItsnowHost> hits;
+        if( total == 0 ){
+            hits = new ArrayList<ItsnowHost>();
+        }else{
+            if(StringUtils.isNotBlank(keyword)) keyword = "%" + keyword + "%";
+            else keyword = null;
+            hits = repository.findAllByKeyword(keyword, pageRequest);
+        }
         DefaultPage<ItsnowHost> page = new DefaultPage<ItsnowHost>(hits, pageRequest, total);
         logger.debug("Listed  itsnow hosts: {}", page);
         return page;
@@ -85,6 +95,7 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
 
     @Override
     public void delete(ItsnowHost host) throws ItsnowHostException {
+        logger.warn("Deleting {}", host);
         SystemInvocation delistJob = translator.delist(host);
         delistJob.setUserFlag(-1);
         String delistJobId = invokeService.addJob(delistJob);
@@ -104,6 +115,7 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
         } catch (Exception e) {
             throw new ItsnowHostException("Can't delete itsnow host: " + host, e);
         }
+        logger.warn("Deleted  {}", host);
     }
 
     @Override

@@ -105,7 +105,7 @@ public abstract class SystemInvocation {
     }
 
     public File totalFile() {
-        return new File(System.getProperty("APP_HOME", System.getProperty("user.dir")), "tmp/" + this.totalFileName());
+        return new File(System.getProperty("app.home", System.getProperty("user.dir")), "tmp/" + this.totalFileName());
     }
 
     public List<String> getOutputs() {

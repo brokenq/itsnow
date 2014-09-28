@@ -27,7 +27,7 @@ if [ $? -gt 0 ]; then
   exit 128
 fi
 
-ssh_exec mkdir -p /opt/system/platform /opt/system/binaries /opt/system/config
+ssh_exec mkdir -p /opt/system/platform /opt/system/binaries /opt/system/config /opt/redis
 echo "copy platform script to $target:/opt/system/platform"
 scp $msc_home/script/platform/* root@$target:/opt/system/platform/
 echo "copy binaries to $target:/opt/system/binaries"

@@ -3,9 +3,7 @@
  */
 package dnt.itsnow.config;
 
-import dnt.itsnow.service.CommonUserService;
-import dnt.itsnow.service.ItsnowHostService;
-import dnt.itsnow.service.ItsnowProcessService;
+import dnt.itsnow.service.*;
 import dnt.itsnow.test.config.ApplicationControllerConfig;
 import dnt.itsnow.web.controller.ItsnowHostsController;
 import dnt.itsnow.web.controller.ItsnowProcessesController;
@@ -32,6 +30,22 @@ public class DeployControllerConfig extends ApplicationControllerConfig {
         return EasyMock.createMock(ItsnowProcessService.class);
     }
 
+    @Bean
+    public ItsnowSchemaService itsnowSchemaService(){
+        return EasyMock.createMock(ItsnowSchemaService.class);
+    }
+
+
+    @Bean
+    @Qualifier("plainUserService")
+    public CommonUserService commonUserService(){
+        return EasyMock.createMock(CommonUserService.class);
+    }
+
+    @Bean
+    public CommonAccountService commonAccountService(){
+        return EasyMock.createMock(CommonAccountService.class);
+    }
 
     //这个也不用scanner，
     //  因为在测试环境下，classpath没有隔离，
@@ -44,12 +58,6 @@ public class DeployControllerConfig extends ApplicationControllerConfig {
     @Bean
     public ItsnowProcessesController itsnowProcessesController(){
         return new ItsnowProcessesController();
-    }
-
-    @Bean
-    @Qualifier("plainUserService")
-    public CommonUserService commonUserService(){
-        return EasyMock.createMock(CommonUserService.class);
     }
 
 

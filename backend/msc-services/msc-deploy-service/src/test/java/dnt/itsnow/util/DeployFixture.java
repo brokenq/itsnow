@@ -3,10 +3,7 @@
  */
 package dnt.itsnow.util;
 
-import dnt.itsnow.model.ItsnowHost;
-import dnt.itsnow.model.ItsnowProcess;
-import dnt.itsnow.model.ItsnowSchema;
-import dnt.itsnow.model.MsuAccount;
+import dnt.itsnow.model.*;
 
 import java.util.Properties;
 
@@ -74,11 +71,6 @@ public class DeployFixture {
         process.setDescription("A test process");
         process.creating();
 
-        process.setAccountId(1L);
-        MsuAccount account = new MsuAccount();
-        account.setId(1L);
-        account.setDomain("msu_100");
-        process.setAccount(account);
         process.setProperty("rmi.port", "1234");
         process.setProperty("jmx.port", "4321");
         process.setProperty("debug.port", "5322");
@@ -90,6 +82,9 @@ public class DeployFixture {
     public static ItsnowProcess deployProcess() {
         ItsnowProcess process = testProcess();
 
+        Account account = testAccount();
+        process.setAccountId(account.getId());
+        process.setAccount(account);
 
         ItsnowSchema schema = deploySchema();
         process.setSchemaId(schema.getId());
@@ -102,5 +97,12 @@ public class DeployFixture {
         process.setWd("/opt/releases/msu_100");
         process.setDescription("A test process");
         return process;
+    }
+
+    public static Account testAccount(){
+        MsuAccount account = new MsuAccount();
+        account.setId(1L);
+        account.setDomain("msu_100");
+        return account;
     }
 }
