@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 /**
- * <h1>为Process Dictionar模块提供的单元测试环境</h1>
+ * <h1>为角色管理模块提供的单元测试环境</h1>
  */
 @Configuration
 @Import(DatabaseConfig.class)

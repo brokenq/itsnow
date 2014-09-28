@@ -2,11 +2,9 @@ package dnt.itsnow.support;
 
 import dnt.itsnow.exception.MscRoleException;
 import dnt.itsnow.model.Role;
-import dnt.itsnow.model.User;
 import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.platform.util.DefaultPage;
-import dnt.itsnow.repository.CommonUserRepository;
+import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.repository.MscRoleRepository;
 import dnt.itsnow.service.MscRoleService;
 import dnt.spring.Bean;
@@ -18,76 +16,107 @@ import java.sql.Timestamp;
 import java.util.List;
 
 /**
- * <h1>类功能说明</h1>
+ * <h1>MSC角色管理业务层</h1>
  */
 @Service
 public class MscRoleManager extends Bean implements MscRoleService {
 
     @Autowired
-    private MscRoleRepository roleRepository;
+    private MscRoleRepository repository;
 
     @Override
-    public Page<Role> findAll(String keyword, Pageable pageable) {
-        logger.debug("Finding role by keyword: {}", keyword);
+    public Page<Role> findAll(String keyword, PageRequest pageRequest) {
+
+        logger.debug("Finding role by keyword:{}", keyword);
+
         if(StringUtils.isBlank(keyword)){
-            int total = roleRepository.count();
-            List<Role> roles = roleRepository.findAll("updated_at", "desc", pageable.getOffset(), pageable.getPageSize());
-            return new DefaultPage<Role>(roles, pageable, total);
+            int total = repository.count();
+            List<Role> roles = repository.findAll("updated_at", "desc", pageRequest.getOffset(), pageRequest.getPageSize());
+            DefaultPage page = new DefaultPage<Role>(roles, pageRequest, total);
+
+            logger.debug("Finded role list info:{}", page);
+
+            return page;
         }else{
-            int total = roleRepository.countByKeyword("%"+keyword+"%");
-            List<Role> roles = roleRepository.findAllByKeyword("%" + keyword + "%", "updated_at", "desc", pageable.getOffset(), pageable.getPageSize());
-            return new DefaultPage<Role>(roles, pageable, total);
+            int total = repository.countByKeyword("%"+keyword+"%");
+            List<Role> roles = repository.findAllByKeyword("%" + keyword + "%", "updated_at", "desc", pageRequest.getOffset(), pageRequest.getPageSize());
+            DefaultPage page = new DefaultPage<Role>(roles, pageRequest, total);
+
+            logger.debug("Finded role list info:{}", page);
+
+            return page;
         }
     }
 
     @Override
-    public Page<Role> findAllRelevantInfo(String keyword, Pageable pageable) {
-        logger.debug("Manager Finding group by keyword: {}", keyword);
-        int total = roleRepository.countByRelevantInfo("%" + keyword + "%");
-        List<Role> roles = roleRepository.findAllRelevantInfo("%" + keyword + "%", "updated_at", "desc", pageable.getOffset(), pageable.getPageSize());
-        logger.debug("Manager Finded group by keyword: {}, size is {}", keyword, roles.size());
-        return new DefaultPage<Role>(roles, pageable, total);
+    public Page<Role> findAllRelevantInfo(String name, PageRequest pageRequest) {
+
+        logger.debug("Finding roles by name:{}, paging info:{}", name, pageRequest);
+
+        int total = repository.countByRelevantInfo(name);
+        List<Role> roles = repository.findAllRelevantInfo(name, "updated_at", "desc", pageRequest.getOffset(), pageRequest.getPageSize());
+        DefaultPage page = new DefaultPage<Role>(roles, pageRequest, total);
+
+        logger.debug("Finded role list info:{}", page);
+
+        return page;
     }
 
     @Override
     public Role findByName(String name) {
-        logger.debug("Finding Role by name: {}", name);
+        logger.debug("Finding Role by name:{}", name);
 
-        return roleRepository.findByName(name);
+        Role role = repository.findByName(name);
+
+        logger.debug("Finded role:{}", role);
+
+        return role;
     }
 
     @Override
     public Role create(Role role) throws MscRoleException {
+
         logger.info("Creating role {}", role);
+
         if(role == null){
             throw new MscRoleException("Role entry can not be empty.");
         }
         role.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         role.setUpdatedAt(role.getCreatedAt());
-        roleRepository.create(role);
+        repository.create(role);
+
+        logger.info("Created role:{}", role);
 
         return role;
     }
 
     @Override
     public Role update(Role role) throws MscRoleException {
+
         logger.info("Updating role {}", role);
+
         if(role==null){
             throw new MscRoleException("Role entry can not be empty.");
         }
-        roleRepository.update(role);
+        repository.update(role);
+
+        logger.info("Updated role");
 
         return role;
     }
 
     @Override
-    public Role destroy(Role role) throws MscRoleException {
+    public void destroy(Role role) throws MscRoleException {
+
         logger.warn("Deleting role {}", role);
+
         if(role==null){
             throw new MscRoleException("Role entry can not be empty.");
         }
-        roleRepository.delete(role.getSn());
-        return role;
+
+        repository.delete(role.getName());
+
+        logger.warn("Deletd role");
     }
 
 }

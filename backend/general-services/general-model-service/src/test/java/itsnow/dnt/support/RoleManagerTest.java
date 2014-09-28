@@ -17,7 +17,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.sql.Timestamp;
 
 /**
- * <h1>Class Usage</h1>
+ * <h1>角色管理业务测试类</h1>
  */
 @ContextConfiguration(classes = RoleManagerConfig.class)
 @ActiveProfiles("test")
@@ -43,7 +43,7 @@ public class RoleManagerTest {
     @Test
     public void testFindAllRelevantInfo() throws Exception {
         Page<Role> roles = service.findAllRelevantInfo("ROLE_ADMIN", pageRequest);
-        Assert.assertTrue(roles.getContent().size()>0);
+        Assert.assertNotNull(roles.getContent());
     }
 
     @Test
@@ -55,8 +55,7 @@ public class RoleManagerTest {
     @Test
     public void testCreate() throws Exception {
         Role role = new Role();
-        role.setSn("009");
-        role.setName("用户");
+        role.setName("ROLE_TEST");
         role.setDescription("This is a test.");
         role.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         role.setUpdatedAt(role.getCreatedAt());
@@ -68,8 +67,9 @@ public class RoleManagerTest {
     @Test
     public void testDestroy() throws Exception {
         Role role = service.findByName("ROLE_REPORTER");
+        Assert.assertNotNull(role);
         service.destroy(role);
-        Assert.assertNotNull(service.findByName(role.getName()));
+        Assert.assertNull(service.findByName("ROLE_REPORTER"));
     }
 
     @Test
@@ -77,8 +77,8 @@ public class RoleManagerTest {
         Role role = service.findByName("ROLE_ADMIN");
         role.setDescription("Hello World!");
         service.update(role);
-        role = service.findByName(role.getName());
-        Assert.assertTrue(role.getDescription() == "Hello World!");
+        role = service.findByName("ROLE_ADMIN");
+        Assert.assertTrue(role.getDescription().equals("Hello World!"));
     }
 
 }

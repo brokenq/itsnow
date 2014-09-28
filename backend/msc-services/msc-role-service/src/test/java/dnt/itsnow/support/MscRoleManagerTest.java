@@ -48,20 +48,14 @@ public class MscRoleManagerTest {
 
     @Test
     public void testFindByName() throws Exception {
-
-        Page<Role> staffs = service.findAll("", pageRequest);
-        Role role = staffs.getContent().get(0);
-
-        Assert.assertNotNull(service.findByName(role.getName()));
+        Assert.assertNotNull(service.findByName("ROLE_ADMIN"));
         Assert.assertNull(service.findByName("10000"));
     }
 
     @Test
     public void testCreate() throws Exception {
         Role role = new Role();
-        role.setId(1L);
-        role.setSn("009");
-        role.setName("用户");
+        role.setName("ROLE_TEST");
         role.setDescription("This is a test.");
         role.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         role.setUpdatedAt(role.getCreatedAt());
@@ -72,20 +66,19 @@ public class MscRoleManagerTest {
 
     @Test
     public void testDestroy() throws Exception {
-        Page<Role> roles = service.findAll("", pageRequest);
-        Role role = roles.getContent().get(0);
+        Role role = service.findByName("ROLE_REPORTER");
+        Assert.assertNotNull(role);
         service.destroy(role);
-        Assert.assertNotNull(service.findByName(role.getName()));
+        Assert.assertNull(service.findByName("ROLE_REPORTER"));
     }
 
     @Test
     public void testUpdate() throws Exception {
-        Page<Role> roles = service.findAll("", pageRequest);
-        Role role = roles.getContent().get(0);
+        Role role = service.findByName("ROLE_ADMIN");
         role.setDescription("Hello World!");
         service.update(role);
-        role = service.findByName(role.getName());
-        Assert.assertTrue(role.getDescription() == "Hello World!");
+        role = service.findByName("ROLE_ADMIN");
+        Assert.assertTrue(role.getDescription().equals("Hello World!"));
     }
 
 }

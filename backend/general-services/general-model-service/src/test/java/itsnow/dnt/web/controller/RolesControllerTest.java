@@ -43,7 +43,7 @@ public class RolesControllerTest extends SessionSupportedControllerTest {
 
         role = new Role();
         role.setId(1L);
-        role.setName("ROLE_MONITOR");
+        role.setName("ROLE_ADMIN");
         role.setDescription("This is a test.");
         role.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         role.setUpdatedAt(role.getCreatedAt());
@@ -81,7 +81,7 @@ public class RolesControllerTest extends SessionSupportedControllerTest {
                 .andReturn(new DefaultPage<Role>(roles));
 
         // 准备 Mock Request
-        MockHttpServletRequestBuilder request = get("/api/roles/ROLE_MONITOR");
+        MockHttpServletRequestBuilder request = get("/api/roles/ROLE_ADMIN");
         request = decorate(request);
 
         replay(roleService);
@@ -96,11 +96,11 @@ public class RolesControllerTest extends SessionSupportedControllerTest {
 
     @Test
     public void testUpdate() throws Exception {
-        expect(roleService.findByName("ROLE_MONITOR")).andReturn(role);
+        expect(roleService.findByName("ROLE_ADMIN")).andReturn(role);
         expect(roleService.update(anyObject(Role.class))).andReturn(role);
         replay(roleService);
 
-        MockHttpServletRequestBuilder request = put("/api/roles/ROLE_MONITOR").content(accountJson());
+        MockHttpServletRequestBuilder request = put("/api/roles/ROLE_ADMIN").content(roleJson());
         decorate(request);
 
         ResultActions result = this.browser.perform(request);
@@ -110,13 +110,13 @@ public class RolesControllerTest extends SessionSupportedControllerTest {
 
     @Test
     public void testDestroy() throws Exception {
-        expect(roleService.findByName("ROLE_MONITOR")).andReturn(role);
-        expect(roleService.destroy(anyObject(Role.class))).andReturn(role);
+        expect(roleService.findByName("ROLE_ADMIN")).andReturn(role);
+        roleService.destroy(anyObject(Role.class));
         expectLastCall().once();
 
         replay(roleService);
 
-        URI uri = new URI("/api/roles/ROLE_MONITOR");
+        URI uri = new URI("/api/roles/ROLE_ADMIN");
 
         MockHttpServletRequestBuilder request = delete(uri);
         decorate(request);
@@ -124,7 +124,7 @@ public class RolesControllerTest extends SessionSupportedControllerTest {
 
     }
 
-    protected String accountJson(){
+    protected String roleJson(){
         return JsonSupport.toJSONString(role);
     }
 

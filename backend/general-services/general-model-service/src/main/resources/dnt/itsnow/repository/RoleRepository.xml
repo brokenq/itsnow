@@ -25,23 +25,30 @@
                         r.description,
                         r.created_at,
                         r.updated_at
-        FROM   roles r,
-               itsnow_msc.accounts acc
+        FROM   itsnow_msc.accounts acc
                LEFT JOIN itsnow_msc.users u
                       ON acc.id = u.account_id
                LEFT JOIN authorities a
-                      ON u.username = a.username
-        WHERE  r.name = a.authority
-        <if test="accountId != null">
-               AND acc.id = #{accountId}
-        </if>
+                      ON a.username = u.username
+               LEFT JOIN roles r
+                      ON r.name = a.authority
+        WHERE  acc.id = #{accountId}
+    </sql>
+
+    <sql id="selectCountRole">
+        SELECT Count(DISTINCT r.id)
+        FROM   itsnow_msc.accounts acc
+               LEFT JOIN itsnow_msc.users u
+                      ON acc.id = u.account_id
+               LEFT JOIN authorities a
+                      ON a.username = u.username
+               LEFT JOIN roles r
+                      ON r.name = a.authority
+        WHERE  acc.id = #{accountId}
     </sql>
 
     <select id="count" resultType="int">
-        SELECT Count(*)
-        FROM  (
-        <include refid="selectRole"/>
-        ) rr
+        <include refid="selectCountRole"/>
     </select>
 
     <select id="findAll" resultMap="roleResult">
@@ -50,11 +57,8 @@
     </select>
 
     <select id="countByKeyword" resultType="int">
-        SELECT Count(*)
-        FROM  (
         <include refid="selectRole"/>
         AND r.name like #{keyword}
-        ) rr
     </select>
 
     <select id="findAllByKeyword" resultMap="roleResult">
@@ -64,30 +68,48 @@
     </select>
 
     <select id="countByRelevantInfo" parameterType="string" resultType="int">
-        select count(*) from roles r
-        left join authorities a on r.name = a.authority
-        left join itsnow_msc.users u on u.username = a.username
-        left join staffs stf on stf.user_id = u.id
-        left join departments d on d.id = stf.dept_id
-        left join sites s on s.id = stf.site_id
-        where r.name like #{keyword}
+        SELECT Count(*)
+        FROM   roles r
+               LEFT JOIN authorities a
+                      ON r.name = a.authority
+               LEFT JOIN itsnow_msc.users u
+                      ON a.username = u.username
+               LEFT JOIN itsnow_msc.accounts acc
+                      ON u.account_id = acc.id
+               LEFT JOIN staffs stf
+                      ON u.id = stf.user_id
+               LEFT JOIN sites s
+                      ON stf.site_id = s.id
+               LEFT JOIN departments d
+                      ON stf.dept_id = d.id
+        WHERE r.name = #{name}
     </select>
 
     <select id="findAllRelevantInfo" parameterType="string" resultMap="roleResult">
-        select r.id, r.name, r.description, r.created_at, r.updated_at,
-        u.username,
-        d.name deptName,
-        s.name siteName,
-        acc.name accountName
-        from roles r
-        left join authorities a on r.name = a.authority
-        left join itsnow_msc.users u on u.username = a.username
-        left join staffs stf on stf.user_id = u.id
-        left join departments d on d.id = stf.dept_id
-        left join sites s on s.id = stf.site_id
-        left join itsnow_msc.accounts acc on acc.user_id = u.id
-        where r.name like #{keyword}
-        order by ${sort} ${dir} limit #{offset}, #{size}
+        SELECT r.id,
+               r.name,
+               r.description,
+               r.created_at,
+               r.updated_at,
+               u.username,
+               acc.name accountName,
+               s.name   siteName,
+               d.name   deptName
+        FROM   roles r
+               LEFT JOIN authorities a
+                      ON r.name = a.authority
+               LEFT JOIN itsnow_msc.users u
+                      ON a.username = u.username
+               LEFT JOIN itsnow_msc.accounts acc
+                      ON u.account_id = acc.id
+               LEFT JOIN staffs stf
+                      ON u.id = stf.user_id
+               LEFT JOIN sites s
+                      ON stf.site_id = s.id
+               LEFT JOIN departments d
+                      ON stf.dept_id = d.id
+        WHERE r.name = #{name}
+        ORDER BY ${sort} ${dir} limit #{offset}, #{size}
     </select>
 
 </mapper>

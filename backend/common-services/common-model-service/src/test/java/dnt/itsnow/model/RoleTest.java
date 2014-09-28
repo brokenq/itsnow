@@ -18,7 +18,6 @@ public class RoleTest {
     public void setUp() throws Exception {
         role = new Role();
         role.setId(1L);
-        role.setSn("001");
         role.setName("用户");
         role.setDescription("This is a test.");
         role.setCreatedAt(new Timestamp(System.currentTimeMillis()));

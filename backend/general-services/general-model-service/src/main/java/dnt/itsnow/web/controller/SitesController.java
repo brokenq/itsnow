@@ -16,12 +16,13 @@ import java.util.List;
 /**
  * <h1>地点的控制器</h1>
  * <pre>
- * <b>HTTP     URI                            方法       含义  </b>
- * # GET      /admin/api/sites/{keyword}  index     列出所有地点，支持过滤，分页，排序等
- * # GET      /admin/api/sites            show      列出特定的地点
- * # POST     /admin/api/sites            create    创建地点，账户信息通过HTTP BODY提交
- * # PUT      /admin/api/sites/{sn}       update    修改地点，账户信息通过HTTP BODY提交
- * # DELETE   /admin/api/sites/{sn}       destroy   删除地点
+ * <b>HTTP     URI                         方法      含义  </b>
+ * # GET      /admin/api/sites?keyword={}  index     列出所有地点，支持过滤，分页，排序等
+ * # GET      /admin/api/sites             show      列出特定的地点
+ * # POST     /admin/api/sites             create    创建地点，账户信息通过HTTP BODY提交
+ * # PUT      /admin/api/sites/{sn}        update    修改地点，账户信息通过HTTP BODY提交
+ * # DELETE   /admin/api/sites/{sn}        destroy   删除地点
+ * </pre>
  */
 @RestController
 @RequestMapping("/api/sites")
