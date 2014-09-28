@@ -1,6 +1,7 @@
 -- // create_itsnow_processes
 -- Migration SQL that makes the change goes here.
 
+DROP TABLE IF EXISTS itsnow_processes;
 
 CREATE TABLE itsnow_processes (
   id            INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,

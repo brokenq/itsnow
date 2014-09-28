@@ -14,6 +14,12 @@ import java.util.List;
  * <h1>Itsnow Host Service</h1>
  */
 public interface ItsnowHostService {
+    /**
+     * <h2>根据关键词查找主机</h2>
+     * @param keyword  主机的关键词，可以为null
+     * @param pageRequest 分页设置
+     * @return 查找的结果
+     */
     Page<ItsnowHost> findAll(String keyword, PageRequest pageRequest);
 
     /**
@@ -23,16 +29,37 @@ public interface ItsnowHostService {
      */
     List<ItsnowHost> findAllDbHosts();
 
+    /**
+     * <h2>根据地址查找主机</h2>
+     * @param address 主机地址
+     * @return 主机对象，查不到则返回null
+     */
     ItsnowHost findByAddress(String address);
 
+    /**
+     * <h2>根据id查找主机 </h2>
+     * @param hostId 主机id
+     * @return 主机对象，查不到则返回null
+     */
     ItsnowHost findById(Long hostId);
 
+    /**
+     * <h2>创建主机</h2>
+     * @param creating  需要创建的主机对象
+     * @return 创建好的主机对象
+     * @throws ItsnowHostException
+     */
     ItsnowHost create(ItsnowHost creating) throws ItsnowHostException;
 
+    /**
+     * <h2>删除主机</h2>
+     * @param host  被删除的主机
+     * @throws ItsnowHostException
+     */
     void delete(ItsnowHost host) throws ItsnowHostException;
 
     /**
-     * 读取一个主机相关任务的最新信息
+     * <h2>读取一个主机相关任务的最新信息</h2>
      *
      * @param host    被读取的主机对象
      * @param job     正在/已经 执行的任务描述符

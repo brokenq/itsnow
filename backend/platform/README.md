@@ -18,37 +18,49 @@
 
 ## 2. Itsnow业务模块说明
 
-首先， Itsnow系统后端的数据库schema设计为  1(msc) + n(msu) + m(msp) 
+首先， Itsnow系统后端的采用MySQL做关系数据库存储，Redis做内存数据以及消息，以下规划(replicatio)的原则适用于mysql和redis
+
+数据库schema设计为  1(msc) + n(msu) + m(msp) 
 在每个数据库schema中均会存在 msc schema, 仅有部分的msu 或 msp的schema。
 在某个数据库instance上具有有哪些msu , msp schema由运营任意根据硬件条件和运营需求决定。
 
+
 ```
-              +-----------------------+ 
-              |instance-01            |
-              |   itsnow_msc(master)--|----
-              +-----------------------+ | |
-                                        | |
-              +-----------------------+ | |
-              |instance-02            | | |
-              |   msc-schema(slave) <-|-+ |
-              |   itsnow_msu_001      |   |       
-              |   itsnow_msp_001      |   | 复制(replicate)
-              +-----------------------+   |
-                                          |
-              +-----------------------+   |
-              |instance-03            |   |
-              |   itsnow_msc(slave) <-|---+
-              |   itsnow_msu_002      |
-              |   itsnow_msp_002      |
-              |   itsnow_msu_003      |
-              |   itsnow_msp_004      |
-              +-----------------------+
+              +-----------------------------+ 
+              |instance-01                  |
+              |   mysql.itsnow_msc(master)--|----
+              |   redis.db0(master)         |-| |
+              +-----------------------------+ | |
+                                              | |
+              +-----------------------------+ | |
+              |instance-02                  | | |
+              |   mysql.itsnow_msc(slave) <-|-+ |
+              |   mysql.itsnow_msu_001      | | |       
+              |   mysql.itsnow_msp_001      | | | 复制(replicate)
+              |   redis.db0(slave)        <-|-| |
+              |   redis.db1(msu_001)        |   |
+              |   redis.db2(msu_002)        |   |
+              +-----------------------------+   |
+                                                |
+              +-----------------------------+   |
+              |instance-03                  |   |
+              |   mysql.itsnow_msc(slave) <-|---+
+              |   mysql.itsnow_msu_002      |   |
+              |   mysql.itsnow_msp_002      |   |
+              |   mysql.itsnow_msu_003      |   |
+              |   mysql.itsnow_msp_004      |   |
+              |   redis.db0(slave)        <-|---|
+              |   redis.db1(msu_002)        |   
+              |   redis.db2(msp_002)        |   
+              |   redis.db3(msu_003)        |   
+              |   redis.db4(msp_004)        |   
+              +-----------------------------+
 
 ```
 
 
  
-一般会存在三种部署单元，各自均只能连接到一个数据库实例上，访问 msc + 自身schema：
+一般会存在三种部署单元，各自均只能连接到一个数据库（关系/内存）实例上，访问 msc + 自身schema：
 
 ```
                                       +-----------------------+
@@ -80,7 +92,7 @@
 ```
 
 其中， 仅有 msc 部署单元对 instance-01的itsnow_msc schema具有写权限，其他部署单元对itsnow_msc的slave均只有只读权限，这样可以保证我们只需要从instance-01向其他instance单向复制。
-
+同理，redis.db0也仅有master进行写操作
 
 我们在项目组织上，将他们分解为如下模块构成：
 

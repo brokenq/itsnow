@@ -14,10 +14,29 @@ import java.util.List;
  * <h1>Itsnow Process Service</h1>
  */
 public interface ItsnowProcessService {
+    /**
+     * <h2>根据关键词查找服务进程</h2>
+     *
+     * @param keyword  服务进程的关键词，可以为null
+     * @param request  分页设置
+     * @return 查找的结果
+     */
     Page<ItsnowProcess> findAll(String keyword, PageRequest request);
 
+    /**
+     * <h2>根据进程标识查找服务进程</h2>
+     * @param name 进程标识
+     * @return 服务进程对象，查不到则返回null
+     */
     ItsnowProcess findByName(String name);
 
+    /**
+     * <h2>创建服务进程</h2>
+     *
+     * @param creating  待创建的服务进程
+     * @return 服务进程对象
+     * @throws ItsnowProcessException
+     */
     ItsnowProcess create(ItsnowProcess creating) throws ItsnowProcessException;
 
     /**
@@ -47,7 +66,7 @@ public interface ItsnowProcessService {
     String stop(ItsnowProcess process) throws ItsnowProcessException;
 
     /**
-     * 停止特定的进程相关任务
+     * <h2>停止特定的进程相关任务</h2>
      *
      * @param process 被停止的服务进程
      * @param job     任务的job描述符
@@ -56,7 +75,7 @@ public interface ItsnowProcessService {
     void cancel(ItsnowProcess process, String job) throws ItsnowProcessException;
 
     /**
-     * 删除一个进程对象
+     * <h2>删除一个进程对象</h2>
      *
      *
      * @param process 被删除的进程
@@ -65,7 +84,7 @@ public interface ItsnowProcessService {
     void delete(ItsnowProcess process) throws ItsnowProcessException;
 
     /**
-     * 读取一个服务进程相关任务的最新信息
+     * <h2>读取一个服务进程相关任务的最新信息</h2>
      *
      * @param process 被读取的进程对象
      * @param job     正在/已经 执行的任务描述符

@@ -1,6 +1,6 @@
 -- // create_itsnow_hosts
 -- Migration SQL that makes the change goes here.
-
+DROP TABLE IF EXISTS itsnow_hosts;
 CREATE TABLE itsnow_hosts (
   id            INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
   name          VARCHAR(50) NOT NULL ,

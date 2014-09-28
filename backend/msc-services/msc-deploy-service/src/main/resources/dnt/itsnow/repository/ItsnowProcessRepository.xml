@@ -43,7 +43,7 @@
         <if test="keyword != null">
             WHERE name LIKE #{keyword}
             OR description LIKE #{keyword}
-            OR wd like #{keyword}
+            OR wd LIKE #{keyword}
         </if>
     </select>
 
@@ -52,7 +52,7 @@
         <if test="keyword != null">
             WHERE name LIKE #{keyword}
             OR description LIKE #{keyword}
-            OR wd like #{keyword}
+            OR wd LIKE #{keyword}
         </if>
     </select>
 

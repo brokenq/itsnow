@@ -1,6 +1,7 @@
 -- // create_itsnow_databases
 -- Migration SQL that makes the change goes here.
 
+DROP TABLE IF EXISTS itsnow_schemas;
 CREATE TABLE itsnow_schemas (
   id            INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
   host_id       INT(10) UNSIGNED NOT NULL,

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,16 +43,25 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
 
     @Override
     public Page<ItsnowProcess> findAll(String keyword, PageRequest request) {
-        logger.debug("Listing itsnow process by keyword: {} at {}", keyword, request);
+        logger.debug("Listing itsnow processes by keyword: {} at {}", keyword, request);
         int total = repository.countByKeyword(keyword);
-        List<ItsnowProcess> hits = repository.findAllByKeyword(keyword, request);
-        return new DefaultPage<ItsnowProcess>(hits, request, total);
+        List<ItsnowProcess> hits;
+        if( total == 0 ){
+            hits = new ArrayList<ItsnowProcess>();
+        }else{
+            hits = repository.findAllByKeyword(keyword, request);
+        }
+        DefaultPage<ItsnowProcess> page = new DefaultPage<ItsnowProcess>(hits, request, total);
+        logger.debug("Listed  itsnow processes {}", page);
+        return page;
     }
 
     @Override
     public ItsnowProcess findByName(String name) {
         logger.debug("Finding itsnow process by name: {}", name);
-        return repository.findByName(name);
+        ItsnowProcess process = repository.findByName(name);
+        logger.debug("Found   itsnow process {}", process);
+        return process;
     }
 
     @Override
@@ -121,7 +131,7 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
 
     @Override
     public String start(ItsnowProcess process) throws ItsnowProcessException {
-        logger.info("Starting {}", process.getName());
+        logger.info("Starting {}", process);
         if( process.getStatus() != ProcessStatus.Stopped)
             throw new ItsnowProcessException("Can't start the process with status = " + process.getStatus());
         // 因为启动一个系统可能是一个比较慢的事情，所以采用异步方式，任务启动之后就返回
@@ -131,6 +141,7 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
         String invocationId = invokeService.addJob(startJob);
         process.setProperty(START_INVOCATION_ID, invocationId);
         repository.update(process);
+        logger.debug("Starting {} with invocation id {}", process, invocationId);
         return invocationId;
     }
 
@@ -145,6 +156,7 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
         String invocationId = invokeService.addJob(stopJob);
         process.setProperty(STOP_INVOCATION_ID, invocationId);
         repository.update(process);
+        logger.debug("Stopping {} with invocation id {}", process, invocationId);
         return invocationId;
     }
 
@@ -154,6 +166,7 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
         if( finished )
             throw new ItsnowProcessException("The job " + jobId + " is finished already!");
         invokeService.cancelJob(jobId);
+        logger.debug("{} invocation {} is cancelled", process, jobId);
     }
 
     @Override
