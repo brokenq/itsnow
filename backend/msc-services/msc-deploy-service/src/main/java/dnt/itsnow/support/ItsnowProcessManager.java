@@ -12,6 +12,7 @@ import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.repository.ItsnowProcessRepository;
 import dnt.itsnow.service.*;
+import dnt.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +50,8 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
         if( total == 0 ){
             hits = new ArrayList<ItsnowProcess>();
         }else{
+            if(StringUtils.isNotBlank(keyword)) keyword = "%" + keyword + "%";
+            else keyword = null;
             hits = repository.findAllByKeyword(keyword, request);
         }
         DefaultPage<ItsnowProcess> page = new DefaultPage<ItsnowProcess>(hits, request, total);

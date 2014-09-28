@@ -13,6 +13,7 @@ import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.repository.ItsnowHostRepository;
 import dnt.itsnow.service.ItsnowHostService;
+import dnt.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +39,8 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
         if( total == 0 ){
             hits = new ArrayList<ItsnowHost>();
         }else{
+            if(StringUtils.isNotBlank(keyword)) keyword = "%" + keyword + "%";
+            else keyword = null;
             hits = repository.findAllByKeyword(keyword, pageRequest);
         }
         DefaultPage<ItsnowHost> page = new DefaultPage<ItsnowHost>(hits, pageRequest, total);

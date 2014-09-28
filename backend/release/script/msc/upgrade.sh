@@ -12,17 +12,19 @@
 #   4. link  /opt/itsnow/new-msc/* to /opt/itsnow/msc-0.1.9-SNAPSHOT/* except webapp
 #   5. cp /opt/itsnow/msc-0.1.9-SNAPSHOT/webapp to /opt/itsnow/new-msc/(override)
 #   6. replace change files(from current itsnow)
-#   7. stop current msc instance (in /opt/itsnow/msc)
-#   8. make snapshot for current db
-#   9. migrate db
-#   10. mv /opt/itsnow/msc to /opt/itsnow/old-msc
+#   7. replace /opt/system/config with neweast one
+#   8. stop current msc instance (in /opt/itsnow/msc)
+#   9. make snapshot for current db
+#   10. migrate db
+#   11. mv /opt/itsnow/msc to /opt/itsnow/old-msc
 #   12. mv /opt/itsnow/new-msc to /opt/itsnow/msc
-#   12.start new msc again
+#   13.start new msc again
 
 CI=ci.dnt.com.cn
 itsnow_dir=$(cd `dirname $0` && cd ../../../ && pwd )
 current="msc"
 upgrading="latest"
+cp="/bin/cp -f"
 
 function last_of(){
   last=$(ls . | grep $1 | awk -F@ '{print $2}' | sort -n | tail -1)
@@ -94,15 +96,22 @@ cd $itsnow_dir
 
 change_list="bin/start.sh bin/stop.sh bin/itsnow-msc config/logback.xml config/nginx.conf config/now.properties config/wrapper.conf db/migrate/environments/production.properties"
 for file in $change_list; do
-  /bin/cp -f $current/$file $upgrading/$file
+  $cp $current/$file $upgrading/$file
 done
+
+echo "Step 7 update /etc and /opt/system/config"
+$cp /etc/redis.conf /etc/redis.conf.bak
+$cp $upgrading/config/redis-master.conf /etc/redis.conf
+
+$cp $upgrading/config/redis /opt/system/config
+$cp $upgrading/config/redis-slave.conf /opt/system/config/redis.conf
 
 chmod +x $upgrading/bin/*.sh $upgrading/bin/itsnow-msc $upgrading/db/bin/migrate  $upgrading/script/*/*.sh
 
-echo "Step 7 stop current msc"
+echo "Step 8 stop current msc"
 cd $current
 bin/itsnow-msc stop
-echo "Step 8 backup db"
+echo "Step 9 backup db"
 script/platform/backup_db.sh itsnow_msc $itsnow_dir/backup $folder.sql
 
 cd $itsnow_dir
@@ -110,7 +119,7 @@ last=$(last_of old)
 /bin/mv -f $current old@$last
 
 
-echo "Step 9 migrate db"
+echo "Step 10 migrate db"
 mv $upgrading $current
 echo "MSC upgraded to $version, link to $folder"
 
@@ -120,7 +129,7 @@ if [ $? -gt 0 ]; then
   echo "Failed to migrate new version, but try to start also"
 fi
 
-echo "Step 10,11 start new msc"
+echo "Step 13 start new msc"
 cd $itsnow_dir/$current
 bin/itsnow-msc start
 bin/check.sh logs/wrapper.log Itsnow-msc

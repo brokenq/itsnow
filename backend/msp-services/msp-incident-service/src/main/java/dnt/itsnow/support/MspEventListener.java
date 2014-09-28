@@ -16,6 +16,7 @@ import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +30,7 @@ import java.util.List;
 public class MspEventListener extends Bean implements ActivitiEventListener, MessageListener {
 
     @Autowired
+    @Qualifier("globalMessageBus")
     MessageBus messageBus;
 
     @Autowired
@@ -42,8 +44,8 @@ public class MspEventListener extends Bean implements ActivitiEventListener, Mes
     @Autowired
     MspIncidentManager mspIncidentManager;
 
-    String accountName="DNT";
-    String username = "jacky.cao";
+    String accountName = "DNT";
+    String username    = "jacky.cao";
 
     /**
      * 监听事件
@@ -51,17 +53,22 @@ public class MspEventListener extends Bean implements ActivitiEventListener, Mes
      */
     @Override
     public void onEvent(ActivitiEvent activitiEvent) {
-        logger.debug("msp incident event:{},pid {}", new Object[]{activitiEvent.getType().toString(), activitiEvent.getProcessInstanceId()});
-        ProcessDefinition processDefinition = activitiEvent.getEngineServices().getRepositoryService().createProcessDefinitionQuery().processDefinitionId(activitiEvent.getProcessDefinitionId()).singleResult();
-        if(!processDefinition.getKey().equals(MspIncidentManager.PROCESS_KEY))
+        logger.debug("msp incident event:{},pid {}",
+                     new Object[]{activitiEvent.getType().toString(), activitiEvent.getProcessInstanceId()});
+        ProcessDefinition processDefinition =
+                activitiEvent.getEngineServices().getRepositoryService().createProcessDefinitionQuery()
+                             .processDefinitionId(activitiEvent.getProcessDefinitionId()).singleResult();
+        if (!processDefinition.getKey().equals(MspIncidentManager.PROCESS_KEY))
             return;
-        Task task = activitiEvent.getEngineServices().getTaskService().createTaskQuery().processInstanceId(activitiEvent.getProcessInstanceId()).singleResult();
+        Task task = activitiEvent.getEngineServices().getTaskService().createTaskQuery()
+                                 .processInstanceId(activitiEvent.getProcessInstanceId()).singleResult();
         Incident incident = mspIncidentRepository.findByInstanceId(activitiEvent.getProcessInstanceId());
 
-        if(task != null) {
-            logger.debug("task id:{},name:{},desc:{},assignee:{},time:{}", task.getId(), task.getName(), task.getDescription(), task.getAssignee(), task.getCreateTime());
+        if (task != null) {
+            logger.debug("task id:{},name:{},desc:{},assignee:{},time:{}", task.getId(), task.getName(),
+                         task.getDescription(), task.getAssignee(), task.getCreateTime());
 
-            if(task.getDescription().equals(IncidentStatus.Assigned.toString())) {
+            if (task.getDescription().equals(IncidentStatus.Assigned.toString())) {
                 this.processAssignedOrResolvedOrClosedEvent(incident,IncidentStatus.Assigned);
             }else if(task.getDescription().equals(IncidentStatus.Accepted.toString())) {
                 this.processAcceptedOrAnalysisEvent(activitiEvent.getEngineServices(),task,incident,IncidentStatus.Accepted);

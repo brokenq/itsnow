@@ -7,9 +7,12 @@ import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.repository.MscGroupRepository;
 import dnt.itsnow.service.MscGroupService;
+import dnt.messaging.MessageBus;
 import dnt.spring.Bean;
+import dnt.support.JsonSupport;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -22,18 +25,24 @@ import java.util.List;
 public class MscGroupManager extends Bean implements MscGroupService {
 
     @Autowired
+    @Qualifier("globalMessageBus")
+    MessageBus globalMessageBus;
+
+    @Autowired
     private MscGroupRepository repository;
 
     @Override
     public Page<Group> findAll(String keyword, Pageable pageable) {
         logger.debug("Finding group by keyword: {}", keyword);
-        if(StringUtils.isBlank(keyword)){
+        if (StringUtils.isBlank(keyword)) {
             int total = repository.count();
             List<Group> groups = repository.findAll("updated_at", "desc", pageable.getOffset(), pageable.getPageSize());
             return new DefaultPage<Group>(groups, pageable, total);
-        }else{
-            int total = repository.countByKeyword("%"+keyword+"%");
-            List<Group> groups = repository.findAllByKeyword("%"+keyword+"%","updated_at","desc", pageable.getOffset(), pageable.getPageSize());
+        } else {
+            int total = repository.countByKeyword("%" + keyword + "%");
+            List<Group> groups = repository
+                    .findAllByKeyword("%" + keyword + "%", "updated_at", "desc", pageable.getOffset(),
+                                      pageable.getPageSize());
             return new DefaultPage<Group>(groups, pageable, total);
         }
     }
@@ -64,7 +73,7 @@ public class MscGroupManager extends Bean implements MscGroupService {
         group.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         group.setUpdatedAt(group.getCreatedAt());
         repository.create(group);
-
+        globalMessageBus.publish("MscGroup", "+" + JsonSupport.toJSONString(group));
         return group;
     }
 
@@ -75,6 +84,7 @@ public class MscGroupManager extends Bean implements MscGroupService {
             throw new GroupException("MspGroup entry can not be empty.");
         }
         repository.update(group);
+        globalMessageBus.publish("MscGroup", "*" + JsonSupport.toJSONString(group));
 
         return group;
     }
@@ -89,6 +99,7 @@ public class MscGroupManager extends Bean implements MscGroupService {
         repository.deleteGroupAndUserRelationByGroupName(group.getName());
         repository.delete(group.getSn());
 
+        globalMessageBus.publish("MscGroup", "-" + JsonSupport.toJSONString(group));
         return group;
     }
 

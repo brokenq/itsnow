@@ -17,6 +17,7 @@ import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
@@ -34,11 +35,11 @@ import java.util.*;
 @Transactional
 public class MspIncidentManager extends Bean implements MspIncidentService,ResourceLoaderAware {
 
-    public static final String PROCESS_KEY = "msp_incident";
-    private static final String LISTENER = "listener";
+    public static final  String PROCESS_KEY = "msp_incident";
+    private static final String LISTENER    = "listener";
     //private static String appSn = System.getProperty("app.id");
-    private static String appSn = "msp_001";
-    private static String msuSn = "msu_001";
+    private static       String appSn       = "msp_001";
+    private static       String msuSn       = "msu_001";
 
     public static final String ROLE_LINE_ONE = "ROLE_LINE_ONE";
     public static final String ROLE_LINE_TWO = "ROLE_LINE_TWO";
@@ -54,19 +55,20 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
     MspEventListener mspEventListener;
 
     @Autowired
+    @Qualifier("globalMessageBus")
     MessageBus messageBus;
 
     private ResourceLoader resourceLoader;
 
     public static String getSendChannel() {
-        if(msuSn == null){
+        if (msuSn == null) {
             //Todo find msuSn from Contract
         }
         return msuSn + "-LISTENER";
     }
 
     public static String getListenChannel() {
-        return  appSn + "-LISTENER";
+        return appSn + "-LISTENER";
     }
 
     /**
@@ -74,10 +76,10 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
      */
     @Override
     protected void performStart() {
-        try{
+        try {
             this.autoDeployment();
-        }catch(IOException e){
-            logger.error("Auto deploy error:{}",e.getMessage());
+        } catch (IOException e) {
+            logger.error("Auto deploy error:{}", e.getMessage());
         }
         activitiEngineService.addEventListener(mspEventListener, ActivitiEventType.ACTIVITY_COMPLETED);
         //add message-bus listener
@@ -97,13 +99,13 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
      * <h2>自动部署流程</h2>
      */
     private void autoDeployment() throws IOException {
-        String path = "bpmn/"+PROCESS_KEY+".bpmn20.xml";
+        String path = "bpmn/" + PROCESS_KEY + ".bpmn20.xml";
         InputStream is = null;
         try {
             URL url = this.resourceLoader.getResource(path).getURL();
             assert url != null;
             is = url.openStream();
-            activitiEngineService.deploySingleProcess(is,PROCESS_KEY,PROCESS_KEY);
+            activitiEngineService.deploySingleProcess(is, PROCESS_KEY, PROCESS_KEY);
             is.close();
         }catch(Exception e){
             logger.warn("Error deploy :{}",e);
