@@ -34,4 +34,3 @@ echo "copy binaries to $target:/opt/system/binaries"
 scp /opt/system/binaries/* root@$target:/opt/system/binaries/
 echo "copy config to $target:/opt/system/config"
 scp /opt/system/config/* root@$target:/opt/system/config/
-

@@ -59,8 +59,7 @@
                             <jvmOptions>-Dcomponent.feature.resolvers=dnt.itsnow.platform.services.MybatisFeatureResolver,dnt.itsnow.platform.services.SpringMvcFeatureResolver -Xms128m -Xmx256m -XX:MaxPermSize=256m -Djava.awt.headless=true</jvmOptions>
                             <propertiesFile>${project.basedir}/config/now.properties</propertiesFile>
                             <logbackFile>${project.basedir}/config/logback.xml</logbackFile>
-                            <folders>${project.basedir}/webapp,${project.basedir}/db,${project.basedir}/script</folders>
-                            <files>${project.basedir}/config/nginx.conf</files>
+                            <folders>${project.basedir}/resources,${project.basedir}/webapp,${project.basedir}/db,${project.basedir}/script</folders>
                         </configuration>
                     </execution>
 

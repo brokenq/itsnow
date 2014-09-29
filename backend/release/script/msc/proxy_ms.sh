@@ -21,7 +21,7 @@ instance=$2
 conf=/etc/nginx/conf.d/$instance.conf
 bad=/etc/nginx/conf.d/$instance.bad
 
-scp root@$host:/opt/itsnow/$instance/config/nginx.conf $conf
+scp root@$host:/opt/itsnow/$instance/resources/nginx.conf $conf
 
 nginx -t 2>&1 | grep "syntax is ok"
 
