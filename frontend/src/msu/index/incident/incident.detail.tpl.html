@@ -176,12 +176,22 @@
                 </div>
 
                 <div ng-show="buttonLabel === '分析'">
+                    <div ng-show="incident.assignedGroup == 'ROLE_LINE_ONE'">
                     <label class="block">
                         <input type="checkbox" class="ace" id="canProcess" name="canProcess" ng-model="incident.canProcess"/>
                             <span class="lbl">
                                 能否处理
                             </span>
                     </label>
+                    </div>
+                    <div ng-show="incident.assignedGroup == 'ROLE_LINE_TWO'">
+                    <label class="block">
+                        <input type="checkbox" class="ace" id="hardwareError" name="hardwareError" ng-model="incident.hardwareError"/>
+                            <span class="lbl">
+                                是否硬件故障
+                            </span>
+                    </label>
+                    </div>
                 </div>
                 <div ng-show="buttonLabel === '解决'">
                     <label class="block">

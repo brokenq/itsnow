@@ -69,6 +69,8 @@ public interface ActivitiEngineService {
 
     Task queryTask(String taskId);
 
+    Task queryTask(String instanceId,String activitiId);
+
     Task claimTask(String taskId,String userId);
 
     void completeTask(String id,Map<String, String> taskVariables,String assignee);

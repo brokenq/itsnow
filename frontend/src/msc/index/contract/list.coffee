@@ -16,9 +16,9 @@ angular.module('MscIndex.Contract', ['ngTable','ngResource'])
   .filter('formatContractStatus', ->
     (status) ->
       return "邀约" if status == 'Draft'
-      return "已批准" if status == 'Valid'
+      return "已批准" if status == 'Approved'
       return "应约" if status == 'Purposed'
-      return "被拒绝" if status == 'Rejected'
+      return "已拒绝" if status == 'Rejected'
   )
 .filter('formatTime', ->
   (time) ->

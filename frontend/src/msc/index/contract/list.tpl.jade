@@ -43,7 +43,7 @@ mixin select_all()
     tr(ng-repeat="contract in $data")
       td(width="30" style="text-align: left" header="'ngTableCheckboxHeader'")
         input(type="checkbox" ng-model="checkboxes.items[contract.sn]")
-      td(data-title="'名称'") {{contract.sn}}
+      td(data-title="'合同名称'") {{contract.sn}}
       td(data-title="'企业帐户'") {{contract.msuAccount.name}}
       td(data-title="'企业状态'") {{contract.msuStatus | formatContractStatus}}
       td(data-title="'服务商'") {{contract.mspAccount.name}}

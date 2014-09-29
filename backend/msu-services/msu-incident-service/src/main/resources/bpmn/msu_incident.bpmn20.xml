@@ -40,8 +40,8 @@
       <documentation>Resolved</documentation>
     </userTask>
     <sequenceFlow id="sid-48E5A371-D2B4-4064-99C9-84956E559417" sourceRef="secondline-process-incident" targetRef="close_incident"></sequenceFlow>
-    <userTask id="secondline-call-msp" name="call-msp" activiti:candidateGroups="ROLE_LINE_TWO">
-      <documentation>Call</documentation>
+    <userTask id="secondline-call-msp" name="call-msp">
+      <documentation>CallMsp</documentation>
     </userTask>
     <sequenceFlow id="sid-5C0B9E85-B305-4C28-B80E-AEE8C137D730" sourceRef="secondline-analysis-incident" targetRef="hardware"></sequenceFlow>
     <sequenceFlow id="sid-FCD072E6-3539-4C1E-B62C-31B57F62F3D4" sourceRef="secondline-call-msp" targetRef="close_incident"></sequenceFlow>
