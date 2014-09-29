@@ -111,7 +111,7 @@ public class MscRolesControllerTest extends SessionSupportedControllerTest {
     @Test
     public void testDestroy() throws Exception {
         expect(mscRoleService.findByName("ROLE_MONITOR")).andReturn(role);
-        expect(mscRoleService.destroy(anyObject(Role.class))).andReturn(role);
+        mscRoleService.destroy(anyObject(Role.class));
         expectLastCall().once();
 
         replay(mscRoleService);

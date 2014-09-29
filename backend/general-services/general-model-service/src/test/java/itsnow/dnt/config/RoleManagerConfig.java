@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * <h1>Class Usage</h1>
+ * <h1>角色管理测试类配置</h1>
  */
 @Configuration
 public class RoleManagerConfig extends RoleRepositoryConfig {
@@ -15,4 +15,5 @@ public class RoleManagerConfig extends RoleRepositoryConfig {
     public RoleService roleSerivce(){
         return new RoleManager();
     }
+
 }

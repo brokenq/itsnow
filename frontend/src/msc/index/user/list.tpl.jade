@@ -1,5 +1,5 @@
-mixin tool_button(action, icon, text)
-  button.btn.btn-default(type="button", ng-click="edit()")
+mixin tool_button(fire, icon, text, weighing)
+  button.btn.btn-default(type="button", dnt-fire="#{fire}", weighing="#{weighing}")
     span.glyphicon(class="glyphicon-#{icon}")
     | #{text}
 mixin drop_button(action, icon, text)
@@ -18,16 +18,16 @@ mixin page_navs()
 mixin page_size_button(count)
   button.btn.btn-default(type="button", ng-class="{'active':params.count() == #{count}}", ng-click="params.count(#{count})")= count
 mixin select_all()
-  input(type="checkbox", ng-model="checkboxes.checked", name="filter-checkbox", value="")#select_all
+  input(type="checkbox", ng-model="checkDatas.checked", name="filter-checkbox", value="")#select_all
 
 div(ui-view='')
   .container(ng-controller="UserListCtrl")
 
-    .btn-toolbar(role="toolbar")
+    .btn-toolbar(role="toolbar", dnt-service="actionService")
       .btn-group
-        +tool_button("#", "refresh", "")
+        +tool_button("actionService.refresh()", "refresh", "", "*")
       .btn-group
-        +tool_button("edit", "edit", "编辑")
+        +tool_button("actionService.gotoState('system.user.detail')", "edit", "编辑", "1")
       .btn-group
         button.btn.btn-default.dropdown-toggle(type="button",data-toggle="dropdown")
           | 更多操作
@@ -41,10 +41,11 @@ div(ui-view='')
               input.nav-search-input(type="text", placeholder="名称或者子域名...",autocomplete="off")#nav-search-input
               i.icon-search.nav-search-icon
 
-    table.table(template-pagination="customPager",ng-table="tableParams")
+    table.table(template-pagination="customPager",ng-table="tableParams")#table
+
       tr(ng-repeat="user in $data")
         td(width="30" style="text-align: left" header="'ngTableCheckboxHeader'")
-          input(type="checkbox" ng-model="checkboxes.items[user.id]")
+          input(type="checkbox" ng-model="checkDatas.items[user.id]")
         td(data-title="'姓名'") {{user.name}}
         td(data-title="'昵称'") {{user.nickName}}
         td(data-title="'邮箱'") {{user.email}}

@@ -17,17 +17,7 @@ import java.util.List;
  */
 public class Role extends ConfigItem {
 
-    private String sn;
-
     private List<RoleDetail> details;
-
-    public String getSn() {
-        return sn;
-    }
-
-    public void setSn(String sn) {
-        this.sn = sn;
-    }
 
     public List<RoleDetail> getDetails() {
         return details;
@@ -40,8 +30,7 @@ public class Role extends ConfigItem {
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Role{");
-        sb.append("sn='").append(sn).append('\'');
-        sb.append(", details=").append(details);
+        sb.append("details=").append(details);
         sb.append('}');
         return sb.toString();
     }

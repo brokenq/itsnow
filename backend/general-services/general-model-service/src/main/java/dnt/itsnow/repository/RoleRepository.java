@@ -6,17 +6,19 @@ import org.apache.ibatis.annotations.*;
 import java.util.List;
 
 /**
- * <h1>类功能说明</h1>
+ * <h1>角色管理持久层</h1>
  */
 public interface RoleRepository {
 
     @Options(useGeneratedKeys = true, keyColumn = "id")
-    @Insert("INSERT INTO roles ( name, description, created_at, updated_at) VALUES " +
+    @Insert("INSERT INTO roles " +
+            "( name,    description,    created_at,   updated_at) " +
+            "VALUES " +
             "( #{name}, #{description}, #{createdAt}, #{updatedAt})")
-    public void create(Role dictionary);
+    public void create(Role role);
 
-    @Delete("DELETE FROM roles WHERE name = #{sn}")
-    public void delete(@Param("sn") String sn);
+    @Delete("DELETE FROM roles WHERE name = #{name}")
+    public void delete(@Param("name") String name);
 
     @Update("UPDATE roles SET " +
             " name        = #{name}, " +
@@ -24,7 +26,7 @@ public interface RoleRepository {
             " created_at  = #{createdAt}, " +
             " updated_at  = #{updatedAt} " +
             " WHERE id    = #{id} ")
-    public void update(Role dictionary);
+    public void update(Role role);
 
     public int count(@Param("accountId") long accountId);
 
@@ -47,9 +49,9 @@ public interface RoleRepository {
             @Param("offset") int offset,
             @Param("size") int size);
 
-    public int countByRelevantInfo(@Param("keyword") String keyword);
+    public int countByRelevantInfo(@Param("name") String name);
 
-    public List<Role> findAllRelevantInfo(@Param("keyword") String keyword,
+    public List<Role> findAllRelevantInfo(@Param("name") String name,
                                              @Param("sort") String sort,
                                              @Param("dir") String dir,
                                              @Param("offset") int offset,

@@ -4,6 +4,7 @@ import dnt.itsnow.exception.MscRoleException;
 import dnt.itsnow.model.Role;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
+import dnt.itsnow.platform.web.exception.WebServerSideException;
 import dnt.itsnow.service.MscRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,7 @@ import java.util.List;
  * <b>HTTP    URI                      方法      含义  </b>
  *  GET      /api/msc-roles            index     列出所有的角色，并且分页显示
  *  GET      /api/msc-roles/{name}     show      列出特定的角色记录
- *  POST     /api/msc-roles/           create    创建一个角色
+ *  POST     /api/msc-roles            create    创建一个角色
  *  PUT      /api/msc-roles/{name}     update    修改一个指定的角色
  *  DELETE   /api/msc-roles/{name}     delete    删除指定的角色记录
  * </pre>
@@ -34,18 +35,20 @@ public class MscRolesController extends SessionSupportController<Role> {
 
     /**
      * <h2>获得所有的角色</h2>
-     * <p/>
+     * <p></p>
      * GET /api/msc-roles
      * @param keyword 查询关键字
      * @return 角色列表
      */
     @RequestMapping
     public List<Role> index(@RequestParam(value = "keyword", required = false) String keyword) {
-        logger.debug("Listing Role keyword:{}" + keyword);
+
+        logger.debug("Listing role keyword:{}" + keyword);
 
         indexPage = service.findAll(keyword, pageRequest);
 
-        logger.debug("Listed Role number {}", indexPage.getNumber());
+        logger.debug("Listed role number:{}", indexPage.getContent().size());
+
         return indexPage.getContent();
     }
 
@@ -53,12 +56,12 @@ public class MscRolesController extends SessionSupportController<Role> {
      * <h2>查看一个角色</h2>
      * <p/>
      * GET /api/msc-roles/{name}
-     *
+     * @param name 角色名称
      * @return 角色
      */
     @RequestMapping(value="{name}", method = RequestMethod.GET)
     public List<Role> show(@PathVariable("name") String name) {
-        logger.debug("Listing group groupName:{}" + name);
+        logger.debug("Listing group name:{}" + name);
 
         indexPage = service.findAllRelevantInfo(name, pageRequest);
 
@@ -70,49 +73,50 @@ public class MscRolesController extends SessionSupportController<Role> {
      * <h2>创建一个角色</h2>
      * <p/>
      * POST /api/msc-roles
-     *
+     * @param role 角色实体类
      * @return 新建的角色
      */
     @RequestMapping(method = RequestMethod.POST)
-    public Role create(@Valid @RequestBody Role dictionary) {
-        logger.info("Creating {}", dictionary.getName());
+    public Role create(@Valid @RequestBody Role role) {
+        logger.info("Creating {}", role);
 
         try {
-            dictionary = service.create(dictionary);
+            role = service.create(role);
         } catch (MscRoleException e) {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (Exception e) {
+            throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
         }
 
-        logger.info("Created  {}", dictionary.getName());
-        return dictionary;
+        logger.info("Created  {}", role);
+
+        return role;
     }
 
     /**
      * <h2>更新一个角色</h2>
      * <p/>
      * PUT /api/msc-roles/{name}
-     *
+     * @param role 角色实体类
      * @return 被更新的角色
      */
     @RequestMapping(value = "{name}", method = RequestMethod.PUT)
-    public Role update(@Valid @RequestBody Role dictionary) {
+    public Role update(@Valid @RequestBody Role role) {
 
-        logger.info("Updateing {}", dictionary.getName());
+        logger.info("Updating {}", role);
 
-        if (dictionary == null) {
-            throw new WebClientSideException(HttpStatus.BAD_REQUEST, "The role no must be specified");
-        }
-
-        this.role.apply(dictionary);
+        this.role.apply(role);
         try {
-            dictionary = service.update(dictionary);
+            role = service.update(role);
         } catch (MscRoleException e) {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (Exception e) {
+            throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
         }
 
-        logger.info("Updated {}", dictionary.getName());
+        logger.info("Updated {}", role);
 
-        return dictionary;
+        return role;
     }
 
     /**
@@ -125,21 +129,23 @@ public class MscRolesController extends SessionSupportController<Role> {
     @RequestMapping(value = "{name}", method = RequestMethod.DELETE)
     public Role destroy() {
 
-        if (role == null) {
-            throw new WebClientSideException(HttpStatus.BAD_REQUEST, "The role no must be specified");
-        }
+        logger.warn("Deleting {}", role);
 
         try {
             service.destroy(role);
         } catch (MscRoleException e) {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (Exception e) {
+            throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
         }
+
+        logger.warn("Deleted  {}", role);
+
         return role;
     }
 
     @BeforeFilter({"update", "destroy"})
     public void initRole(@PathVariable("name") String name) {
-
         this.role = service.findByName(name);//find it by name
     }
 }

@@ -6,17 +6,19 @@ import org.apache.ibatis.annotations.*;
 import java.util.List;
 
 /**
- * <h1>类功能说明</h1>
+ * <h1>MSC角色管理持久层</h1>
  */
 public interface MscRoleRepository {
 
     @Options(useGeneratedKeys = true, keyColumn = "id")
-    @Insert("INSERT INTO roles ( name, description, created_at, updated_at) VALUES " +
+    @Insert("INSERT INTO roles " +
+            "( name,    description,    created_at,   updated_at) " +
+            "VALUES " +
             "( #{name}, #{description}, #{createdAt}, #{updatedAt})")
-    public void create(Role dictionary);
+    public void create(Role role);
 
-    @Delete("DELETE FROM roles WHERE name = #{sn}")
-    public void delete(@Param("sn") String sn);
+    @Delete("DELETE FROM roles WHERE name = #{name}")
+    public void delete(@Param("name") String name);
 
     @Update("UPDATE roles SET " +
             " name        = #{name}, " +
@@ -24,7 +26,7 @@ public interface MscRoleRepository {
             " created_at  = #{createdAt}, " +
             " updated_at  = #{updatedAt} " +
             " WHERE id    = #{id} ")
-    public void update(Role dictionary);
+    public void update(Role role);
 
     @Select("select count(0) from roles")
     public int count();
@@ -41,19 +43,21 @@ public interface MscRoleRepository {
 
     @Select("select * from roles where name like #{keyword}" +
             " order by ${sort} ${dir} limit #{offset}, #{size}")
-    public List<Role> findAllByKeyword(@Param("keyword") String keyword,
-                                       @Param("sort") String sort,
-                                       @Param("dir") String dir,
-                                       @Param("offset") int offset,
-                                       @Param("size") int size);
+    public List<Role> findAllByKeyword(
+            @Param("keyword") String keyword,
+            @Param("sort") String sort,
+            @Param("dir") String dir,
+            @Param("offset") int offset,
+            @Param("size") int size);
 
-    public int countByRelevantInfo(@Param("keyword") String keyword);
+    public int countByRelevantInfo(@Param("name") String name);
 
-    public List<Role> findAllRelevantInfo(@Param("keyword") String keyword,
-                                                  @Param("sort") String sort,
-                                                  @Param("dir") String dir,
-                                                  @Param("offset") int offset,
-                                                  @Param("size") int size);
+    public List<Role> findAllRelevantInfo(
+            @Param("name") String name,
+            @Param("sort") String sort,
+            @Param("dir") String dir,
+            @Param("offset") int offset,
+            @Param("size") int size);
 
     @Select("SELECT * FROM roles WHERE name = #{name}")
     public Role findByName(@Param("name") String name);
