@@ -75,7 +75,10 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     @Override
     public ItsnowHost create(ItsnowHost creating) throws ItsnowHostException {
         logger.info("Creating host {}", creating);
-
+        if( creating.getProperty("mysql.slave.index") == null ){
+            int total = repository.countByKeyword(null);
+            creating.setProperty("mysql.slave.index", String.valueOf(total+1) );
+        }
         SystemInvocation configJob = translator.provision(creating);
         configJob.setUserFlag(1);// 1 代表创建
         //需要在create主机之后，执行脚本，将主机环境配置好

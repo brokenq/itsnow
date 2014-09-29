@@ -17,10 +17,9 @@ public class DeployFixture {
         host.setName("srv1.itsnow.com");
         host.setCapacity(10);
         host.setDescription("A test itsnow host");
-        Properties configuration = new Properties();
-        configuration.setProperty("user", "root");
-        configuration.setProperty("password", "root1234");
-        host.setConfiguration(configuration);
+        host.setProperty("user", "root");
+        host.setProperty("password", "root1234");
+        host.setProperty("mysql.slave.index", "8");
         host.creating();
         return host;
     }

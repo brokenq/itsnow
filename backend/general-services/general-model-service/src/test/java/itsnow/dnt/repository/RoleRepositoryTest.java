@@ -56,7 +56,7 @@ public class RoleRepositoryTest {
     @Test
     public void testCount() throws Exception {
         int count = repository.count(1L);
-        Assert.assertTrue(count>0);
+        Assert.assertNotNull(count);
     }
 
     @Test
@@ -68,7 +68,7 @@ public class RoleRepositoryTest {
     @Test
     public void testCountByKeyword() throws Exception {
         int count = repository.countByKeyword(1L, "%ROLE_ADMIN%");
-        Assert.assertTrue(count>0);
+        Assert.assertNotNull(count);
     }
 
     @Test

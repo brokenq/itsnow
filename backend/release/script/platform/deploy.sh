@@ -62,7 +62,7 @@ interpolate_file bin/start.sh bin/sh.vars
 interpolate_file bin/stop.sh bin/sh.vars
 interpolate_file config/wrapper.conf
 interpolate_file bin/itsnow-$id config/wrapper.vars
-interpolate_file config/nginx.conf config/nginx.vars interpolate2.sh
+interpolate_file resources/nginx.conf resources/nginx.vars interpolate2.sh
 
 echo "$folder/$instance deployed"
 

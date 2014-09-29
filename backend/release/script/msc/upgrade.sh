@@ -101,10 +101,16 @@ done
 
 echo "Step 7 update /etc and /opt/system/config"
 $cp /etc/redis.conf /etc/redis.conf.bak
-$cp $upgrading/config/redis-master.conf /etc/redis.conf
+$cp $upgrading/resources/redis-master.conf /etc/redis.conf
 
-$cp $upgrading/config/redis /opt/system/config
-$cp $upgrading/config/redis-slave.conf /opt/system/config/redis.conf
+$cp /usr/my.cnf /usr/my.cnf.bak
+$cp $upgrading/resources/my-master.cnf /usr/my.cnf
+$cp $upgrading/resources/my-slave.cnf  /opt/system/config/my.conf
+service mysql restart
+
+
+$cp $upgrading/resources/redis /opt/system/config
+$cp $upgrading/resources/redis-slave.conf /opt/system/config/redis.conf
 
 chmod +x $upgrading/bin/*.sh $upgrading/bin/itsnow-msc $upgrading/db/bin/migrate  $upgrading/script/*/*.sh
 

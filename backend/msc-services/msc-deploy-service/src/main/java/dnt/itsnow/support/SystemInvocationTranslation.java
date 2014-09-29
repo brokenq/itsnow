@@ -42,27 +42,35 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
                                    host.getProperty("user"),
                                    host.getProperty("password"));
             }
-        }.timeout("1m").next(new LocalInvocation() {
+        }.timeout("1m"/*建立互信关系*/)
+         .next(new LocalInvocation() {
             public int perform(Process process) throws Exception {
                 return process.run("./prepare_host.sh", host.getAddress());
             }
-        }.timeout("3m")).next(new RemoteInvocation(host.getAddress()) {
+        }.timeout("3m"/*copy资料*/))
+         .next(new RemoteInvocation(host.getAddress()) {
             public int perform(Process ssh) throws Exception {
                 return ssh.run("./provision.sh");
             }
-        }.timeout("5m"/*最后开通最长用时5分钟*/)).next(new RemoteInvocation(host.getAddress()) {
-            //将 ci 上 特定版本的 msu 下载到目标主机的特定路径，并做好link
-            @Override
-            public int perform(Process ssh) throws Exception {
-                return ssh.run("./prepare_ms.sh", "msu", host.getProperty("msu.version"));
-            }
-        }).next(new RemoteInvocation(host.getAddress()) {
-            //将 ci 上 特定版本的 msp 下载到目标主机的特定路径，并做好link
-            @Override
-            public int perform(Process ssh) throws Exception {
-                return ssh.run("./prepare_ms.sh", "msp", host.getProperty("msp.version"));
-            }
-        });
+        }.timeout("5m"/*最后开通最长用时5分钟*/))
+         .next(new LocalInvocation() {
+             @Override
+             public int perform(Process ssh) throws Exception {
+                 return ssh.run("./replicate.sh", host.getAddress(), host.getProperty("mysql.slave.index"));
+             }
+         }).next(new RemoteInvocation(host.getAddress()) {
+             //将 ci 上 特定版本的 msu 下载到目标主机的特定路径，并做好link
+             @Override
+             public int perform(Process ssh) throws Exception {
+                 return ssh.run("./prepare_ms.sh", "msu", host.getProperty("msu.version"));
+             }
+         }).next(new RemoteInvocation(host.getAddress()) {
+             //将 ci 上 特定版本的 msp 下载到目标主机的特定路径，并做好link
+             @Override
+             public int perform(Process ssh) throws Exception {
+                 return ssh.run("./prepare_ms.sh", "msp", host.getProperty("msp.version"));
+             }
+         });
     }
 
     @Override
@@ -118,7 +126,7 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
           .next(new ScpTask(itsnowProcess, dbVars(itsnowProcess), "db/migrate/environments/production.vars"))
           .next(new ScpTask(itsnowProcess, shVars(itsnowProcess), "bin/sh.vars"))
           .next(new ScpTask(itsnowProcess, wrapperVars(itsnowProcess), "config/wrapper.vars"))
-          .next(new ScpTask(itsnowProcess, nginxVars(itsnowProcess), "config/nginx.vars"))
+          .next(new ScpTask(itsnowProcess, nginxVars(itsnowProcess), "resources/nginx.vars"))
           .next(new RemoteInvocation(address) {
               // 7. 实际开始部署
               @Override
@@ -144,7 +152,7 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
 
     @Override
     public SystemInvocation undeploy(final ItsnowProcess itsnowProcess) {
-        return new LocalInvocation(){
+        return new LocalInvocation() {
             @Override
             public int perform(Process process) throws Exception {
                 return process.run("./unproxy_ms.sh", itsnowProcess.getName());
