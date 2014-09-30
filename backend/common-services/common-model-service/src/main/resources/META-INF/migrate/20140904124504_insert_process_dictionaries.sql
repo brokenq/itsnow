@@ -1,15 +1,15 @@
 -- // insert_process_dictionaries
 -- Migration SQL that makes the change goes here.
 
-INSERT INTO process_dictionaries(code, name, level, level_name, state, type) VALUES
-('inc001', '优先程度',   'high',   '高',   '1', '1'),
-('inc002', '优先程度',   'middle', '中',   '1', '1'),
-('inc003', '优先程度',   'low',    '低',   '1', '1'),
-('inc004', '影响程度',   'high',   '高',   '1', '1'),
-('inc005', '影响程度',   'middle', '中',   '1', '1'),
-('inc006', '影响程度',   'low',    '低',   '1', '1'),
-('inc007', '北京',       'normal', '一般', '1', '1'),
-('inc008', '上海',       'normal', '一般', '1', '1');
+INSERT INTO process_dictionaries(sn, code, name, display, val, state, type) VALUES
+('001', 'inc001', '优先程度',  '高',     'high',    '1', '1'),
+('002', 'inc001', '优先程度',  '中',     'middle',  '1', '1'),
+('003', 'inc001', '优先程度',  '低',     'low',     '1', '1'),
+('004', 'inc002', '影响程度',  '高',     'high',    '1', '1'),
+('005', 'inc002', '影响程度',  '中',     'middle',  '1', '1'),
+('006', 'inc002', '影响程度',  '低',     'low',      '1', '1'),
+('007', 'inc003', '北京',      '一般',   'normal',  '1', '1'),
+('008', 'inc003', '上海',      '一般',   'normal',  '1', '1');
 
 -- //@UNDO
 -- SQL to undo the change goes here.

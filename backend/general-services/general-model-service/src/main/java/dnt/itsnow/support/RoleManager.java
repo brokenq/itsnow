@@ -31,7 +31,7 @@ public class RoleManager extends Bean implements RoleService {
         logger.debug("Finding roles by keyword:{}, accountId:{}", keyword, accountId);
 
         if(StringUtils.isBlank(keyword)){
-            int total = repository.count(accountId);
+            int total = repository.count(accountId).intValue();
             List<Role> roles = repository.findAll(accountId, "updated_at", "desc", pageRequest.getOffset(), pageRequest.getPageSize());
             DefaultPage page = new DefaultPage<Role>(roles, pageRequest, total);
 
@@ -39,7 +39,7 @@ public class RoleManager extends Bean implements RoleService {
 
             return page;
         }else{
-            int total = repository.countByKeyword(accountId, "%"+keyword+"%");
+            int total = repository.countByKeyword(accountId, "%"+keyword+"%").intValue();
             List<Role> roles = repository.findAllByKeyword(accountId, "%" + keyword + "%", "updated_at", "desc", pageRequest.getOffset(), pageRequest.getPageSize());
             DefaultPage page = new DefaultPage<Role>(roles, pageRequest, total);
 
@@ -54,8 +54,8 @@ public class RoleManager extends Bean implements RoleService {
 
         logger.debug("Finding roles by keyword:{}, paging info:{}", keyword, pageRequest);
 
-        int total = repository.countByRelevantInfo("%" + keyword + "%");
-        List<Role> roles = repository.findAllRelevantInfo("%" + keyword + "%", "updated_at", "desc", pageRequest.getOffset(), pageRequest.getPageSize());
+        int total = repository.countByRelevantInfo(keyword).intValue();
+        List<Role> roles = repository.findAllRelevantInfo(keyword, "updated_at", "desc", pageRequest.getOffset(), pageRequest.getPageSize());
         DefaultPage page = new DefaultPage<Role>(roles, pageRequest, total);
 
         logger.debug("Finded role list info:{}", page);

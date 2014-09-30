@@ -7,9 +7,12 @@ import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.repository.MscRoleRepository;
 import dnt.itsnow.service.MscRoleService;
+import dnt.messaging.MessageBus;
 import dnt.spring.Bean;
+import dnt.support.JsonSupport;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -20,6 +23,10 @@ import java.util.List;
  */
 @Service
 public class MscRoleManager extends Bean implements MscRoleService {
+
+    @Autowired
+    @Qualifier("globalMessageBus")
+    MessageBus globalMessageBus;
 
     @Autowired
     private MscRoleRepository repository;
@@ -87,6 +94,8 @@ public class MscRoleManager extends Bean implements MscRoleService {
 
         logger.info("Created role:{}", role);
 
+        globalMessageBus.publish("MscRole", "+" + JsonSupport.toJSONString(role));
+
         return role;
     }
 
@@ -102,6 +111,8 @@ public class MscRoleManager extends Bean implements MscRoleService {
 
         logger.info("Updated role");
 
+        globalMessageBus.publish("MscRole", "*" + JsonSupport.toJSONString(role));
+
         return role;
     }
 
@@ -115,6 +126,8 @@ public class MscRoleManager extends Bean implements MscRoleService {
         }
 
         repository.delete(role.getName());
+
+        globalMessageBus.publish("MscRole", "-" + JsonSupport.toJSONString(role));
 
         logger.warn("Deletd role");
     }

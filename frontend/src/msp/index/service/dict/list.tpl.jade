@@ -49,8 +49,8 @@ mixin select_all()
         input(type="checkbox" ng-model="checkboxes.items[dict.sn]")
       td(style="text-align: center" data-title="'字典代码'") {{dict.code}}
       td(style="text-align: center" data-title="'字典名称'") {{dict.name}}
-      td(style="text-align: center" data-title="'显示名'") {{dict.levelName}}
-      td(style="text-align: center" data-title="'值'") {{dict.level}}
+      td(style="text-align: center" data-title="'显示名'") {{dict.display}}
+      td(style="text-align: center" data-title="'值'") {{dict.val}}
       td(style="text-align: center" data-title="'状态'") {{dict.state | stateFilter}}
 
 script(type="text/ng-template")#ngTableCheckboxHeader

@@ -6,7 +6,6 @@
 
     <resultMap id="groupResult" type="Group">
         <id property="id" column="id"/>
-        <result property="sn" column="sn"/>
         <result property="name" column="group_name"/>
         <result property="description" column="description"/>
         <result property="createdAt" column="created_at"/>
@@ -20,7 +19,6 @@
 
     <sql id="selectGroup">
         SELECT DISTINCT g.id,
-        g.sn,
         g.name,
         g.description,
         g.created_at,
@@ -37,22 +35,22 @@
         </if>
     </sql>
 
-    <select id="findBySn" parameterType="string" resultMap="groupResult">
-        select g.id, g.sn, g.group_name, g.description, g.created_at, g.updated_at
+    <select id="findByName" parameterType="string" resultMap="groupResult">
+        select g.id, g.group_name, g.description, g.created_at, g.updated_at
         from groups g
-        where g.sn=#{sn}
+        where g.group_name = #{name}
     </select>
 
     <select id="findAll" parameterType="string" resultMap="groupResult">
-        select g.id, g.sn, g.group_name, g.description, g.created_at, g.updated_at
+        select g.id, g.group_name, g.description, g.created_at, g.updated_at
         from groups g
         order by ${sort} ${dir} limit #{offset}, #{size}
     </select>
 
     <select id="findAllByKeyword" parameterType="string" resultMap="groupResult">
-        select g.id, g.sn, g.group_name, g.description, g.created_at, g.updated_at
+        select g.id, g.group_name, g.description, g.created_at, g.updated_at
         from groups g
-        where g.group_name like #{keyword} or g.sn like #{keyword}
+        where g.group_name like #{keyword}
         order by ${sort} ${dir} limit #{offset}, #{size}
     </select>
 
@@ -67,7 +65,7 @@
     </select>
 
     <select id="findAllRelevantInfo" parameterType="string" resultMap="groupResult">
-        select g.id, g.sn, g.group_name, g.description, g.created_at, g.updated_at,
+        select g.id, g.group_name, g.description, g.created_at, g.updated_at,
         u.username,
         d.name deptName,
         s.name siteName

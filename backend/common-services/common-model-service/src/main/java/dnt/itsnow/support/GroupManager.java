@@ -75,7 +75,7 @@ public class GroupManager extends Bean implements GroupService {
         if(role==null){
             throw new GroupException("Group entry can not be empty.");
         }
-        repository.delete(role.getSn());
+        repository.delete(role.getName());
         return role;
     }
 
@@ -86,6 +86,6 @@ public class GroupManager extends Bean implements GroupService {
 
     @Override
     public Group find(String name) {
-        return repository.findByName(name);
+        return repository.findBySn(name);
     }
 }

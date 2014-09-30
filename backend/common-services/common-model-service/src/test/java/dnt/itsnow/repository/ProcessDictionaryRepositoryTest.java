@@ -27,10 +27,10 @@ public class ProcessDictionaryRepositoryTest {
     @Test
     public void testCreate() throws Exception {
         ProcessDictionary dictionary = new ProcessDictionary();
-        dictionary.setCode("inc003");
+        dictionary.setCode("004");
         dictionary.setName("影响范围");
-        dictionary.setLevel("high");
-        dictionary.setLevelName("高");
+        dictionary.setDisplay("高");
+        dictionary.setVal("high");
         dictionary.setState("1");
         repository.create(dictionary);
         Assert.notNull(dictionary.getId());
@@ -38,19 +38,19 @@ public class ProcessDictionaryRepositoryTest {
 
     @Test
     public void testDelete() throws Exception {
-        String sn = "inc001";
-        Assert.notNull(repository.findByCode(sn));
+        String sn = "001";
+        Assert.notNull(repository.findBySn(sn));
         repository.delete(sn);
-        Assert.isNull(repository.findByCode(sn));
+        Assert.isNull(repository.findBySn(sn));
     }
 
     @Test
     public void testUpdate() throws Exception {
-        String sn = "inc002";
-        ProcessDictionary dictionary = repository.findByCode(sn);
+        String sn = "002";
+        ProcessDictionary dictionary = repository.findBySn(sn);
         dictionary.setState("0");
         repository.update(dictionary);
-        dictionary = repository.findByCode(sn);
+        dictionary = repository.findBySn(sn);
         Assert.isTrue(dictionary.getState() == "0");
     }
 
@@ -66,18 +66,18 @@ public class ProcessDictionaryRepositoryTest {
 
     @Test
     public void testCountByKeyword() throws Exception {
-        Assert.notNull(repository.countByKeyword("%003%"));
+        Assert.notNull(repository.countByKeyword("%3%"));
     }
 
     @Test
     public void testFindByKeyword() throws Exception {
-        Assert.notNull(repository.findByKeyword("%003%","updated_at","desc", 0, 10));
+        Assert.notNull(repository.findByKeyword("%3%","updated_at","desc", 0, 10));
     }
 
     @Test
     public void testFindBySn() throws Exception {
-        Assert.notNull(repository.findByCode("inc002"));
-        Assert.isNull(repository.findByCode("inc0002"));
+        Assert.notNull(repository.findBySn("002"));
+        Assert.isNull(repository.findBySn("0002"));
     }
 
 }

@@ -6,23 +6,26 @@ import org.apache.ibatis.annotations.*;
 import java.util.List;
 
 /**
- * <h1>类功能说明</h1>
+ * <h1>数据字典持久层</h1>
  */
 public interface ProcessDictionaryRepository {
 
     @Options(useGeneratedKeys = true, keyColumn = "id")
-    @Insert("INSERT INTO process_dictionaries (code, name, level, level_name, state, type, description, created_at, updated_at) VALUES " +
-            "(#{code}, #{name}, #{level}, #{levelName}, #{state}, #{type}, #{description} ,#{createdAt}, #{updatedAt})")
+    @Insert("INSERT INTO process_dictionaries " +
+            "(sn,    code,    name,    display,    val,    state,    type,    description,    created_at,   updated_at) " +
+            "VALUES " +
+            "(#{sn}, #{code}, #{name}, #{display}, #{val}, #{state}, #{type}, #{description} ,#{createdAt}, #{updatedAt})")
     public void create(ProcessDictionary dictionary);
 
-    @Delete("DELETE FROM process_dictionaries WHERE code = #{sn}")
+    @Delete("DELETE FROM process_dictionaries WHERE sn = #{sn}")
     public void delete(@Param("sn") String sn);
 
     @Update("UPDATE process_dictionaries SET " +
+            " sn          = #{sn}, " +
             " code        = #{code}, " +
             " name        = #{name}, " +
-            " level       = #{level}," +
-            " level_name  = #{levelName}," +
+            " display         = #{display}," +
+            " val       = #{val}," +
             " state       = #{state}," +
             " type        = #{type}, " +
             " description = #{description}, " +
@@ -53,5 +56,8 @@ public interface ProcessDictionaryRepository {
                                                  @Param("size") int size);
 
     @Select("SELECT * FROM process_dictionaries WHERE code = #{code}")
-    public ProcessDictionary findByCode(@Param("code") String code);
+    public List<ProcessDictionary> findByCode(@Param("code") String code);
+
+    @Select("SELECT * FROM process_dictionaries WHERE sn = #{sn}")
+    public ProcessDictionary findBySn(@Param("sn") String sn);
 }

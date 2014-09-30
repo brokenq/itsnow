@@ -26,8 +26,8 @@
             <id property="id" column="dictionaryId"/>
             <result property="code" column="dictionaryCode"/>
             <result property="name" column="dictionaryName"/>
-            <result property="level" column="dictionaryLevel"/>
-            <result property="levelName" column="dictionaryLevelName"/>
+            <result property="display" column="dictionaryDisplay"/>
+            <result property="val" column="dictionaryVal"/>
             <result property="state" column="dictionaryState"/>
             <result property="type" column="dictionaryType"/>
         </association>
@@ -44,7 +44,7 @@
     <sql id="selectSite">
         select s.id, s.sn, s.name, s.address, s.description, s.created_at, s.updated_at,
         w.id as workTimeId, w.sn as workTimeSn, w.name as workTimeName, w.work_days as workTimeWorkDays, w.start_at as workTimeStartAt, w.end_at as workTimeEndAt,
-        p.id as dictionaryId, p.code as dictionaryCode, p.name as dictionaryName, p.level as dictionaryLevel, p.level_name as dictionaryLevelName, p.state as dictionaryState, p.type as dictionaryType,
+        p.id as dictionaryId, p.code as dictionaryCode, p.name as dictionaryName, p.display as dictionaryDisplay, p.val as dictionaryVal, p.state as dictionaryState, p.type as dictionaryType,
         d.id as departmentId, d.name as departmentName, d.sn as departmentSn, d.description as departmentDescription
         from sites s
         left join work_times w on s.work_time_id=w.id

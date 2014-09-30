@@ -37,52 +37,47 @@ public class MscGroupManagerTest {
     @Test
     public void testFindAll() throws Exception {
         Page<Group> groups = service.findAll("", pageRequest);
-        Assert.assertNotNull(groups.getTotalElements());
-        Assert.assertNotNull(groups.getNumberOfElements());
+        Assert.assertTrue(groups.getContent().size()>0);
     }
 
     @Test
-    public void testFindBySn() throws Exception {
-
-        Page<Group> staffs = service.findAll("", pageRequest);
-        Group group = staffs.getContent().get(0);
-
-        Assert.assertNotNull(service.findBySn(group.getSn()));
-        Assert.assertNull(service.findBySn("10000"));
+    public void testFindByName() throws Exception {
+        Assert.assertNotNull(service.findByName("administrators"));
+        Assert.assertNull(service.findByName("1000000"));
     }
 
     @Test
     public void testCreate() throws Exception {
-
         Group group = new Group();
-        group.setId(1L);
-        group.setSn("009");
-        group.setName("用户");
+        group.setName("GROUP_SERVICE_TEST");
         group.setDescription("This is a test.");
         group.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         group.setUpdatedAt(group.getCreatedAt());
-
         service.create(group);
-
         Assert.assertNotNull(group.getId());
     }
 
     @Test
     public void testDestroy() throws Exception {
-        Page<Group> groups = service.findAll("", pageRequest);
-        Group group = groups.getContent().get(0);
+        Group group = service.findByName("first_line");
+        Assert.assertNotNull(group);
         service.destroy(group);
-        Assert.assertNull(service.findBySn(group.getSn()));
+        Assert.assertNull(service.findByName(group.getName()));
     }
 
     @Test
     public void testUpdate() throws Exception {
-        Page<Group> groups = service.findAll("", pageRequest);
-        Group group = groups.getContent().get(0);
+        Group group = service.findByName("administrators");
         group.setDescription("Hello World!");
         service.update(group);
-        group = service.findBySn(group.getSn());
-        Assert.assertTrue(group.getDescription() == "Hello World!");
+        group = service.findByName(group.getName());
+        Assert.assertTrue(group.getDescription().equals("Hello World!"));
+    }
+
+    @Test
+    public void testFindAllRelevantInfo() throws Exception {
+        Page<Group> groups = service.findAllRelevantInfo("administrators", pageRequest);
+        Assert.assertTrue(groups.getContent().size()>0);
     }
 
 }

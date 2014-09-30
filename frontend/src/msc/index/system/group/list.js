@@ -2,7 +2,7 @@
 angular.module('System.Group', ['ngTable', 'ngResource'])
 
     .config(function ($stateProvider) {
-        $stateProvider.state('group', {
+        $stateProvider.state('system.group', {
             url: '/group',
             templateUrl: 'system/group/list.tpl.jade',
             data: {pageTitle: '组管理'}

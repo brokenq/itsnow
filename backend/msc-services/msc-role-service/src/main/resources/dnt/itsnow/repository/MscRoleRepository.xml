@@ -14,28 +14,38 @@
         <collection property="details" ofType="RoleDetail">
             <result property="accountName" column="accountName"/>
             <result property="username" column="username"/>
-            <result property="deptName" column="deptName"/>
-            <result property="siteName" column="siteName"/>
         </collection>
     </resultMap>
 
     <select id="countByRelevantInfo" parameterType="string" resultType="int">
-        select count(*) from roles r
-        left join authorities a on r.name = a.authority
-        left join users u on u.username = a.username
-        where r.name = #{name}
+        SELECT Count(*)
+        FROM   roles r
+               LEFT JOIN authorities a
+                      ON r.name = a.authority
+               LEFT JOIN users u
+                      ON a.username = u.username
+               LEFT JOIN accounts acc
+                      ON u.account_id = acc.id
+        WHERE r.name = #{name}
     </select>
 
     <select id="findAllRelevantInfo" parameterType="string" resultMap="roleResult">
-        select r.id, r.name, r.description, r.created_at, r.updated_at,
-        u.id as userId, u.username as userName,
-        acc.name as accountName
-        from roles r
-        left join authorities a on r.name = a.authority
-        left join users u on u.username = a.username
-        left join accounts acc on acc.user_id = u.id
-        where r.name = #{name}
-        order by ${sort} ${dir} limit #{offset}, #{size}
+        SELECT r.id,
+               r.name,
+               r.description,
+               r.created_at,
+               r.updated_at,
+               u.username,
+               acc.name accountName
+        FROM   roles r
+               LEFT JOIN authorities a
+                      ON r.name = a.authority
+               LEFT JOIN users u
+                      ON a.username = u.username
+               LEFT JOIN accounts acc
+                      ON u.account_id = acc.id
+        WHERE r.name = #{name}
+        ORDER BY ${sort} ${dir} limit #{offset}, #{size}
     </select>
 
 </mapper>

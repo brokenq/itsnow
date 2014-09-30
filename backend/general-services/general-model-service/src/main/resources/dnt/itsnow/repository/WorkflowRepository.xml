@@ -35,8 +35,8 @@
             <id property="id" column="dictionaryId"/>
             <result property="code" column="dictionaryCode"/>
             <result property="name" column="dictionaryName"/>
-            <result property="level" column="dictionaryLevel"/>
-            <result property="levelName" column="dictionaryLevelName"/>
+            <result property="display" column="dictionaryDisplay"/>
+            <result property="val" column="dictionaryVal"/>
             <result property="state" column="dictionaryState"/>
             <result property="type" column="dictionaryType"/>
         </association>
@@ -44,7 +44,7 @@
 
     <sql id="selectWorkflow">
         select flow.id, flow.sn, flow.name, flow.service_item_type, flow.description, flow.created_at, flow.updated_at,
-        p.id as dictionaryId, p.code as dictionaryCode, p.name as dictionaryName, p.level as dictionaryLevel, p.level_name as dictionaryLevelName, p.state as dictionaryState, p.type as dictionaryType,
+        p.id as dictionaryId, p.code as dictionaryCode, p.name as dictionaryName, p.display as dictionaryDisplay, p.val as dictionaryVal,  p.state as dictionaryState, p.type as dictionaryType,
         serviceItem.id as serviceItemId, serviceItem.title as serviceItemTitle, serviceItem.brief as serviceItemBrief, serviceItem.icon as serviceItemIcon, serviceItem.description as serviceItemDescription
         from workflows flow
         left join act_re_procdef a on flow.act_re_procdef_id = a.id_

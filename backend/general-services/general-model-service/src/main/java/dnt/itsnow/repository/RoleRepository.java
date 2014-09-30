@@ -28,7 +28,7 @@ public interface RoleRepository {
             " WHERE id    = #{id} ")
     public void update(Role role);
 
-    public int count(@Param("accountId") long accountId);
+    public Long count(@Param("accountId") long accountId);
 
     public List<Role> findAll(
             @Param("accountId") long accountId,
@@ -37,7 +37,7 @@ public interface RoleRepository {
             @Param("offset") int offset,
             @Param("size") int size);
 
-    public int countByKeyword(
+    public Long countByKeyword(
             @Param("accountId") long accountId,
             @Param("keyword") String keyword);
 
@@ -49,7 +49,7 @@ public interface RoleRepository {
             @Param("offset") int offset,
             @Param("size") int size);
 
-    public int countByRelevantInfo(@Param("name") String name);
+    public Long countByRelevantInfo(@Param("name") String name);
 
     public List<Role> findAllRelevantInfo(@Param("name") String name,
                                              @Param("sort") String sort,

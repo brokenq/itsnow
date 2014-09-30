@@ -47,10 +47,12 @@ public class ProcessDictionariesControllerTest extends SessionSupportedControlle
     public void setup() {
 
         dictionary = new ProcessDictionary();
+        dictionary.setId(3L);
+        dictionary.setSn("003");
         dictionary.setCode("inc003");
         dictionary.setName("影响范围");
-        dictionary.setLevel("high");
-        dictionary.setLevelName("高");
+        dictionary.setDisplay("高");
+        dictionary.setVal("high");
         dictionary.setState("1");
         dictionary.setDescription("This is a test.");
         dictionary.setCreatedAt(new Timestamp(System.currentTimeMillis()));
@@ -85,10 +87,29 @@ public class ProcessDictionariesControllerTest extends SessionSupportedControlle
     @Test
     public void testShow() throws Exception {
 
-        expect(processDictionaryService.findBySn("inc003")).andReturn(dictionary);
+        expect(processDictionaryService.findBySn("003")).andReturn(dictionary);
 
         // 准备 Mock Request
-        MockHttpServletRequestBuilder request = get("/api/process-dictionaries/inc003");
+        MockHttpServletRequestBuilder request = get("/api/process-dictionaries/003");
+        request = decorate(request);
+
+        replay(processDictionaryService);
+
+        // 执行
+        ResultActions result = this.browser.perform(request);
+
+        // 对业务结果的验证
+        decorate(result).andExpect(status().isOk());
+
+    }
+
+    @Test
+    public void testList() throws Exception {
+
+        expect(processDictionaryService.findByCode("inc003")).andReturn(dictionaries);
+
+        // 准备 Mock Request
+        MockHttpServletRequestBuilder request = get("/api/process-dictionaries/code/inc003");
         request = decorate(request);
 
         replay(processDictionaryService);
@@ -103,11 +124,11 @@ public class ProcessDictionariesControllerTest extends SessionSupportedControlle
 
     @Test
     public void testUpdate() throws Exception {
-        expect(processDictionaryService.findBySn("inc003")).andReturn(dictionary);
+        expect(processDictionaryService.findBySn("003")).andReturn(dictionary);
         expect(processDictionaryService.update(anyObject(ProcessDictionary.class))).andReturn(dictionary);
         replay(processDictionaryService);
 
-        MockHttpServletRequestBuilder request = put("/api/process-dictionaries/inc003").content(accountJson());
+        MockHttpServletRequestBuilder request = put("/api/process-dictionaries/003").content(accountJson());
         decorate(request);
 
         ResultActions result = this.browser.perform(request);
@@ -117,13 +138,13 @@ public class ProcessDictionariesControllerTest extends SessionSupportedControlle
 
     @Test
     public void testDestroy() throws Exception {
-        expect(processDictionaryService.findBySn("inc003")).andReturn(dictionary);
-        processDictionaryService.destroy(anyString());
+        expect(processDictionaryService.findBySn("003")).andReturn(dictionary);
+        processDictionaryService.destroy(anyObject(ProcessDictionary.class));
         expectLastCall().once();
 
         replay(processDictionaryService);
 
-        URI uri = new URI("/api/process-dictionaries/inc003");
+        URI uri = new URI("/api/process-dictionaries/003");
 
         MockHttpServletRequestBuilder request = delete(uri);
         decorate(request);

@@ -49,10 +49,10 @@ public class GeneralGroupManager extends Bean implements GeneralGroupService {
 
 
     @Override
-    public Group findBySn(String sn) {
-        logger.debug("Finding MspGroup by sn: {}", sn);
+    public Group findByName(String name) {
+        logger.debug("Finding MspGroup by name: {}", name);
 
-        return repository.findBySn(sn);
+        return repository.findByName(name);
     }
 
     @Override
@@ -85,7 +85,7 @@ public class GeneralGroupManager extends Bean implements GeneralGroupService {
         if(group==null){
             throw new GroupException("MspGroup entry can not be empty.");
         }
-        repository.delete(group.getSn());
+        repository.delete(group.getName());
         return group;
     }
 

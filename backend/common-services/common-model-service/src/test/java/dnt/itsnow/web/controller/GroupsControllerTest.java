@@ -45,7 +45,6 @@ public class GroupsControllerTest extends SessionSupportedControllerTest {
 
         group = new Group();
         group.setId(1L);
-        group.setSn("010");
         group.setName("用户");
         group.setDescription("This is a test.");
         group.setCreatedAt(new Timestamp(System.currentTimeMillis()));
