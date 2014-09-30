@@ -10,6 +10,7 @@ import dnt.support.JsonSupport;
 import itsnow.dnt.config.GeneralGroupsControllerConfig;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -24,7 +25,7 @@ import java.util.List;
 import static org.easymock.EasyMock.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+@Ignore
 @ContextConfiguration(classes = GeneralGroupsControllerConfig.class)
 public class GeneralGroupsControllerTest extends SessionSupportedControllerTest {
 
