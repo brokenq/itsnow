@@ -45,6 +45,7 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService,Resou
     public static final String CAN_PROCESS = "canProcess";
     public static final String HARDWARE_ERROR = "hardwareError";
     public static final String RESOLVED = "resolved";
+    public static final String SECONDLINE_CALL_MSP ="secondline-call-msp";
 
     SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 

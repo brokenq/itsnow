@@ -266,6 +266,12 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
         processEngine.getRuntimeService().removeEventListener(listenerToRemove);
     }
 
+    @Override
+    public Task queryTask(String instanceId,String activitiId){
+        return processEngine.getTaskService().createTaskQuery().processInstanceId(instanceId)
+                .taskDefinitionKey(activitiId).singleResult();
+    }
+
     /**
      * 封装输出信息，包括：当前节点的X、Y坐标、变量信息、任务类型、任务描述
      *

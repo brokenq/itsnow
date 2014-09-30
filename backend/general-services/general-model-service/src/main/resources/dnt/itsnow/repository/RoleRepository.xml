@@ -57,7 +57,7 @@
     </select>
 
     <select id="countByKeyword" resultType="int">
-        <include refid="selectRole"/>
+        <include refid="selectCountRole"/>
         AND r.name like #{keyword}
     </select>
 
