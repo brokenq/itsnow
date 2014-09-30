@@ -54,50 +54,50 @@ public class GeneralGroupsControllerTest extends SessionSupportedControllerTest 
         reset(groupService);
     }
 
-//    @Test
-//    public void testIndex() throws Exception {
-//
-////        expect(groupService.search(anyString())).andReturn(groups);
-//
-//        expect(groupService.findAll(anyString(), isA(PageRequest.class)))
-//                .andReturn(new DefaultPage<Group>(groups));
-//
-//        // 准备 Mock Request
-//        MockHttpServletRequestBuilder request = get("/api/groups");
-//        request = decorate(request);
-//
-//        replay(groupService);
-//
-//        // 执行
-//        ResultActions result = this.browser.perform(request);
-//
-//        // 对业务结果的验证
-//        decorate(result).andExpect(status().isOk());
-//
-//    }
-//
-//    @Test
-//    public void testShow() throws Exception {
-//
-//        expect(groupService.findAllRelevantInfo(anyString(), anyObject(PageRequest.class)))
-//                .andReturn(new DefaultPage<Group>(groups));
-//
-//        // 准备 Mock Request
-//        MockHttpServletRequestBuilder request = get("/api/groups/user");
-//        request = decorate(request);
-//
-//        replay(groupService);
-//
-//        // 执行
-//        ResultActions result = this.browser.perform(request);
-//
-//        // 对业务结果的验证
-//        decorate(result).andExpect(status().isOk());
-//
-//    }
-//
-//    @Test
-//    public void testUpdate() throws Exception {
+    @Test
+    public void testIndex() throws Exception {
+
+//        expect(groupService.search(anyString())).andReturn(groups);
+
+        expect(groupService.findAll(anyString(), isA(PageRequest.class)))
+                .andReturn(new DefaultPage<Group>(groups));
+
+        // 准备 Mock Request
+        MockHttpServletRequestBuilder request = get("/api/groups");
+        request = decorate(request);
+
+        replay(groupService);
+
+        // 执行
+        ResultActions result = this.browser.perform(request);
+
+        // 对业务结果的验证
+        decorate(result).andExpect(status().isOk());
+
+    }
+
+    @Test
+    public void testShow() throws Exception {
+
+        expect(groupService.findAllRelevantInfo(anyString(), anyObject(PageRequest.class)))
+                .andReturn(new DefaultPage<Group>(groups));
+
+        // 准备 Mock Request
+        MockHttpServletRequestBuilder request = get("/api/groups/user");
+        request = decorate(request);
+
+        replay(groupService);
+
+        // 执行
+        ResultActions result = this.browser.perform(request);
+
+        // 对业务结果的验证
+        decorate(result).andExpect(status().isOk());
+
+    }
+
+    @Test
+    public void testUpdate() throws Exception {
 //        expect(groupService.findByName("user")).andReturn(group);
 //        expect(groupService.update(anyObject(Group.class))).andReturn(group);
 //        replay(groupService);
@@ -107,11 +107,11 @@ public class GeneralGroupsControllerTest extends SessionSupportedControllerTest 
 //
 //        ResultActions result = this.browser.perform(request);
 //        decorate(result).andExpect(status().isOk());
-//
-//    }
-//
-//    @Test
-//    public void testDestroy() throws Exception {
+
+    }
+
+    @Test
+    public void testDestroy() throws Exception {
 //        expect(groupService.findByName("user")).andReturn(group);
 //        expect(groupService.destroy(anyObject(Group.class))).andReturn(group);
 //        expectLastCall().once();
@@ -123,12 +123,12 @@ public class GeneralGroupsControllerTest extends SessionSupportedControllerTest 
 //        MockHttpServletRequestBuilder request = delete(uri);
 //        decorate(request);
 //        this.browser.perform(request).andExpect(status().isOk());
-//
-//    }
-//
-//    protected String accountJson(){
-//        return JsonSupport.toJSONString(group);
-//    }
+
+    }
+
+    protected String accountJson(){
+        return JsonSupport.toJSONString(group);
+    }
 
     // 每次测试结束之后再验证
     @After
