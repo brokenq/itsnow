@@ -126,7 +126,7 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
           .next(new ScpTask(itsnowProcess, dbVars(itsnowProcess), "db/migrate/environments/production.vars"))
           .next(new ScpTask(itsnowProcess, shVars(itsnowProcess), "bin/sh.vars"))
           .next(new ScpTask(itsnowProcess, wrapperVars(itsnowProcess), "config/wrapper.vars"))
-          .next(new ScpTask(itsnowProcess, nginxVars(itsnowProcess), "resources/nginx.vars"))
+          .next(new ScpTask(itsnowProcess, nginxVars(itsnowProcess), "config/nginx.vars"))
           .next(new RemoteInvocation(address) {
               // 7. 实际开始部署
               @Override
