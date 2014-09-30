@@ -79,7 +79,7 @@ public class GeneralGroupsControllerTest extends SessionSupportedControllerTest 
     @Test
     public void testShow() throws Exception {
 
-        expect(groupService.findAllRelevantInfo(anyString(), isA(PageRequest.class)))
+        expect(groupService.findAllRelevantInfo(anyString(), anyObject(PageRequest.class)))
                 .andReturn(new DefaultPage<Group>(groups));
 
         // 准备 Mock Request
