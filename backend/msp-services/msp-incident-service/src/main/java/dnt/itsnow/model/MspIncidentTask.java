@@ -3,7 +3,7 @@ package dnt.itsnow.model;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
- * Created by jacky on 2014/9/10.
+ * <h1>Msp Incident Task Object</h1>
  */
 public class MspIncidentTask {
 

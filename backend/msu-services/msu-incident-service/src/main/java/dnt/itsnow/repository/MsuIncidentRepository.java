@@ -5,16 +5,17 @@ import dnt.itsnow.platform.service.Pageable;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
+import java.util.Set;
 
 /**
- * Created by jacky on 2014/7/28.
+ * <h1>Msu incident repository</h1>
  */
 public interface MsuIncidentRepository {
 
     @Select("SELECT * FROM msu_incidents WHERE msu_instance_id = #{id}")
     Incident findByInstanceId(@Param("id") String id);
 
-    List<Incident> findAllByInstanceIds(@Param("ids")List<String> ids,
+    List<Incident> findAllByInstanceIds(@Param("ids")Set<String> ids,
                                         @Param("keyword")String keyword,
                                         @Param("pageable")Pageable pageable);
 
@@ -32,34 +33,37 @@ public interface MsuIncidentRepository {
     void create(Incident incident);
 
     @Update("UPDATE msu_incidents SET " +
-            "requester_location = #{requesterLocation},requester_name = #{requesterName},"+
-            "requester_email = #{requesterEmail},requester_phone = #{requesterPhone},"+
-            "request_type = #{requestType},"+
-            "service_catalog = #{serviceCatalog}," +
-            "category = #{category}," +
-            "impact = #{impact}," +
-            "urgency = #{urgency}," +
-            "priority = #{priority}," +
-            "ci_type = #{ciType}," +
-            "ci = #{ci}," +
-            "updated_at = #{updatedAt}," +
-            "updated_by = #{updatedBy}," +
-            "assigned_user = #{assignedUser}," +
-            "assigned_group = #{assignedGroup}," +
-            "response_time = #{responseTime},"+
-            "resolve_time = #{resolveTime},"+
-            "close_time = #{closeTime},"+
-            "solution = #{solution},"+
-            "msu_status = #{msuStatus},"+
-            "msp_status = #{mspStatus},"+
-            "close_code = #{closeCode}, "+
-            "msp_account_name = #{mspAccountName}, "+
-            "msp_instance_id = #{mspInstanceId}, "+
-            "can_process = #{canProcess}, "+
-            "resolved = #{resolved}, "+
-            "hardware_error = #{hardwareError}, "+
-            "close_code = #{closeCode} "+
-            " WHERE msu_instance_id = #{msuInstanceId};")
+            "requester_location = #{requesterLocation}," +
+            "requester_name     = #{requesterName},"+
+            "requester_email    = #{requesterEmail}," +
+            "requester_phone    = #{requesterPhone},"+
+            "request_type       = #{requestType},"+
+            "service_catalog    = #{serviceCatalog}," +
+            "category           = #{category}," +
+            "impact             = #{impact}," +
+            "urgency            = #{urgency}," +
+            "priority           = #{priority}," +
+            "ci_type            = #{ciType}," +
+            "ci                 = #{ci}," +
+            "updated_at         = #{updatedAt}," +
+            "updated_by         = #{updatedBy}," +
+            "assigned_user      = #{assignedUser}," +
+            "assigned_group     = #{assignedGroup}," +
+            "response_time      = #{responseTime},"+
+            "resolve_time       = #{resolveTime},"+
+            "close_time         = #{closeTime},"+
+            "solution           = #{solution},"+
+            "msu_status         = #{msuStatus},"+
+            "msp_status         = #{mspStatus},"+
+            "close_code         = #{closeCode}, "+
+            "msp_account_name   = #{mspAccountName}, "+
+            "msp_instance_id    = #{mspInstanceId}, "+
+            "can_process        = #{canProcess}, "+
+            "resolved           = #{resolved}, "+
+            "hardware_error     = #{hardwareError}, "+
+            "close_code         = #{closeCode} "+
+            "WHERE " +
+            "msu_instance_id    = #{msuInstanceId};")
     void update(Incident incident);
 
 }

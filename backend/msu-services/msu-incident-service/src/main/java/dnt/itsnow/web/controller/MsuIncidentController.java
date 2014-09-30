@@ -41,8 +41,10 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
     @RequestMapping
     public List<Incident> index(@RequestParam(value = "key", required = false) String key) {
 
+        logger.debug("Finding all msu incidents");
         //根据实例查询对应表单数据
         indexPage = service.findAllByUserAndKey(currentUser.getUsername(), key, pageRequest);
+        logger.debug("Found msu incidents:{}",indexPage.getTotalElements());
         return indexPage.getContent();
     }
 
@@ -57,8 +59,10 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
     @ResponseBody
     public List<Incident> indexClosed(@RequestParam(value = "key", required = false) String key) {
 
+        logger.debug("Finding all closed incidents");
         //根据实例查询对应表单数据
         indexPage = service.findAllClosedByUserAndKey(currentUser.getUsername(), key, pageRequest);
+        logger.debug("Found closed incidents:{}",indexPage.getTotalElements());
         return indexPage.getContent();
     }
 
@@ -73,8 +77,10 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
     @ResponseBody
     public List<Incident> indexCreated(@RequestParam(value = "key", required = false) String key) {
 
+        logger.debug("Finding all my created incidents");
         //根据实例查询对应表单数据
         indexPage = service.findAllCreatedByUserAndKey(currentUser.getUsername(), key, pageRequest);
+        logger.debug("Found my created incidents:{}",indexPage.getTotalElements());
         return indexPage.getContent();
     }
 
@@ -91,8 +97,8 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
     @ResponseBody
     public MsuIncident query(@PathVariable("instanceId") String instanceId,
                                     @RequestParam(value = "withHistory", required = false) boolean withHistory) {
-
-       return service.findByInstanceId(instanceId,withHistory);
+        logger.debug("Find incident by instanceId:{}",instanceId);
+        return service.findByInstanceId(instanceId,withHistory);
     }
 
     /**
@@ -105,6 +111,7 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
     @RequestMapping(value = "start",method = RequestMethod.POST)
     @ResponseBody
     public MsuIncident start(@RequestBody @Valid Incident incident){
+        logger.debug("Start msu incident workflow");
         return service.startIncident(mainAccount.getName(), this.currentUser.getUsername(),incident);
     }
 
@@ -120,6 +127,7 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
     @RequestMapping(value = "{instanceId}/{taskId}/complete",method = RequestMethod.PUT)
     @ResponseBody
     public MsuIncident complete(@PathVariable("instanceId") String instanceId,@PathVariable("taskId") String taskId,@RequestBody @Valid Incident incident){
+        logger.debug("Complete msu incident workflow task:{},instanceId:{}",taskId,instanceId);
         return service.processIncident(instanceId,taskId,currentUser.getUsername(),incident);
     }
 

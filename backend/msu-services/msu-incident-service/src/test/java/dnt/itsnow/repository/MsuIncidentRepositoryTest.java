@@ -14,8 +14,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <h1>测试MsuIncidentRepository的Mybatis的Mapping配置是否正确</h1>
@@ -36,7 +36,7 @@ public class MsuIncidentRepositoryTest {
 
     @Test
     public void testFindAllByInstanceIds() throws Exception {
-        List<String> ids = new ArrayList<String>();
+        Set<String> ids = new HashSet<String>();
         ids.add("1");
         ids.add("2");
         PageRequest pageRequest = new PageRequest(0, 10, null);

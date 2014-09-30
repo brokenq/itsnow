@@ -125,7 +125,7 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
      */
     @Override
     public Page<Incident> findByUserAndKey(String username, String keyword, Pageable pageable){
-
+        logger.debug("finding incident by user:{} and key:{}",username,keyword);
         Set<Task> tasks = new HashSet<Task>();
         //查询分配给当前用户的任务列表
         tasks.addAll(activitiEngineService.queryTasksAssignee(username,PROCESS_KEY));
@@ -142,9 +142,11 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
             if(keyword == null)
                 keyword = "";
             List<Incident> incidents = repository.findAllByInstanceIds(ids,keyword,pageable);
+            logger.debug("found incidents:{}",total);
             return new DefaultPage<Incident>(incidents,pageable,total);
         }else {
             List<Incident> incidents = new ArrayList<Incident>();
+            logger.debug("found no incident");
             return new DefaultPage<Incident>(incidents, pageable, total);
         }
     }
@@ -165,9 +167,11 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
             if(keyword == null)
                 keyword = "";
             List<Incident> incidents = repository.findAllByInstanceIds(ids,keyword,pageable);
+            logger.debug("found my created incidents:{}",total);
             return new DefaultPage<Incident>(incidents,pageable,total);
         }else {
             List<Incident> incidents = new ArrayList<Incident>();
+            logger.debug("found no my created incidents");
             return new DefaultPage<Incident>(incidents, pageable, total);
         }
     }
@@ -182,7 +186,7 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
      */
     @Override
     public Page<Incident> findClosedByUserAndKey(String username, String keyword, Pageable pageable){
-
+        logger.debug("finding all closed incident by user:{} and key:{}",username,keyword);
         //查询当前用户已完成的流程列表
         List<HistoricProcessInstance> historicProcessInstanceList =  activitiEngineService.queryTasksFinished(username, PROCESS_KEY);
 
@@ -196,9 +200,11 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
             if(keyword == null)
                 keyword = "";
             List<Incident> incidents = repository.findAllByInstanceIds(ids,keyword,pageable);
+            logger.debug("found closed incidents:{}",total);
             return new DefaultPage<Incident>(incidents,pageable,total);
         }else {
             List<Incident> incidents = new ArrayList<Incident>();
+            logger.debug("found no closed incidents");
             return new DefaultPage<Incident>(incidents, pageable, total);
         }
     }
@@ -212,6 +218,7 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
      */
     @Override
     public MspIncident findByInstanceId(String instanceId,boolean withHistory){
+        logger.debug("finding incident by instance:{}",instanceId);
         MspIncident mspIncident = new MspIncident();
         Incident incident = repository.findByInstanceId(instanceId);
         mspIncident.setIncident(incident);
@@ -226,6 +233,7 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
             }
             mspIncident.setHistoricActivityInstanceList(list);
         }
+        logger.debug("found incident:{}",incident.getMspInstanceId());
         return mspIncident;
     }
 
@@ -239,10 +247,12 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
      */
     @Override
     public MspIncident startIncident(String accountName,String username,Incident incident){
+        logger.info("starting msp incident workflow");
         MspIncident mspIncident = new MspIncident();
 
         //start incident process
         ProcessInstance processInstance = activitiEngineService.startProcessInstanceByKey(PROCESS_KEY, null, username);
+        logger.info("msp incident incident started,instance:{}",processInstance.getProcessInstanceId());
         //activitiEngineService.addEventListener( mspEventListener);
         //create incident object and persist it
         incident.setNumber("INC"+df.format(new Date()));
@@ -254,9 +264,9 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
         incident.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         incident.setUpdatedAt(incident.getCreatedAt());
         repository.create(incident);
-
+        logger.info("created msp incident object and saved it");
         mspIncident.setIncident(incident);
-
+        logger.info("started msp incident");
         return mspIncident;
     }
 
@@ -271,6 +281,7 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
      */
     @Override
     public MspIncident processIncident(String instanceId,String taskId,String username,Incident incident){
+        logger.info("processing msp incident:{} task:{} by user:{}",instanceId,taskId,username);
         MspIncident mspIncident = new MspIncident();
         //Task task = activitiEngineService.queryTask(taskId);
         //Incident incident1 = repository.findByInstanceId(task.getProcessInstanceId());
@@ -280,6 +291,7 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
         activitiEngineService.completeTask(taskId,taskVariables,username);
         mspIncident.setIncident(incident);
         mspIncident.setResult("success");
+        logger.info("processed msp incident:{} task:{} by user:{}",instanceId,taskId,username);
         return mspIncident;
     }
 

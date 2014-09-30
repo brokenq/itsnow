@@ -6,7 +6,7 @@ import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 
 /**
- * Created by jacky on 2014/7/28.
+ * <h1>Msp Incident Service</h1>
  */
 public interface MspIncidentService {
 

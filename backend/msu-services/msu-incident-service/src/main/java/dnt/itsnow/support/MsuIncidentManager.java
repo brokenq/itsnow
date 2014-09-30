@@ -79,6 +79,7 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService,Resou
      */
     @Override
     protected void performStart() {
+        logger.debug("Bean starting");
         try{
             this.autoDeployment();
         }catch(IOException e){
@@ -87,6 +88,7 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService,Resou
         activitiEngineService.addEventListener(msuEventListener, ActivitiEventType.ACTIVITY_COMPLETED);
         //add message-bus listener
         messageBus.subscribe(LISTENER, getListenChannel(), msuEventListener);
+        logger.debug("Bean started");
     }
 
     /**
@@ -94,8 +96,10 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService,Resou
      */
     @Override
     protected void performStop() {
+        logger.debug("Bean stopping");
         activitiEngineService.removeEventListener(msuEventListener);
         messageBus.unsubscribe(LISTENER);
+        logger.debug("Bean stopped");
     }
 
     /**
@@ -128,14 +132,14 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService,Resou
      */
     @Override
     public Page<Incident> findAllByUserAndKey(String username, String keyword, Pageable pageable){
-
+        logger.debug("Finding incidents by username:{} and key:{}",username,keyword);
         Set<Task> tasks = new HashSet<Task>();
         //查询分配给当前用户的任务列表
         tasks.addAll(activitiEngineService.queryTasksAssignee(username,PROCESS_KEY));
         //查询当前用户参与的任务列表
         tasks.addAll(activitiEngineService.queryTasksCandidateUser(username,PROCESS_KEY));
         //获取任务所属实例ID列表
-        List<String> ids = new ArrayList<String>();
+        Set<String> ids = new HashSet<String>();
         for(Task task:tasks){
             ids.add(task.getProcessInstanceId());
         }
@@ -145,9 +149,11 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService,Resou
             if(keyword == null)
                 keyword = "";
             List<Incident> incidents = repository.findAllByInstanceIds(ids,keyword,pageable);
+            logger.debug("Found incidents:{}",total);
             return new DefaultPage<Incident>(incidents,pageable,total);
         }else {
             List<Incident> incidents = new ArrayList<Incident>();
+            logger.debug("Not found incidents");
             return new DefaultPage<Incident>(incidents, pageable, total);
         }
     }
@@ -162,11 +168,11 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService,Resou
      */
     @Override
     public Page<Incident> findAllClosedByUserAndKey(String username, String keyword, Pageable pageable){
-
+        logger.debug("Finding all closed incidents by user:{} and key:{}",username,keyword);
         //查询当前用户已完成的流程列表
         List<HistoricProcessInstance> historicProcessInstanceList =  activitiEngineService.queryTasksFinished(username, PROCESS_KEY);
 
-        List<String> ids = new ArrayList<String>();
+        Set<String> ids = new HashSet<String>();
         for(HistoricProcessInstance processInstance:historicProcessInstanceList){
             ids.add(processInstance.getId());
         }
@@ -176,9 +182,11 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService,Resou
             if(keyword == null)
                 keyword = "";
             List<Incident> incidents = repository.findAllByInstanceIds(ids,keyword,pageable);
+            logger.debug("Fount closed incidents:{}",total);
             return new DefaultPage<Incident>(incidents,pageable,total);
         }else {
             List<Incident> incidents = new ArrayList<Incident>();
+            logger.debug("Not found closed incidents");
             return new DefaultPage<Incident>(incidents, pageable, total);
         }
     }
@@ -189,7 +197,7 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService,Resou
         logger.debug("Finding all incidents createdBy:{}",username);
         List<HistoricProcessInstance> historicProcessInstanceList =  activitiEngineService.queryTasksStartedBy(username, PROCESS_KEY);
 
-        List<String> ids = new ArrayList<String>();
+        Set<String> ids = new HashSet<String>();
         for(HistoricProcessInstance processInstance:historicProcessInstanceList){
             ids.add(processInstance.getId());
         }
@@ -199,9 +207,11 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService,Resou
             if(keyword == null)
                 keyword = "";
             List<Incident> incidents = repository.findAllByInstanceIds(ids,keyword,pageable);
+            logger.debug("Found my created incidents:{}",total);
             return new DefaultPage<Incident>(incidents,pageable,total);
         }else {
             List<Incident> incidents = new ArrayList<Incident>();
+            logger.debug("Not found my created incidents");
             return new DefaultPage<Incident>(incidents, pageable, total);
         }
     }
@@ -215,6 +225,7 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService,Resou
      */
     @Override
     public MsuIncident findByInstanceId(String instanceId,boolean withHistory){
+        logger.debug("Finding incident by instanceId:{}",instanceId);
         MsuIncident msuIncident = new MsuIncident();
         Incident incident = repository.findByInstanceId(instanceId);
         msuIncident.setIncident(incident);
@@ -226,6 +237,7 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService,Resou
             List<HistoricActivityInstance> list = activitiEngineService.traceProcessHistory(instanceId);
             msuIncident.setHistoricActivityInstanceList(list);
         }
+        logger.debug("Found incident:{}",incident);
         return msuIncident;
     }
 
@@ -239,6 +251,7 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService,Resou
      */
     @Override
     public MsuIncident startIncident(String accountName,String username,Incident incident){
+        logger.info("Starting msu incident workflow,account:{},user:{}",accountName,username);
         MsuIncident msuIncident = new MsuIncident();
 
         //start incident process
@@ -255,6 +268,7 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService,Resou
         repository.create(incident);
 
         msuIncident.setIncident(incident);
+        logger.info("Started msu incident workflow,instanceId:{}",incident.getMsuInstanceId());
         return msuIncident;
     }
 
@@ -269,6 +283,7 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService,Resou
      */
     @Override
     public MsuIncident processIncident(String instanceId,String taskId,String username,Incident incident){
+        logger.info("Processing msu incident workflow,instance:{},task:{},user:{}",instanceId,taskId,username);
         MsuIncident msuIncident = new MsuIncident();
         incident.setUpdatedBy(username);
         repository.update(incident);
@@ -289,6 +304,7 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService,Resou
 
         msuIncident.setIncident(incident);
         msuIncident.setResult("success");
+        logger.info("Processed msu incident workflow");
         return msuIncident;
     }
 

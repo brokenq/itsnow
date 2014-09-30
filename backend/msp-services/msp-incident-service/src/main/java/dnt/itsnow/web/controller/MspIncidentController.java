@@ -41,9 +41,10 @@ public class MspIncidentController extends SessionSupportController<Incident> {
     @RequestMapping()
     @ResponseBody
     public List<Incident> index(@RequestParam(value = "key", required = false) String key) {
-
+        logger.debug("finding all incidents by user:{} key:{}",currentUser.getUsername(),key);
         //根据实例查询对应表单数据
         indexPage = service.findByUserAndKey(currentUser.getUsername(), key, pageRequest);
+        logger.debug("found incidents:{}",indexPage.getTotalElements());
         return indexPage.getContent();
     }
 
@@ -57,9 +58,10 @@ public class MspIncidentController extends SessionSupportController<Incident> {
     @RequestMapping(value = "/closed")
     @ResponseBody
     public List<Incident> indexClosed(@RequestParam(value = "key", required = false) String key) {
-
+        logger.debug("finding all closed incidents by user:{} key:{}",currentUser.getUsername(),key);
         //根据实例查询对应表单数据
         indexPage = service.findClosedByUserAndKey(currentUser.getUsername(), key, pageRequest);
+        logger.debug("found closed incidents:{}",indexPage.getTotalElements());
         return indexPage.getContent();
     }
 
@@ -73,9 +75,10 @@ public class MspIncidentController extends SessionSupportController<Incident> {
     @RequestMapping("created")
     @ResponseBody
     public List<Incident> indexCreated(@RequestParam(value = "key", required = false) String key) {
-
+        logger.debug("finding all created incidents by user:{} key:{}",currentUser.getUsername(),key);
         //根据实例查询对应表单数据
         indexPage = service.findAllCreatedByUserAndKey(currentUser.getUsername(), key, pageRequest);
+        logger.debug("found created incidents:{}",indexPage.getTotalElements());
         return indexPage.getContent();
     }
 

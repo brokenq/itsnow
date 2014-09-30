@@ -7,6 +7,9 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <h1>Msp Incident Object</h1>
+ */
 public class MspIncident {
 
     @NotNull

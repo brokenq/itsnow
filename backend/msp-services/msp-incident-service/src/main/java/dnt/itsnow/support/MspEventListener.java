@@ -53,7 +53,7 @@ public class MspEventListener extends Bean implements ActivitiEventListener, Mes
      */
     @Override
     public void onEvent(ActivitiEvent activitiEvent) {
-        logger.debug("msp incident event:{},pid {}",
+        logger.debug("receiving msp incident event:{},pid {}",
                      new Object[]{activitiEvent.getType().toString(), activitiEvent.getProcessInstanceId()});
         ProcessDefinition processDefinition =
                 activitiEvent.getEngineServices().getRepositoryService().createProcessDefinitionQuery()
@@ -82,6 +82,7 @@ public class MspEventListener extends Bean implements ActivitiEventListener, Mes
             //send message to msu
             this.sendMessageToMsu(activitiEvent.getProcessInstanceId());
         }
+        logger.debug("received msp incident event");
     }
 
     /**
@@ -90,6 +91,7 @@ public class MspEventListener extends Bean implements ActivitiEventListener, Mes
      * @param incidentStatus 故障状态
      */
     private void processAssignedOrResolvedOrClosedEvent(Incident incident,IncidentStatus incidentStatus){
+        logger.debug("processing {} event",incidentStatus);
         incident.setMspStatus(incidentStatus);
         incident.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         if(incidentStatus == IncidentStatus.Resolved)
@@ -97,6 +99,7 @@ public class MspEventListener extends Bean implements ActivitiEventListener, Mes
         else if(incidentStatus == IncidentStatus.Closed)
             incident.setCloseTime(incident.getUpdatedAt());
         mspIncidentRepository.update(incident);
+        logger.debug("processed {} event",incidentStatus);
     }
 
     /**
@@ -107,7 +110,7 @@ public class MspEventListener extends Bean implements ActivitiEventListener, Mes
      * @param incidentStatus 故障状态
      */
     private void processAcceptedOrAnalysisEvent(EngineServices engineServices,Task task,Incident incident,IncidentStatus incidentStatus){
-
+        logger.debug("processing {} event",incidentStatus);
         incident.setMspStatus(incidentStatus);
         incident.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         incident.setResponseTime(incident.getUpdatedAt());
@@ -120,6 +123,7 @@ public class MspEventListener extends Bean implements ActivitiEventListener, Mes
 
         //update incident
         mspIncidentRepository.update(incident);
+        logger.debug("processed {} event",incidentStatus);
     }
 
     /**
@@ -127,8 +131,10 @@ public class MspEventListener extends Bean implements ActivitiEventListener, Mes
      * @param instanceId 流程实例ID
      */
     private void sendMessageToMsu(String instanceId){
+        logger.debug("sending message to msu , instance:{}",instanceId);
         Incident incident = mspIncidentRepository.findByInstanceId(instanceId);
         messageBus.publish(MspIncidentManager.getSendChannel(), JsonSupport.toJSONString(incident));
+        logger.debug("sent message to msu channel:{}",MspIncidentManager.getSendChannel());
     }
 
     @Override
@@ -148,10 +154,11 @@ public class MspEventListener extends Bean implements ActivitiEventListener, Mes
      */
     @Override
     public void onMessage(String channel, String message) {
-        logger.debug("receive channel:{}, string message:{}",channel,message);
+        logger.debug("receiving channel:{}, string message:{}",channel,message);
         Incident incident = JsonSupport.parseJson(message,Incident.class);
         logger.debug("incident:"+incident.toString());
         this.saveOrUpdateIncident(incident);
+        logger.debug("received incident message");
     }
 
     /**
@@ -159,15 +166,17 @@ public class MspEventListener extends Bean implements ActivitiEventListener, Mes
      * @param incident
      */
     private void saveOrUpdateIncident(Incident incident){
+        logger.info("save or update incident:{}",incident.getId());
         long count = mspIncidentRepository.countByMsuAccountNameAndInstanceId(incident.getMsuAccountName(),incident.getMsuInstanceId());
         if(count > 0){
             //update incident
             mspIncidentRepository.updateByMsuAccountAndMsuInstanceId(incident);
+            logger.info("update incident:{}",incident.getMspInstanceId());
         }else{
             //start msp process
             //start incident process
             ProcessInstance processInstance = activitiEngineService.startProcessInstanceByKey(MspIncidentManager.PROCESS_KEY, null, username);
-
+            logger.info("started msp incident workflow,instance:{}",processInstance.getProcessInstanceId());
             //save incident object and persist it
             incident.setCreatedBy(username);
             incident.setMspInstanceId(processInstance.getProcessInstanceId());
@@ -178,6 +187,7 @@ public class MspEventListener extends Bean implements ActivitiEventListener, Mes
             incident.setCreatedAt(new Timestamp(System.currentTimeMillis()));
             incident.setUpdatedAt(incident.getCreatedAt());
             mspIncidentRepository.create(incident);
+            logger.info("save incident : {}",incident.getMspInstanceId());
         }
     }
 
