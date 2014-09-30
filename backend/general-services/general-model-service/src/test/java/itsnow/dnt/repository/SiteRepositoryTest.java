@@ -45,7 +45,7 @@ public class SiteRepositoryTest {
         site.setSn("100");
         site.setName("大众四厂");
 
-        ProcessDictionary dictionary = dictionaryRepository.findByCode("001");
+        ProcessDictionary dictionary = dictionaryRepository.findBySn("001");
         site.setProcessDictionary(dictionary);
 
         WorkTime workTime = workTimeRepository.findBySn("plan1");

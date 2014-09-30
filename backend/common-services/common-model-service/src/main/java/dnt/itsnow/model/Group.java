@@ -19,18 +19,7 @@ import java.util.List;
  */
 public class Group extends ConfigItem {
 
-    @NotBlank
-    private String sn;
-
     private List<GroupDetail> details;
-
-    public String getSn() {
-        return sn;
-    }
-
-    public void setSn(String sn) {
-        this.sn = sn;
-    }
 
     public List<GroupDetail> getDetails() {
         return details;
@@ -43,8 +32,7 @@ public class Group extends ConfigItem {
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Group{");
-        sb.append("sn='").append(sn).append('\'');
-        sb.append(", details=").append(details);
+        sb.append("details=").append(details);
         sb.append('}');
         return sb.toString();
     }

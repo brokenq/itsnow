@@ -16,39 +16,20 @@
         </collection>
     </resultMap>
 
-    <select id="findBySn" parameterType="string" resultMap="groupResult">
-        select g.id, g.sn, g.group_name, g.description, g.created_at, g.updated_at
-        from groups g
-        where g.sn=#{sn}
-    </select>
-
-    <select id="findAll" parameterType="string" resultMap="groupResult">
-        select g.id, g.sn, g.group_name, g.description, g.created_at, g.updated_at
-        from groups g
-        order by ${sort} ${dir} limit #{offset}, #{size}
-    </select>
-
-    <select id="findAllByKeyword" parameterType="string" resultMap="groupResult">
-        select g.id, g.sn, g.group_name, g.description, g.created_at, g.updated_at
-        from groups g
-        where g.group_name like #{keyword} or g.sn like #{keyword}
-        order by ${sort} ${dir} limit #{offset}, #{size}
-    </select>
-
-    <select id="countByRelevantInfo" parameterType="string" resultType="int">
+    <select id="countByRelevantInfo" resultType="int">
         select count(*) from groups g
         left join group_members gm on gm.group_name = g.group_name
         left join users u on u.username = gm.username
-        where g.group_name like #{keyword}
+        where g.group_name = #{name}
     </select>
 
-    <select id="findAllRelevantInfo" parameterType="string" resultMap="groupResult">
-        select g.id, g.sn, g.group_name, g.description, g.created_at, g.updated_at,
+    <select id="findAllRelevantInfo" resultMap="groupResult">
+        select g.id, g.group_name, g.description, g.created_at, g.updated_at,
         u.username
         from groups g
         left join group_members gm on gm.group_name = g.group_name
         left join users u on u.username = gm.username
-        where g.group_name like #{keyword}
+        where g.group_name = #{name}
         order by ${sort} ${dir} limit #{offset}, #{size}
     </select>
 

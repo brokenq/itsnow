@@ -20,10 +20,10 @@ import java.util.List;
  * <pre>
  * <b>HTTP    URI                 方法      含义  </b>
  *  GET      /api/groups           index     列出所有的流程字典，并且分页显示
- *  GET      /api/groups/{sn}      show      列出特定的流程字典记录
+ *  GET      /api/groups/{name}      show      列出特定的流程字典记录
  *  POST     /api/groups/          create    创建一个流程字典
- *  PUT      /api/groups/{sn}      update    修改一个指定的流程字典
- *  DELETE   /api/groups/{sn}      delete    删除指定的流程字典记录
+ *  PUT      /api/groups/{name}      update    修改一个指定的流程字典
+ *  DELETE   /api/groups/{name}      delete    删除指定的流程字典记录
  * </pre>
  */
 @RestController
@@ -79,11 +79,11 @@ public class GeneralGroupsController extends SessionSupportController<Group> {
     /**
      * <h2>更新一个角色</h2>
      *
-     * PUT /api/groups/{sn}
+     * PUT /api/groups/{name}
      *
      * @return 被更新的角色
      */
-    @RequestMapping(value = "{sn}", method = RequestMethod.PUT)
+    @RequestMapping(value = "{name}", method = RequestMethod.PUT)
     public Group update(@Valid @RequestBody Group dictionary){
 
         logger.info("Updateing {}", dictionary.getName());
@@ -107,11 +107,11 @@ public class GeneralGroupsController extends SessionSupportController<Group> {
     /**
      * <h2>删除一个角色</h2>
      *
-     * DELETE /api/groups/{sn}
+     * DELETE /api/groups/{name}
      *
      * @return 被删除的角色
      */
-    @RequestMapping(value = "{sn}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "{name}", method = RequestMethod.DELETE)
     public Group destroy(){
 
         if (group == null) {
@@ -127,8 +127,8 @@ public class GeneralGroupsController extends SessionSupportController<Group> {
     }
 
     @BeforeFilter({"update", "destroy"})
-    public void initGroup(@PathVariable("sn") String sn){
+    public void initGroup(@PathVariable("name") String name){
 
-        this.group = service.findBySn(sn);//find it by sn
+        this.group = service.findByName(name);//find it by name
     }
 }

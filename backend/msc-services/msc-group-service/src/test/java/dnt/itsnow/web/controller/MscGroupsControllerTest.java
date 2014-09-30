@@ -43,8 +43,7 @@ public class MscGroupsControllerTest extends SessionSupportedControllerTest {
 
         group = new Group();
         group.setId(1L);
-        group.setSn("010");
-        group.setName("administrators");
+        group.setName("GROUP_TEST");
         group.setDescription("This is a test.");
         group.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         group.setUpdatedAt(group.getCreatedAt());
@@ -57,8 +56,6 @@ public class MscGroupsControllerTest extends SessionSupportedControllerTest {
 
     @Test
     public void testIndex() throws Exception {
-
-//        expect(groupService.search(anyString())).andReturn(groups);
 
         expect(groupService.findAll(anyString(), isA(PageRequest.class)))
                 .andReturn(new DefaultPage<Group>(groups));
@@ -84,7 +81,7 @@ public class MscGroupsControllerTest extends SessionSupportedControllerTest {
                 .andReturn(new DefaultPage<Group>(groups));
 
         // 准备 Mock Request
-        MockHttpServletRequestBuilder request = get("/api/msc-groups/administrators");
+        MockHttpServletRequestBuilder request = get("/api/msc-groups/GROUP_TEST");
         request = decorate(request);
 
         replay(groupService);
@@ -99,11 +96,11 @@ public class MscGroupsControllerTest extends SessionSupportedControllerTest {
 
     @Test
     public void testUpdate() throws Exception {
-        expect(groupService.findBySn("administrators")).andReturn(group);
+        expect(groupService.findByName(anyString())).andReturn(group);
         expect(groupService.update(anyObject(Group.class))).andReturn(group);
         replay(groupService);
 
-        MockHttpServletRequestBuilder request = put("/api/msc-groups/administrators").content(accountJson());
+        MockHttpServletRequestBuilder request = put("/api/msc-groups/GROUP_TEST").content(groupJson());
         decorate(request);
 
         ResultActions result = this.browser.perform(request);
@@ -113,13 +110,13 @@ public class MscGroupsControllerTest extends SessionSupportedControllerTest {
 
     @Test
     public void testDestroy() throws Exception {
-        expect(groupService.findBySn("administrators")).andReturn(group);
-        expect(groupService.destroy(anyObject(Group.class))).andReturn(group);
+        expect(groupService.findByName(anyString())).andReturn(group);
+        groupService.destroy(anyObject(Group.class));
         expectLastCall().once();
 
         replay(groupService);
 
-        URI uri = new URI("/api/msc-groups/administrators");
+        URI uri = new URI("/api/msc-groups/GROUP_TEST");
 
         MockHttpServletRequestBuilder request = delete(uri);
         decorate(request);
@@ -127,7 +124,7 @@ public class MscGroupsControllerTest extends SessionSupportedControllerTest {
 
     }
 
-    protected String accountJson(){
+    protected String groupJson(){
         return JsonSupport.toJSONString(group);
     }
 

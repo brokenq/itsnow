@@ -17,16 +17,15 @@ import java.util.Set;
 public interface GroupRepository {
 
     @Options(useGeneratedKeys = true, keyColumn = "id")
-    @Insert("INSERT INTO groups (sn, group_name, description, created_at, updated_at) VALUES " +
-            "(#{sn}, #{name}, #{description}, #{createdAt}, #{updatedAt})")
+    @Insert("INSERT INTO groups (group_name, description, created_at, updated_at) VALUES " +
+            "(#{name}, #{description}, #{createdAt}, #{updatedAt})")
     public void create(Group group);
 
-    @Delete("DELETE FROM groups WHERE sn = #{sn}")
-    public void delete(@Param("sn") String sn);
+    @Delete("DELETE FROM groups WHERE group_name = #{name}")
+    public void delete(@Param("name") String name);
 
     @Update("UPDATE groups SET " +
-            " sn                    = #{sn}, " +
-            " group_name                  = #{name}, " +
+            " group_name            = #{name}, " +
             " description           = #{description}," +
             " created_at            = #{createdAt}, " +
             " updated_at            = #{updatedAt} " +
@@ -42,7 +41,7 @@ public interface GroupRepository {
             @Param("offset") int offset,
             @Param("size") int size);
 
-    @Select("select count(*) from groups where group_name like #{keyword} or sn like #{keyword}")
+    @Select("select count(*) from groups where group_name like #{keyword}")
     public int countByKeyword(@Param("keyword") String keyword);
 
     public List<Group> findAllByKeyword(@Param("keyword") String keyword,
@@ -54,10 +53,7 @@ public interface GroupRepository {
     @Select("SELECT * FROM groups WHERE UPPER(group_name) LIKE UPPER('%#{keyword}%')")
     List<Group> searchAllByKeyword(@Param("keyword") String keyword);
 
-    public Group findBySn(@Param("sn") String sn);
-
-    @Select("SELECT * FROM groups WHERE UPPER(group_name) = UPPER(#{name})")
-    Group findByName(@Param("name") String name);
+    public Group findBySn(@Param("name") String name);
 
     @Select(" SELECT ga.authority, g.group_name" +
             " FROM group_authorities ga " +

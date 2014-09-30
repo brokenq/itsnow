@@ -26,6 +26,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class ProcessDictionaryManagerTest {
 
     PageRequest pageRequest;
+
     ProcessDictionary dictionary;
 
     @Autowired
@@ -39,10 +40,8 @@ public class ProcessDictionaryManagerTest {
         dictionary.setName("Test Account");
     }
 
-
     @Test
     public void testFindAll() throws Exception {
-
         Page<ProcessDictionary> dictionaries = service.findAll("003", pageRequest);
         Assert.assertNotNull(dictionaries.getTotalElements());
         Assert.assertNotNull(dictionaries.getNumberOfElements());
@@ -50,8 +49,14 @@ public class ProcessDictionaryManagerTest {
 
     @Test
     public void testFindBySn() throws Exception {
-        Assert.assertNotNull(service.findBySn("inc002"));
+        Assert.assertNotNull(service.findBySn("002"));
         Assert.assertNull(service.findBySn("0003"));
+    }
+
+    @Test
+    public void testFindByCode() throws Exception {
+        Assert.assertNotNull(service.findByCode("inc002"));
+        Assert.assertTrue(service.findByCode("asdf").size()==0);
     }
 
     @Test
@@ -59,8 +64,8 @@ public class ProcessDictionaryManagerTest {
         ProcessDictionary dictionary = new ProcessDictionary();
         dictionary.setCode("inc003");
         dictionary.setName("影响范围");
-        dictionary.setLevel("high");
-        dictionary.setLevelName("高");
+        dictionary.setDisplay("高");
+        dictionary.setVal("high");
         dictionary.setState("1");
         service.create(dictionary);
         Assert.assertNotNull(dictionary.getId());
@@ -68,15 +73,16 @@ public class ProcessDictionaryManagerTest {
 
     @Test
     public void testDestroy() throws Exception {
-        String sn = "inc001";
-        Assert.assertNotNull(service.findBySn(sn));
-        service.destroy(sn);
+        String sn = "001";
+        ProcessDictionary dictionary = service.findBySn(sn);
+        Assert.assertNotNull(dictionary);
+        service.destroy(dictionary);
         Assert.assertNull(service.findBySn(sn));
     }
 
     @Test
     public void testUpdate() throws Exception {
-        String sn = "inc002";
+        String sn = "002";
         ProcessDictionary dictionary = service.findBySn(sn);
         dictionary.setState("0");
         service.update(dictionary);

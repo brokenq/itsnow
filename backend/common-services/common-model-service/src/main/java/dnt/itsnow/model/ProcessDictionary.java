@@ -12,14 +12,24 @@ import org.hibernate.validator.constraints.NotBlank;
 public class ProcessDictionary extends ConfigItem {
 
     @NotBlank
+    private String sn;
+    @NotBlank
     private String code;
     @NotBlank
-    private String level;
+    private String display;
     @NotBlank
-    private String levelName;
+    private String val;
     @NotBlank
     private String state;
     private String type;
+
+    public String getSn() {
+        return sn;
+    }
+
+    public void setSn(String sn) {
+        this.sn = sn;
+    }
 
     public String getCode() {
         return code;
@@ -27,22 +37,6 @@ public class ProcessDictionary extends ConfigItem {
 
     public void setCode(String code) {
         this.code = code;
-    }
-
-    public String getLevel() {
-        return level;
-    }
-
-    public void setLevel(String level) {
-        this.level = level;
-    }
-
-    public String getLevelName() {
-        return levelName;
-    }
-
-    public void setLevelName(String levelName) {
-        this.levelName = levelName;
     }
 
     public String getState() {
@@ -61,14 +55,32 @@ public class ProcessDictionary extends ConfigItem {
         this.type = type;
     }
 
+    public String getVal() {
+        return val;
+    }
+
+    public void setVal(String val) {
+        this.val = val;
+    }
+
+    public String getDisplay() {
+        return display;
+    }
+
+    public void setDisplay(String display) {
+        this.display = display;
+    }
+
     @Override
     public String toString() {
-        return "ProcessDictionary{" +
-                "code='" + code + '\'' +
-                ", level='" + level + '\'' +
-                ", levelName='" + levelName + '\'' +
-                ", state='" + state + '\'' +
-                ", type='" + type + '\'' +
-                '}';
+        final StringBuffer sb = new StringBuffer("ProcessDictionary{");
+        sb.append("sn='").append(sn).append('\'');
+        sb.append(", code='").append(code).append('\'');
+        sb.append(", display='").append(display).append('\'');
+        sb.append(", val='").append(val).append('\'');
+        sb.append(", state='").append(state).append('\'');
+        sb.append(", type='").append(type).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }

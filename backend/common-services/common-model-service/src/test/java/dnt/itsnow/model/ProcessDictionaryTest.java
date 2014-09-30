@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 import java.util.Set;
 
 /**
- * <h1>MenuItem测试类</h1>
+ * <h1>流程字典测试类</h1>
  */
 public class ProcessDictionaryTest {
 
@@ -25,18 +25,32 @@ public class ProcessDictionaryTest {
     @Before
     public void setUp() throws Exception {
         dictionary = new ProcessDictionary();
-        dictionary.setId(1L);
-        dictionary.setName("用户");
-        dictionary.setState("index.user");
+        dictionary.setId(10L);
+        dictionary.setSn("010");
+        dictionary.setCode("inc010");
+        dictionary.setName("优先级");
+        dictionary.setDisplay("高");
+        dictionary.setVal("high");
+        dictionary.setState("1");
+        dictionary.setType("1");
         dictionary.setDescription("This is a test.");
         dictionary.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         dictionary.setUpdatedAt(dictionary.getCreatedAt());
     }
 
     @Test
+    public void testDictionaryIsNotValid() throws Exception {
+        dictionary.setSn(null);
+        Set<ConstraintViolation<ProcessDictionary>> violations = validator.validate(dictionary);
+        Assert.assertFalse(violations == null || violations.isEmpty());
+    }
+
+    @Test
     public void testJson() throws Exception {
         String json = JsonSupport.toJSONString(dictionary);
-        Assert.assertNotNull(json);
+        System.out.println(json);
+        ProcessDictionary parsed = JsonSupport.parseJson(json, ProcessDictionary.class);
+        Assert.assertEquals(ProcessDictionary.class, parsed.getClass());
     }
 
 }

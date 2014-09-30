@@ -28,7 +28,6 @@ public class GeneralGroupRepositoryTest {
     @Test
     public void testCreate() throws Exception {
         Group group = new Group();
-        group.setSn("008");
         group.setName("用户");
         group.setDescription("This is a test.");
         group.setCreatedAt(new Timestamp(System.currentTimeMillis()));
@@ -42,8 +41,8 @@ public class GeneralGroupRepositoryTest {
     public void testDelete() throws Exception {
         List<Group> groups = repository.findAll("updated_at", "desc", 0, 1);
         Group group = groups.get(0);
-        repository.delete(group.getSn());
-        Assert.isNull(repository.findBySn(group.getSn()));
+        repository.delete(group.getName());
+        Assert.isNull(repository.findByName(group.getName()));
     }
 
     @Test
@@ -52,7 +51,7 @@ public class GeneralGroupRepositoryTest {
         Group group = groups.get(0);
         group.setDescription("Hello World!");
         repository.update(group);
-        group = repository.findBySn(group.getSn());
+        group = repository.findByName(group.getName());
         Assert.isTrue(group.getDescription().equals("Hello World!"));
     }
 
@@ -78,10 +77,8 @@ public class GeneralGroupRepositoryTest {
 
     @Test
     public void testFindBySn() throws Exception {
-        List<Group> groups = repository.findAll("updated_at", "desc", 0, 1);
-        Group group = groups.get(0);
-        Assert.notNull(repository.findBySn(group.getSn()));
-        Assert.isNull(repository.findBySn("1000000"));
+        Assert.notNull(repository.findByName("administrators"));
+        Assert.isNull(repository.findByName("1000000"));
     }
 
 }

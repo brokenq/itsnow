@@ -5,8 +5,4 @@ package dnt.itsnow.service;
  */
 public interface ActivitiSyncService {
 
-    /*
-     * 同步users，groups，groups_member数据至activiti
-     */
-    void syncActiviti();
 }

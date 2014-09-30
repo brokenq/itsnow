@@ -47,15 +47,14 @@ public class GeneralGroupManagerTest {
         Page<Group> staffs = service.findAll("", pageRequest);
         Group group = staffs.getContent().get(0);
 
-        Assert.assertNotNull(service.findBySn(group.getSn()));
-        Assert.assertNull(service.findBySn("10000"));
+        Assert.assertNotNull(service.findByName(group.getName()));
+        Assert.assertNull(service.findByName("10000"));
     }
 
     @Test
     public void testCreate() throws Exception {
         Group group = new Group();
         group.setId(1L);
-        group.setSn("009");
         group.setName("用户");
         group.setDescription("This is a test.");
         group.setCreatedAt(new Timestamp(System.currentTimeMillis()));
@@ -70,7 +69,7 @@ public class GeneralGroupManagerTest {
         Page<Group> groups = service.findAll("", pageRequest);
         Group group = groups.getContent().get(0);
         service.destroy(group);
-        Assert.assertNull(service.findBySn(group.getSn()));
+        Assert.assertNull(service.findByName(group.getName()));
     }
 
     @Test
@@ -79,7 +78,7 @@ public class GeneralGroupManagerTest {
         Group group = groups.getContent().get(0);
         group.setDescription("Hello World!");
         service.update(group);
-        group = service.findBySn(group.getSn());
+        group = service.findByName(group.getName());
         Assert.assertTrue(group.getDescription() == "Hello World!");
     }
 

@@ -55,8 +55,9 @@ public class RoleRepositoryTest {
 
     @Test
     public void testCount() throws Exception {
-        int count = repository.count(1L);
-        Assert.assertNotNull(count);
+        Long count = repository.count(1L);
+        System.out.print("count:"+count);
+        Assert.assertSame(Long.class, count.getClass());
     }
 
     @Test
@@ -67,8 +68,8 @@ public class RoleRepositoryTest {
 
     @Test
     public void testCountByKeyword() throws Exception {
-        int count = repository.countByKeyword(1L, "%ROLE_ADMIN%");
-        Assert.assertNotNull(count);
+        Long count = repository.countByKeyword(1L, "%ROLE_ADMIN%");
+        Assert.assertSame(Long.class, count.getClass());
     }
 
     @Test
@@ -79,8 +80,8 @@ public class RoleRepositoryTest {
 
     @Test
     public void testCountByRelevantInfo() throws Exception {
-        int count = repository.countByRelevantInfo("ROLE_ADMIN");
-        Assert.assertTrue(count>0);
+        Long count = repository.countByRelevantInfo("ROLE_ADMIN");
+        Assert.assertSame(Long.class, count.getClass());
     }
 
     @Test

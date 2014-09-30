@@ -22,14 +22,11 @@ import java.util.concurrent.Executors;
  */
 @Service
 @EnableScheduling
-public class ActivitiSyncManager extends Bean implements SchedulingConfigurer,DisposableBean,ActivitiSyncService {
+public class ActivitiSyncManager extends Bean implements ActivitiSyncService {
 
     @Autowired
     @Qualifier("globalMessageBus")
     MessageBus globalMessageBus;
-
-    ScheduledTaskRegistrar task;
-    Executor               exe;
 
     @Autowired
     ActivitiSyncRepository activitiSyncRepository;
@@ -44,62 +41,61 @@ public class ActivitiSyncManager extends Bean implements SchedulingConfigurer,Di
         globalMessageBus.subscribe(getClass().getName(), channels, new MessageAdapter() {
             @Override
             public void onMessage(String channel, String message) {
-                if ("MscGroup".equals(channel)) {
 
+                String operator = message.substring(0,1);
+                int size = 0;
+
+                logger.info("begin sync activiti user and group");
+
+                if ("MscGroup".equals(channel)) {
+                    if("+".equals(operator)){
+                        size = jdbcTemplate.update("INSERT INTO ACT_ID_GROUP(ID_,NAME_,TYPE_) select c.authority,c.authority,'group' from (SELECT a.authority FROM itsnow_msc.group_authorities a union select b.authority from authorities b ) c WHERE c.authority NOT IN (SELECT ID_ FROM ACT_ID_GROUP)");
+                        logger.info("insert ACT_ID_GROUP size:{}",size);
+
+                        size = jdbcTemplate.update("INSERT INTO ACT_ID_MEMBERSHIP(USER_ID_,GROUP_ID_) SELECT username,authority FROM itsnow_msc.authorities WHERE CONCAT(username,authority) NOT IN (select CONCAT(USER_ID_,GROUP_ID_) FROM ACT_ID_MEMBERSHIP)");
+                        logger.info("insert ACT_ID_MEMBERSHIP size:{}",size);
+                    }else if("-".equals(operator)){
+                        // 删除用户权限关系表
+                        size = jdbcTemplate.update(
+                                "DELETE FROM ACT_ID_MEMBERSHIP WHERE CONCAT(USER_ID_,GROUP_ID_) NOT IN (select CONCAT(username,authority) FROM itsnow_msc.authorities)");
+                        logger.info("delete ACT_ID_MEMBERSHIP size:{}", size);
+
+                        size = jdbcTemplate.update("DELETE FROM ACT_ID_GROUP WHERE ID_ NOT IN (SELECT a.authority FROM group_authorities a union select b.authority from authorities b)");
+                        logger.info("delete ACT_ID_GROUP size:{}",size);
+                    }else if("*".equals(operator)){
+
+                    }
+                }else if("MscUser".equals(channel)){
+                    if("+".equals(operator)){
+                        size = jdbcTemplate.update("INSERT INTO ACT_ID_USER(ID_,EMAIL_) SELECT username,email FROM itsnow_msc.users WHERE username not in (select ID_ FROM ACT_ID_USER)");
+                        logger.info("insert ACT_ID_USER size:{}",size);
+
+                        size = jdbcTemplate.update("INSERT INTO ACT_ID_MEMBERSHIP(USER_ID_,GROUP_ID_) SELECT username,authority FROM itsnow_msc.authorities WHERE CONCAT(username,authority) NOT IN (select CONCAT(USER_ID_,GROUP_ID_) FROM ACT_ID_MEMBERSHIP)");
+                        logger.info("insert ACT_ID_MEMBERSHIP size:{}",size);
+                    }else if("-".equals(operator)){
+                        size = jdbcTemplate.update(
+                                "DELETE FROM ACT_ID_MEMBERSHIP WHERE CONCAT(USER_ID_,GROUP_ID_) NOT IN (select CONCAT(username,authority) FROM itsnow_msc.authorities)");
+                        logger.info("delete ACT_ID_MEMBERSHIP size:{}", size);
+
+                        size = jdbcTemplate.update("DELETE FROM ACT_ID_USER WHERE ID_ NOT IN (select username FROM itsnow_msc.users)");
+                        logger.info("delete ACT_ID_USER size:{}",size);
+                    }else if("*".equals(operator)){
+
+                    }
+                }else if("MscRole".equals(channel)){
+                    if("+".equals(operator)){
+
+                    }else if("-".equals(operator)){
+
+                    }else if("*".equals(operator)){
+
+                    }
                 }
+
+                logger.info("end sync activiti user and group");
+
             }
         });
     }
 
-    @Override
-    public void syncActiviti() {
-        //SELECT a.authority FROM group_authorities a union select b.authority from authorities b
-        logger.info("begin sync activiti user and group");
-        int size = jdbcTemplate.update("\n" +
-                                       "DELETE FROM ACT_ID_MEMBERSHIP WHERE CONCAT(USER_ID_,GROUP_ID_) NOT IN (select CONCAT(username,authority) FROM itsnow_msc.authorities)");
-        logger.info("delete ACT_ID_MEMBERSHIP size:{}", size);
-        //activitiSyncRepository.deleteGroupMembers();
-        size = jdbcTemplate.update("DELETE FROM ACT_ID_USER WHERE ID_ NOT IN (select username FROM itsnow_msc.users)");
-        logger.info("delete ACT_ID_USER size:{}",size);
-        //activitiSyncRepository.deleteUsers();
-        size = jdbcTemplate.update("DELETE FROM ACT_ID_GROUP WHERE ID_ NOT IN (SELECT a.authority FROM group_authorities a union select b.authority from authorities b)");
-        logger.info("delete ACT_ID_GROUP size:{}",size);
-        //activitiSyncRepository.deleteGroups();
-        size = jdbcTemplate.update("INSERT INTO ACT_ID_GROUP(ID_,NAME_,TYPE_) select c.authority,c.authority,'group' from (SELECT a.authority FROM itsnow_msc.group_authorities a union select b.authority from authorities b ) c WHERE c.authority NOT IN (SELECT ID_ FROM ACT_ID_GROUP)");
-        logger.info("insert ACT_ID_GROUP size:{}",size);
-        //activitiSyncRepository.insertGroups();
-        size = jdbcTemplate.update("INSERT INTO ACT_ID_USER(ID_,EMAIL_) SELECT username,email FROM itsnow_msc.users WHERE username not in (select ID_ FROM ACT_ID_USER)");
-        logger.info("insert ACT_ID_USER size:{}",size);
-        //activitiSyncRepository.insertUsers();
-        size = jdbcTemplate.update("INSERT INTO ACT_ID_MEMBERSHIP(USER_ID_,GROUP_ID_) SELECT username,authority FROM itsnow_msc.authorities WHERE CONCAT(username,authority) NOT IN (select CONCAT(USER_ID_,GROUP_ID_) FROM ACT_ID_MEMBERSHIP)");
-        logger.info("insert ACT_ID_MEMBERSHIP size:{}",size);
-        //activitiSyncRepository.insertGroupMembers();
-        logger.info("end sync activiti user and group");
-    }
-
-    @Override
-    public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
-        task = taskRegistrar;
-        taskRegistrar.setScheduler(taskScheduler());
-        String cron = System.getProperty("activiti.sync.cron","5 * * * * *");
-        taskRegistrar.addCronTask(new Runnable() {
-            public void run() {
-                syncActiviti();
-            }
-        },cron);
-
-    }
-
-    @org.springframework.context.annotation.Bean(destroyMethod="shutdown")
-    public Executor taskScheduler() {
-        exe = Executors.newScheduledThreadPool(10);
-        return exe;
-    }
-
-    @Override
-    public void destroy() throws Exception {
-        if(this.task != null){
-            task.destroy();
-        }
-    }
 }

@@ -16,7 +16,7 @@ public interface GeneralGroupService {
 
     public Page<Group> findAllRelevantInfo(String keyword, Pageable pageable);
 
-    public Group findBySn(String sn);
+    public Group findByName(String name);
 
     public Group create(Group group) throws GroupException;
 

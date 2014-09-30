@@ -47,7 +47,7 @@
         WHERE  acc.id = #{accountId}
     </sql>
 
-    <select id="count" resultType="int">
+    <select id="count" resultType="java.lang.Long">
         <include refid="selectCountRole"/>
     </select>
 
@@ -56,7 +56,7 @@
         order by ${sort} ${dir} limit #{offset}, #{size}
     </select>
 
-    <select id="countByKeyword" resultType="int">
+    <select id="countByKeyword" resultType="java.lang.Long">
         <include refid="selectCountRole"/>
         AND r.name like #{keyword}
     </select>
@@ -67,7 +67,7 @@
         order by ${sort} ${dir} limit #{offset}, #{size}
     </select>
 
-    <select id="countByRelevantInfo" parameterType="string" resultType="int">
+    <select id="countByRelevantInfo" parameterType="string" resultType="java.lang.Long">
         SELECT Count(*)
         FROM   roles r
                LEFT JOIN authorities a

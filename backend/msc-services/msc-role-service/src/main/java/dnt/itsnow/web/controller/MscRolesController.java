@@ -107,7 +107,7 @@ public class MscRolesController extends SessionSupportController<Role> {
 
         this.role.apply(role);
         try {
-            role = service.update(role);
+            role = service.update(this.role);
         } catch (MscRoleException e) {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
         } catch (Exception e) {
