@@ -98,7 +98,7 @@ public class GeneralGroupsControllerTest extends SessionSupportedControllerTest 
 
     @Test
     public void testUpdate() throws Exception {
-        expect(groupService.findBySn("user")).andReturn(group);
+        expect(groupService.findByName("user")).andReturn(group);
         expect(groupService.update(anyObject(Group.class))).andReturn(group);
         replay(groupService);
 
@@ -112,7 +112,7 @@ public class GeneralGroupsControllerTest extends SessionSupportedControllerTest 
 
     @Test
     public void testDestroy() throws Exception {
-        expect(groupService.findBySn("user")).andReturn(group);
+        expect(groupService.findByName("user")).andReturn(group);
         expect(groupService.destroy(anyObject(Group.class))).andReturn(group);
         expectLastCall().once();
 
