@@ -25,8 +25,9 @@ import java.util.List;
 import static org.easymock.EasyMock.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-@Ignore
+
 @ContextConfiguration(classes = GeneralGroupsControllerConfig.class)
+@Ignore
 public class GeneralGroupsControllerTest extends SessionSupportedControllerTest {
 
     @Autowired
@@ -39,6 +40,7 @@ public class GeneralGroupsControllerTest extends SessionSupportedControllerTest 
 
     List<Group> groups;
 
+    @Ignore
     @Before
     public void setup() {
 
@@ -55,6 +57,7 @@ public class GeneralGroupsControllerTest extends SessionSupportedControllerTest 
         reset(groupService);
     }
 
+    @Ignore
     @Test
     public void testIndex() throws Exception {
 
@@ -77,6 +80,7 @@ public class GeneralGroupsControllerTest extends SessionSupportedControllerTest 
 
     }
 
+    @Ignore
     @Test
     public void testShow() throws Exception {
 
@@ -97,6 +101,7 @@ public class GeneralGroupsControllerTest extends SessionSupportedControllerTest 
 
     }
 
+    @Ignore
     @Test
     public void testUpdate() throws Exception {
         expect(groupService.findByName("user")).andReturn(group);
@@ -111,6 +116,7 @@ public class GeneralGroupsControllerTest extends SessionSupportedControllerTest 
 
     }
 
+    @Ignore
     @Test
     public void testDestroy() throws Exception {
         expect(groupService.findByName("user")).andReturn(group);
@@ -132,6 +138,7 @@ public class GeneralGroupsControllerTest extends SessionSupportedControllerTest 
     }
 
     // 每次测试结束之后再验证
+    @Ignore
     @After
     public void tearDown() throws Exception {
         // 对Mock的Expectations进行验证
