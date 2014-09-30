@@ -33,12 +33,12 @@ git@happyonroad.net:insight/itsnow.git Rel-x.y.z 标签(tag)
 
 ```sh
   cd path/to/itsnow
-  mvn -Pdnt,with-itsnow-msc package
-  mvn -Pdnt,with-itsnow-general,with-itsnow-msp package
-  mvn -Pdnt,with-itsnow-general,with-itsnow-msu package
+  mvn -Pdnt,with-itsnow-msc clean package
+  mvn -Pdnt,with-itsnow-general,with-itsnow-msp clean package
+  mvn -Pdnt,with-itsnow-general,with-itsnow-msu clean package
 ```
 
-  * 集成测试（以msc的集成测试为例，msp, msu 均需要单独参照执行）
+  * 集成测试（以msc的集成测试为例，msp, msu 均需要单独参照执行, 另外msp，msu集成测试时需要启动msc）
 
 ```sh
   cd /opt/releases/itsnow/msc-x.y.z-SNAPSHOT
@@ -46,7 +46,7 @@ git@happyonroad.net:insight/itsnow.git Rel-x.y.z 标签(tag)
   db/migrate up
   bin/itsnow-msc start
   cd path/to/itsnow/backend/integration-test
-  mvn -Pdnt,with-itsnow-msc package
+  mvn -Pdnt,with-itsnow-msc test
 ```
   
 2. 提交相应代码到origin上相应开发分支 Dev-x.y.z
@@ -62,9 +62,9 @@ git@happyonroad.net:insight/itsnow.git Rel-x.y.z 标签(tag)
 6. 重新执行一次: `mvn package`
 
 ```sh
-  mvn -Pdnt,with-itsnow-msc package
-  mvn -Pdnt,with-itsnow-general,with-itsnow-msp package
-  mvn -Pdnt,with-itsnow-general,with-itsnow-msu package
+  mvn -Pdnt,with-itsnow-msc clean package
+  mvn -Pdnt,with-itsnow-general,with-itsnow-msp clean package
+  mvn -Pdnt,with-itsnow-general,with-itsnow-msu clean package
 ```
 7. 将对master的修改提交到origin上（origin会执行单元测试以及集成测试）:`git push origin master`
 8. 检查CI上各个子系统是否通过Sprint Build
@@ -183,6 +183,37 @@ git@happyonroad.net:insight/itsnow.git Rel-x.y.z 标签(tag)
 1. [msc-0.1.8](http://ci.dnt.com.cn/repository/download/Itsnow_Sprint_Build_MSC/3832:id/msc-0.1.8.zip)
 2. [msp-0.1.8](http://ci.dnt.com.cn/repository/download/Itsnow_SprintBuild_MSP/3833:id/msp-0.1.8.zip)
 3. [msu-0.1.8](http://ci.dnt.com.cn/repository/download/Itsnow_SprintBuild_MSU/3834:id/msu-0.1.8.zip)
+
+4. 系统演示地址
+-----------
+
+暂未部署
+
+0.1.9 发布说明
+=================
+
+1. 新增特性
+-----------
+
+1. Frontend 主机界面和进程服务界面
+2. Frontend 系统配置列表
+3. Frontend MSP与MSU故障流程页面
+4. Frontend MSP与MSU签约流程页面
+5. Frontend ActionService组件初步实现
+6. Backend 部署运行环境支持
+7. Backend 实现MSC中MSU/P注册的脚本开发工作
+8. Backend MSP与MSU故障流程
+
+2. 问题修复
+-----------
+
+
+3. 交付物地址
+--------------
+
+1. [msc-0.1.9](http://ci.dnt.com.cn/repository/download/Itsnow_Sprint_Build_MSC/3832:id/msc-0.1.9.zip)
+2. [msp-0.1.9](http://ci.dnt.com.cn/repository/download/Itsnow_SprintBuild_MSP/3833:id/msp-0.1.9.zip)
+3. [msu-0.1.9](http://ci.dnt.com.cn/repository/download/Itsnow_SprintBuild_MSU/3834:id/msu-0.1.9.zip)
 
 4. 系统演示地址
 -----------
