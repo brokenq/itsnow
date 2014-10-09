@@ -101,7 +101,7 @@ public class AbstractFilterInterceptor extends HandlerInterceptorAdapter {
             String handleMethodName = handleMethod.getName().toLowerCase();
             boolean accept = false;
             for (String methodName : value) {
-                if (handleMethodName.contains(methodName.toLowerCase())) {
+                if (handleMethodName.equals(methodName.toLowerCase())) {
                     accept = true;
                     break;
                 }
