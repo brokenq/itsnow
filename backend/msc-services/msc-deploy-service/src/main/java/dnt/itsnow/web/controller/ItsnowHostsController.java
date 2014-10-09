@@ -138,7 +138,7 @@ public class ItsnowHostsController extends SessionSupportController<ItsnowHost>{
      */
     @RequestMapping("{id}/follow/{invocationId}")
     public String follow( @PathVariable("invocationId") String invocationId,
-                          @RequestParam("offset") long offset,
+                          @RequestParam( value = "offset", defaultValue = "0") long offset,
                           HttpServletResponse response){
         logger.debug("Follow {} invocation {} from {}", currentHost, invocationId, offset);
         List<String> body = new LinkedList<String>();

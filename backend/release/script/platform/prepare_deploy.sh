@@ -54,7 +54,7 @@ cp $folder/$type/db/migrate/environments/* $instance/db/migrate/environments
 cp $folder/$type/db/migrate/environments/development.properties $instance/db/migrate/environments/production.properties
 
 cp -r $type/config/* $instance/config/
-base_list="boot lib script repository"
+base_list="boot lib script repository resources"
 for file in $base_list; do
   ln -s $folder/$type/$file    $instance/$file
 done

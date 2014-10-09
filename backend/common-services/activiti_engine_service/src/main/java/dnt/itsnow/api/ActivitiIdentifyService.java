@@ -5,7 +5,7 @@ import dnt.itsnow.model.Group;
 import java.util.List;
 
 /**
- * Created by jacky on 2014/7/30.
+ * <h2>Activiti Identify Service</h2>
  */
 public interface ActivitiIdentifyService {
 

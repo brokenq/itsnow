@@ -11,6 +11,7 @@ echo "Uninstall mysql"
 rpm -qa | grep MySQL | xargs rpm -e
 rm -f ~/.mysql_*
 rm -rf /var/lib/mysql
+rm -f /usr/my.cnf
 echo "Mysql uninstalled"
 
 echo "Stop redis"

@@ -12,7 +12,7 @@ angular.module('MscIndex.HostView', ['ngResource'])
       promise.then (host) ->
         $scope.host = host
         if invokeId = host.configuration.createInvocationId
-          url = "/admin/api/hosts/" + host.id + "/follow/" + invokeId
+          url = "/admin/api/hosts/" + host.id + "/follow/" + invokeId + "?offset=0"
           $http.get(url).success (log) ->
             host.creationLog = log
       # Do nothing now

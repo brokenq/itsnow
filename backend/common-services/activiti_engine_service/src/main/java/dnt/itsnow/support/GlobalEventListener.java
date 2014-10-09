@@ -6,7 +6,7 @@ import org.activiti.engine.delegate.TaskListener;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by jacky on 2014/8/18.
+ * <h1>Global Event Listener</h1>
  */
 @Service
 public class GlobalEventListener extends Bean implements TaskListener {
