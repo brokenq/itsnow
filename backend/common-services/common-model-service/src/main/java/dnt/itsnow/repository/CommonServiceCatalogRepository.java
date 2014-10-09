@@ -5,7 +5,7 @@ import dnt.itsnow.model.PublicServiceCatalog;
 import java.util.List;
 
 /**
- * Created by jacky on 2014/9/2.
+ * <h1>CommonServiceCatalog Repository</h1>
  */
 public interface CommonServiceCatalogRepository {
 

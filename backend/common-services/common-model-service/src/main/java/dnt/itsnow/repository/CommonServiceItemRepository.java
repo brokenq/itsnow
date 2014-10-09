@@ -5,7 +5,7 @@ import dnt.itsnow.model.PublicServiceItem;
 import java.util.List;
 
 /**
- * Created by jacky on 2014/9/2.
+ * <h1>CommonServiceItem Repository</h1>
  */
 public interface CommonServiceItemRepository {
 

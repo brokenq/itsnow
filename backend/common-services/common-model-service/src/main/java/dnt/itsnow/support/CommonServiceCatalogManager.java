@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by jacky on 2014/9/3.
+ * <h1>Common ServiceCatalog Manager</h1>
  */
 @Service
 public class CommonServiceCatalogManager extends Bean implements CommonServiceCatalogService {
@@ -27,6 +27,7 @@ public class CommonServiceCatalogManager extends Bean implements CommonServiceCa
         if(commonServiceCatalogList==null || commonServiceCatalogList.isEmpty())
             commonServiceCatalogList = commonServiceCatalogRepository.findAll();
 
+        //convert list to tree object
         List<PublicServiceCatalog> list = new ArrayList<PublicServiceCatalog>();
         for(PublicServiceCatalog node1 : commonServiceCatalogList){
             boolean mark = false;
