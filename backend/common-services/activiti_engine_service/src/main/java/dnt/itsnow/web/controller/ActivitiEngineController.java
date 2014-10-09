@@ -1,6 +1,3 @@
-/**
- * Developer: Kadvin Date: 14-7-14 下午5:08
- */
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.platform.web.controller.ApplicationController;
@@ -19,7 +16,7 @@ import java.io.InputStream;
 import java.util.*;
 
 /**
- * The user controller
+ * <h1>The Activiti WorkFlow controller</h1>
  */
 @RestController
 @RequestMapping("/api/workflow")
@@ -265,7 +262,7 @@ public class ActivitiEngineController extends ApplicationController {
         return resultLs;
     }
 
-    @RequestMapping(value = "/tasks/claim/{id}")
+    /*@RequestMapping(value = "/tasks/claim/{id}")
     @ResponseBody
     public Object claimTasksByUser(@PathVariable("id") String taskId,@RequestParam("userId") String userId,HttpServletRequest request){
         Task task = null;
@@ -273,5 +270,5 @@ public class ActivitiEngineController extends ApplicationController {
             task = activitiEngineService.claimTask(taskId, userId);
         }
         return task;
-    }
+    }*/
 }
