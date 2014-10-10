@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 /**
- * Created by jacky on 2014/7/30.
+ * <h1>Activiti Identify Manager</h1>
  */
 public class ActivitiIdentifyManager extends Bean implements ActivitiIdentifyService {
 

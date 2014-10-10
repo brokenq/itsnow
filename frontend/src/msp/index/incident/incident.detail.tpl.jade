@@ -1,0 +1,117 @@
+.page-content
+  #fuelux-wizard.row-fluid.wizard(data-adjust='false', data-initialize='wizard')
+    ul.steps
+      li(data-step='1')
+        span.step 1
+        span.title 新建
+      li(data-step='2')
+        span.step 2
+        span.title 分派
+      li(data-step='3')
+        span.step 3
+        span.title 签收
+      li(data-step='4')
+        span.step 4
+        span.title 分析
+      li(data-step='5')
+        span.step 5
+        span.title 处理
+      li(data-step='6')
+        span.step 6
+        span.title 关闭
+    hr
+  .row
+    .col-xs-12
+      // PAGE CONTENT BEGINS
+      ng-form.form-horizontal(ng-controller='MspCreateIncidentCtrl', role='form', name='newTroubleTicketForm')
+        .form-group.has-info
+          .col-sm-6
+            label.col-sm-3.control-label.no-padding-right(for='msuAccountName')  帐户
+            .col-sm-9
+              select#msuAccountName.form-control(ng-options='m.name as m.name for m in selectedModel.accountModule', ng-model='incident.msuAccountName', name='msuAccountName')
+                option Shanghai VW
+                option Shanghai GM
+                option China Union Pay
+          .col-sm-6
+            label.col-sm-3.control-label.no-padding-right(for='requester')  请求人
+            .col-sm-9
+              input#requester.form-control(type='text', placeholder='例如：张三', required='', ng-model='incident.requesterName', name='requesterName')
+              span(ng-show='newTroubleTicketForm.requesterName.$error.required') 必填!
+        .form-group.has-info
+          .col-sm-6
+            label.col-sm-3.control-label.no-padding-right(for='phone')  联系电话
+            .col-sm-9
+              input#phone.form-control(type='text', placeholder='例如：1398888888', ng-model='incident.requesterPhone', name='requestPhone')
+          .col-sm-6
+            label.col-sm-3.control-label.no-padding-right(for='email')  邮箱
+            .col-sm-9
+              input#email.form-control(type='text', placeholder='例如：stone@gmail.com', required='', ng-model='incident.requesterEmail', name='requestEmail')
+              span(ng-show='newTroubleTicketForm.requestEmail.$error.required') 必填
+              span(ng-show='newTroubleTicketForm.requestEmail.$error.email') 地址不对
+        .form-group.has-info
+          .col-sm-6
+            label.col-sm-3.control-label.no-padding-right(for='area')  所处地区
+            .col-sm-9
+              select#area.form-control(ng-options='m.name as m.name for m in selectedModel.areaModule', ng-model='incident.requesterLocation', name='requesterLocation')
+                option(value='')  请选择
+          .col-sm-6
+            label.col-sm-3.control-label.no-padding-right(for='requestType')  请求类型
+            .col-sm-9
+              select#requestType.form-control(ng-options='m.name as m.name for m in selectedModel.requestTypeModule', ng-model='incident.requestType')
+        .hr.hr-24
+        .form-group.has-info
+          .col-sm-6
+            label.col-sm-3.control-label.no-padding-right(for='serviceCatalog')  服务目录
+            .col-sm-9
+              select#serviceCatalog.form-control(ng-options='m.name as m.name for m in selectedModel.serviceCatalogModule', ng-model='incident.serviceCatalog')
+                option(value='')  请选择
+          .col-sm-6
+            label.col-sm-3.control-label.no-padding-right(for='impact')  影响程度
+            .col-sm-9
+              select#impact.form-control(ng-options='m.name as m.name for m in selectedModel.impactModule', ng-model='incident.impact')
+        .form-group.has-info
+          .col-sm-6
+            label.col-sm-3.control-label.no-padding-right(for='priority')  优先级
+            .col-sm-9
+              select#priority.form-control(ng-options='m.name as m.name for m in selectedModel.priorityModule', ng-model='incident.priority')
+          .col-sm-6
+            label.col-sm-3.control-label.no-padding-right(for='urgency')  紧急程度
+            .col-sm-9
+              select#urgency.form-control(ng-options='m.name as m.name for m in selectedModel.urgencyModule', ng-model='incident.urgency')
+        .form-group.has-info
+          .col-sm-6
+            label.col-sm-3.control-label.no-padding-right(for='category')  配置分类
+            .col-sm-9
+              select#category.form-control(ng-options='m.name as m.name for m in selectedModel.categoryModule', ng-model='incident.category')
+                option(value='')  请选择
+          .col-sm-6
+            label.col-sm-3.control-label.no-padding-right(for='ci')  配置项
+            .col-sm-9
+              select#ci.form-control(ng-options='m.name as m.name for m in selectedModel.ciModule', ng-model='incident.ci')
+                option(value='')  请选择
+        .hr.hr-24
+        .form-group.row.has-info
+          .col-sm-offset-1.col-sm-11
+            label(for='requestDescription') 问题描述
+            textarea#requestDescription.form-control(required='', placeholder='问题描述', ng-model='incident.requestDescription', name='requestDescription', rows='5')
+            span(ng-show='newTroubleTicketForm.requestDescription.$error.required') 必填
+        div(ng-show='buttonLabel === "解决"')
+          label.block
+            input#resolved.ace(type='checkbox', ng-model='incident.resolved', name='resolved')
+            span.lbl
+              | 是否解决
+        div(ng-hide='buttonLabel==="新建"')
+          .form-group
+            .col-sm-offset-1.col-sm-11
+              label(for='solution') 解决方案
+              textarea#solution.form-control(placeholder='解决方案', ng-model='incident.solution', name='solution', rows='5')
+              span(ng-show='newTroubleTicketForm.solution.$error.required') 必填
+        .hr.hr-24
+        .clearfix.form-actions
+          .col-md-offset-1.col-md-11
+            button.btn.btn-info(ng-disabled='newTroubleTicketForm.$invalid', ng-click='process(incident)', type='submit')
+              i.icon-ok.bigger-110
+              | {{buttonLabel}}
+    // /.col
+  // /.row
+// /.page-content
