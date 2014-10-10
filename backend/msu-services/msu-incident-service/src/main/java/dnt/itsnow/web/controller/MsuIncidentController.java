@@ -2,15 +2,13 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.Incident;
 import dnt.itsnow.model.MsuIncident;
-import dnt.itsnow.platform.web.annotation.AfterFilter;
+import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.service.MsuIncidentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * <h1>MSU Incident服务的控制器</h1>
@@ -39,13 +37,13 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
      * @return  Incident列表
      */
     @RequestMapping
-    public List<Incident> index(@RequestParam(value = "key", required = false) String key) {
+    public Page<Incident> index(@RequestParam(value = "key", required = false) String key) {
 
         logger.debug("Finding all msu incidents");
         //根据实例查询对应表单数据
         indexPage = service.findAllByUserAndKey(currentUser.getUsername(), key, pageRequest);
         logger.debug("Found msu incidents:{}",indexPage.getTotalElements());
-        return indexPage.getContent();
+        return indexPage;
     }
 
     /**
@@ -57,13 +55,13 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
      */
     @RequestMapping("closed")
     @ResponseBody
-    public List<Incident> indexClosed(@RequestParam(value = "key", required = false) String key) {
+    public Page<Incident> indexClosed(@RequestParam(value = "key", required = false) String key) {
 
         logger.debug("Finding all closed incidents");
         //根据实例查询对应表单数据
         indexPage = service.findAllClosedByUserAndKey(currentUser.getUsername(), key, pageRequest);
         logger.debug("Found closed incidents:{}",indexPage.getTotalElements());
-        return indexPage.getContent();
+        return indexPage;
     }
 
     /**
@@ -75,13 +73,13 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
      */
     @RequestMapping("created")
     @ResponseBody
-    public List<Incident> indexCreated(@RequestParam(value = "key", required = false) String key) {
+    public Page<Incident> indexCreated(@RequestParam(value = "key", required = false) String key) {
 
         logger.debug("Finding all my created incidents");
         //根据实例查询对应表单数据
         indexPage = service.findAllCreatedByUserAndKey(currentUser.getUsername(), key, pageRequest);
         logger.debug("Found my created incidents:{}",indexPage.getTotalElements());
-        return indexPage.getContent();
+        return indexPage;
     }
 
 
@@ -139,10 +137,5 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
         super.initDefaultPageRequest(page,size,sort);
     }
 
-    @Override
-    @AfterFilter(method =  RequestMethod.GET, value = {"index","indexClosed","indexCreated"})
-    public void renderPageToHeader(HttpServletResponse response){
-        super.renderPageToHeader(response);
-    }
 
 }

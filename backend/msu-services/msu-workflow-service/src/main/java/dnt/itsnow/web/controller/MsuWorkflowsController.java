@@ -2,6 +2,7 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.exception.WorkflowException;
 import dnt.itsnow.model.Workflow;
+import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.service.WorkflowService;
@@ -32,13 +33,13 @@ public class MsuWorkflowsController extends SessionSupportController<Workflow> {
      * @return 地点列表
      */
     @RequestMapping
-    public List<Workflow> index(@RequestParam(value = "keyword", required = false) String keyword){
-        logger.debug("Listing Workflow");
+    public Page<Workflow> index(@RequestParam(value = "keyword", required = false) String keyword){
+        logger.debug("Listing Workflow by keyword: {}", keyword);
 
         indexPage = service.findAll(keyword, pageRequest, "0");
 
-        logger.debug("Listed Workflow number {}", indexPage.getNumber());
-        return indexPage.getContent();
+        logger.debug("Found  {}", indexPage);
+        return indexPage;
     }
 
     /**

@@ -4,6 +4,7 @@
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.Contract;
+import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.ServiceException;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
@@ -13,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * <h1>Contracts Controller</h1>
@@ -41,16 +41,16 @@ public class MutableContractsController extends SessionSupportController<Contrac
      * @return 合同
      */
     @RequestMapping(method=RequestMethod.GET)
-    public List<Contract> index(){
+    public Page<Contract> index(){
         logger.debug("Listing contracts");
         try {
             indexPage = mutableContractService.findAllByAccount(mainAccount, pageRequest);
-            logger.debug("Found   contracts {}", indexPage.getTotalElements());
+            logger.debug("Found   {}", indexPage);
         }
         catch (ServiceException e) {
             throw new WebClientSideException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
         }
-        return indexPage.getContent();
+        return indexPage;
     }
 
     /**

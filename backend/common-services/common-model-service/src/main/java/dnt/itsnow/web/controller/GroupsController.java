@@ -5,6 +5,7 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.exception.GroupException;
 import dnt.itsnow.model.Group;
+import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.service.GroupService;
@@ -37,13 +38,13 @@ public class GroupsController extends SessionSupportController<Group> {
 
     // 虽然也是index，但这里不需要分页，application controller 也不会错
     @RequestMapping
-    public List<Group> index(@RequestParam(value = "keyword", required = false) String keyword) {
-        logger.debug("Listing group keyword:{}" + keyword);
+    public Page<Group> index(@RequestParam(value = "keyword", required = false) String keyword) {
+        logger.debug("Listing Groups by keyword: {}" + keyword);
 
         indexPage = service.findAll(keyword, pageRequest);
 
-        logger.debug("Listed group number {}", indexPage.getNumber());
-        return indexPage.getContent();
+        logger.debug("Listed  {}", indexPage);
+        return indexPage;
     }
 
     @RequestMapping("/{name}")

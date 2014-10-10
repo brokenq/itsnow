@@ -5,6 +5,7 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.exception.ProcessDictionaryException;
 import dnt.itsnow.model.ProcessDictionary;
+import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.platform.web.exception.WebServerSideException;
@@ -45,15 +46,15 @@ public class ProcessDictionariesController extends SessionSupportController<Proc
      * @return 字典列表
      */
     @RequestMapping
-    public List<ProcessDictionary> index(@RequestParam(value = "keyword", required = false) String keyword) {
+    public Page<ProcessDictionary> index(@RequestParam(value = "keyword", required = false) String keyword) {
 
-        logger.debug("Listing Process Dictionary by keyword:{}", keyword);
+        logger.debug("Listing Process Dictionaries by keyword: {}", keyword);
 
         indexPage = service.findAll(keyword, pageRequest);
 
-        logger.debug("Listed ProcessDictionary number : {}", indexPage.getContent().size());
+        logger.debug("Listed  {}", indexPage);
 
-        return indexPage.getContent();
+        return indexPage;
     }
 
     /**

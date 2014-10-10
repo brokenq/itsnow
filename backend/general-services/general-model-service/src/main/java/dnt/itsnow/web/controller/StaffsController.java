@@ -2,6 +2,7 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.exception.StaffException;
 import dnt.itsnow.model.Staff;
+import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.service.StaffService;
@@ -10,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * <h1>Staffs Controller</h1>
@@ -32,13 +32,13 @@ public class StaffsController extends SessionSupportController<Staff> {
      * @return 地点列表
      */
     @RequestMapping
-    public List<Staff> index(@RequestParam(value = "keyword", required = false) String keyword){
-        logger.debug("Listing Staff");
+    public Page<Staff> index(@RequestParam(value = "keyword", required = false) String keyword){
+        logger.debug("Listing Staffs by keyword: {}", keyword);
 
         indexPage = staffService.findAll(keyword, pageRequest);
 
-        logger.debug("Listed Staff number {}", indexPage.getNumber());
-        return indexPage.getContent();
+        logger.debug("Listed  {}", indexPage);
+        return indexPage;
     }
 
     /**

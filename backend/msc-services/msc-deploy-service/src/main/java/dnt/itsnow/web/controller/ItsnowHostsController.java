@@ -5,6 +5,7 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.exception.ItsnowHostException;
 import dnt.itsnow.model.ItsnowHost;
+import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.service.ItsnowHostService;
@@ -51,11 +52,11 @@ public class ItsnowHostsController extends SessionSupportController<ItsnowHost>{
      * @return 主机列表
      */
     @RequestMapping
-    public List<ItsnowHost> index( @RequestParam(value = "keyword", required = false) String keyword ) {
-        logger.debug("Listing itsnow hosts");
+    public Page<ItsnowHost> index( @RequestParam(value = "keyword", required = false) String keyword ) {
+        logger.debug("Listing itsnow hosts by keyword: {}", keyword);
         indexPage = hostService.findAll(keyword, pageRequest);
-        logger.debug("Found   itsnow hosts {}", indexPage.getTotalElements());
-        return indexPage.getContent();
+        logger.debug("Found   {}", indexPage);
+        return indexPage;
     }
 
     /**

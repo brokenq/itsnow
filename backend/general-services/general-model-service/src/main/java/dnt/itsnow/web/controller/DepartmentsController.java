@@ -5,6 +5,7 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.exception.DepartmentException;
 import dnt.itsnow.model.Department;
+import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.service.DepartmentService;
@@ -35,13 +36,13 @@ public class DepartmentsController extends SessionSupportController<Department> 
      * @return 地点列表
      */
     @RequestMapping
-    public List<Department> index(@RequestParam(value = "keyword", required = false) String keyword){
-        logger.debug("Listing Department");
+    public Page<Department> index(@RequestParam(value = "keyword", required = false) String keyword){
+        logger.debug("Listing Departments by keyword: {}", keyword);
 
         indexPage = departmentService.findAll(keyword, pageRequest);
 
-        logger.debug("Listed Department number {}", indexPage.getNumber());
-        return indexPage.getContent();
+        logger.debug("Listed  {}", indexPage);
+        return indexPage;
     }
 
     /**
