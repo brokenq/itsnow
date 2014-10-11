@@ -5,9 +5,8 @@ package dnt.itsnow.platform.web;
 
 import dnt.itsnow.platform.web.interceptor.AfterFilterInterceptor;
 import dnt.itsnow.platform.web.interceptor.BeforeFilterInterceptor;
-import dnt.itsnow.platform.web.interceptor.DelayedInterceptor;
-import dnt.itsnow.platform.web.support.DelayedRequestResponseBodyMethodProcessor;
 import dnt.itsnow.platform.web.support.ExtendedRequestMappingHandlerMapping;
+import dnt.itsnow.platform.web.support.PageRequestResponseBodyMethodProcessor;
 import org.apache.commons.lang.reflect.FieldUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -96,17 +95,15 @@ public class SpringMvcConfig extends WebMvcConfigurationSupport implements Initi
         }
         if( index == -1 )
             throw new IllegalStateException("Can't find any RequestResponseBodyMethodProcessor in requestMappingHandlerAdapter#handlers");
-        RequestResponseBodyMethodProcessor wrapped = (RequestResponseBodyMethodProcessor) actual.get(index);
-        DelayedRequestResponseBodyMethodProcessor delayed = new DelayedRequestResponseBodyMethodProcessor(wrapped);
-        actual.set(index, delayed);
-        logger.debug("Replace Spring MVC RequestResponseBodyMethodProcessor as delayed one");
+        PageRequestResponseBodyMethodProcessor pageRenderer = new PageRequestResponseBodyMethodProcessor(getMessageConverters(), mvcContentNegotiationManager());
+        actual.add(index, pageRenderer);
+        logger.debug("Insert Page RequestResponseBodyMethodProcessor before origin");
     }
 
     @Override
     protected void addInterceptors(InterceptorRegistry registry) {
         super.addInterceptors(registry);
         RequestMappingHandlerAdapter adapter = this.requestMappingHandlerAdapter();
-        registry.addInterceptor(new DelayedInterceptor(adapter));
         registry.addInterceptor(new BeforeFilterInterceptor(adapter));
         registry.addInterceptor(new AfterFilterInterceptor(adapter));
         logger.debug("Add Before/After/Delayed Filter Interceptors");

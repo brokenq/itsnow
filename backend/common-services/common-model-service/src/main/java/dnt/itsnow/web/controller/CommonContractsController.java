@@ -6,6 +6,7 @@ package dnt.itsnow.web.controller;
 import dnt.itsnow.exception.AccountException;
 import dnt.itsnow.exception.ContractException;
 import dnt.itsnow.model.Contract;
+import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.ServiceException;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.platform.web.exception.WebServerSideException;
@@ -15,8 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * <h1>合同控制器</h1>
@@ -42,7 +41,7 @@ public class CommonContractsController extends SessionSupportController<Contract
      * @return 合同列表，其中的合同信息不包括Contract Detail
      */
     @RequestMapping
-    public List<Contract> index( ) {
+    public Page<Contract> index( ) {
         logger.debug("Listing contracts");
         try {
             indexPage = contractService.findAllByAccount(mainAccount, pageRequest);
@@ -50,8 +49,8 @@ public class CommonContractsController extends SessionSupportController<Contract
             throw new WebClientSideException(HttpStatus.BAD_REQUEST,
                     "Your main account can't list contracts: " + e.getMessage());
         }
-        logger.debug("Found   contracts {}", indexPage.getTotalElements());
-        return indexPage.getContent();
+        logger.debug("Found   {}", indexPage);
+        return indexPage;
     }
 
     /**

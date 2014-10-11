@@ -6,7 +6,7 @@
 
 script_dir=$(cd `dirname $0` && pwd )
 
-echo "TZ='Asia/Shanghai'; export TZ" >> /root/.profile
+echo "TZ='Asia/Shanghai'; export TZ" >> /root/.bash_profile
 
 echo "Stop the firewalld for dev phase"
 systemctl stop firewalld

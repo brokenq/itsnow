@@ -5,6 +5,7 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.exception.GroupException;
 import dnt.itsnow.model.Group;
+import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.platform.web.exception.WebServerSideException;
@@ -44,15 +45,15 @@ public class MscGroupsController extends SessionSupportController<Group> {
      * @return 组信息列表
      */
     @RequestMapping
-    public List<Group> index(@RequestParam(value = "keyword", required = false) String keyword) {
+    public Page<Group> index(@RequestParam(value = "keyword", required = false) String keyword) {
 
-        logger.debug("Listing group keyword {}" + keyword);
+        logger.debug("Listing Groups by keyword: {}", keyword);
 
         indexPage = service.findAll(keyword, pageRequest);
 
-        logger.debug("Listed group number {}", indexPage.getContent().size());
+        logger.debug("Listed  {}", indexPage);
 
-        return indexPage.getContent();
+        return indexPage;
     }
 
     /**

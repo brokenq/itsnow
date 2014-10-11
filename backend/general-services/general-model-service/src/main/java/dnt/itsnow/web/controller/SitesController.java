@@ -2,6 +2,7 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.exception.SiteException;
 import dnt.itsnow.model.Site;
+import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.platform.web.exception.WebServerSideException;
@@ -11,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * <h1>地点的控制器</h1>
@@ -42,13 +42,13 @@ public class SitesController extends SessionSupportController<Site> {
      * @return 地点列表
      */
     @RequestMapping
-    public List<Site> index(@RequestParam(value = "keyword", required = false) String keyword) {
-        logger.debug("Listing site keyword:{}" + keyword);
+    public Page<Site> index(@RequestParam(value = "keyword", required = false) String keyword) {
+        logger.debug("Listing Sites by keyword: {}" + keyword);
 
         indexPage = siteService.findAll(keyword, pageRequest);
 
-        logger.debug("Listed Site number {}", indexPage.getNumber() + " TotalPages:" + indexPage.getTotalPages() + " size:" + indexPage.getSize() + " Content:" + indexPage.getContent());
-        return indexPage.getContent();
+        logger.debug("Listed  {}", indexPage);
+        return indexPage;
     }
 
     /**

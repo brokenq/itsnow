@@ -2,6 +2,7 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.exception.WorkTimeException;
 import dnt.itsnow.model.WorkTime;
+import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.service.WorkTimeService;
@@ -10,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * <h1>WorkTime Controller</h1>
@@ -25,13 +25,13 @@ public class WorkTimesController extends SessionSupportController<WorkTime> {
     private WorkTimeService service;
 
     @RequestMapping
-    public List<WorkTime> index(@RequestParam(value = "keyword", required = false) String keyword){
-        logger.debug("Listing Work Time");
+    public Page<WorkTime> index(@RequestParam(value = "keyword", required = false) String keyword){
+        logger.debug("Listing Work Times by keyword: {}", keyword);
 
         indexPage = service.findAll(keyword, pageRequest);
 
-        logger.debug("Listed Work Time number {}", indexPage.getNumber());
-        return indexPage.getContent();
+        logger.debug("Listed  {}", indexPage);
+        return indexPage;
     }
 
     @RequestMapping("/{sn}")

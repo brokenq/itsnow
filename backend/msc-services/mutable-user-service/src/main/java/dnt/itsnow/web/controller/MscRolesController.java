@@ -3,6 +3,7 @@ package dnt.itsnow.web.controller;
 import dnt.itsnow.exception.MscRoleException;
 import dnt.itsnow.model.Role;
 import dnt.itsnow.model.UserAuthority;
+import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.platform.web.exception.WebServerSideException;
@@ -44,15 +45,15 @@ public class MscRolesController extends SessionSupportController<Role> {
      * @return 角色列表
      */
     @RequestMapping
-    public List<Role> index(@RequestParam(value = "keyword", required = false) String keyword) {
+    public Page<Role> index(@RequestParam(value = "keyword", required = false) String keyword) {
 
-        logger.debug("Listing role keyword:{}" + keyword);
+        logger.debug("Listing Roles by keyword: {}", keyword);
 
         indexPage = service.findAll(keyword, pageRequest);
 
-        logger.debug("Listed role number:{}", indexPage.getContent().size());
+        logger.debug("Listed  {}", indexPage);
 
-        return indexPage.getContent();
+        return indexPage;
     }
 
     /**
