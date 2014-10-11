@@ -21,13 +21,17 @@ public class MscGroupRepositoryConfig extends RepositoryConfigWithH2 {
                 "classpath:META-INF/setup/create_users.sql@up",
                 "classpath:META-INF/setup/create_groups.sql@up",
                 "classpath:META-INF/setup/create_group_members.sql@up",
+                "classpath:META-INF/setup/create_roles.sql@up",
+                "classpath:META-INF/setup/create_group_authorities.sql@up",
 
                 "classpath:META-INF/setup/initialization_groups.sql",
 
                 "classpath:META-INF/setup/insert_accounts.sql@up",
                 "classpath:META-INF/setup/insert_users.sql@up",
                 "classpath:META-INF/setup/insert_groups.sql@up",
-                "classpath:META-INF/setup/insert_group_members.sql@up"
+                "classpath:META-INF/setup/insert_group_members.sql@up",
+                "classpath:META-INF/setup/insert_roles.sql@up",
+                "classpath:META-INF/setup/insert_group_authorities.sql@up"
         };
     }
 }
