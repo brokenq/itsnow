@@ -29,23 +29,19 @@ import java.util.List;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class DepartmentManagerTest {
 
-    PageRequest pageRequest;
-
     @Autowired
     DepartmentService service;
 
-    @Before
-    public void setUp() throws Exception {
-        pageRequest = new PageRequest(0, 1);
+    @Test
+    public void testFindAllByTree() throws Exception {
+        List<Department> departments = service.findAll(true);
+        Assert.assertNotNull(departments);
     }
 
-
     @Test
-    public void testFindAll() throws Exception {
-
-        Page<Department> departments = service.findAll("部", pageRequest);
-        Assert.assertNotNull(departments.getTotalElements());
-        Assert.assertNotNull(departments.getNumberOfElements());
+    public void testFindAllByNoTree() throws Exception {
+        List<Department> departments = service.findAll(false);
+        Assert.assertNotNull(departments);
     }
 
     @Test
@@ -59,9 +55,10 @@ public class DepartmentManagerTest {
         Department department = new Department();
         department.setSn("006");
         department.setName("后勤保障部");
+        department.setPosition(11L);
         department.setDescription("It's test.");
-        department.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        department.setUpdatedAt(department.getCreatedAt());
+        department.creating();
+        department.updating();
 
         Site site = new Site();
         site.setSn("10000");
@@ -73,8 +70,8 @@ public class DepartmentManagerTest {
         workTime.setId(1L);
         site.setWorkTime(workTime);
         site.setDescription("It's test.");
-        site.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        site.setUpdatedAt(site.getCreatedAt());
+        site.creating();
+        site.updating();
         List<Site> sites = new ArrayList<Site>();
         sites.add(site);
         department.setSites(sites);
@@ -108,15 +105,15 @@ public class DepartmentManagerTest {
         workTime.setId(1L);
         site.setWorkTime(workTime);
         site.setDescription("It's test.");
-        site.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        site.setUpdatedAt(site.getCreatedAt());
+        site.creating();
+        site.updating();
         List<Site> sites = new ArrayList<Site>();
         sites.add(site);
         department.setSites(sites);
 
         service.update(department);
         department = service.findBySn(sn);
-        Assert.assertTrue(department.getDescription() == "it's a update test");
+        Assert.assertTrue("it's a update test".equals(department.getDescription()));
     }
 
 }

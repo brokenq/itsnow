@@ -27,8 +27,7 @@
         <module>msc-deploy-service</module>
         <module>mutable-service_catalog-service</module>
         <module>mutable-contract-service</module>
-        <module>msc-role-service</module>
-        <module>msc-group-service</module>
+        <!--<module>msc-group-service</module>-->
     </modules>
 
     <dependencies>

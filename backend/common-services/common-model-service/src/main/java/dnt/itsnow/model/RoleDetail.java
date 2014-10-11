@@ -3,7 +3,7 @@ package dnt.itsnow.model;
 /**
  * <h1>类功能说明</h1>
  */
-public class RoleDetail extends Group {
+public class RoleDetail {
 
     public String accountName;
     public String username;

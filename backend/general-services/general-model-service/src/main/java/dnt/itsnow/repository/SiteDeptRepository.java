@@ -16,6 +16,9 @@ public interface SiteDeptRepository {
             "(#{site.id}, #{department.id})")
     public void create(SiteDept siteDept);
 
+    @Select("SELECT * FROM site_depts WHERE site_id = #{site.id} AND dept_id = #{department.id}")
+    public SiteDept find(SiteDept siteDept);
+
     public List<SiteDept> findAll();
 
     /**

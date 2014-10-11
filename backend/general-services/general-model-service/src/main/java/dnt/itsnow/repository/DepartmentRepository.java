@@ -12,8 +12,8 @@ import java.util.List;
 public interface DepartmentRepository {
 
     @Options(useGeneratedKeys = true, keyColumn = "id")
-    @Insert("INSERT INTO departments (sn, name, parent_id, description, created_at, updated_at) VALUES " +
-            "(#{sn}, #{name}, #{parent.id}, #{description}, #{createdAt}, #{updatedAt})")
+    @Insert("INSERT INTO departments (sn, name, parent_id, position, description, created_at, updated_at) VALUES " +
+            "(#{sn}, #{name}, #{parent.id}, #{position}, #{description}, #{createdAt}, #{updatedAt})")
     public void create(Department department);
 
     @Delete("DELETE FROM departments WHERE sn = #{sn}")
@@ -23,32 +23,16 @@ public interface DepartmentRepository {
             " sn                    = #{sn}, " +
             " name                  = #{name}, " +
             " parent_id             = #{parent.id}," +
+            " position              = #{position}," +
             " description           = #{description}," +
             " created_at            = #{createdAt}, " +
             " updated_at            = #{updatedAt} " +
             " WHERE id              = #{id} ")
     public void update(Department department);
 
-    @Select("select count(0) from departments")
-    public int count();
-
-//    @Select("select * from departments order by ${sort} ${dir} limit #{offset}, #{size}")
-    public List<Department> find(
-            @Param("sort") String sort,
-            @Param("dir") String dir,
-            @Param("offset") int offset,
-            @Param("size") int size);
-
-    @Select("select count(*) from departments where name like #{keyword} or sn like #{keyword}")
-    public int countByKeyword(@Param("keyword") String keyword);
-
-//    @Select("select * from departments where name like #{keyword} or sn like #{keyword}" +
-//            " order by ${sort} ${dir} limit #{offset}, #{size}")
-    public List<Department> findByKeyword(@Param("keyword") String keyword,
-                                    @Param("sort") String sort,
-                                    @Param("dir") String dir,
-                                    @Param("offset") int offset,
-                                    @Param("size") int size);
+    @Select("SELECT * FROM departments")
+    public List<Department> findAll();
 
     public Department findBySn(@Param("sn") String sn);
+
 }

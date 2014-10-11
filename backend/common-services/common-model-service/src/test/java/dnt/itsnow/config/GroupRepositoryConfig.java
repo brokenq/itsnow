@@ -18,9 +18,9 @@ public class GroupRepositoryConfig extends RepositoryConfigWithH2 {
     protected String[] sqlScripts() {
         return new String[]{
                 "classpath:META-INF/migrate/20140722125410_create_roles.sql@up",
-                "classpath:META-INF/migrate/20140722125420_insert_roles.sql@up",
+                "classpath:META-INF/setup/insert_roles.sql@up",
                 "classpath:META-INF/migrate/20140722135407_create_groups.sql@up",
-                "classpath:META-INF/migrate/20140728161920_insert_groups.sql@up",
+                "classpath:META-INF/setup/insert_groups.sql@up",
                 "classpath:META-INF/migrate/20140912164525_create_group_roles.sql@up",
                 "classpath:META-INF/migrate/20140912164639_insert_group_roles.sql@up"
         };

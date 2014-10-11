@@ -1,5 +1,5 @@
 // List System
-angular.module('System.Department', ['ngTable', 'ngResource'])
+angular.module('System.Department', ['ngTable', 'ngResource', 'ui.tree'])
 
     .config(function ($stateProvider) {
         $stateProvider.state('department', {
@@ -10,7 +10,10 @@ angular.module('System.Department', ['ngTable', 'ngResource'])
     })
 
     .factory('DepartmentService', ['$resource', function ($resource) {
-        return $resource("/api/departments");
+        return $resource("/api/departments/:sn", {}, {
+            query : {method:'GET', params:{isTree:true}, isArray:true},
+            show : {method:'GET', params:{sn:'@sn'}}
+        });
     }
     ])
 
@@ -18,69 +21,35 @@ angular.module('System.Department', ['ngTable', 'ngResource'])
     .filter('siteFilter', function () {
         var siteFilter = function (input) {
             var name = '';
-            for (var i = 0; i < input.length; i++) {
-                name += input[i].name + ',';
+            if (input !== null && input !== undefined) {
+                for (var i = 0; i < input.length; i++) {
+                    name += input[i].name + ',';
+                }
+                name = name.substring(0, name.length - 1);
             }
-            name = name.substring(0, name.length - 1);
-            return name;
+            return name || '无';
         };
         return siteFilter;
     })
 
-    .controller('DepartmentListCtrl', ['$scope', '$location', '$timeout', 'ngTableParams', 'DepartmentService', function ($scope, $location, $timeout, NgTableParams, departmentService) {
-        var options = {
-            page: 1,           // show first page
-            count: 10           // count per page
-        };
+    .controller('DepartmentListCtrl', ['$scope', 'DepartmentService', function ($scope, departmentService) {
 
-        var args = {
-            total: 0,
-            getData: function ($defer, params) {
-                $location.search(params.url()); // put params in url
-                departmentService.query(params.url(), function (data, headers) {
-                        $timeout(function () {
-                                params.total(headers('total'));
-                                $defer.resolve($scope.department = data);
-                            },
-                            500
-                        );
-                    }
-                );
-            }
-        };
-        $scope.tableParams = new NgTableParams(angular.extend(options, $location.search()), args);
-        $scope.checkboxes = { 'checked': false, items: {} };
-
-        // watch for check all checkbox
-        $scope.$watch('checkboxes.checked', function (value) {
-            angular.forEach($scope.department, function (item) {
-                if (angular.isDefined(item.sn)) {
-                    $scope.checkboxes.items[item.sn] = value;
-
-                }
-            });
+        var promise = departmentService.query().$promise;
+        promise.then(function (data) {
+            $scope.departments = data;
         });
 
-        // watch for data checkboxes
-        $scope.$watch('checkboxes.items', function (values) {
-                if (!$scope.department) {
-                    return;
-                }
-                var checked = 0;
-                var unchecked = 0;
-                var total = $scope.department.length;
-                angular.forEach($scope.department, function (item) {
-                    checked += ($scope.checkboxes.items[item.sn]) || 0;
-                    unchecked += (!$scope.checkboxes.items[item.sn]) || 0;
-                });
-                if ((unchecked === 0) || (checked === 0)) {
-                    $scope.checkboxes.checked = (checked == total);
-                }
-                // grayed checkbox
-                angular.element(document.getElementById("select_all")).prop("indeterminate", (checked !== 0 && unchecked !== 0));
-            },
-           true
-        );
+        $scope.show = function(sn){
+            console.log("sn:"+sn);
+            promise = departmentService.show({sn:sn}).$promise;
+            promise.then(function (data) {
+                $scope.departmentDetail = data;
+            });
+        };
+
+        $scope.toggle = function(scope) {
+            scope.toggle();
+        };
 
     }
     ]);

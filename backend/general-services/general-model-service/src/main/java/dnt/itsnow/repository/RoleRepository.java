@@ -1,6 +1,7 @@
 package dnt.itsnow.repository;
 
 import dnt.itsnow.model.Role;
+import dnt.itsnow.model.UserAuthority;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -59,5 +60,41 @@ public interface RoleRepository {
 
     @Select("SELECT * FROM roles WHERE name = #{name}")
     public Role findByName(@Param("name") String name);
+
+    /**
+     * 创建角色和用户关系
+     * @param userAuthority 用户与角色关系实体类
+     */
+    @Insert("INSERT INTO authorities ( username, authority) VALUES (#{username}, #{authority})")
+    public void createRoleAndUserRelation(UserAuthority userAuthority);
+
+    /**
+     * 删除角色和用户关系
+     * @param userAuthority 用户与角色关系实体类
+     */
+    @Delete("DELETE FROM authorities WHERE username = #{username} and authority = #{authority}")
+    public void deleteRoleAndUserRelation(UserAuthority userAuthority);
+
+    /**
+     * 纯属为这测试才写了此方法
+     * @param userAuthority 用户与角色关系实体类
+     * @return
+     */
+    @Select("SELECT * FROM authorities WHERE username = #{username} and authority = #{authority}")
+    public UserAuthority findRoleAndUserRelation(UserAuthority userAuthority);
+
+    /**
+     * 删除所包含有此角色名的角色与用户关系
+     * @param authority 角色名
+     */
+    @Delete("DELETE FROM authorities WHERE authority = #{authority}")
+    public void deleteRoleAndUserRelationByRoleName(@Param("authority") String authority);
+
+    /**
+     * 删除所包含有此角色名的角色与组关系
+     * @param authority 角色名
+     */
+    @Delete("DELETE FROM group_authorities WHERE authority = #{authority}")
+    public void deleteRoleAndGroupRelationByRoleName(@Param("authority") String authority);
 
 }

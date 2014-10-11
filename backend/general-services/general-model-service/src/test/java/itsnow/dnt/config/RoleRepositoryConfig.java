@@ -27,6 +27,9 @@ public class RoleRepositoryConfig extends RepositoryConfigWithH2 {
                 "classpath:META-INF/setup/create_accounts.sql",
                 "classpath:META-INF/setup/create_users.sql@up",
                 "classpath:META-INF/setup/create_staffs.sql@up",
+                "classpath:META-INF/setup/create_groups.sql@up",
+                "classpath:META-INF/setup/create_group_authorities.sql@up",
+                "classpath:META-INF/setup/create_group_members.sql@up",
 
                 "classpath:META-INF/setup/initialization_roles.sql@up",
 
@@ -39,7 +42,10 @@ public class RoleRepositoryConfig extends RepositoryConfigWithH2 {
                 "classpath:META-INF/setup/insert_authorities.sql@up",
                 "classpath:META-INF/setup/insert_accounts.sql",
                 "classpath:META-INF/setup/insert_users.sql@up",
-                "classpath:META-INF/setup/insert_staffs.sql@up"
+                "classpath:META-INF/setup/insert_staffs.sql@up",
+                "classpath:META-INF/setup/insert_groups.sql@up",
+                "classpath:META-INF/setup/insert_group_authorities.sql@up",
+                "classpath:META-INF/setup/insert_group_members.sql@up"
         };
     }
 }
