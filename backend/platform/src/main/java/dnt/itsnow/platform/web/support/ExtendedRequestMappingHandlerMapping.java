@@ -92,7 +92,6 @@ public class ExtendedRequestMappingHandlerMapping extends RequestMappingHandlerM
             registerHandlerMethod(handler, method, mapping);
             HandlerMethod handlerMethod = getHandlerMethods().get(mapping);
             RouteItem routeItem = RouteItem.fromMapping(mapping, handlerMethod);
-            routeItem.showDetail(true);
             //Extended Request Mapping Handler Mapping's logger/info has been disabled
             SpringMvcConfig.logger.info(routeItem);
         }
