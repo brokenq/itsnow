@@ -85,6 +85,7 @@ public class GeneralGroupManager extends Bean implements GeneralGroupService {
         if(group==null){
             throw new GroupException("MspGroup entry can not be empty.");
         }
+        repository.deleteGroupAuthority(group.getId());
         repository.delete(group.getName());
         return group;
     }
