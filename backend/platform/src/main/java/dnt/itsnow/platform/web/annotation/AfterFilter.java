@@ -8,7 +8,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import java.lang.annotation.*;
 
 /**
- * 用户标记特定方法需要在请求之前执行
+ * <h1>用户标记特定方法需要在请求之后执行</h1>
+ *
+ * 特别注意：
+ *   之后执行的方法，不能向http response里面写入任何东西，因为此时http response 流业已关闭
  */
 @Documented
 @Target( { ElementType.METHOD })

@@ -10,7 +10,10 @@ angular.module('System.Role', ['ngTable', 'ngResource'])
     })
 
     .factory('RoleService', ['$resource', function ($resource) {
-        return $resource("/api/msc-roles");
+        return $resource("/api/msc-roles", {
+            query: { method: 'GET' },
+            remove: { method: 'DELETE' }
+        });
     }
     ])
 
@@ -96,6 +99,10 @@ angular.module('System.Role', ['ngTable', 'ngResource'])
         $scope.changeSelection = function (role) {
             roleName = {name:role.name};
             $scope.detailTableParams.reload();
+        };
+
+        $scope.deleteRole = function () {
+            roleService.remove($scope.role);
         };
 
     }

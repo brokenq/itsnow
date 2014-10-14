@@ -5,19 +5,48 @@ import dnt.itsnow.model.Department;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 
+import java.util.List;
+
 /**
- * <h1>部门服务类</h1>
+ * <h1>部门业务层</h1>
  */
 public interface DepartmentService {
 
-    public Page<Department> findAll(String keyword, Pageable pageable);
-
-    public Department findBySn(String sn);
-
+    /**
+     * <h2>创建部门信息</h2>
+     * @param department 新增的部门
+     * @return 信息
+     * @throws DepartmentException
+     */
     public Department create(Department department) throws DepartmentException;
 
+    /**
+     * <h2>销毁部门信息</h2>
+     * @param department 待销毁部门
+     * @throws DepartmentException
+     */
+    public void destroy(Department department) throws DepartmentException;
+
+    /**
+     * <h2>修改部门信息</h2>
+     * @param department 待修改部门
+     * @return 已完成修改部门信息
+     * @throws DepartmentException
+     */
     public Department update(Department department) throws DepartmentException;
 
-    public Department destroy(Department department) throws DepartmentException;
+    /**
+     * <h2>根据序列号查询部门信息</h2>
+     * @param sn 部门序列号
+     * @return 部门信息
+     */
+    public Department findBySn(String sn);
+
+    /**
+     * <h2>查询所有的部门</h2>
+     * @param isTree 是否生成树形结构标记，true为生成
+     * @return 部门集合
+     */
+    public List<Department> findAll(boolean isTree);
 
 }

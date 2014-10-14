@@ -2,6 +2,7 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.exception.SiteException;
 import dnt.itsnow.model.Site;
+import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.platform.web.exception.WebServerSideException;
@@ -11,17 +12,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * <h1>地点的控制器</h1>
  * <pre>
  * <b>HTTP     URI                         方法      含义  </b>
- * # GET      /admin/api/sites?keyword={}  index     列出所有地点，支持过滤，分页，排序等
- * # GET      /admin/api/sites             show      列出特定的地点
- * # POST     /admin/api/sites             create    创建地点，账户信息通过HTTP BODY提交
- * # PUT      /admin/api/sites/{sn}        update    修改地点，账户信息通过HTTP BODY提交
- * # DELETE   /admin/api/sites/{sn}        destroy   删除地点
+ * # GET      /api/sites?keyword={}  index     列出所有地点，支持过滤，分页，排序等
+ * # GET      /api/sites             show      列出特定的地点
+ * # POST     /api/sites             create    创建地点，账户信息通过HTTP BODY提交
+ * # PUT      /api/sites/{sn}        update    修改地点，账户信息通过HTTP BODY提交
+ * # DELETE   /api/sites/{sn}        destroy   删除地点
  * </pre>
  */
 @RestController
@@ -42,13 +42,13 @@ public class SitesController extends SessionSupportController<Site> {
      * @return 地点列表
      */
     @RequestMapping
-    public List<Site> index(@RequestParam(value = "keyword", required = false) String keyword) {
-        logger.debug("Listing site keyword:{}" + keyword);
+    public Page<Site> index(@RequestParam(value = "keyword", required = false) String keyword) {
+        logger.debug("Listing Sites by keyword: {}" + keyword);
 
         indexPage = siteService.findAll(keyword, pageRequest);
 
-        logger.debug("Listed Site number {}", indexPage.getNumber() + " TotalPages:" + indexPage.getTotalPages() + " size:" + indexPage.getSize() + " Content:" + indexPage.getContent());
-        return indexPage.getContent();
+        logger.debug("Listed  {}", indexPage);
+        return indexPage;
     }
 
     /**
@@ -77,6 +77,8 @@ public class SitesController extends SessionSupportController<Site> {
         try {
             site = siteService.create(site);
         } catch (SiteException e) {
+            throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (Exception e) {
             throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
         }
 

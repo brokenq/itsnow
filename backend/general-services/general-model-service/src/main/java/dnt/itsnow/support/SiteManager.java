@@ -68,7 +68,11 @@ public class SiteManager extends Bean implements SiteService {
         siteRepository.create(site);
 
         for(Department department : site.getDepartments()){
-            siteDeptRepository.create(new SiteDept(site, department));
+            SiteDept siteDept = new SiteDept(site, department);
+
+            if (siteDeptRepository.find(siteDept) == null) {
+                siteDeptRepository.create(siteDept);
+            }
         }
         logger.info("Created site {}", site);
         return site;

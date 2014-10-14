@@ -9,7 +9,10 @@ import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.repository.MutableUserRepository;
 import dnt.itsnow.service.MutableUserService;
+import dnt.messaging.MessageBus;
+import dnt.support.JsonSupport;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -26,6 +29,10 @@ public class MutableUserManager extends CommonUserManager
            但继承时依然会抛出 IllegalAccessException，
            这是底层component-framework的class loading机制需要解决的一个典型问题*/
         implements MutableUserService{
+
+    @Autowired
+    @Qualifier("globalMessageBus")
+    MessageBus globalMessageBus;
 
     @Autowired
     MutableUserRepository mutableRepository;
@@ -45,6 +52,9 @@ public class MutableUserManager extends CommonUserManager
         user.setUpdatedAt(user.getCreatedAt());
         mutableRepository.create(user);
         logger.info("Created  {}", user);
+
+        globalMessageBus.publish("User", "+" + JsonSupport.toJSONString(user));
+
         return user;
     }
 
@@ -52,6 +62,8 @@ public class MutableUserManager extends CommonUserManager
     public void update(User user) {
         logger.info("Updating {}", user);
         mutableRepository.update(user);
+
+        globalMessageBus.publish("User", "*" + JsonSupport.toJSONString(user));
     }
 
     @Override

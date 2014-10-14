@@ -8,6 +8,7 @@ import dnt.itsnow.model.Account;
 import dnt.itsnow.model.ItsnowHost;
 import dnt.itsnow.model.ItsnowProcess;
 import dnt.itsnow.model.ItsnowSchema;
+import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.service.CommonAccountService;
@@ -64,11 +65,11 @@ public class ItsnowProcessesController extends SessionSupportController<ItsnowPr
      * @return 进程列表
      */
     @RequestMapping
-    public List<ItsnowProcess> index(@RequestParam(value = "keyword", required = false) String keyword) {
-        logger.debug("Listing itsnow processes");
+    public Page<ItsnowProcess> index(@RequestParam(value = "keyword", required = false) String keyword) {
+        logger.debug("Listing itsnow processes by keyword: {}", keyword);
         indexPage = processService.findAll(keyword, pageRequest);
-        logger.debug("Found   itsnow processes {}", indexPage.getTotalElements());
-        return indexPage.getContent();
+        logger.debug("Found   {}", indexPage);
+        return indexPage;
     }
 
     /**

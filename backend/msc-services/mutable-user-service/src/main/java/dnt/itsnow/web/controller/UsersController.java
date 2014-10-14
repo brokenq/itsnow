@@ -4,12 +4,12 @@
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.User;
+import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.service.MutableUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * <h1>具备一定权限的管理者对用户的管理</h1>
@@ -35,11 +35,13 @@ public class UsersController extends SessionSupportController<User> {
      * 提供给前端的分页信息放在response头中
      */
     @RequestMapping
-    public List<User> index( @RequestParam(required = false, value="keyword", defaultValue = "") String keyword ) {
+    public Page<User> index( @RequestParam(required = false, value="keyword", defaultValue = "") String keyword ) {
+        logger.debug("Listing Users by keyword: {}", keyword);
         indexPage = userService.findAll(keyword, pageRequest);
+        logger.debug("Listed  {}", indexPage);
         //把分页的整体信息放在http头中
         //把数据放在http的body中
-        return indexPage.getContent();
+        return indexPage;
     }
 
 

@@ -5,6 +5,7 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.exception.AccountException;
 import dnt.itsnow.model.Account;
+import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.service.MutableAccountService;
@@ -13,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * <h1>账户服务的控制器</h1>
@@ -49,11 +49,11 @@ public class MutableAccountsController extends SessionSupportController<Account>
      * @return 账户列表
      */
     @RequestMapping
-    public List<Account> index( @RequestParam(value = "type", required = false) String type ) {
+    public Page<Account> index( @RequestParam(value = "type", required = false) String type ) {
         logger.debug("Listing accounts");
         indexPage = accountService.findAll(type, pageRequest);
         logger.debug("Found   accounts {}", indexPage.getTotalElements());
-        return indexPage.getContent();
+        return indexPage;
     }
 
     /**

@@ -30,6 +30,10 @@ public class UserAuthority implements GrantedAuthority {
 
     @Override
     public String toString() {
-        return authority + ":U";
+        final StringBuffer sb = new StringBuffer("UserAuthority{");
+        sb.append("username='").append(username).append('\'');
+        sb.append(", authority='").append(authority).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }

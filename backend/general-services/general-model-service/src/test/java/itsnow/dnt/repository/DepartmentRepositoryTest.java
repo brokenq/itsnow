@@ -35,9 +35,10 @@ public class DepartmentRepositoryTest {
         Department department = new Department();
         department.setSn("005");
         department.setName("公关部");
+        department.setPosition(10L);
         department.setDescription("It's test.");
-        department.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        department.setUpdatedAt(department.getCreatedAt());
+        department.creating();
+        department.updating();
         repository.create(department);
         Assert.assertNotNull(department.getId());
     }
@@ -64,23 +65,8 @@ public class DepartmentRepositoryTest {
     }
 
     @Test
-    public void testCount() throws Exception {
-        Assert.assertNotNull(repository.count());
-    }
-
-    @Test
     public void testFind() throws Exception {
-        Assert.assertNotNull(repository.find("updated_at", "desc",  0, 10));
-    }
-
-    @Test
-    public void testCountByKeyword() throws Exception {
-        Assert.assertNotNull(repository.countByKeyword("%部%"));
-    }
-
-    @Test
-    public void testFindByKeyword() throws Exception {
-        Assert.assertNotNull(repository.findByKeyword("%部%","updated_at","desc", 0, 10));
+        Assert.assertNotNull(repository.findAll());
     }
 
     @Test

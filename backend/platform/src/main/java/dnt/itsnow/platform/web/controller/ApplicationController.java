@@ -7,7 +7,6 @@ import dnt.itsnow.platform.model.Record;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.platform.util.Sort;
-import dnt.itsnow.platform.web.annotation.AfterFilter;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.platform.web.exception.WebServerSideException;
@@ -22,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.WebRequest;
-
-import javax.servlet.http.HttpServletResponse;
 
 /** The Rest Controller */
 @Scope(WebApplicationContext.SCOPE_REQUEST)
@@ -80,17 +77,6 @@ public class ApplicationController<T extends Record> {
                                         @RequestParam(required = false, value = "sort", defaultValue = "") String sort){
         Sort theSort = parseSort(sort);
         pageRequest = new PageRequest(page - 1, count, theSort);
-    }
-
-    @AfterFilter(method =  RequestMethod.GET, value = "index")
-    public void renderPageToHeader(HttpServletResponse response){
-        if( indexPage == null ) return;
-        response.setHeader(Page.TOTAL, String.valueOf(indexPage.getTotalElements()));
-        response.setHeader(Page.PAGES, String.valueOf(indexPage.getTotalPages()));
-        response.setHeader(Page.NUMBER, String.valueOf(indexPage.getNumber() + 1));
-        response.setHeader(Page.REAL, String.valueOf(indexPage.getNumberOfElements()));
-        response.setHeader(Page.SORT, String.valueOf(indexPage.getSort()));
-        response.setHeader(Page.COUNT, String.valueOf(indexPage.getSize()));
     }
 
     private Sort parseSort(String sort) {

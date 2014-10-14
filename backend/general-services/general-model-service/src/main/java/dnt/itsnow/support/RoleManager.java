@@ -3,14 +3,16 @@ package dnt.itsnow.support;
 import dnt.itsnow.exception.RoleException;
 import dnt.itsnow.model.Role;
 import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.repository.RoleRepository;
 import dnt.itsnow.service.RoleService;
+import dnt.messaging.MessageBus;
 import dnt.spring.Bean;
+import dnt.support.JsonSupport;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -21,6 +23,10 @@ import java.util.List;
  */
 @Service
 public class RoleManager extends Bean implements RoleService {
+
+    @Autowired
+    @Qualifier("globalMessageBus")
+    MessageBus globalMessageBus;
 
     @Autowired
     private RoleRepository repository;
@@ -89,6 +95,8 @@ public class RoleManager extends Bean implements RoleService {
 
         logger.info("Created role:{}", role);
 
+        globalMessageBus.publish("Role", "+" + JsonSupport.toJSONString(role));
+
         return role;
     }
 
@@ -105,6 +113,8 @@ public class RoleManager extends Bean implements RoleService {
 
         logger.info("Updated role");
 
+        globalMessageBus.publish("Role", "*" + JsonSupport.toJSONString(role));
+
         return role;
     }
 
@@ -116,7 +126,13 @@ public class RoleManager extends Bean implements RoleService {
         if(role==null){
             throw new RoleException("Role entry can not be empty.");
         }
+
+        repository.deleteRoleAndUserRelationByRoleName(role.getName());
+        repository.deleteRoleAndGroupRelationByRoleName(role.getName());
+
         repository.delete(role.getName());
+
+        globalMessageBus.publish("Role", "-" + JsonSupport.toJSONString(role));
 
         logger.warn("Deletd role");
     }

@@ -43,9 +43,10 @@ public class DepartmentsControllerTest extends SessionSupportedControllerTest {
         department = new Department();
         department.setSn("007");
         department.setName("小卖部");
+        department.setPosition(12L);
         department.setDescription("It's test.");
-        department.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        department.setUpdatedAt(department.getCreatedAt());
+        department.creating();
+        department.updating();
 
         departments = new ArrayList<Department>();
         departments.add(department);
@@ -55,8 +56,8 @@ public class DepartmentsControllerTest extends SessionSupportedControllerTest {
 
     @Test
     public void testIndex() throws Exception {
-        expect(departmentService.findAll(anyString(), isA(PageRequest.class)))
-                .andReturn(new DefaultPage<Department>(departments));
+        expect(departmentService.findAll(anyBoolean()))
+                .andReturn(new ArrayList<Department>(departments));
 
         // 准备 Mock Request
         MockHttpServletRequestBuilder request = get("/api/departments");
@@ -116,7 +117,7 @@ public class DepartmentsControllerTest extends SessionSupportedControllerTest {
     @Test
     public void testDestroy() throws Exception {
         expect(departmentService.findBySn("001")).andReturn(department);
-        expect(departmentService.destroy(anyObject(Department.class))).andReturn(department);
+        departmentService.destroy(anyObject(Department.class));
         expectLastCall().once();
 
         replay(departmentService);

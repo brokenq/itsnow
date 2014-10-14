@@ -24,6 +24,12 @@ public interface GeneralGroupRepository {
     @Delete("DELETE FROM groups WHERE group_name = #{name}")
     public void delete(@Param("name") String name);
 
+    @Delete("DELETE FROM group_authorities WHERE group_id  = #{id}")
+    public void deleteGroupAuthority(@Param("id") Long id);
+
+    @Delete("DELETE FROM group_members WHERE group_id  = #{id}")
+    public void deleteGroupMember(@Param("id") Long id);
+
     @Update("UPDATE groups SET " +
             " group_name            = #{name}, " +
             " description           = #{description}," +

@@ -40,6 +40,7 @@ public class RoleRepositoryTest {
     public void testDelete() throws Exception {
         Role role = repository.findByName("ROLE_GUEST");
         Assert.assertNotNull(role);
+        repository.deleteRoleAndGroupRelationByRoleName("ROLE_GUEST");
         repository.delete("ROLE_GUEST");
         Assert.assertNull(repository.findByName("ROLE_GUEST"));
     }

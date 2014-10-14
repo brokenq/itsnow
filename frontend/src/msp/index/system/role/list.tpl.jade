@@ -1,5 +1,5 @@
 mixin tool_button(action, icon, text)
-  button.btn.btn-default(type="button")
+  button.btn.btn-default(type="button",ng-click="#{action}")
     span.glyphicon(class="glyphicon-#{icon}")
     | #{text}
 mixin drop_button(action, icon, text)
@@ -25,13 +25,13 @@ mixin select_all()
 
   .btn-toolbar(role="toolbar")
     .btn-group
-      +tool_button("#", "refresh", "")
+      +tool_button("", "refresh", "")
     .btn-group
-        +tool_button("#", "new", "新建")
-        +tool_button("#", "edit", "编辑")
-        +tool_button("#", "remove", "删除")
-        +tool_button("#", "addUser", "添加用户")
-        +tool_button("#", "removeUser", "删除用户")
+        +tool_button("", "new", "新建")
+        +tool_button("", "edit", "编辑")
+        +tool_button("deleteRole()", "remove", "删除")
+        +tool_button("", "addUser", "添加用户")
+        +tool_button("", "removeUser", "删除用户")
     //.btn-group
     //  button.btn.btn-default.dropdown-toggle(type="button",data-toggle="dropdown")
     //    | 更多操作

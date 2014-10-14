@@ -3,7 +3,7 @@ angular.module('MspIndex.IncidentDetail', ['ngTable', 'ngResource'])
         $stateProvider
             .state('incidents-create',{
                 url:'/create',
-                templateUrl:'incident/incident.detail.tpl.html',
+                templateUrl:'incident/incident.detail.tpl.jade',
                 controller:'MspCreateIncidentCtrl',
                 data: {
                     pageTitle: '新建故障单'
