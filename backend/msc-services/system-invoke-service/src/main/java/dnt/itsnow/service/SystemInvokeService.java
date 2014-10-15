@@ -55,7 +55,7 @@ public interface SystemInvokeService {
      *
      * @param invocationId 任务描述符
      * @return Result Code, 有时候，有些调用返回码错误，但没异常
-     * @throws dnt.itsnow.service.SystemInvokeService 异常
+     * @throws SystemInvokeException 异常
      */
     int waitJobFinished(String invocationId) throws SystemInvokeException;
 
