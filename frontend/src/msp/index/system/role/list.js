@@ -18,7 +18,9 @@ angular.module('System.Role', ['ngTable', 'ngResource'])
     ])
 
     .factory('RoleDetailService', ['$resource', function ($resource) {
-        return $resource("/api/roles/:name",{name:'@name'});
+        return $resource("/api/roles/:name",{name:'@name'},{
+            query: { method: 'GET', isArray:false}
+        });
     }
     ])
 
@@ -86,7 +88,7 @@ angular.module('System.Role', ['ngTable', 'ngResource'])
                 roleDetailService.query(params.url(), roleName, function (data, headers) {
                         $timeout(function () {
                                 params.total(headers('total'));
-                                $defer.resolve($scope.detailRoles = data.length>0 ? data[0].details : data);
+                                $defer.resolve($scope.detailRoles = data.details);
                             },
                             500
                         );

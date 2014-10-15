@@ -20,8 +20,8 @@ angular.module('Service.Workflow', ['ngTable', 'ngResource', 'angularFileUpload'
     }
     ])
 
-    .controller('WorkflowCtrl', ['$scope', '$location', '$timeout', 'ngTableParams', 'WorkflowService', '$upload',
-        function ($scope, $location, $timeout, NgTableParams, workflowService, $upload) {
+    .controller('WorkflowCtrl', ['$scope', '$location', '$timeout', 'ngTableParams', 'WorkflowService', 'FileUploader',
+        function ($scope, $location, $timeout, NgTableParams, workflowService, FileUploader) {
 
             var options = {
                 page: 1,           // show first page
@@ -77,149 +77,10 @@ angular.module('Service.Workflow', ['ngTable', 'ngResource', 'angularFileUpload'
                 true
             );
 
-//            $scope.onFileSelect = function ($files) {
-//                $scope.selectedFiles = [];
-//                $scope.progress = [];
-//                if ($scope.upload && $scope.upload.length > 0) {
-//                    for (var i = 0; i < $scope.upload.length; i++) {
-//                        if ($scope.upload[i] != null) {
-//                            $scope.upload[i].abort();
-//                        }
-//                    }
-//                }
-//                $scope.upload = [];
-//                $scope.uploadResult = [];
-//                $scope.selectedFiles = $files;
-//                $scope.dataUrls = [];
-//                for (var i = 0; i < $files.length; i++) {
-//                    var $file = $files[i];
-//                    if ($scope.fileReaderSupported && $file.type.indexOf('image') > -1) {
-//                        var fileReader = new FileReader();
-//                        fileReader.readAsDataURL($files[i]);
-//                        var loadFile = function (fileReader, index) {
-//                            fileReader.onload = function (e) {
-//                                $timeout(function () {
-//                                    $scope.dataUrls[index] = e.target.result;
-//                                });
-//                            };
-//                        }(fileReader, i);
-//                    }
-//                    $scope.progress[i] = -1;
-//                    if ($scope.uploadRightAway) {
-//                        $scope.start(i);
-//                    }
-//                }
-//            };
 
-//            $scope.start = function (index) {
-//                $scope.progress[index] = 0;
-//                $scope.errorMsg = null;
-//                if ($scope.howToSend == 1) {
-//                    //$upload.upload()
-//                    $scope.upload[index] = $upload.upload({
-//                        url: uploadUrl,
-//                        method: $scope.httpMethod,
-//                        headers: {'my-header': 'my-header-value'},
-//                        data: {
-//                            myModel: $scope.myModel,
-//                            errorCode: $scope.generateErrorOnServer && $scope.serverErrorCode,
-//                            errorMessage: $scope.generateErrorOnServer && $scope.serverErrorMsg
-//                        },
-//                        /* formDataAppender: function(fd, key, val) {
-//                         if (angular.isArray(val)) {
-//                         angular.forEach(val, function(v) {
-//                         fd.append(key, v);
-//                         });
-//                         } else {
-//                         fd.append(key, val);
-//                         }
-//                         }, */
-//                        /* transformRequest: [function(val, h) {
-//                         console.log(val, h('my-header')); return val + '-modified';
-//                         }], */
-//                        file: $scope.selectedFiles[index],
-//                        fileFormDataName: 'myFile'
-//                    });
-//                    $scope.upload[index].then(function (response) {
-//                        $timeout(function () {
-//                            $scope.uploadResult.push(response.data);
-//                        });
-//                    }, function (response) {
-//                        if (response.status > 0) $scope.errorMsg = response.status + ': ' + response.data;
-//                    }, function (evt) {
-//                        // Math.min is to fix IE which reports 200% sometimes
-//                        $scope.progress[index] = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
-//                    });
-//                    $scope.upload[index].xhr(function (xhr) {
-////				xhr.upload.addEventListener('abort', function() {console.log('abort complete')}, false);
-//                    });
-//                } else if ($scope.howToSend == 2) {
-//                    //$upload.http()
-//                    var fileReader = new FileReader();
-//                    fileReader.onload = function (e) {
-//                        console.log('file is loaded in filereader');
-//                        $scope.upload[index] = $upload.http({
-//                            url: uploadUrl,
-//                            headers: {'Content-Type': $scope.selectedFiles[index].type},
-//                            data: e.target.result
-//                        });
-//                        $scope.upload[index].then(function (response) {
-//                            $scope.uploadResult.push(response.data);
-//                        }, function (response) {
-//                            if (response.status > 0) $scope.errorMsg = response.status + ': ' + response.data;
-//                        }, function (evt) {
-//                            // Math.min is to fix IE which reports 200% sometimes
-//                            $scope.progress[index] = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
-//                            console.log('progres', Math.min(100, parseInt(100.0 * evt.loaded / evt.total)))
-//                        });
-//                        $scope.upload[index].xhr(function (xhr) {
-//                            xhr.upload.addEventListener('progress', function (evt) {
-//                                console.log('progres2', Math.min(100, parseInt(100.0 * evt.loaded / evt.total)))
-//                            }, false);
-//                            xhr.addEventListener('progress', function (evt) {
-//                                console.log('progres3', Math.min(100, parseInt(100.0 * evt.loaded / evt.total)))
-//                            }, false);
-//                        });
-//                    };
-//                    fileReader.readAsArrayBuffer($scope.selectedFiles[index]);
-//                } else {
-//                    //s3 upload
-//                    $scope.upload[index] = $upload.upload({
-//                        url: $scope.s3url,
-//                        method: 'POST',
-//                        data: {
-//                            key: $scope.selectedFiles[index].name,
-//                            AWSAccessKeyId: $scope.AWSAccessKeyId,
-//                            acl: $scope.acl,
-//                            policy: $scope.policy,
-//                            signature: $scope.signature,
-//                            "Content-Type": $scope.selectedFiles[index].type === null || $scope.selectedFiles[index].type === '' ?
-//                                'application/octet-stream' : $scope.selectedFiles[index].type,
-//                            filename: $scope.selectedFiles[index].name
-//                        },
-//                        file: $scope.selectedFiles[index],
-//                        fileFormDataName: 'myFile'
-//                    });
-//                    $scope.upload[index].then(function (response) {
-//                        $timeout(function () {
-//                            $scope.uploadResult.push(response.data);
-//                        });
-//                    }, function (response) {
-//                        if (response.status > 0) $scope.errorMsg = response.status + ': ' + response.data;
-//                    }, function (evt) {
-//                        // Math.min is to fix IE which reports 200% sometimes
-//                        $scope.progress[index] = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
-//                    });
-//                    if (localStorage) {
-//                        localStorage.setItem("s3url", $scope.s3url);
-//                        localStorage.setItem("AWSAccessKeyId", $scope.AWSAccessKeyId);
-//                        localStorage.setItem("acl", $scope.acl);
-//                        localStorage.setItem("success_action_redirect", $scope.success_action_redirect);
-//                        localStorage.setItem("policy", $scope.policy);
-//                        localStorage.setItem("signature", $scope.signature);
-//                    }
-//                }
-//            };
+            var uploader = $scope.uploader = new FileUploader({
+                url: '/api/msp_workflows'
+            });
 
         }
     ]);
