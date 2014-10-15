@@ -8,7 +8,7 @@ import dnt.itsnow.model.PrivateServiceItem;
 import java.util.List;
 
 /**
- * <h1>公共服务项服务</h1>
+ * <h1>Private Service Item Service</h1>
  */
 public interface PrivateServiceItemService extends CommonServiceItemService {
 

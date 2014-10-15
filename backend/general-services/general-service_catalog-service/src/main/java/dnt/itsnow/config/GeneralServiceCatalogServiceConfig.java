@@ -1,7 +1,7 @@
 package dnt.itsnow.config;
 
 /**
- * General ServiceCatalog模块的服务配置
+ * <h1>General ServiceCatalog模块的服务配置</h1>
  */
 public class GeneralServiceCatalogServiceConfig extends DefaultCommonServiceConfig {
 

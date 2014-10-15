@@ -10,7 +10,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * <h1>私有服务目录管理，</h1>
+ * <h1>私有服务目录管理控制器</h1>
  */
 
 @RestController
