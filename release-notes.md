@@ -5,7 +5,7 @@
 
 1. 交付物获取
 -----------
-应该从[CI](http://ci.dnt.com.cn/)系统上获取相应的交付物，如果需要登录，请以guest身份登录
+应该从[CI](http://ci.itsnow.com/)系统上获取相应的交付物，如果需要登录，请以guest身份登录
 
 2. 开发代码地址
 -----------
@@ -50,7 +50,7 @@ git@happyonroad.net:insight/itsnow.git Rel-x.y.z 标签(tag)
 ```
   
 2. 提交相应代码到origin上相应开发分支 Dev-x.y.z
-3. 集成负责人在CI的 [Itsnow SAAS Platform](http://ci.dnt.com.cn/viewType.html?buildTypeId=itsnow_Continuous_Build)持续集成通过之后，进行正式的版本发布工作
+3. 集成负责人在CI的 [Itsnow SAAS Platform](http://ci.itsnow.com/viewType.html?buildTypeId=itsnow_Continuous_Build)持续集成通过之后，进行正式的版本发布工作
 
 发布工作:
 
@@ -75,7 +75,7 @@ git@happyonroad.net:insight/itsnow.git Rel-x.y.z 标签(tag)
 11. 开辟新版本: `git co -b Dev-x.y.z+1`
 12. 修改新版本号: 替换所有版本号 x.y.z 为 x.y.z+1-SNAPSHOT
 13. 提交新的开发分支: `git push -u origin Dev-x.y.z+1:Dev-x.y.z+1`
-14. 修改Itsnow CI的Continuous Build [version参数](http://ci.dnt.com.cn/admin/editBuildParams.html?id=buildType:itsnow_Continuous_Build)
+14. 修改Itsnow CI的Continuous Build [version参数](http://ci.itsnow.com/admin/editBuildParams.html?id=buildType:itsnow_Continuous_Build)
 
 收尾工作:
 
@@ -99,9 +99,9 @@ git@happyonroad.net:insight/itsnow.git Rel-x.y.z 标签(tag)
 
 3. 交付物地址
 -----------
-1. [msc-0.1.5](http://ci.dnt.com.cn/repository/download/Itsnow_Sprint_Build_MSC/3783:id/msc-0.1.5.zip)
-2. [msp-0.1.5](http://ci.dnt.com.cn/repository/download/Itsnow_SprintBuild_MSP/3784:id/msp-0.1.5.zip)
-3. [msu-0.1.5](http://ci.dnt.com.cn/repository/download/Itsnow_SprintBuild_MSU/3782:id/msu-0.1.5.zip)
+1. [msc-0.1.5](http://ci.itsnow.com/repository/download/Itsnow_Sprint_Build_MSC/3783:id/msc-0.1.5.zip)
+2. [msp-0.1.5](http://ci.itsnow.com/repository/download/Itsnow_SprintBuild_MSP/3784:id/msp-0.1.5.zip)
+3. [msu-0.1.5](http://ci.itsnow.com/repository/download/Itsnow_SprintBuild_MSU/3782:id/msu-0.1.5.zip)
 
 0.1.6 发布说明
 =================
@@ -121,9 +121,9 @@ git@happyonroad.net:insight/itsnow.git Rel-x.y.z 标签(tag)
 3. 交付物地址
 --------------
 
-1. [msc-0.1.6](http://ci.dnt.com.cn/repository/download/Itsnow_Sprint_Build_MSC/3832:id/msc-0.1.6.zip)
-2. [msp-0.1.6](http://ci.dnt.com.cn/repository/download/Itsnow_SprintBuild_MSP/3833:id/msp-0.1.6.zip)
-3. [msu-0.1.6](http://ci.dnt.com.cn/repository/download/Itsnow_SprintBuild_MSU/3834:id/msu-0.1.6.zip)
+1. [msc-0.1.6](http://ci.itsnow.com/repository/download/Itsnow_Sprint_Build_MSC/3832:id/msc-0.1.6.zip)
+2. [msp-0.1.6](http://ci.itsnow.com/repository/download/Itsnow_SprintBuild_MSP/3833:id/msp-0.1.6.zip)
+3. [msu-0.1.6](http://ci.itsnow.com/repository/download/Itsnow_SprintBuild_MSU/3834:id/msu-0.1.6.zip)
 
 4. 系统演示地址
 -----------
@@ -148,9 +148,9 @@ git@happyonroad.net:insight/itsnow.git Rel-x.y.z 标签(tag)
 3. 交付物地址
 --------------
 
-1. [msc-0.1.7](http://ci.dnt.com.cn/repository/download/Itsnow_Sprint_Build_MSC/3832:id/msc-0.1.7.zip)
-2. [msp-0.1.7](http://ci.dnt.com.cn/repository/download/Itsnow_SprintBuild_MSP/3833:id/msp-0.1.7.zip)
-3. [msu-0.1.7](http://ci.dnt.com.cn/repository/download/Itsnow_SprintBuild_MSU/3834:id/msu-0.1.7.zip)
+1. [msc-0.1.7](http://ci.itsnow.com/repository/download/Itsnow_Sprint_Build_MSC/3832:id/msc-0.1.7.zip)
+2. [msp-0.1.7](http://ci.itsnow.com/repository/download/Itsnow_SprintBuild_MSP/3833:id/msp-0.1.7.zip)
+3. [msu-0.1.7](http://ci.itsnow.com/repository/download/Itsnow_SprintBuild_MSU/3834:id/msu-0.1.7.zip)
 
 4. 系统演示地址
 -----------
@@ -180,9 +180,9 @@ git@happyonroad.net:insight/itsnow.git Rel-x.y.z 标签(tag)
 3. 交付物地址
 --------------
 
-1. [msc-0.1.8](http://ci.dnt.com.cn/repository/download/Itsnow_Sprint_Build_MSC/3832:id/msc-0.1.8.zip)
-2. [msp-0.1.8](http://ci.dnt.com.cn/repository/download/Itsnow_SprintBuild_MSP/3833:id/msp-0.1.8.zip)
-3. [msu-0.1.8](http://ci.dnt.com.cn/repository/download/Itsnow_SprintBuild_MSU/3834:id/msu-0.1.8.zip)
+1. [msc-0.1.8](http://ci.itsnow.com/repository/download/Itsnow_Sprint_Build_MSC/3832:id/msc-0.1.8.zip)
+2. [msp-0.1.8](http://ci.itsnow.com/repository/download/Itsnow_SprintBuild_MSP/3833:id/msp-0.1.8.zip)
+3. [msu-0.1.8](http://ci.itsnow.com/repository/download/Itsnow_SprintBuild_MSU/3834:id/msu-0.1.8.zip)
 
 4. 系统演示地址
 -----------
@@ -211,9 +211,9 @@ git@happyonroad.net:insight/itsnow.git Rel-x.y.z 标签(tag)
 3. 交付物地址
 --------------
 
-1. [msc-0.1.9](http://ci.dnt.com.cn/repository/download/Itsnow_Sprint_Build_MSC/3832:id/msc-0.1.9.zip)
-2. [msp-0.1.9](http://ci.dnt.com.cn/repository/download/Itsnow_SprintBuild_MSP/3833:id/msp-0.1.9.zip)
-3. [msu-0.1.9](http://ci.dnt.com.cn/repository/download/Itsnow_SprintBuild_MSU/3834:id/msu-0.1.9.zip)
+1. [msc-0.1.9](http://ci.itsnow.com/repository/download/Itsnow_Sprint_Build_MSC/3832:id/msc-0.1.9.zip)
+2. [msp-0.1.9](http://ci.itsnow.com/repository/download/Itsnow_SprintBuild_MSP/3833:id/msp-0.1.9.zip)
+3. [msu-0.1.9](http://ci.itsnow.com/repository/download/Itsnow_SprintBuild_MSU/3834:id/msu-0.1.9.zip)
 
 4. 系统演示地址
 -----------
