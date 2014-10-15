@@ -42,8 +42,8 @@ public class RoleManagerTest {
 
     @Test
     public void testFindAllRelevantInfo() throws Exception {
-        Page<Role> roles = service.findAllRelevantInfo("ROLE_ADMIN", pageRequest);
-        Assert.assertNotNull(roles.getContent());
+        Role role = service.findAllRelevantInfo("ROLE_ADMIN");
+        Assert.assertNotNull(role);
     }
 
     @Test

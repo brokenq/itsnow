@@ -19,7 +19,7 @@
         </collection>
     </resultMap>
 
-    <sql id="selectRole">
+    <sql id="select">
         SELECT DISTINCT r.id,
                         r.name,
                         r.description,
@@ -35,7 +35,7 @@
         WHERE  acc.id = #{accountId}
     </sql>
 
-    <sql id="selectCountRole">
+    <sql id="selectCount">
         SELECT Count(DISTINCT r.id)
         FROM   itsnow_msc.accounts acc
                LEFT JOIN itsnow_msc.users u
@@ -48,44 +48,26 @@
     </sql>
 
     <select id="count" resultType="java.lang.Long">
-        <include refid="selectCountRole"/>
+        <include refid="selectCount"/>
     </select>
 
     <select id="findAll" resultMap="roleResult">
-        <include refid="selectRole"/>
+        <include refid="select"/>
         order by ${sort} ${dir} limit #{offset}, #{size}
     </select>
 
     <select id="countByKeyword" resultType="java.lang.Long">
-        <include refid="selectCountRole"/>
+        <include refid="selectCount"/>
         AND r.name like #{keyword}
     </select>
 
     <select id="findAllByKeyword" resultMap="roleResult">
-        <include refid="selectRole"/>
+        <include refid="select"/>
         AND r.name like #{keyword}
         order by ${sort} ${dir} limit #{offset}, #{size}
     </select>
 
-    <select id="countByRelevantInfo" parameterType="string" resultType="java.lang.Long">
-        SELECT Count(*)
-        FROM   roles r
-               LEFT JOIN authorities a
-                      ON r.name = a.authority
-               LEFT JOIN itsnow_msc.users u
-                      ON a.username = u.username
-               LEFT JOIN itsnow_msc.accounts acc
-                      ON u.account_id = acc.id
-               LEFT JOIN staffs stf
-                      ON u.id = stf.user_id
-               LEFT JOIN sites s
-                      ON stf.site_id = s.id
-               LEFT JOIN departments d
-                      ON stf.dept_id = d.id
-        WHERE r.name = #{name}
-    </select>
-
-    <select id="findAllRelevantInfo" parameterType="string" resultMap="roleResult">
+    <select id="findAllRelevantInfo" resultMap="roleResult">
         SELECT r.id,
                r.name,
                r.description,
@@ -109,7 +91,6 @@
                LEFT JOIN departments d
                       ON stf.dept_id = d.id
         WHERE r.name = #{name}
-        ORDER BY ${sort} ${dir} limit #{offset}, #{size}
     </select>
 
 </mapper>

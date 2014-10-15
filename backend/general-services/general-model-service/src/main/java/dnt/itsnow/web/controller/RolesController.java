@@ -61,15 +61,15 @@ public class RolesController extends SessionSupportController<Role> {
      * @return 角色实体类
      */
     @RequestMapping(value="{name}", method = RequestMethod.GET)
-    public List<Role> show(@PathVariable("name") String name) {
+    public Role show(@PathVariable("name") String name) {
 
         logger.debug("Listing role name:{}" + name);
 
-        indexPage = service.findAllRelevantInfo(name, pageRequest);
+        role = service.findAllRelevantInfo(name);
 
         logger.debug("Listed role size:{}", indexPage.getContent().size());
 
-        return indexPage.getContent();
+        return role;
     }
 
     /**

@@ -25,10 +25,9 @@ public interface RoleService {
      * <h2>查询指定角色相关联的信息</h2>
      * <p/>
      * @param name 角色名称
-     * @param pageRequest 分页类
      * @return 角色列表
      */
-    public Page<Role> findAllRelevantInfo(String name, PageRequest pageRequest);
+    public Role findAllRelevantInfo(String name);
 
     /**
      * <h2>根据角色名称进行查找</h2>

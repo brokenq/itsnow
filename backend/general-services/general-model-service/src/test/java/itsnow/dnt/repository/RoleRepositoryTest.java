@@ -80,15 +80,9 @@ public class RoleRepositoryTest {
     }
 
     @Test
-    public void testCountByRelevantInfo() throws Exception {
-        Long count = repository.countByRelevantInfo("ROLE_ADMIN");
-        Assert.assertSame(Long.class, count.getClass());
-    }
-
-    @Test
     public void testFindAllRelevantInfo() throws Exception {
-        List<Role> roles = repository.findAllRelevantInfo("ROLE_ADMIN", "updated_at", "desc", 0, 10);
-        Assert.assertNotNull(roles);
+        Role role = repository.findAllRelevantInfo("ROLE_ADMIN");
+        Assert.assertNotNull(role);
     }
 
     @Test

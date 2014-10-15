@@ -50,19 +50,14 @@ public interface RoleRepository {
             @Param("offset") int offset,
             @Param("size") int size);
 
-    public Long countByRelevantInfo(@Param("name") String name);
-
-    public List<Role> findAllRelevantInfo(@Param("name") String name,
-                                             @Param("sort") String sort,
-                                             @Param("dir") String dir,
-                                             @Param("offset") int offset,
-                                             @Param("size") int size);
+    public Role findAllRelevantInfo(@Param("name") String name);
 
     @Select("SELECT * FROM roles WHERE name = #{name}")
     public Role findByName(@Param("name") String name);
 
     /**
      * 创建角色和用户关系
+     *
      * @param userAuthority 用户与角色关系实体类
      */
     @Insert("INSERT INTO authorities ( username, authority) VALUES (#{username}, #{authority})")
@@ -70,6 +65,7 @@ public interface RoleRepository {
 
     /**
      * 删除角色和用户关系
+     *
      * @param userAuthority 用户与角色关系实体类
      */
     @Delete("DELETE FROM authorities WHERE username = #{username} and authority = #{authority}")
@@ -77,6 +73,7 @@ public interface RoleRepository {
 
     /**
      * 纯属为这测试才写了此方法
+     *
      * @param userAuthority 用户与角色关系实体类
      * @return
      */
@@ -85,6 +82,7 @@ public interface RoleRepository {
 
     /**
      * 删除所包含有此角色名的角色与用户关系
+     *
      * @param authority 角色名
      */
     @Delete("DELETE FROM authorities WHERE authority = #{authority}")
@@ -92,6 +90,7 @@ public interface RoleRepository {
 
     /**
      * 删除所包含有此角色名的角色与组关系
+     *
      * @param authority 角色名
      */
     @Delete("DELETE FROM group_authorities WHERE authority = #{authority}")

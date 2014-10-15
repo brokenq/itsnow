@@ -56,17 +56,15 @@ public class RoleManager extends Bean implements RoleService {
     }
 
     @Override
-    public Page<Role> findAllRelevantInfo(String keyword, PageRequest pageRequest) {
+    public Role findAllRelevantInfo(String keyword) {
 
-        logger.debug("Finding roles by keyword:{}, paging info:{}", keyword, pageRequest);
+        logger.debug("Finding role by keyword:{}, paging info:{}", keyword);
 
-        int total = repository.countByRelevantInfo(keyword).intValue();
-        List<Role> roles = repository.findAllRelevantInfo(keyword, "updated_at", "desc", pageRequest.getOffset(), pageRequest.getPageSize());
-        DefaultPage page = new DefaultPage<Role>(roles, pageRequest, total);
+        Role role = repository.findAllRelevantInfo(keyword);
 
-        logger.debug("Finded role list info:{}", page);
+        logger.debug("Finded role:{}", role);
 
-        return page;
+        return role;
     }
 
     @Override

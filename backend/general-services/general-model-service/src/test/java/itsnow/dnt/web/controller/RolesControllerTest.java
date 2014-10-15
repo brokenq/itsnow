@@ -77,8 +77,7 @@ public class RolesControllerTest extends SessionSupportedControllerTest {
     @Test
     public void testShow() throws Exception {
 
-        expect(roleService.findAllRelevantInfo(anyString(), anyObject(PageRequest.class)))
-                .andReturn(new DefaultPage<Role>(roles));
+        expect(roleService.findAllRelevantInfo(anyString())).andReturn(role);
 
         // 准备 Mock Request
         MockHttpServletRequestBuilder request = get("/api/roles/ROLE_ADMIN");

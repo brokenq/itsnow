@@ -1,12 +1,7 @@
 mixin tool_button(action, icon, text)
-  button.btn.btn-default(type="button",ng-click="#{action}")
+  button.btn.btn-default(type="button",ng-click=action)
     span.glyphicon(class="glyphicon-#{icon}")
     | #{text}
-mixin drop_button(action, icon, text)
-  li
-    a(href=action)
-      span.glyphicon(class="glyphicon-#{icon}")
-      | #{text}
 mixin nav_link(value, icon, text)
   a(ng-switch-when=value, ng-click="params.page(page.number)", href="")
     span.glyphicon(class="glyphicon-#{icon}")
@@ -25,13 +20,13 @@ mixin select_all()
 
   .btn-toolbar(role="toolbar")
     .btn-group
-      +tool_button("#", "refresh", "")
+      +tool_button("", "refresh", "")
     .btn-group
-        +tool_button("#", "new", "新建")
-        +tool_button("#", "edit", "编辑")
-        +drop_button("deleteRole()", "remove", "删除")
-        +tool_button("#", "addUser", "添加用户")
-        +drop_button("#", "removeUser", "删除用户")
+        +tool_button("", "new", "新建")
+        +tool_button("", "edit", "编辑")
+        +tool_button("deleteRole()", "remove", "删除")
+        +tool_button("", "addUser", "添加用户")
+        +tool_button("", "removeUser", "删除用户")
     .btn-group.pull-right
       .nav-search#nav-search
         form.form-search
