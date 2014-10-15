@@ -99,7 +99,8 @@ module.exports = {
       '../vendor/angular-ui-tree/dist/angular-ui-tree.js',
       '../vendor/angular-dialog-service/dialogs.js',
       '../vendor/angular-dialog-service/dialogs-default-translations.js',
-      '../vendor/angular-translate/angular-translate.js'
+      '../vendor/angular-translate/angular-translate.js',
+      '../vendor/dnt-action-service/dist/dnt-action-service.js'
     ],
     css: [
 //    '../vendor/angular/angular-csp.css',
