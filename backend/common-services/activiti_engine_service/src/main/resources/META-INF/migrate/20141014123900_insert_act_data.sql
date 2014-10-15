@@ -1,20 +1,20 @@
 
-DELETE FROM act_id_membership
+DELETE FROM ACT_ID_MEMBERSHIP
 WHERE  Concat(user_id_, group_id_) NOT IN (SELECT Concat(username, authority)
                                            FROM   authorities);
 
-DELETE FROM act_id_user
+DELETE FROM ACT_ID_USER
 WHERE  id_ NOT IN (SELECT username
                    FROM   itsnow_msc.users);
 
-DELETE FROM act_id_group
+DELETE FROM ACT_ID_GROUP
 WHERE  id_ NOT IN (SELECT a.authority
                    FROM   group_authorities a
                    UNION
                    SELECT b.authority
                    FROM   authorities b);
 
-INSERT INTO act_id_group
+INSERT INTO ACT_ID_GROUP
             (id_,
              name_,
              type_)
@@ -29,7 +29,7 @@ FROM   (SELECT a.authority
 WHERE  c.authority NOT IN (SELECT id_
                            FROM   act_id_group);
 
-INSERT INTO act_id_user
+INSERT INTO ACT_ID_USER
             (id_,
              email_)
 SELECT username,
@@ -38,7 +38,7 @@ FROM   itsnow_msc.users
 WHERE  username NOT IN (SELECT id_
                         FROM   act_id_user);
 
-INSERT INTO act_id_membership
+INSERT INTO ACT_ID_MEMBERSHIP
             (user_id_,
              group_id_)
 SELECT username,
