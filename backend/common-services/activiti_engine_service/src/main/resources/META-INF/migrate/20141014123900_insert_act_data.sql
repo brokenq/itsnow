@@ -27,7 +27,7 @@ FROM   (SELECT a.authority
         SELECT b.authority
         FROM   authorities b) c
 WHERE  c.authority NOT IN (SELECT id_
-                           FROM   act_id_group);
+                           FROM   ACT_ID_GROUP);
 
 INSERT INTO ACT_ID_USER
             (id_,
@@ -36,7 +36,7 @@ SELECT username,
        email
 FROM   itsnow_msc.users
 WHERE  username NOT IN (SELECT id_
-                        FROM   act_id_user);
+                        FROM   ACT_ID_USER);
 
 INSERT INTO ACT_ID_MEMBERSHIP
             (user_id_,
@@ -45,6 +45,6 @@ SELECT username,
        authority
 FROM   authorities
 WHERE  Concat(username, authority) NOT IN (SELECT Concat(user_id_, group_id_)
-                                           FROM   act_id_membership);
+                                           FROM   ACT_ID_MEMBERSHIP);
 
 -- //@UNDO
