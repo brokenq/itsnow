@@ -1,5 +1,5 @@
-mixin tool_button(fire, icon, text, weighing)
-  button.btn.btn-default(type="button", dnt-fire="#{fire}", weighing="#{weighing}")
+mixin tool_button(action, icon, text, weight, rejectCss, requireCss)
+  button.btn.btn-primary.no-border(type="button", ng-click="#{action}", weight="#{weight}", reject-css="#{rejectCss}", require-css="#{requireCss}")
     span.glyphicon(class="glyphicon-#{icon}")
     | #{text}
 mixin drop_button(action, icon, text)
@@ -16,20 +16,20 @@ mixin page_navs()
     +nav_link("prev", "step-backward", "上一页")
     +nav_link("next", "step-forward", "下一页")
 mixin page_size_button(count)
-  button.btn.btn-default(type="button", ng-class="{'active':params.count() == #{count}}", ng-click="params.count(#{count})")= count
+  button.btn.btn-primary.no-border(type="button", ng-class="{'active':params.count() == #{count}}", ng-click="params.count(#{count})")= count
 mixin select_all()
-  input(type="checkbox", ng-model="checkDatas.checked", name="filter-checkbox", value="")#select_all
+  input(type="checkbox", ng-model="selection.checked", name="filter-checkbox", value="")#select_all
 
 div(ui-view='')
   .container(ng-controller="UserListCtrl")
 
-    .btn-toolbar(role="toolbar", dnt-service="actionService")
+    .btn-toolbar(role="toolbar")
       .btn-group
-        +tool_button("actionService.refresh()", "refresh", "", "*")
+        +tool_button("", "refresh", "", "*", "", "")
       .btn-group
-        +tool_button("actionService.gotoState('system.user.detail')", "edit", "编辑", "1")
+        +tool_button("actionService.gotoState('system.user.detail', $event)", "edit", "编辑", "1", "", "")
       .btn-group
-        button.btn.btn-default.dropdown-toggle(type="button",data-toggle="dropdown")
+        button.btn.btn-primary.no-border.dropdown-toggle(type="button",data-toggle="dropdown")
           | 更多操作
           span.caret
         ul.dropdown-menu(role="menu")
@@ -41,11 +41,11 @@ div(ui-view='')
               input.nav-search-input(type="text", placeholder="名称或者子域名...",autocomplete="off")#nav-search-input
               i.icon-search.nav-search-icon
 
-    table.table(template-pagination="customPager",ng-table="tableParams")#table
+    table.table.table-hover.table-bordered(template-pagination="customPager",ng-table="tableParams")#table
 
-      tr(ng-repeat="user in $data")
+      tr(ng-repeat="user in $data", value="{{user.id}}")
         td(width="30" style="text-align: left" header="'ngTableCheckboxHeader'")
-          input(type="checkbox" ng-model="checkDatas.items[user.id]")
+          input(type="checkbox" ng-model="selection.items[user.id]")
         td(data-title="'姓名'") {{user.name}}
         td(data-title="'昵称'") {{user.nickName}}
         td(data-title="'邮箱'") {{user.email}}

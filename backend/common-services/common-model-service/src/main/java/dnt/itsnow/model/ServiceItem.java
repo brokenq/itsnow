@@ -5,12 +5,13 @@ package dnt.itsnow.model;
 
 import dnt.itsnow.platform.model.Record;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * <h1>服务项目</h1>
  *
  * 服务项目也不作为配置项
  *
- * TODO 添加测试用例
  */
 public class ServiceItem extends Record{
     private String title;
@@ -18,6 +19,7 @@ public class ServiceItem extends Record{
     private String description;
     private String icon;
 
+    @NotNull
     private ServiceCatalog catalog;
 
     public String getTitle() {

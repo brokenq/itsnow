@@ -4,7 +4,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * The demo Incident app config
+ * <h1>General Service Catalog App Config</h1>
  */
 @Configuration
 @ComponentScan("dnt.itsnow.support")

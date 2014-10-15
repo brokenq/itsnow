@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Created by jacky on 2014/9/3.
+ * <h1>Private Service Item Manager</h1>
  */
 @Service
 public class PrivateServiceItemManager extends CommonServiceItemManager implements PrivateServiceItemService {

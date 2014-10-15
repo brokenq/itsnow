@@ -1,7 +1,7 @@
 package dnt.itsnow.model;
 
 /**
- * Created by jacky on 2014/9/3.
+ * <h1>Private Service Item Object</h1>
  */
 public class PrivateServiceItem extends PublicServiceItem{
 

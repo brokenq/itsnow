@@ -4,7 +4,7 @@
 # Usage: prepare_ms.sh msc 0.1.7 path/to/folder
 # 
 
-CI=ci.dnt.com.cn
+CI=ci.itsnow.com
 if [ ! $1 ]; then
   echo "You should provide the artifact type: msc|msu|msp"
   exit 1

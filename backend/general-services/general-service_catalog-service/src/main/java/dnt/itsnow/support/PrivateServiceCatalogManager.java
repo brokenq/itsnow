@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by jacky on 2014/9/3.
+ * <h1>Private Service Catalog Manager</h1>
  */
 @Service
 public class PrivateServiceCatalogManager extends CommonServiceCatalogManager implements PrivateServiceCatalogService {

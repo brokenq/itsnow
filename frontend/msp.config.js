@@ -100,6 +100,7 @@ module.exports = {
       '../vendor/angular-dialog-service/dialogs.js',
       '../vendor/angular-dialog-service/dialogs-default-translations.js',
       '../vendor/angular-translate/angular-translate.js',
+      '../vendor/dnt-action-service/dist/dnt-action-service.js',
       '../vendor/angular-file-upload/angular-file-upload.js'
     ],
     css: [

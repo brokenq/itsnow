@@ -1,4 +1,4 @@
-angular.module('MscIndex.User', ['ngTable','ngResource', 'MscIndex.User.Detail', 'dnt.action.directive'])
+angular.module('MscIndex.User', ['ngTable','ngResource', 'MscIndex.User.Detail', 'dnt.action.service'])
   .config ($stateProvider)->
     $stateProvider.state 'system',
       url: '/system',
@@ -17,7 +17,7 @@ angular.module('MscIndex.User', ['ngTable','ngResource', 'MscIndex.User.Detail',
     $resource("/admin/api/users")
   ])
 
-  .controller 'UserListCtrl',['$scope', '$location', '$timeout', '$state', 'ngTableParams', 'UserService', 'ActionService', ($scope, $location, $timeout, $state, ngTableParams, userService, actionService)->
+  .controller 'UserListCtrl',['$scope', '$location', '$timeout', '$state', 'ngTableParams', 'UserService', 'ActionService', ($scope, $location, $timeout, $state, ngTableParams, userService, ActionService)->
     options =
       page:  1,           # show first page
       count: 10           # count per page
@@ -29,14 +29,31 @@ angular.module('MscIndex.User', ['ngTable','ngResource', 'MscIndex.User.Detail',
           $timeout(->
             params.total(headers('total'))
             $defer.resolve($scope.users = data)
-            $scope.getUserById  = ->
-                param = $scope.actionService.getQueryData()
-                return user for user in $scope.users when user.id is parseInt(param, 10)
-            $scope.actionService = actionService.init({scope: $scope, datas: $scope.users, checkKey: "id", mapping: $scope.getUserById, tableId: '#table'})
-            $scope.checkDatas = $scope.actionService.getCheckDatas()
           , 500)
         )
     $scope.tableParams = new ngTableParams(angular.extend(options, $location.search()), args)
+
+    $scope.selection = {checked: false, items: {}}
+    $scope.getUserById  = (id)->
+      return user for user in $scope.users when user.id is parseInt id
+    $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.getUserById})
+  
+    $scope.$watch 'selection.checked', (value)->
+      angular.forEach $scope.users, (item)->
+        $scope.selection.items[item.id] = value if angular.isDefined(item.id)
+    # watch for data checkboxes
+    $scope.$watch('selection.items', (values) ->
+      return if !$scope.users
+      checked = 0
+      unchecked = 0
+      total = $scope.users.length
+      angular.forEach $scope.users, (item)->
+        checked   +=  ($scope.selection.items[item.id]) || 0
+        unchecked += (!$scope.selection.items[item.id]) || 0
+      $scope.selection.checked = (checked == total) if (unchecked == 0) || (checked == 0)
+      # grayed checkbox
+      angular.element(document.getElementById("select_all")).prop("indeterminate", (checked != 0 && unchecked != 0));
+    , true)
   ]
 
 

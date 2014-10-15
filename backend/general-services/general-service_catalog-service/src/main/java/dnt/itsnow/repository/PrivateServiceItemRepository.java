@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Insert;
 import java.util.List;
 
 /**
- * Created by jacky on 2014/9/3.
+ * <h1>Private Service Item Repository</h1>
  */
 public interface PrivateServiceItemRepository extends CommonServiceItemRepository {
 

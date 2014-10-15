@@ -15,7 +15,6 @@ import java.util.List;
  *
  * 合同暂时不作为配置项
  *
- * TODO 添加测试用例
  */
 public class Contract extends Record {
     //合同编号
