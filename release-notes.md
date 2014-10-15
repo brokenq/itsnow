@@ -219,3 +219,33 @@ git@happyonroad.net:insight/itsnow.git Rel-x.y.z 标签(tag)
 -----------
 
 暂未部署
+
+0.2.0 发布说明
+=================
+
+1. 新增特性
+-----------
+
+1. Frontend 部门管理树形结构前台展示
+2. Frontend ActionService实现
+3. Backend 解决平台web respond随机故障的问题
+4. Backend 在itsnow部署环境中再次测试与集成
+5. Backend 部门管理树形结构功能开发
+6. Backend Activiti数据库表同步操作
+7. Backend BSM系统架构Draft
+
+2. 问题修复
+-----------
+
+
+3. 交付物地址
+--------------
+
+1. [msc-0.2.0](http://ci.itsnow.com/repository/download/Itsnow_Sprint_Build_MSC/3832:id/msc-0.2.0.zip)
+2. [msp-0.2.0](http://ci.itsnow.com/repository/download/Itsnow_SprintBuild_MSP/3833:id/msp-0.2.0.zip)
+3. [msu-0.2.0](http://ci.itsnow.com/repository/download/Itsnow_SprintBuild_MSU/3834:id/msu-0.2.0.zip)
+
+4. 系统演示地址
+-----------
+
+暂未部署
