@@ -12,70 +12,92 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 /**
- * <h1>类功能说明</h1>
+ * <h1>工作流管理业务实现层</h1>
  */
 @Service
 public class WorkflowManager extends Bean implements WorkflowService {
 
     @Autowired
-    private WorkflowRepository workflowRepository;
+    private WorkflowRepository repository;
 
     @Override
     public Workflow create(Workflow workflow) throws WorkflowException {
+
         logger.info("Creating workflow {}", workflow);
+
         if (workflow == null) {
             throw new WorkflowException("Workflow entry can not be empty.");
         }
-        workflow.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        workflow.setUpdatedAt(workflow.getCreatedAt());
-        workflowRepository.create(workflow);
+
+        workflow.creating();
+        repository.create(workflow);
+
+        logger.info("Created workflow {}", workflow);
 
         return workflow;
     }
 
     @Override
     public Workflow update(Workflow workflow) throws WorkflowException {
+
         logger.info("Updating workflow {}", workflow);
+
         if (workflow == null) {
             throw new WorkflowException("Workflow entry can not be empty.");
         }
-        workflowRepository.update(workflow);
+
+        workflow.creating();
+        repository.update(workflow);
+
+        logger.info("Updated workflow {}", workflow);
 
         return workflow;
     }
 
     @Override
-    public Workflow destroy(Workflow workflow) throws WorkflowException {
+    public void destroy(Workflow workflow) throws WorkflowException {
+
         logger.warn("Deleting workflow {}", workflow);
+
         if (workflow == null) {
             throw new WorkflowException("Workflow entry can not be empty.");
         }
-        workflowRepository.delete(workflow.getSn());
-        return workflow;
+        repository.delete(workflow.getSn());
+
+        logger.warn("Deleted workflow {}", workflow);
+
     }
 
     @Override
     public Page<Workflow> findAll(String keyword, Pageable pageable, String serviceFlag) {
-        logger.debug("Finding workflow by keyword: {}", keyword);
-        if(StringUtils.isBlank(keyword)){
-            int total = workflowRepository.count();
-            List<Workflow> workflows = workflowRepository.find(serviceFlag,"updated_at", "desc", pageable.getOffset(), pageable.getPageSize());
-            return new DefaultPage<Workflow>(workflows, pageable, total);
-        }else{
-            int total = workflowRepository.countByKeyword("%"+keyword+"%");
-            List<Workflow> workflows = workflowRepository.findByKeyword(serviceFlag,"%"+keyword+"%","updated_at","desc", pageable.getOffset(), pageable.getPageSize());
-            return new DefaultPage<Workflow>(workflows, pageable, total);
+
+        logger.debug("Finding workflows by keyword: {}", keyword);
+
+        if (StringUtils.isNotBlank(keyword)) {
+            keyword = "%" + keyword + "%";
         }
+        int total = repository.count(serviceFlag, keyword);
+        List<Workflow> workflows = repository.find(serviceFlag, keyword, pageable);
+        DefaultPage<Workflow> page = new DefaultPage<Workflow>(workflows, pageable, total);
+
+        logger.debug("Found   workflows by keyword: {}, list of the number is {}", keyword, page.getContent().size());
+
+        return page;
     }
 
     @Override
     public Workflow findBySn(String sn, String serviceFlag) {
+
         logger.debug("Finding Workflow by sn: {}", sn);
 
-        return workflowRepository.findBySn(sn, serviceFlag);
+        Workflow workflow = repository.findBySn(sn, serviceFlag);
+
+        logger.debug("Found Workflow by sn, {}", workflow);
+
+        return workflow;
     }
+
 }

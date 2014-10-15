@@ -1,0 +1,43 @@
+.col-xs-12.col-sm-4
+    .widget-box
+        .widget-header
+            h4
+            span.widget-toolbar
+                a(href='', data-action='collapse')
+                    i.icon-chevron-up
+                a(href='', data-action='close')
+                    i.icon-remove
+        .widget-body
+            .widget-main
+                ng-form(ng-controller='WorkflowCtrl', role='form', name='newMspWorkflowForm')
+                    div
+                        label(for='form-field-mask-1')
+                            | 名称
+                        .input-group
+                            input#form-field-mask-1.form-control(type='text',ng-model='workflow.name')
+                    hr
+                    div
+                        label(for='form-field-select-1') 类型
+                        select#form-field-select-1.form-control(ng-model='workflow.processDictionary')
+                            option(value='')  
+                            option(value='incident') Incident
+                            option(value='problem') Problem
+                    hr
+                    div
+                        label(for='form-field-select-1') 服务目录
+                        select#form-field-select-1.form-control(ng-model='workflow.serviceItem')
+                            option(value='')  
+                            option(value='hp') HP维保
+                            option(value='oracle') Oracle服务
+                    hr
+                    .ace-file-input
+                        input#id-input-file-2(type='file', ng-file-select='onFileSelect($files)', onclick='this.value=null')
+                        label.file-label(data-title='选择文件')
+                            span.file-name(data-title='No File ...')
+                                i.icon-upload-alt
+                        a.remove(href='')
+                            i.icon-remove
+                    div.form-actions.center
+                        button.btn.btn-sm.btn-success(type='button')
+                            | 提交
+                            i.icon-arrow-right.icon-on-right.bigger-110

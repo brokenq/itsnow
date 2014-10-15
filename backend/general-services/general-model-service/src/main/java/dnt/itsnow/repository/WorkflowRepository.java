@@ -1,6 +1,8 @@
 package dnt.itsnow.repository;
 
 import dnt.itsnow.model.Workflow;
+import dnt.itsnow.platform.service.Pageable;
+import dnt.itsnow.platform.util.PageRequest;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -11,7 +13,9 @@ import java.util.List;
 public interface WorkflowRepository {
 
     @Options(useGeneratedKeys = true, keyColumn = "id")
-    @Insert("INSERT INTO workflows (sn, name, description, act_re_procdef_id, service_item_id, service_item_type, process_dictionary_id, created_at, updated_at) VALUES " +
+    @Insert("INSERT INTO workflows " +
+            "(sn, name, description, act_re_procdef_id, service_item_id, service_item_type, process_dictionary_id, created_at, updated_at) " +
+            "VALUES " +
             "(#{sn}, #{name}, #{description}, #{actReProcdef.id_}, #{serviceItem.id}, #{serviceTtemType}, #{processDictionary.id}, #{createdAt}, #{updatedAt})")
     public void create(Workflow workflow);
 
@@ -31,29 +35,14 @@ public interface WorkflowRepository {
             " WHERE id              = #{id} ")
     public void update(Workflow workflow);
 
-    @Select("select count(0) from workflows")
-    public int count();
+    public int count(@Param("serviceTtemType") String serviceTtemType,
+                     @Param("keyword") String keyword);
 
-    //    @Select("select * from workflows order by ${sort} ${dir} limit #{offset}, #{size}")
     public List<Workflow> find(
             @Param("serviceTtemType") String serviceTtemType,
-            @Param("sort") String sort,
-            @Param("dir") String dir,
-            @Param("offset") int offset,
-            @Param("size") int size);
-
-    @Select("select count(*) from workflows where name like #{keyword} or sn like #{keyword}")
-    public int countByKeyword(@Param("keyword") String keyword);
-
-    //    @Select("select * from workflows where name like #{keyword} or sn like #{keyword}" +
-//            " order by ${sort} ${dir} limit #{offset}, #{size}")
-    public List<Workflow> findByKeyword(
-            @Param("serviceTtemType") String serviceTtemType,
             @Param("keyword") String keyword,
-            @Param("sort") String sort,
-            @Param("dir") String dir,
-            @Param("offset") int offset,
-            @Param("size") int size);
+            @Param("pageable") Pageable pageable);
 
     public Workflow findBySn(@Param("sn") String sn, @Param("serviceTtemType") String serviceTtemType);
+
 }

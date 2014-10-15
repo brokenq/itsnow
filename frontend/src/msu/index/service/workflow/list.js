@@ -10,7 +10,7 @@ angular.module('Service.Workflow', ['ngTable', 'ngResource'])
     })
 
     .factory('WorkflowService', ['$resource', function ($resource) {
-        return $resource("/api/msu-workflows");
+        return $resource("/api/msu_workflows");
     }
     ])
 

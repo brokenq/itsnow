@@ -33,7 +33,6 @@ public class WorkflowManagerTest {
 
     @Before
     public void setup() {
-
         pageRequest = new PageRequest(0, 1);
 
         workflow = new Workflow();
@@ -63,7 +62,11 @@ public class WorkflowManagerTest {
 
     @Test
     public void testDestroy() throws Exception {
-        Assert.assertNotNull(service.destroy(workflow));
+        String sn = "005";
+        Workflow workflow = service.findBySn(sn, Workflow.PRIVATE_SERVICE_ITEM);
+        Assert.assertNotNull(workflow);
+        service.destroy(workflow);
+        Assert.assertNull(service.findBySn(sn, Workflow.PRIVATE_SERVICE_ITEM));
     }
 
     @Test
@@ -73,13 +76,13 @@ public class WorkflowManagerTest {
 
     @Test
     public void findAll() throws Exception {
-        Page<Workflow> workflows =  service.findAll("%工作%", pageRequest, "1");
-        Assert.assertTrue(workflows.getContent().size()>0);
+        Page<Workflow> workflows = service.findAll("%工作%", pageRequest, Workflow.PRIVATE_SERVICE_ITEM);
+        Assert.assertTrue(workflows.getContent().size() > 0);
     }
 
     @Test
     public void findBySn() throws Exception {
-        Assert.assertNotNull(service.findBySn("001", "1"));
+        Assert.assertNotNull(service.findBySn("001", Workflow.PRIVATE_SERVICE_ITEM));
     }
 
 }

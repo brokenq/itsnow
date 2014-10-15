@@ -29,6 +29,10 @@
         </dependency>
         <dependency>
             <groupId>dnt.itsnow</groupId>
+            <artifactId>activiti_engine_service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dnt.itsnow</groupId>
             <artifactId>common-model-service</artifactId>
         </dependency>
         <dependency>

@@ -13,6 +13,7 @@ import dnt.messaging.MessageBus;
  * <h1>The general model service config</h1>
  */
 public class GeneralModelServiceConfig extends DefaultGeneralServiceConfig {
+
     @Override
     public void defineServices() {
         super.defineServices();
@@ -24,4 +25,5 @@ public class GeneralModelServiceConfig extends DefaultGeneralServiceConfig {
         exportService(MutableCacheService.class, "local", "localCacheService") ;
         exportService(MessageBus.class, "local", "localMessageBus") ;
     }
+
 }

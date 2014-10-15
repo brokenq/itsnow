@@ -48,7 +48,7 @@ mixin select_all()
       td(width="30" style="text-align: left" header="'ngTableCheckboxHeader'")
         input(type="checkbox" ng-model="checkboxes.items[workflow.sn]")
       td(style="text-align: center" data-title="'名称'") {{workflow.name}}
-      td(style="text-align: center" data-title="'类型'") {{workflow.processDictionary.levelName}}
+      td(style="text-align: center" data-title="'类型'") {{workflow.processDictionary.display}}
       //td(style="text-align: center" data-title="'文件名'") {{workflow.actReProcdef.resourceName_}}
       //td(style="text-align: center" data-title="'部署版本'") {{workflow.actReProcdef.version_}}
       //td(style="text-align: center" data-title="'服务目录'") {{workflow.serviceItem.name}}

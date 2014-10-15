@@ -25,6 +25,7 @@
     "-fuelux": "git@github.com:Kadvin/fuelux.git"
   },
   "dependencies": {
-    "angular-dialog-service": "~5.1.1"
+    "angular-dialog-service": "~5.1.1",
+    "angular-file-upload": "~1.1.1"
   }
 }

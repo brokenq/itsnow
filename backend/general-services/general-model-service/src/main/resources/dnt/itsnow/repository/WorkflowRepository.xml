@@ -42,35 +42,72 @@
         </association>
     </resultMap>
 
-    <sql id="selectWorkflow">
-        select flow.id, flow.sn, flow.name, flow.service_item_type, flow.description, flow.created_at, flow.updated_at,
-        p.id as dictionaryId, p.code as dictionaryCode, p.name as dictionaryName, p.display as dictionaryDisplay, p.val as dictionaryVal,  p.state as dictionaryState, p.type as dictionaryType,
-        serviceItem.id as serviceItemId, serviceItem.title as serviceItemTitle, serviceItem.brief as serviceItemBrief, serviceItem.icon as serviceItemIcon, serviceItem.description as serviceItemDescription
-        from workflows flow
-        left join act_re_procdef a on flow.act_re_procdef_id = a.id_
-        left join process_dictionaries p on flow.process_dictionary_id=p.id
+    <sql id="select">
+        SELECT flow.id,
+        flow.sn,
+        flow.name,
+        flow.service_item_type,
+        flow.description,
+        flow.created_at,
+        flow.updated_at,
+        p.id                    AS dictionaryId,
+        p.code                  AS dictionaryCode,
+        p.name                  AS dictionaryName,
+        p.display               AS dictionaryDisplay,
+        p.val                   AS dictionaryVal,
+        p.state                 AS dictionaryState,
+        p.type                  AS dictionaryType,
+        serviceitem.id          AS serviceItemId,
+        serviceitem.title       AS serviceItemTitle,
+        serviceitem.brief       AS serviceItemBrief,
+        serviceitem.icon        AS serviceItemIcon,
+        serviceitem.description AS serviceItemDescription
+        FROM   workflows flow
+        LEFT JOIN act_re_procdef a
+        ON flow.act_re_procdef_id = a.id_
+        LEFT JOIN process_dictionaries p
+        ON flow.process_dictionary_id = p.id
         <if test="serviceTtemType == 1">
-            left join itsnow_msc.public_service_items serviceItem on flow.service_item_id = serviceItem.id
+            LEFT JOIN itsnow_msc.public_service_items serviceItem
+            ON flow.service_item_id = serviceItem.id
         </if>
         <if test="serviceTtemType == 0">
-            left join private_service_items serviceItem on flow.service_item_id = serviceItem.id
+            LEFT JOIN private_service_items serviceItem
+            ON flow.service_item_id = serviceItem.id
         </if>
     </sql>
 
-    <select id="findBySn" parameterType="string" resultType="Workflow" resultMap="workflowResult">
-        <include refid="selectWorkflow"/>
-        where flow.sn=#{sn}
+    <select id="count" resultType="java.lang.Integer">
+        SELECT COUNT(0) FROM workflows
+        <where>
+            <if test="keyword != null">
+                name LIKE #{keyword} OR sn LIKE #{keyword}
+            </if>
+            <if test="serviceTtemType != null">
+                AND service_item_type = #{serviceTtemType}
+            </if>
+        </where>
     </select>
 
-    <select id="find" parameterType="string" resultType="Workflow" resultMap="workflowResult">
-        <include refid="selectWorkflow"/>
-        order by ${sort} ${dir} limit #{offset}, #{size}
+    <select id="find" resultMap="workflowResult">
+        <include refid="select"/>
+        <where>
+            <if test="keyword != null">
+                flow.name LIKE #{keyword} OR flow.sn LIKE #{keyword}
+            </if>
+        </where>
+        <if test="pageable.sort != null">
+            ORDER BY #{pageable.sort}
+        </if>
+        <trim prefix="LIMIT" prefixOverrides=",">
+            <if test="pageable.offset > 0">#{pageable.offset}</if>
+            <if test="pageable.pageSize > 0">, #{pageable.pageSize}</if>
+        </trim>
     </select>
 
-    <select id="findByKeyword" parameterType="string" resultType="Workflow" resultMap="workflowResult">
-        <include refid="selectWorkflow"/>
-        where flow.name like #{keyword} or flow.sn like #{keyword}
-        order by ${sort} ${dir} limit #{offset}, #{size}
+    <select id="findBySn" resultMap="workflowResult">
+        <include refid="select"/>
+        WHERE flow.sn=#{sn}
     </select>
 
 </mapper>

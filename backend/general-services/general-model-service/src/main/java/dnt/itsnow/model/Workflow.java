@@ -10,10 +10,25 @@ package dnt.itsnow.model;
 public class Workflow extends ConfigItem {
 
     private String sn;
+    private int version;
     private ActReProcdef actReProcdef;
     private ServiceItem serviceItem;
     private String serviceTtemType;
     private ProcessDictionary processDictionary;
+
+    /** 公共服务目录标记 */
+    public static final String PUBLIC_SERVICE_ITEM = "0";
+
+    /** 私有服务目录标记 */
+    public static final String PRIVATE_SERVICE_ITEM = "1";
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
 
     public ActReProcdef getActReProcdef() {
         return actReProcdef;
@@ -66,4 +81,5 @@ public class Workflow extends ConfigItem {
         sb.append('}');
         return sb.toString();
     }
+
 }

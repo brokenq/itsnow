@@ -50,7 +50,7 @@ mixin select_all()
       td(style="text-align: center" data-title="'地点名称'") {{site.name}}
       td(style="text-align: center" data-title="'地址'") {{site.address}}
       td(style="text-align: center" data-title="'描述'") {{site.description}}
-      td(style="text-align: center" data-title="'区域'") {{site.processDictionary.name}}
+      td(style="text-align: center" data-title="'区域'") {{site.processDictionary.display}}
       td(style="text-align: center" data-title="'工作时间'") {{ site.workTime.startAt}} - {{ site.workTime.endAt}}
 
 script(type="text/ng-template")#ngTableCheckboxHeader
