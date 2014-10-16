@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--不要用 type != '*' 这种， mybatis 会根据 '*' 认为 type 为 long类型，而后无法解析-->
 <mapper namespace="dnt.itsnow.repository.ItsnowProcessRepository">
-    <select id="findByName" resultMap="processResult">
+    <sql id="selectProcess">
         SELECT p.*,
             a.id            AS account_id,
             a.user_id       AS account_user_id,
@@ -35,6 +35,9 @@
             JOIN itsnow_hosts h ON p.host_id = h.id
             JOIN itsnow_schemas s ON p.schema_id = s.id
             JOIN accounts a ON p.account_id = a.id
+    </sql>
+    <select id="findByName" resultMap="processResult">
+        <include refid="selectProcess"/>
         WHERE p.name = #{name}
     </select>
 
@@ -47,12 +50,12 @@
         </if>
     </select>
 
-    <select id="findAllByKeyword" resultMap="basicProcessResult" >
-        SELECT * FROM itsnow_processes
+    <select id="findAllByKeyword" resultMap="processResult" >
+        <include refid="selectProcess"/>
         <if test="keyword != null">
             WHERE name LIKE #{keyword}
-            OR description LIKE #{keyword}
-            OR wd LIKE #{keyword}
+            OR p.description LIKE #{keyword}
+            OR p.wd LIKE #{keyword}
         </if>
     </select>
 
