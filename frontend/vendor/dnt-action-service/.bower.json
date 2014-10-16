@@ -26,7 +26,7 @@
   "_resolution": {
     "type": "version",
     "tag": "0.0.1",
-    "commit": "00f11114b80ded2427721149a289caded84294c4"
+    "commit": "8706a8ad21a3ddcccfdc92ecbd1ee724383f0c61"
   },
   "_source": "git://github.com/brokenq/dnt-action-service.git",
   "_target": "~0.0.1",
