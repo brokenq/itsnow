@@ -53,7 +53,7 @@
     <select id="findAllByKeyword" resultMap="processResult" >
         <include refid="selectProcess"/>
         <if test="keyword != null">
-            WHERE name LIKE #{keyword}
+            WHERE p.name LIKE #{keyword}
             OR p.description LIKE #{keyword}
             OR p.wd LIKE #{keyword}
         </if>
