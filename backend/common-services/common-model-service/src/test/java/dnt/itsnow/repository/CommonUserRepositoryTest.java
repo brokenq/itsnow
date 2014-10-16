@@ -26,15 +26,27 @@ public class CommonUserRepositoryTest {
 
     @Test
     public void testFindByUsername() throws Exception {
-        //TODO XIEXING write test case
         User user = repository.findByUsername("admin");
         validateUser(user);
         Assert.isNull(repository.findByUsername("Not Exist"));
     }
 
     @Test
+    public void testFindByAccountSnAndUsername() throws Exception {
+        User user = repository.findByAccountSnAndUsername("msc", "admin");
+        validateUser(user);
+    }
+
+
+    @Test
+    public void testFindByIncorrectAccountSnAndCorrectUsername() throws Exception {
+        User user = repository.findByAccountSnAndUsername("msu_001", "admin");
+        Assert.isNull(user);
+    }
+
+    @Test
     public void testFindAuthorities() throws Exception {
-        //TODO XIEXING write test case
+        // TODO
     }
 
     protected void validateUser(User user) {
