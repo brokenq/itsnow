@@ -44,11 +44,7 @@ public class ItsnowStatusMaintainer extends ItsnowResourceManager {
             public void run() {
                 while(isRunning()){
                     checkHostsStatus();
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        //have a rest for 1 seconds
-                    }
+                    rest(60 * 1000);//sleep one second
                 }
 
             }
@@ -58,11 +54,7 @@ public class ItsnowStatusMaintainer extends ItsnowResourceManager {
             public void run() {
                 while(isRunning()){
                     checkProcessesStatus();
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        //have a rest for 1 seconds
-                    }
+                    rest(60 * 1000);//sleep one second
                 }
             }
         });
@@ -75,17 +67,6 @@ public class ItsnowStatusMaintainer extends ItsnowResourceManager {
         processExecutor.shutdown();
     }
 
-    public void run() {
-        while(isRunning()){
-            checkHostsStatus();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                //have a rest for 1 seconds
-            }
-            checkProcessesStatus();
-        }
-    }
 
     /**
      * 执行定时检测
@@ -94,6 +75,7 @@ public class ItsnowStatusMaintainer extends ItsnowResourceManager {
         List<ItsnowHost> hosts = hostService.findAllDbHosts();
         for (ItsnowHost host : hosts) {
             checkHostStatus(host);
+            rest(1000);//sleep one second
         }
     }
 
@@ -135,6 +117,7 @@ public class ItsnowStatusMaintainer extends ItsnowResourceManager {
         Page<ItsnowProcess> processes = processService.findAll(null, new PageRequest(0, 1000));
         for (ItsnowProcess process : processes) {
             checkProcessStatus(process);
+            rest(1000);//sleep one second
         }
     }
 
