@@ -97,11 +97,11 @@ public class ItsnowProcessRepositoryTest {
         // 批量查询出来的Process，暂时不需要增加关联对象
         ItsnowProcess found = processes.get(0);
         Assert.assertNotNull(found.getHostId());
-        Assert.assertNull(found.getHost());
+        Assert.assertNotNull(found.getHost());
         Assert.assertNotNull(found.getSchemaId());
-        Assert.assertNull(found.getSchema());
+        Assert.assertNotNull(found.getSchema());
         Assert.assertNotNull(found.getAccountId());
-        Assert.assertNull(found.getAccount());
+        Assert.assertNotNull(found.getAccount());
     }
 
     @Test
