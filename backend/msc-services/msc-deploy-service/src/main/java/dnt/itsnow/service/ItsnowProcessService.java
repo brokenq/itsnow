@@ -84,6 +84,16 @@ public interface ItsnowProcessService {
     void delete(ItsnowProcess process) throws ItsnowProcessException;
 
     /**
+     * <h2>更新服务进程</h2>
+     *
+     * 当前主要是更新服务进程的状态
+     *
+     * @param process  被更新的主机
+     * @throws ItsnowProcessException
+     */
+    void update(ItsnowProcess process)throws ItsnowProcessException;
+
+    /**
      * <h2>读取一个服务进程相关任务的最新信息</h2>
      *
      * @param process 被读取的进程对象
