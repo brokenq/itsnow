@@ -77,6 +77,19 @@ git@happyonroad.net:insight/itsnow.git Rel-x.y.z 标签(tag)
 13. 提交新的开发分支: `git push -u origin Dev-x.y.z+1:Dev-x.y.z+1`
 14. 修改Itsnow CI的Continuous Build [version参数](http://ci.itsnow.com/admin/editBuildParams.html?id=buildType:itsnow_Continuous_Build)
 
+部署工作:
+
+1. 链接主机：ssh root@msc.itsnow.com
+  1.1 密码：itsnow@team
+2. 进入msc目录：cd /opt/itsnow/msc
+3. 查看链接指向的版本：ll
+  例如：/opt/itsnow/msc-x.y.z-SNAPSHOT/bin执行以下指令后,会更新成/opt/itsnow/msc-x.y.z/bin
+3. 进入msc的脚本目录：script/msc
+4. 执行脚本命令，更新链接指向的版本：upgrade.sh x.y.z
+5. 查看链接指向的版本是否更新完成：
+  5.1. cd ../msc
+  5.2. ll
+
 收尾工作:
 
 1. 发出Release Mail
@@ -248,4 +261,4 @@ git@happyonroad.net:insight/itsnow.git Rel-x.y.z 标签(tag)
 4. 系统演示地址
 -----------
 
-暂未部署
+1. [msc-0.2.0](http://msc.itsnow.com/login.html)
