@@ -185,7 +185,7 @@
 
         ActionService.prototype.getConditions = function(event) {
           var conditions, element;
-          element = $(event.srcElement);
+          element = $(event.srcElement || event.target);
           conditions = {
             weight: element.attr(this.CSS.WEIGHT),
             rejectCss: element.attr(this.CSS.REJECT_CSS),
@@ -226,7 +226,7 @@
         ActionService.prototype.getCss = function(classes) {
           var css, cssJson, _i, _len, _ref;
           cssJson = {};
-          if (classes != null) {
+          if ((classes != null) && classes !== '') {
             _ref = classes.split(/\s+/);
             for (_i = 0, _len = _ref.length; _i < _len; _i++) {
               css = _ref[_i];
