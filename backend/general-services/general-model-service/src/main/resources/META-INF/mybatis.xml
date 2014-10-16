@@ -12,7 +12,5 @@
         <typeAlias type="dnt.itsnow.model.Staff" alias="Staff"/>
         <typeAlias type="dnt.itsnow.model.Group" alias="Group"/>
         <typeAlias type="dnt.itsnow.model.GroupDetail" alias="GroupDetail"/>
-        <typeAlias type="dnt.itsnow.model.Role" alias="Role"/>
-        <typeAlias type="dnt.itsnow.model.RoleDetail" alias="RoleDetail"/>
     </typeAliases>
 </configuration>

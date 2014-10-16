@@ -2,6 +2,7 @@ package dnt.itsnow.service;
 
 import dnt.itsnow.exception.RoleException;
 import dnt.itsnow.model.Role;
+import dnt.itsnow.model.UserAuthority;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.platform.util.PageRequest;
@@ -14,20 +15,11 @@ public interface RoleService {
     /**
      * <h2>查询所有角色，可分页，可按关键字查询</h2>
      * <p/>
-     * @param accountId 账户ID
      * @param keyword 关键字
-     * @param pageRequest 分页类
+     * @param pageable 分页类
      * @return 角色列表
      */
-    public Page<Role> findAll(Long accountId, String keyword, PageRequest pageRequest);
-
-    /**
-     * <h2>查询指定角色相关联的信息</h2>
-     * <p/>
-     * @param name 角色名称
-     * @return 角色列表
-     */
-    public Role findAllRelevantInfo(String name);
+    public Page<Role> findAll(String keyword, Pageable pageable);
 
     /**
      * <h2>根据角色名称进行查找</h2>
@@ -59,5 +51,17 @@ public interface RoleService {
      * @throws RoleException
      */
     public void destroy(Role role) throws RoleException;
+
+    /**
+     * 创建角色和用户关系表
+     * @param userAuthority 用户与角色关系实体类
+     */
+    public UserAuthority createRoleAndUserRelation(UserAuthority userAuthority) throws RoleException;
+
+    /**
+     * 删除角色和用户关系
+     * @param userAuthority 用户与角色关系实体类
+     */
+    public void destroyRoleAndUserRelation(UserAuthority userAuthority) throws RoleException;
 
 }

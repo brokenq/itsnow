@@ -1,5 +1,5 @@
 // List System
-angular.module('System.Role', ['ngTable', 'ngResource'])
+angular.module('System.Role', ['ngTable', 'ngResource', 'dnt.action.service'])
 
     .config(function ($stateProvider) {
         $stateProvider.state('system.role', {
@@ -10,19 +10,31 @@ angular.module('System.Role', ['ngTable', 'ngResource'])
     })
 
     .factory('RoleService', ['$resource', function ($resource) {
-        return $resource("/api/msc-roles", {
-            query: { method: 'GET' },
-            remove: { method: 'DELETE' }
+        return $resource("/api/roles/:name", {}, {
+            query: { method: 'GET', isArray:true},
+            remove: { method: 'DELETE', params:{name:'@name'}, isArray:true }
         });
     }
     ])
 
-    .factory('RoleDetailService', ['$resource', function ($resource) {
-        return $resource("/api/msc-roles/:name",{name:'@name'});
-    }
-    ])
+    // 过滤拼接地点后的最后一个逗号
+    .filter('colFilter', function () {
+        var colFilter = function (input) {
+            var name = '';
+            if (input !== null && input !== undefined) {
+                for (var i = 0; i < input.length; i++) {
+                    name += input[i].name + ', ';
+                }
+                name = name.substring(0, name.length - 2);
+            }
+            return name || '无';
+        };
+        return colFilter;
+    })
 
-    .controller('RoleListCtrl', ['$scope', '$location', '$timeout', 'ngTableParams', 'RoleService', 'RoleDetailService', function ($scope, $location, $timeout, NgTableParams, roleService, roleDetailService) {
+    .controller('RoleListCtrl', ['$scope', '$location', '$timeout', 'ngTableParams', 'RoleService', 'ActionService',
+        function ($scope, $location, $timeout, NgTableParams, roleService, ActionService) {
+
         var options = {
             page: 1,           // show first page
             count: 10           // count per page
@@ -45,20 +57,30 @@ angular.module('System.Role', ['ngTable', 'ngResource'])
         };
         $scope.tableParams = new NgTableParams(angular.extend(options, $location.search()), args);
 
-        $scope.checkboxes = { 'checked': false, items: {} };
+        $scope.selection = {checked: false, items: {}};
+        $scope.getUserById  = function(id){
+            var idInt = parseInt(id, 10);
+            var i;
+            for(i in $scope.users){
+                var user = $scope.users[i];
+                if(user.id===idInt){
+                    return user;
+                }
+            }
+        };
+        $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.getUserById});
 
         // watch for check all checkbox
-        $scope.$watch('checkboxes.checked', function (value) {
+        $scope.$watch('selection.checked', function (value) {
             angular.forEach($scope.role, function (item) {
                 if (angular.isDefined(item.sn)) {
-                    $scope.checkboxes.items[item.sn] = value;
-
+                    $scope.selection.items[item.sn] = value;
                 }
             });
         });
 
         // watch for data checkboxes
-        $scope.$watch('checkboxes.items', function (values) {
+        $scope.$watch('selection.items', function (values) {
                 if (!$scope.role) {
                     return;
                 }
@@ -66,11 +88,11 @@ angular.module('System.Role', ['ngTable', 'ngResource'])
                 var unchecked = 0;
                 var total = $scope.role.length;
                 angular.forEach($scope.role, function (item) {
-                    checked += ($scope.checkboxes.items[item.sn]) || 0;
-                    unchecked += (!$scope.checkboxes.items[item.sn]) || 0;
+                    checked += ($scope.selection.items[item.sn]) || 0;
+                    unchecked += (!$scope.selection.items[item.sn]) || 0;
                 });
                 if ((unchecked === 0) || (checked === 0)) {
-                    $scope.checkboxes.checked = (checked == total);
+                    $scope.selection.checked = (checked == total);
                 }
                 // grayed checkbox
                 angular.element(document.getElementById("select_all")).prop("indeterminate", (checked !== 0 && unchecked !== 0));
@@ -78,31 +100,8 @@ angular.module('System.Role', ['ngTable', 'ngResource'])
            true
         );
 
-        var roleName = {name:'null'};
-        var detailArgs = {
-            total: 0,
-            getData: function ($defer, params) {
-                $location.search(params.url()); // put params in url
-                roleDetailService.query(params.url(), roleName, function (data, headers) {
-                        $timeout(function () {
-                                params.total(headers('total'));
-                                $defer.resolve($scope.detailRoles = data.length>0 ? data[0].details : data);
-                            },
-                            500
-                        );
-                    }
-                );
-            }
-        };
-        $scope.detailTableParams = new NgTableParams(angular.extend(options, $location.search()), detailArgs);
-
-        $scope.changeSelection = function (role) {
-            roleName = {name:role.name};
-            $scope.detailTableParams.reload();
-        };
-
         $scope.deleteRole = function () {
-            roleService.remove($scope.role);
+            roleService.remove({name:'ROLE_ADMIN'});
         };
 
     }

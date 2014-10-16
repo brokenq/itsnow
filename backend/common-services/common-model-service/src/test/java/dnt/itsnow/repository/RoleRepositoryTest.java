@@ -1,9 +1,12 @@
-package itsnow.dnt.repository;
+package dnt.itsnow.repository;
 
 import dnt.itsnow.model.Role;
+import dnt.itsnow.model.UserAuthority;
+import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.repository.RoleRepository;
-import itsnow.dnt.config.RoleRepositoryConfig;
+import dnt.itsnow.config.RoleRepositoryConfig;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,16 +25,22 @@ import java.util.List;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class RoleRepositoryTest {
 
+    PageRequest pageRequest;
+
     @Autowired
     RoleRepository repository;
+
+    @Before
+    public void setUp() throws Exception {
+        pageRequest = new PageRequest(0, 1);
+    }
 
     @Test
     public void testCreate() throws Exception {
         Role role = new Role();
         role.setName("ROLE_TEST");
         role.setDescription("This is a test.");
-        role.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        role.setUpdatedAt(role.getCreatedAt());
+        role.creating();
         repository.create(role);
         Assert.assertNotNull(role.getId());
     }
@@ -49,6 +58,7 @@ public class RoleRepositoryTest {
     public void testUpdate() throws Exception {
         Role role = repository.findByName("ROLE_ADMIN");
         role.setDescription("Hello World!");
+        role.updating();
         repository.update(role);
         role = repository.findByName("ROLE_ADMIN");
         Assert.assertTrue(role.getDescription().equals("Hello World!"));
@@ -56,39 +66,43 @@ public class RoleRepositoryTest {
 
     @Test
     public void testCount() throws Exception {
-        Long count = repository.count(1L);
+        Long count = repository.count(null);
         System.out.print("count:"+count);
         Assert.assertSame(Long.class, count.getClass());
     }
 
     @Test
     public void testFind() throws Exception {
-        List<Role> roles = repository.findAll(1L, "updated_at", "desc", 0, 10);
+        List<Role> roles = repository.findAll(null, pageRequest);
         Assert.assertNotNull(roles);
-    }
-
-    @Test
-    public void testCountByKeyword() throws Exception {
-        Long count = repository.countByKeyword(1L, "%ROLE_ADMIN%");
-        Assert.assertSame(Long.class, count.getClass());
-    }
-
-    @Test
-    public void testFindByKeyword() throws Exception {
-        List<Role> roles = repository.findAllByKeyword(1L, "%ROLE_ADMIN%", "updated_at", "desc", 0, 10);
-        Assert.assertNotNull(roles);
-    }
-
-    @Test
-    public void testFindAllRelevantInfo() throws Exception {
-        Role role = repository.findAllRelevantInfo("ROLE_ADMIN");
-        Assert.assertNotNull(role);
     }
 
     @Test
     public void testFindByName() throws Exception {
         Assert.assertNotNull(repository.findByName("ROLE_ADMIN"));
         Assert.assertNull(repository.findByName("1000000"));
+    }
+
+    @Test
+    public void testCreateRoleAndUserRelation() throws Exception {
+        UserAuthority userAuthority = new UserAuthority();
+        userAuthority.setUsername("USER_DAO_TEST");
+        userAuthority.setAuthority("ROLE_DAO_TEST");
+        repository.createRoleAndUserRelation(userAuthority);
+
+        UserAuthority ua = repository.findRoleAndUserRelation(userAuthority);
+        Assert.assertNotNull(ua);
+    }
+
+    @Test
+    public void testDeleteRoleAndUserRelation() throws Exception {
+        UserAuthority userAuthority = new UserAuthority();
+        userAuthority.setUsername("susie.qian");
+        userAuthority.setAuthority("ROLE_LINE_TWO");
+        repository.deleteRoleAndUserRelation(userAuthority);
+
+        UserAuthority ua = repository.findRoleAndUserRelation(userAuthority);
+        Assert.assertNull(ua);
     }
 
 }

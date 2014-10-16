@@ -17,14 +17,24 @@ angular.module('System.Role', ['ngTable', 'ngResource'])
     }
     ])
 
-    .factory('RoleDetailService', ['$resource', function ($resource) {
-        return $resource("/api/roles/:name",{name:'@name'},{
-            query: { method: 'GET', isArray:false}
-        });
-    }
-    ])
+    // 过滤拼接地点后的最后一个逗号
+    .filter('colFilter', function () {
+        var colFilter = function (input) {
+            var name = '';
+            if (input !== null && input !== undefined) {
+                for (var i = 0; i < input.length; i++) {
+                    name += input[i].name + ', ';
+                }
+                name = name.substring(0, name.length - 2);
+            }
+            return name || '无';
+        };
+        return colFilter;
+    })
 
-    .controller('RoleListCtrl', ['$scope', '$location', '$timeout', 'ngTableParams', 'RoleService', 'RoleDetailService', function ($scope, $location, $timeout, NgTableParams, roleService, roleDetailService) {
+    .controller('RoleListCtrl', ['$scope', '$location', '$timeout', 'ngTableParams', 'RoleService',
+        function ($scope, $location, $timeout, NgTableParams, roleService) {
+
         var options = {
             page: 1,           // show first page
             count: 10           // count per page
@@ -79,29 +89,6 @@ angular.module('System.Role', ['ngTable', 'ngResource'])
             },
            true
         );
-
-        var roleName = {name:'null'};
-        var detailArgs = {
-            total: 0,
-            getData: function ($defer, params) {
-                $location.search(params.url()); // put params in url
-                roleDetailService.query(params.url(), roleName, function (data, headers) {
-                        $timeout(function () {
-                                params.total(headers('total'));
-                                $defer.resolve($scope.detailRoles = data.details);
-                            },
-                            500
-                        );
-                    }
-                );
-            }
-        };
-        $scope.detailTableParams = new NgTableParams(angular.extend(options, $location.search()), detailArgs);
-
-        $scope.changeSelection = function (role) {
-            roleName = {name:role.name};
-            $scope.detailTableParams.reload();
-        };
 
         $scope.deleteRole = function () {
             roleService.remove({name:'ROLE_ADMIN'});

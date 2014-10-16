@@ -2,7 +2,9 @@ package dnt.itsnow.support;
 
 import dnt.itsnow.exception.RoleException;
 import dnt.itsnow.model.Role;
+import dnt.itsnow.model.UserAuthority;
 import dnt.itsnow.platform.service.Page;
+import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.repository.RoleRepository;
@@ -32,39 +34,21 @@ public class RoleManager extends Bean implements RoleService {
     private RoleRepository repository;
 
     @Override
-    public Page<Role> findAll(Long accountId, String keyword, PageRequest pageRequest) {
+    public Page<Role> findAll(String keyword, Pageable pageable) {
 
-        logger.debug("Finding roles by keyword:{}, accountId:{}", keyword, accountId);
+        logger.debug("Finding roles by keyword:{}, accountId:{}", keyword);
 
-        if(StringUtils.isBlank(keyword)){
-            int total = repository.count(accountId).intValue();
-            List<Role> roles = repository.findAll(accountId, "updated_at", "desc", pageRequest.getOffset(), pageRequest.getPageSize());
-            DefaultPage page = new DefaultPage<Role>(roles, pageRequest, total);
-
-            logger.debug("Finded role list info:{}", page);
-
-            return page;
-        }else{
-            int total = repository.countByKeyword(accountId, "%"+keyword+"%").intValue();
-            List<Role> roles = repository.findAllByKeyword(accountId, "%" + keyword + "%", "updated_at", "desc", pageRequest.getOffset(), pageRequest.getPageSize());
-            DefaultPage page = new DefaultPage<Role>(roles, pageRequest, total);
-
-            logger.debug("Finded role list info:{}", page);
-
-            return page;
+        if (StringUtils.isNotBlank(keyword)) {
+            keyword = "%" + keyword + "%";
         }
-    }
 
-    @Override
-    public Role findAllRelevantInfo(String keyword) {
+        int total = repository.count(keyword).intValue();
+        List<Role> roles = repository.findAll(keyword, pageable);
+        DefaultPage<Role> page = new DefaultPage<Role>(roles, pageable, total);
 
-        logger.debug("Finding role by keyword:{}, paging info:{}", keyword);
+        logger.debug("Finded role list info:{}", page);
 
-        Role role = repository.findAllRelevantInfo(keyword);
-
-        logger.debug("Finded role:{}", role);
-
-        return role;
+        return page;
     }
 
     @Override
@@ -84,11 +68,11 @@ public class RoleManager extends Bean implements RoleService {
 
         logger.info("Creating role:{}", role);
 
-        if(role == null){
+        if (role == null) {
             throw new RoleException("Role entry can not be empty.");
         }
-        role.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        role.setUpdatedAt(role.getCreatedAt());
+
+        role.creating();
         repository.create(role);
 
         logger.info("Created role:{}", role);
@@ -103,7 +87,7 @@ public class RoleManager extends Bean implements RoleService {
 
         logger.info("Updating role:{}", role);
 
-        if(role==null){
+        if (role == null) {
             throw new RoleException("Role entry can not be empty.");
         }
 
@@ -121,7 +105,7 @@ public class RoleManager extends Bean implements RoleService {
 
         logger.warn("Deleting role {}", role);
 
-        if(role==null){
+        if (role == null) {
             throw new RoleException("Role entry can not be empty.");
         }
 
@@ -133,6 +117,46 @@ public class RoleManager extends Bean implements RoleService {
         globalMessageBus.publish("Role", "-" + JsonSupport.toJSONString(role));
 
         logger.warn("Deletd role");
+    }
+
+    @Override
+    public UserAuthority createRoleAndUserRelation(UserAuthority userAuthority) throws RoleException {
+        logger.info("Creating role and user relation : {}", userAuthority);
+
+        if (userAuthority == null) {
+            throw new RoleException("userAuthority entry can not be empty.");
+        } else if (StringUtils.isBlank(userAuthority.getUsername())) {
+            throw new RoleException("UserAuthority's username must be specify.");
+        } else if (StringUtils.isBlank(userAuthority.getAuthority())) {
+            throw new RoleException("UserAuthority's authority must be specify.");
+        }
+
+        repository.createRoleAndUserRelation(userAuthority);
+
+        globalMessageBus.publish("Role", "+");
+
+        logger.info("Created role and user relation : {}", userAuthority);
+
+        return userAuthority;
+    }
+
+    @Override
+    public void destroyRoleAndUserRelation(UserAuthority userAuthority) throws RoleException {
+        logger.warn("Deleting role and user relation : {}", userAuthority);
+
+        if (userAuthority == null) {
+            throw new RoleException("userAuthority entry can not be empty.");
+        } else if (StringUtils.isBlank(userAuthority.getUsername())) {
+            throw new RoleException("UserAuthority's username must be specify.");
+        } else if (StringUtils.isBlank(userAuthority.getAuthority())) {
+            throw new RoleException("UserAuthority's authority must be specify.");
+        }
+
+        repository.deleteRoleAndUserRelation(userAuthority);
+
+        globalMessageBus.publish("Role", "-");
+
+        logger.warn("Deletd role and user relation : {}", userAuthority);
     }
 
 }

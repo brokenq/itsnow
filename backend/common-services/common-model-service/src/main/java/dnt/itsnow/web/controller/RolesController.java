@@ -2,6 +2,7 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.exception.RoleException;
 import dnt.itsnow.model.Role;
+import dnt.itsnow.model.UserAuthority;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
@@ -44,9 +45,9 @@ public class RolesController extends SessionSupportController<Role> {
     @RequestMapping
     public Page<Role> index(@RequestParam(value = "keyword", required = false) String keyword) {
 
-        logger.debug("Listing Roles by keyword: {}" + keyword);
+        logger.debug("Listing Roles by keyword: {}", keyword);
 
-        indexPage = service.findAll(mainAccount.getId(), keyword, pageRequest);
+        indexPage = service.findAll(keyword, pageRequest);
 
         logger.debug("Listed  {}", indexPage);
 
@@ -65,7 +66,7 @@ public class RolesController extends SessionSupportController<Role> {
 
         logger.debug("Listing role name:{}" + name);
 
-        role = service.findAllRelevantInfo(name);
+        role = service.findByName(name);
 
         logger.debug("Listed role size:{}", indexPage.getContent().size());
 
@@ -111,16 +112,16 @@ public class RolesController extends SessionSupportController<Role> {
 
         this.role.apply(role);
         try {
-            role = service.update(role);
+            this.role = service.update(this.role);
         } catch (RoleException e) {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
         } catch (Exception e) {
             throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
         }
 
-        logger.info("Updated {}", role);
+        logger.info("Updated {}", this.role);
 
-        return role;
+        return this.role;
     }
 
     /**
@@ -131,7 +132,7 @@ public class RolesController extends SessionSupportController<Role> {
      * @return 被删除的角色
      */
     @RequestMapping(value = "{name}", method = RequestMethod.DELETE)
-    public Role destroy() {
+    public void destroy() {
 
         logger.warn("Deleting {}", role);
 
@@ -145,7 +146,40 @@ public class RolesController extends SessionSupportController<Role> {
 
         logger.warn("Deleted  {}", role);
 
-        return role;
+    }
+
+    @RequestMapping(value = "relation", method = RequestMethod.POST)
+    public UserAuthority createRelation(@RequestBody UserAuthority userAuthority) {
+
+        logger.info("Creating role and user relation : {}", userAuthority);
+
+        try {
+            service.createRoleAndUserRelation(userAuthority);
+        } catch (RoleException e) {
+            throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (Exception e) {
+            throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
+        }
+
+        logger.info("Created role and user relation : {}", userAuthority);
+
+        return userAuthority;
+    }
+
+    @RequestMapping(value = "relation", method = RequestMethod.DELETE)
+    public void deleteRelation(@RequestBody UserAuthority userAuthority) {
+
+        logger.info("Deleting role and user relation : {}", userAuthority);
+
+        try {
+            service.destroyRoleAndUserRelation(userAuthority);
+        } catch (RoleException e) {
+            throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (Exception e) {
+            throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
+        }
+
+        logger.info("Deleted role and user relation : {}", userAuthority);
     }
 
     @BeforeFilter({"update", "destroy"})
