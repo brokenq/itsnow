@@ -6,10 +6,12 @@ package dnt.itsnow.platform.web.security;
 import dnt.itsnow.platform.web.support.DefaultAuthenticationFailureHandler;
 import dnt.itsnow.platform.web.support.DefaultAuthenticationSuccessHandler;
 import dnt.itsnow.platform.web.support.DefaultLogoutSuccessHandler;
+import dnt.itsnow.platform.web.support.LoginPageDeniedHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -28,6 +30,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.exceptionHandling().accessDeniedHandler(new LoginPageDeniedHandler());
         http.authenticationProvider(delegateAuthenticationProvider())
                 // 配置了 authentication provider 之后， 不需要配置 user details service
                 //.userDetailsService(delegateUserDetailsService())
@@ -51,10 +54,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
                 (ExpressionUrlAuthorizationConfigurer.ExpressionInterceptUrlRegistry) http.authorizeRequests();
         //谁在前，谁优先级高
         authenticated.antMatchers(HttpMethod.POST, "api/session").anonymous()
+                     .antMatchers("/login.html").anonymous() // use spring interceptor
                 .antMatchers("/api/**").hasAnyRole("ADMIN", "MONITOR", "REPORTER", "USER","LINE_ONE","LINE_TWO","ROLE_SERVICE_DESK")
                 .antMatchers("/admin/api/**").hasAnyRole("ADMIN")
                 .antMatchers("/monitor/api/**").hasAnyRole("MONITOR")
                 .antMatchers("/reporter/api/**").hasAnyRole("REPORTER")
+                .antMatchers("/index.html").not().anonymous()
                 .antMatchers("/routes").hasRole("ANONYMOUS")
                 .antMatchers("/**").permitAll();
         authenticated.and().formLogin()
