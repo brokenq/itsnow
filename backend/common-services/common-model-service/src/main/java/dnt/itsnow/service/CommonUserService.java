@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 public interface CommonUserService extends UserDetailsService {
 
     /**
-     * <h2>根据用户名查找用户</h2>
+     * <h2>根据用户名在当前系统的帐户下查找用户</h2>
      *
      * @param username 用户名
      * @return 找到的用户 不包括权限等信息, 找不到则返回null
@@ -20,7 +20,7 @@ public interface CommonUserService extends UserDetailsService {
     User findByUsername(String username);
 
     /**
-     * 加载用户各种信息
+     * 加载在当前系统的帐户下的用户各种信息
      *
      * @param username 用户名
      * @return 包括了权限等信息的用户详情
@@ -29,7 +29,7 @@ public interface CommonUserService extends UserDetailsService {
     User loadUserByUsername(String username) throws UsernameNotFoundException;
 
     /**
-     * <h2>判断某个用户的密码是否正确</h2>
+     * <h2>判断某个在当前系统的帐户下的用户的密码是否正确</h2>
      *
      * @param username 被判断的用户名
      * @param password 被判断的密码

@@ -36,7 +36,9 @@ public class CommonUserManager extends Bean implements CommonUserService {
 
     @Override
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = repository.findByUsername(username);
+        // AppId 就是 Account的sn，忽略大小写
+        String appId = System.getProperty("app.id");
+        User user = repository.findByAccountSnAndUsername(appId, username);
         if (user == null) throw new UsernameNotFoundException("Can't find user " + username);
         user.setAuthorities(repository.findAuthorities(username));
         return user;
@@ -44,7 +46,9 @@ public class CommonUserManager extends Bean implements CommonUserService {
 
     @Override
     public boolean challenge(String username, String password) {
-        User user = repository.findByUsername(username);
+        // AppId 就是 Account的sn，忽略大小写
+        String appId = System.getProperty("app.id");
+        User user = repository.findByAccountSnAndUsername(appId, username);
         if (user == null) throw new UsernameNotFoundException("Can't find user " + username);
         return passwordEncoder.matches(password, user.getPassword());
     }

@@ -21,4 +21,6 @@ public interface CommonUserRepository {
 
     @Select("SELECT * FROM authorities WHERE UPPER(username) = UPPER(#{username})")
     Set<UserAuthority> findAuthorities(@Param("username") String username);
+
+    User findByAccountSnAndUsername(@Param("accountSn") String accountSn, @Param("username")String username);
 }

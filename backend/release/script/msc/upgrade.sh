@@ -20,11 +20,12 @@
 #   12. mv /opt/itsnow/new-msc to /opt/itsnow/msc
 #   13.start new msc again
 
-CI=ci.dnt.com.cn
+CI=ci.itsnow.com
 itsnow_dir=$(cd `dirname $0` && cd ../../../ && pwd )
 current="msc"
 upgrading="latest"
 cp="/bin/cp -f"
+
 
 function last_of(){
   last=$(ls . | grep $1 | awk -F@ '{print $2}' | sort -n | tail -1)
@@ -45,6 +46,8 @@ fi
 version=$1
 
 cd $itsnow_dir
+old_version=$(cat msc/bin/start.sh | grep APP_TARGET | head -1 | awk -Frelease\- '{print $2}')
+
 
 folder="msc-$version"
 if [ -d "$folder" ]; then
@@ -97,6 +100,9 @@ cd $itsnow_dir
 change_list="bin/start.sh bin/stop.sh bin/itsnow-msc config/logback.xml config/nginx.conf config/now.properties config/wrapper.conf db/migrate/environments/production.properties"
 for file in $change_list; do
   $cp $current/$file $upgrading/$file
+  if [ "$version" != "$old_version" ]; then
+    sed -i s/$old_version/$version/g $upgrading/$file
+  fi
 done
 
 echo "Step 7 update /etc and /opt/system/config"
@@ -127,7 +133,7 @@ last=$(last_of old)
 
 echo "Step 10 migrate db"
 mv $upgrading $current
-echo "MSC upgraded to $version, link to $folder"
+echo "MSC upgraded from $old_version to $version, link to $folder"
 
 cd $current/db
 bin/migrate --env=production up
