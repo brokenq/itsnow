@@ -1,5 +1,5 @@
 // List System
-angular.module('Service.Dict', ['ngTable', 'ngResource'])
+angular.module('Service.Dict', ['ngTable', 'ngResource', 'Service.DictNew', 'dnt.action.service'])
 
     .config(function ($stateProvider) {
         $stateProvider.state('dict', {
@@ -10,7 +10,7 @@ angular.module('Service.Dict', ['ngTable', 'ngResource'])
     })
 
     .factory('DictService', ['$resource', function ($resource) {
-        return $resource("/api/process-dictionaries");
+        return $resource("/api/dict-dictionaries");
     }
     ])
 
@@ -25,7 +25,13 @@ angular.module('Service.Dict', ['ngTable', 'ngResource'])
         return stateFilter;
     })
 
-    .controller('DictListCtrl', ['$scope', '$location', '$timeout', 'ngTableParams', 'DictService', function ($scope, $location, $timeout, NgTableParams, dictService) {
+    .controller('DictListCtrl', ['$scope', '$location', '$timeout', 'ngTableParams', 'DictService', 'ActionService',function (parameters) {
+        var $scope = parameters.$scope;
+        var $location = parameters.$location;
+        var $timeout = parameters.$timeout;
+        var NgTableParams = parameters.NgTableParams;
+        var dictService = parameters.dictService;
+        var actionService = parameters.actionService;
         var options = {
             page: 1,           // show first page
             count: 10           // count per page
