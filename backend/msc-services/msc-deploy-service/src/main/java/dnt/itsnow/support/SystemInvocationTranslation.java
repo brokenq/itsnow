@@ -188,6 +188,29 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
         };
     }
 
+    @Override
+    public SystemInvocation check(final ItsnowHost host) {
+        return new LocalInvocation() {
+            @Override
+            public int perform(Process process) throws Exception {
+                return process.run("./check_host_status.sh", host.getAddress());
+            }
+        };
+    }
+
+    @Override
+    public SystemInvocation check(final ItsnowProcess itsnowProcess) {
+        return new LocalInvocation() {
+            @Override
+            public int perform(Process process) throws Exception {
+                return process.run("./check_process_status.sh",
+                                   itsnowProcess.getHostAddress(),
+                                   itsnowProcess.getProperty("http.port"),
+                                   itsnowProcess.getAccount().getSn());
+            }
+        };
+    }
+
     static class ScpTask extends LocalInvocation {
         private ItsnowProcess itsnowProcess;
         private File          varsFile;
