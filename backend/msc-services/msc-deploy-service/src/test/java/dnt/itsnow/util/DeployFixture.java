@@ -15,6 +15,7 @@ public class DeployFixture {
         ItsnowHost host = new ItsnowHost();
         host.setAddress("192.168.0.100");
         host.setName("srv1.itsnow.com");
+        host.setType(HostType.APP);
         host.setCapacity(10);
         host.setDescription("A test itsnow host");
         host.setProperty("user", "root");
@@ -29,6 +30,7 @@ public class DeployFixture {
         host.setId(1001L);
         host.setAddress("srv2.itsnow.com");
         host.setName("srv2.itsnow.com");
+        host.setType(HostType.APP);
         host.setProperty("password", "kadvin1234");
         host.setProperty("msu.version", "0.1.8");
         host.setProperty("msp.version", "0.1.8");

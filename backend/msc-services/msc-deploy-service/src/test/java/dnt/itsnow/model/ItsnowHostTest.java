@@ -45,6 +45,13 @@ public class ItsnowHostTest extends ValidatorSupport {
     }
 
     @Test
+    public void testRequireType() throws Exception {
+        host.setType(null);
+        Set<ConstraintViolation<ItsnowHost>> violations = validator.validate(host);
+        Assert.assertFalse(violations.isEmpty());
+    }
+
+    @Test
     public void testSerialization() throws Exception {
         String json = JsonSupport.toJSONString(host);
         System.out.println(json);
