@@ -1,7 +1,7 @@
 //   Index.jade parts: Profile
 mixin profile_link(text, icon, action)
   li
-    a(href="#", ng-click=action)
+    a(href="javascript:void(0)", ng-click=action)
       i(class="icon-#{icon}")
       | #{text}
 
