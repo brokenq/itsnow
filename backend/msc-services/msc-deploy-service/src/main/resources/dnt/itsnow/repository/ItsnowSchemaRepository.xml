@@ -14,9 +14,11 @@
             h.configuration AS host_configuration ,
             h.description   AS host_description ,
             h.created_at    AS host_created_at,
-            h.updated_at    AS host_updated_at
+            h.updated_at    AS host_updated_at,
+            p.name          AS process_name
         FROM itsnow_schemas s
-            JOIN itsnow_hosts h ON s.host_id = h.id
+            LEFT OUTER JOIN itsnow_hosts h ON s.host_id = h.id
+            LEFT OUTER JOIN itsnow_processes p ON s.id = p.schema_id
     </sql>
     <select id="findByName" resultMap="schemaResult">
         <include refid="selectSchema"/>
@@ -30,9 +32,35 @@
             s.id = #{id}
         </where>
     </select>
+    <select id="countByKeyword" resultType="int">
+        SELECT COUNT(0) FROM itsnow_schemas
+        <if test="keyword != null">
+            <where>
+                name LIKE #{keyword}
+                OR description LIKE #{keyword}
+            </where>
+        </if>
+    </select>
+    <select id="findAllByKeyword" resultMap="schemaResult">
+        <include refid="selectSchema"/>
+        <if test="keyword != null">
+            <where>
+                s.name LIKE #{keyword}
+                OR s.description LIKE #{keyword}
+            </where>
+        </if>
+        <if test="pageRequest.sort != null">
+            ORDER BY #{pageRequest.sort}
+        </if>
+        <trim prefix="LIMIT" prefixOverrides=",">
+            <if test="pageRequest.offset > 0">#{pageRequest.offset}</if>
+            <if test="pageRequest.pageSize > 0">, #{pageRequest.pageSize}</if>
+        </trim>
+    </select>
     <resultMap id="schemaResult" type="ItsnowSchema" autoMapping="true">
         <result column="configuration" property="configuration" typeHandler="dnt.itsnow.util.PropertiesHandler"/>
         <result column="host_id" property="hostId"/>
         <association property="host" columnPrefix="host_" resultMap="dnt.itsnow.repository.ItsnowHostRepository.hostResult"/>
+        <collection property="processes" columnPrefix="process_" resultMap="dnt.itsnow.repository.ItsnowProcessRepository.basicProcessResult"/>
     </resultMap>
 </mapper>

@@ -7,6 +7,7 @@ import dnt.itsnow.service.*;
 import dnt.itsnow.test.config.ApplicationControllerConfig;
 import dnt.itsnow.web.controller.ItsnowHostsController;
 import dnt.itsnow.web.controller.ItsnowProcessesController;
+import dnt.itsnow.web.controller.ItsnowSchemasController;
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -58,6 +59,11 @@ public class DeployControllerConfig extends ApplicationControllerConfig {
     @Bean
     public ItsnowProcessesController itsnowProcessesController(){
         return new ItsnowProcessesController();
+    }
+
+    @Bean
+    public ItsnowSchemasController itsnowSchemasController(){
+        return new ItsnowSchemasController();
     }
 
 
