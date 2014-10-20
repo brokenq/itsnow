@@ -33,7 +33,7 @@
         </where>
     </select>
 
-    <select id="findAll" resultMap="roleResult">
+    <sql id="select">
         SELECT r.id,
                r.name,
                r.description,
@@ -55,6 +55,15 @@
                       ON a.username = u.username
                LEFT JOIN itsnow_msc.accounts acc
                       ON u.account_id = acc.id
+    </sql>
+
+    <select id="findByName" resultMap="roleResult">
+        <include refid="select"></include>
+        WHERE r.name = #{name}
+    </select>
+
+    <select id="findAll" resultMap="roleResult">
+        <include refid="select"></include>
         <where>
             <if test="keyword != null and keywork != ''">
                 r.name LIKE #{keyword}

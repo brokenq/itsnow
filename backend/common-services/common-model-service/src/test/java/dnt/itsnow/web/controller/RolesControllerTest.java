@@ -1,6 +1,8 @@
 package dnt.itsnow.web.controller;
 
+ import dnt.itsnow.model.Account;
  import dnt.itsnow.model.Role;
+ import dnt.itsnow.model.User;
  import dnt.itsnow.model.UserAuthority;
  import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.util.PageRequest;
@@ -39,7 +41,9 @@ public class RolesControllerTest extends SessionSupportedControllerTest {
 
     List<Role> roles;
 
-    UserAuthority userAuthority;
+    User user;
+
+    List<User> users;
 
     @Before
     public void setup() {
@@ -54,9 +58,16 @@ public class RolesControllerTest extends SessionSupportedControllerTest {
         roles = new ArrayList<Role>();
         roles.add(role);
 
-        userAuthority = new UserAuthority();
-        userAuthority.setUsername("USER_ACTION_TEST");
-        userAuthority.setAuthority("ROLE_ACTION_TEST");
+        user = new User();
+        user.setName("USER_ACTION_TEST");
+        user.setUsername("USER_ACTION_TEST");
+        user.setEmail("stone@126.com");
+        user.setPhone("15901968888");
+        user.setPassword("Hi");
+        user.setRepeatPassword("Hi");
+
+        users = new ArrayList<User>();
+        users.add(user);
 
         reset(roleService);
     }
@@ -131,38 +142,26 @@ public class RolesControllerTest extends SessionSupportedControllerTest {
     }
 
     @Test
-    public void testCreateRelation() throws Exception {
+    public void testListUsers() throws Exception {
 
-        expect(roleService.createRoleAndUserRelation(anyObject(UserAuthority.class))).andReturn(userAuthority);
+        expect(roleService.findUsersByAccount(anyObject(Account.class))).andReturn(users);
+
+        // 准备 Mock Request
+        MockHttpServletRequestBuilder request = get("/api/roles/users");
+        request = decorate(request);
 
         replay(roleService);
 
-        MockHttpServletRequestBuilder request = post("/api/roles/relation").content(userAuthorityJson());
-        decorate(request);
-
+        // 执行
         ResultActions result = this.browser.perform(request);
+
+        // 对业务结果的验证
         decorate(result).andExpect(status().isOk());
-    }
 
-    @Test
-    public void testDeleteRelation() throws Exception {
-
-        roleService.destroyRoleAndUserRelation(anyObject(UserAuthority.class));
-
-        replay(roleService);
-
-        MockHttpServletRequestBuilder request = delete("/api/roles/relation").content(userAuthorityJson()); //执行请求
-        decorate(request);
-
-        this.browser.perform(request).andExpect(status().isOk());
     }
 
     protected String roleJson(){
         return JsonSupport.toJSONString(role);
-    }
-
-    protected String userAuthorityJson(){
-        return JsonSupport.toJSONString(userAuthority);
     }
 
     // 每次测试结束之后再验证

@@ -1,11 +1,15 @@
 package dnt.itsnow.service;
 
 import dnt.itsnow.exception.RoleException;
+import dnt.itsnow.model.Account;
 import dnt.itsnow.model.Role;
+import dnt.itsnow.model.User;
 import dnt.itsnow.model.UserAuthority;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.platform.util.PageRequest;
+
+import java.util.List;
 
 /**
  * <h1>MSP/MSU角色Service</h1>
@@ -53,15 +57,9 @@ public interface RoleService {
     public void destroy(Role role) throws RoleException;
 
     /**
-     * 创建角色和用户关系表
-     * @param userAuthority 用户与角色关系实体类
+     * 根据账户名列出所对应的所有用户信息
+     * @param mainAccount 账户
+     * @return 用户列表
      */
-    public UserAuthority createRoleAndUserRelation(UserAuthority userAuthority) throws RoleException;
-
-    /**
-     * 删除角色和用户关系
-     * @param userAuthority 用户与角色关系实体类
-     */
-    public void destroyRoleAndUserRelation(UserAuthority userAuthority) throws RoleException;
-
+    List<User> findUsersByAccount(Account mainAccount);
 }

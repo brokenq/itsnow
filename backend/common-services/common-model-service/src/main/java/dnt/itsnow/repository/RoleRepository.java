@@ -1,6 +1,7 @@
 package dnt.itsnow.repository;
 
 import dnt.itsnow.model.Role;
+import dnt.itsnow.model.User;
 import dnt.itsnow.model.UserAuthority;
 import dnt.itsnow.platform.service.Pageable;
 import org.apache.ibatis.annotations.*;
@@ -40,7 +41,6 @@ public interface RoleRepository {
      */
     public List<Role> findAll(@Param("keyword") String keyword, @Param("pageable") Pageable pageable);
 
-    @Select("SELECT * FROM roles WHERE name = #{name}")
     public Role findByName(@Param("name") String name);
 
     /**
@@ -84,4 +84,11 @@ public interface RoleRepository {
     @Delete("DELETE FROM group_authorities WHERE authority = #{authority}")
     public void deleteRoleAndGroupRelationByRoleName(@Param("authority") String authority);
 
+    /**
+     * 根据账户序列号查询所属用户列表
+     * @param id 账户ID
+     * @return 用户列表
+     */
+    @Select("SELECT * FROM itsnow_msc.users WHERE account_id = #{id}")
+    List<User> findUsersByAccountId(@Param("id") Long id);
 }

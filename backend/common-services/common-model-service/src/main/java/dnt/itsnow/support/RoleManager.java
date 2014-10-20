@@ -1,12 +1,13 @@
 package dnt.itsnow.support;
 
 import dnt.itsnow.exception.RoleException;
+import dnt.itsnow.model.Account;
 import dnt.itsnow.model.Role;
+import dnt.itsnow.model.User;
 import dnt.itsnow.model.UserAuthority;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.platform.util.DefaultPage;
-import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.repository.RoleRepository;
 import dnt.itsnow.service.RoleService;
 import dnt.messaging.MessageBus;
@@ -17,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -66,7 +66,7 @@ public class RoleManager extends Bean implements RoleService {
     @Override
     public Role create(Role role) throws RoleException {
 
-        logger.info("Creating role:{}", role);
+        logger.info("Creating {}", role);
 
         if (role == null) {
             throw new RoleException("Role entry can not be empty.");
@@ -75,8 +75,19 @@ public class RoleManager extends Bean implements RoleService {
         role.creating();
         repository.create(role);
 
-        logger.info("Created role:{}", role);
+        if (role.getUsers() != null) {
+            UserAuthority userAuthority;
+            for (User user : role.getUsers()) {
+                userAuthority = new UserAuthority();
+                userAuthority.setAuthority(role.getName());
+                userAuthority.setUsername(user.getUsername());
+                repository.createRoleAndUserRelation(userAuthority);
+            }
+        }
 
+        logger.info("Created {}", role);
+
+        logger.info("Sync role +");
         globalMessageBus.publish("Role", "+" + JsonSupport.toJSONString(role));
 
         return role;
@@ -85,7 +96,7 @@ public class RoleManager extends Bean implements RoleService {
     @Override
     public Role update(Role role) throws RoleException {
 
-        logger.info("Updating role:{}", role);
+        logger.info("Updating {}", role);
 
         if (role == null) {
             throw new RoleException("Role entry can not be empty.");
@@ -93,8 +104,20 @@ public class RoleManager extends Bean implements RoleService {
 
         repository.update(role);
 
-        logger.info("Updated role");
+        if (role.getUsers() != null) {
+            repository.deleteRoleAndUserRelationByRoleName(role.getName());
+            UserAuthority userAuthority;
+            for (User user : role.getUsers()) {
+                userAuthority = new UserAuthority();
+                userAuthority.setAuthority(role.getName());
+                userAuthority.setUsername(user.getUsername());
+                repository.createRoleAndUserRelation(userAuthority);
+            }
+        }
 
+        logger.info("Updated {}", role);
+
+        logger.info("Sync role *");
         globalMessageBus.publish("Role", "*" + JsonSupport.toJSONString(role));
 
         return role;
@@ -114,49 +137,22 @@ public class RoleManager extends Bean implements RoleService {
 
         repository.delete(role.getName());
 
+        logger.info("Sync role -");
         globalMessageBus.publish("Role", "-" + JsonSupport.toJSONString(role));
 
         logger.warn("Deletd role");
     }
 
     @Override
-    public UserAuthority createRoleAndUserRelation(UserAuthority userAuthority) throws RoleException {
-        logger.info("Creating role and user relation : {}", userAuthority);
+    public List<User> findUsersByAccount(Account mainAccount) {
 
-        if (userAuthority == null) {
-            throw new RoleException("userAuthority entry can not be empty.");
-        } else if (StringUtils.isBlank(userAuthority.getUsername())) {
-            throw new RoleException("UserAuthority's username must be specify.");
-        } else if (StringUtils.isBlank(userAuthority.getAuthority())) {
-            throw new RoleException("UserAuthority's authority must be specify.");
-        }
+        logger.debug("Finding users by account:{}", mainAccount);
 
-        repository.createRoleAndUserRelation(userAuthority);
+        List<User> users = repository.findUsersByAccountId(mainAccount.getId());
 
-        globalMessageBus.publish("Role", "+");
+        logger.debug("Found {}", users);
 
-        logger.info("Created role and user relation : {}", userAuthority);
-
-        return userAuthority;
-    }
-
-    @Override
-    public void destroyRoleAndUserRelation(UserAuthority userAuthority) throws RoleException {
-        logger.warn("Deleting role and user relation : {}", userAuthority);
-
-        if (userAuthority == null) {
-            throw new RoleException("userAuthority entry can not be empty.");
-        } else if (StringUtils.isBlank(userAuthority.getUsername())) {
-            throw new RoleException("UserAuthority's username must be specify.");
-        } else if (StringUtils.isBlank(userAuthority.getAuthority())) {
-            throw new RoleException("UserAuthority's authority must be specify.");
-        }
-
-        repository.deleteRoleAndUserRelation(userAuthority);
-
-        globalMessageBus.publish("Role", "-");
-
-        logger.warn("Deletd role and user relation : {}", userAuthority);
+        return users;
     }
 
 }

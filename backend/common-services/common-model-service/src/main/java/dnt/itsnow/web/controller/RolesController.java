@@ -2,7 +2,7 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.exception.RoleException;
 import dnt.itsnow.model.Role;
-import dnt.itsnow.model.UserAuthority;
+import dnt.itsnow.model.User;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
@@ -24,6 +24,7 @@ import java.util.List;
  *  POST     /api/roles                                                      create    创建一个角色
  *  PUT      /api/roles/{name}                                               update    修改一个指定的角色
  *  DELETE   /api/roles/{name}                                               delete    删除指定的角色记录
+ *  GET      /api/roles/users                                                listUsers 列出当前用户所属账户中，所有用户的信息记录
  * </pre>
  */
 @RestController
@@ -148,38 +149,16 @@ public class RolesController extends SessionSupportController<Role> {
 
     }
 
-    @RequestMapping(value = "relation", method = RequestMethod.POST)
-    public UserAuthority createRelation(@RequestBody UserAuthority userAuthority) {
+    @RequestMapping(value = "users", method = RequestMethod.GET)
+    public List<User> listUsers() {
 
-        logger.info("Creating role and user relation : {}", userAuthority);
+        logger.info("Listing users by current account:{}", mainAccount);
 
-        try {
-            service.createRoleAndUserRelation(userAuthority);
-        } catch (RoleException e) {
-            throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
-        } catch (Exception e) {
-            throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
-        }
+        List<User> users = service.findUsersByAccount(mainAccount);
 
-        logger.info("Created role and user relation : {}", userAuthority);
+        logger.info("Listed {}", users);
 
-        return userAuthority;
-    }
-
-    @RequestMapping(value = "relation", method = RequestMethod.DELETE)
-    public void deleteRelation(@RequestBody UserAuthority userAuthority) {
-
-        logger.info("Deleting role and user relation : {}", userAuthority);
-
-        try {
-            service.destroyRoleAndUserRelation(userAuthority);
-        } catch (RoleException e) {
-            throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
-        } catch (Exception e) {
-            throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
-        }
-
-        logger.info("Deleted role and user relation : {}", userAuthority);
+        return users;
     }
 
     @BeforeFilter({"update", "destroy"})
