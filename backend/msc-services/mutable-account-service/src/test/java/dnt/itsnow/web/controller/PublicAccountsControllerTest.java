@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * <h1>针对 Mutable Accounts Controller 的测试 </h1>
  */
 @ContextConfiguration(classes = MutableAccountsControllerConfig.class)
-public class AccountsSignupControllerTest extends SessionSupportedControllerTest {
+public class PublicAccountsControllerTest extends SessionSupportedControllerTest {
 
     @Autowired
     CommonUserService     userService;

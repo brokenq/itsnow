@@ -12,25 +12,23 @@ import dnt.itsnow.web.model.AccountRegistration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 /**
  * <h1>MSC/MSU注册</h1>
  * <pre>
- * <b>HTTP     URI                            方法       含义  </b>
- * # POST      /public/accounts              create     通过注册创建帐号
+ * <b>HTTP     URI                                         方法          含义  </b>
+ * # POST      /public/accounts                            create       通过注册创建帐号
+ * # POST      /public/accounts/check_unique/:field/:value checkUnique  检测字段唯一性
  * </pre>
  * 之所以单独搞一个控制器，是因为它与 MutableAccountController 中定义的其他方法有不同的使用者
  * 没法在同一个控制器/rest resource下进行分别授权
  */
 @RestController
 @RequestMapping("/public/accounts")
-public class AccountsSignupController extends ApplicationController<Account> {
+public class PublicAccountsController extends ApplicationController<Account> {
     @Autowired
     MutableAccountService accountService;
     Account currentAccount;
@@ -67,4 +65,20 @@ public class AccountsSignupController extends ApplicationController<Account> {
         }
     }
 
+    @RequestMapping("{field}/{value}")
+    public String checkUnique(@PathVariable("field") String field, @PathVariable("value") String value ){
+        Account found;
+        if("username".equalsIgnoreCase(field)){
+            found = accountService.findByName(value);
+        }else if("domain".equalsIgnoreCase(field)){
+            found = accountService.findByDomain(value);
+        }else{
+            throw new WebClientSideException(HttpStatus.BAD_REQUEST, "Can't check uniqueness of account field: " + field);
+        }
+        if( found != null ){
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate field: " + field + " with value: " + value);
+        }else{
+            return "ok";
+        }
+    }
 }

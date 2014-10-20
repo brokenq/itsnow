@@ -31,7 +31,17 @@ public class CommonUserManager extends Bean implements CommonUserService {
 
     @Override
     public User findByUsername(String username) {
-        return repository.findByUsername(username);
+        return repository.findByFieldAndValue("username", username);
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return repository.findByFieldAndValue("email", email);
+    }
+
+    @Override
+    public User findByPhone(String phone) {
+        return repository.findByFieldAndValue("phone", phone);
     }
 
     @Override

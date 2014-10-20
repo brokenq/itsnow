@@ -101,6 +101,7 @@ module.exports = {
       '../vendor/angular-dialog-service/dialogs-default-translations.js',
       '../vendor/angular-translate/angular-translate.js',
       '../vendor/dnt-action-service/dist/dnt-action-service.js',
+      '../vendor/angular-auto-validate/dist/jcs-auto-validate.js',
       '../vendor/isteven-angular-multiselect/angular-multi-select.js'
     ],
     css: [

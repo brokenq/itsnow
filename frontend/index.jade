@@ -33,7 +33,7 @@ html(ng-app="Itsnow.#{sysName}Index")
       link(rel="stylesheet", type="text/css", href=style)
     each js in scripts
       script(type="text/javascript", src=js)
-  body(ng-controller='IndexCtrl')
+  body(ng-controller="IndexCtrl")
     .navbar.navbar-default#navbar
       +check_option('navbar', 'fixed')
 

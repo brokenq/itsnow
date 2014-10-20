@@ -102,6 +102,7 @@ module.exports = {
       '../vendor/angular-translate/angular-translate.js',
       '../vendor/dnt-action-service/dist/dnt-action-service.js',
       '../vendor/angular-file-upload/angular-file-upload.js',
+      '../vendor/angular-auto-validate/dist/jcs-auto-validate.js',
       '../vendor/isteven-angular-multiselect/angular-multi-select.js'
     ],
     css: [

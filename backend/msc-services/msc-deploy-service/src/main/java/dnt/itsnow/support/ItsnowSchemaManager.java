@@ -5,15 +5,21 @@ package dnt.itsnow.support;
 
 import dnt.itsnow.exception.ItsnowSchemaException;
 import dnt.itsnow.exception.SystemInvokeException;
+import dnt.itsnow.model.ItsnowHost;
 import dnt.itsnow.model.ItsnowSchema;
 import dnt.itsnow.model.SystemInvocation;
+import dnt.itsnow.platform.service.Page;
+import dnt.itsnow.platform.util.DefaultPage;
+import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.repository.ItsnowSchemaRepository;
 import dnt.itsnow.service.ItsnowSchemaService;
+import dnt.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <h1>Itsnow Schema Manager</h1>
@@ -70,5 +76,22 @@ public class ItsnowSchemaManager extends ItsnowResourceManager implements Itsnow
         ItsnowSchema schema = repository.findById(schemaId);
         logger.debug("Found   schema by id: {}", schema);
         return schema;
+    }
+
+    @Override
+    public Page<ItsnowSchema> findAll(String keyword, PageRequest pageRequest) {
+        logger.debug("Listing itsnow schemas by keyword: {} at {}", keyword, pageRequest);
+        int total = repository.countByKeyword(keyword);
+        List<ItsnowSchema> hits;
+        if( total == 0 ){
+            hits = new ArrayList<ItsnowSchema>();
+        }else{
+            if(StringUtils.isNotBlank(keyword)) keyword = "%" + keyword + "%";
+            else keyword = null;
+            hits = repository.findAllByKeyword(keyword, pageRequest);
+        }
+        DefaultPage<ItsnowSchema> page = new DefaultPage<ItsnowSchema>(hits, pageRequest, total);
+        logger.debug("Listed  itsnow schemas: {}", page);
+        return page;
     }
 }
