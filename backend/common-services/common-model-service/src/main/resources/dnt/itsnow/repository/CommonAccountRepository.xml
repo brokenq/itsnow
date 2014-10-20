@@ -25,14 +25,22 @@
     <select id="findByName" resultMap="accountWithUserResult">
         <include refid="selectAccounts"/>
         <where>a.name = #{name}</where>
+        LIMIT 1
     </select>
     <select id="findBySn" resultMap="accountWithUserResult">
         <include refid="selectAccounts"/>
         <where>a.sn = #{sn}</where>
+        LIMIT 1
     </select>
     <select id="findById" resultMap="accountWithUserResult">
         <include refid="selectAccounts"/>
         <where>a.id = #{id}</where>
+        LIMIT 1
+    </select>
+    <select id="findByDomain" resultMap="accountWithUserResult">
+        <include refid="selectAccounts"/>
+        <where>a.domain = #{domain}</where>
+        LIMIT 1
     </select>
 
     <resultMap id="accountWithUserResult" type="Account" autoMapping="true">

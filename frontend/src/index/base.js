@@ -3,6 +3,7 @@ angular.module('Itsnow.Index', [
     'ngResource',
     'ngLocale',
     'Lib.Interceptor',
+    'Lib.Directives',
     'Lib.Templates',
     'Index.Templates',
     'Index.Menu',
