@@ -5,6 +5,8 @@ package dnt.itsnow.service;
 
 import dnt.itsnow.exception.ItsnowSchemaException;
 import dnt.itsnow.model.ItsnowSchema;
+import dnt.itsnow.platform.service.Page;
+import dnt.itsnow.platform.util.PageRequest;
 
 /**
  * <h1>Itsnow Schema Service</h1>
@@ -41,4 +43,12 @@ public interface ItsnowSchemaService {
      * @return 查找到的数据库schema对象
      */
     ItsnowSchema findById(long schemaId);
+
+    /**
+     * <h2>根据关键词查找Schema</h2>
+     * @param keyword  Schema的关键词，可以为null
+     * @param pageRequest 分页设置
+     * @return 查找的结果
+     */
+    Page<ItsnowSchema> findAll(String keyword, PageRequest pageRequest);
 }

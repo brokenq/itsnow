@@ -8,7 +8,8 @@ angular.module('Itsnow.Index', [
     'Index.Templates',
     'Index.Menu',
     'Index.Dialog',
-    'Index.Table'
+    'Index.Table',
+    'jcs-autoValidate'
 ])
   .config(function ($httpProvider, $stateProvider, $urlRouterProvider) {
         $urlRouterProvider.otherwise('dashboard');
@@ -66,4 +67,12 @@ angular.module('Itsnow.Index', [
       profileService.get(function (data) {
           $rootScope.user = data;
       });
-  }]);
+  }])
+
+  // angular-auto-validate error message
+  .run(['defaultErrorMessageResolver',
+    function (defaultErrorMessageResolver) {
+      defaultErrorMessageResolver.setI18nFileRootPath('assets/json');
+      defaultErrorMessageResolver.setCulture('zh-CN');
+    }
+  ]);
