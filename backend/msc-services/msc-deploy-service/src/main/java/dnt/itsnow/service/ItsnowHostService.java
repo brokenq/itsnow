@@ -14,6 +14,7 @@ import java.util.List;
  * <h1>Itsnow Host Service</h1>
  */
 public interface ItsnowHostService {
+
     /**
      * <h2>根据关键词查找主机</h2>
      * @param keyword  主机的关键词，可以为null
@@ -67,4 +68,15 @@ public interface ItsnowHostService {
      * @return 当前的位置，也是下次来读的始点
      */
     long follow(ItsnowHost host, String job, long offset, List<String> result);
+
+
+    /**
+     * <h2>更新主机</h2>
+     *
+     * 当前主要是更新主机的状态，以后可能有更新主机的普通属性以及地址
+     *
+     * @param host  被更新的主机
+     * @throws ItsnowHostException
+     */
+    void update(ItsnowHost host) throws ItsnowHostException;
 }

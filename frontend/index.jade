@@ -33,7 +33,7 @@ html(ng-app="Itsnow.#{sysName}Index")
       link(rel="stylesheet", type="text/css", href=style)
     each js in scripts
       script(type="text/javascript", src=js)
-  body
+  body(ng-controller='IndexCtrl')
     .navbar.navbar-default#navbar
       +check_option('navbar', 'fixed')
 
@@ -63,7 +63,7 @@ html(ng-app="Itsnow.#{sysName}Index")
 
         .main-content
           include index/parts/breadcrumbs
-          .page-content: .row: .col-xs-12: div(ui-view ng-controller='IndexCtrl')
+          .page-content: .row: .col-xs-12: div(ui-view)
 
         include index/parts/page_settings
 

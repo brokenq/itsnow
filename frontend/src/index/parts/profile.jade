@@ -1,12 +1,12 @@
 //   Index.jade parts: Profile
 mixin profile_link(text, icon, action)
   li
-    a(href="#", ng-click=action)
+    a(href="javascript:void(0)", ng-click=action)
       i(class="icon-#{icon}")
       | #{text}
 
 li.light-blue(ng-controller="IndexCtrl")
-  a.dropdown-toggle(data-toggle="dropdown", href="#")
+  a.dropdown-toggle(data-toggle="dropdown", href="javascript:void(0)")
     img.nav-user-photo(src="assets/user.jpg", alt="Jason's Photo")
     span.user-info
       small 欢迎,

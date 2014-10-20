@@ -122,6 +122,14 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     }
 
     @Override
+    public void update(ItsnowHost host) throws ItsnowHostException {
+        logger.info("Updating {}", host);
+        host.updating();
+        repository.update(host);
+        logger.info("Updated  {}", host);
+    }
+
+    @Override
     public long follow(ItsnowHost host, String jobId, long offset, List<String> result) {
         logger.trace("Follow {}'s job: {}", host, jobId);
         return invokeService.read(jobId, offset, result);
