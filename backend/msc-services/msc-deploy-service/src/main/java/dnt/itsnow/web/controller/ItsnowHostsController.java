@@ -35,8 +35,8 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
  * PUT    /admin/api/hosts/{id}  update    修改主机信息
  * DELETE /admin/api/hosts/{id}  destroy   删除特定的主机信息
  * GET    /admin/api/hosts/{id}/follow/{invocationId} follow    获取目标主机最新的任务信息
- * GET    /admin/api/hosts/checkName/{value} checkName 检查主机名是否唯一
- * GET    /admin/api/hosts/checkAddress/{value} checkAddress 检查主机地址是否唯一,有效
+ * GET    /admin/api/hosts/checkName?value=xx checkName 检查主机名是否唯一
+ * GET    /admin/api/hosts/checkAddress?value=yy checkAddress 检查主机地址是否唯一,有效
  * </pre>
  */
 @RestController
