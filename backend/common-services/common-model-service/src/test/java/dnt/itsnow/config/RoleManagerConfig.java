@@ -1,7 +1,7 @@
 package dnt.itsnow.config;
 
-import dnt.itsnow.service.MscRoleService;
-import dnt.itsnow.support.MscRoleManager;
+import dnt.itsnow.service.RoleService;
+import dnt.itsnow.support.RoleManager;
 import dnt.messaging.MessageBus;
 import dnt.messaging.support.DefaultMessageBus;
 import org.springframework.context.annotation.Bean;
@@ -13,14 +13,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * <h1>Class Usage</h1>
+ * <h1>角色管理测试类配置</h1>
  */
 @Configuration
-public class MscRoleManagerConfig extends MscRoleRepositoryConfig {
+public class RoleManagerConfig extends RoleRepositoryConfig {
 
     @Bean
-    public MscRoleService mscRoleSerivce(){
-        return new MscRoleManager();
+    public RoleService roleSerivce(){
+        return new RoleManager();
     }
 
     @Bean
@@ -37,4 +37,5 @@ public class MscRoleManagerConfig extends MscRoleRepositoryConfig {
     public TaskScheduler timeoutScheduler(){
         return new ThreadPoolTaskScheduler();
     }
+
 }

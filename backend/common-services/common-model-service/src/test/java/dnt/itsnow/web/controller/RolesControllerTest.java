@@ -1,13 +1,16 @@
-package itsnow.dnt.web.controller;
+package dnt.itsnow.web.controller;
 
+ import dnt.itsnow.model.Account;
  import dnt.itsnow.model.Role;
-import dnt.itsnow.platform.util.DefaultPage;
+ import dnt.itsnow.model.User;
+ import dnt.itsnow.model.UserAuthority;
+ import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.service.CommonUserService;
 import dnt.itsnow.service.RoleService;
 import dnt.itsnow.test.controller.SessionSupportedControllerTest;
 import dnt.support.JsonSupport;
-import itsnow.dnt.config.RolesControllerConfig;
+import dnt.itsnow.config.RolesControllerConfig;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,6 +41,10 @@ public class RolesControllerTest extends SessionSupportedControllerTest {
 
     List<Role> roles;
 
+    User user;
+
+    List<User> users;
+
     @Before
     public void setup() {
 
@@ -51,13 +58,24 @@ public class RolesControllerTest extends SessionSupportedControllerTest {
         roles = new ArrayList<Role>();
         roles.add(role);
 
+        user = new User();
+        user.setName("USER_ACTION_TEST");
+        user.setUsername("USER_ACTION_TEST");
+        user.setEmail("stone@126.com");
+        user.setPhone("15901968888");
+        user.setPassword("Hi");
+        user.setRepeatPassword("Hi");
+
+        users = new ArrayList<User>();
+        users.add(user);
+
         reset(roleService);
     }
 
     @Test
     public void testIndex() throws Exception {
 
-        expect(roleService.findAll(anyLong(), anyString(), isA(PageRequest.class)))
+        expect(roleService.findAll(anyString(), isA(PageRequest.class)))
                 .andReturn(new DefaultPage<Role>(roles));
 
         // 准备 Mock Request
@@ -77,8 +95,7 @@ public class RolesControllerTest extends SessionSupportedControllerTest {
     @Test
     public void testShow() throws Exception {
 
-        expect(roleService.findAllRelevantInfo(anyString(), anyObject(PageRequest.class)))
-                .andReturn(new DefaultPage<Role>(roles));
+        expect(roleService.findByName(anyString())).andReturn(role);
 
         // 准备 Mock Request
         MockHttpServletRequestBuilder request = get("/api/roles/ROLE_ADMIN");
@@ -121,6 +138,25 @@ public class RolesControllerTest extends SessionSupportedControllerTest {
         MockHttpServletRequestBuilder request = delete(uri);
         decorate(request);
         this.browser.perform(request).andExpect(status().isOk());
+
+    }
+
+    @Test
+    public void testListUsers() throws Exception {
+
+        expect(roleService.findUsersByAccount(anyObject(Account.class))).andReturn(users);
+
+        // 准备 Mock Request
+        MockHttpServletRequestBuilder request = get("/api/roles/users");
+        request = decorate(request);
+
+        replay(roleService);
+
+        // 执行
+        ResultActions result = this.browser.perform(request);
+
+        // 对业务结果的验证
+        decorate(result).andExpect(status().isOk());
 
     }
 

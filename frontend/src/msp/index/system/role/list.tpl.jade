@@ -1,43 +1,31 @@
-mixin tool_button(action, icon, text)
-  button.btn.btn-default(type="button",ng-click="#{action}")
-    span.glyphicon(class="glyphicon-#{icon}")
-    | #{text}
-mixin drop_button(action, icon, text)
-  li
-    a(href=action)
-      span.glyphicon(class="glyphicon-#{icon}")
-      | #{text}
+mixin tool_button(action, icon, text, weight, rejectCss, requireCss)
+    button.btn.btn-primary.no-border(type="button", ng-click=action, weight=weight, reject-css=rejectCss, require-css=requireCss)
+        span.glyphicon(class="glyphicon-#{icon}")
+        | #{text}
+mixin td(style, title, name)
+    td(style="text-align: center;#{style}" data-title=title) #{name}
 mixin nav_link(value, icon, text)
-  a(ng-switch-when=value, ng-click="params.page(page.number)", href="")
-    span.glyphicon(class="glyphicon-#{icon}")
-    | #{text}
-// 由于IDEA/WebStorm等在script tag内对jade的解析有问题，所以将这段会仅在IDE中出错的抽取到mixin中
+    a(ng-switch-when="#{value}", ng-click="params.page(page.number)", href="")
+        span.glyphicon(class="glyphicon-#{icon}")
+        | #{text}
 mixin page_navs()
-  li(ng-repeat="page in pages", ng-klass="{'disabled': !page.active, 'previous': page.type == 'prev', 'next': page.type == 'next'}", ng-show="page.type == 'prev' || page.type == 'next'", ng-switch="page.type")
-    +nav_link("prev", "step-backward", "上一页")
-    +nav_link("next", "step-forward", "下一页")
+    li(ng-repeat="page in pages", ng-class="{'disabled': !page.active, 'previous': page.type == 'prev', 'next': page.type == 'next'}", ng-show="page.type == 'prev' || page.type == 'next'", ng-switch="page.type")
+        +nav_link("prev", "step-backward", "上一页")
+        +nav_link("next", "step-forward", "下一页")
 mixin page_size_button(count)
-  button.btn.btn-default(type="button", ng-class="{'active':params.count() == #{count}}", ng-click="params.count(#{count})")= count
+    button.btn.btn-primary.no-border(type="button", ng-class="{'active':params.count() == #{count}}", ng-click="params.count(#{count})")= count
 mixin select_all()
-  input(type="checkbox", ng-model="checkboxes.checked", name="filter-checkbox", value="")#select_all
+    input(type="checkbox", ng-model="selection.checked", name="filter-checkbox", value="")#select_all
 
 .container(ng-controller="RoleListCtrl")
 
   .btn-toolbar(role="toolbar")
     .btn-group
-      +tool_button("", "refresh", "")
+      +tool_button("", "refresh", "", "*", "", "")
     .btn-group
-        +tool_button("", "new", "新建")
-        +tool_button("", "edit", "编辑")
-        +tool_button("deleteRole()", "remove", "删除")
-        +tool_button("", "addUser", "添加用户")
-        +tool_button("", "removeUser", "删除用户")
-    //.btn-group
-    //  button.btn.btn-default.dropdown-toggle(type="button",data-toggle="dropdown")
-    //    | 更多操作
-    //    span.caret
-    //  ul.dropdown-menu(role="menu")
-    //    +drop_button("#", "remove", "删除")
+        +tool_button("actionService.gotoState('role_form', $event)", "new", "新建", "*", "", "")
+        +tool_button("actionService.gotoState('role_form', $event)", "edit", "编辑", "1", "", "")
+        +tool_button("actionService.perform(deleteRole, $event)", "remove", "删除", "*", "", "")
     .btn-group.pull-right
       .nav-search#nav-search
         form.form-search
@@ -45,31 +33,23 @@ mixin select_all()
             input.nav-search-input(type="text", placeholder="请输入角色名称...",autocomplete="off")#nav-search-input
             i.icon-search.nav-search-icon
 
-  .row
-    .col-xs-4
-        table.table(template-pagination="customPager",ng-table="tableParams")
-            tr(ng-repeat="role in $data", ng-click="changeSelection(role)")
-                td(width="30" style="text-align: left;" header="'ngTableCheckboxHeader'")
-                    input(type="checkbox" ng-model="checkboxes.items[role.sn]")
-                td(style="text-align: center;cursor: pointer; cursor: hand;" data-title="'组名'") {{role.name}}
-    .col-xs-8
-      table.table(template-pagination="customPager",ng-table="detailTableParams")
-        tr(ng-repeat="detail in detailRoles")
-            td(width="30" style="text-align: left" header="'ngTableCheckboxHeader'")
-              input(type="checkbox" ng-model="checkboxes.items[detail.name]")
-            td(style="text-align: center" data-title="'用户名称'") {{detail.username}}
-            td(style="text-align: center" data-title="'部门'") {{detail.deptName}}
-            td(style="text-align: center" data-title="'地点'") {{detail.siteName}}
+    table.table.table-hover.table-bordered(template-pagination="customPager",ng-table="tableParams")#table
+      tr(ng-repeat="role in $data", value="{{role.name}}")
+          td(width="30" style="text-align: left;" header="'ngTableCheckboxHeader'")
+              input(type="checkbox" ng-model="selection.items[role.name]")
+          +td("cursor: pointer; cursor: hand;", "'角色名'", "{{role.name}}")
+          +td("", "'描述'", "{{role.description}}")
+          +td("", "'用户名称'", "{{role.users | colFilter}}")
 
-script(type="text/ng-template")#ngTableCheckboxHeader
-  +select_all()
-script(type="text/ng-template")#customPager
-  ul.pager.ng-cloak
-    +page_navs()
-    li
-      .btn-group
-        +page_size_button(5)
-        +page_size_button(10)
-        +page_size_button(25)
-        +page_size_button(50)
-        +page_size_button(100)
+  script(type="text/ng-template")#ngTableCheckboxHeader
+      +select_all()
+  script(type="text/ng-template")#customPager
+      ul.pager.ng-cloak
+        +page_navs()
+        li
+          .btn-group
+            +page_size_button(5)
+            +page_size_button(10)
+            +page_size_button(25)
+            +page_size_button(50)
+            +page_size_button(100)

@@ -2,6 +2,7 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.exception.RoleException;
 import dnt.itsnow.model.Role;
+import dnt.itsnow.model.User;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
@@ -23,6 +24,7 @@ import java.util.List;
  *  POST     /api/roles                                                      create    创建一个角色
  *  PUT      /api/roles/{name}                                               update    修改一个指定的角色
  *  DELETE   /api/roles/{name}                                               delete    删除指定的角色记录
+ *  GET      /api/roles/users                                                listUsers 列出当前用户所属账户中，所有用户的信息记录
  * </pre>
  */
 @RestController
@@ -44,9 +46,9 @@ public class RolesController extends SessionSupportController<Role> {
     @RequestMapping
     public Page<Role> index(@RequestParam(value = "keyword", required = false) String keyword) {
 
-        logger.debug("Listing Roles by keyword: {}" + keyword);
+        logger.debug("Listing Roles by keyword: {}", keyword);
 
-        indexPage = service.findAll(mainAccount.getId(), keyword, pageRequest);
+        indexPage = service.findAll(keyword, pageRequest);
 
         logger.debug("Listed  {}", indexPage);
 
@@ -61,15 +63,15 @@ public class RolesController extends SessionSupportController<Role> {
      * @return 角色实体类
      */
     @RequestMapping(value="{name}", method = RequestMethod.GET)
-    public List<Role> show(@PathVariable("name") String name) {
+    public Role show(@PathVariable("name") String name) {
 
         logger.debug("Listing role name:{}" + name);
 
-        indexPage = service.findAllRelevantInfo(name, pageRequest);
+        role = service.findByName(name);
 
         logger.debug("Listed role size:{}", indexPage.getContent().size());
 
-        return indexPage.getContent();
+        return role;
     }
 
     /**
@@ -111,16 +113,16 @@ public class RolesController extends SessionSupportController<Role> {
 
         this.role.apply(role);
         try {
-            role = service.update(role);
+            this.role = service.update(this.role);
         } catch (RoleException e) {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
         } catch (Exception e) {
             throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
         }
 
-        logger.info("Updated {}", role);
+        logger.info("Updated {}", this.role);
 
-        return role;
+        return this.role;
     }
 
     /**
@@ -131,7 +133,7 @@ public class RolesController extends SessionSupportController<Role> {
      * @return 被删除的角色
      */
     @RequestMapping(value = "{name}", method = RequestMethod.DELETE)
-    public Role destroy() {
+    public void destroy() {
 
         logger.warn("Deleting {}", role);
 
@@ -145,7 +147,18 @@ public class RolesController extends SessionSupportController<Role> {
 
         logger.warn("Deleted  {}", role);
 
-        return role;
+    }
+
+    @RequestMapping(value = "users", method = RequestMethod.GET)
+    public List<User> listUsers() {
+
+        logger.info("Listing users by current account:{}", mainAccount);
+
+        List<User> users = service.findUsersByAccount(mainAccount);
+
+        logger.info("Listed {}", users);
+
+        return users;
     }
 
     @BeforeFilter({"update", "destroy"})

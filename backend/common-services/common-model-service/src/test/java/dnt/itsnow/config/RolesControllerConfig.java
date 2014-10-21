@@ -1,4 +1,4 @@
-package itsnow.dnt.config;
+package dnt.itsnow.config;
 
 import dnt.itsnow.service.CommonUserService;
 import dnt.itsnow.service.RoleService;

@@ -1,10 +1,13 @@
 package dnt.itsnow.support;
 
 import dnt.itsnow.exception.RoleException;
+import dnt.itsnow.model.Account;
 import dnt.itsnow.model.Role;
+import dnt.itsnow.model.User;
+import dnt.itsnow.model.UserAuthority;
 import dnt.itsnow.platform.service.Page;
+import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.platform.util.DefaultPage;
-import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.repository.RoleRepository;
 import dnt.itsnow.service.RoleService;
 import dnt.messaging.MessageBus;
@@ -15,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -32,37 +34,17 @@ public class RoleManager extends Bean implements RoleService {
     private RoleRepository repository;
 
     @Override
-    public Page<Role> findAll(Long accountId, String keyword, PageRequest pageRequest) {
+    public Page<Role> findAll(String keyword, Pageable pageable) {
 
-        logger.debug("Finding roles by keyword:{}, accountId:{}", keyword, accountId);
+        logger.debug("Finding roles by keyword:{}, accountId:{}", keyword);
 
-        if(StringUtils.isBlank(keyword)){
-            int total = repository.count(accountId).intValue();
-            List<Role> roles = repository.findAll(accountId, "updated_at", "desc", pageRequest.getOffset(), pageRequest.getPageSize());
-            DefaultPage page = new DefaultPage<Role>(roles, pageRequest, total);
-
-            logger.debug("Finded role list info:{}", page);
-
-            return page;
-        }else{
-            int total = repository.countByKeyword(accountId, "%"+keyword+"%").intValue();
-            List<Role> roles = repository.findAllByKeyword(accountId, "%" + keyword + "%", "updated_at", "desc", pageRequest.getOffset(), pageRequest.getPageSize());
-            DefaultPage page = new DefaultPage<Role>(roles, pageRequest, total);
-
-            logger.debug("Finded role list info:{}", page);
-
-            return page;
+        if (StringUtils.isNotBlank(keyword)) {
+            keyword = "%" + keyword + "%";
         }
-    }
 
-    @Override
-    public Page<Role> findAllRelevantInfo(String keyword, PageRequest pageRequest) {
-
-        logger.debug("Finding roles by keyword:{}, paging info:{}", keyword, pageRequest);
-
-        int total = repository.countByRelevantInfo(keyword).intValue();
-        List<Role> roles = repository.findAllRelevantInfo(keyword, "updated_at", "desc", pageRequest.getOffset(), pageRequest.getPageSize());
-        DefaultPage page = new DefaultPage<Role>(roles, pageRequest, total);
+        int total = repository.count(keyword).intValue();
+        List<Role> roles = repository.findAll(keyword, pageable);
+        DefaultPage<Role> page = new DefaultPage<Role>(roles, pageable, total);
 
         logger.debug("Finded role list info:{}", page);
 
@@ -84,17 +66,28 @@ public class RoleManager extends Bean implements RoleService {
     @Override
     public Role create(Role role) throws RoleException {
 
-        logger.info("Creating role:{}", role);
+        logger.info("Creating {}", role);
 
-        if(role == null){
+        if (role == null) {
             throw new RoleException("Role entry can not be empty.");
         }
-        role.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        role.setUpdatedAt(role.getCreatedAt());
+
+        role.creating();
         repository.create(role);
 
-        logger.info("Created role:{}", role);
+        if (role.getUsers() != null) {
+            UserAuthority userAuthority;
+            for (User user : role.getUsers()) {
+                userAuthority = new UserAuthority();
+                userAuthority.setAuthority(role.getName());
+                userAuthority.setUsername(user.getUsername());
+                repository.createRoleAndUserRelation(userAuthority);
+            }
+        }
 
+        logger.info("Created {}", role);
+
+        logger.info("Sync role +");
         globalMessageBus.publish("Role", "+" + JsonSupport.toJSONString(role));
 
         return role;
@@ -103,16 +96,28 @@ public class RoleManager extends Bean implements RoleService {
     @Override
     public Role update(Role role) throws RoleException {
 
-        logger.info("Updating role:{}", role);
+        logger.info("Updating {}", role);
 
-        if(role==null){
+        if (role == null) {
             throw new RoleException("Role entry can not be empty.");
         }
 
         repository.update(role);
 
-        logger.info("Updated role");
+        if (role.getUsers() != null) {
+            repository.deleteRoleAndUserRelationByRoleName(role.getName());
+            UserAuthority userAuthority;
+            for (User user : role.getUsers()) {
+                userAuthority = new UserAuthority();
+                userAuthority.setAuthority(role.getName());
+                userAuthority.setUsername(user.getUsername());
+                repository.createRoleAndUserRelation(userAuthority);
+            }
+        }
 
+        logger.info("Updated {}", role);
+
+        logger.info("Sync role *");
         globalMessageBus.publish("Role", "*" + JsonSupport.toJSONString(role));
 
         return role;
@@ -123,7 +128,7 @@ public class RoleManager extends Bean implements RoleService {
 
         logger.warn("Deleting role {}", role);
 
-        if(role==null){
+        if (role == null) {
             throw new RoleException("Role entry can not be empty.");
         }
 
@@ -132,9 +137,22 @@ public class RoleManager extends Bean implements RoleService {
 
         repository.delete(role.getName());
 
+        logger.info("Sync role -");
         globalMessageBus.publish("Role", "-" + JsonSupport.toJSONString(role));
 
         logger.warn("Deletd role");
+    }
+
+    @Override
+    public List<User> findUsersByAccount(Account mainAccount) {
+
+        logger.debug("Finding users by account:{}", mainAccount);
+
+        List<User> users = repository.findUsersByAccountId(mainAccount.getId());
+
+        logger.debug("Found {}", users);
+
+        return users;
     }
 
 }

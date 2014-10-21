@@ -1,10 +1,10 @@
 package dnt.itsnow.support;
 
-import dnt.itsnow.config.MscRoleManagerConfig;
 import dnt.itsnow.model.Role;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.util.PageRequest;
-import dnt.itsnow.service.MscRoleService;
+import dnt.itsnow.service.RoleService;
+import dnt.itsnow.config.RoleManagerConfig;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,17 +17,17 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.sql.Timestamp;
 
 /**
- * <h1>Class Usage</h1>
+ * <h1>角色管理业务测试类</h1>
  */
-@ContextConfiguration(classes = MscRoleManagerConfig.class)
+@ContextConfiguration(classes = RoleManagerConfig.class)
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
-public class MscRoleManagerTest {
+public class RoleManagerTest {
 
     PageRequest pageRequest;
 
     @Autowired
-    MscRoleService service;
+    RoleService service;
 
     @Before
     public void setUp() throws Exception {
@@ -36,13 +36,7 @@ public class MscRoleManagerTest {
 
     @Test
     public void testFindAll() throws Exception {
-        Page<Role> roles = service.findAll("", pageRequest);
-        Assert.assertTrue(roles.getContent().size()>0);
-    }
-
-    @Test
-    public void testFindAllRelevantInfo() throws Exception {
-        Page<Role> roles = service.findAllRelevantInfo("ROLE_ADMIN", pageRequest);
+        Page<Role> roles = service.findAll(null, pageRequest);
         Assert.assertTrue(roles.getContent().size()>0);
     }
 
@@ -57,9 +51,7 @@ public class MscRoleManagerTest {
         Role role = new Role();
         role.setName("ROLE_TEST");
         role.setDescription("This is a test.");
-        role.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        role.setUpdatedAt(role.getCreatedAt());
-
+        role.creating();
         service.create(role);
         Assert.assertNotNull(role.getId());
     }
@@ -76,6 +68,7 @@ public class MscRoleManagerTest {
     public void testUpdate() throws Exception {
         Role role = service.findByName("ROLE_ADMIN");
         role.setDescription("Hello World!");
+        role.updating();
         service.update(role);
         role = service.findByName("ROLE_ADMIN");
         Assert.assertTrue(role.getDescription().equals("Hello World!"));

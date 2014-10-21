@@ -1,15 +1,17 @@
 package dnt.itsnow.repository;
 
 import dnt.itsnow.model.Role;
+import dnt.itsnow.model.User;
 import dnt.itsnow.model.UserAuthority;
+import dnt.itsnow.platform.service.Pageable;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
 /**
- * <h1>MSC角色管理持久层</h1>
+ * <h1>角色管理持久层</h1>
  */
-public interface MscRoleRepository {
+public interface RoleRepository {
 
     @Options(useGeneratedKeys = true, keyColumn = "id")
     @Insert("INSERT INTO roles " +
@@ -29,42 +31,21 @@ public interface MscRoleRepository {
             " WHERE id    = #{id} ")
     public void update(Role role);
 
-    @Select("select count(0) from roles")
-    public int count();
+    public Long count(@Param("keyword") String keyword);
 
-    @Select("select * from roles order by ${sort} ${dir} limit #{offset}, #{size}")
-    public List<Role> findAll(
-            @Param("sort") String sort,
-            @Param("dir") String dir,
-            @Param("offset") int offset,
-            @Param("size") int size);
+    /**
+     * 查询所有角色及其相关的用户信息
+     * @param keyword 关键字
+     * @param pageable 分页类
+     * @return 角色及其相关的用户信息
+     */
+    public List<Role> findAll(@Param("keyword") String keyword, @Param("pageable") Pageable pageable);
 
-    @Select("select count(*) from roles where name like #{keyword}")
-    public int countByKeyword(@Param("keyword") String keyword);
-
-    @Select("select * from roles where name like #{keyword}" +
-            " order by ${sort} ${dir} limit #{offset}, #{size}")
-    public List<Role> findAllByKeyword(
-            @Param("keyword") String keyword,
-            @Param("sort") String sort,
-            @Param("dir") String dir,
-            @Param("offset") int offset,
-            @Param("size") int size);
-
-    public int countByRelevantInfo(@Param("name") String name);
-
-    public List<Role> findAllRelevantInfo(
-            @Param("name") String name,
-            @Param("sort") String sort,
-            @Param("dir") String dir,
-            @Param("offset") int offset,
-            @Param("size") int size);
-
-    @Select("SELECT * FROM roles WHERE name = #{name}")
     public Role findByName(@Param("name") String name);
 
     /**
      * 创建角色和用户关系
+     *
      * @param userAuthority 用户与角色关系实体类
      */
     @Insert("INSERT INTO authorities ( username, authority) VALUES (#{username}, #{authority})")
@@ -72,6 +53,7 @@ public interface MscRoleRepository {
 
     /**
      * 删除角色和用户关系
+     *
      * @param userAuthority 用户与角色关系实体类
      */
     @Delete("DELETE FROM authorities WHERE username = #{username} and authority = #{authority}")
@@ -79,6 +61,7 @@ public interface MscRoleRepository {
 
     /**
      * 纯属为这测试才写了此方法
+     *
      * @param userAuthority 用户与角色关系实体类
      * @return
      */
@@ -87,6 +70,7 @@ public interface MscRoleRepository {
 
     /**
      * 删除所包含有此角色名的角色与用户关系
+     *
      * @param authority 角色名
      */
     @Delete("DELETE FROM authorities WHERE authority = #{authority}")
@@ -94,9 +78,17 @@ public interface MscRoleRepository {
 
     /**
      * 删除所包含有此角色名的角色与组关系
+     *
      * @param authority 角色名
      */
     @Delete("DELETE FROM group_authorities WHERE authority = #{authority}")
     public void deleteRoleAndGroupRelationByRoleName(@Param("authority") String authority);
 
+    /**
+     * 根据账户序列号查询所属用户列表
+     * @param id 账户ID
+     * @return 用户列表
+     */
+    @Select("SELECT * FROM itsnow_msc.users WHERE account_id = #{id}")
+    List<User> findUsersByAccountId(@Param("id") Long id);
 }

@@ -30,13 +30,7 @@
                             option(value='hp') HP维保
                             option(value='oracle') Oracle服务
                     hr
-                    .ace-file-input
-                        input#id-input-file-2(type='file', ng-file-select='onFileSelect($files)', onclick='this.value=null')
-                        label.file-label(data-title='选择文件')
-                            span.file-name(data-title='No File ...')
-                                i.icon-upload-alt
-                        a.remove(href='')
-                            i.icon-remove
+                    input#id-input-file-2(type='file', nv-file-select='', uploader='uploader')
                     div.form-actions.center
                         button.btn.btn-sm.btn-success(type='button')
                             | 提交
