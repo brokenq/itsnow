@@ -1,5 +1,5 @@
 # List accounts
-angular.module('MscIndex.Account', ['ngTable','ngResource'])
+angular.module('MscIndex.Account', ['ngTable','ngResource','dnt.action.service'])
   .config ($stateProvider)->
     $stateProvider.state 'accounts',
       url: '/accounts',
@@ -27,7 +27,7 @@ angular.module('MscIndex.Account', ['ngTable','ngResource'])
       return "已批准" if status == 'Valid'
       return "被拒绝" if status == 'Rejected'
   )
-  .controller 'AccountListCtrl',['$scope', '$location', '$timeout', 'ngTableParams', 'AccountService',($scope, $location, $timeout, ngTableParams, accountService)->
+  .controller 'AccountListCtrl',['$scope', '$location', '$timeout', 'ngTableParams', 'ActionService', 'AccountService',($scope, $location, $timeout, ngTableParams, ActionService, accountService)->
     options =
       page:  1,           # show first page
       count: 10           # count per page
@@ -35,14 +35,29 @@ angular.module('MscIndex.Account', ['ngTable','ngResource'])
       total: 0,
       getData: ($defer, params) ->
         $location.search(params.url()) # put params in url
-        accountService.query(params.url(), (data, headers) ->
+        type = $location.$$path.substr($location.$$path.lastIndexOf('/')+1)
+        defaults = params.url()
+        defaults.type = type if type == 'msu' or type == 'msp'
+        accountService.query(defaults, (data, headers) ->
           $timeout(->
             params.total(headers('total'))
             $defer.resolve($scope.accounts = data)
           , 500)
         )
-    $scope.tableParams = new ngTableParams(angular.extend(options, $location.search()), args)
     $scope.checkboxes = { 'checked': false, items: {} }
+    $scope.getAccountById  = (id)->
+      return account for account in $scope.accounts when account.id is parseInt id
+    $scope.actionService = new ActionService({watch: $scope.checkboxes.items, mapping: $scope.getAccountById})
+
+    $scope.tableParams = new ngTableParams(angular.extend(options, $location.search()), args)
+    $scope.$on '$stateChangeSuccess', ()->
+      $scope.tableParams.reload()
+
+
+    $scope.approve = (account) ->
+      alert "Approve " + account
+    $scope.reject = (account) ->
+      alert "Reject " + account
     # watch for check all checkbox
     $scope.$watch 'checkboxes.checked', (value)->
       angular.forEach $scope.accounts, (item)->
@@ -60,5 +75,6 @@ angular.module('MscIndex.Account', ['ngTable','ngResource'])
       # grayed checkbox
       angular.element(document.getElementById("select_all")).prop("indeterminate", (checked != 0 && unchecked != 0));
     , true)
+
   ]
 
