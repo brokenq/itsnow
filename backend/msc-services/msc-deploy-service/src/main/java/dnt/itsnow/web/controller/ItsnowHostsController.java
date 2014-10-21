@@ -158,14 +158,14 @@ public class ItsnowHostsController extends SessionSupportController<ItsnowHost>{
      * 主要检查主机的名称是否唯一；
      * 如果主机名可以直接ping通，则会返回目标主机的ip地址；
      * 如果ping不通，只要名称合法，也不认为是错误，但http body里面没有ip地址
-     * PUT /admin/api/hosts/checkName/{value}
+     * PUT /admin/api/hosts/checkName?value=
      * <pre>
      * Response body:
      * 200: {'address': '172.16.1.32'}
      * </pre>
      */
-    @RequestMapping("checkName/{value}")
-    public HashMap checkName(@PathVariable("value") String value ){
+    @RequestMapping("checkName")
+    public HashMap checkName(@RequestParam("value") String value ){
       ItsnowHost host = hostService.findByName(value);
       if(host != null) 
           throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate host name: " + value);
@@ -185,14 +185,14 @@ public class ItsnowHostsController extends SessionSupportController<ItsnowHost>{
      * <p/>
      * 1. 检查主机的地址是否物理唯一；
      * 2. 检查主机地址可以直接ping通
-     * GET /admin/api/hosts/checkAddress/{value}
+     * GET /admin/api/hosts/checkAddress?value=address
      * <pre>
      * Response body:
      * 200: {'name': 'dev2'}
      * </pre>
      */
-    @RequestMapping("checkAddress/{value}")
-    public HashMap checkAddress(@PathVariable("value") String value ){
+    @RequestMapping("checkAddress")
+    public HashMap checkAddress(@RequestParam("value")  String value ){
       HashMap<String,String> map = new HashMap<String,String>();
       String name;
       try{

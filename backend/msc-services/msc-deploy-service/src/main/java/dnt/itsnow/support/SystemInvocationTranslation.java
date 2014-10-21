@@ -211,26 +211,6 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
         };
     }
 
-    @Override
-    public SystemInvocation resolveHostAddress(final String hostName) {
-        return new LocalInvocation() {
-            @Override
-            public int perform(Process process) throws Exception {
-                return process.run("./resolve_host_name.sh", hostName);
-            }
-        };
-    }
-
-    @Override
-    public SystemInvocation resolveHostName(final String hostAddress) {
-        return new LocalInvocation() {
-            @Override
-            public int perform(Process process) throws Exception {
-                return process.run("./resolve_host_address.sh", hostAddress);
-            }
-        };
-    }
-
     static class ScpTask extends LocalInvocation {
         private ItsnowProcess itsnowProcess;
         private File          varsFile;
