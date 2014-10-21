@@ -60,25 +60,4 @@
             <case value="msp" resultType="MspAccount"/>
         </discriminator>
     </resultMap>
-
-    <resultMap id="accountResult" type="Account" autoMapping="true">
-        <id  property="id" column="id"/>
-        <result column="user_id" property="userId"/>
-        <result column="sn" property="sn"/>
-        <result column="domain" property="domain"/>
-        <result column="name" property="name"/>
-        <result column="status" property="status"/>
-        <result column="description" property="description"/>
-        <result column="created_at" property="createdAt"/>
-        <result column="updated_at" property="updatedAt"/>
-        <discriminator column="type" javaType="string">
-            <case value="msc" resultType="MscAccount"/>
-            <case value="msu" resultType="MsuAccount"/>
-            <case value="msp" resultType="MspAccount"/>
-        </discriminator>
-    </resultMap>
-    <!--
-    <resultMap id="basicAccountResult" type="Account" autoMapping="true">
-        <result column="user_id" property="userId"/>
-    </resultMap>-->
 </mapper>

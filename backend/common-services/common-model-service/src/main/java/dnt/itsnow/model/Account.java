@@ -40,7 +40,6 @@ public class Account extends ConfigItem {
     @IsNotReservedDomain
     private String domain;
     private Long   userId; // 帐户管理员ID
-    @JsonIgnore
     private User   user;   // 帐户管理员
     //@NotBlank
     // 账户状态
