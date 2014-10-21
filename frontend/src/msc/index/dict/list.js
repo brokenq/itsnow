@@ -1,10 +1,10 @@
 // List System
-angular.module('Service.Dict', ['ngTable', 'ngResource', 'dnt.action.service'])
+angular.module('MscIndex.Dict', ['ngTable', 'ngResource', 'dnt.action.service','MscIndex.DictDetail'])
 
     .config(function ($stateProvider) {
         $stateProvider.state('dict', {
             url: '/dict',
-            templateUrl: 'service/dict/list.tpl.jade',
+            templateUrl: 'dict/list.tpl.jade',
             data: {pageTitle: '流程字典管理'}
         });
     })

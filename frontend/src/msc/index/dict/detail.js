@@ -1,15 +1,15 @@
 // List System
-angular.module('Service.Dictnew', ['ngTable', 'ngResource'])
+angular.module('MscIndex.DictDetail', ['ngTable', 'ngResource'])
 
     .config(function ($stateProvider) {
         $stateProvider.state('dict_new', {
             url: '/dict_new',
-            templateUrl: 'service/dict/detail.tpl.jade',
+            templateUrl: 'dict/detail.tpl.jade',
             data: {pageTitle: '流程字典添加'}
         });
         $stateProvider.state('dict_edit',{
             url:'/dict_edit/{sn}',
-            templateUrl:'service/dict/detail.tpl.jade',
+            templateUrl:'dict/detail.tpl.jade',
             data:{pageTitle:'流程字典修改'}
         });
     })
