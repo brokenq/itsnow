@@ -8,30 +8,30 @@ package dnt.itsnow.model;
  */
 public class HostExtend
 {
-    private int processCount;
-    private int schemaCount;
+    private int processesCount;
+    private int schemasCount;
 
-    public int getProcessCount() {
-        return processCount;
+    public int getProcessesCount() {
+        return processesCount;
     }
 
-    public void setProcessCount(int processCount) {
-        this.processCount = processCount;
+    public void setProcessesCount(int processesCount) {
+        this.processesCount = processesCount;
     }
 
-    public int getSchemaCount() {
-        return schemaCount;
+    public int getSchemasCount() {
+        return schemasCount;
     }
 
-    public void setSchemaCount(int schemaCount) {
-        this.schemaCount = schemaCount;
+    public void setSchemasCount(int schemasCount) {
+        this.schemasCount = schemasCount;
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + processCount;
-        result = 31 * result + schemaCount;
+        result = 31 * result + processesCount;
+        result = 31 * result + schemasCount;
         return result;
     }
 
@@ -43,8 +43,8 @@ public class HostExtend
 
         HostExtend that = (HostExtend) o;
 
-        if (processCount != that.processCount) return false;
-        if (schemaCount != that.schemaCount) return false;
+        if (processesCount != that.processesCount) return false;
+        if (schemasCount != that.schemasCount) return false;
 
         return true;
     }

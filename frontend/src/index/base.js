@@ -70,7 +70,7 @@ angular.module('Itsnow.Index', [
   }])
 
   // angular-auto-validate error message
-  .run(['defaultErrorMessageResolver',
+  .run(['defaultErrorMessageResolver', 'defaultErrorMessageResolver',
     function (defaultErrorMessageResolver) {
       defaultErrorMessageResolver.setI18nFileRootPath('assets/json');
       defaultErrorMessageResolver.setCulture('zh-CN');
