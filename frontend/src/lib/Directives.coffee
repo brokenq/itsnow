@@ -32,3 +32,21 @@ angular.module('Lib.Directives', [])
             )
     }
   ])
+
+  .directive('dntDuplicate', ['$http', (async)->
+    {
+      require: 'ngModel'
+      link: (scope, elem, attrs, ctrl)->
+        elem.on 'blur', ->
+          scope.$apply ->
+            val = elem.val()
+            return unless val?
+            return if val == ''
+
+            async.get(elem.attr('check-url') + "?value=" + val).success((data)->
+              ctrl.$setValidity('duplicate', scope.checkName(data, elem))
+            ).error(->
+              ctrl.$setValidity('duplicate', false)
+            )
+    }
+  ])

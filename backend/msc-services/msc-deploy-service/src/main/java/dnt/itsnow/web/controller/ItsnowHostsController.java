@@ -16,13 +16,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.List;
 import java.util.LinkedList;
 import java.util.HashMap;
+import java.util.List;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.*;
 
 /**
  * <h1>Itsnow hosts web controller</h1>
@@ -219,4 +217,5 @@ public class ItsnowHostsController extends SessionSupportController<ItsnowHost>{
         if( currentHost == null )
             throw new WebClientSideException(NOT_FOUND, "Can't find the itsnow host with id = " + id);
     }
+
 }
