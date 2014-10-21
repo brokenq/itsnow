@@ -20,7 +20,7 @@
                u.created_at AS user_created_at,
                u.updated_at AS user_updated_at
         FROM itsnow_msc.accounts a
-        LEFT JOIN itsnow_msc.users u on a.user_id = u.id
+        LEFT JOIN itsnow_msc.users u ON a.user_id = u.id
     </sql>
     <select id="findByName" resultMap="accountWithUserResult">
         <include refid="selectAccounts"/>
@@ -44,11 +44,11 @@
         </where>
     </select>
 
-    <select id="findAllByType" resultMap="accountResult">
-        SELECT * FROM itsnow_msc.accounts
+    <select id="findAllByType" resultMap="accountWithUserResult">
+        <include refid="selectAccounts"/>
         <where>
             <if test="type != null">
-                (type = #{type})
+                (a.type = #{type})
             </if>
         </where>
         <if test="pageable.sort != null">
@@ -61,22 +61,20 @@
 
     </select>
     <resultMap id="accountWithUserResult" type="Account" autoMapping="true">
+        <id  property="id" column="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="sn" property="sn"/>
+        <result column="domain" property="domain"/>
+        <result column="name" property="name"/>
+        <result column="status" property="status"/>
+        <result column="description" property="description"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
         <association property="user" columnPrefix="user_" resultMap="dnt.itsnow.repository.CommonUserRepository.userResult"/>
         <discriminator column="type" javaType="string">
-            <case value="msc" resultType="MscAccount" resultMap="basicAccountResult"/>
-            <case value="msu" resultType="MsuAccount" resultMap="basicAccountResult"/>
-            <case value="msp" resultType="MspAccount" resultMap="basicAccountResult"/>
+            <case value="msc" resultType="MscAccount"/>
+            <case value="msu" resultType="MsuAccount"/>
+            <case value="msp" resultType="MspAccount"/>
         </discriminator>
-    </resultMap>
-
-    <resultMap id="accountResult" type="Account" autoMapping="true">
-        <discriminator column="type" javaType="string">
-            <case value="msc" resultType="MscAccount" resultMap="basicAccountResult"/>
-            <case value="msu" resultType="MsuAccount" resultMap="basicAccountResult"/>
-            <case value="msp" resultType="MspAccount" resultMap="basicAccountResult"/>
-        </discriminator>
-    </resultMap>
-    <resultMap id="basicAccountResult" type="Account" autoMapping="true">
-        <result column="user_id" property="userId"/>
     </resultMap>
 </mapper>

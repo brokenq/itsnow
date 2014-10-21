@@ -62,6 +62,8 @@ public class MutableAccountRepositoryTest {
     public void testFindAllByType() throws Exception {
         List<Account> mscs = mutableRepository.findAllByType("msc", pageRequest);
         Assert.assertEquals(1, mscs.size());
+        Assert.assertNotNull(mscs.get(0).getUserId());
+        Assert.assertNotNull(mscs.get(0).getUser());
         List<Account> msus = mutableRepository.findAllByType("msu", pageRequest);
         Assert.assertEquals(2, msus.size());
         List<Account> msps = mutableRepository.findAllByType("msp", pageRequest);
