@@ -17,7 +17,7 @@ mixin page_navs()
     +nav_link("prev", "step-backward", "上一页")
     +nav_link("next", "step-forward", "下一页")
 mixin page_size_button(count)
-  button.btn.btn-default(type="button", ng-class="{'active':params.count() == #{count}}", ng-click="params.count(#{count})")= count
+  button.btn.btn-primary.no-border(type="button", ng-class="{'active':params.count() == #{count}}", ng-click="params.count(#{count})")= count
 mixin select_all()
   input(type="checkbox", ng-model="checkboxes.checked", name="filter-checkbox", value="")#select_all
 
@@ -25,7 +25,7 @@ mixin select_all()
 
   .btn-toolbar(role="toolbar")
     .btn-group
-      +tool_button("", "refresh", "", "*", "", "")
+      +tool_button("tableParams.reload()", "refresh", "", "*", "", "")
     .btn-group
       +tool_button("actionService.perform(approve)", "ok",    "批准",    "+", "", "new")
       +tool_button("actionService.perform(reject)",  "trash", "拒绝",    "+", "", "new")
@@ -47,10 +47,15 @@ mixin select_all()
     tr(ng-repeat="account in $data", ng-class="account.status.toLowerCase()")
       td(width="30" style="text-align: left" header="'ngTableCheckboxHeader'")
         input(type="checkbox" ng-model="checkboxes.items[account.sn]")
-      td(data-title="'名称'") {{account.name}}
-      td(data-title="'子域名'") {{account.domain | formatSubDomain}}
-      td(data-title="'联系人'") account.user.nickName
-      td(data-title="'联系人电话'") account.user.phone
+      td(data-title="'名称'")
+        a(ui-sref="account_view({sn: '{{account.sn}}'})") {{account.name}}
+
+        a(ng-if="account.process", ui-sref="process_view({name: '{{account.process.name}}'})")
+          i.icon-cogs.pull-right
+      td(data-title="'子域名'", ng-bind-html="account | formatSubDomain")
+      td(data-title="'联系人'")
+        a(ui-sref="user_view({name: '{{account.user.name}}'})") {{account.user.name}}
+      td(data-title="'联系人电话'") {{account.user.phone}}
       td(data-title="'状态'") {{ account.status | formatAccountStatus}}
 
 script(type="text/ng-template")#ngTableCheckboxHeader

@@ -1,5 +1,5 @@
 # List accounts
-angular.module('MscIndex.Account', ['ngTable','ngResource','dnt.action.service'])
+angular.module('MscIndex.Account', ['ngTable','ngResource', 'ngSanitize','dnt.action.service'])
   .config ($stateProvider)->
     $stateProvider.state 'accounts',
       url: '/accounts',
@@ -17,10 +17,14 @@ angular.module('MscIndex.Account', ['ngTable','ngResource','dnt.action.service']
   .factory('AccountService', ['$resource', ($resource) ->
     $resource("/admin/api/accounts")
   ])
-  .filter('formatSubDomain', ->
-    (subDomain) ->
-      "http://" + subDomain + ".itsnow.com"
-  )
+  .filter('formatSubDomain', ['$sce', ($sce)->
+    (account) ->
+      link = "http://" + account.domain + ".itsnow.com"
+      if account.status == 'Valid'
+        $sce.trustAsHtml '<a target="_blank" href="' + link + '">' + link + '</a>'
+      else
+        link
+  ])
   .filter('formatAccountStatus', ->
     (status) ->
       return "待审核" if status == 'New'
