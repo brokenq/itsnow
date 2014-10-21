@@ -25,11 +25,12 @@ mixin select_all()
 
   .btn-toolbar(role="toolbar")
     .btn-group
-      +tool_button("#", "refresh", "")
+        +tool_button("refresh()", "refresh", "", "*", "", "")
     .btn-group
-        +tool_button("#", "new", "新建")
-        +tool_button("actionService.gotoState('Service.Dictnew', $event)", "edit", "编辑", "1", "", "")
-        +tool_button("#", "remove", "删除")
+        +tool_button("actionService.gotoState('dict_new', $event)", "new", "新建", "*", "", "")
+        +tool_button("actionService.gotoState('dict_edit', $event)", "edit", "编辑", "1", "", "")
+        +tool_button("actionService.perform(deleteDict, $event)", "remove", "删除", "1+", "", "")
+
     //.btn-group
     //  button.btn.btn-default.dropdown-toggle(type="button",data-toggle="dropdown")
     //    | 更多操作
@@ -44,7 +45,7 @@ mixin select_all()
             i.icon-search.nav-search-icon
 
   table.table(template-pagination="customPager",ng-table="tableParams")
-    tr(ng-repeat="dict in $data")
+    tr(ng-repeat="dict in $data", value="{{dict.sn}}")
       td(width="30" style="text-align: left" header="'ngTableCheckboxHeader'")
         input(type="checkbox" ng-model="checkboxes.items[dict.sn]")
       td(style="text-align: center" data-title="'字典代码'") {{dict.code}}
