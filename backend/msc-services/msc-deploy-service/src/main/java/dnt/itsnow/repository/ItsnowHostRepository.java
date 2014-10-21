@@ -27,6 +27,10 @@ public interface ItsnowHostRepository {
     @ResultMap("hostResult")
     ItsnowHost findByAddress(@Param("address")String address);
 
+    @Select("SELECT * FROM itsnow_hosts WHERE name = #{name}")
+    @ResultMap("hostResult")
+    ItsnowHost findByName(@Param("name") String name);
+
     @Select("SELECT * FROM itsnow_hosts WHERE id = #{id}")
     @ResultMap("hostResult")
     ItsnowHost findById(@Param("id")Long id);
@@ -59,4 +63,5 @@ public interface ItsnowHostRepository {
     @Select("SELECT * FROM itsnow_hosts WHERE configuration REGEXP '\"${name}\" *: *\"?${value}\"?'")
     @ResultMap("hostResult")
     List<ItsnowHost> findAllByConfiguration(@Param("name")String name, @Param("value") String value);
+
 }

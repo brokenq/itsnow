@@ -17,9 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.sql.Timestamp;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * 测试 Itsnow Host Repository
@@ -48,6 +46,14 @@ public class ItsnowHostRepositoryTest {
     @Test
     public void testFindByAddress() throws Exception {
         ItsnowHost host = hostRepository.findByAddress("172.16.3.4");
+        Assert.assertNotNull(host);
+        Assert.assertNotNull(host.getConfiguration());
+        Assert.assertEquals("4x2533Mhz", host.getConfiguration().getProperty("cpu"));
+    }
+
+    @Test
+    public void testFindByName() throws Exception {
+        ItsnowHost host = hostRepository.findByName("MSU/P Host A");
         Assert.assertNotNull(host);
         Assert.assertNotNull(host.getConfiguration());
         Assert.assertEquals("4x2533Mhz", host.getConfiguration().getProperty("cpu"));

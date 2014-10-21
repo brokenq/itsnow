@@ -92,4 +92,18 @@ public interface SystemInvocationTranslator {
      * @return 调用对象
      */
     SystemInvocation check(ItsnowProcess process);
+
+    /**
+     * <h2>根据name解析主机address </h2>
+     * @param hostName 主机名称
+     * @return 主机地址
+     */
+    SystemInvocation resolveHostAddress(String hostName);
+
+    /**
+     * <h2>根据address解析主机名 </h2>
+     * @param hostAddress 主机地址
+     * @return 主机名
+     */
+    SystemInvocation resolveHostName(String hostAddress);
 }

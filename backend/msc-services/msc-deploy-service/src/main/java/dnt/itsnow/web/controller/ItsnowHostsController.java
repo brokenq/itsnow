@@ -11,12 +11,14 @@ import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.service.ItsnowHostService;
 import dnt.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.LinkedList;
+import java.util.HashMap;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
@@ -33,6 +35,8 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
  * PUT    /admin/api/hosts/{id}  update    修改主机信息
  * DELETE /admin/api/hosts/{id}  destroy   删除特定的主机信息
  * GET    /admin/api/hosts/{id}/follow/{invocationId} follow    获取目标主机最新的任务信息
+ * GET    /admin/api/hosts/checkName/{value} checkName 检查主机名是否唯一
+ * GET    /admin/api/hosts/checkAddress/{value} checkAddress 检查主机地址是否唯一,有效
  * </pre>
  */
 @RestController
@@ -148,6 +152,65 @@ public class ItsnowHostsController extends SessionSupportController<ItsnowHost>{
         return StringUtils.join(body, "\n");
     }
 
+    /**
+     * <h2>检查主机名是否有效</h2>
+     * <p/>
+     * 主要检查主机的名称是否唯一；
+     * 如果主机名可以直接ping通，则会返回目标主机的ip地址；
+     * 如果ping不通，只要名称合法，也不认为是错误，但http body里面没有ip地址
+     * PUT /admin/api/hosts/checkName/{value}
+     * <pre>
+     * Response body:
+     * 200: {'address': '172.16.1.32'}
+     * </pre>
+     */
+    @RequestMapping("checkName/{value}")
+    public HashMap checkName(@PathVariable("value") String value ){
+      ItsnowHost host = hostService.findByName(value);
+      if(host != null) 
+          throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate host name: " + value);
+
+      HashMap<String,String> map = new HashMap<String,String>();
+      try{
+        String address = hostService.resolveAddress(value);
+        map.put("address", address);
+      }catch(ItsnowHostException ex){
+        // do not render any address indicator
+      }
+      return map;
+    }
+
+    /**
+     * <h2>检查主机地址是否有效</h2>
+     * <p/>
+     * 1. 检查主机的地址是否物理唯一；
+     * 2. 检查主机地址可以直接ping通
+     * GET /admin/api/hosts/checkAddress/{value}
+     * <pre>
+     * Response body:
+     * 200: {'name': 'dev2'}
+     * </pre>
+     */
+    @RequestMapping("checkAddress/{value}")
+    public HashMap checkAddress(@PathVariable("value") String value ){
+      HashMap<String,String> map = new HashMap<String,String>();
+      String name;
+      try{
+        name = hostService.resolveName(value);
+      }catch(ItsnowHostException ex){
+        // do not render any name indicator
+        throw new WebClientSideException(HttpStatus.NOT_FOUND, "Can't reach host address: " + value);
+      }
+      ItsnowHost host = hostService.findByAddress(value);
+      if(host != null) 
+          throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate host address: " + value);
+
+      host = hostService.findByName(name);
+      if(host != null) 
+          throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate host name: " + name);
+      map.put("name", name);
+      return map;
+    }
 
     @BeforeFilter({"show", "start", "stop", "cancel", "destroy", "follow"})
     public void initCurrentHost(@PathVariable("id") Long id){

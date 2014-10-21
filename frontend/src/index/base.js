@@ -2,14 +2,14 @@ angular.module('Itsnow.Index', [
     'ui.router',
     'ngResource',
     'ngLocale',
+    'jcs-autoValidate',
     'Lib.Interceptor',
     'Lib.Directives',
     'Lib.Templates',
     'Index.Templates',
     'Index.Menu',
     'Index.Dialog',
-    'Index.Table',
-    'jcs-autoValidate'
+    'Index.Table'
 ])
   .config(function ($httpProvider, $stateProvider, $urlRouterProvider) {
         $urlRouterProvider.otherwise('dashboard');

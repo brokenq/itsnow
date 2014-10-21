@@ -18,8 +18,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * <h1>Itsnow Host Manager</h1>
@@ -27,19 +30,21 @@ import java.util.List;
 @Service
 @Transactional
 public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHostService {
+    static Pattern PATTERN = Pattern.compile("^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$");
 
     @Autowired
     ItsnowHostRepository repository;
+    private String mscAddress;
 
     @Override
     public Page<ItsnowHost> findAll(String keyword, PageRequest pageRequest) {
         logger.debug("Listing itsnow hosts by keyword: {} at {}", keyword, pageRequest);
         int total = repository.countByKeyword(keyword);
         List<ItsnowHost> hits;
-        if( total == 0 ){
+        if (total == 0) {
             hits = new ArrayList<ItsnowHost>();
-        }else{
-            if(StringUtils.isNotBlank(keyword)) keyword = "%" + keyword + "%";
+        } else {
+            if (StringUtils.isNotBlank(keyword)) keyword = "%" + keyword + "%";
             else keyword = null;
             hits = repository.findAllByKeyword(keyword, pageRequest);
         }
@@ -62,6 +67,56 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
         ItsnowHost host = repository.findByAddress(address);
         logger.debug("Found   itsnow host: {}", host);
         return host;
+    }
+
+    @Override
+    public ItsnowHost findByName(String name) {
+        logger.debug("Finding itsnow host by name: {}", name);
+        ItsnowHost host = repository.findByName(name);
+        logger.debug("Found   itsnow host: {}", host);
+        return host;
+    }
+
+    @Override
+    public String resolveAddress(String name) throws ItsnowHostException{
+        logger.debug("Resolving host address of {}", name);
+        String hostAddress;
+        try {
+            if(mscAddress == null ) mscAddress = initMscAddress();
+        } catch (UnknownHostException e) {
+            throw new ItsnowHostException("Failed to resolve msc host: srv1.itsnow.com " , e);
+        }
+        try {
+            hostAddress = InetAddress.getByName(name).getHostAddress();
+        } catch (UnknownHostException e) {
+            if( name.toLowerCase().endsWith(".itsnow.com") )
+                throw new ItsnowHostException("Failed to resolve host name: " + name, e);
+            else
+                return resolveAddress(name + ".itsnow.com");
+        }
+        if(StringUtils.equals(mscAddress, hostAddress)){
+            throw new ItsnowHostException("Bad host name: " + name);
+        }
+        logger.debug("Resolved  host address {}", hostAddress);
+        return hostAddress;
+    }
+
+    private String initMscAddress() throws UnknownHostException {
+        return InetAddress.getByName("srv1.itsnow.com").getHostAddress();
+    }
+
+    @Override
+    public String resolveName(String address) throws ItsnowHostException{
+        logger.debug("Resolve host name of {}", address);
+        if( !PATTERN.matcher(address).matches() )
+            throw new IllegalArgumentException("Bad ip address: " + address);
+        String hostName;
+        try {
+            hostName = InetAddress.getByName(address).getHostName();
+        } catch (UnknownHostException e) {
+            throw new ItsnowHostException("Failed to resolve host address: " + address, e);
+        }
+        return hostName;
     }
 
     @Override
