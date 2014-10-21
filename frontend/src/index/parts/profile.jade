@@ -16,4 +16,4 @@ li.light-blue(ng-controller="IndexCtrl")
     +profile_link("设置", "cog", "")
     +profile_link("个人资料", "user", "")
     li.divider
-    +profile_link("注销", "off", "logout")
+    +profile_link("注销", "off")(ngClick="logout()")

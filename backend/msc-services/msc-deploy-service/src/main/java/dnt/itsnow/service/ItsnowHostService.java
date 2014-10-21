@@ -14,6 +14,7 @@ import java.util.List;
  * <h1>Itsnow Host Service</h1>
  */
 public interface ItsnowHostService {
+
     /**
      * <h2>根据关键词查找主机</h2>
      * @param keyword  主机的关键词，可以为null

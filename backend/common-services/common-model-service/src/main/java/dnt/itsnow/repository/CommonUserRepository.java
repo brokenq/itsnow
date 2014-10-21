@@ -17,7 +17,7 @@ import java.util.Set;
 public interface CommonUserRepository {
     //@Select("SELECT * FROM itsnow_msc.users where UPPER(username) = UPPER(#{username})")
     // USE XML which will find user with account
-    User findByUsername(@Param("username") String username);
+    User findByFieldAndValue(@Param("field") String field, @Param("value") String value);
 
     @Select("SELECT * FROM authorities WHERE UPPER(username) = UPPER(#{username})")
     Set<UserAuthority> findAuthorities(@Param("username") String username);

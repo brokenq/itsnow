@@ -20,6 +20,22 @@ public interface CommonUserService extends UserDetailsService {
     User findByUsername(String username);
 
     /**
+     * <h2>根据email查找用户</h2>
+     *
+     * @param email 用户邮件地址
+     * @return 找到的用户 不包括权限等信息, 找不到则返回null
+     */
+    User findByEmail(String email);
+
+    /**
+     * <h2>根据电话查找用户</h2>
+     *
+     * @param phone 用户电话
+     * @return 找到的用户 不包括权限等信息, 找不到则返回null
+     */
+    User findByPhone(String phone);
+
+    /**
      * 加载在当前系统的帐户下的用户各种信息
      *
      * @param username 用户名

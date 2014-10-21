@@ -5,6 +5,7 @@ CREATE TABLE itsnow_hosts (
   id            INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
   name          VARCHAR(50) NOT NULL ,
   address       VARCHAR(50) NOT NULL,
+  type          VARCHAR(50) NOT NULL,
   capacity      INT(10) UNSIGNED NOT NULL DEFAULT 20,
   status        VARCHAR(50)               DEFAULT 'Planing',
   configuration VARCHAR(255),

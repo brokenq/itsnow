@@ -26,9 +26,23 @@ public class CommonUserRepositoryTest {
 
     @Test
     public void testFindByUsername() throws Exception {
-        User user = repository.findByUsername("admin");
+        User user = repository.findByFieldAndValue("username", "admin");
         validateUser(user);
-        Assert.isNull(repository.findByUsername("Not Exist"));
+        Assert.isNull(repository.findByFieldAndValue("username", "Not Exist"));
+    }
+
+    @Test
+    public void testFindByEmail() throws Exception {
+        User user = repository.findByFieldAndValue("email", "admin@itsnow.com");
+        validateUser(user);
+        Assert.isNull(repository.findByFieldAndValue("email", "NotExist@itsnow.com"));
+    }
+
+    @Test
+    public void testFindByPhone() throws Exception {
+        User user = repository.findByFieldAndValue("phone", "13012345678");
+        validateUser(user);
+        Assert.isNull(repository.findByFieldAndValue("phone", "123456678"));
     }
 
     @Test

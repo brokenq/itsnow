@@ -22,9 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -62,6 +60,19 @@ public class ProcessDictionariesControllerTest extends SessionSupportedControlle
         dictionaries.add(dictionary);
 
        reset(processDictionaryService);
+    }
+
+    @Test
+    public void testCreate() throws Exception {
+        expect(processDictionaryService.create(anyObject(ProcessDictionary.class))).andReturn(dictionary);
+        replay(processDictionaryService);
+
+        MockHttpServletRequestBuilder request = post("/api/process-dictionaries").content(accountJson());
+
+        decorate(request);
+
+        ResultActions result = this.browser.perform(request);
+        decorate(result).andExpect(status().isOk());
     }
 
     @Test

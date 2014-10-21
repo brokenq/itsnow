@@ -1,14 +1,5 @@
-/**
- * xiongjie on 14-8-20.
- */
 package dnt.itsnow.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import dnt.itsnow.platform.model.Record;
-import org.hibernate.validator.constraints.NotBlank;
-import sun.security.krb5.Config;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,21 +8,22 @@ import java.util.List;
  */
 public class Role extends ConfigItem {
 
-    private List<RoleDetail> details;
+    private List<User> users;
 
-    public List<RoleDetail> getDetails() {
-        return details;
+    public List<User> getUsers() {
+        return users;
     }
 
-    public void setDetails(List<RoleDetail> details) {
-        this.details = details;
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Role{");
-        sb.append("details=").append(details);
+        sb.append("users=").append(users);
         sb.append('}');
         return sb.toString();
     }
+
 }

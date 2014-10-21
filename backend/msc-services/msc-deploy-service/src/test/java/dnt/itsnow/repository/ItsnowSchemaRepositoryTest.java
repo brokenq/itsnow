@@ -5,6 +5,7 @@ package dnt.itsnow.repository;
 
 import dnt.itsnow.config.DeployRepositoryConfig;
 import dnt.itsnow.model.ItsnowSchema;
+import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.util.DeployFixture;
 import junit.framework.Assert;
 import org.junit.Before;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.util.List;
 
 /**
  * 测试 Itsnow Schema Repository
@@ -65,5 +68,29 @@ public class ItsnowSchemaRepositoryTest {
         schemaRepository.delete(schema);
         ItsnowSchema found = schemaRepository.findByName(schema.getName());
         Assert.assertNull(found);
+    }
+    @Test
+    public void testCountByKeyword() throws Exception {
+        int count = schemaRepository.countByKeyword("%msc%");
+        Assert.assertEquals(1, count);
+    }
+
+    @Test
+    public void testCountNoKeyword() throws Exception {
+        int count = schemaRepository.countByKeyword(null);
+        Assert.assertTrue(count >= 1);
+    }
+
+    @Test
+    public void testFindAllByKeyword() throws Exception {
+        //实际环境中，大小写不敏感，但H2 database没有很好的支持，所以在测试用例中不进行case insensitive测试
+        List<ItsnowSchema> schemas = schemaRepository.findAllByKeyword("%MS%", new PageRequest(0, 10));
+        Assert.assertEquals(1, schemas.size());
+    }
+
+    @Test
+    public void testFindAllNoKeyword() throws Exception {
+        List<ItsnowSchema> schemas = schemaRepository.findAllByKeyword(null, new PageRequest(0, 10));
+        Assert.assertTrue(schemas.size() >= 1);
     }
 }

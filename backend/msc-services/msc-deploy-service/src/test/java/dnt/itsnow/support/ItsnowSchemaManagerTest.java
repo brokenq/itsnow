@@ -8,6 +8,7 @@ import dnt.itsnow.exception.ItsnowSchemaException;
 import dnt.itsnow.exception.SystemInvokeException;
 import dnt.itsnow.model.ItsnowSchema;
 import dnt.itsnow.model.SystemInvocation;
+import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.repository.ItsnowSchemaRepository;
 import dnt.itsnow.service.SystemInvokeService;
 import dnt.itsnow.util.DeployFixture;
@@ -39,12 +40,14 @@ public class ItsnowSchemaManagerTest {
     SystemInvokeService    systemInvokeService;
 
     ItsnowSchema schema;
+    PageRequest pageRequest;
 
 
     @Before
     public void setUp() throws Exception {
         schema = DeployFixture.testSchema();
         schema.setHost(DeployFixture.testHost());
+        pageRequest = new PageRequest(0, 10);
     }
 
     @After
@@ -120,4 +123,5 @@ public class ItsnowSchemaManagerTest {
             Assert.hasText("Can't drop schema", e.getMessage());
         }
     }
+
 }

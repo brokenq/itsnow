@@ -13,10 +13,10 @@ angular.module( 'MscLogin.Signup', [
       views: {
         "login": {
           controller: 'SignupCtrl as signup',
-          templateUrl: 'signup/signup.tpl.html'
+          templateUrl: 'signup/signup.tpl.jade'
         }
       },
-      data:{ pageTitle: '注册' }
+      data:{ pageTitle: '注册帐户' }
     });
   })
 
@@ -35,6 +35,16 @@ angular.module( 'MscLogin.Signup', [
         attachments: {/*营业执照(yyzz), 税务登记证(rwdjz), 个人身份证(id_card)*/},
         individual: function(){
           return this.type == 'Individual';
+        },
+        serviceRoles: function(){
+          var array = [];
+          if(this.asUser) {
+            array.push("服务使用方 ");
+          }
+          if(this.asProvider) {
+            array.push("服务供应方");
+          }
+          return array.join(",");
         },
         nameLabel : function(){
           if( this.individual() ){

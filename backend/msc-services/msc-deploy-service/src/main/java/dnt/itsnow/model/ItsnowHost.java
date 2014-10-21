@@ -15,6 +15,10 @@ public class ItsnowHost extends DeployResource
     private HostStatus status = HostStatus.Planing;
     //这台主机一般能部署多少个Itsnow Process
     private int    capacity;
+    @NotNull
+    private HostType type = HostType.APP;
+    // 拓展字段，不存储于数据库中，用于列表中展示
+    private HostExtend extend;
 
     @Override
     @NotNull
@@ -46,6 +50,22 @@ public class ItsnowHost extends DeployResource
         this.capacity = capacity;
     }
 
+    public HostType getType() {
+        return type;
+    }
+
+    public void setType(HostType type) {
+        this.type = type;
+    }
+
+    public HostExtend getExtend() {
+        return extend;
+    }
+
+    public void setExtend(HostExtend extend) {
+        this.extend = extend;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -56,8 +76,10 @@ public class ItsnowHost extends DeployResource
 
         if (capacity != that.capacity) return false;
         if (address != null ? !address.equals(that.address) : that.address != null) return false;
+        if (extend != null ? !extend.equals(that.extend) : that.extend != null) return false;
         //noinspection RedundantIfStatement
         if (status != that.status) return false;
+        if (type != that.type) return false;
 
         return true;
     }
@@ -66,6 +88,8 @@ public class ItsnowHost extends DeployResource
     public int hashCode() {
         int result = super.hashCode();
         result = 31 * result + (address != null ? address.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (extend != null ? extend.hashCode() : 0);
         result = 31 * result + status.hashCode();
         result = 31 * result + capacity;
         return result;
