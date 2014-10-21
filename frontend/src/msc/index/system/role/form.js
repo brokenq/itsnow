@@ -27,36 +27,52 @@ angular.module('System.Role.Form', ['multi-select', 'ngResource'])
     }
     ])
 
+    .directive('remoteValidation', function($http) {
+        return {
+            require : 'ngModel',
+            link : function(scope, elm, attrs, ctrl) {
+                elm.bind('keyup', function() {
+                    $http({method: 'GET', url: '/api/roles/'+scope.role.name}).
+                        success(function(data, status, headers, config) {
+                            if(data===''){
+                                ctrl.$setValidity('titleRepeat',true);
+                            }else{
+                                ctrl.$setValidity('titleRepeat',false);
+                            }
+                        }).
+                        error(function(data, status, headers, config) {
+                            ctrl.$setValidity('titleRepeat', false);
+                        });
+                });
+            }
+        };
+    })
+
     .controller('RoleCtrl', ['$scope', '$location', 'RoleService', '$stateParams',
         function ($scope, $location, roleService, $stateParams) {
-
-
 
             var name = $stateParams.name;
 
             if (name !== null && name !== "" && name !== undefined) {
 
                 $("#form-field-mask-1").attr("readonly","true");
+                $("#form-field-mask-1").remove("remote-validation");
 
-                roleService.get({name: name}, function (data) {
+                var promise = roleService.get({name: name}).$promise;
+                promise.then(function(data){
                     $scope.role = data;
 
-                    roleService.getUsers(
-                        function (data) {
-                            $scope.users = data;
-                            for (var i in $scope.users) {
-                                for (var j in $scope.role.users) {
-                                    if ($scope.users[i].name == $scope.role.users[j].name) {
-                                        $scope.users[i].ticked = true;
-                                    }
-                                    /*else{
-                                     $scope.users[i].ticked = false;
-                                     }*/
+                    var prms = roleService.getUsers().$promise;
+                    prms.then(function(data){
+                        $scope.users = data;
+                        for (var i in $scope.users) {
+                            for (var j in $scope.role.users) {
+                                if ($scope.users[i].name == $scope.role.users[j].name) {
+                                    $scope.users[i].ticked = true;
                                 }
                             }
                         }
-                    );
-
+                    });
                 });
 
                 $scope.submit = function () {
@@ -71,9 +87,13 @@ angular.module('System.Role.Form', ['multi-select', 'ngResource'])
                             selectedUser.push(myUser);
                         }
                     }
-                    $scope.role.users = selectedUser;
 
-                    roleService.update({name: $scope.role.name}, $scope.role, function () {
+                    var role = $scope.role;
+                    role.users = selectedUser;
+                    role.$promise=undefined;
+                    role.$resolved=undefined;
+
+                    roleService.update({name: role.name}, role, function () {
                         $location.path('/system/role');
                     }, function (data) {
                         alert(data);
@@ -83,6 +103,7 @@ angular.module('System.Role.Form', ['multi-select', 'ngResource'])
             } else {
 
                 $("#form-field-mask-1").remove("readonly");
+                $("#form-field-mask-1").attr("remote-validation", "");
 
                 roleService.getUsers(
                     function (data) {
@@ -111,6 +132,8 @@ angular.module('System.Role.Form', ['multi-select', 'ngResource'])
                     });
                 };
             }
+
+
 
         }
     ]);

@@ -9,5 +9,6 @@
     "date": "请输入有效的日期",
     "pattern": "请输入匹配 {0} 的字符",
     "number": "请输入有效数字",
-    "url": "请输入有效的URL，例如：http(s)://wwww.google.com"
+    "url": "请输入有效的URL，例如：http(s)://wwww.google.com",
+    "titleRepeat": "名称已存在"
 }

@@ -8,17 +8,19 @@
                 a(href='', data-action='close')
                     i.icon-remove
         .widget-body
-            .widget-main
-                ng-form(ng-controller='RoleCtrl', role='form', name='newRoleForm')
+            .widget-main(ng-controller='RoleCtrl')
+                form(novalidate="novalidate", role='form', name='roleForm', ng-submit='submit(role)')
                     div
                         label(for='form-field-mask-1')
                             | 角色名称
                         .input-group
-                            input#form-field-mask-1.form-control(type='text',ng-model='role.name')
+                            input#form-field-mask-1.form-control(type='text', ng-model='role.name', name='titleRepeat', required, remote-validation)
                     hr
                     div
                         label(for='form-field-9') 描述
-                        textarea#form-field-9.form-control.limited(maxlength='50',ng-model='role.description')
+                        textarea#form-field-9.form-control.limited(
+                            ng-model='role.description',
+                            ng-maxlength="50")
                     hr
                     label(for='form-field-select-2') 用户（可多选）
                     div(multi-select
@@ -28,6 +30,6 @@
                         tick-property="ticked")
                     hr
                     div.form-actions.center
-                        button.btn.btn-sm.btn-success(ng-click='submit(role)', type='submit')
+                        button.btn.btn-sm.btn-success(type='submit')
                             | 提交
                             i.icon-arrow-right.icon-on-right.bigger-110
