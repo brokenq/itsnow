@@ -27,7 +27,7 @@
     <select id="count" resultType="java.lang.Long">
         SELECT COUNT(0) FROM roles
         <where>
-            <if test="keyword != null and keywork != ''">
+            <if test="keyword != null and keyword != ''">
                 name LIKE #{keyword}
             </if>
         </where>
@@ -65,7 +65,7 @@
     <select id="findAll" resultMap="roleResult">
         <include refid="select"></include>
         <where>
-            <if test="keyword != null and keywork != ''">
+            <if test="keyword != null and keyword != ''">
                 r.name LIKE #{keyword}
             </if>
         </where>

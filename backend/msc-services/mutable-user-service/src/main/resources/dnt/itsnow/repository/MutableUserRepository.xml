@@ -15,14 +15,25 @@
         </where>
     </select>
 
-    <select id="findAllByKeyword" resultType="User">
+    <select id="findAllByKeyword" resultMap="userWithBasicAccount">
         <bind name="pattern" value="'%' + keyword + '%' "/>
-        SELECT * FROM itsnow_msc.users
+        SELECT u.*,
+                a.id            AS account_id,
+                a.user_id       AS account_user_id,
+                a.sn            AS account_sn,
+                a.domain        AS account_domain,
+                a.name          AS account_name,
+                a.type          AS account_type,
+                a.status        AS account_status,
+                a.created_at    AS account_created_at,
+                a.updated_at    AS account_updated_at
+        FROM itsnow_msc.users u
+        JOIN itsnow_msc.accounts a ON u.account_id = a.id
         <where>
             <if test="keyword != ''">
-                   (username LIKE #{pattern})
-                OR (email LIKE #{pattern})
-                OR (phone LIKE #{pattern})
+                   (u.username LIKE #{pattern})
+                OR (u.email LIKE #{pattern})
+                OR (u.phone LIKE #{pattern})
             </if>
         </where>
         <if test="pageable.sort != null">
@@ -34,5 +45,25 @@
         </trim>
 
     </select>
+    <resultMap id="userWithBasicAccount" type="User" autoMapping="true">
+        <id  property="id" column="id"/>
+        <association property="account" resultMap="accountWithoutUser" columnPrefix="account_"/>
+    </resultMap>
+    <resultMap id="accountWithoutUser" type="Account" autoMapping="true" >
+        <id  property="id" column="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="sn" property="sn"/>
+        <result column="domain" property="domain"/>
+        <result column="name" property="name"/>
+        <result column="status" property="status"/>
+        <result column="description" property="description"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+        <discriminator column="type" javaType="string">
+            <case value="msc" resultType="MscAccount"/>
+            <case value="msu" resultType="MsuAccount"/>
+            <case value="msp" resultType="MspAccount"/>
+        </discriminator>
+    </resultMap>
 
 </mapper>

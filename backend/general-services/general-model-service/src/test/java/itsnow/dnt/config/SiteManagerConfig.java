@@ -1,5 +1,7 @@
 package itsnow.dnt.config;
 
+import dnt.itsnow.platform.service.AutoNumberService;
+import dnt.itsnow.platform.support.AutoNumberInMemory;
 import dnt.itsnow.service.DepartmentService;
 import dnt.itsnow.service.ProcessDictionaryService;
 import dnt.itsnow.service.SiteService;
@@ -35,5 +37,10 @@ public class SiteManagerConfig extends SiteRepositoryConfig {
     @Bean
     public WorkTimeService workTimeSerivce(){
         return new WorkTimeManager();
+    }
+
+    @Bean
+    public AutoNumberService autoNumberService(){
+        return new AutoNumberInMemory();
     }
 }

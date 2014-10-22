@@ -4,7 +4,7 @@
 CREATE TABLE IF NOT EXISTS sites (
   id                    INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
   process_dictionary_id INT(10) UNSIGNED,
-  sn                    VARCHAR(20)      NOT NULL,
+  sn                    VARCHAR(100)      NOT NULL,
   name                  VARCHAR(255)     NOT NULL,
   address               VARCHAR(255)     NOT NULL,
   description           VARCHAR(500),
