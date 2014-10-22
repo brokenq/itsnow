@@ -30,8 +30,8 @@ public class RouteItem implements Comparable<RouteItem> {
     @Override
     public String toString() {
         return showDetail ?
-               String.format("%6s %-70s : %s", httpMethod, urlWithParams(), handler) :
-               String.format("%6s %-100s", httpMethod, urlWithParams());
+               String.format("%6s %-50s : %s", httpMethod, urlWithParams(), handler) :
+               String.format("%6s %-50s", httpMethod, urlWithParams());
     }
 
     private String urlWithParams() {

@@ -76,7 +76,7 @@ public class ProcessDictionariesController extends SessionSupportController<Proc
      * @return 字典列表
      */
     @RequestMapping("code/{code}")
-    public ProcessDictionary list(@PathVariable(value = "code") String code) {
+    public List<ProcessDictionary> list(@PathVariable(value = "code") String code) {
 
         logger.debug("Listing Process Dictionary by code:{}", code);
 
@@ -84,7 +84,7 @@ public class ProcessDictionariesController extends SessionSupportController<Proc
 
         logger.debug("Listed Process Dictionary number:{}", dictionaries.size());
 
-        return processDictionary;
+        return dictionaries;
     }
 
     /**

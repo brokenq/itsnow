@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dnt.itsnow.repository.RoleRepository">
+
+    <resultMap id="roleResult" type="Role">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <!-- 一对多关系 -->
+        <collection property="users" ofType="User">
+            <result property="id" column="userId"/>
+            <result property="name" column="username"/>
+            <result property="email" column="userEmail"/>
+            <result property="phone" column="userPhone"/>
+            <result property="accountId" column="userAccountId"/>
+            <result property="enabled" column="userEnabled"/>
+            <result property="expired" column="userExpired"/>
+            <result property="locked" column="userLocked"/>
+            <result property="passwordExpired" column="userPasswordExpired"/>
+        </collection>
+    </resultMap>
+
+    <select id="count" resultType="java.lang.Long">
+        SELECT COUNT(0) FROM roles
+        <where>
+            <if test="keyword != null and keyword != ''">
+                name LIKE #{keyword}
+            </if>
+        </where>
+    </select>
+
+    <sql id="select">
+        SELECT r.id,
+               r.name,
+               r.description,
+               r.created_at,
+               r.updated_at,
+               u.id as userId,
+               u.username,
+               u.email as userEmail,
+               u.phone as userPhone,
+               u.account_id as userAccountId,
+               u.enabled as userEnabled,
+               u.expired as userExpired,
+               u.locked as userLocked,
+               u.password_expired as userPasswordExpired
+        FROM   roles r
+               LEFT JOIN authorities a
+                      ON r.name = a.authority
+               LEFT JOIN itsnow_msc.users u
+                      ON a.username = u.username
+               LEFT JOIN itsnow_msc.accounts acc
+                      ON u.account_id = acc.id
+    </sql>
+
+    <select id="findByName" resultMap="roleResult">
+        <include refid="select"></include>
+        WHERE r.name = #{name}
+    </select>
+
+    <select id="findAll" resultMap="roleResult">
+        <include refid="select"></include>
+        <where>
+            <if test="keyword != null and keyword != ''">
+                r.name LIKE #{keyword}
+            </if>
+        </where>
+        <if test="pageable.sort != null">
+            ORDER BY #{pageable.sort}
+        </if>
+        <trim prefix="LIMIT" prefixOverrides=",">
+            <if test="pageable.offset > 0">#{pageable.offset}</if>
+            <if test="pageable.pageSize > 0">, #{pageable.pageSize}</if>
+        </trim>
+    </select>
+
+</mapper>

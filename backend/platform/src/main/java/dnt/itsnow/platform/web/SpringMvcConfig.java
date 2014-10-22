@@ -106,7 +106,7 @@ public class SpringMvcConfig extends WebMvcConfigurationSupport implements Initi
         RequestMappingHandlerAdapter adapter = this.requestMappingHandlerAdapter();
         registry.addInterceptor(new BeforeFilterInterceptor(adapter));
         registry.addInterceptor(new AfterFilterInterceptor(adapter));
-        logger.debug("Add Before/After/Delayed Filter Interceptors");
+        logger.debug("Add Before/After Filter Interceptors");
     }
 
     @Override

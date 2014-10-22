@@ -11,6 +11,8 @@ import dnt.itsnow.model.Account;
 public interface CommonAccountService {
     Account findByName(String name);
 
+    Account findByDomain(String domain);
+
     Account findBySn(String sn);
 
     Account findById(Long id);

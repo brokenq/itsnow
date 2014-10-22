@@ -1,5 +1,5 @@
 # List accounts
-angular.module('MscIndex.Host', ['ngTable','ngResource'])
+angular.module('MscIndex.Host', ['ngTable','ngResource', 'dnt.action.service', 'Lib.Filters'])
   .config ($stateProvider)->
     $stateProvider.state 'hosts',
       url: '/hosts',
@@ -9,14 +9,8 @@ angular.module('MscIndex.Host', ['ngTable','ngResource'])
   .factory('HostService', ['$resource', ($resource) ->
     $resource("/admin/api/hosts/:id", {id: "@id"})
   ])
-  .filter('formatHostStatus', ->
-    (status) ->
-      return "规划中" if status == 'Planing'
-      return "运行中" if status == 'Running'
-      return "有故障" if status == 'Abnormal'
-      return "已关机" if status == 'Shutdown'
-  )
-  .controller 'HostListCtrl',['$scope', '$location', '$state', '$timeout', 'ngTableParams', 'HostService',($scope, $location, $state, $timeout, ngTableParams, hostService)->
+
+  .controller 'HostListCtrl',['$scope', '$location', '$state', '$timeout', 'ngTableParams', 'HostService', 'ActionService', ($scope, $location, $state, $timeout, ngTableParams, hostService, ActionService)->
     options =
       page:  1,           # show first page
       count: 10           # count per page
@@ -31,26 +25,29 @@ angular.module('MscIndex.Host', ['ngTable','ngResource'])
           , 500)
         )
     $scope.tableParams = new ngTableParams(angular.extend(options, $location.search()), args)
-    $scope.checkboxes = { 'checked': false, items: {} }
+    
+    $scope.selection = {checked: false, items: {}}
+    $scope.getHostById  = (id)->
+      return host for host in $scope.hosts when host.id is parseInt id
+    $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.getHostById})
+    
     # watch for check all checkbox
-    $scope.$watch 'checkboxes.checked', (value)->
+    $scope.$watch 'selection.checked', (value)->
       angular.forEach $scope.hosts, (item)->
-        $scope.checkboxes.items[item.id] = value if angular.isDefined(item.id)
-    # watch for data checkboxes
-    $scope.$watch('checkboxes.items', (values) ->
+        $scope.selection.items[item.id] = value if angular.isDefined(item.id)
+    # watch for data selection
+    $scope.$watch('selection.items', (values) ->
       return if !$scope.hosts
       checked = 0
       unchecked = 0
       total = $scope.hosts.length
       angular.forEach $scope.hosts, (item)->
-        checked   +=  ($scope.checkboxes.items[item.id]) || 0
-        unchecked += (!$scope.checkboxes.items[item.id]) || 0
-      $scope.checkboxes.checked = (checked == total) if (unchecked == 0) || (checked == 0)
+        checked   +=  ($scope.selection.items[item.id]) || 0
+        unchecked += (!$scope.selection.items[item.id]) || 0
+      $scope.selection.checked = (checked == total) if (unchecked == 0) || (checked == 0)
       # grayed checkbox
       angular.element(document.getElementById("select_all")).prop("indeterminate", (checked != 0 && unchecked != 0));
     , true)
 
-    $scope.viewHost = (hostId)->
-      $state.go 'host_view', {id: hostId}
   ]
 

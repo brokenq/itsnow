@@ -19,7 +19,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import java.net.URI;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +43,12 @@ public class SitesControllerTest extends SessionSupportedControllerTest {
     @Before
     public void setup() {
 
+        site = new Site();
+        site.setId(1L);
+        site.setSn("001");
+        site.setName("大众五厂");
+        site.setAddress("待定");
+
         Department department = new Department();
         department.setId(1L);
         department.setSn("007");
@@ -54,27 +59,21 @@ public class SitesControllerTest extends SessionSupportedControllerTest {
 
         List<Department> departments = new ArrayList<Department>();
         departments.add(department);
+        site.setDepartments(departments);
 
-        site = new Site();
-        site.setId(1L);
-        site.setSn("001");
-        site.setName("大众五厂");
-        site.setAddress("待定");
         ProcessDictionary dictionary = new ProcessDictionary();
         dictionary.setId(1L);
         site.setProcessDictionary(dictionary);
+
         WorkTime workTime = new WorkTime();
         workTime.setId(1L);
         site.setWorkTime(workTime);
+
         site.setDescription("It's test.");
-        site.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        site.setUpdatedAt(site.getCreatedAt());
-        site.setDepartments(departments);
+        site.creating();
 
         sites = new ArrayList<Site>();
         sites.add(site);
-
-
 
         reset(siteService);
     }
@@ -147,9 +146,7 @@ public class SitesControllerTest extends SessionSupportedControllerTest {
 
         replay(siteService);
 
-        URI uri = new URI("/api/sites/001");
-
-        MockHttpServletRequestBuilder request = delete(uri);
+        MockHttpServletRequestBuilder request = delete("/api/sites/001");
         decorate(request);
         this.browser.perform(request).andExpect(status().isOk());
     }

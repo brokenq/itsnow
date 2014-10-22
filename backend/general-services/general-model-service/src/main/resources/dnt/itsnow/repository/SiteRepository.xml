@@ -24,6 +24,7 @@
         <!-- 多对一关系 -->
         <association property="processDictionary" column="process_dictionary_id" javaType="ProcessDictionary">
             <id property="id" column="dictionaryId"/>
+            <result property="sn" column="dictionarySn"/>
             <result property="code" column="dictionaryCode"/>
             <result property="name" column="dictionaryName"/>
             <result property="display" column="dictionaryDisplay"/>
@@ -42,32 +43,70 @@
     </resultMap>
 
     <sql id="selectSite">
-        select s.id, s.sn, s.name, s.address, s.description, s.created_at, s.updated_at,
-        w.id as workTimeId, w.sn as workTimeSn, w.name as workTimeName, w.work_days as workTimeWorkDays, w.start_at as workTimeStartAt, w.end_at as workTimeEndAt,
-        p.id as dictionaryId, p.code as dictionaryCode, p.name as dictionaryName, p.display as dictionaryDisplay, p.val as dictionaryVal, p.state as dictionaryState, p.type as dictionaryType,
-        d.id as departmentId, d.name as departmentName, d.sn as departmentSn, d.description as departmentDescription
-        from sites s
-        left join work_times w on s.work_time_id=w.id
-        left join process_dictionaries p on s.process_dictionary_id=p.id
-        left join site_depts sd on s.id = sd.site_id
-        left join departments d on sd.dept_id = d.id
+        SELECT s.id,
+            s.sn,
+            s.name,
+            s.address,
+            s.description,
+            s.created_at,
+            s.updated_at,
+            w.id          AS workTimeId,
+            w.sn          AS workTimeSn,
+            w.name        AS workTimeName,
+            w.work_days   AS workTimeWorkDays,
+            w.start_at    AS workTimeStartAt,
+            w.end_at      AS workTimeEndAt,
+            p.id          AS dictionaryId,
+            p.sn          AS dictionarySn,
+            p.code        AS dictionaryCode,
+            p.name        AS dictionaryName,
+            p.display     AS dictionaryDisplay,
+            p.val         AS dictionaryVal,
+            p.state       AS dictionaryState,
+            p.type        AS dictionaryType,
+            d.id          AS departmentId,
+            d.name        AS departmentName,
+            d.sn          AS departmentSn,
+            d.description AS departmentDescription
+        FROM   sites s
+            LEFT JOIN work_times w
+                ON s.work_time_id = w.id
+            LEFT JOIN process_dictionaries p
+                ON s.process_dictionary_id = p.id
+            LEFT JOIN site_depts sd
+                ON s.id = sd.site_id
+            LEFT JOIN departments d
+                ON sd.dept_id = d.id
     </sql>
 
-    <select id="findBySn" parameterType="string" resultType="Site" resultMap="siteResult">
+    <select id="count" resultType="java.lang.Integer">
+        SELECT COUNT(0) FROM sites
+        <where>
+            <if test="keyword != null and keyword != ''">
+                name LIKE #{keyword} OR address LIKE #{keyword}
+            </if>
+        </where>
+    </select>
+
+    <select id="findBySn" resultMap="siteResult">
         <include refid="selectSite"/>
         where s.sn=#{sn}
     </select>
 
-    <select id="findAll" parameterType="string" resultType="Site" resultMap="siteResult">
+    <select id="findAll" resultMap="siteResult">
         <include refid="selectSite"/>
-        order by ${sort} ${dir} limit #{offset}, #{size}
-    </select>
-
-
-    <select id="findAllByKeyword" parameterType="string" resultType="Site" resultMap="siteResult">
-        <include refid="selectSite"/>
-        where s.name like #{keyword} or s.sn like #{keyword}
-        order by ${sort} ${dir} limit #{offset}, #{size}
+        <where>
+            <if test="keyword != null and keyword != ''">
+                s.name LIKE #{keyword} OR s.address LIKE #{keyword}
+            </if>
+        </where>
+        <if test="pageable.sort != null">
+            ORDER BY #{pageable.sort}
+        </if>
+        <trim prefix="LIMIT" prefixOverrides=",">
+            <if test="pageable.offset > 0">#{pageable.offset}</if>
+            <if test="pageable.pageSize > 0">, #{pageable.pageSize}</if>
+        </trim>
     </select>
 
 </mapper>

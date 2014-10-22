@@ -1,5 +1,5 @@
 // List System
-angular.module('System.Role', ['ngTable', 'ngResource'])
+angular.module('System.Role', ['ngTable', 'ngResource', 'dnt.action.service'])
 
     .config(function ($stateProvider) {
         $stateProvider.state('system.role', {
@@ -10,101 +10,86 @@ angular.module('System.Role', ['ngTable', 'ngResource'])
     })
 
     .factory('RoleService', ['$resource', function ($resource) {
-        return $resource("/api/msc-roles", {
-            query: { method: 'GET' },
-            remove: { method: 'DELETE' }
+        return $resource("/api/roles/:name", {}, {
+            get: { method: 'GET', params: {name: '@name'}},
+            save: { method: 'POST'},
+            update: { method: 'PUT', params: {name: '@name'}},
+            query: { method: 'GET', isArray: true},
+            remove: { method: 'DELETE', params: {name: '@name'}},
+            getUsers: { method: 'GET', params: {name: 'users'}, isArray: true}
         });
     }
     ])
 
-    .factory('RoleDetailService', ['$resource', function ($resource) {
-        return $resource("/api/msc-roles/:name",{name:'@name'});
-    }
-    ])
-
-    .controller('RoleListCtrl', ['$scope', '$location', '$timeout', 'ngTableParams', 'RoleService', 'RoleDetailService', function ($scope, $location, $timeout, NgTableParams, roleService, roleDetailService) {
-        var options = {
-            page: 1,           // show first page
-            count: 10           // count per page
-        };
-
-        var args = {
-            total: 0,
-            getData: function ($defer, params) {
-                $location.search(params.url()); // put params in url
-                roleService.query(params.url(), function (data, headers) {
-                        $timeout(function () {
-                                params.total(headers('total'));
-                                $defer.resolve($scope.role = data);
-                            },
-                            500
-                        );
-                    }
-                );
+    // 过滤拼接地点后的最后一个逗号
+    .filter('colFilter', function () {
+        var colFilter = function (input) {
+            var name = '';
+            if (input !== null && input !== undefined) {
+                for (var i = 0; i < input.length; i++) {
+                    name += input[i].name + ', ';
+                }
+                name = name.substring(0, name.length - 2);
             }
+            return name || '无';
         };
-        $scope.tableParams = new NgTableParams(angular.extend(options, $location.search()), args);
+        return colFilter;
+    })
 
-        $scope.checkboxes = { 'checked': false, items: {} };
+    .controller('RoleListCtrl', ['$scope', '$location', '$timeout', 'ngTableParams', 'RoleService', 'ActionService',
+        function ($scope, $location, $timeout, NgTableParams, roleService, ActionService) {
 
-        // watch for check all checkbox
-        $scope.$watch('checkboxes.checked', function (value) {
-            angular.forEach($scope.role, function (item) {
-                if (angular.isDefined(item.sn)) {
-                    $scope.checkboxes.items[item.sn] = value;
-
+            var options = {
+                page: 1,           // show first page
+                count: 10           // count per page
+            };
+            var args = {
+                total: 0,
+                getData: function ($defer, params) {
+                    $location.search(params.url()); // put params in url
+                    roleService.query(params.url(), function (data, headers) {
+                            $timeout(function () {
+                                    params.total(headers('total'));
+                                    $defer.resolve($scope.roles = data);
+                                },
+                                500
+                            );
+                        }
+                    );
                 }
-            });
-        });
+            };
+            $scope.tableParams = new NgTableParams(angular.extend(options, $location.search()), args);
 
-        // watch for data checkboxes
-        $scope.$watch('checkboxes.items', function (values) {
-                if (!$scope.role) {
-                    return;
+            $scope.selection = {checked: false, items: {}};
+            $scope.getRoleByName = function (name) {
+//            var idInt = parseInt(id, 10);
+                var i;
+                for (i in $scope.roles) {
+                    var role = $scope.roles[i];
+                    if (role.name === name) {
+                        return role;
+                    }
                 }
-                var checked = 0;
-                var unchecked = 0;
-                var total = $scope.role.length;
-                angular.forEach($scope.role, function (item) {
-                    checked += ($scope.checkboxes.items[item.sn]) || 0;
-                    unchecked += (!$scope.checkboxes.items[item.sn]) || 0;
+            };
+            $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.getRoleByName});
+
+            // watch for check all checkbox
+            $scope.$watch('selection.checked', function (value) {
+                angular.forEach($scope.roles, function (item) {
+                    if (angular.isDefined(item.name)) {
+                        $scope.selection.items[item.name] = value;
+                    }
                 });
-                if ((unchecked === 0) || (checked === 0)) {
-                    $scope.checkboxes.checked = (checked == total);
-                }
-                // grayed checkbox
-                angular.element(document.getElementById("select_all")).prop("indeterminate", (checked !== 0 && unchecked !== 0));
-            },
-           true
-        );
+            });
 
-        var roleName = {name:'null'};
-        var detailArgs = {
-            total: 0,
-            getData: function ($defer, params) {
-                $location.search(params.url()); // put params in url
-                roleDetailService.query(params.url(), roleName, function (data, headers) {
-                        $timeout(function () {
-                                params.total(headers('total'));
-                                $defer.resolve($scope.detailRoles = data.length>0 ? data[0].details : data);
-                            },
-                            500
-                        );
-                    }
-                );
-            }
-        };
-        $scope.detailTableParams = new NgTableParams(angular.extend(options, $location.search()), detailArgs);
+            $scope.deleteRole = function (role) {
+                roleService.remove({name: role.name},function(){
+//                    console.log('remove function backcalling!');
+                    $scope.tableParams.reload();
+//                    console.log('remove function backcalled!');
+                });
+            };
 
-        $scope.changeSelection = function (role) {
-            roleName = {name:role.name};
-            $scope.detailTableParams.reload();
-        };
-
-        $scope.deleteRole = function () {
-            roleService.remove($scope.role);
-        };
-
-    }
+        }
     ]);
 

@@ -1,12 +1,13 @@
-DELETE FROM users;
-SET @MSC_ID = (SELECT id from accounts where sn = 'msc');
-SET @MSU001 = (SELECT id from accounts where sn = 'msu_001');
-SET @MSU002 = (SELECT id from accounts where sn = 'msu_002');
-SET @MSP001 = (SELECT id from accounts where sn = 'msp_001');
-SET @MSP002 = (SELECT id from accounts where sn = 'msp_002');
+
+DELETE FROM itsnow_msc.users;
+SET @MSC_ID = (SELECT id from itsnow_msc.accounts where sn = 'msc');
+SET @MSU001 = (SELECT id from itsnow_msc.accounts where sn = 'msu_001');
+SET @MSU002 = (SELECT id from itsnow_msc.accounts where sn = 'msu_002');
+SET @MSP001 = (SELECT id from itsnow_msc.accounts where sn = 'msp_001');
+SET @MSP002 = (SELECT id from itsnow_msc.accounts where sn = 'msp_002');
 
 
-INSERT INTO users(account_id, username, nick_name, email, phone, password) VALUES
+INSERT INTO itsnow_msc.users(account_id, username, nick_name, email, phone, password) VALUES
 (@MSC_ID, 'admin',     'Administrator', 'admin@itsnow.com',    '13012345678', '54442704733e9cddaeb28d54fb631f56247d326288d9d4e09da2039dff070bd47430a0e6b3560cd2'),
 (@MSC_ID, 'root',      'Super Admin',   'root@itsnow.com',     '13112345678', 'e81a8a2dc76c227258a1bd5551f3d3f45e21deeec634c052dc4e7acd82c0dd92db674b56d22dd637'),
 (@MSU001, 'steve.li',  'Steven Li',     'steve@csvw.com',      '13212345678', 'd73e6f76127849f457d17eb663f3f9605c89d1b9d596a5842e13bbcb56e658bbaceb07b8da9886b8'),
@@ -27,14 +28,14 @@ INSERT INTO users(account_id, username, nick_name, email, phone, password) VALUE
 -- 方式生成
 
 -- 更新以上账户的主用户
-SET @admin_id = (SELECT id FROM users where username = 'admin');
-SET @steven_li_id = (SELECT id FROM users where username = 'steve.li');
-SET @sharp_liu_id = (SELECT id FROM users where username = 'sharp.liu');
-SET @jacky_cao_id = (SELECT id FROM users where username = 'jacky.cao');
-SET @rose_zhou_id = (SELECT id FROM users where username = 'rose.zhou');
+SET @admin_id = (SELECT id FROM itsnow_msc.users where username = 'admin');
+SET @steven_li_id = (SELECT id FROM itsnow_msc.users where username = 'steve.li');
+SET @sharp_liu_id = (SELECT id FROM itsnow_msc.users where username = 'sharp.liu');
+SET @jacky_cao_id = (SELECT id FROM itsnow_msc.users where username = 'jacky.cao');
+SET @rose_zhou_id = (SELECT id FROM itsnow_msc.users where username = 'rose.zhou');
 
-UPDATE accounts SET user_id = @admin_id WHERE id = @MSC_ID;
-UPDATE accounts SET user_id = @steven_li_id WHERE id = @MSU001;
-UPDATE accounts SET user_id = @sharp_liu_id WHERE id = @MSU002;
-UPDATE accounts SET user_id = @jacky_cao_id WHERE id = @MSP001;
-UPDATE accounts SET user_id = @rose_zhou_id WHERE id = @MSP002;
+UPDATE itsnow_msc.accounts SET user_id = @admin_id WHERE id = @MSC_ID;
+UPDATE itsnow_msc.accounts SET user_id = @steven_li_id WHERE id = @MSU001;
+UPDATE itsnow_msc.accounts SET user_id = @sharp_liu_id WHERE id = @MSU002;
+UPDATE itsnow_msc.accounts SET user_id = @jacky_cao_id WHERE id = @MSP001;
+UPDATE itsnow_msc.accounts SET user_id = @rose_zhou_id WHERE id = @MSP002;

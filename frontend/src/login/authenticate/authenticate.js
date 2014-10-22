@@ -17,7 +17,7 @@ angular
           templateUrl: 'authenticate/authenticate.tpl.jade'
         }
       },
-      data: { pageTitle: '登录' }
+      data: { pageTitle: '系统登录' }
     });
   })
 

@@ -1,0 +1,120 @@
+mixin step(step, title)
+  li(data-step=step, class!=attributes.class)
+    span.step #{step}
+    span.title #{title}
+mixin stepPane(step)
+  .step-pane(id="step#{step}", class!=attributes.class, data-step=step)
+    block
+mixin fieldGroup(title,help)
+  .form-group.has-info(ng-class!=attributes.ngClass, ng-hide!=attributes.ngHide, ng-show!=attributes.ngShow)
+    label.col-xs-12.col-sm-3.control-label.no-padding-right(for!=attributes.for) #{title}
+    .col-xs-12.col-sm-5(class!=attributes.class)
+      block
+    .help-block.col-xs-12.col-sm-reset.inline #{help}
+mixin detail(label, value)
+  .profile-info-row
+    .profile-info-name #{label}
+    .profile-info-value #{value}
+
+.signup-box.visible.widget-box.no-border#signup-box
+  .widget-body
+    .widget-main.fuelux
+      h4.header.green.lighter.bigger
+        i.icon-group.blue
+        | 注册帐户
+      .row-fluid.wizard#fuelux-wizard(data-initialize="wizard",data-adjust="false")
+        ul.steps
+          +step(1, "基本信息")(class="active")
+          +step(2, "管理员信息")
+          +step(3, "凭证信息")
+          +step(4, "完成注册")
+        hr
+        .step-content.row-fluid.position-relative#step-container
+          +stepPane(1)(class="active")
+            form.form-horizontal(novalidate,name="step1Form",role="form")
+              +fieldGroup("帐户类型","{{registration.typeHelp()}}")(class="radio")
+                label
+                  input.ace#registration_type_enterprise(name="registration_type", ng-model="registration.type", value="Enterprise", type="radio")
+                  span.lbl 企业
+                label
+                  input.ace#registration_type_individual(name="registration_type", ng-model="registration.type", value="Individual", type="radio")
+                  span.lbl 个人
+              +fieldGroup("服务选择", "选择您需要在itsnow平台完成的工作")(class="checkbox")
+                label
+                  input.ace#registration_as_user(name="registration_asUser", ng-model="registration.asUser", ng-disabled="registration.individual()", value="user", type="checkbox")
+                  span.lbl 服务使用方
+                label
+                  input.ace#registration_as_provider(name="registration_asProvider", ng-model="registration.asProvider",ng-disabled="registration.individual()", value="provider", type="checkbox")
+                  span.lbl 服务供应方
+              +fieldGroup("{{registration.nameLabel()}}","请设置{{registration.nameLabel()}}")
+                span.block.input-icon.input-icon-right
+                  input.form-control#registration_account_name(name="registration_account_name", ng-model="registration.account.name",ng-required,ng-minlength="2",ng-maxlength="50", ng-unique="/public/accounts/check/name/", type="text", placeholder="{{registration.namePlaceholder()}}")
+                  i.icon-group
+              +fieldGroup("自定义域名","仅由英文,数字，下划线组合")
+                .input-group
+                  .input-group-addon http://
+                  input.span2#registration_account_domain(name="registration_account_domain", ng-model="registration.account.domain", ng-required="true", ng-minlength="2", ng-maxlength="10",ng-unique="/public/accounts/check/domain/", type="text", placeholder="2-10位", ng-pattern='/^[\\w|\\d|_]+$/')
+                  .input-group-addon .itsnow.com
+          +stepPane(2)
+            form.form-horizontal(novalidate,name="step2Form",role="form")
+              +fieldGroup("用户名","管理员帐户登录名")(for="registration_user_username")
+                span.block.input-icon.input-icon-right
+                  input.form-control#registration_user_username(name="registration_user_username", ng-model="registration.user.username", ng-required, ng-minlength="4", ng-maxlength="20", ng-pattern='/^[a-zA-Z0-9]|_|\\-|\\.]+$/', ng-unique="/public/users/check/username/", type="text", placeholder="用户名")
+                  i.icon-user
+              +fieldGroup("电子邮箱","用于找回密码，接收通知等")(for="registration_user_email")
+                span.block.input-icon.input-icon-right
+                  input.form-control#registration_user_email(name="registration_user_email", ng-model="registration.user.email", ng-required, ng-unique="/public/users/check/email/", type="email", placeholder="someone@company.com")
+                  i.icon-envelope
+              +fieldGroup("电话号码","帐号审批通过后，会通过该电话与您联系")(for="registration_user_phone")
+                span.block.input-icon.input-icon-right
+                  input.form-control#registration_user_phone(name="registration_user_phone", ng-model="registration.user.phone", ng-required, ng-unique="/public/users/check/phone/", type="text", placeholder="13912345678", ng-pattern='/[\\d|-]{8,11}/')
+                  i.icon-headphones
+              +fieldGroup("密码","设置6-20位密码")(for="registration_user_password")
+                span.block.input-icon.input-icon-right
+                  input.form-control#registration_user_password(name="registration_user_password", ng-model="registration.user.password", ng-required, ng-minlength="6", ng-maxlength="20", type="password", placeholder="数字,字母，符号组合")
+                  i.icon-lock
+              +fieldGroup("重复密码","重复以上密码")(for="registration_user_repeat_password")
+                span.block.input-icon.input-icon-right
+                  input.form-control#registration_user_repeat_password(name="registration_user_repeat_password", ng-model="registration.user.repeatPassword", ng-required, type="password", placeholder="重复密码",pw-check="registration_user_password")
+                  i.icon-retweet
+          +stepPane(3)
+            form.form-horizontal(novalidate,name="step3Form", role="form")
+              +fieldGroup("营业执照","请上传营业执照复印件")(for="registration_attachments_yyzz", ngHide="registration.individual()")
+                span.block.input-icon.input-icon-right
+                  input.width-100.form-control#registration_attachments_yyzz(name="registration_attachments_yyzz", ng-model="registration.attachments.yyzz", ng-required, type="file")
+                  i.icon-briefcase
+              +fieldGroup("税务登记证","请上传营业执照复印件")(for="registration_attachments_swdjz", ngHide="registration.individual()")
+                span.block.input-icon.input-icon-right
+                  input.width-100.form-control#registration_attachments_swdjz(name="registration_attachments_swdjz", ng-model="registration.attachments.swdjz", ng-required, type="file")
+                  i.icon-certificate
+              +fieldGroup("个人身份证","请上传个人身份证复印件")(for="registration_attachments_id_card", ngShow="registration.individual()")
+                span.block.input-icon.input-icon-right
+                  input.width-100.form-control#registration_attachments_id_card(name="registration_attachments_id_card", ng-model="registration.attachments.id_card", ng-required, type="file")
+                  i.icon-credit-card
+
+
+          +stepPane(4)
+            .profile-user-info.profile-user-info-striped
+              +detail("帐户类型", "{{registration.type}}")
+              +detail("服务选择", "{{registration.serviceRoles()}}")
+              +detail("企业名称", "{{registration.account.name}}")
+              +detail("自定义域名", "http://{{registration.account.domain}}.itsnow.com")
+              +detail("--", " ")
+              +detail("用户名", "{{registration.user.username}}")
+              +detail("电子邮箱", "{{registration.user.email}}")
+              +detail("电话号码", "{{registration.user.phone}}")
+            form.form-horizontal(novalidate,name="step4Form", role="form")
+              label.block.center
+                input.ace#accept_license(name="acceptLicense", ng-model="acceptLicense", type="checkbox", value="accept")
+                span.lbl 我接受使用协议
+        hr
+        .row-fluid.actions
+          button.btn.btn-white.pull-left(ui-sref="authenticate")
+            i.icon-desktop
+            | 返回
+          button.btn.btn-prev(disabled)
+            i.icon-arrow-left
+            | 上一步
+          button.btn.btn-success.btn-next(data-last="注册")
+            | 下一步
+            i.icon-arrow-right.icon-on-right

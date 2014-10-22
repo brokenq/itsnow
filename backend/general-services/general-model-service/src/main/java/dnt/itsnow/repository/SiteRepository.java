@@ -1,6 +1,7 @@
 package dnt.itsnow.repository;
 
 import dnt.itsnow.model.Site;
+import dnt.itsnow.platform.service.Pageable;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -30,23 +31,12 @@ public interface SiteRepository {
             " WHERE id              = #{id} ")
     public void update(Site site);
 
-    @Select("select count(0) from sites")
-    public int count();
+    public int count(@Param("keyword") String keyword);
 
     public List<Site> findAll(
-            @Param("sort") String sort,
-            @Param("dir") String dir,
-            @Param("offset") int offset,
-            @Param("size") int size);
-
-    @Select("select count(*) from sites where name like #{keyword} or sn like #{keyword}")
-    public int countByKeyword(@Param("keyword") String keyword);
-
-    public List<Site> findAllByKeyword(@Param("keyword") String keyword,
-                                    @Param("sort") String sort,
-                                    @Param("dir") String dir,
-                                    @Param("offset") int offset,
-                                    @Param("size") int size);
+            @Param("keyword") String keyword,
+            @Param("pageable") Pageable pageable);
 
     public Site findBySn(@Param("sn") String sn);
+
 }

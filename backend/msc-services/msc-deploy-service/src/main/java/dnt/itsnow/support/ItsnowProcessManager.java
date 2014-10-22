@@ -133,6 +133,14 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
     }
 
     @Override
+    public void update(ItsnowProcess process) throws ItsnowProcessException {
+        logger.info("Updating {}", process);
+        process.updating();
+        repository.update(process);
+        logger.info("Updated  {}", process);
+    }
+
+    @Override
     public String start(ItsnowProcess process) throws ItsnowProcessException {
         logger.info("Starting {}", process);
         if( process.getStatus() != ProcessStatus.Stopped)

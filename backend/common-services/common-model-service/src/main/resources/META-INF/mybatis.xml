@@ -21,5 +21,14 @@
         <typeAlias type="dnt.itsnow.model.SLO" alias="SLO"/>
 
         <typeAlias type="dnt.itsnow.model.ProcessDictionary" alias="ProcessDictionary"/>
+
+        <typeAlias type="dnt.itsnow.model.ItsnowHost" alias="ItsnowHost"/>
+        <typeAlias type="dnt.itsnow.model.HostExtend" alias="HostExtend"/>
+        <typeAlias type="dnt.itsnow.model.ItsnowSchema" alias="ItsnowSchema"/>
+        <typeAlias type="dnt.itsnow.model.ItsnowProcess" alias="ItsnowProcess"/>
     </typeAliases>
+
+    <typeHandlers>
+        <typeHandler handler="dnt.itsnow.util.PropertiesHandler" javaType="java.util.Properties" jdbcType="VARCHAR"/>
+    </typeHandlers>
 </configuration>

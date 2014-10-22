@@ -6,7 +6,7 @@ package dnt.itsnow.config;
 import dnt.itsnow.service.CommonUserService;
 import dnt.itsnow.service.MutableAccountService;
 import dnt.itsnow.test.config.ApplicationControllerConfig;
-import dnt.itsnow.web.controller.AccountsSignupController;
+import dnt.itsnow.web.controller.PublicAccountsController;
 import dnt.itsnow.web.controller.MutableAccountsController;
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -41,8 +41,8 @@ public class MutableAccountsControllerConfig extends ApplicationControllerConfig
     }
 
     @Bean
-    public AccountsSignupController accountsSignupController(){
-        return new AccountsSignupController();
+    public PublicAccountsController accountsSignupController(){
+        return new PublicAccountsController();
     }
 
 
