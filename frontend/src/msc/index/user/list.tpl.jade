@@ -25,7 +25,7 @@ div(ui-view='')
 
     .btn-toolbar(role="toolbar")
       .btn-group
-        +tool_button("", "refresh", "", "*", "", "")
+        +tool_button("tableParams.reload()", "refresh", "", "*", "", "")
       .btn-group
         +tool_button("actionService.gotoState('system.user.detail', $event)", "edit", "编辑", "1", "", "")
       .btn-group
@@ -47,9 +47,9 @@ div(ui-view='')
         td(width="30" style="text-align: left" header="'ngTableCheckboxHeader'")
           input(type="checkbox" ng-model="selection.items[user.id]")
         td(data-title="'姓名'") 
-          a(ui-sref="user_view({name: '{{user.name}}'})") {{user.name}}
-        td(data-title="'登录名'") 
-          a(ui-sref="user_view({name: '{{user.name}}'})") {{user.username}}
+          a(ui-sref="user_view({name: '{{user.name}}'})") {{user | formatUser}}
+        td(data-title="'所属帐户'")
+          a(ui-sref="account_view({sn: '{{user.account.sn}}'})") {{user.account.name}}
         td(data-title="'邮箱'") 
           a(href="mailto:{{user.email}}") {{user.email}}
         td(data-title="'电话'", align="right") {{user.phone}}

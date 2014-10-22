@@ -28,9 +28,11 @@
     </select>
 
     <resultMap id="userResult" type="User" autoMapping="true">
+        <id  property="id" column="id"/>
         <result column="account_id" property="accountId"/>
     </resultMap>
     <resultMap id="userWithAccount" type="User" autoMapping="true">
+        <id  property="id" column="id"/>
         <association property="account" resultMap="dnt.itsnow.repository.CommonAccountRepository.accountWithUserResult" columnPrefix="account_"/>
     </resultMap>
 
