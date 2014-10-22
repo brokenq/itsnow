@@ -16,8 +16,8 @@
         <result property="updatedAt" column="updated_at"/>
         <result column="configuration" property="configuration" typeHandler="dnt.itsnow.util.PropertiesHandler"/>
         <association property="extend" javaType="HostExtend">
-            <result property="processCount" column="process_count"/>
-            <result property="schemaCount" column="schema_count"/>
+            <result property="processesCount" column="processes_count"/>
+            <result property="schemasCount" column="schemas_count"/>
         </association>
     </resultMap>
 
@@ -33,9 +33,9 @@
     </select>
 
     <select id="findAllByKeyword" resultMap="hostResult">
-        SELECT t.*, COUNT(s.id) schema_count FROM
+        SELECT t.*, COUNT(s.id) schemas_count FROM
         (
-            SELECT h.*, COUNT(p.id) process_count FROM itsnow_hosts h
+            SELECT h.*, COUNT(p.id) processes_count FROM itsnow_hosts h
                 LEFT OUTER JOIN itsnow_processes p ON h.id = p.host_id
             <if test="keyword != null and keyword != ''">
                 <where>

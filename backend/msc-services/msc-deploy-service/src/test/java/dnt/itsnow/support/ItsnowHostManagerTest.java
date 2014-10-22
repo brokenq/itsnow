@@ -116,4 +116,27 @@ public class ItsnowHostManagerTest {
             Assert.hasText("Can't quit host", e.getMessage());
         }
     }
+
+    @Test
+    public void testResolveAddress() throws Exception {
+        replay(systemInvokeService);
+        replay(repository);
+
+        Assert.isTrue("172.16.3.4".equals(hostManager.resolveAddress("srv2.itsnow.com")));
+        Assert.isTrue("172.16.3.4".equals(hostManager.resolveAddress("srv2")));
+        try {
+            hostManager.resolveAddress("no-routes");
+        } catch (ItsnowHostException e) {
+            Assert.isTrue(e.getMessage().contains("Bad host name"));
+        }
+    }
+
+    @Test
+    public void testResolveName() throws Exception {
+        replay(systemInvokeService);
+        replay(repository);
+
+        String hostName = hostManager.resolveName("172.16.3.4");
+        Assert.isTrue("srv2.itsnow.com".equals(hostName));
+    }
 }

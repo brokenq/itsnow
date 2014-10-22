@@ -72,20 +72,6 @@ angular.module( 'MscLogin.Signup', [
       $scope.acceptLicense = true;
       $scope.registration = registration;
       $scope.enterpriseRole = enterpriseRole;
-      //TODO 1. 改为 directive(A): groupStyle
-      //TODO 2. 增加一个根据状态改变tip的directive(E): inputTip
-      $scope.inputStyle = function(formName, fieldName){
-        var form = $scope[formName];
-        var field = form[fieldName];
-        if(field.$dirty) {
-          return field.$invalid ? 'has-error' : 'has-success';
-        }else{
-          return 'has-info';
-        }
-      };
-      //TODO 3. 考虑增加额外的机制，委托后端进行校验，如：
-      //  用户输入 accountName, domainName, userName, email, phone的时候
-      //  本地校验通过之后，均要发起请求向远端进行额外的校验
       //TODO 4. form submit 等于 触发wizard next
       $scope.$watch('registration.type', function(newValue, oldValue){
         if(registration.individual()){
@@ -99,10 +85,6 @@ angular.module( 'MscLogin.Signup', [
         }
       });
       $scope.submit = function(success,failure){
-        //TODO 正则表达式没完全生效
-        //  1. domain中的.都没有被检查出来
-        //  2. 重复密码没有
-        //  3. 电话号码是 区号+7-8位固话 或 11 位手机号码的pattern没校验出来
         //TODO 文件信息没能上传上来
         //submit the registration information to server side by user service
         accountService.save(registration, success, failure);

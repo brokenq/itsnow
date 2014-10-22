@@ -15,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 
 /**
  * <h1>MSC/MSU注册</h1>
@@ -65,10 +66,10 @@ public class PublicAccountsController extends ApplicationController<Account> {
         }
     }
 
-    @RequestMapping("{field}/{value}")
-    public String checkUnique(@PathVariable("field") String field, @PathVariable("value") String value ){
+    @RequestMapping("check/{field}/{value}")
+    public HashMap checkUnique(@PathVariable("field") String field, @PathVariable("value") String value ){
         Account found;
-        if("username".equalsIgnoreCase(field)){
+        if("name".equalsIgnoreCase(field)){
             found = accountService.findByName(value);
         }else if("domain".equalsIgnoreCase(field)){
             found = accountService.findByDomain(value);
@@ -78,7 +79,7 @@ public class PublicAccountsController extends ApplicationController<Account> {
         if( found != null ){
             throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate field: " + field + " with value: " + value);
         }else{
-            return "ok";
+            return new HashMap();
         }
     }
 }

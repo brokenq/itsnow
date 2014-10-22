@@ -38,11 +38,32 @@ public interface ItsnowHostService {
     ItsnowHost findByAddress(String address);
 
     /**
+     * <h2>根据name查找主机</h2>
+     * @param name 主机名称
+     * @return 主机名称，查不到则返回null
+     */
+    ItsnowHost findByName(String name);
+
+    /**
      * <h2>根据id查找主机 </h2>
      * @param hostId 主机id
      * @return 主机对象，查不到则返回null
      */
     ItsnowHost findById(Long hostId);
+    
+    /**
+     * <h2>根据name解析主机address </h2>
+     * @param name 主机名称
+     * @return 主机地址
+     */
+    String resolveAddress(String name)throws ItsnowHostException;
+
+    /**
+     * <h2>根据address解析主机名 </h2>
+     * @param address 主机地址
+     * @return 主机名
+     */
+    String resolveName(String address)throws ItsnowHostException;
 
     /**
      * <h2>创建主机</h2>

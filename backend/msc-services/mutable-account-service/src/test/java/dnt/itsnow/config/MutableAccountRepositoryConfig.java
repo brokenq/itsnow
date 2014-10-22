@@ -23,6 +23,7 @@ public class MutableAccountRepositoryConfig extends RepositoryConfigWithH2 imple
                 "classpath:META-INF/migrate/20140722125016_create_users.sql@up",
                 "classpath:META-INF/migrate/20140728142611_insert_accounts.sql@up",
                 "classpath:META-INF/migrate/20140728143025_insert_users.sql@up",
+                "classpath:META-INF/setup/insert_itsnow_deploy_resources.sql",
         };
     }
 

@@ -5,10 +5,13 @@ angular.module("Itsnow.Login", [
     'ngResource',
     'ngLocale',
     'ui.router',
+    'jcs-autoValidate',
+
 
     'Lib.Interceptor',
     'Lib.Templates',
     'Lib.Directives',
+    'Lib.JcsEnhance',
     'Login.Templates',
     'Itsnow.Security',
     'Login.Authenticate',
@@ -25,5 +28,15 @@ angular.module("Itsnow.Login", [
             $rootScope.pageTitle = toState.data.pageTitle + ' | ItsNow' ;
         }
     });
-  }]);
+  }])
+
+  // angular-auto-validate error message
+  .run(['defaultErrorMessageResolver', 'validator', 'AceElementModifier',
+    function (defaultErrorMessageResolver, validator, aceElementModifier) {
+      defaultErrorMessageResolver.setI18nFileRootPath('assets/json');
+      defaultErrorMessageResolver.setCulture('zh-CN');
+      validator.registerDomModifier(aceElementModifier.key, aceElementModifier);
+      validator.setDefaultElementModifier(aceElementModifier.key);
+    }
+  ]);
 

@@ -18,12 +18,35 @@ angular.module('Lib.Directives', [])
         elem.on 'blur', () ->
           scope.$apply ->
             val = elem.val()
-            # GET /accounts/check_unique/name/$accountName
-            # GET /accounts/check_unique/domain/$accountDomain
-            # GET /users/check_unique/username/$username
-            # GET /users/check_unique/email/$email
-            # GET /users/check_unique/phone/$phone
-            async({method: 'GET', url: attrs.ngUnique + "/" + val}).success (data)->
-              ctrl.$setValidity('unique', data.status);
+            return unless val?
+            return if val == ''
+            # GET /public/accounts/check/name/$accountName
+            # GET /public/accounts/check/domain/$accountDomain
+            # GET /public/users/check/username/$username
+            # GET /public/users/check/email/$email
+            # GET /public/users/check/phone/$phone
+            async.get(attrs.ngUnique + val).success(->
+              ctrl.$setValidity('unique', true);
+            ).error(->
+              ctrl.$setValidity('unique', false)
+            )
+    }
+  ])
+
+  .directive('dntDuplicate', ['$http', (async)->
+    {
+      require: 'ngModel'
+      link: (scope, elem, attrs, ctrl)->
+        elem.on 'blur', ->
+          scope.$apply ->
+            val = elem.val()
+            return unless val?
+            return if val == ''
+
+            async.get(elem.attr('check-url') + "?value=" + val).success((data)->
+              ctrl.$setValidity('duplicate', scope.checkName(data, elem))
+            ).error(->
+              ctrl.$setValidity('duplicate', false)
+            )
     }
   ])

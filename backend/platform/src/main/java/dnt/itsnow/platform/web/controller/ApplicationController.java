@@ -22,6 +22,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.WebRequest;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /** The Rest Controller */
 @Scope(WebApplicationContext.SCOPE_REQUEST)
 public class ApplicationController<T extends Record> {
@@ -56,8 +59,9 @@ public class ApplicationController<T extends Record> {
         if (HttpStatus.INTERNAL_SERVER_ERROR.equals(status)) {
             request.setAttribute("javax.servlet.error.exception", ex, WebRequest.SCOPE_REQUEST);
         }
-
-        return new ResponseEntity<Object>(body, headers, status);
+        Map<String,String> map = new HashMap<String,String>();
+        map.put("error", body);
+        return new ResponseEntity<Object>(map, headers, status);
     }
 
     /**

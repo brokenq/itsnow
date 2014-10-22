@@ -31,7 +31,7 @@
         <result column="account_id" property="accountId"/>
     </resultMap>
     <resultMap id="userWithAccount" type="User" autoMapping="true">
-        <association property="account" resultMap="dnt.itsnow.repository.CommonAccountRepository.accountResult" columnPrefix="account_"/>
+        <association property="account" resultMap="dnt.itsnow.repository.CommonAccountRepository.accountWithUserResult" columnPrefix="account_"/>
     </resultMap>
 
 </mapper>
