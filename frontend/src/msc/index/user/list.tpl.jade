@@ -38,7 +38,7 @@ div(ui-view='')
         .nav-search#nav-search
           form.form-search
             span.input-icon
-              input.nav-search-input(type="text", placeholder="名称或者子域名...",autocomplete="off")#nav-search-input
+              input.nav-search-input(type="text", placeholder="姓名／用户名／手机／邮箱...",autocomplete="off")#nav-search-input
               i.icon-search.nav-search-icon
 
     table.table.table-hover.table-bordered(template-pagination="customPager",ng-table="tableParams")#table
@@ -46,10 +46,13 @@ div(ui-view='')
       tr(ng-repeat="user in $data", value="{{user.id}}")
         td(width="30" style="text-align: left" header="'ngTableCheckboxHeader'")
           input(type="checkbox" ng-model="selection.items[user.id]")
-        td(data-title="'姓名'") {{user.name}}
-        td(data-title="'昵称'") {{user.nickName}}
-        td(data-title="'邮箱'") {{user.email}}
-        td(data-title="'电话'") {{user.phone}}
+        td(data-title="'姓名'") 
+          a(ui-sref="user_view({name: '{{user.name}}'})") {{user.name}}
+        td(data-title="'登录名'") 
+          a(ui-sref="user_view({name: '{{user.name}}'})") {{user.username}}
+        td(data-title="'邮箱'") 
+          a(href="mailto:{{user.email}}") {{user.email}}
+        td(data-title="'电话'", align="right") {{user.phone}}
         td(data-title="'是否启用'") {{user.enabled == '1' ? '启用' : '停用'}}
 
   script(type="text/ng-template")#ngTableCheckboxHeader
