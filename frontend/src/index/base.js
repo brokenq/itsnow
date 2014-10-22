@@ -2,7 +2,9 @@ angular.module('Itsnow.Index', [
     'ui.router',
     'ngResource',
     'ngLocale',
+    'jcs-autoValidate',
     'Lib.Interceptor',
+    'Lib.Directives',
     'Lib.Templates',
     'Index.Templates',
     'Index.Menu',
@@ -65,4 +67,12 @@ angular.module('Itsnow.Index', [
       profileService.get(function (data) {
           $rootScope.user = data;
       });
-  }]);
+  }])
+
+  // angular-auto-validate error message
+  .run(['defaultErrorMessageResolver', 'defaultErrorMessageResolver',
+    function (defaultErrorMessageResolver) {
+      defaultErrorMessageResolver.setI18nFileRootPath('assets/json');
+      defaultErrorMessageResolver.setCulture('zh-CN');
+    }
+  ]);

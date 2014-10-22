@@ -20,6 +20,10 @@ mixin page_size_button(count)
   button.btn.btn-primary.no-border(type="button", ng-class="{'active':params.count() == #{count}}", ng-click="params.count(#{count})")= count
 mixin select_all()
   input(type="checkbox", ng-model="selection.checked", name="filter-checkbox", value="")#select_all
+mixin progressBar(capacity, processPercent, schemaPercent)
+  .progress
+    .progress-bar.progress-bar-success.progress-bar-striped.active(style="width: #{processPercent}%") #{processPercent}%
+    .progress-bar.progress-bar-info.progress-bar-striped.active(style="width: #{schemaPercent}%") #{schemaPercent}%
 
 .container(ng-controller="HostListCtrl")
 
@@ -50,10 +54,9 @@ mixin select_all()
         a(ng-click="viewHost(host.id)", href="javascript:void(0)") {{host.name}}
       td(data-title="'地址'")
         a(href="ssh://root@${{host.address}}") {{host.address}}
-      td(data-title="'容量'") {{host.capacity}}
-      td(data-title="'类型'") {{host.type}}
-      td(data-title="'服务进程（个）'") {{host.extend.processCount}}
-      td(data-title="'Schema（个）'") {{host.extend.schemaCount}}
+      td(data-title="'类型'") {{host.type | formatHostType}}
+      td(data-title="'使用率'")
+        +progressBar("{{host.capacity}}", "{{host.extend.processesCount/host.capacity*100 | round}}", "{{host.extend.schemasCount/host.capacity*100 | round}}")
       td(data-title="'状态'") {{host.status | formatHostStatus}}
 
 script(type="text/ng-template")#ngTableCheckboxHeader

@@ -39,6 +39,16 @@ public class GroupedUserDetailsService implements CommonUserService, UserDetails
     }
 
     @Override
+    public User findByEmail(String email) {
+        return userService.findByEmail(email);
+    }
+
+    @Override
+    public User findByPhone(String phone) {
+        return userService.findByPhone(phone);
+    }
+
+    @Override
     public boolean challenge(String username, String password) {
         return userService.challenge(username, password);
     }

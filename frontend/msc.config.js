@@ -100,7 +100,9 @@ module.exports = {
       '../vendor/angular-dialog-service/dialogs.js',
       '../vendor/angular-dialog-service/dialogs-default-translations.js',
       '../vendor/angular-translate/angular-translate.js',
-      '../vendor/dnt-action-service/dist/dnt-action-service.js'
+      '../vendor/dnt-action-service/dist/dnt-action-service.js',
+      '../vendor/angular-auto-validate/dist/jcs-auto-validate.js',
+      '../vendor/isteven-angular-multiselect/angular-multi-select.js'
     ],
     css: [
 //    '../vendor/angular/angular-csp.css',
@@ -109,7 +111,8 @@ module.exports = {
       '../vendor/ng-grid/ng-grid.css',
       '../vendor/angular-dialog-service/dialogs.css',
       '../vendor/angular-ui-tree/dist/angular-ui-tree.min.css',
-      '../vendor/ng-table/ng-table.css'
+      '../vendor/ng-table/ng-table.css',
+      '../vendor/isteven-angular-multiselect/angular-multi-select.css'
 //    '../vendor/fuelux/dist/css/fuelux.css'
     ],
     built_css: [
@@ -118,7 +121,8 @@ module.exports = {
       '<%= build_dir %>/assets/ng-grid.css',
       '<%= build_dir %>/assets/dialogs.css',
       '<%= build_dir %>/assets/angular-ui-tree.min.css',
-      '<%= build_dir %>/assets/ng-table.css'
+      '<%= build_dir %>/assets/ng-table.css',
+      '<%= build_dir %>/assets/angular-multi-select.css'
     ],
 
     assets: [

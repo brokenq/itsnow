@@ -18,9 +18,22 @@
                u.locked     AS user_locked,
                u.password_expired AS user_password_expired,
                u.created_at AS user_created_at,
-               u.updated_at AS user_updated_at
+               u.updated_at AS user_updated_at,
+               p.id             as process_id            ,
+               p.account_id     as process_account_id    ,
+               p.host_id        as process_host_id       ,
+               p.schema_id      as process_schema_id     ,
+               p.name           as process_name          ,
+               p.pid            as process_pid           ,
+               p.wd             as process_wd            ,
+               p.configuration  as process_configuration ,
+               p.status         as process_status        ,
+               p.description    as process_description   ,
+               p.created_at     as process_created_at    ,
+               p.updated_at     as process_updated_at
         FROM itsnow_msc.accounts a
-        LEFT JOIN itsnow_msc.users u on a.user_id = u.id
+        LEFT JOIN itsnow_msc.users u ON a.user_id = u.id
+        LEFT JOIN itsnow_processes p ON p.account_id = a.id
     </sql>
     <select id="findByName" resultMap="accountWithUserResult">
         <include refid="selectAccounts"/>
@@ -44,11 +57,11 @@
         </where>
     </select>
 
-    <select id="findAllByType" resultMap="accountResult">
-        SELECT * FROM itsnow_msc.accounts
+    <select id="findAllByType" resultMap="accountWithUserResult">
+        <include refid="selectAccounts"/>
         <where>
             <if test="type != null">
-                (type = #{type})
+                (a.type = #{type})
             </if>
         </where>
         <if test="pageable.sort != null">
@@ -61,22 +74,28 @@
 
     </select>
     <resultMap id="accountWithUserResult" type="Account" autoMapping="true">
+        <id  property="id" column="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="sn" property="sn"/>
+        <result column="domain" property="domain"/>
+        <result column="name" property="name"/>
+        <result column="status" property="status"/>
+        <result column="description" property="description"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
         <association property="user" columnPrefix="user_" resultMap="dnt.itsnow.repository.CommonUserRepository.userResult"/>
+        <association property="process" columnPrefix="process_" resultMap="basicProcessResult"/>
         <discriminator column="type" javaType="string">
-            <case value="msc" resultType="MscAccount" resultMap="basicAccountResult"/>
-            <case value="msu" resultType="MsuAccount" resultMap="basicAccountResult"/>
-            <case value="msp" resultType="MspAccount" resultMap="basicAccountResult"/>
+            <case value="msc" resultType="MscAccount"/>
+            <case value="msu" resultType="MsuAccount"/>
+            <case value="msp" resultType="MspAccount"/>
         </discriminator>
+    </resultMap>
+    <resultMap id="basicProcessResult" type="ItsnowProcess" autoMapping="true">
+        <result column="configuration" property="configuration" typeHandler="dnt.itsnow.util.PropertiesHandler"/>
+        <result column="account_id" property="accountId"/>
+        <result column="host_id" property="hostId"/>
+        <result column="schema_id" property="schemaId"/>
     </resultMap>
 
-    <resultMap id="accountResult" type="Account" autoMapping="true">
-        <discriminator column="type" javaType="string">
-            <case value="msc" resultType="MscAccount" resultMap="basicAccountResult"/>
-            <case value="msu" resultType="MsuAccount" resultMap="basicAccountResult"/>
-            <case value="msp" resultType="MspAccount" resultMap="basicAccountResult"/>
-        </discriminator>
-    </resultMap>
-    <resultMap id="basicAccountResult" type="Account" autoMapping="true">
-        <result column="user_id" property="userId"/>
-    </resultMap>
 </mapper>

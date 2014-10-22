@@ -12,8 +12,10 @@ import org.apache.ibatis.annotations.Param;
 public interface CommonAccountRepository {
     Account findByName(@Param("name") String name);
 
-    Account findBySn(@Param("sn") String sn);
+    Account findByDomain(@Param("domain") String domain);
 
+
+    Account findBySn(@Param("sn") String sn);
 
     Account findById(@Param("id") Long id);
 }

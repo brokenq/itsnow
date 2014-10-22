@@ -11,6 +11,7 @@ INSERT INTO menu_items(id, parent_id, name, state, position, css) VALUES
 (12,   1, '服务商帐户', 'accounts.msp',      1, 'icon-tag'), 
 (13,   1, '主机资源',   'hosts',             2, 'icon-cloud'),
 (14,   1, '服务进程',   'processes',         3, 'icon-play'),
+(15,   1, 'Schema资源', 'schemas',           4, 'icon-play'),
 
 (21,   2, '合同管理',   'contracts.contract',3, 'icon-tag'),
 

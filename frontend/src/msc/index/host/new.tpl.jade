@@ -1,32 +1,64 @@
 //   New host
 doctype html
 
-mixin form_field(name, label, icon, tip)
+mixin form_field(name, label, icon, tip, checkExistUrl, autoFillId)
   .form-group
     label.col-xs-12.col-sm-3.control-label.no-padding-right(for="host_#{name}") #{label}
     .col-xs-12.col-sm-5
       span.block.input-icon.input-icon-right
-        input.form-control(id="host_#{name}", name="host.#{name}", ng-model="host.#{name}", ng-required,  ng-maxlength="20", type="text", placeholder="#{label}")
+        input.form-control(id="host_#{name}", name="host.#{name}", ng-model="host.#{name}", required,  ng-maxlength="20", type="text", placeholder="#{label}", ng-exist="#{checkExistUrl}", auto-fill="#{autoFillId}")
         i(class="icon-#{icon}")
     .help-block.col-xs-12.col-sm-reset.inline #{tip}
+mixin widgetBox(title)
+  .col-md-offset-2.col-md-8
+    .widget-box
+      .widget-header
+        h4 #{title}
+      .widget-body
+        block
+mixin formGroup(name, label, icon, tip)
+  .form-group
+    label.col-xs-12.col-sm-3.control-label.no-padding-right(for="host_#{name}") #{label}
+    .col-xs-12.col-sm-5
+      span.block.input-icon.input-icon-right
+        block
+        i(class="icon-#{icon}")
+    .help-block.col-xs-12.col-sm-reset.inline #{tip}
+mixin formControl(name, label)
+  input.form-control(id="host_#{name}", name="host.#{name}", ng-model="host.#{name}", required,  ng-maxlength="20", type="text", placeholder="#{label}")
+
 mixin config_field(name, id, label, icon, tip)
   .form-group
     label.col-xs-12.col-sm-3.control-label.no-padding-right(for="configuration_#{id}") #{label}
     .col-xs-12.col-sm-5
       span.block.input-icon.input-icon-right
-        input.form-control(id="configuration_#{id}", name="configuration.#{name}", ng-model="host.configuration.#{name}", ng-required, ng-maxlength="20", type="text", placeholder="#{label}")
+        input.form-control(id="configuration_#{id}", name="configuration.#{name}", ng-model="host.configuration.#{name}", required, ng-maxlength="20", type="text", placeholder="#{label}")
         i(class="icon-#{icon}")
+    .help-block.col-xs-12.col-sm-reset.inline #{tip}
+mixin selector(name, label, datas, tip)
+  .form-group
+    label.col-xs-12.col-sm-3.control-label.no-padding-right(for="host_#{name}") #{label}
+    .col-xs-12.col-sm-5
+      select.form-control(ng-model="host.#{name}", required)
+        option(ng-repeat="data in #{datas}", value="{{data}}") {{data}}
     .help-block.col-xs-12.col-sm-reset.inline #{tip}
 
 .row(ng-controller="HostNewCtrl")
-  form.form-horizontal(name="newHostForm", novalidate, ng-model-options="{ updateOn: 'mousedown blur' }", role="form")
-    +form_field("name",     "主机名", "star", "主机名，不要用中文，尽量为简单的英文字符")
-    +form_field("address",  "地址",   "font", "主机地址，IP地址或者域名均可")
-    +form_field("capacity", "容量",   "th", "主机上可以部署多少个MSU/MSP实例")
-    +config_field("user",        "user",        "用户名",  "user",  "用户名，默认为root")
-    +config_field("password",    "password",    "密码",    "lock",  "以上用户的密码")
-    +config_field("msu_version", "msu_version", "MSU版本", "flag",  "部署的MSU的版本号")
-    +config_field("msp_version", "msu_version", "MSP版本", "flag",  "部署的MSP的版本号")
+  form.form-horizontal(name="newHostForm", novalidate="novalidate", ng-model-options="{ updateOn: 'mousedown blur' }", role="form")
+    +widgetBox("主机信息")
+      +formGroup("name",     "主机名", "star", "主机名，不要用中文，尽量为简单的英文字符")
+        //input.form-control#host_name(name="host.name", ng-model="host.name", required,  ng-maxlength="20", type="text", placeholder="主机名", ng-check-host="/admin/api/hosts/checkName", auto-fill="host_address")
+        input.form-control#host_name(name="host.name", ng-model="host.name", required,  ng-maxlength="20", type="text", placeholder="主机名", dnt-duplicate, check-url="/admin/api/hosts/checkName", auto-fill="host_address")
+      +formGroup("address",  "地址",   "font", "主机地址，IP地址或者域名均可")
+        +formControl("address", "地址")
+      +selector("type", "类型", "types", "")
+      +formGroup("capacity", "容量",   "th", "主机上可以部署多少个MSU/MSP实例")
+        +formControl("capacity", "容量")
+    +widgetBox("配置信息")
+      +config_field("user",        "user",        "用户名",  "user",  "用户名，默认为root")
+      +config_field("password",    "password",    "密码",    "lock",  "以上用户的密码")
+      +config_field("msu_version", "msu_version", "MSU版本", "flag",  "部署的MSU的版本号")
+      +config_field("msp_version", "msu_version", "MSP版本", "flag",  "部署的MSP的版本号")
 
     .row-fluid.actions
       .col-xs-12.col-sm-3

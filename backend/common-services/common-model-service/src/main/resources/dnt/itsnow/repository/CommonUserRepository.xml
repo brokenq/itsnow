@@ -17,9 +17,9 @@
         FROM itsnow_msc.users u
         LEFT JOIN itsnow_msc.accounts a ON u.account_id = a.id
     </sql>
-    <select id="findByUsername" resultMap="userWithAccount">
+    <select id="findByFieldAndValue" resultMap="userWithAccount">
         <include refid="selectUser"/>
-        WHERE UPPER(u.username) = UPPER(#{username})
+        WHERE UPPER(u.${field}) = UPPER(#{value}) LIMIT 1
     </select>
     <select id="findByAccountSnAndUsername" resultMap="userWithAccount">
         <include refid="selectUser"/>
@@ -31,7 +31,7 @@
         <result column="account_id" property="accountId"/>
     </resultMap>
     <resultMap id="userWithAccount" type="User" autoMapping="true">
-        <association property="account" resultMap="dnt.itsnow.repository.CommonAccountRepository.accountResult" columnPrefix="account_"/>
+        <association property="account" resultMap="dnt.itsnow.repository.CommonAccountRepository.accountWithUserResult" columnPrefix="account_"/>
     </resultMap>
 
 </mapper>

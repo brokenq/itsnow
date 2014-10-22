@@ -42,6 +42,8 @@ public class GroupRepositoryTest {
     public void testDelete() throws Exception {
         List<Group> groups = repository.findAll("updated_at", "desc", 0, 1);
         Group group = groups.get(0);
+        repository.deleteGroupAuthority(group.getId());
+        repository.deleteGroupMember(group.getId());
         repository.delete(group.getName());
         Assert.isNull(repository.findBySn(group.getName()));
     }

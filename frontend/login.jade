@@ -5,15 +5,15 @@
 html(lang="zh-CN", ng-app="Itsnow.#{sysName}Login")
   head
     meta(charset="utf-8")
-    meta(name="description", content="用户登录应用")
+    meta(name="description", content="用户登录前应用")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     link(rel="icon", type="image/icon", href="/assets/favicon.ico")
     each style in styles
       link(rel="stylesheet", type="text/css", href=style)
     each js in scripts
       script(type="text/javascript", src=js)
-    title 系统登录 - ItsNow ITIL Platform
-  body.login-layout
+    title(ng-bind="pageTitle")
+  body.login-layout(ng-controller="LoginCtrl")
     .main-container
       .main-content
         .row

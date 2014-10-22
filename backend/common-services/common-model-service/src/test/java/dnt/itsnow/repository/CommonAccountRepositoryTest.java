@@ -49,6 +49,13 @@ public class CommonAccountRepositoryTest {
         Assert.isNull(repository.findById(100L));
     }
 
+    @Test
+    public void testFindByDomain() throws Exception {
+        Account account = repository.findByDomain("www");
+        validateAccount(account);
+        Assert.isNull(repository.findByDomain("Not Exist"));
+    }
+
     protected void validateAccount(Account account) {
         Assert.notNull(account);
         Assert.notNull(account.getUserId());

@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
  *
  * 主要是: 为web请求设定伪造的user principal
  */
-public class SessionSupportedControllerTest extends ApplicationControllerTest {
+public abstract class SessionSupportedControllerTest extends ApplicationControllerTest {
     protected Authentication currentUserPrincipal;
 
     @Before
