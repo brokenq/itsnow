@@ -1,0 +1,48 @@
+.page-content
+    .row
+        .col-xs-12
+            // PAGE CONTENT BEGINS
+            ng-form.form-horizontal(ng-controller='CatalogDetailCtrl', role='form', name='catalogForm')
+                .form-group.has-info
+                    .col-sm-6
+                        label.col-sm-3.control-label.no-padding-right(for='sn')  名称
+                        .col-sm-9
+                            input#sn.form-control(type='text', placeholder='例如：', required='', ng-model='catalog.sn', name='sn')
+                            span(ng-show='catalogForm.sn.$error.required') 必填!
+                    .col-sm-6
+                        label.col-sm-3.control-label.no-padding-right(for='title')  标题
+                        .col-sm-9
+                            input#title.form-control(type='text', placeholder='例如：', required='', ng-model='catalog.title', name='title')
+                            span(ng-show='catalogForm.title.$error.required') 必填!
+                .form-group.has-info
+                    .col-sm-6
+                        label.col-sm-3.control-label.no-padding-right(for='description')  描述
+                        .col-sm-9
+                            input#description.form-control(type='text', placeholder='例如：', ng-model='catalog.description', name='description')
+                    .col-sm-6
+                        label.col-sm-3.control-label.no-padding-right(for='icon')  图标
+                        .col-sm-9
+                            input#icon.form-control(type='text', placeholder='例如：', ng-model='catalog.icon', name='icon')
+
+                .form-group.has-info
+                    .col-sm-6
+                        label.col-sm-3.control-label.no-padding-right(for='parentId')  父节点
+                        .col-sm-9
+                            select#parentId.form-control(ng-options='m.name as m.name for m in selectedModel.serviceCatalogModule', ng-model='incident.serviceCatalog')
+                                option(value='')  请选择
+                    .col-sm-6
+                        label.col-sm-3.control-label.no-padding-right(for='level')  层次
+                        .col-sm-9
+                            select#level.form-control(type='text', placeholder='例如：1,2,3,4,5', ng-model='catalog.level', name='level')
+
+                .clearfix.form-actions
+                    .col-md-offset-1.col-md-11
+                        button.btn.btn-info(ng-disabled='catalogForm.$invalid', ng-click='process(catalog)', type='submit')
+                            i.icon-ok.bigger-110
+                            | {{buttonLabel}}
+                        button.btn.btn-info(type='submit')
+                            i.icon-ok.bigger-110
+                            | 取消
+        // /.col
+    // /.row
+// /.page-content
