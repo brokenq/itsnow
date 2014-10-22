@@ -1,5 +1,5 @@
-mixin tool_button(action, icon, text)
-  button.btn.btn-default(type="button")
+mixin tool_button(action, icon, text, weight, rejectCss, requireCss)
+  button.btn.btn-primary.no-border(type="button", ng-click="#{action}", weight="#{weight}", reject-css="#{rejectCss}", require-css="#{requireCss}")
     span.glyphicon(class="glyphicon-#{icon}")
     | #{text}
 mixin drop_button(action, icon, text)
@@ -8,32 +8,32 @@ mixin drop_button(action, icon, text)
       span.glyphicon(class="glyphicon-#{icon}")
       | #{text}
 mixin nav_link(value, icon, text)
-  a(ng-switch-when=value, ng-click="params.page(page.number)", href="")
+  a(ng-switch-when="#{value}", ng-click="params.page(page.number)", href="")
     span.glyphicon(class="glyphicon-#{icon}")
     | #{text}
-// 由于IDEA/WebStorm等在script tag内对jade的解析有问题，所以将这段会仅在IDE中出错的抽取到mixin中
+// 由于IDEA/WebStorm等在script tag内对jade的解析有问题，所以将这段会仅在IDE中出错的抽取到mixin�?
 mixin page_navs()
-  li(ng-repeat="page in pages", ng-klass="{'disabled': !page.active, 'previous': page.type == 'prev', 'next': page.type == 'next'}", ng-show="page.type == 'prev' || page.type == 'next'", ng-switch="page.type")
+  li(ng-repeat="page in pages", ng-class="{'disabled': !page.active, 'previous': page.type == 'prev', 'next': page.type == 'next'}", ng-show="page.type == 'prev' || page.type == 'next'", ng-switch="page.type")
     +nav_link("prev", "step-backward", "上一页")
     +nav_link("next", "step-forward", "下一页")
 mixin page_size_button(count)
-  button.btn.btn-default(type="button", ng-class="{'active':params.count() == #{count}}", ng-click="params.count(#{count})")= count
+  button.btn.btn-primary.no-border(type="button", ng-class="{'active':params.count() == #{count}}", ng-click="params.count(#{count})")= count
 mixin select_all()
-  input(type="checkbox", ng-model="checkboxes.checked", name="filter-checkbox", value="")#select_all
+  input(type="checkbox", ng-model="selection.checked", name="filter-checkbox", value="")#select_all
 
-.container(ng-controller="CatalogListCtrl")
+div(ui-view='')
+ .container(ng-controller="CatalogListCtrl")
 
   .btn-toolbar(role="toolbar")
     .btn-group
       +tool_button("#", "refresh", "")
-      +tool_button("#", "create", "新增")
-      +tool_button("#", "edit", "编辑")
+      +tool_button("actionService.gotoState('services.catalog.detail', $event)", "create", "新建", "*", "", "")
+      +tool_button("actionService.gotoState('services.catalog.detail', $event)", "edit", "编辑", "1", "", "")
+      +tool_button("actionService.perform(remove, $event)", "remove", "删除", "1+", "", "")
     .btn-group
       button.btn.btn-default.dropdown-toggle(type="button",data-toggle="dropdown")
         | 更多操作
         span.caret
-      ul.dropdown-menu(role="menu")
-        +drop_button("#", "remove", "删除")
     .btn-group.pull-right
       .nav-search#nav-search
         form.form-search
@@ -41,10 +41,10 @@ mixin select_all()
             input.nav-search-input(type="text", placeholder="服务目录名称...",autocomplete="off")#nav-search-input
             i.icon-search.nav-search-icon
 
-  table.table(template-pagination="customPager",ng-table="tableParams")
-    tr(ng-repeat="catalog in $data")
+  table.table.table-hover.table-bordered(template-pagination="customPager",ng-table="tableParams")
+    tr(ng-repeat="catalog in $data", value="{{catalog.sn}}")
       td(width="30" style="text-align: left" header="'ngTableCheckboxHeader'")
-        input(type="checkbox" ng-model="checkboxes.items[catalog.sn]")
+        input(type="checkbox" ng-model="selection.items[catalog.sn]")
       td(data-title="'名称'") {{catalog.sn}}
       td(data-title="'标题'") {{catalog.title}}
       td(data-title="'描述'") {{catalog.description}}

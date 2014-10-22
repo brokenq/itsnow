@@ -29,12 +29,14 @@ public class ServiceCatalogTest extends ValidatorSupport{
         catalog.setSn("SN-001");
         catalog.setDescription("DESC-001");
         catalog.setTitle("TITLE-001");
+        catalog.setLevel(1);
 
         childCatalog = new ServiceCatalog();
         childCatalog.setId(2L);
         childCatalog.setSn("SN-001-01");
         childCatalog.setDescription("DESC-001-01");
         childCatalog.setTitle("TITLE-001-01");
+        childCatalog.setLevel(2);
         childCatalog.setParentId(1L);
 
         List<ServiceCatalog> list = new ArrayList<ServiceCatalog>();

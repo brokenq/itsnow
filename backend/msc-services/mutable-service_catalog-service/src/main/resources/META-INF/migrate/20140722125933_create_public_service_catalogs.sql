@@ -8,6 +8,7 @@ CREATE TABLE public_service_catalogs (
   title       VARCHAR(255)     NOT NULL,
   description TEXT(16),
   icon        VARCHAR(100),
+  level       INT(10) UNSIGNED NOT NULL DEFAULT 1,
   created_at  TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at  TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (parent_id)      REFERENCES public_service_catalogs(id)
