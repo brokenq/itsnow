@@ -11,8 +11,8 @@ import org.apache.ibatis.annotations.Update;
  */
 public interface PublicServiceCatalogRepository extends CommonServiceCatalogRepository {
 
-    @Insert("INSERT INTO public_service_catalogs (parent_id,sn,title,description,icon,created_at,updated_at) "+
-            " values(#{parentId},#{sn},#{title},#{description},#{icon},#{createdAt},#{updatedAt})")
+    @Insert("INSERT INTO public_service_catalogs (parent_id,sn,title,description,icon,level,created_at,updated_at) "+
+            " values(#{parentId},#{sn},#{title},#{description},#{icon},#{level},#{createdAt},#{updatedAt})")
     @Options(useGeneratedKeys = true,keyColumn = "id")
     void create(PublicServiceCatalog publicServiceCatalog);
 

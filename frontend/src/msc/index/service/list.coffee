@@ -51,17 +51,13 @@
         return catalog for catalog in $scope.catalogs when catalog.sn = sn
 
       $scope.remove = (catalog)->
-       alert "remove sn:"+ catalog.sn
-       removeCatalogService.remove sn:catalog.sn
-       alert "remove finish!"
+       removeCatalogService.remove(sn:catalog.sn)
+       $state.go('services.catalog');
 
-      $scope.process = (catalog)->
-        alert "create catalog:"
-        $state.go('services.catalog.detail')
+      $scope.create = (catalog)->
+        $state.go('services.catalog.detail',{'sn':catalog.sn,'action':'create'});
 
       $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.getCatalogBySn})
-
-
 
     # watch for check all checkbox
       $scope.$watch 'selection.checked', (value)->

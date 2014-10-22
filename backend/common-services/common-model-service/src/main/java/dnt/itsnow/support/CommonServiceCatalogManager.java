@@ -61,7 +61,19 @@ public class CommonServiceCatalogManager extends Bean implements CommonServiceCa
     }
 
     private void formatServiceCatalog(PublicServiceCatalog catalog){
-        switch(catalog.getLevel()){
+        int level = catalog.getLevel()-1;
+        String str = "";
+        for(ServiceItem item:catalog.getItems()){
+            str = "";
+            for(int i=0;i<=level;i++)
+                str = str +"--";
+            item.setTitle(str+item.getTitle());
+        }
+        str = "";
+        for(int i=0;i<level;i++)
+            str = str +"--";
+        catalog.setTitle(str+catalog.getTitle());
+        /*switch(catalog.getLevel()){
             case 1:
                 for(ServiceItem item:catalog.getItems()){
                     item.setTitle("--"+item.getTitle());
@@ -83,7 +95,7 @@ public class CommonServiceCatalogManager extends Bean implements CommonServiceCa
                 break;
             default:
                 break;
-        }
+        }*/
     }
 
     @Override

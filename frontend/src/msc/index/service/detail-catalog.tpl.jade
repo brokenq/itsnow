@@ -28,19 +28,18 @@
                     .col-sm-6
                         label.col-sm-3.control-label.no-padding-right(for='parentId')  父节点
                         .col-sm-9
-                            select#parentId.form-control(ng-options='m.name as m.name for m in selectedModel.serviceCatalogModule', ng-model='incident.serviceCatalog')
-                                option(value='')  请选择
+                            input#parentId.form-control(type='text', readonly=true, ng-model='catalog.parentId', name='parentId')
                     .col-sm-6
                         label.col-sm-3.control-label.no-padding-right(for='level')  层次
                         .col-sm-9
-                            select#level.form-control(type='text', placeholder='例如：1,2,3,4,5', ng-model='catalog.level', name='level')
+                            input#level.form-control(type='text', readonly=true, ng-model='catalog.level', name='level')
 
                 .clearfix.form-actions
                     .col-md-offset-1.col-md-11
                         button.btn.btn-info(ng-disabled='catalogForm.$invalid', ng-click='process(catalog)', type='submit')
                             i.icon-ok.bigger-110
                             | {{buttonLabel}}
-                        button.btn.btn-info(type='submit')
+                        button.btn.btn-info(type='reset',ng-click='reset()')
                             i.icon-ok.bigger-110
                             | 取消
         // /.col
