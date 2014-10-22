@@ -4,6 +4,7 @@ import dnt.itsnow.exception.SiteException;
 import dnt.itsnow.model.Department;
 import dnt.itsnow.model.Site;
 import dnt.itsnow.model.SiteDept;
+import dnt.itsnow.platform.service.AutoNumberService;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.platform.util.DefaultPage;
@@ -18,9 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.UUID;
 
 /**
- * <h1>地点业务实现类</h1>
+ * <h1>地点管理业务实现类</h1>
  */
 @Service
 @Transactional
@@ -32,75 +34,96 @@ public class SiteManager extends Bean implements SiteService {
     @Autowired
     private SiteDeptRepository siteDeptRepository;
 
+    @Autowired
+    private AutoNumberService autoNumberService;
+
     @Override
     public Page<Site> findAll(String keyword, Pageable pageable) {
-        logger.debug("Finding site by keyword: {}", keyword);
 
-        if(StringUtils.isBlank(keyword)){
-            int total = siteRepository.count();
-            List<Site> sites = siteRepository.findAll("updated_at", "desc", pageable.getOffset(), pageable.getPageSize());
-            logger.debug("Finded site by keyword: {}", keyword);
-            return new DefaultPage<Site>(sites, pageable, total);
-        }else{
-            int total = siteRepository.countByKeyword("%"+keyword+"%");
-            List<Site> sites = siteRepository.findAllByKeyword("%"+keyword+"%","updated_at","desc", pageable.getOffset(), pageable.getPageSize());
-            logger.debug("Finded site by keyword: {}", keyword);
-            return new DefaultPage<Site>(sites, pageable, total);
+        logger.debug("Finding sites by keyword: {}", keyword);
+
+        if (StringUtils.isNotBlank(keyword)) {
+            keyword = "%" + keyword + "%";
         }
+
+        int total = siteRepository.count(keyword);
+        List<Site> sites = siteRepository.findAll(keyword, pageable);
+        DefaultPage<Site> page = new DefaultPage<Site>(sites, pageable, total);
+
+        logger.debug("Found {}", page.getContent());
+
+        return page;
     }
 
     @Override
     public Site findBySn(String sn) {
         logger.debug("Finding Site by sn: {}", sn);
         Site site = siteRepository.findBySn(sn);
-        logger.debug("Finded Site by sn: {}", sn);
+        logger.debug("Found   Site by sn: {}", sn);
         return site;
     }
 
     @Override
     public Site create(Site site) throws SiteException {
-        logger.info("Creating site {}", site);
-        if(site == null){
+
+        logger.info("Creating {}", site);
+
+        if (site == null) {
             throw new SiteException("Site entry can not be empty.");
         }
-        site.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        site.setUpdatedAt(site.getCreatedAt());
+        autoNumberService.configure("site", "");
+        site.setSn(autoNumberService.next("site"));
+        site.setSn(UUID.randomUUID().toString());
+        site.creating();
         siteRepository.create(site);
 
-        for(Department department : site.getDepartments()){
-            SiteDept siteDept = new SiteDept(site, department);
+        if (site.getDepartments() != null) {
+            for (Department department : site.getDepartments()) {
+                SiteDept siteDept = new SiteDept(site, department);
 
-            if (siteDeptRepository.find(siteDept) == null) {
-                siteDeptRepository.create(siteDept);
+                if (siteDeptRepository.find(siteDept) == null) {
+                    siteDeptRepository.create(siteDept);
+                }
             }
         }
-        logger.info("Created site {}", site);
+
+        logger.info("Created  {}", site);
+
         return site;
     }
 
     @Override
     public Site update(Site site) throws SiteException {
+
         logger.info("Updating site {}", site);
-        if(site==null){
+
+        if (site == null) {
             throw new SiteException("Site entry can not be empty.");
         }
+        site.updating();
         siteRepository.update(site);
 
         siteDeptRepository.deleteSiteAndDeptRelationBySiteId(site.getId());
-        for(Department department : site.getDepartments()){
+        for (Department department : site.getDepartments()) {
             siteDeptRepository.create(new SiteDept(site, department));
         }
+
+        logger.info("Updated  site {}", site);
 
         return site;
     }
 
     @Override
     public void destroy(Site site) throws SiteException {
+
         logger.warn("Deleting site {}", site);
-        if(site==null){
+
+        if (site == null) {
             throw new SiteException("Site entry can not be empty.");
         }
         siteDeptRepository.deleteSiteAndDeptRelationBySiteId(site.getId());
         siteRepository.delete(site.getSn());
+
+        logger.warn("Deleted site  {}", site);
     }
 }

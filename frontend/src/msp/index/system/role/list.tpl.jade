@@ -2,8 +2,8 @@ mixin tool_button(action, icon, text, weight, rejectCss, requireCss)
     button.btn.btn-primary.no-border(type="button", ng-click=action, weight=weight, reject-css=rejectCss, require-css=requireCss)
         span.glyphicon(class="glyphicon-#{icon}")
         | #{text}
-mixin td(style, title, name)
-    td(style="text-align: center;#{style}" data-title=title) #{name}
+mixin td(title, name)
+    td(style="text-align: center" data-title=title) #{name}
 mixin nav_link(value, icon, text)
     a(ng-switch-when="#{value}", ng-click="params.page(page.number)", href="")
         span.glyphicon(class="glyphicon-#{icon}")
@@ -25,25 +25,25 @@ mixin select_all()
     .btn-group
         +tool_button("actionService.gotoState('role_form', $event)", "new", "新建", "*", "", "")
         +tool_button("actionService.gotoState('role_form', $event)", "edit", "编辑", "1", "", "")
-        +tool_button("actionService.perform(deleteRole, $event)", "remove", "删除", "*", "", "")
+        +tool_button("actionService.perform(deleteRole, $event)", "remove", "删除", "1+", "", "")
     .btn-group.pull-right
       .nav-search#nav-search
         form.form-search
           span.input-icon
-            input.nav-search-input(type="text", placeholder="请输入角色名称...",autocomplete="off")#nav-search-input
+            input.nav-search-input(type="text", placeholder="请输入角色名称...",autocomplete="off",ng-keypress="search($event)")#nav-search-input
             i.icon-search.nav-search-icon
 
     table.table.table-hover.table-bordered(template-pagination="customPager",ng-table="tableParams")#table
-      tr(ng-repeat="role in $data", value="{{role.name}}")
+      tr(ng-repeat="role in roles", value="{{role.name}}")
           td(width="30" style="text-align: left;" header="'ngTableCheckboxHeader'")
               input(type="checkbox" ng-model="selection.items[role.name]")
-          +td("cursor: pointer; cursor: hand;", "'角色名'", "{{role.name}}")
-          +td("", "'描述'", "{{role.description}}")
-          +td("", "'用户名称'", "{{role.users | colFilter}}")
+          +td("'角色名'", "{{role.name}}")
+          +td("'描述'", "{{role.description}}")
+          +td("'用户名称'", "{{role.users | colFilter}}")
 
-  script(type="text/ng-template")#ngTableCheckboxHeader
+script(type="text/ng-template")#ngTableCheckboxHeader
       +select_all()
-  script(type="text/ng-template")#customPager
+script(type="text/ng-template")#customPager
       ul.pager.ng-cloak
         +page_navs()
         li
