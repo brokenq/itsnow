@@ -14,7 +14,7 @@ angular.module('System.Role', ['ngTable', 'ngResource', 'dnt.action.service'])
             get: { method: 'GET', params: {name: '@name'}},
             save: { method: 'POST'},
             update: { method: 'PUT', params: {name: '@name'}},
-            query: { method: 'GET', isArray: true},
+            query: { method: 'GET', params: {keyword: '@keyword'}, isArray: true},
             remove: { method: 'DELETE', params: {name: '@name'}},
             getUsers: { method: 'GET', params: {name: 'users'}, isArray: true}
         });
@@ -83,7 +83,18 @@ angular.module('System.Role', ['ngTable', 'ngResource', 'dnt.action.service'])
             });
 
             $scope.deleteRole = function (role) {
-                roleService.remove({name: role.name});
+                roleService.remove({name: role.name},function(){
+                    $scope.tableParams.reload();
+                });
+            };
+
+            $scope.search = function($event){
+                if($event.keyCode===13){
+                    var promise = roleService.query({keyword:$event.currentTarget.value}).$promise;
+                    promise.then(function(data){
+                        $scope.roles = data;
+                    });
+                }
             };
 
         }

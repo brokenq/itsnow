@@ -3,12 +3,14 @@ package itsnow.dnt.repository;
 import dnt.itsnow.model.ProcessDictionary;
 import dnt.itsnow.model.Site;
 import dnt.itsnow.model.WorkTime;
+import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.repository.ProcessDictionaryRepository;
 import dnt.itsnow.repository.SiteDeptRepository;
 import dnt.itsnow.repository.SiteRepository;
 import dnt.itsnow.repository.WorkTimeRepository;
 import itsnow.dnt.config.SiteRepositoryConfig;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,13 @@ public class SiteRepositoryTest {
 
     @Autowired
     SiteDeptRepository siteDeptRepository;
+
+    PageRequest pageRequest;
+
+    @Before
+    public void setUp() throws Exception {
+        pageRequest = new PageRequest(0, 1);
+    }
 
     @Test
     public void testCreate() throws Exception {
@@ -75,30 +84,20 @@ public class SiteRepositoryTest {
     public void testUpdate() throws Exception {
         String sn = "003";
         Site site = repository.findBySn(sn);
-        site.setAddress("改变成新地址");
+        site.setAddress("Hello World!");
         repository.update(site);
-        Assert.assertEquals("改变成新地址", site.getAddress());
+        Assert.assertEquals("Hello World!", site.getAddress());
     }
 
     @Test
     public void testCount() throws Exception {
-        Assert.assertNotNull(repository.count());
+        Assert.assertNotNull(repository.count(""));
     }
 
     @Test
     public void testFind() throws Exception {
-        List<Site> sites = repository.findAll("updated_at", "desc",  0, 10);
+        List<Site> sites = repository.findAll("", pageRequest);
         Assert.assertNotNull(sites);
-    }
-
-    @Test
-    public void testCountByKeyword() throws Exception {
-        Assert.assertNotNull(repository.countByKeyword("%工厂%"));
-    }
-
-    @Test
-    public void testFindByKeyword() throws Exception {
-        Assert.assertNotNull(repository.findAllByKeyword("%工厂%","updated_at","desc", 0, 10));
     }
 
     @Test
