@@ -54,4 +54,9 @@ public class DeployResource extends ConfigItem {
         result = 31 * result + (configuration != null ? configuration.hashCode() : 0);
         return result;
     }
+
+    public String getProperty(String name, String defaultValue) {
+        String value = getProperty(name);
+        return value == null ? defaultValue : value;
+    }
 }
