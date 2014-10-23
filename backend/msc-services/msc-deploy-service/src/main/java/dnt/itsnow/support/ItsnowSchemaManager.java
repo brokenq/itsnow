@@ -100,9 +100,11 @@ public class ItsnowSchemaManager extends ItsnowResourceManager implements Itsnow
 
     @Override
     public ItsnowSchema pickSchema(Account account, ItsnowHost host) {
-        if(host.getType() == HostType.DB) {
+        //如果当前应用所在的主机是数据库主机或者混合主机，且由剩余容量，则把schema就近分配则该主机上
+        if(host.getType() != HostType.APP /*DB or COMBINED(mixed)*/ && host.getLeftCapacity() > 0 ) {
             return autoAssignSchema(account,host);
         }
+        // picked host maybe db or combined
         ItsnowHost dbHost = hostService.pickHost(account, HostType.DB);
         return autoAssignSchema(account,dbHost);
     }

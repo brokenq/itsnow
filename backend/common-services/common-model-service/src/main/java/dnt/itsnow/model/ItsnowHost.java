@@ -3,6 +3,8 @@
  */
 package dnt.itsnow.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.validation.constraints.NotNull;
 
 /**
@@ -101,7 +103,8 @@ public class ItsnowHost extends DeployResource implements Comparable<ItsnowHost>
         return getLeftCapacity() - another.getLeftCapacity();
     }
 
-    private int getLeftCapacity() {
+    @JsonIgnore
+    public int getLeftCapacity() {
         int processesCount = extend == null ? 0 : extend.getProcessesCount();
         int schemasCount = extend == null ? 0 : extend.getSchemasCount();
         return this.getCapacity() - processesCount - schemasCount;

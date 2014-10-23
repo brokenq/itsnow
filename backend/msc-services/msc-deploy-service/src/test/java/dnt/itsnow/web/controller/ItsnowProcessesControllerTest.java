@@ -71,13 +71,36 @@ public class ItsnowProcessesControllerTest extends SessionSupportedControllerTes
         schema.setId(process.getSchemaId());
 
         process.setSchema(schema);
+
+        resetAll();
     }
 
     @After
     public void tearDown() throws Exception {
-        verify(mockedService);
+        verifyAll();
+    }
+
+    void resetAll(){
+        reset(accountService);
+        reset(hostService);
+        reset(schemaService);
         reset(mockedService);
     }
+
+    void replayAll(){
+        replay(accountService);
+        replay(hostService);
+        replay(schemaService);
+        replay(mockedService);
+    }
+
+    void verifyAll(){
+        verify(accountService);
+        verify(hostService);
+        verify(schemaService);
+        verify(mockedService);
+    }
+
 
     @Test
     public void testIndex() throws Exception {
@@ -89,7 +112,7 @@ public class ItsnowProcessesControllerTest extends SessionSupportedControllerTes
         decorate(request);
 
         // Mock 准备播放
-        replay(mockedService);
+        replayAll();
 
         // 执行
         ResultActions result = this.browser.perform(request);
@@ -114,7 +137,7 @@ public class ItsnowProcessesControllerTest extends SessionSupportedControllerTes
         decorate(request);
 
         // Mock 准备播放
-        replay(mockedService);
+        replayAll();
 
         // 执行
         ResultActions result = this.browser.perform(request);
@@ -132,26 +155,18 @@ public class ItsnowProcessesControllerTest extends SessionSupportedControllerTes
         expect(mockedService.create(isA(ItsnowProcess.class))).andReturn(process);
         // 准备 Mock Request
         MockHttpServletRequestBuilder request = post("/admin/api/processes/");
+        process.setAccountId(account.getId());
+        process.setHostId(host.getId());
         decorate(request).content(JsonSupport.toJSONString(process));
 
         // Mock 准备播放
-        replay(mockedService);
-        replay(accountService);
-        replay(hostService);
-        replay(schemaService);
+        replayAll();
 
         // 执行
         ResultActions result = this.browser.perform(request);
 
         // 对业务结果的验证
         decorate(result).andExpect(status().isOk());
-
-        verify(accountService);
-        reset(accountService);
-        verify(hostService);
-        reset(hostService);
-        verify(schemaService);
-        reset(schemaService);
     }
 
     @Test
@@ -173,17 +188,13 @@ public class ItsnowProcessesControllerTest extends SessionSupportedControllerTes
         decorate(request);
 
         // Mock 准备播放
-        replay(accountService);
-        replay(mockedService);
+        replayAll();
 
         // 执行
         ResultActions result = this.browser.perform(request);
 
         // 对业务结果的验证
         decorate(result).andExpect(status().isOk());
-
-        verify(accountService);
-        reset(accountService);
     }
 
     @Test
@@ -197,7 +208,7 @@ public class ItsnowProcessesControllerTest extends SessionSupportedControllerTes
         decorate(request);
 
         // Mock 准备播放
-        replay(mockedService);
+        replayAll();
 
         // 执行
         this.browser.perform(request);
@@ -216,7 +227,7 @@ public class ItsnowProcessesControllerTest extends SessionSupportedControllerTes
         decorate(request);
 
         // Mock 准备播放
-        replay(mockedService);
+        replayAll();
 
         // 执行
         ResultActions result = this.browser.perform(request);
@@ -235,7 +246,7 @@ public class ItsnowProcessesControllerTest extends SessionSupportedControllerTes
         decorate(request);
 
         // Mock 准备播放
-        replay(mockedService);
+        replayAll();
 
         // 执行
         ResultActions result = this.browser.perform(request);
@@ -256,7 +267,7 @@ public class ItsnowProcessesControllerTest extends SessionSupportedControllerTes
         decorate(request);
 
         // Mock 准备播放
-        replay(mockedService);
+        replayAll();
 
         // 执行
         ResultActions result = this.browser.perform(request);
