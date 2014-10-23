@@ -6,12 +6,8 @@ package dnt.itsnow.support;
 import dnt.itsnow.config.ItsnowHostManagerConfig;
 import dnt.itsnow.exception.ItsnowHostException;
 import dnt.itsnow.exception.SystemInvokeException;
-import dnt.itsnow.model.ItsnowHost;
-import dnt.itsnow.model.SystemInvocation;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.util.PageRequest;
+import dnt.itsnow.model.*;
 import dnt.itsnow.repository.ItsnowHostRepository;
-import dnt.itsnow.service.ItsnowHostService;
 import dnt.itsnow.service.SystemInvokeService;
 import dnt.itsnow.util.DeployFixture;
 import org.junit.After;
@@ -23,6 +19,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.easymock.EasyMock.*;
 
@@ -138,5 +137,34 @@ public class ItsnowHostManagerTest {
 
         String hostName = hostManager.resolveName("172.16.3.4");
         Assert.isTrue("srv2.itsnow.com".equals(hostName));
+    }
+
+    @Test
+    public void testPickHost() throws Exception {
+        ItsnowHost host1 = new ItsnowHost();
+        host1.setCapacity(10);
+        host1.setExtend(new HostExtend());
+        host1.getExtend().setProcessesCount(3);
+        host1.getExtend().setSchemasCount(4);
+        ItsnowHost host2 = new ItsnowHost();
+
+        host2.setCapacity(8);
+        host2.setExtend(new HostExtend());
+        host2.getExtend().setProcessesCount(3);
+        host2.getExtend().setSchemasCount(4);
+
+        List<ItsnowHost> hosts = new ArrayList<ItsnowHost>();
+        hosts.add(host1);
+        hosts.add(host2);
+
+        expect(repository.findAllByType(HostType.APP)).andReturn(hosts);
+        expect(repository.findAllByType(HostType.COM)).andReturn(new ArrayList<ItsnowHost>());
+
+        replay(systemInvokeService);
+        replay(repository);
+
+        ItsnowHost host = hostManager.pickHost(new MspAccount(), HostType.APP );
+        Assert.isTrue(host == host1);
+
     }
 }

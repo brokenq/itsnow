@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 /**
  * The itsnow host which can service for MSC/MSU/MSP
  */
-public class ItsnowHost extends DeployResource
+public class ItsnowHost extends DeployResource implements Comparable<ItsnowHost>
 {
     @NotNull
     private String address;
@@ -93,5 +93,17 @@ public class ItsnowHost extends DeployResource
         result = 31 * result + status.hashCode();
         result = 31 * result + capacity;
         return result;
+    }
+
+    @SuppressWarnings("NullableProblems")
+    @Override
+    public int compareTo(ItsnowHost another) {
+        return getLeftCapacity() - another.getLeftCapacity();
+    }
+
+    private int getLeftCapacity() {
+        int processesCount = extend == null ? 0 : extend.getProcessesCount();
+        int schemasCount = extend == null ? 0 : extend.getSchemasCount();
+        return this.getCapacity() - processesCount - schemasCount;
     }
 }

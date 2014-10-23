@@ -17,6 +17,7 @@ import dnt.itsnow.service.ItsnowSchemaService;
 import dnt.itsnow.test.controller.SessionSupportedControllerTest;
 import dnt.itsnow.util.DeployFixture;
 import dnt.support.JsonSupport;
+import org.easymock.IAnswer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -151,6 +152,38 @@ public class ItsnowProcessesControllerTest extends SessionSupportedControllerTes
         reset(hostService);
         verify(schemaService);
         reset(schemaService);
+    }
+
+    @Test
+    public void testAutoCreate() throws Exception {
+        // Service Mock 记录阶段
+        account.setSn("msu_222");
+        expect(accountService.findBySn(account.getSn())).andReturn(account);
+        expect(mockedService.autoCreate(account)).andAnswer(new IAnswer<ItsnowProcess>() {
+            @Override
+            public ItsnowProcess answer() throws Throwable {
+                process.setAccount(account);
+                process.setHost(host);
+                process.setSchema(schema);
+                return process;
+            }
+        });
+        // 准备 Mock Request
+        MockHttpServletRequestBuilder request = post("/admin/api/processes/auto/" + account.getSn());
+        decorate(request);
+
+        // Mock 准备播放
+        replay(accountService);
+        replay(mockedService);
+
+        // 执行
+        ResultActions result = this.browser.perform(request);
+
+        // 对业务结果的验证
+        decorate(result).andExpect(status().isOk());
+
+        verify(accountService);
+        reset(accountService);
     }
 
     @Test

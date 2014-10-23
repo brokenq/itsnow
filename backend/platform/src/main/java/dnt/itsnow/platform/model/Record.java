@@ -28,6 +28,10 @@ public class Record {
         this.id = id;
     }
 
+    public Record() {
+        creating();
+    }
+
     public Timestamp getCreatedAt() {
         return createdAt == null ? new Timestamp(System.currentTimeMillis()) : createdAt;
     }

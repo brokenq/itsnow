@@ -11,6 +11,7 @@ import dnt.itsnow.model.ItsnowSchema;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
+import dnt.itsnow.platform.web.exception.WebServerSideException;
 import dnt.itsnow.service.CommonAccountService;
 import dnt.itsnow.service.ItsnowHostService;
 import dnt.itsnow.service.ItsnowProcessService;
@@ -29,15 +30,15 @@ import java.util.List;
  * <h1>Itsnow processes web controller</h1>
  * <pre>
  * <b>HTTP     URI                                  方法       含义  </b>
- * GET    /admin/api/processes                     index     列出所有进程，支持过滤，分页，排序等
- * POST   /admin/api/processes                     create    为特定帐户分配(创建)进程
- * GET    /admin/api/processes/{name}              show      查看特定进程的信息
- * PUT    /admin/api/processes/{name}/start        start     启动进程
- * PUT    /admin/api/processes/{name}/stop         stop      停止进程
- * PUT    /admin/api/processes/{name}/cancel       cancel    取消最近的操作(启动/停止)
- * DELETE /admin/api/processes/{name}              destroy   删除进程对象
- * GET    /admin/api/processes/{name}/follow/{job} follow    获取特定进程最新的任务信息
- *
+ * GET    /admin/api/processes                     index      列出所有进程，支持过滤，分页，排序等
+ * POST   /admin/api/processes                     create     为特定帐户分配(创建)进程
+ * POST   /admin/api/processes/auto/{accountSn}    autoCreate 为特定帐户自动分配一个进程
+ * GET    /admin/api/processes/{name}              show       查看特定进程的信息
+ * PUT    /admin/api/processes/{name}/start        start      启动进程
+ * PUT    /admin/api/processes/{name}/stop         stop       停止进程
+ * PUT    /admin/api/processes/{name}/cancel       cancel     取消最近的操作(启动/停止)
+ * DELETE /admin/api/processes/{name}              destroy    删除进程对象
+ * GET    /admin/api/processes/{name}/follow/{job} follow     获取特定进程最新的任务信息
  * </pre>
  */
 @RestController
@@ -112,7 +113,7 @@ public class ItsnowProcessesController extends SessionSupportController<ItsnowPr
      */
     @RequestMapping(method = RequestMethod.POST)
     public ItsnowProcess create(@Valid @RequestBody ItsnowProcess creating) {
-        logger.info("Creating {} Itsnow Process {}", creating);
+        logger.info("Creating Itsnow Process {}", creating);
         try {
             // 将输入的id引用转换为已有的对象
             Account account = findAccount(creating.getAccountId());
@@ -133,11 +134,31 @@ public class ItsnowProcessesController extends SessionSupportController<ItsnowPr
             }
             // 可能会抛出重名的异常(重名由数据库uk保证)
             currentProcess= processService.create(creating);
-            logger.info("Created  {} Itsnow Process {} ", currentProcess);
+            logger.info("Created  Itsnow Process {} ", currentProcess);
             return currentProcess;
         }catch (ItsnowProcessException ex){
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, ex.getMessage());
         }
+    }
+
+    /**
+        * <h2>创建(分配)服务进程</h2>
+        * POST /admin/api/processes
+        * <p/>
+     */
+   @RequestMapping(method = RequestMethod.POST, value = "auto/{accountSn}")
+    public ItsnowProcess autoCreate(@PathVariable("accountSn") String accountSn){
+       logger.info("Auto creating Itsnow Process for account with sn {}", accountSn);
+       Account account = findAccount(accountSn);
+       ItsnowProcess process;
+       try {
+           process = processService.autoCreate(account);
+           logger.info("Auto created  Itsnow Process {} for account with sn {}", process, account);
+       } catch (ItsnowProcessException e) {
+           throw new WebServerSideException(HttpStatus.INTERNAL_SERVER_ERROR,
+                                            "Can't auto create process for " + account);
+       }
+       return process;
     }
 
     /**
@@ -243,6 +264,13 @@ public class ItsnowProcessesController extends SessionSupportController<ItsnowPr
         Account account = accountService.findById(accountId);
         if( account == null )
             throw new WebClientSideException(HttpStatus.NOT_FOUND, String.format(template, "account", accountId));
+        return account;
+    }
+
+    protected Account findAccount(String accountSn) {
+        Account account = accountService.findBySn(accountSn);
+        if( account == null )
+            throw new WebClientSideException(HttpStatus.NOT_FOUND, "Can't find the account sn = " + accountSn);
         return account;
     }
 

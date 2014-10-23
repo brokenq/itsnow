@@ -3,6 +3,7 @@
  */
 package dnt.itsnow.support;
 
+import dnt.itsnow.exception.ItsnowHostException;
 import dnt.itsnow.exception.ItsnowProcessException;
 import dnt.itsnow.exception.ItsnowSchemaException;
 import dnt.itsnow.exception.SystemInvokeException;
@@ -11,13 +12,14 @@ import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.repository.ItsnowProcessRepository;
-import dnt.itsnow.service.*;
+import dnt.itsnow.service.ItsnowHostService;
+import dnt.itsnow.service.ItsnowProcessService;
+import dnt.itsnow.service.ItsnowSchemaService;
 import dnt.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,6 +108,21 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
         repository.create(creating);
         logger.info("Created  itsnow process: {}", creating);
         return creating;
+    }
+
+    @Override
+    public ItsnowProcess autoCreate(Account account) throws ItsnowProcessException {
+        logger.info("Auto creating itsnow process for {}", account);
+        ItsnowHost host = autoAssignHost(account);
+        ItsnowSchema schema = autoAssignSchema(account, host);
+        ItsnowProcess process = autoAssignProcess(account, host, schema);
+        updateHost(host, process);
+        // Create it first
+        create(process);
+        // Then start it
+        start(process);
+        logger.info("Auto created and start the itsnow process {} for {}", process, account);
+        return process;
     }
 
     @Override
@@ -203,10 +220,16 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
         super.finished(invocation);
         if( invocation.getUserFlag() == START_FLAG){
             // set process status as started
-            updateStatus(START_INVOCATION_ID, invocation.getId(), ProcessStatus.Running);
+            ItsnowProcess process = updateStatus(START_INVOCATION_ID, invocation.getId(), ProcessStatus.Running);
+            if( process != null ) {
+                logger.info("Started  {}", process);
+            }
         }else if (invocation.getUserFlag() == STOP_FLAG){
             // set process status as stopped
-            updateStatus(STOP_INVOCATION_ID, invocation.getId(), ProcessStatus.Stopped);
+            ItsnowProcess process = updateStatus(STOP_INVOCATION_ID, invocation.getId(), ProcessStatus.Stopped);
+            if( process != null ) {
+                logger.info("Stopped  {}", process);
+            }
         }
     }
 
@@ -216,19 +239,68 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
         //set process status as abnormal
         if( invocation.getUserFlag() == START_FLAG){
             // set process status as started
-            updateStatus(START_INVOCATION_ID, invocation.getId(), ProcessStatus.Abnormal);
+            ItsnowProcess process = updateStatus(START_INVOCATION_ID, invocation.getId(), ProcessStatus.Abnormal);
+            if( process != null ) {
+                logger.info("Starts   {} failed", process);
+            }
         }else if (invocation.getUserFlag() == STOP_FLAG){
             // set process status as stopped
-            updateStatus(STOP_INVOCATION_ID, invocation.getId(), ProcessStatus.Abnormal);
+            ItsnowProcess process = updateStatus(STOP_INVOCATION_ID, invocation.getId(), ProcessStatus.Abnormal);
+            if( process != null ) {
+                logger.info("Stops    {} failed", process);
+            }
         }
     }
 
-    protected void updateStatus(String invocationName, String invocationId, ProcessStatus status) {
+    protected ItsnowProcess updateStatus(String invocationName, String invocationId, ProcessStatus status) {
         ItsnowProcess process = repository.findByConfiguration(invocationName, invocationId);
-        if( process == null ) return;//听到了别的消息，忽略
+        if( process == null ) return null;//听到了别的消息，忽略
         logger.info("Update {} status as {}", process, status);
         process.setStatus(status);
         process.updating();
         repository.update(process);
+        return process;
     }
+
+    ItsnowHost autoAssignHost(Account account) {
+        return hostService.pickHost(account, HostType.APP );
+    }
+
+    ItsnowSchema autoAssignSchema(Account account, ItsnowHost host) {
+        return schemaService.pickSchema(account, host);
+    }
+
+    ItsnowProcess autoAssignProcess(Account account, ItsnowHost host,  ItsnowSchema schema) {
+        ItsnowProcess process = new ItsnowProcess();
+        process.setAccount(account);
+        process.setHost(host);
+        process.setSchema(schema);
+
+        process.setName("itsnow_" + account.getSn());
+        process.setDescription("Itsnow process for " + account.getSn());
+        process.setWd("/opt/itsnow/" + process.getName());
+        process.setProperty("rmi.port", host.getProperty("next.rmi.port", "8100"));
+        process.setProperty("debug.port", host.getProperty("next.debug.port", "8200"));
+        process.setProperty("jmx.port", host.getProperty("next.jmx.port", "8300"));
+        process.setProperty("http.port", host.getProperty("next.http.port", "8400"));
+        return process;
+    }
+
+    void updateHost(ItsnowHost host, ItsnowProcess process) throws ItsnowProcessException {
+        host.setProperty("next.rmi.port", next(process.getProperty("rmi.port")));
+        host.setProperty("next.debug.port", next(process.getProperty("debug.port")));
+        host.setProperty("next.jmx.port", next(process.getProperty("jmx.port")));
+        host.setProperty("next.http.port", next(process.getProperty("http.port")));
+        try {
+            hostService.update(host);
+        } catch (ItsnowHostException e) {
+            throw new ItsnowProcessException("Can't update the host for next ports", e);
+        }
+    }
+
+    private String next(String value) {
+        return String.valueOf(Integer.valueOf(value) + 1);
+    }
+
+
 }

@@ -14,6 +14,7 @@ import dnt.itsnow.util.DeployFixture;
 import org.apache.commons.io.FileUtils;
 import org.easymock.IAnswer;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.util.Assert;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -103,8 +103,8 @@ public class ItsnowProcessManagerTest {
         replay(repository);
 
         ItsnowProcess created = service.create(process);
-        Assert.notNull(created.getCreatedAt());
-        Assert.notNull(created.getUpdatedAt());
+        Assert.assertNotNull(created.getCreatedAt());
+        Assert.assertNotNull(created.getUpdatedAt());
     }
 
     @Test
@@ -139,7 +139,7 @@ public class ItsnowProcessManagerTest {
         replay(repository);
 
         String returnJobId = service.start(process);
-        Assert.isTrue(jobId.equals(returnJobId));
+        Assert.assertEquals(jobId, returnJobId);
     }
 
     @Test
@@ -156,7 +156,7 @@ public class ItsnowProcessManagerTest {
         replay(repository);
 
         String returnJobId = service.stop(process);
-        Assert.isTrue(jobId.equals(returnJobId));
+        Assert.assertEquals(jobId, returnJobId);
     }
 
     @Test
@@ -197,7 +197,64 @@ public class ItsnowProcessManagerTest {
         replay(repository);
 
         long offset = service.follow(process, jobId, 0L, messages);
-        Assert.isTrue(offset == 8L);
-        Assert.isTrue(messages.size()==2);
+        Assert.assertEquals(8L, offset);
+        Assert.assertEquals(2, messages.size());
+    }
+
+    @Test
+    public void testAutoCreate() throws Exception {
+        MsuAccount account = new MsuAccount();
+        account.setName("Test MSU");
+        account.setSn("msu_111");
+        account.setDomain("auto");
+
+        expect(hostService.pickHost(account, HostType.APP)).andAnswer(new IAnswer<ItsnowHost>() {
+            @Override
+            public ItsnowHost answer() throws Throwable {
+                host.setProperty("next.rmi.port", "8110");
+                host.setProperty("next.debug.port", "8210");
+                host.setProperty("next.jmx.port", "8310");
+                host.setProperty("next.http.port", "8410");
+                return host;
+            }
+        });
+        schema.setId(null);
+        expect(schemaService.pickSchema(account, host)).andReturn(schema);
+        hostService.update(host);
+        expectLastCall().atLeastOnce();
+        expect(schemaService.create(schema)).andAnswer(new IAnswer<ItsnowSchema>() {
+            @Override
+            public ItsnowSchema answer() throws Throwable {
+                schema.setId(100L);
+                return schema;
+            }
+        });
+
+        String jobId = "create-process-job-id";
+        expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
+        expect(systemInvokeService.waitJobFinished(jobId)).andReturn(0) ;
+        repository.create(isA(ItsnowProcess.class));
+        expectLastCall().once();
+
+        jobId = "start-process-job-id";
+        expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
+        repository.update(isA(ItsnowProcess.class));
+        expectLastCall().once();
+
+        replay(hostService);
+        replay(schemaService);
+        replay(systemInvokeService);
+        replay(repository);
+
+        ItsnowProcess newProcess = service.autoCreate(account);
+        Assert.assertEquals("8110", newProcess.getProperty("rmi.port"));
+        Assert.assertEquals("8210", newProcess.getProperty("debug.port"));
+        Assert.assertEquals("8310", newProcess.getProperty("jmx.port"));
+        Assert.assertEquals("8410", newProcess.getProperty("http.port"));
+
+        Assert.assertEquals("8111", host.getProperty("next.rmi.port"));
+        Assert.assertEquals("8211", host.getProperty("next.debug.port"));
+        Assert.assertEquals("8311", host.getProperty("next.jmx.port"));
+        Assert.assertEquals("8411", host.getProperty("next.http.port"));
     }
 }
