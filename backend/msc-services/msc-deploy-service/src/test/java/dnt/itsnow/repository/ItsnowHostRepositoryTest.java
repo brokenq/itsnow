@@ -94,7 +94,7 @@ public class ItsnowHostRepositoryTest {
     public void testFindAllByKeyword() throws Exception {
         //实际环境中，大小写不敏感，但H2 database没有很好的支持，所以在测试用例中不进行case insensitive测试
         List<ItsnowHost> msHosts = hostRepository.findAllByKeyword("%MS%", new PageRequest(0, 10));
-        Assert.assertEquals(3, msHosts.size());
+        Assert.assertEquals(2, msHosts.size());
     }
 
     @Test
@@ -136,5 +136,11 @@ public class ItsnowHostRepositoryTest {
     public void testFindAllByConfiguration() throws Exception {
         List<ItsnowHost> hosts = hostRepository.findAllByConfiguration("mem", "8g");
         Assert.assertEquals(3, hosts.size());
+    }
+
+    @Test
+    public void testCountLinked() throws Exception {
+        int count = hostRepository.countLinked(1L);
+        Assert.assertEquals(2, count);
     }
 }

@@ -23,6 +23,13 @@
 
     <select id="findAllByKeyword" resultMap="hostResult">
         <include refid="selectHost"/>
+        <if test="keyword != null and keyword != ''">
+            <where>
+                h.name LIKE #{keyword}
+                OR h.address LIKE #{keyword}
+                OR h.description LIKE #{keyword}
+            </where>
+        </if>
         <if test="pageRequest.sort != null">
             ORDER BY #{pageRequest.sort}
         </if>
@@ -88,10 +95,8 @@
         <result property="createdAt" column="created_at"/>
         <result property="updatedAt" column="updated_at"/>
         <result column="configuration" property="configuration" typeHandler="dnt.itsnow.util.PropertiesHandler"/>
-        <association property="extend" javaType="HostExtend">
-            <result property="processesCount" column="processes_count"/>
-            <result property="schemasCount" column="schemas_count"/>
-        </association>
+        <result column="processes_count" property="processesCount"/>
+        <result column="schemas_count" property="schemasCount"/>
     </resultMap>
 
 </mapper>

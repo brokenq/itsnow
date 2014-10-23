@@ -19,8 +19,9 @@ public class ItsnowHost extends DeployResource implements Comparable<ItsnowHost>
     private int    capacity;
     @NotNull
     private HostType type = HostType.APP;
-    // 拓展字段，不存储于数据库中，用于列表中展示
-    private HostExtend extend;
+
+    private int processesCount;
+    private int schemasCount;
 
     @Override
     @NotNull
@@ -60,12 +61,20 @@ public class ItsnowHost extends DeployResource implements Comparable<ItsnowHost>
         this.type = type;
     }
 
-    public HostExtend getExtend() {
-        return extend;
+    public int getProcessesCount() {
+        return processesCount;
     }
 
-    public void setExtend(HostExtend extend) {
-        this.extend = extend;
+    public void setProcessesCount(int processesCount) {
+        this.processesCount = processesCount;
+    }
+
+    public int getSchemasCount() {
+        return schemasCount;
+    }
+
+    public void setSchemasCount(int schemasCount) {
+        this.schemasCount = schemasCount;
     }
 
     @Override
@@ -77,8 +86,9 @@ public class ItsnowHost extends DeployResource implements Comparable<ItsnowHost>
         ItsnowHost that = (ItsnowHost) o;
 
         if (capacity != that.capacity) return false;
+        if (processesCount != that.processesCount) return false;
+        if (schemasCount != that.schemasCount) return false;
         if (address != null ? !address.equals(that.address) : that.address != null) return false;
-        if (extend != null ? !extend.equals(that.extend) : that.extend != null) return false;
         //noinspection RedundantIfStatement
         if (status != that.status) return false;
         if (type != that.type) return false;
@@ -91,9 +101,10 @@ public class ItsnowHost extends DeployResource implements Comparable<ItsnowHost>
         int result = super.hashCode();
         result = 31 * result + (address != null ? address.hashCode() : 0);
         result = 31 * result + (type != null ? type.hashCode() : 0);
-        result = 31 * result + (extend != null ? extend.hashCode() : 0);
         result = 31 * result + status.hashCode();
         result = 31 * result + capacity;
+        result = 31 * result + processesCount;
+        result = 31 * result + schemasCount;
         return result;
     }
 
@@ -105,8 +116,6 @@ public class ItsnowHost extends DeployResource implements Comparable<ItsnowHost>
 
     @JsonIgnore
     public int getLeftCapacity() {
-        int processesCount = extend == null ? 0 : extend.getProcessesCount();
-        int schemasCount = extend == null ? 0 : extend.getSchemasCount();
         return this.getCapacity() - processesCount - schemasCount;
     }
 }

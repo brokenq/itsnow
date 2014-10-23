@@ -24,8 +24,8 @@ angular.module('MscIndex.HostNew', ['ngResource'])
       $scope.createHost = ->
         feedback = (content) ->
           alert content
-        success = ->
-          $state.go 'hosts'
+        success = (data)->
+          $state.go 'host_view', data
         failure = (response)->
           feedback response.statusText
         host = $scope.host
@@ -36,10 +36,5 @@ angular.module('MscIndex.HostNew', ['ngResource'])
         host.configuration['msu.version'] = msu_version
         host.configuration['msp.version'] = msp_version
         hostService.save(host, success, failure)
-
-      $scope.checkName = (data, elem)->
-        autoFillId = '#' + elem.attr 'auto-fill'
-        if data.address? then $(autoFillId).val data.address else $(autoFillId).val ""
-        return true
   ]
 

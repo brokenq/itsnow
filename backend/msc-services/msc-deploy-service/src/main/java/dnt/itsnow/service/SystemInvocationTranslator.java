@@ -92,4 +92,14 @@ public interface SystemInvocationTranslator {
      * @return 调用对象
      */
     SystemInvocation check(ItsnowProcess process);
+
+    /**
+     * <h2>检查主机用户名密码</h2>
+     *
+     * @param host 主机地址
+     * @param username 用户名
+     * @param password 密码
+     * @return 调用对象
+     */
+    SystemInvocation checkHostUser(String host, String username, String password);
 }

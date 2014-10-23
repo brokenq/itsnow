@@ -101,6 +101,7 @@ public class ItsnowSchemasControllerTest extends SessionSupportedControllerTest 
         schema.setId(102L);
         // Service Mock 记录阶段
         expect(mockedService.findById(schema.getId())).andReturn(schema);
+        expect(mockedService.canDelete(schema)).andReturn(true);
         mockedService.delete(schema);
         expectLastCall().once();
         // 准备 Mock Request

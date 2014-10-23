@@ -211,6 +211,16 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
         };
     }
 
+    @Override
+    public SystemInvocation checkHostUser(final String host, final String username, final String password) {
+        return new LocalInvocation() {
+            @Override
+            public int perform(Process process) throws Exception {
+            return process.run("./check_host_user.sh", host, username, password);
+            }
+        };
+    }
+
     static class ScpTask extends LocalInvocation {
         private ItsnowProcess itsnowProcess;
         private File          varsFile;

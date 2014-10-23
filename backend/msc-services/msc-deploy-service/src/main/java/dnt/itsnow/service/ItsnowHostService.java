@@ -120,4 +120,22 @@ public interface ItsnowHostService {
      * @return 可用的主机
      */
     ItsnowHost pickHost(Account account, HostType type);
+
+    /**
+     * <h2>检查主机用户名密码是否有效</h2>
+     *
+     *  @param host 主机地址
+     *  @param username 用户名
+     *  @param password 密码
+     *  throws ItsnowHostException
+     */
+    boolean checkPassword(String host, String username, String password) throws ItsnowHostException;
+
+    /**
+     * <h2>主机是否可删除</h2>
+     * <p>如果主机有关联的进程或Schema，则不能删除，返回false；否则返回true</p>
+     * @param host 主机对象
+     * @return true：可删除；false：不可删除
+     */
+    boolean canDelete(ItsnowHost host);
 }

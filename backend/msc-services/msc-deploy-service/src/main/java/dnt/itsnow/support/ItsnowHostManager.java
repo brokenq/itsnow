@@ -120,6 +120,27 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     }
 
     @Override
+    public boolean checkPassword(String host, String username, String password) throws ItsnowHostException {
+        logger.debug("Checking {}@{} password availability", username, host);
+        SystemInvocation checkJob = translator.checkHostUser(host, username, password);
+        String jobId = invokeService.addJob(checkJob);
+        try {
+            int code = invokeService.waitJobFinished(jobId);
+            return code == 0;
+        } catch (SystemInvokeException e) {
+            throw new ItsnowHostException("Checking " + host + " password availability " , e);
+        }
+    }
+
+    @Override
+    public boolean canDelete(ItsnowHost host) {
+        logger.debug("Counting linked processes and schemas by host id: {} ", host.getId());
+        int count = repository.countLinked(host.getId());
+        logger.debug("Counted linked processes and schemas by host id: {} is {} ", host.getId(), count);
+        return count == 0;
+    }
+
+    @Override
     public ItsnowHost findById(Long hostId) {
         logger.debug("Finding itsnow host by id: {}", hostId);
         ItsnowHost host = repository.findById(hostId);

@@ -78,9 +78,9 @@ public class GeneralGroupRepositoryTest {
     }
 
     @Test
-    public void testFindBySn() throws Exception {
+    public void testFindByName() throws Exception {
         Assert.notNull(repository.findByName("administrators"));
-        Assert.isNull(repository.findByName("1000000"));
+        Assert.isNull(repository.findByName("not-exist-record"));
     }
 
 }

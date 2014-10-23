@@ -7,6 +7,8 @@ import dnt.itsnow.config.ItsnowHostManagerConfig;
 import dnt.itsnow.exception.ItsnowHostException;
 import dnt.itsnow.exception.SystemInvokeException;
 import dnt.itsnow.model.*;
+import dnt.itsnow.model.ItsnowHost;
+import dnt.itsnow.model.SystemInvocation;
 import dnt.itsnow.repository.ItsnowHostRepository;
 import dnt.itsnow.service.SystemInvokeService;
 import dnt.itsnow.util.DeployFixture;
@@ -42,8 +44,6 @@ public class ItsnowHostManagerTest {
     SystemInvokeService  systemInvokeService;
 
     ItsnowHost host;
-//    @Autowired
-//    ItsnowHostService hostService;
 
     @Before
     public void setUp() throws Exception {
@@ -58,12 +58,6 @@ public class ItsnowHostManagerTest {
         verify(repository);
         reset(repository);
     }
-
-//    @Test
-//    public void testFindAll() throws Exception {
-//        Page<ItsnowHost> pages = hostService.findAll(null, new PageRequest(0, 10));
-//        Assert.notNull(pages);
-//    }
 
     @Test
     public void testCreate() throws Exception {
@@ -143,15 +137,13 @@ public class ItsnowHostManagerTest {
     public void testPickHost() throws Exception {
         ItsnowHost host1 = new ItsnowHost();
         host1.setCapacity(10);
-        host1.setExtend(new HostExtend());
-        host1.getExtend().setProcessesCount(3);
-        host1.getExtend().setSchemasCount(4);
+        host1.setProcessesCount(3);
+        host1.setSchemasCount(4);
         ItsnowHost host2 = new ItsnowHost();
 
         host2.setCapacity(8);
-        host2.setExtend(new HostExtend());
-        host2.getExtend().setProcessesCount(3);
-        host2.getExtend().setSchemasCount(4);
+        host2.setProcessesCount(3);
+        host2.setSchemasCount(4);
 
         List<ItsnowHost> hosts = new ArrayList<ItsnowHost>();
         hosts.add(host1);
@@ -165,6 +157,16 @@ public class ItsnowHostManagerTest {
 
         ItsnowHost host = hostManager.pickHost(new MspAccount(), HostType.APP );
         Assert.isTrue(host == host1);
+    }
 
+    public void testCheckPassword() throws Exception {
+        String jobId = "check-password-job-id";
+        expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
+        expect(systemInvokeService.waitJobFinished(jobId)).andReturn(0);
+
+        replay(systemInvokeService);
+        replay(repository);
+        boolean b = hostManager.checkPassword("172.16.3.4", "srv2.itsnow.com", "itsnow@team");
+        Assert.isTrue(b);
     }
 }

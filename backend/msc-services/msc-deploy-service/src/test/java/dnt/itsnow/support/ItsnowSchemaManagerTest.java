@@ -149,5 +149,4 @@ public class ItsnowSchemaManagerTest {
         replay(systemInvokeService);
         replay(repository);
     }
-
 }
