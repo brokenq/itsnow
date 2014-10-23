@@ -1,7 +1,7 @@
 package itsnow.dnt.web.controller;
 
 import dnt.itsnow.model.Department;
-import dnt.itsnow.model.ProcessDictionary;
+import dnt.itsnow.model.Dictionary;
 import dnt.itsnow.model.Site;
 import dnt.itsnow.model.WorkTime;
 import dnt.itsnow.platform.util.DefaultPage;
@@ -61,9 +61,9 @@ public class SitesControllerTest extends SessionSupportedControllerTest {
         departments.add(department);
         site.setDepartments(departments);
 
-        ProcessDictionary dictionary = new ProcessDictionary();
+        Dictionary dictionary = new Dictionary();
         dictionary.setId(1L);
-        site.setProcessDictionary(dictionary);
+        site.setDictionary(dictionary);
 
         WorkTime workTime = new WorkTime();
         workTime.setId(1L);

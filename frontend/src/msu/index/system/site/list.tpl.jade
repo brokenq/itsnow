@@ -1,12 +1,9 @@
-mixin tool_button(action, icon, text)
-  button.btn.btn-default(type="button")
-    span.glyphicon(class="glyphicon-#{icon}")
-    | #{text}
-mixin drop_button(action, icon, text)
-  li
-    a(href=action)
-      span.glyphicon(class="glyphicon-#{icon}")
-      | #{text}
+mixin tool_button(action, icon, text, weight, rejectCss, requireCss)
+    button.btn.btn-primary.no-border(type="button", ng-click=action, weight=weight, reject-css=rejectCss, require-css=requireCss)
+        span.glyphicon(class="glyphicon-#{icon}")
+        | #{text}
+mixin td(title, name)
+    td(style="text-align: center" data-title=title) #{name}
 mixin nav_link(value, icon, text)
   a(ng-switch-when=value, ng-click="params.page(page.number)", href="")
     span.glyphicon(class="glyphicon-#{icon}")
@@ -17,7 +14,7 @@ mixin page_navs()
     +nav_link("prev", "step-backward", "上一页")
     +nav_link("next", "step-forward", "下一页")
 mixin page_size_button(count)
-  button.btn.btn-default(type="button", ng-class="{'active':params.count() == #{count}}", ng-click="params.count(#{count})")= count
+  button.btn.btn-primary.no-border(type="button", ng-class="{'active':params.count() == #{count}}", ng-click="params.count(#{count})")= count
 mixin select_all()
   input(type="checkbox", ng-model="checkboxes.checked", name="filter-checkbox", value="")#select_all
 
@@ -25,33 +22,27 @@ mixin select_all()
 
   .btn-toolbar(role="toolbar")
     .btn-group
-      +tool_button("#", "refresh", "")
+        +tool_button("", "refresh", "", "*", "", "")
     .btn-group
-        +tool_button("#", "new", "新建")
-        +tool_button("#", "edit", "编辑")
-        +tool_button("#", "remove", "删除")
-        //.btn-group
-        //  button.btn.btn-default.dropdown-toggle(type="button",data-toggle="dropdown")
-        //    | 更多操作
-        //    span.caret
-        //  ul.dropdown-menu(role="menu")
-        //    +drop_button("#", "remove", "删除")
+        +tool_button("actionService.gotoState('site_form', $event)", "new", "新建", "*", "", "")
+        +tool_button("actionService.gotoState('site_form', $event)", "edit", "编辑", "1", "", "")
+        +tool_button("actionService.perform(remove, $event)", "remove", "删除", "1+", "", "")
     .btn-group.pull-right
       .nav-search#nav-search
         form.form-search
           span.input-icon
-            input.nav-search-input(type="text", placeholder="请输入地点名称或者地址...",autocomplete="off")#nav-search-input
+            input.nav-search-input(type="text", placeholder="请输入地点名称或者地址...",autocomplete="off",ng-keypress="search($event)")#nav-search-input
             i.icon-search.nav-search-icon
 
-  table.table(template-pagination="customPager",ng-table="tableParams")
-    tr(ng-repeat="site in $data")
+  table.table.table-hover.table-bordered(template-pagination="customPager",ng-table="tableParams")#table
+    tr(ng-repeat="site in sites", value="{{site.sn}}")
       td(width="30" style="text-align: left" header="'ngTableCheckboxHeader'")
         input(type="checkbox" ng-model="checkboxes.items[site.sn]")
-      td(style="text-align: center" data-title="'地点名称'") {{site.name}}
-      td(style="text-align: center" data-title="'地址'") {{site.address}}
-      td(style="text-align: center" data-title="'描述'") {{site.description}}
-      td(style="text-align: center" data-title="'区域'") {{site.processDictionary.name}}
-      td(style="text-align: center" data-title="'工作时间'") {{ site.workTime.startAt}} - {{ site.workTime.endAt}}
+      +td("'地点名称'", "{{site.name}}")
+      +td("'地址'", "{{site.address}}")
+      +td("'描述'", "{{site.description}}")
+      +td("'区域'", "{{site.dictionary.display}}")
+      +td("'工作时间'", "{{ site.workTime.startAt}} - {{ site.workTime.endAt}}")
 
 script(type="text/ng-template")#ngTableCheckboxHeader
   +select_all()

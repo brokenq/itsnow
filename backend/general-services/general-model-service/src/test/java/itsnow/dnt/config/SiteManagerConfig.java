@@ -3,11 +3,11 @@ package itsnow.dnt.config;
 import dnt.itsnow.platform.service.AutoNumberService;
 import dnt.itsnow.platform.support.AutoNumberInMemory;
 import dnt.itsnow.service.DepartmentService;
-import dnt.itsnow.service.ProcessDictionaryService;
+import dnt.itsnow.service.DictionaryService;
 import dnt.itsnow.service.SiteService;
 import dnt.itsnow.service.WorkTimeService;
 import dnt.itsnow.support.DepartmentManager;
-import dnt.itsnow.support.ProcessDictionaryManager;
+import dnt.itsnow.support.DictionaryManager;
 import dnt.itsnow.support.SiteManager;
 import dnt.itsnow.support.WorkTimeManager;
 import org.springframework.context.annotation.Bean;
@@ -25,8 +25,8 @@ public class SiteManagerConfig extends SiteRepositoryConfig {
     }
 
     @Bean
-    public ProcessDictionaryService processDictionarySerivce(){
-        return new ProcessDictionaryManager();
+    public DictionaryService processDictionarySerivce(){
+        return new DictionaryManager();
     }
 
     @Bean

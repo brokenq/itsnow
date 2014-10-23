@@ -22,7 +22,7 @@
             <result property="endAt" column="workTimeEndAt"/>
         </association>
         <!-- 多对一关系 -->
-        <association property="processDictionary" column="process_dictionary_id" javaType="ProcessDictionary">
+        <association property="dictionary" column="process_dictionary_id" javaType="Dictionary">
             <id property="id" column="dictionaryId"/>
             <result property="sn" column="dictionarySn"/>
             <result property="code" column="dictionaryCode"/>
@@ -71,7 +71,7 @@
         FROM   sites s
             LEFT JOIN work_times w
                 ON s.work_time_id = w.id
-            LEFT JOIN process_dictionaries p
+            LEFT JOIN dictionaries p
                 ON s.process_dictionary_id = p.id
             LEFT JOIN site_depts sd
                 ON s.id = sd.site_id
@@ -80,10 +80,11 @@
     </sql>
 
     <select id="count" resultType="java.lang.Integer">
+        <bind name="pattern" value="'%' + keyword + '%' "/>
         SELECT COUNT(0) FROM sites
         <where>
             <if test="keyword != null and keyword != ''">
-                name LIKE #{keyword} OR address LIKE #{keyword}
+                name LIKE #{pattern} OR address LIKE #{pattern}
             </if>
         </where>
     </select>
@@ -94,10 +95,11 @@
     </select>
 
     <select id="findAll" resultMap="siteResult">
+        <bind name="pattern" value="'%' + keyword + '%' "/>
         <include refid="selectSite"/>
         <where>
             <if test="keyword != null and keyword != ''">
-                s.name LIKE #{keyword} OR s.address LIKE #{keyword}
+                s.name LIKE #{pattern} OR s.address LIKE #{pattern}
             </if>
         </where>
         <if test="pageable.sort != null">

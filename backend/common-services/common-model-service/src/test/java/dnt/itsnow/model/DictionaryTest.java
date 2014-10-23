@@ -15,16 +15,16 @@ import java.util.Set;
 /**
  * <h1>流程字典测试类</h1>
  */
-public class ProcessDictionaryTest {
+public class DictionaryTest {
 
     private static ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     private static Validator validator = factory.getValidator();
 
-    private ProcessDictionary dictionary;
+    private Dictionary dictionary;
 
     @Before
     public void setUp() throws Exception {
-        dictionary = new ProcessDictionary();
+        dictionary = new Dictionary();
         dictionary.setId(10L);
         dictionary.setSn("010");
         dictionary.setCode("inc010");
@@ -41,7 +41,7 @@ public class ProcessDictionaryTest {
     @Test
     public void testDictionaryIsNotValid() throws Exception {
         dictionary.setSn(null);
-        Set<ConstraintViolation<ProcessDictionary>> violations = validator.validate(dictionary);
+        Set<ConstraintViolation<Dictionary>> violations = validator.validate(dictionary);
         Assert.assertFalse(violations == null || violations.isEmpty());
     }
 
@@ -49,8 +49,8 @@ public class ProcessDictionaryTest {
     public void testJson() throws Exception {
         String json = JsonSupport.toJSONString(dictionary);
         System.out.println(json);
-        ProcessDictionary parsed = JsonSupport.parseJson(json, ProcessDictionary.class);
-        Assert.assertEquals(ProcessDictionary.class, parsed.getClass());
+        Dictionary parsed = JsonSupport.parseJson(json, Dictionary.class);
+        Assert.assertEquals(Dictionary.class, parsed.getClass());
     }
 
 }

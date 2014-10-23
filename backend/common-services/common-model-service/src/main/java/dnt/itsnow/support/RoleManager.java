@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,17 +37,16 @@ public class RoleManager extends Bean implements RoleService {
     @Override
     public Page<Role> findAll(String keyword, Pageable pageable) {
 
-        logger.debug("Finding roles by keyword:{}, accountId:{}", keyword);
+        logger.debug("Finding roles by keyword:{}", keyword);
 
-        if (StringUtils.isNotBlank(keyword)) {
-            keyword = "%" + keyword + "%";
+        int total = repository.count(keyword);
+        List<Role> roles = new ArrayList<Role>();
+        if (total > 0) {
+            roles = repository.findAll(keyword, pageable);
         }
-
-        int total = repository.count(keyword).intValue();
-        List<Role> roles = repository.findAll(keyword, pageable);
         DefaultPage<Role> page = new DefaultPage<Role>(roles, pageable, total);
 
-        logger.debug("Finded role list info:{}", page);
+        logger.debug("Found   {}", page);
 
         return page;
     }
@@ -54,11 +54,11 @@ public class RoleManager extends Bean implements RoleService {
     @Override
     public Role findByName(String name) {
 
-        logger.debug("Finding Role by name:{}", name);
+        logger.debug("Finding role by name:{}", name);
 
         Role role = repository.findByName(name);
 
-        logger.debug("Finded role:{}", role);
+        logger.debug("Found   {}", role);
 
         return role;
     }
@@ -85,9 +85,8 @@ public class RoleManager extends Bean implements RoleService {
             }
         }
 
-        logger.info("Created {}", role);
+        logger.info("Created  {}", role);
 
-        logger.info("Sync role +");
         globalMessageBus.publish("Role", "+" + JsonSupport.toJSONString(role));
 
         return role;
@@ -101,7 +100,7 @@ public class RoleManager extends Bean implements RoleService {
         if (role == null) {
             throw new RoleException("Role entry can not be empty.");
         }
-
+        role.updating();
         repository.update(role);
 
         if (role.getUsers() != null) {
@@ -115,9 +114,8 @@ public class RoleManager extends Bean implements RoleService {
             }
         }
 
-        logger.info("Updated {}", role);
+        logger.info("Updated  {}", role);
 
-        logger.info("Sync role *");
         globalMessageBus.publish("Role", "*" + JsonSupport.toJSONString(role));
 
         return role;
@@ -126,7 +124,7 @@ public class RoleManager extends Bean implements RoleService {
     @Override
     public void destroy(Role role) throws RoleException {
 
-        logger.warn("Deleting role {}", role);
+        logger.warn("Deleting {}", role);
 
         if (role == null) {
             throw new RoleException("Role entry can not be empty.");
@@ -137,10 +135,9 @@ public class RoleManager extends Bean implements RoleService {
 
         repository.delete(role.getName());
 
-        logger.info("Sync role -");
         globalMessageBus.publish("Role", "-" + JsonSupport.toJSONString(role));
 
-        logger.warn("Deletd role");
+        logger.warn("Deleted  {}", role);
     }
 
     @Override
@@ -150,7 +147,7 @@ public class RoleManager extends Bean implements RoleService {
 
         List<User> users = repository.findUsersByAccountId(mainAccount.getId());
 
-        logger.debug("Found {}", users);
+        logger.debug("Found   {}", users);
 
         return users;
     }

@@ -13,13 +13,13 @@ import org.springframework.context.annotation.Import;
  */
 @Configuration
 @Import(DatabaseConfig.class)
-public class ProcessDictionaryRepositoryConfig extends RepositoryConfigWithH2 {
+public class DictionaryRepositoryConfig extends RepositoryConfigWithH2 {
 
     protected String[] sqlScripts() {
         return new String[]{
-                "classpath:META-INF/migrate/20140720144647_create_process_dictionaries.sql@up",
+                "classpath:META-INF/migrate/20140720144647_create_dictionaries.sql@up",
                 "classpath:META-INF/setup/initialization.sql",
-                "classpath:META-INF/migrate/20140904124504_insert_process_dictionaries.sql@up"
+                "classpath:META-INF/migrate/20140904124504_insert_dictionaries.sql@up"
         };
     }
 }

@@ -10,7 +10,7 @@ angular.module('Service.Dict', ['ngTable', 'ngResource'])
     })
 
     .factory('DictService', ['$resource', function ($resource) {
-        return $resource("/api/process-dictionaries");
+        return $resource("/api/dictionaries");
     }
     ])
 

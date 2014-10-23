@@ -1,57 +1,36 @@
-mixin tool_button(action, icon, text)
-  button.btn.btn-default(type="button")
-    span.glyphicon(class="glyphicon-#{icon}")
-    | #{text}
+mixin tool_button(action, icon, text, weight, rejectCss, requireCss)
+    button.btn.btn-primary.no-border(type="button", ng-click=action, weight=weight, reject-css=rejectCss, require-css=requireCss)
+        span.glyphicon(class="glyphicon-#{icon}")
+        | #{text}
+mixin td(title, name)
+    td(data-title=title) #{name}
+// 由于IDEA/WebStorm等在script tag内对jade的解析有问题，所以将这段会仅在IDE中出错的抽取到mixin中
+mixin select_all()
+  input(type="checkbox", ng-model="checkboxes.checked", name="filter-checkbox", value="")#select_all
 
-mixin dept_profile(title, text)
-    div.profile-info-row
-        div.profile-info-name  #{title}
-        div.profile-info-value
-            span#username.editable.editable-click #{text}
-
-.container(ng-controller="DepartmentListCtrl")
+.container(ng-controller="DeptListCtrl")
 
   .btn-toolbar(role="toolbar")
     .btn-group
-      +tool_button("#", "refresh", "")
+        +tool_button("", "refresh", "", "*", "", "")
     .btn-group
-        +tool_button("#", "new", "新建")
-        +tool_button("#", "edit", "编辑")
-        +tool_button("#", "remove", "删除")
+        +tool_button("actionService.gotoState('dept_form', $event)", "new", "新建", "*", "", "")
+        +tool_button("actionService.gotoState('dept_form', $event)", "edit", "编辑", "1", "", "")
+        +tool_button("actionService.perform(remove, $event)", "remove", "删除", "1+", "", "")
     .btn-group.pull-right
       .nav-search#nav-search
         form.form-search
           span.input-icon
-            input.nav-search-input(type="text", placeholder="请输入部门名称...",autocomplete="off")#nav-search-input
+            input.nav-search-input(type="text", placeholder="请输入地点名称或者地址...",autocomplete="off",ng-keypress="search($event)")#nav-search-input
             i.icon-search.nav-search-icon
 
-  .row
-    .col-sm-6
-      .widget-box
-        .widget-header.header-color-blue2
-          h4.lighter.smaller 部门管理
-        .widget-body
-          .widget-main.padding-8
-              #tree1.tree.tree-selectable
-                  div(ui-tree)
-                    ol(ui-tree-nodes, ng-model='departments', data-nodrag)
-                        li(ng-repeat='department in departments', ui-tree-node)
-                          div.tree-folder
-                              div.tree-folder-header
-                                  i(ng-click="toggle(this)", ng-class="{'icon-minus': !collapsed, 'icon-plus': collapsed}")
-                                  div.tree-folder-name(ui-tree-handle, ng-click="show(department.sn)",style="cursor: pointer; cursor: hand;")
-                                      | {{department.name}}
-                              div.tree-folder-content(ng-class="{hidden: collapsed}")
-                                  ol(ui-tree-nodes, ng-model='department.children')
-                                      li(ng-repeat='subDept in department.children', ui-tree-node)
-                                          div.tree-item(ng-class="{'tree-selected': !collapsed}", ng-click='show(subDept.sn)')
-                                              i(ng-click="toggle(this)",ng-class="{'icon-ok': !collapsed, 'icon-remove': collapsed}")
-                                              div.tree-item-name(ui-tree-handle,style="cursor: pointer; cursor: hand;")
-                                                  | {{subDept.name}}
-    .col-sm-6
-        .widget-main.padding-8
-            div.profile-user-info.profile-user-info-striped
-                +dept_profile('描述', "{{((departmentDetail||'无').description||'无')}}")
-                +dept_profile('地点', "{{((departmentDetail||'无').sites||'无') | siteFilter}}")
+  table.table.table-hover.table-bordered(ng-table="tableParams")#table
+    tr(ng-repeat="dept in departments", value="{{dept.sn}}")
+      td(width="30" style="text-align: left" header="'ngTableCheckboxHeader'")
+        input(type="checkbox" ng-model="checkboxes.items[dept.sn]")
+      +td("'部门名称'", "{{dept.name}}")
+      +td("'描述'", "{{dept.description}}")
+      +td("'地点'", "{{dept.sites | siteFilter}}")
 
-
+script(type="text/ng-template")#ngTableCheckboxHeader
+  +select_all()

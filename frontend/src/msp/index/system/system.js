@@ -9,6 +9,7 @@ angular.module('MspIndex.System', [
   'System.Site.Form',
   'System.WorkTime',
   'System.Department',
+  'System.Department.Form',
   'System.Group',
   'System.Staff'
 ]);

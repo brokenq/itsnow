@@ -44,32 +44,74 @@
         </association>
     </resultMap>
 
-    <sql id="selectStaff">
-        select stf.id, stf.no, stf.name, stf.mobile_phone, stf.fixed_phone, stf.email, stf.title, stf.type, stf.status, stf.description, stf.created_at, stf.updated_at,
-        u.id as userId, u.username as userName, u.email as userEmail, u.phone as userPhone, u.enabled as userEnabled, u.expired as userEnabled, u.locked as userLocked,
-        s.id as siteId, s.sn as siteSn, s.name as siteName, s.address as siteAddress, s.description as siteDescription,
-        d.id as deptId, d.sn as deptSn, d.name as deptName, d.description as deptDescription
-        from staffs stf
-        left join itsnow_msc.users u on stf.user_id = u.id
-        left join sites s on stf.site_id = s.id
-        left join departments d on stf.dept_id = d.id
+    <sql id="select">
+        SELECT stf.id,
+            stf.no,
+            stf.name,
+            stf.mobile_phone,
+            stf.fixed_phone,
+            stf.email,
+            stf.title,
+            stf.type,
+            stf.status,
+            stf.description,
+            stf.created_at,
+            stf.updated_at,
+            u.id          AS userId,
+            u.username    AS userName,
+            u.email       AS userEmail,
+            u.phone       AS userPhone,
+            u.enabled     AS userEnabled,
+            u.expired     AS userEnabled,
+            u.locked      AS userLocked,
+            s.id          AS siteId,
+            s.sn          AS siteSn,
+            s.name        AS siteName,
+            s.address     AS siteAddress,
+            s.description AS siteDescription,
+            d.id          AS deptId,
+            d.sn          AS deptSn,
+            d.name        AS deptName,
+            d.description AS deptDescription
+        FROM   staffs stf
+            LEFT JOIN itsnow_msc.users u
+                ON stf.user_id = u.id
+            LEFT JOIN sites s
+                ON stf.site_id = s.id
+            LEFT JOIN departments d
+                ON stf.dept_id = d.id
     </sql>
 
     <select id="findByNo" parameterType="string" resultMap="staffResult">
-        <include refid="selectStaff"/>
+        <include refid="select"/>
         where stf.no=#{no}
     </select>
 
-    <select id="find" parameterType="string" resultMap="staffResult">
-        <include refid="selectStaff"/>
-        order by ${sort} ${dir} limit #{offset}, #{size}
+    <select id="count" resultType="java.lang.Integer">
+        <bind name="pattern" value="'%' + keyword + '%' "/>
+        SELECT COUNT(0) FROM staffs
+        <where>
+            <if test="keyword != null and keyword != ''">
+                name LIKE #{pattern}
+            </if>
+        </where>
     </select>
 
-
-    <select id="findByKeyword" parameterType="string" resultMap="staffResult">
-        <include refid="selectStaff"/>
-        where stf.name like #{keyword}
-        order by ${sort} ${dir} limit #{offset}, #{size}
+    <select id="findAll" parameterType="string" resultMap="staffResult">
+        <bind name="pattern" value="'%' + keyword + '%' "/>
+        <include refid="select"/>
+        <where>
+            <if test="keyword != null and keyword != ''">
+                stf.name LIKE #{pattern}
+            </if>
+        </where>
+        <if test="pageable.sort != null">
+            ORDER BY #{pageable.sort}
+        </if>
+        <trim prefix="LIMIT" prefixOverrides=",">
+            <if test="pageable.offset > 0">#{pageable.offset}</if>
+            <if test="pageable.pageSize > 0">, #{pageable.pageSize}</if>
+        </trim>
     </select>
 
 </mapper>

@@ -1,0 +1,33 @@
+.col-xs-12.col-sm-4
+    .widget-box
+        .widget-header
+            h4
+            span.widget-toolbar
+                a(href='', data-action='collapse')
+                    i.icon-chevron-up
+        .widget-body
+            .widget-main(ng-controller='DeptCtrl')
+                form(novalidate="novalidate", role='form', name='deptForm', ng-submit='submit(department)')
+                    div
+                        label(for='form-field-mask-1')
+                            | 部门名称
+                        .input-group
+                            input#form-field-mask-1.form-control(type='text', ng-model='department.name', name='titleRepeat', required, remote-validation-dept-name)
+                    hr
+                    div
+                        label(for='form-field-9') 描述
+                        textarea#form-field-9.form-control.limited(
+                            ng-model='department.description',
+                            ng-maxlength="50")
+                    hr
+                    label 地点（可多选）
+                    div(multi-select
+                        input-model="sites"
+                        button-label="name"
+                        item-label="name"
+                        tick-property="ticked")
+                    hr
+                    div.form-actions.center
+                        button.btn.btn-sm.btn-success(type='submit')
+                            | 提交
+                            i.icon-arrow-right.icon-on-right.bigger-110

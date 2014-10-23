@@ -3,8 +3,10 @@
  */
 package dnt.itsnow.repository;
 
-import dnt.itsnow.config.ProcessDictionaryRepositoryConfig;
-import dnt.itsnow.model.ProcessDictionary;
+import dnt.itsnow.config.DictionaryRepositoryConfig;
+import dnt.itsnow.model.Dictionary;
+import dnt.itsnow.platform.util.PageRequest;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,19 +16,26 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
 /**
- * <h1>测试ProcessDictionaryRepository的Mybatis的Mapping配置是否正确</h1>
+ * <h1>测试DictionaryRepository的Mybatis的Mapping配置是否正确</h1>
  */
-@ContextConfiguration(classes = ProcessDictionaryRepositoryConfig.class)
+@ContextConfiguration(classes = DictionaryRepositoryConfig.class)
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
-public class ProcessDictionaryRepositoryTest {
+public class DictionaryRepositoryTest {
 
     @Autowired
-    ProcessDictionaryRepository repository;
+    DictionaryRepository repository;
+
+    PageRequest pageRequest;
+
+    @Before
+    public void setUp() throws Exception {
+        pageRequest = new PageRequest(0, 1);
+    }
 
     @Test
     public void testCreate() throws Exception {
-        ProcessDictionary dictionary = new ProcessDictionary();
+        Dictionary dictionary = new Dictionary();
         dictionary.setCode("004");
         dictionary.setName("影响范围");
         dictionary.setDisplay("高");
@@ -47,7 +56,7 @@ public class ProcessDictionaryRepositoryTest {
     @Test
     public void testUpdate() throws Exception {
         String sn = "002";
-        ProcessDictionary dictionary = repository.findBySn(sn);
+        Dictionary dictionary = repository.findBySn(sn);
         dictionary.setState("0");
         repository.update(dictionary);
         dictionary = repository.findBySn(sn);
@@ -56,22 +65,12 @@ public class ProcessDictionaryRepositoryTest {
 
     @Test
     public void testCount() throws Exception {
-        Assert.notNull(repository.count());
+        Assert.notNull(repository.count(""));
     }
 
     @Test
-    public void testFind() throws Exception {
-        Assert.notNull(repository.find("updated_at", "desc",  0, 10));
-    }
-
-    @Test
-    public void testCountByKeyword() throws Exception {
-        Assert.notNull(repository.countByKeyword("%3%"));
-    }
-
-    @Test
-    public void testFindByKeyword() throws Exception {
-        Assert.notNull(repository.findByKeyword("%3%","updated_at","desc", 0, 10));
+    public void testFindAll() throws Exception {
+        Assert.notNull(repository.findAll("", pageRequest));
     }
 
     @Test

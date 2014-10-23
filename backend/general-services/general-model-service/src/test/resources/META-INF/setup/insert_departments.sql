@@ -1,4 +1,4 @@
--- // insert_process_dictionaries
+-- // insert_dictionaries
 -- Migration SQL that makes the change goes here.
 
 INSERT INTO departments (sn, name, parent_id, position, description) VALUES

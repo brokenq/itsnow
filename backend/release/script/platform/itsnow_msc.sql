@@ -1501,13 +1501,13 @@ LOCK TABLES `persistent_logins` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `process_dictionaries`
+-- Table structure for table `dictionaries`
 --
 
-DROP TABLE IF EXISTS `process_dictionaries`;
+DROP TABLE IF EXISTS `dictionaries`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `process_dictionaries` (
+CREATE TABLE `dictionaries` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `code` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
@@ -1523,13 +1523,13 @@ CREATE TABLE `process_dictionaries` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `process_dictionaries`
+-- Dumping data for table `dictionaries`
 --
 
-LOCK TABLES `process_dictionaries` WRITE;
-/*!40000 ALTER TABLE `process_dictionaries` DISABLE KEYS */;
-INSERT INTO `process_dictionaries` VALUES (1,'inc001','????','high','?','1','1',NULL,'2014-09-25 00:47:17','2014-09-25 00:47:17'),(2,'inc002','????','middle','?','1','1',NULL,'2014-09-25 00:47:17','2014-09-25 00:47:17'),(3,'inc003','????','low','?','1','1',NULL,'2014-09-25 00:47:17','2014-09-25 00:47:17'),(4,'inc004','????','high','?','1','1',NULL,'2014-09-25 00:47:17','2014-09-25 00:47:17'),(5,'inc005','????','middle','?','1','1',NULL,'2014-09-25 00:47:17','2014-09-25 00:47:17'),(6,'inc006','????','low','?','1','1',NULL,'2014-09-25 00:47:17','2014-09-25 00:47:17'),(7,'inc007','??','normal','??','1','1',NULL,'2014-09-25 00:47:17','2014-09-25 00:47:17'),(8,'inc008','??','normal','??','1','1',NULL,'2014-09-25 00:47:17','2014-09-25 00:47:17');
-/*!40000 ALTER TABLE `process_dictionaries` ENABLE KEYS */;
+LOCK TABLES `dictionaries` WRITE;
+/*!40000 ALTER TABLE `dictionaries` DISABLE KEYS */;
+INSERT INTO `dictionaries` VALUES (1,'inc001','????','high','?','1','1',NULL,'2014-09-25 00:47:17','2014-09-25 00:47:17'),(2,'inc002','????','middle','?','1','1',NULL,'2014-09-25 00:47:17','2014-09-25 00:47:17'),(3,'inc003','????','low','?','1','1',NULL,'2014-09-25 00:47:17','2014-09-25 00:47:17'),(4,'inc004','????','high','?','1','1',NULL,'2014-09-25 00:47:17','2014-09-25 00:47:17'),(5,'inc005','????','middle','?','1','1',NULL,'2014-09-25 00:47:17','2014-09-25 00:47:17'),(6,'inc006','????','low','?','1','1',NULL,'2014-09-25 00:47:17','2014-09-25 00:47:17'),(7,'inc007','??','normal','??','1','1',NULL,'2014-09-25 00:47:17','2014-09-25 00:47:17'),(8,'inc008','??','normal','??','1','1',NULL,'2014-09-25 00:47:17','2014-09-25 00:47:17');
+/*!40000 ALTER TABLE `dictionaries` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

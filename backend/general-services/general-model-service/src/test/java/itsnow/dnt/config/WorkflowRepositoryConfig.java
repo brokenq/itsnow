@@ -17,8 +17,8 @@ public class WorkflowRepositoryConfig extends RepositoryConfigWithH2 {
 
     protected String[] sqlScripts() {
         return new String[]{
-                "classpath:META-INF/migrate/20140720144647_create_process_dictionaries.sql@up",
-                "classpath:META-INF/migrate/20140904124504_insert_process_dictionaries.sql@up",
+                "classpath:META-INF/migrate/20140720144647_create_dictionaries.sql@up",
+                "classpath:META-INF/migrate/20140904124504_insert_dictionaries.sql@up",
                 "classpath:META-INF/setup/create_act_re_procdef.sql@up",
                 "classpath:META-INF/setup/create_private_service_catalogs.sql@up",
                 "classpath:META-INF/setup/create_private_service_items.sql@up",

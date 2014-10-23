@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.*;
 import java.util.List;
 
 /**
- * <h1>地点类持久层</h1>
+ * <h1>部门管理持久层</h1>
  */
 public interface DepartmentRepository {
 
@@ -30,8 +30,7 @@ public interface DepartmentRepository {
             " WHERE id              = #{id} ")
     public void update(Department department);
 
-    @Select("SELECT * FROM departments")
-    public List<Department> findAll();
+    public List<Department> findAll(@Param("keyword") String keyword);
 
     public Department findBySn(@Param("sn") String sn);
 
