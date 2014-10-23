@@ -19,6 +19,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -142,7 +143,6 @@ public class ItsnowHostsControllerTest extends SessionSupportedControllerTest {
         host.setId(102L);
         // Service Mock 记录阶段
         expect(mockedService.findById(host.getId())).andReturn(host);
-        expect(mockedService.canDelete(host)).andReturn(true);
         mockedService.delete(host);
         expectLastCall().once();
         // 准备 Mock Request
@@ -209,5 +209,20 @@ public class ItsnowHostsControllerTest extends SessionSupportedControllerTest {
         decorate(result);
         status().isOk();
         content().string("{}");
+    }
+
+    @Test
+    public void testListByField() throws Exception {
+        expect(mockedService.findByType("DB")).andReturn(hosts);
+        MockHttpServletRequestBuilder request = get("/admin/api/hosts/list/type/DB");
+        decorate(request);
+
+        replay(mockedService);
+        // 执行
+        ResultActions result =this.browser.perform(request);
+
+        // 对业务结果的验证
+        decorate(result);
+        status().isConflict();
     }
 }

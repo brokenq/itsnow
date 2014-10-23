@@ -21,6 +21,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.easymock.EasyMock.*;
 
 /**
@@ -139,5 +142,18 @@ public class ItsnowHostManagerTest {
         replay(repository);
         boolean b = hostManager.checkPassword("172.16.3.4", "srv2.itsnow.com", "itsnow@team");
         Assert.isTrue(b);
+    }
+
+    @Test
+    public void testFindByType() throws Exception {
+        List<ItsnowHost> hosts = new ArrayList<ItsnowHost>();
+        hosts.add(host);
+        expect(repository.findByType("DB")).andReturn(hosts);
+
+        replay(systemInvokeService);
+        replay(repository);
+
+        hosts = hostManager.findByType("DB");
+        Assert.isTrue(1 == hosts.size());
     }
 }

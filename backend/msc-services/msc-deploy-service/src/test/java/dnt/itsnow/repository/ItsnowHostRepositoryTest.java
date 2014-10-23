@@ -132,8 +132,9 @@ public class ItsnowHostRepositoryTest {
     }
 
     @Test
-    public void testCountLinked() throws Exception {
-        int count = hostRepository.countLinked(1L);
-        Assert.assertEquals(2, count);
+    public void testFindByType() throws Exception {
+        List<ItsnowHost> hosts = hostRepository.findByType("DB");
+        Assert.assertEquals(2, hosts.size());
     }
+
 }

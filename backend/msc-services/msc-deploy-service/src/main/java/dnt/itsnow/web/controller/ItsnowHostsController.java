@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.LinkedList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +38,7 @@ import static org.springframework.http.HttpStatus.*;
  * GET    /admin/api/hosts/checkName?value=xx checkName 检查主机名是否唯一
  * GET    /admin/api/hosts/checkAddress?value=yy checkAddress 检查主机地址是否唯一,有效
  * GET    /admin/api/hosts/checkPassword?host={host}&username={username}&password={password} checkPassword 检查主机用户名密码是否有效
+ * GET    /admin/api/hosts/list/{field}/{value}      listByField      列出所有匹配的主机
  * </pre>
  */
 @RestController
@@ -124,8 +125,6 @@ public class ItsnowHostsController extends SessionSupportController<ItsnowHost>{
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
     public void destroy() {
         logger.debug("Destroying {}", currentHost);
-        if( !hostService.canDelete(currentHost) )
-            throw new WebClientSideException(NOT_ACCEPTABLE, "Can't delete the itsnow host for which is associated with the active processes or schemas");
         try {
             hostService.delete(currentHost);
         } catch (ItsnowHostException e) {
@@ -240,6 +239,24 @@ public class ItsnowHostsController extends SessionSupportController<ItsnowHost>{
         }
     }
 
+    /**
+     * <h2>列出所有匹配的主机</h2>
+     * <p/>
+     * GET /admin/api/hosts/list/{field}/{value}
+     * @param field Schema 字段
+     * @param value Schema 字段值
+     */
+    @RequestMapping("list/{field}/{value}")
+    public List<ItsnowHost> listByField(@PathVariable("field") String field, @PathVariable("value") String value) {
+        logger.debug("Listing all itsnow schemas by field = {} and value = {}", field, value);
+        List<ItsnowHost> hosts;
+        if ("type".equalsIgnoreCase(field)) {
+            hosts = hostService.findByType(value);
+            logger.debug("Listed size of all itsnow schemas is {}", hosts.size());
+            return hosts;
+        }
+        throw new WebClientSideException(BAD_REQUEST, "Can't find itsnow schema by field " + field);
+    }
 
     @BeforeFilter({"show", "start", "stop", "cancel", "destroy", "follow"})
     public void initCurrentHost(@PathVariable("id") Long id){
