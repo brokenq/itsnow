@@ -41,7 +41,8 @@ angular.module('MscIndex.Account', ['ngTable','ngResource', 'ngSanitize','dnt.ac
         when 'Abnormal' then 'red'
         else #Unknown
   )
-  .controller 'AccountListCtrl',['$scope', '$location', '$timeout', '$resource', 'ngTableParams', 'ActionService', ($scope, $location, $timeout, $resource, ngTableParams, ActionService)->
+  .controller 'AccountListCtrl',['$scope', '$location', '$timeout', '$resource', '$http', 'ngTableParams', 'ActionService', \
+                                ($scope, $location, $timeout, $resource, $http, ngTableParams, ActionService)->
     Accounts = $resource("/admin/api/accounts")
     actions = 
       approve: 
@@ -82,7 +83,7 @@ angular.module('MscIndex.Account', ['ngTable','ngResource', 'ngSanitize','dnt.ac
 
     $scope.approve = (account) ->
       acc = new Account(account)
-      acc.$approve (value,head)->
+      acc.$approve ->
         # TODO 增加反馈机制, 另外，需要考虑结束操作后，是否应该当前纪录从选中的集合中移除
         # 这个移除的工作，貌似该由Action Service完成？
         # 包括表格的刷新，在批量操作时，每条记录都会导致表格刷新
@@ -94,13 +95,23 @@ angular.module('MscIndex.Account', ['ngTable','ngResource', 'ngSanitize','dnt.ac
       
     $scope.reject = (account) ->
       acc = new Account(account)
-      acc.$reject (resp)->
+      acc.$reject ->
+        $scope.tableParams.reload()
+
+    $scope.destroy = (account) ->
+      acc = new Account(account)
+      acc.$remove ->
+        $scope.tableParams.reload()
+
+    $scope.autoCreate = (account) ->
+      $http.post "/admin/api/processes/auto_create/" + account.sn, "", ->
         $scope.tableParams.reload()
 
     # watch for check all checkbox
     $scope.$watch 'checkboxes.checked', (value)->
       angular.forEach $scope.accounts, (item)->
         $scope.checkboxes.items[item.sn] = value if angular.isDefined(item.sn)
+
     # watch for data checkboxes
     $scope.$watch('checkboxes.items', (values) ->
       return if !$scope.accounts

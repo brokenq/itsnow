@@ -21,6 +21,7 @@
         <rmi.port>1083</rmi.port>
         <http.port>8070</http.port>
         <app.id>platform</app.id>
+        <app.version>${project.version}</app.version>
         <app.name>Itsnow-${app.id}</app.name>
         <db.name>itsnow_${app.id}</db.name>
     </properties>

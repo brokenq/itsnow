@@ -60,4 +60,7 @@ public interface MutableUserRepository extends CommonUserRepository {
             " WHERE username = #{username} ")
     void changePassword(@Param("username") String username,
                         @Param("password") String newPassword);
+
+    @Delete("DELETE FROM itsnow_msc.users WHERE account_id = #{accountId}")
+    void deleteAllByAccountId(@Param("accountId") Long accountId);
 }

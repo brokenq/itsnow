@@ -3,12 +3,14 @@
  */
 package dnt.itsnow.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.validation.constraints.NotNull;
 
 /**
  * The itsnow host which can service for MSC/MSU/MSP
  */
-public class ItsnowHost extends DeployResource
+public class ItsnowHost extends DeployResource implements Comparable<ItsnowHost>
 {
     @NotNull
     private String address;
@@ -104,5 +106,16 @@ public class ItsnowHost extends DeployResource
         result = 31 * result + processesCount;
         result = 31 * result + schemasCount;
         return result;
+    }
+
+    @SuppressWarnings("NullableProblems")
+    @Override
+    public int compareTo(ItsnowHost another) {
+        return getLeftCapacity() - another.getLeftCapacity();
+    }
+
+    @JsonIgnore
+    public int getLeftCapacity() {
+        return this.getCapacity() - processesCount - schemasCount;
     }
 }

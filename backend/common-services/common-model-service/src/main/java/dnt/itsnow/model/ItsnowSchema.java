@@ -35,6 +35,7 @@ public class ItsnowSchema extends DeployResource {
 
     public void setHost(ItsnowHost host) {
         this.host = host;
+        if(host != null ) setHostId(host.getId());
     }
 
     public ItsnowProcess getProcess() {

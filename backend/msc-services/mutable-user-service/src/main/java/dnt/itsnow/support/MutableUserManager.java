@@ -62,12 +62,21 @@ public class MutableUserManager extends CommonUserManager
     public void update(User user) {
         logger.info("Updating {}", user);
         mutableRepository.update(user);
-
+        logger.info("Updated  {}", user);
         globalMessageBus.publish("User", "*" + JsonSupport.toJSONString(user));
     }
 
     @Override
     public void changePassword(String username, String newPassword) {
+        logger.info("Changing password for {}", username);
         mutableRepository.changePassword(username, encode(newPassword));
+        logger.info("Changed  password for {}", username);
+    }
+
+    @Override
+    public void deleteByAccountId(Long accountId) {
+        logger.warn("Deleting all users of account with id = {}", accountId);
+        mutableRepository.deleteAllByAccountId(accountId);
+        logger.warn("Deleted  all users of account with id = {}", accountId);
     }
 }

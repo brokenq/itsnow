@@ -4,12 +4,12 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--不要用 type != '*' 这种， mybatis 会根据 '*' 认为 type 为 long类型，而后无法解析-->
 <mapper namespace="dnt.itsnow.repository.ItsnowHostRepository">
-    <resultMap id="hostResult" type="ItsnowHost" autoMapping="true">
-        <result column="configuration" property="configuration" typeHandler="dnt.itsnow.util.PropertiesHandler"/>
-        <result column="processes_count" property="processesCount"/>
-        <result column="schemas_count" property="schemasCount"/>
-    </resultMap>
-
+    <sql id="selectHost">
+        SELECT h.*,
+            (SELECT COUNT(0) FROM itsnow_schemas s where s.host_id = h.id) as schemas_count,
+            (SELECT COUNT(0) FROM itsnow_processes p where p.host_id = h.id) as processes_count
+        FROM  itsnow_hosts h
+    </sql>
     <select id="countByKeyword" resultType="int">
         SELECT COUNT(0) FROM itsnow_hosts
         <if test="keyword != null and keyword != ''">
@@ -22,10 +22,7 @@
     </select>
 
     <select id="findAllByKeyword" resultMap="hostResult">
-        SELECT h.*,
-                (SELECT COUNT(s.id) FROM itsnow_schemas s WHERE h.id = s.host_id) schemas_count,
-                (SELECT COUNT(p.id) FROM itsnow_processes p WHERE h.id = p.host_id) processes_count
-        FROM itsnow_hosts h
+        <include refid="selectHost"/>
         <if test="keyword != null and keyword != ''">
             <where>
                 h.name LIKE #{keyword}
@@ -41,4 +38,65 @@
             <if test="pageRequest.pageSize > 0">, #{pageRequest.pageSize}</if>
         </trim>
     </select>
+
+    <select id="findAllByType" resultMap="hostResult">
+        <include refid="selectHost"/>
+        <if test="type != null">
+            <where>
+                type = #{type}
+            </where>
+        </if>
+    </select>
+
+    <select id="findByAddress" resultMap="hostResult">
+        <include refid="selectHost"/>
+        <where>
+            address = #{address}
+        </where>
+    </select>
+
+    <select id="findByName" resultMap="hostResult">
+        <include refid="selectHost"/>
+        <where>
+            name = #{name}
+        </where>
+    </select>
+
+    <select id="findById" resultMap="hostResult">
+        <include refid="selectHost"/>
+        <where>
+            id = #{id}
+        </where>
+    </select>
+
+    <select id="findByConfiguration" resultMap="hostResult">
+        <include refid="selectHost"/>
+        <where>
+            configuration REGEXP '"${name}" *: *"?${value}"?'
+        </where>
+        LIMIT 1
+    </select>
+
+    <select id="findAllByConfiguration" resultMap="hostResult">
+        <include refid="selectHost"/>
+        <where>
+            configuration REGEXP '"${name}" *: *"?${value}"?'
+        </where>
+    </select>
+
+    <resultMap id="hostResult" type="ItsnowHost">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="address" column="address"/>
+        <result property="status" column="status"/>
+        <result property="capacity" column="capacity"/>
+        <result property="type" column="type"/>
+        <result property="description" column="description"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result column="configuration" property="configuration" typeHandler="dnt.itsnow.util.PropertiesHandler"/>
+        <result column="processes_count" property="processesCount"/>
+        <result column="schemas_count" property="schemasCount"/>
+    </resultMap>
+
 </mapper>

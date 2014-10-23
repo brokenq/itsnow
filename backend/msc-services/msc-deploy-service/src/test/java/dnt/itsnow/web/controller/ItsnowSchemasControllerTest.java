@@ -41,13 +41,12 @@ public class ItsnowSchemasControllerTest extends SessionSupportedControllerTest 
         schemas = new LinkedList<ItsnowSchema>();
         schemas.add(schema);
 
-        reset(mockedService);
+        resetAll();
     }
 
     @After
     public void tearDown() throws Exception {
-        verify(mockedService);
-        reset(mockedService);
+        verifyAll();
     }
 
     @Test
@@ -60,7 +59,7 @@ public class ItsnowSchemasControllerTest extends SessionSupportedControllerTest 
         decorate(request);
 
         // Mock 准备播放
-        replay(mockedService);
+        replayAll();
 
         // 执行
         ResultActions result = this.browser.perform(request);
@@ -85,7 +84,7 @@ public class ItsnowSchemasControllerTest extends SessionSupportedControllerTest 
         decorate(request).content(JsonSupport.toJSONString(schema));
 
         // Mock 准备播放
-        replay(mockedService);
+        replayAll();
 
         // 执行
         ResultActions result = this.browser.perform(request);
@@ -107,14 +106,25 @@ public class ItsnowSchemasControllerTest extends SessionSupportedControllerTest 
         decorate(request);
 
         // Mock 准备播放
-        replay(mockedService);
+        replayAll();
 
         // 执行
         this.browser.perform(request);
 
         // 对业务结果的验证
         status().isOk();
+    }
 
+    void resetAll(){
+        reset(mockedService);
+    }
+
+    void verifyAll(){
+        verify(mockedService);
+    }
+
+    void replayAll(){
+        replay(mockedService);
     }
 
     @Test

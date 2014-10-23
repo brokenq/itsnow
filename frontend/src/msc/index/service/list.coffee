@@ -15,32 +15,25 @@
         data: {pageTitle: '服务级别管理'}
 
     .factory('ServiceCatalogService', ['$resource', ($resource) ->
-      $resource("/admin/api/public_service_catalogs")
+      $resource("/admin/api/public_service_catalogs/:sn",{sn:'@sn'})
     ])
-
-    .factory('RemoveCatalogService', ['$resource', ($resource) ->
-      $resource('/admin/api/public_service_catalogs/:sn',{sn:'@sn'}, ->
-        remove: method: 'DELETE'
-      )
-    ])
-
 
   .filter('formatTime', ->
     (time) ->
       date = new Date(time)
       return date.toLocaleString()
   )
-    .controller 'CatalogListCtrl',['$scope', '$location', '$timeout', '$state','ngTableParams', 'ServiceCatalogService','RemoveCatalogService', 'ActionService',($scope, $location, $timeout, $state, ngTableParams, serviceCatalogService,removeCatalogService,ActionService)->
+    .controller 'CatalogListCtrl',['$scope', '$location', '$timeout', '$state','ngTableParams', 'ServiceCatalogService', 'ActionService',($scope, $location, $timeout, $state, ngTableParams, serviceCatalogService,ActionService)->
       options =
         page:  1,           # show first page
         count: 10           # count per page
       args =
         total: 0,
         getData: ($defer, params) ->
-          $location.search(params.url()) # put params in url
+          #$location.search(params.url()) # put params in url
           serviceCatalogService.query(params.url(), (data, headers) ->
             $timeout(->
-              params.total(headers('total'))
+              #params.total(headers('total'))
               $defer.resolve($scope.catalogs = data)
             , 500)
           )
@@ -51,8 +44,13 @@
         return catalog for catalog in $scope.catalogs when catalog.sn = sn
 
       $scope.remove = (catalog)->
-       removeCatalogService.remove(sn:catalog.sn)
-       $state.go('services.catalog');
+        feedback = (content) ->
+          alert content
+        success = ->
+          $scope.tableParams.reload();
+        failure = (response)->
+          feedback response.statusText
+        serviceCatalogService.remove({sn: catalog.sn}, success, failure)
 
       $scope.create = (catalog)->
         $state.go('services.catalog.detail',{'sn':catalog.sn,'action':'create'});

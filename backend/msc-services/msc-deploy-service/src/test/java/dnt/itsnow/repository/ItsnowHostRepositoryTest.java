@@ -5,6 +5,7 @@ package dnt.itsnow.repository;
 
 import dnt.itsnow.config.DeployRepositoryConfig;
 import dnt.itsnow.model.HostStatus;
+import dnt.itsnow.model.HostType;
 import dnt.itsnow.model.ItsnowHost;
 import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.util.DeployFixture;
@@ -41,6 +42,8 @@ public class ItsnowHostRepositoryTest {
         hostRepository.create(host);
         // 验证已经被创建
         Assert.assertNotNull(host.getId());
+        // clean it
+        hostRepository.deleteByAddress(host.getAddress());
     }
 
     @Test
@@ -95,15 +98,19 @@ public class ItsnowHostRepositoryTest {
     }
 
     @Test
-    public void testFindAllNoKeyword() throws Exception {
-        List<ItsnowHost> msHosts = hostRepository.findAllByKeyword(null, new PageRequest(0, 10));
-        Assert.assertTrue(msHosts.size() >= 2);
+    public void testFindAllByType() throws Exception {
+        List<ItsnowHost> appHosts = hostRepository.findAllByType(HostType.APP);
+        Assert.assertEquals(1, appHosts.size());
+        List<ItsnowHost> dbHosts = hostRepository.findAllByType(HostType.DB);
+        Assert.assertEquals(1, dbHosts.size());
+        List<ItsnowHost> comHosts = hostRepository.findAllByType(HostType.COM);
+        Assert.assertEquals(1, comHosts.size());
     }
 
     @Test
-    public void testFindAllDbHosts() throws Exception {
-        List<ItsnowHost> msHosts = hostRepository.findAllDbHosts();
-        Assert.assertTrue(msHosts.size() >= 1);
+    public void testFindAllNoKeyword() throws Exception {
+        List<ItsnowHost> msHosts = hostRepository.findAllByKeyword(null, new PageRequest(0, 10));
+        Assert.assertTrue(msHosts.size() >= 2);
     }
 
     @Test
@@ -128,7 +135,7 @@ public class ItsnowHostRepositoryTest {
     @Test
     public void testFindAllByConfiguration() throws Exception {
         List<ItsnowHost> hosts = hostRepository.findAllByConfiguration("mem", "8g");
-        Assert.assertEquals(2, hosts.size());
+        Assert.assertEquals(3, hosts.size());
     }
 
     @Test

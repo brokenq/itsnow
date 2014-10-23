@@ -4,6 +4,7 @@
 package dnt.itsnow.service;
 
 import dnt.itsnow.exception.ItsnowProcessException;
+import dnt.itsnow.model.Account;
 import dnt.itsnow.model.ItsnowProcess;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.util.PageRequest;
@@ -40,6 +41,24 @@ public interface ItsnowProcessService {
     ItsnowProcess create(ItsnowProcess creating) throws ItsnowProcessException;
 
     /**
+     * <h2>为被批准的帐户，提供服务进程建议信息</h2>
+     *
+     * @param account 被批准的帐户
+     * @return 服务进程对象
+     * @throws ItsnowProcessException
+     */
+    ItsnowProcess autoNew(Account account) throws ItsnowProcessException;
+
+    /**
+     * <h2>为被批准的帐户，自动创建服务进程</h2>
+     *
+     * @param account 被批准的帐户
+     * @return 服务进程对象
+     * @throws ItsnowProcessException
+     */
+    ItsnowProcess autoCreate(Account account) throws ItsnowProcessException;
+
+    /**
      * <h2>启动特定的服务进程</h2>
      * <pre>
      * 设计考虑：
@@ -53,7 +72,6 @@ public interface ItsnowProcessService {
      * @throws ItsnowProcessException 启动异常
      */
     String start(ItsnowProcess process) throws ItsnowProcessException;
-
 
     /**
      * <h2>停止特定的服务进程</h2>
@@ -93,6 +111,7 @@ public interface ItsnowProcessService {
      */
     void update(ItsnowProcess process)throws ItsnowProcessException;
 
+
     /**
      * <h2>读取一个服务进程相关任务的最新信息</h2>
      *
@@ -102,4 +121,5 @@ public interface ItsnowProcessService {
      * @return 当前的位置，也是下次来读的始点
      */
     long follow(ItsnowProcess process, String job, long offset, List<String> result);
+
 }
