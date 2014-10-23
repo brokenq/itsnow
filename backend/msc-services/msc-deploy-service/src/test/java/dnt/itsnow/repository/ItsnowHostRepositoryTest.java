@@ -141,7 +141,7 @@ public class ItsnowHostRepositoryTest {
     @Test
     public void testFindByType() throws Exception {
         List<ItsnowHost> hosts = hostRepository.findByType("DB");
-        Assert.assertEquals(2, hosts.size());
+        Assert.assertEquals(1, hosts.size());
     }
 
 }
