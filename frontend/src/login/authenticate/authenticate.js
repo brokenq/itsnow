@@ -28,8 +28,8 @@ angular
       $scope.challenge = function () {
         sessionService.challenge($scope.credential, function(){
           window.location.href = '/index.html';
-        }, function(data){
-          $scope.error = data;
+        }, function(resp){
+          $scope.error = resp.data;
 
         });
       };
