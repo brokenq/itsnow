@@ -1,35 +1,35 @@
 //   New dict
 doctype html
-mixin form_field(name, label, icon, tip, pattern, maxLength,ngblur)
-  .form-group
-    label.col-xs-12.col-sm-3.control-label.no-padding-right(for="dict_#{name}") #{label}
-    .col-xs-12.col-sm-5
-      span.block.input-icon.input-icon-right
-        input.form-control(id="dict_#{name}", name="dict.#{name}", ng-model="dict.#{name}",  ng-maxlength="#{maxLength}", type="text", placeholder="#{label}", ng-pattern="#{pattern}",ng-Blur="#{ngblur}", required)
-        i(class="icon-#{icon}")
-    .help-block.col-xs-12.col-sm-reset.inline #{tip}
-mixin selector(name, label, datas, tip)
-  .form-group
-    label.col-xs-12.col-sm-3.control-label.no-padding-right(for="dict_#{name}") #{label}
-    .col-xs-12.col-sm-5
-      select.form-control(ng-model="dict.#{name}")
-        option(ng-repeat="data in #{datas}", value="{{data.id}}") {{data.name}}
-    .help-block.col-xs-12.col-sm-reset.inline #{tip}
-
-.row(ng-controller="DictNewCtrl")
-  form.form-horizontal(name="newDictForm", novalidate, ng-model-options="", role="form")
-    +form_field("code", "字典代码", "star", "", "", "20","autoComplete()")
-    +form_field("name", "字典名称", "star", "", "", "20","")
-    +form_field("display", "显示名", "star", "", "", "20","")
-    +form_field("val", "值", "star", "", "", "20","")
-    +selector("state", "状态","datas", "")
+.row(ng-controller="WorkTimeNewCtrl")
+  form.form-horizontal(name="workForm", novalidate, role="form")
+    .form-group
+      label.col-xs-12.col-sm-3.control-label.no-padding-right(for="workdates") 工作日：
+      .col-xs-12.col-sm-5
+        .row
+           .col-xs-12
+             span(ng-repeat="workdate in workdates")
+               input(type="checkbox" ,id="{{workdate.id}}",ng-checked="selection.indexOf(workdate.name)>-1",ng-click="toggleSelection(workdate.name)")
+               {{workdate.name}}
+    .form-group
+      label.col-xs-12.col-sm-3.control-label.no-padding-right(for="worktimes") 工作时间：
+      .col-xs-12.col-sm-5
+        span.block.input-icon.input-icon-right
+          input.form-control(id="worktime_startime", name="worktime_startAt", ng-model="worktime.startAt",type="text")
+          input.form-control(id="worktime_endAt", name="worktime_endAt", ng-model="worktime.endAt",type="text")
+      .help-block.col-xs-12.col-sm-reset.inline #{tip}
+    .form-group
+      label.col-xs-12.col-sm-3.control-label.no-padding-right(for="_description") 描述：
+      .col-xs-12.col-sm-5
+        span.block.input-icon.input-icon-right
+          input.form-control(id="worktime_description", name="worktime_description", ng-model="worktime.description",type="text", placeholder="请输入描述",required)
+      .help-block.col-xs-12.col-sm-reset.inline #{tip}
     .row-fluid.actions
       .col-xs-12.col-sm-3
       .col-xs-12.col-sm-5
-        button.btn.btn-sm.btn-primary(ng-click="changeDict()")
+        button.btn.btn-sm.btn-primary(ng-click="changeWorkTime()")
           i.icon-ok
           | 保存
         button.btn.btn-sm.btn-primary(type="reset")
           i.icon-ok
           | 重置
-.row
+

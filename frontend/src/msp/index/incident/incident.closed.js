@@ -2,7 +2,7 @@ angular.module('MspIndex.IncidentClosed', ['ngTable', 'ngResource'])
     .config(['$stateProvider',function($stateProvider) {
         $stateProvider
             .state('incidents-closed',{
-                url:'/closed',
+                url:'/incident/closed',
                 templateUrl:'incident/incident.closed.tpl.jade',
                 data: {
                     pageTitle: '已关闭故障单'

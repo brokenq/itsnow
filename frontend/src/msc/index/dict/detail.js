@@ -23,7 +23,11 @@ angular.module('MscIndex.DictDetail', ['ngTable', 'ngResource'])
          ]
         $scope.resetDict=function(){
             $scope.dict={
-
+                 code:'',
+                 name:'',
+                 display:'',
+                 val:'',
+                 state:''
             }
         };
         if (sn !== null && sn !== "" && sn !== undefined) {

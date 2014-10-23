@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * <h1>工作时间服务实现类</h1>
@@ -53,6 +54,9 @@ public class WorkTimeManager extends Bean implements WorkTimeService {
         }
         workTime.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         workTime.setUpdatedAt(workTime.getCreatedAt());
+        workTime.setSn(UUID.randomUUID().toString().substring(0,8));
+       // workTime.setName("xxx");
+        workTime.setWorkDays("undefine");
         repository.create(workTime);
         return workTime;
     }

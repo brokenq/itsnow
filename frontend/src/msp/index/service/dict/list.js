@@ -1,5 +1,5 @@
 // List System
-angular.module('Service.Dict', ['ngTable', 'ngResource', 'dnt.action.service'])
+angular.module('Service.Dict', ['ngTable', 'ngResource', 'Service.Dictnew', 'dnt.action.service'])
 
     .config(function ($stateProvider) {
         $stateProvider.state('dict', {
@@ -15,11 +15,11 @@ angular.module('Service.Dict', ['ngTable', 'ngResource', 'dnt.action.service'])
             save: { method: 'POST'},
             update: { method: 'PUT', params: {sn: '@sn'}},
             query: { method: 'GET', isArray: true},
-            remove: { method: 'DELETE', params: {sn: '@sn'}}
+            remove: { method: 'DELETE', params: {sn: '@sn'}},
+            list: { method: 'GET', params: {sn: 'code',code:'@code'}, isArray: true}
         });
     }
     ])
-
     .filter('stateFilter', function () {
         var stateFilter = function (input) {
             if(input === '1'){
@@ -64,7 +64,7 @@ angular.module('Service.Dict', ['ngTable', 'ngResource', 'dnt.action.service'])
                 }
             }
         };
-        $scope.actionService = new ActionService({watch: $scope.checkboxes.items, mapping: $scope.getDictBySn})
+        $scope.actionService = new ActionService({watch: $scope.checkboxes.items, mapping: $scope.getDictBySn});
         // watch for check all checkbox
         $scope.$watch('checkboxes.checked', function (value) {
             angular.forEach($scope.dicts, function (item) {
@@ -81,7 +81,7 @@ angular.module('Service.Dict', ['ngTable', 'ngResource', 'dnt.action.service'])
             };
         $scope.refresh=function(){
             $scope.tableParams.reload();
-        }
+        };
         // watch for data checkboxes
         $scope.$watch('checkboxes.items', function (values) {
                 if (!$scope.dicts) {

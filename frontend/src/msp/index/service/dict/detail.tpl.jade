@@ -5,7 +5,7 @@ mixin form_field(name, label, icon, tip, pattern, maxLength)
     label.col-xs-12.col-sm-3.control-label.no-padding-right(for="dict_#{name}") #{label}
     .col-xs-12.col-sm-5
       span.block.input-icon.input-icon-right
-        input.form-control(id="dict_#{name}", name="dict.#{name}", ng-model="dict.#{name}", ng-required,  ng-maxlength="#{maxLength}", type="text", placeholder="#{label}", ng-pattern="#{pattern}" ,onblur="#{onblur}")
+        input.form-control(id="dict_#{name}", name="dict.#{name}", ng-model="dict.#{name}",  ng-maxlength="#{maxLength}", type="text", placeholder="#{label}", ng-pattern="#{pattern}",required)
         i(class="icon-#{icon}")
     .help-block.col-xs-12.col-sm-reset.inline #{tip}
 mixin selector(name, label, datas, tip)
@@ -17,7 +17,7 @@ mixin selector(name, label, datas, tip)
     .help-block.col-xs-12.col-sm-reset.inline #{tip}
 
 .row(ng-controller="DictNewCtrl")
-  form.form-horizontal(name="newDictForm", novalidate, ng-model-options="{ updateOn: 'mousedown blur' }", role="form")
+  form.form-horizontal(name="newDictForm", novalidate,role="form")
     +form_field("code", "字典代码", "star", "", "", "20")
     +form_field("name", "字典名称", "star", "", "", "20")
     +form_field("display", "显示名", "star", "", "", "20")
@@ -29,7 +29,7 @@ mixin selector(name, label, datas, tip)
         button.btn.btn-sm.btn-primary(ng-click="changeDict()")
           i.icon-ok
           | 保存
-        button.btn.btn-sm.btn-primary(ng-clik="resetDict()")
-          i.icon-remove
+        button.btn.btn-sm.btn-primary(type="reset")
+          i.icon-ok
           | 重置
 .row
