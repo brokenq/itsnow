@@ -6,12 +6,10 @@ package dnt.itsnow.support;
 import dnt.itsnow.config.ItsnowHostManagerConfig;
 import dnt.itsnow.exception.ItsnowHostException;
 import dnt.itsnow.exception.SystemInvokeException;
+import dnt.itsnow.model.*;
 import dnt.itsnow.model.ItsnowHost;
 import dnt.itsnow.model.SystemInvocation;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.repository.ItsnowHostRepository;
-import dnt.itsnow.service.ItsnowHostService;
 import dnt.itsnow.service.SystemInvokeService;
 import dnt.itsnow.util.DeployFixture;
 import org.junit.After;
@@ -23,6 +21,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.easymock.EasyMock.*;
 
@@ -43,8 +44,6 @@ public class ItsnowHostManagerTest {
     SystemInvokeService  systemInvokeService;
 
     ItsnowHost host;
-//    @Autowired
-//    ItsnowHostService hostService;
 
     @Before
     public void setUp() throws Exception {
@@ -59,12 +58,6 @@ public class ItsnowHostManagerTest {
         verify(repository);
         reset(repository);
     }
-
-//    @Test
-//    public void testFindAll() throws Exception {
-//        Page<ItsnowHost> pages = hostService.findAll(null, new PageRequest(0, 10));
-//        Assert.notNull(pages);
-//    }
 
     @Test
     public void testCreate() throws Exception {
@@ -138,5 +131,42 @@ public class ItsnowHostManagerTest {
 
         String hostName = hostManager.resolveName("172.16.3.4");
         Assert.isTrue("srv2.itsnow.com".equals(hostName));
+    }
+
+    @Test
+    public void testPickHost() throws Exception {
+        ItsnowHost host1 = new ItsnowHost();
+        host1.setCapacity(10);
+        host1.setProcessesCount(3);
+        host1.setSchemasCount(4);
+        ItsnowHost host2 = new ItsnowHost();
+
+        host2.setCapacity(8);
+        host2.setProcessesCount(3);
+        host2.setSchemasCount(4);
+
+        List<ItsnowHost> hosts = new ArrayList<ItsnowHost>();
+        hosts.add(host1);
+        hosts.add(host2);
+
+        expect(repository.findAllByType(HostType.APP)).andReturn(hosts);
+        expect(repository.findAllByType(HostType.COM)).andReturn(new ArrayList<ItsnowHost>());
+
+        replay(systemInvokeService);
+        replay(repository);
+
+        ItsnowHost host = hostManager.pickHost(new MspAccount(), HostType.APP );
+        Assert.isTrue(host == host1);
+    }
+
+    public void testCheckPassword() throws Exception {
+        String jobId = "check-password-job-id";
+        expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
+        expect(systemInvokeService.waitJobFinished(jobId)).andReturn(0);
+
+        replay(systemInvokeService);
+        replay(repository);
+        boolean b = hostManager.checkPassword("172.16.3.4", "srv2.itsnow.com", "itsnow@team");
+        Assert.isTrue(b);
     }
 }

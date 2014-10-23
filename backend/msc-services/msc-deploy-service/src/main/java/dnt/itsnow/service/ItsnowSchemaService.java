@@ -4,6 +4,8 @@
 package dnt.itsnow.service;
 
 import dnt.itsnow.exception.ItsnowSchemaException;
+import dnt.itsnow.model.Account;
+import dnt.itsnow.model.ItsnowHost;
 import dnt.itsnow.model.ItsnowSchema;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.util.PageRequest;
@@ -51,4 +53,20 @@ public interface ItsnowSchemaService {
      * @return 查找的结果
      */
     Page<ItsnowSchema> findAll(String keyword, PageRequest pageRequest);
+
+    /**
+     * 为即将部署在某个主机上的特定帐户的服务进程分配一个数据库schema实例
+     * @param account 目标帐户
+     * @param host 目标帐户的服务进程即将部署的主机
+     * @return 新分配的schema（尚未创建）
+     */
+    ItsnowSchema pickSchema(Account account, ItsnowHost host);
+
+    /*
+     * <h2>Schema是否能删除</h2>
+     * <p>如果Schema有关联的进程，则不能删除，返回false；否则返回true</p>
+     * @param schema  schema对象
+     * @return true：可删除；false：不可删除
+     */
+    boolean canDelete(ItsnowSchema schema);
 }

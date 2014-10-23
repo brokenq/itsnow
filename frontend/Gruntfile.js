@@ -415,6 +415,7 @@ module.exports = function ( grunt ) {
         src: [
           '<%= vendor_files.js %>',
           'module.prefix',
+          'window.VERSION = "<%=target.version%>"' ,
           '<%= build_dir %>/lib/**/*.js',
           '<%= build_dir %>/index/**/*.js',
           '<%= build_dir %>/<%= target.name %>/index/**/*.js',
@@ -429,6 +430,7 @@ module.exports = function ( grunt ) {
         src: [
           '<%= vendor_files.js %>',
           'module.prefix',
+          'window.VERSION = "<%=target.version%>"' ,
           '<%= build_dir %>/lib/**/*.js',
           '<%= build_dir %>/login/**/*.js',
           '<%= build_dir %>/<%= target.name %>/login/**/*.js',
@@ -874,7 +876,7 @@ module.exports = function ( grunt ) {
             scripts: scripts,
             styles: styles,
             sysName: system.title,
-            version: grunt.config( 'pkg.version' )
+            version: system.version
           }
         });
       }
@@ -896,7 +898,7 @@ module.exports = function ( grunt ) {
             scripts: scripts,
             styles:  styles,
             sysName: system.title,
-            version: grunt.config( 'pkg.version' )
+            version: system.version
           }
         });
       }

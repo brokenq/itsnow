@@ -3,6 +3,7 @@
  */
 package dnt.itsnow.repository;
 
+import dnt.itsnow.model.HostType;
 import dnt.itsnow.model.ItsnowHost;
 import dnt.itsnow.platform.util.PageRequest;
 import org.apache.ibatis.annotations.*;
@@ -19,20 +20,12 @@ public interface ItsnowHostRepository {
     List<ItsnowHost> findAllByKeyword(@Param("keyword") String keyword,
                                       @Param("pageRequest") PageRequest pageRequest);
 
-    @Select("SELECT * FROM itsnow_hosts WHERE name != 'srv1.itsnow.com'")
-    @ResultMap("hostResult")
-    List<ItsnowHost> findAllDbHosts();
+    List<ItsnowHost> findAllByType(@Param("type") HostType hostType);
 
-    @Select("SELECT * FROM itsnow_hosts WHERE address = #{address}")
-    @ResultMap("hostResult")
     ItsnowHost findByAddress(@Param("address")String address);
 
-    @Select("SELECT * FROM itsnow_hosts WHERE name = #{name}")
-    @ResultMap("hostResult")
     ItsnowHost findByName(@Param("name") String name);
 
-    @Select("SELECT * FROM itsnow_hosts WHERE id = #{id}")
-    @ResultMap("hostResult")
     ItsnowHost findById(@Param("id")Long id);
 
     @Insert("INSERT INTO itsnow_hosts(name, address, type, capacity, status, configuration, description, created_at, updated_at) " +
@@ -56,12 +49,13 @@ public interface ItsnowHostRepository {
             "WHERE id = #{id}")
     void update(ItsnowHost host);
 
-    @Select("SELECT * FROM itsnow_hosts WHERE configuration REGEXP '\"${name}\" *: *\"?${value}\"?' limit 1")
-    @ResultMap("hostResult")
     ItsnowHost findByConfiguration(@Param("name")String name, @Param("value")String value);
 
-    @Select("SELECT * FROM itsnow_hosts WHERE configuration REGEXP '\"${name}\" *: *\"?${value}\"?'")
-    @ResultMap("hostResult")
     List<ItsnowHost> findAllByConfiguration(@Param("name")String name, @Param("value") String value);
 
+    // 统计 主机关联的进程和Schema的 数量总和
+    @Select("SELECT (SELECT COUNT(p.id) FROM itsnow_processes p WHERE p.host_id = h.id) " +
+            "      +(SELECT COUNT(s.id) FROM itsnow_schemas s WHERE s.host_id = h.id)   " +
+            "FROM itsnow_hosts h WHERE h.id = #{id}" )
+    int countLinked(@Param("id") long id);
 }

@@ -43,7 +43,7 @@
         LIMIT 1
     </select>
 
-    <resultMap id="accountWithUserResult" type="Account" autoMapping="true">
+    <resultMap id="accountWithUserResult" type="Account" autoMapping="true" >
         <id  property="id" column="id"/>
         <result column="user_id" property="userId"/>
         <result column="sn" property="sn"/>

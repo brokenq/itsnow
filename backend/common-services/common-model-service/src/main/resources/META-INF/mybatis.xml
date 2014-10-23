@@ -23,7 +23,6 @@
         <typeAlias type="dnt.itsnow.model.Dictionary" alias="Dictionary"/>
 
         <typeAlias type="dnt.itsnow.model.ItsnowHost" alias="ItsnowHost"/>
-        <typeAlias type="dnt.itsnow.model.HostExtend" alias="HostExtend"/>
         <typeAlias type="dnt.itsnow.model.ItsnowSchema" alias="ItsnowSchema"/>
         <typeAlias type="dnt.itsnow.model.ItsnowProcess" alias="ItsnowProcess"/>
     </typeAliases>

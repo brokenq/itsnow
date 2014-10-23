@@ -5,6 +5,7 @@ package dnt.itsnow.model;
 
 import dnt.itsnow.platform.model.Record;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -15,11 +16,16 @@ import java.util.List;
  */
 public class ServiceCatalog extends Record{
     private Long parentId;
+    @NotNull
     private String title;
     private String description;
     private String icon;
+
+    @NotNull
     private String sn;
     private List<ServiceCatalog> children;
+    @NotNull
+    private Integer level;
 
     private List<ServiceItem> items;
 
@@ -77,6 +83,14 @@ public class ServiceCatalog extends Record{
 
     public void setItems(List<ServiceItem> items) {
         this.items = items;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
     }
 
     public ServiceItem getItemBySn(Long id) {

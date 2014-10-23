@@ -4,23 +4,12 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--不要用 type != '*' 这种， mybatis 会根据 '*' 认为 type 为 long类型，而后无法解析-->
 <mapper namespace="dnt.itsnow.repository.ItsnowHostRepository">
-    <resultMap id="hostResult" type="ItsnowHost">
-        <id property="id" column="id"/>
-        <result property="name" column="name"/>
-        <result property="address" column="address"/>
-        <result property="status" column="status"/>
-        <result property="capacity" column="capacity"/>
-        <result property="type" column="type"/>
-        <result property="description" column="description"/>
-        <result property="createdAt" column="created_at"/>
-        <result property="updatedAt" column="updated_at"/>
-        <result column="configuration" property="configuration" typeHandler="dnt.itsnow.util.PropertiesHandler"/>
-        <association property="extend" javaType="HostExtend">
-            <result property="processesCount" column="processes_count"/>
-            <result property="schemasCount" column="schemas_count"/>
-        </association>
-    </resultMap>
-
+    <sql id="selectHost">
+        SELECT h.*,
+            (SELECT COUNT(0) FROM itsnow_schemas s where s.host_id = h.id) as schemas_count,
+            (SELECT COUNT(0) FROM itsnow_processes p where p.host_id = h.id) as processes_count
+        FROM  itsnow_hosts h
+    </sql>
     <select id="countByKeyword" resultType="int">
         SELECT COUNT(0) FROM itsnow_hosts
         <if test="keyword != null and keyword != ''">
@@ -33,21 +22,14 @@
     </select>
 
     <select id="findAllByKeyword" resultMap="hostResult">
-        SELECT t.*, COUNT(s.id) schemas_count FROM
-        (
-            SELECT h.*, COUNT(p.id) processes_count FROM itsnow_hosts h
-                LEFT OUTER JOIN itsnow_processes p ON h.id = p.host_id
-            <if test="keyword != null and keyword != ''">
-                <where>
-                    h.name LIKE #{keyword}
-                    OR h.address LIKE #{keyword}
-                    OR h.description LIKE #{keyword}
-                </where>
-            </if>
-            GROUP BY h.id
-        ) t
-            LEFT OUTER JOIN itsnow_schemas s ON t.id = s.host_id
-        GROUP BY t.id
+        <include refid="selectHost"/>
+        <if test="keyword != null and keyword != ''">
+            <where>
+                h.name LIKE #{keyword}
+                OR h.address LIKE #{keyword}
+                OR h.description LIKE #{keyword}
+            </where>
+        </if>
         <if test="pageRequest.sort != null">
             ORDER BY #{pageRequest.sort}
         </if>
@@ -56,4 +38,65 @@
             <if test="pageRequest.pageSize > 0">, #{pageRequest.pageSize}</if>
         </trim>
     </select>
+
+    <select id="findAllByType" resultMap="hostResult">
+        <include refid="selectHost"/>
+        <if test="type != null">
+            <where>
+                type = #{type}
+            </where>
+        </if>
+    </select>
+
+    <select id="findByAddress" resultMap="hostResult">
+        <include refid="selectHost"/>
+        <where>
+            address = #{address}
+        </where>
+    </select>
+
+    <select id="findByName" resultMap="hostResult">
+        <include refid="selectHost"/>
+        <where>
+            name = #{name}
+        </where>
+    </select>
+
+    <select id="findById" resultMap="hostResult">
+        <include refid="selectHost"/>
+        <where>
+            id = #{id}
+        </where>
+    </select>
+
+    <select id="findByConfiguration" resultMap="hostResult">
+        <include refid="selectHost"/>
+        <where>
+            configuration REGEXP '"${name}" *: *"?${value}"?'
+        </where>
+        LIMIT 1
+    </select>
+
+    <select id="findAllByConfiguration" resultMap="hostResult">
+        <include refid="selectHost"/>
+        <where>
+            configuration REGEXP '"${name}" *: *"?${value}"?'
+        </where>
+    </select>
+
+    <resultMap id="hostResult" type="ItsnowHost">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="address" column="address"/>
+        <result property="status" column="status"/>
+        <result property="capacity" column="capacity"/>
+        <result property="type" column="type"/>
+        <result property="description" column="description"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result column="configuration" property="configuration" typeHandler="dnt.itsnow.util.PropertiesHandler"/>
+        <result column="processes_count" property="processesCount"/>
+        <result column="schemas_count" property="schemasCount"/>
+    </resultMap>
+
 </mapper>

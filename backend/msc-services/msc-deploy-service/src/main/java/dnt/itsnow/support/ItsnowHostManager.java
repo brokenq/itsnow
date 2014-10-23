@@ -5,9 +5,7 @@ package dnt.itsnow.support;
 
 import dnt.itsnow.exception.ItsnowHostException;
 import dnt.itsnow.exception.SystemInvokeException;
-import dnt.itsnow.model.HostStatus;
-import dnt.itsnow.model.ItsnowHost;
-import dnt.itsnow.model.SystemInvocation;
+import dnt.itsnow.model.*;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.util.PageRequest;
@@ -21,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -56,7 +55,7 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     @Override
     public List<ItsnowHost> findAllDbHosts() {
         logger.debug("Listing all itsnow hosts support mysql instance");
-        List<ItsnowHost> dbHosts = repository.findAllDbHosts();
+        List<ItsnowHost> dbHosts = repository.findAllByType(HostType.DB);
         logger.debug("Listed  {} db hosts", dbHosts.size());
         return dbHosts;
     }
@@ -102,7 +101,8 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     }
 
     private String initMscAddress() throws UnknownHostException {
-        return InetAddress.getByName("srv1.itsnow.com").getHostAddress();
+        String mscHost = System.getProperty("msc.host", "srv1.itsnow.com");
+        return InetAddress.getByName(mscHost).getHostAddress();
     }
 
     @Override
@@ -117,6 +117,27 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
             throw new ItsnowHostException("Failed to resolve host address: " + address, e);
         }
         return hostName;
+    }
+
+    @Override
+    public boolean checkPassword(String host, String username, String password) throws ItsnowHostException {
+        logger.debug("Checking {}@{} password availability", username, host);
+        SystemInvocation checkJob = translator.checkHostUser(host, username, password);
+        String jobId = invokeService.addJob(checkJob);
+        try {
+            int code = invokeService.waitJobFinished(jobId);
+            return code == 0;
+        } catch (SystemInvokeException e) {
+            throw new ItsnowHostException("Checking " + host + " password availability " , e);
+        }
+    }
+
+    @Override
+    public boolean canDelete(ItsnowHost host) {
+        logger.debug("Counting linked processes and schemas by host id: {} ", host.getId());
+        int count = repository.countLinked(host.getId());
+        logger.debug("Counted linked processes and schemas by host id: {} is {} ", host.getId(), count);
+        return count == 0;
     }
 
     @Override
@@ -188,6 +209,16 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     public long follow(ItsnowHost host, String jobId, long offset, List<String> result) {
         logger.trace("Follow {}'s job: {}", host, jobId);
         return invokeService.read(jobId, offset, result);
+    }
+
+    @Override
+    public ItsnowHost pickHost(Account account, HostType type) {
+        List<ItsnowHost> hostList = repository.findAllByType(type);
+        List<ItsnowHost> combineList = repository.findAllByType(HostType.COM);
+        hostList.addAll(combineList);
+        ItsnowHost[] hosts = hostList.toArray(new ItsnowHost[hostList.size()]);
+        Arrays.sort(hosts);
+        return hosts[hosts.length-1];
     }
 
     //////////////////////////////////////////////////////////////////////////////

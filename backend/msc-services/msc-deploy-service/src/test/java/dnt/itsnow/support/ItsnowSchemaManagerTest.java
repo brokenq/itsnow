@@ -6,8 +6,7 @@ package dnt.itsnow.support;
 import dnt.itsnow.config.ItsnowSchemaManagerConfig;
 import dnt.itsnow.exception.ItsnowSchemaException;
 import dnt.itsnow.exception.SystemInvokeException;
-import dnt.itsnow.model.ItsnowSchema;
-import dnt.itsnow.model.SystemInvocation;
+import dnt.itsnow.model.*;
 import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.repository.ItsnowSchemaRepository;
 import dnt.itsnow.service.SystemInvokeService;
@@ -48,14 +47,12 @@ public class ItsnowSchemaManagerTest {
         schema = DeployFixture.testSchema();
         schema.setHost(DeployFixture.testHost());
         pageRequest = new PageRequest(0, 10);
+        resetAll();
     }
 
     @After
     public void tearDown() throws Exception {
-        verify(systemInvokeService);
-        reset(systemInvokeService);
-        verify(repository);
-        reset(repository);
+        verifyAll();
     }
 
     @Test
@@ -66,8 +63,7 @@ public class ItsnowSchemaManagerTest {
         repository.create(schema);
         expectLastCall().once();
 
-        replay(systemInvokeService);
-        replay(repository);
+        replayAll();
 
         ItsnowSchema created = manager.create(schema);
         Assert.notNull(created.getCreatedAt());
@@ -80,9 +76,7 @@ public class ItsnowSchemaManagerTest {
         expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
         expect(systemInvokeService.waitJobFinished(jobId)).andThrow(new SystemInvokeException("configuration error"));
 
-        replay(systemInvokeService);
-        replay(repository);
-
+        replayAll();
 
         try {
             manager.create(schema);
@@ -100,8 +94,7 @@ public class ItsnowSchemaManagerTest {
         repository.delete(schema);
         expectLastCall().once();
 
-        replay(systemInvokeService);
-        replay(repository);
+        replayAll();
 
         manager.delete(schema);
     }
@@ -112,10 +105,8 @@ public class ItsnowSchemaManagerTest {
         expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
         expect(systemInvokeService.waitJobFinished(jobId)).andThrow(new SystemInvokeException("configuration error"));
 
-        replay(systemInvokeService);
-        replay(repository);
 
-
+        replayAll();
         try {
             manager.delete(schema);
             throw new Exception("It should failed!");
@@ -124,4 +115,38 @@ public class ItsnowSchemaManagerTest {
         }
     }
 
+    @Test
+    public void testPickSchema() throws Exception {
+        MsuAccount account = new MsuAccount();
+        ItsnowHost host = new ItsnowHost();
+        host.setType(HostType.COM);
+        host.setCapacity(10);
+        replayAll();
+
+        //using the app host
+        ItsnowSchema pickedSchema = manager.pickSchema(account, host);
+
+        Assert.notNull(pickedSchema.getHost());
+        Assert.notNull(pickedSchema.getName());
+        Assert.notNull(pickedSchema.getDescription());
+        Assert.notNull(pickedSchema.getProperty("user"));
+        Assert.notNull(pickedSchema.getProperty("password"));
+        Assert.notNull(pickedSchema.getProperty("port"));
+
+    }
+
+    void resetAll(){
+        reset(systemInvokeService);
+        reset(repository);
+    }
+
+    void verifyAll(){
+        verify(systemInvokeService);
+        verify(repository);
+    }
+
+    void replayAll(){
+        replay(systemInvokeService);
+        replay(repository);
+    }
 }

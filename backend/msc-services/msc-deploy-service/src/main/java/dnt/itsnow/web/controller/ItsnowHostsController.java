@@ -8,6 +8,7 @@ import dnt.itsnow.model.ItsnowHost;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
+import dnt.itsnow.platform.web.exception.WebServerSideException;
 import dnt.itsnow.service.ItsnowHostService;
 import dnt.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import javax.validation.Valid;
 import java.util.LinkedList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -35,6 +37,7 @@ import static org.springframework.http.HttpStatus.*;
  * GET    /admin/api/hosts/{id}/follow/{invocationId} follow    获取目标主机最新的任务信息
  * GET    /admin/api/hosts/checkName?value=xx checkName 检查主机名是否唯一
  * GET    /admin/api/hosts/checkAddress?value=yy checkAddress 检查主机地址是否唯一,有效
+ * GET    /admin/api/hosts/checkPassword?host={host}&username={username}&password={password} checkPassword 检查主机用户名密码是否有效
  * </pre>
  */
 @RestController
@@ -121,6 +124,8 @@ public class ItsnowHostsController extends SessionSupportController<ItsnowHost>{
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
     public void destroy() {
         logger.debug("Destroying {}", currentHost);
+        if( !hostService.canDelete(currentHost) )
+            throw new WebClientSideException(NOT_ACCEPTABLE, "Can't delete the itsnow host for which is associated with the active processes or schemas");
         try {
             hostService.delete(currentHost);
         } catch (ItsnowHostException e) {
@@ -209,6 +214,32 @@ public class ItsnowHostsController extends SessionSupportController<ItsnowHost>{
       map.put("name", name);
       return map;
     }
+
+    /**
+     * <h2>检查主机用户名密码是否有效</h2>
+     * <p/>
+     * GET /admin/api/hosts/checkPassword?host={host}&username={username}&password={password}
+     *  @param host 主机地址
+     *  @param username 用户名
+     *  @param password 密码
+     *  <pre>
+     *    Response body:
+     *    200: {}
+     *  </pre>
+     */
+    @RequestMapping("checkPassword")
+    public Map checkPassword(@RequestParam("host") String host,
+                             @RequestParam("username") String username,
+                             @RequestParam("password") String password) {
+        try {
+            boolean correct = hostService.checkPassword(host, username, password);
+            if( !correct ) throw new WebClientSideException(CONFLICT, "bad user or password");
+            return new HashMap();
+        } catch (ItsnowHostException e) {
+            throw new WebServerSideException(INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
 
     @BeforeFilter({"show", "start", "stop", "cancel", "destroy", "follow"})
     public void initCurrentHost(@PathVariable("id") Long id){

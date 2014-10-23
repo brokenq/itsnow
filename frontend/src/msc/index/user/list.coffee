@@ -13,6 +13,12 @@ angular.module('MscIndex.User', ['ngTable','ngResource', 'MscIndex.User.Detail',
       templateUrl: 'user/list.tpl.jade'
       data: {pageTitle: '权限管理'}
 
+  .filter('formatUser', ->
+    (user) ->
+      return user.name if user.name == user.username
+      user.name + "(" + user.username + ")"
+  )
+
   .factory('UserService', ['$resource', ($resource) ->
     $resource("/admin/api/users")
   ])
