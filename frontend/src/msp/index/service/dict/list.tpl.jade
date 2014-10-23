@@ -8,16 +8,15 @@ mixin drop_button(action, icon, text)
       span.glyphicon(class="glyphicon-#{icon}")
       | #{text}
 mixin nav_link(value, icon, text)
-  a(ng-switch-when=value, ng-click="params.page(page.number)", href="")
-    span.glyphicon(class="glyphicon-#{icon}")
-    | #{text}
-// 由于IDEA/WebStorm等在script tag内对jade的解析有问题，所以将这段会仅在IDE中出错的抽取到mixin中
+    a(ng-switch-when="#{value}", ng-click="params.page(page.number)", href="")
+        span.glyphicon(class="glyphicon-#{icon}")
+        | #{text}
 mixin page_navs()
-  li(ng-repeat="page in pages", ng-klass="{'disabled': !page.active, 'previous': page.type == 'prev', 'next': page.type == 'next'}", ng-show="page.type == 'prev' || page.type == 'next'", ng-switch="page.type")
-    +nav_link("prev", "step-backward", "上一页")
-    +nav_link("next", "step-forward", "下一页")
+    li(ng-repeat="page in pages", ng-class="{'disabled': !page.active, 'previous': page.type == 'prev', 'next': page.type == 'next'}", ng-show="page.type == 'prev' || page.type == 'next'", ng-switch="page.type")
+        +nav_link("prev", "step-backward", "上一页")
+        +nav_link("next", "step-forward", "下一页")
 mixin page_size_button(count)
-  button.btn.btn-default(type="button", ng-class="{'active':params.count() == #{count}}", ng-click="params.count(#{count})")= count
+  button.btn.btn-primary.no-border(type="button", ng-class="{'active':params.count() == #{count}}", ng-click="params.count(#{count})")= count
 mixin select_all()
   input(type="checkbox", ng-model="checkboxes.checked", name="filter-checkbox", value="")#select_all
 

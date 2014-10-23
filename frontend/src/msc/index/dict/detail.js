@@ -35,7 +35,8 @@ angular.module('MscIndex.DictDetail', ['ngTable', 'ngResource'])
                 $scope.dict=data;
             });
             $scope.changeDict=function(){
-
+                $scope.dict.$promise = undefined;
+                $scope.dict.$resolved = undefined;
                 DictService.update({sn:sn}, $scope.dict, function () {
                     $location.path('/dict');
                 }, function (data) {
@@ -44,6 +45,8 @@ angular.module('MscIndex.DictDetail', ['ngTable', 'ngResource'])
             }
          }else{
             $scope.changeDict=function(){
+                $scope.dict.$promise = undefined;
+                $scope.dict.$resolved = undefined;
                 DictService.save($scope.dict,function(){
                     $location.path('/dict');
                 });
