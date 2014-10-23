@@ -15,6 +15,7 @@
                 i.updated_at AS item_updated_at
         FROM itsnow_msc.public_service_catalogs c
         LEFT OUTER JOIN itsnow_msc.public_service_items i ON c.id = i.catalog_id
+        ORDER BY c.level,c.parent_id
     </select>
 
     <select id="findBySn" resultMap="catalogWithItems">

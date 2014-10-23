@@ -116,11 +116,14 @@ public class ItsnowHostRepositoryTest {
     @Test
     public void testUpdate() throws Exception {
         ItsnowHost host = hostRepository.findByAddress("172.16.3.4");
+        String originName = host.getName();
         host.setName("new name");
         host.setStatus(HostStatus.Running);
         host.updating();
         hostRepository.update(host);
-
+        //NOT AFFECT OTHER TEST CASE
+        host.setName(originName);
+        hostRepository.update(host);
     }
 
     @Test
