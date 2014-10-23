@@ -11,6 +11,7 @@ import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.util.DeployFixture;
 import junit.framework.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -139,6 +140,7 @@ public class ItsnowHostRepositoryTest {
     }
 
     @Test
+    @Ignore
     public void testCountLinked() throws Exception {
         int count = hostRepository.countLinked(1L);
         Assert.assertEquals(2, count);
