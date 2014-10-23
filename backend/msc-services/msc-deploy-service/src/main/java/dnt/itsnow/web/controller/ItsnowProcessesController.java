@@ -29,16 +29,17 @@ import java.util.List;
 /**
  * <h1>Itsnow processes web controller</h1>
  * <pre>
- * <b>HTTP     URI                                  方法       含义  </b>
- * GET    /admin/api/processes                     index      列出所有进程，支持过滤，分页，排序等
- * POST   /admin/api/processes                     create     为特定帐户分配(创建)进程
- * POST   /admin/api/processes/auto/{accountSn}    autoCreate 为特定帐户自动分配一个进程
- * GET    /admin/api/processes/{name}              show       查看特定进程的信息
- * PUT    /admin/api/processes/{name}/start        start      启动进程
- * PUT    /admin/api/processes/{name}/stop         stop       停止进程
- * PUT    /admin/api/processes/{name}/cancel       cancel     取消最近的操作(启动/停止)
- * DELETE /admin/api/processes/{name}              destroy    删除进程对象
- * GET    /admin/api/processes/{name}/follow/{job} follow     获取特定进程最新的任务信息
+ * <b>HTTP     URI                                      方法       含义  </b>
+ * GET    /admin/api/processes                          index      列出所有进程，支持过滤，分页，排序等
+ * GET    /admin/api/processes/auto_new/{accountSn}     autoNew    手工分配时，为特定帐户自动的进程信息
+ * POST   /admin/api/processes/auto_create/{accountSn}  autoCreate 自动分配，为特定帐户自动分配一个进程
+ * POST   /admin/api/processes                          create     为特定帐户分配(创建)进程
+ * GET    /admin/api/processes/{name}                   show       查看特定进程的信息
+ * PUT    /admin/api/processes/{name}/start             start      启动进程
+ * PUT    /admin/api/processes/{name}/stop              stop       停止进程
+ * PUT    /admin/api/processes/{name}/cancel            cancel     取消最近的操作(启动/停止)
+ * DELETE /admin/api/processes/{name}                   destroy    删除进程对象
+ * GET    /admin/api/processes/{name}/follow/{job}      follow     获取特定进程最新的任务信息
  * </pre>
  */
 @RestController
@@ -146,7 +147,7 @@ public class ItsnowProcessesController extends SessionSupportController<ItsnowPr
         * POST /admin/api/processes
         * <p/>
      */
-   @RequestMapping(method = RequestMethod.POST, value = "auto/{accountSn}")
+   @RequestMapping(method = RequestMethod.POST, value = "auto_create/{accountSn}")
     public ItsnowProcess autoCreate(@PathVariable("accountSn") String accountSn){
        logger.info("Auto creating Itsnow Process for account with sn {}", accountSn);
        Account account = findAccount(accountSn);
@@ -161,6 +162,20 @@ public class ItsnowProcessesController extends SessionSupportController<ItsnowPr
        return process;
     }
 
+    @RequestMapping("auto_new/{accountSn}")
+    public ItsnowProcess autoNew(@PathVariable("accountSn") String accountSn){
+        logger.info("Suggesting Itsnow Process for account with sn {}", accountSn);
+        Account account = findAccount(accountSn);
+        ItsnowProcess process;
+        try {
+            process = processService.autoNew(account);
+            logger.info("Suggested  Itsnow Process {} for account with sn {}", process, account);
+        } catch (ItsnowProcessException e) {
+            throw new WebServerSideException(HttpStatus.INTERNAL_SERVER_ERROR,
+                                             "Can't auto new process for " + account);
+        }
+        return process;
+    }
     /**
      * <h2>删除特定服务进程</h2>
      * <p/>

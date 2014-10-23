@@ -72,21 +72,13 @@ public class ItsnowProcessManagerTest {
         process.setStatus(ProcessStatus.Stopped);
         process.setHost(host);
         process.setAccount(DeployFixture.testAccount());
+
+        resetAll();
     }
 
     @After
     public void tearDown() throws Exception {
-        verify(repository);
-        reset(repository);
-
-        verify(systemInvokeService);
-        reset(systemInvokeService);
-
-        verify(hostService);
-        reset(hostService);
-
-        verify(schemaService);
-        reset(schemaService);
+        verifyAll();
     }
 
     @Test
@@ -97,10 +89,7 @@ public class ItsnowProcessManagerTest {
         repository.create(process);
         expectLastCall().once();
 
-        replay(hostService);
-        replay(schemaService);
-        replay(systemInvokeService);
-        replay(repository);
+        replayAll();
 
         ItsnowProcess created = service.create(process);
         Assert.assertNotNull(created.getCreatedAt());
@@ -117,10 +106,7 @@ public class ItsnowProcessManagerTest {
         schemaService.delete(schema);
         expectLastCall().once();
 
-        replay(hostService);
-        replay(schemaService);
-        replay(systemInvokeService);
-        replay(repository);
+        replayAll();
 
         service.delete(process);
 
@@ -133,10 +119,7 @@ public class ItsnowProcessManagerTest {
         repository.update(process);
         expectLastCall().once();
 
-        replay(hostService);
-        replay(schemaService);
-        replay(systemInvokeService);
-        replay(repository);
+        replayAll();
 
         String returnJobId = service.start(process);
         Assert.assertEquals(jobId, returnJobId);
@@ -150,10 +133,7 @@ public class ItsnowProcessManagerTest {
         repository.update(process);
         expectLastCall().once();
 
-        replay(hostService);
-        replay(schemaService);
-        replay(systemInvokeService);
-        replay(repository);
+        replayAll();
 
         String returnJobId = service.stop(process);
         Assert.assertEquals(jobId, returnJobId);
@@ -167,10 +147,7 @@ public class ItsnowProcessManagerTest {
         systemInvokeService.cancelJob(jobId);
         expectLastCall().once();
 
-        replay(hostService);
-        replay(schemaService);
-        replay(systemInvokeService);
-        replay(repository);
+        replayAll();
 
         service.cancel(process, jobId);
 
@@ -182,7 +159,7 @@ public class ItsnowProcessManagerTest {
         String jobId = "stop-process-job-id";
         final List<String> messages = new LinkedList<String>();
         final String[] lines = {"one", "two"};
-        expect(systemInvokeService.read(jobId, 0 ,messages)).andAnswer(new IAnswer<Long>() {
+        expect(systemInvokeService.read(jobId, 0, messages)).andAnswer(new IAnswer<Long>() {
             @Override
             public Long answer() throws Throwable {
                 messages.add(lines[0]);
@@ -191,10 +168,7 @@ public class ItsnowProcessManagerTest {
             }
         });
 
-        replay(hostService);
-        replay(schemaService);
-        replay(systemInvokeService);
-        replay(repository);
+        replayAll();
 
         long offset = service.follow(process, jobId, 0L, messages);
         Assert.assertEquals(8L, offset);
@@ -202,8 +176,42 @@ public class ItsnowProcessManagerTest {
     }
 
     @Test
+    public void testAutoNew() throws Exception {
+        MsuAccount account = new MsuAccount();
+        account.setStatus(AccountStatus.Valid);
+        account.setName("Test MSU");
+        account.setSn("msu_111");
+        account.setDomain("auto");
+
+        expect(hostService.pickHost(account, HostType.APP)).andAnswer(new IAnswer<ItsnowHost>() {
+            @Override
+            public ItsnowHost answer() throws Throwable {
+                host.setProperty("next.rmi.port", "8110");
+                host.setProperty("next.debug.port", "8210");
+                host.setProperty("next.jmx.port", "8310");
+                host.setProperty("next.http.port", "8410");
+                return host;
+            }
+        });
+        schema.setId(null);
+        expect(schemaService.pickSchema(account, host)).andReturn(schema);
+
+        replayAll();
+
+        ItsnowProcess newProcess = service.autoNew(account);
+        Assert.assertNotNull(newProcess.getName());
+        Assert.assertNotNull(newProcess.getDescription());
+        Assert.assertNotNull(newProcess.getWd());
+        Assert.assertEquals("8110", newProcess.getProperty("rmi.port"));
+        Assert.assertEquals("8210", newProcess.getProperty("debug.port"));
+        Assert.assertEquals("8310", newProcess.getProperty("jmx.port"));
+        Assert.assertEquals("8410", newProcess.getProperty("http.port"));
+    }
+
+    @Test
     public void testAutoCreate() throws Exception {
         MsuAccount account = new MsuAccount();
+        account.setStatus(AccountStatus.Valid);
         account.setName("Test MSU");
         account.setSn("msu_111");
         account.setDomain("auto");
@@ -241,12 +249,12 @@ public class ItsnowProcessManagerTest {
         repository.update(isA(ItsnowProcess.class));
         expectLastCall().once();
 
-        replay(hostService);
-        replay(schemaService);
-        replay(systemInvokeService);
-        replay(repository);
+        replayAll();
 
         ItsnowProcess newProcess = service.autoCreate(account);
+        Assert.assertNotNull(newProcess.getName());
+        Assert.assertNotNull(newProcess.getDescription());
+        Assert.assertNotNull(newProcess.getWd());
         Assert.assertEquals("8110", newProcess.getProperty("rmi.port"));
         Assert.assertEquals("8210", newProcess.getProperty("debug.port"));
         Assert.assertEquals("8310", newProcess.getProperty("jmx.port"));
@@ -256,5 +264,26 @@ public class ItsnowProcessManagerTest {
         Assert.assertEquals("8211", host.getProperty("next.debug.port"));
         Assert.assertEquals("8311", host.getProperty("next.jmx.port"));
         Assert.assertEquals("8411", host.getProperty("next.http.port"));
+    }
+
+    void resetAll(){
+        reset(repository);
+        reset(systemInvokeService);
+        reset(hostService);
+        reset(schemaService);
+    }
+
+    void verifyAll(){
+        verify(repository);
+        verify(systemInvokeService);
+        verify(hostService);
+        verify(schemaService);
+    }
+
+    void replayAll(){
+        replay(hostService);
+        replay(schemaService);
+        replay(systemInvokeService);
+        replay(repository);
     }
 }

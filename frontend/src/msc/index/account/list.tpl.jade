@@ -2,11 +2,9 @@ mixin tool_button(action, icon, text, weight, rejectCss, requireCss)
   button.btn.btn-primary.no-border(type="button", ng-click="#{action}", weight="#{weight}", reject-css="#{rejectCss}", require-css="#{requireCss}")
     span.glyphicon(class="glyphicon-#{icon}")
     | #{text}
-mixin drop_button(action, icon, text)
+mixin drop_button(action, icon, text, weight, rejectCss, requireCss)
   li
-    a(href=action)
-      span.glyphicon(class="glyphicon-#{icon}")
-      | #{text}
+    a(ng-click="#{action}", weight="#{weight}", reject-css="#{rejectCss}", require-css="#{requireCss}") #{text}
 mixin nav_link(value, icon, text)
   a(ng-switch-when="#{value}", ng-click="params.page(page.number)", href="")
     span.glyphicon(class="glyphicon-#{icon}")
@@ -29,13 +27,14 @@ mixin select_all()
     .btn-group
       +tool_button("actionService.perform(approve, $event)", "ok",    "批准",    "1+", "", "new")
       +tool_button("actionService.perform(reject, $event)",  "trash", "拒绝",    "1+", "", "new")
-      +tool_button("actionService.gotoState('process_new', $event)",  "plus",  "分配服务", "1", "", "valid")
+      +tool_button("actionService.gotoState('process_new', $event)",  "key",  "自动分配", "1+", "", "valid")
     .btn-group
       button.btn.btn-primary.dropdown-toggle(type="button",data-toggle="dropdown")
         | 更多操作
         span.caret
       ul.dropdown-menu(role="menu")
-        +drop_button("#", "remove", "删除")
+        +drop_button("#", "plus", "手工分配", "1", "", "valid")
+        +drop_button("#", "remove", "删除", "1+", "valid", "")
     .btn-group.pull-right
       .nav-search#nav-search
         form.form-search

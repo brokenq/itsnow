@@ -170,6 +170,34 @@ public class ItsnowProcessesControllerTest extends SessionSupportedControllerTes
     }
 
     @Test
+    public void testAutoNew() throws Exception {
+        // Service Mock 记录阶段
+        account.setSn("msu_222");
+        expect(accountService.findBySn(account.getSn())).andReturn(account);
+        expect(mockedService.autoNew(account)).andAnswer(new IAnswer<ItsnowProcess>() {
+            @Override
+            public ItsnowProcess answer() throws Throwable {
+                process.setAccount(account);
+                process.setHost(host);
+                process.setSchema(schema);
+                return process;
+            }
+        });
+        // 准备 Mock Request
+        MockHttpServletRequestBuilder request = get("/admin/api/processes/auto_new/" + account.getSn());
+        decorate(request);
+
+        // Mock 准备播放
+        replayAll();
+
+        // 执行
+        ResultActions result = this.browser.perform(request);
+
+        // 对业务结果的验证
+        decorate(result).andExpect(status().isOk());
+    }
+
+    @Test
     public void testAutoCreate() throws Exception {
         // Service Mock 记录阶段
         account.setSn("msu_222");
@@ -184,7 +212,7 @@ public class ItsnowProcessesControllerTest extends SessionSupportedControllerTes
             }
         });
         // 准备 Mock Request
-        MockHttpServletRequestBuilder request = post("/admin/api/processes/auto/" + account.getSn());
+        MockHttpServletRequestBuilder request = post("/admin/api/processes/auto_create/" + account.getSn());
         decorate(request);
 
         // Mock 准备播放

@@ -12,7 +12,7 @@ angular.module('MscIndex.ServiceCatalog.Detail', ['ngResource']).config(function
         get: { method: 'GET', params: {sn: '@sn'}},
         update:{method:'PUT', params: {sn: '@sn'}},
         save:{method:'POST'},
-        delete:{method:'DELETE'}, params: {sn: '@sn'}});
+        dddd:{method:'DELETE'}, params: {sn: '@sn'}});
   }
 ]).controller('CatalogDetailCtrl', [
   '$scope','$state','$location', '$stateParams', 'CatalogService', function($scope,$state,$location, $stateParams, catalogService) {
@@ -53,6 +53,6 @@ angular.module('MscIndex.ServiceCatalog.Detail', ['ngResource']).config(function
 
     $scope.reset = function () {
         $state.go('services.catalog');
-    }
+    };
   }
 ]);

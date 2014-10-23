@@ -111,12 +111,24 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
     }
 
     @Override
-    public ItsnowProcess autoCreate(Account account) throws ItsnowProcessException {
-        logger.info("Auto creating itsnow process for {}", account);
+    public ItsnowProcess autoNew(Account account) throws ItsnowProcessException {
+        logger.info("Suggesting itsnow process for {}", account);
+        if( account.getStatus() != AccountStatus.Valid)
+            throw new ItsnowProcessException("Can't auto new process for account not valid");
+        if( account.getProcess() != null )
+            throw new ItsnowProcessException("Can't auto new process for account with process");
         ItsnowHost host = autoAssignHost(account);
         ItsnowSchema schema = autoAssignSchema(account, host);
         ItsnowProcess process = autoAssignProcess(account, host, schema);
-        updateHost(host, process);
+        logger.info("Suggested  itsnow process for {}", account);
+        return process;
+    }
+
+    @Override
+    public ItsnowProcess autoCreate(Account account) throws ItsnowProcessException {
+        logger.info("Auto creating itsnow process for {}", account);
+        ItsnowProcess process = autoNew(account);
+        updateHost(process.getHost(), process);
         // Create it first
         create(process);
         // Then start it
@@ -175,7 +187,7 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
 
     @Override
     public String stop(ItsnowProcess process) throws ItsnowProcessException {
-        logger.info("Stopping {}", process.getName());
+        logger.info("Stopping {}", process);
         if( process.getStatus() == ProcessStatus.Stopped || process.getStatus() == ProcessStatus.Stopping)
             throw new ItsnowProcessException("Can't stop the " + process.getStatus() + " process");
         SystemInvocation stopJob = translator.stop(process);
