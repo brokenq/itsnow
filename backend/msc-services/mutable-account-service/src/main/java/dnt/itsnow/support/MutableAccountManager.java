@@ -76,6 +76,11 @@ public class MutableAccountManager extends CommonAccountManager implements Mutab
             throw new AccountException("Can't delete new account: " + deleting);
         if( deleting.isValid() )
             throw new AccountException("Can't delete valid account: " + deleting);
+        //TODO 对于已经开通服务的帐户，其删除流程暂时没考虑清楚，先用拒绝删除的方案
+        if( deleting.getProcess() != null )
+            throw new AccountException("Can't delete account with deployed process: " + deleting);
+        //删除该帐户下所有用户, 照理来说，此时该帐户下不应该有其他数据，类似于合同什么的
+        userService.deleteByAccountId(deleting.getId());
         mutableRepository.deleteBySn(deleting.getSn());
         logger.info("Deleted  account {}", deleting);
     }

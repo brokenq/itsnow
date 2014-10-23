@@ -119,7 +119,7 @@ public interface ItsnowHostService {
      * @param type 主机类型
      * @return 可用的主机
      */
-    ItsnowHost pickHost(Account account, HostType type);
+    ItsnowHost pickHost(Account account, HostType type) throws ItsnowHostException;
 
     /**
      * <h2>检查主机用户名密码是否有效</h2>

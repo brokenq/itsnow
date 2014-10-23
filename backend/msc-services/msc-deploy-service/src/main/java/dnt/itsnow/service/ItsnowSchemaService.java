@@ -3,6 +3,7 @@
  */
 package dnt.itsnow.service;
 
+import dnt.itsnow.exception.ItsnowHostException;
 import dnt.itsnow.exception.ItsnowSchemaException;
 import dnt.itsnow.model.Account;
 import dnt.itsnow.model.ItsnowHost;
@@ -60,7 +61,7 @@ public interface ItsnowSchemaService {
      * @param host 目标帐户的服务进程即将部署的主机
      * @return 新分配的schema（尚未创建）
      */
-    ItsnowSchema pickSchema(Account account, ItsnowHost host);
+    ItsnowSchema pickSchema(Account account, ItsnowHost host) throws ItsnowHostException;
 
     /*
      * <h2>Schema是否能删除</h2>

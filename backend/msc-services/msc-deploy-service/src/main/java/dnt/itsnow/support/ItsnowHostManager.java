@@ -212,10 +212,12 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     }
 
     @Override
-    public ItsnowHost pickHost(Account account, HostType type) {
+    public ItsnowHost pickHost(Account account, HostType type) throws ItsnowHostException {
         List<ItsnowHost> hostList = repository.findAllByType(type);
         List<ItsnowHost> combineList = repository.findAllByType(HostType.COM);
         hostList.addAll(combineList);
+        if(hostList.isEmpty())
+            throw new ItsnowHostException("There is not " + type + " host available for " + account);
         ItsnowHost[] hosts = hostList.toArray(new ItsnowHost[hostList.size()]);
         Arrays.sort(hosts);
         return hosts[hosts.length-1];
