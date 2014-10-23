@@ -142,6 +142,7 @@ public class ItsnowHostsControllerTest extends SessionSupportedControllerTest {
         host.setId(102L);
         // Service Mock 记录阶段
         expect(mockedService.findById(host.getId())).andReturn(host);
+        expect(mockedService.canDelete(host)).andReturn(true);
         mockedService.delete(host);
         expectLastCall().once();
         // 准备 Mock Request
@@ -192,5 +193,21 @@ public class ItsnowHostsControllerTest extends SessionSupportedControllerTest {
         decorate(result);
         status().isOk();
         content().string("{\"name\":\"srv2.itsnow.com\"}");
+    }
+
+    @Test
+    public void testCheckPassword() throws Exception {
+        expect(mockedService.checkPassword("172.16.3.4", "srv2.itsnow.com", "itsnow@team")).andReturn(true);
+        MockHttpServletRequestBuilder request = get("/admin/api/hosts/checkPassword?host=172.16.3.4&username=srv2.itsnow.com&password=itsnow@team");
+        decorate(request);
+
+        replay(mockedService);
+        // 执行
+        ResultActions result =this.browser.perform(request);
+
+        // 对业务结果的验证
+        decorate(result);
+        status().isOk();
+        content().string("{}");
     }
 }

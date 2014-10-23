@@ -51,4 +51,12 @@ public interface ItsnowSchemaService {
      * @return 查找的结果
      */
     Page<ItsnowSchema> findAll(String keyword, PageRequest pageRequest);
+
+    /**
+     * <h2>Schema是否能删除</h2>
+     * <p>如果Schema有关联的进程，则不能删除，返回false；否则返回true</p>
+     * @param schema  schema对象
+     * @return true：可删除；false：不可删除
+     */
+    boolean canDelete(ItsnowSchema schema);
 }

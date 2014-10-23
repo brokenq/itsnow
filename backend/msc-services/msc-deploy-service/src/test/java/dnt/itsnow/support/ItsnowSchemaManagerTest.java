@@ -123,5 +123,4 @@ public class ItsnowSchemaManagerTest {
             Assert.hasText("Can't drop schema", e.getMessage());
         }
     }
-
 }

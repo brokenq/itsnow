@@ -8,10 +8,7 @@ import dnt.itsnow.exception.ItsnowHostException;
 import dnt.itsnow.exception.SystemInvokeException;
 import dnt.itsnow.model.ItsnowHost;
 import dnt.itsnow.model.SystemInvocation;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.repository.ItsnowHostRepository;
-import dnt.itsnow.service.ItsnowHostService;
 import dnt.itsnow.service.SystemInvokeService;
 import dnt.itsnow.util.DeployFixture;
 import org.junit.After;
@@ -43,8 +40,6 @@ public class ItsnowHostManagerTest {
     SystemInvokeService  systemInvokeService;
 
     ItsnowHost host;
-//    @Autowired
-//    ItsnowHostService hostService;
 
     @Before
     public void setUp() throws Exception {
@@ -59,12 +54,6 @@ public class ItsnowHostManagerTest {
         verify(repository);
         reset(repository);
     }
-
-//    @Test
-//    public void testFindAll() throws Exception {
-//        Page<ItsnowHost> pages = hostService.findAll(null, new PageRequest(0, 10));
-//        Assert.notNull(pages);
-//    }
 
     @Test
     public void testCreate() throws Exception {
@@ -138,5 +127,17 @@ public class ItsnowHostManagerTest {
 
         String hostName = hostManager.resolveName("172.16.3.4");
         Assert.isTrue("srv2.itsnow.com".equals(hostName));
+    }
+
+    @Test
+    public void testCheckPassword() throws Exception {
+        String jobId = "check-password-job-id";
+        expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
+        expect(systemInvokeService.waitJobFinished(jobId)).andReturn(0);
+
+        replay(systemInvokeService);
+        replay(repository);
+        boolean b = hostManager.checkPassword("172.16.3.4", "srv2.itsnow.com", "itsnow@team");
+        Assert.isTrue(b);
     }
 }

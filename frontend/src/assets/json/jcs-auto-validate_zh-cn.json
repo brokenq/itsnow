@@ -13,5 +13,5 @@
     "unique": "输入的值与系统已有记录重复",
     "pwmatch": "与前次输入的密码不一致",
     "titleRepeat": "名称已存在",
-    "duplicate": "输入的值与系统已有记录重复"
+    "pwError": "密码错误"
 }

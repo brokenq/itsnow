@@ -130,4 +130,10 @@ public class ItsnowHostRepositoryTest {
         List<ItsnowHost> hosts = hostRepository.findAllByConfiguration("mem", "8g");
         Assert.assertEquals(2, hosts.size());
     }
+
+    @Test
+    public void testCountLinked() throws Exception {
+        int count = hostRepository.countLinked(1L);
+        Assert.assertEquals(2, count);
+    }
 }

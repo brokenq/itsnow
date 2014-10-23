@@ -1,5 +1,5 @@
 
-angular.module('Lib.Directives', [])
+angular.module('Lib.Directives', ['Lib.Utils'])
   .directive('pwCheck', [->
     {
       require: 'ngModel',
@@ -11,42 +11,25 @@ angular.module('Lib.Directives', [])
   					ctrl.$setValidity('pwmatch', v);
     }
   ])
-  .directive('ngUnique', ['$http', (async) ->
+  .directive('ngCheck', ['$http', 'Utils', (async, Utils) ->
     {
       require: 'ngModel',
       link: (scope, elem, attrs, ctrl)->
         elem.on 'blur', () ->
           scope.$apply ->
+            errType = 'unique'
+            errType = attrs.errType if attrs.errType?
             val = elem.val()
-            return unless val?
-            return if val == ''
-            # GET /public/accounts/check/name/$accountName
+            return ctrl.$setValidity(errType, true) if !val? or val is ''
+            # GET /public/accounts/check/{0}/name
             # GET /public/accounts/check/domain/$accountDomain
             # GET /public/users/check/username/$username
             # GET /public/users/check/email/$email
             # GET /public/users/check/phone/$phone
-            async.get(attrs.ngUnique + val).success(->
-              ctrl.$setValidity('unique', true);
+            async.get(Utils.stringFormat attrs.ngCheck, val).success(->
+              ctrl.$setValidity(errType, true);
             ).error(->
-              ctrl.$setValidity('unique', false)
-            )
-    }
-  ])
-
-  .directive('dntDuplicate', ['$http', (async)->
-    {
-      require: 'ngModel'
-      link: (scope, elem, attrs, ctrl)->
-        elem.on 'blur', ->
-          scope.$apply ->
-            val = elem.val()
-            return unless val?
-            return if val == ''
-
-            async.get(elem.attr('check-url') + "?value=" + val).success((data)->
-              ctrl.$setValidity('duplicate', scope.checkName(data, elem))
-            ).error(->
-              ctrl.$setValidity('duplicate', false)
+              ctrl.$setValidity(errType, false)
             )
     }
   ])

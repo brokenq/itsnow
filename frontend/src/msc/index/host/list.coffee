@@ -49,5 +49,13 @@ angular.module('MscIndex.Host', ['ngTable','ngResource', 'dnt.action.service', '
       angular.element(document.getElementById("select_all")).prop("indeterminate", (checked != 0 && unchecked != 0));
     , true)
 
+    $scope.deleteHost = (host)->
+      feedback = (content) ->
+        alert content
+      success = ->
+        window.location.reload()
+      failure = (response)->
+        feedback response.statusText
+      hostService.delete(host, success, failure)
   ]
 

@@ -2,9 +2,9 @@ mixin tool_button(action, icon, text, weight, rejectCss, requireCss)
   button.btn.btn-primary.no-border(type="button", ng-click="#{action}", weight="#{weight}", reject-css="#{rejectCss}", require-css="#{requireCss}")
     span.glyphicon(class="glyphicon-#{icon}")
     | #{text}
-mixin drop_button(action, icon, text)
+mixin drop_button(action, icon, text, weight, rejectCss, requireCss)
   li
-    a(href=action)
+    a(href="javascript:void(0);", ng-click="#{action}", weight="#{weight}", reject-css="#{rejectCss}", require-css="#{requireCss}")
       span.glyphicon(class="glyphicon-#{icon}")
       | #{text}
 mixin nav_link(value, icon, text)
@@ -38,7 +38,7 @@ mixin progressBar(capacity, processPercent, schemaPercent)
         | 更多操作
         span.caret
       ul.dropdown-menu(role="menu")
-        +drop_button("#", "remove", "删除")
+        +drop_button("actionService.perform(deleteHost, $event)", "remove", "删除", "1+", "", "deletable")
     .btn-group.pull-right
       .nav-search#nav-search
         form.form-search
@@ -47,8 +47,9 @@ mixin progressBar(capacity, processPercent, schemaPercent)
             i.icon-search.nav-search-icon
 
   table.table.table-hover.table-bordered(template-pagination="customPager",ng-table="tableParams")
-    tr(ng-repeat="host in $data" value="{{host.id}}")
+    tr(ng-repeat="host in $data" value="{{host.id}}", ng-class="status", ng-init="status = {deletable: deletable}")
       td(width="30" style="text-align: left" header="'ngTableCheckboxHeader'")
+        input(type='text', ng-hide='true', ng-model='status', ng-init="status = (host.processesCount > 0 || host.schemasCount > 0 ? '' : 'deletable')")
         input(type="checkbox" ng-model="selection.items[host.id]")
       td(data-title="'名称'")
         a(ng-click="viewHost(host.id)", href="javascript:void(0)") {{host.name}}
@@ -56,7 +57,7 @@ mixin progressBar(capacity, processPercent, schemaPercent)
         a(href="ssh://root@${{host.address}}") {{host.address}}
       td(data-title="'类型'") {{host.type | formatHostType}}
       td(data-title="'使用率'")
-        +progressBar("{{host.capacity}}", "{{host.extend.processesCount/host.capacity*100 | round}}", "{{host.extend.schemasCount/host.capacity*100 | round}}")
+        +progressBar("{{host.capacity}}", "{{host.processesCount/host.capacity*100 | round}}", "{{host.schemasCount/host.capacity*100 | round}}")
       td(data-title="'状态'") {{host.status | formatHostStatus}}
 
 script(type="text/ng-template")#ngTableCheckboxHeader

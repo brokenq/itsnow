@@ -94,4 +94,12 @@ public class ItsnowSchemaManager extends ItsnowResourceManager implements Itsnow
         logger.debug("Listed  itsnow schemas: {}", page);
         return page;
     }
+
+    @Override
+    public boolean canDelete(ItsnowSchema schema){
+        logger.debug("Counting link processes by schema id: {} ", schema.getId());
+        int count = repository.countLinkProcesses(schema.getId());
+        logger.debug("Counted link processes by schema id: {} is {} ", schema.getId(), count);
+        return count == 0;
+    }
 }
