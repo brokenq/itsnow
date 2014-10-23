@@ -49,11 +49,11 @@ div(ui-view='')
             img(ng-src="{{catalog.icon}}")
           td(data-title="'名称'") {{catalog.sn}}
           td(data-title="'标题'") {{catalog.title}}
-          td(data-title="'描述'") {{catalog.description}}
+          td(data-title="'描述'") {{catalog.description}} {{selection.items}}
           td(data-title="'更新时间'") {{catalog.updatedAt | formatTime}}
         tr(ng-repeat="item in catalog.items")
           td(width="30" style="text-align: left" header="'ngTableCheckboxHeader'")
-              {{item.id}}
+
           td(data-title="'图标1'")
               img(ng-src="{{item.icon}}")
           td(data-title="'名称1'") {{item.brief}}

@@ -1,7 +1,7 @@
 angular.module('MscIndex.ServiceCatalog.Detail', ['ngResource']).config(function($stateProvider) {
   return $stateProvider.state('services.catalog.detail', {
     url: '/detail/{sn}/{action}',
-    templateUrl: 'service/detail.tpl.jade',
+    templateUrl: 'service/detail-catalog.tpl.jade',
     data: {
       pageTitle: '服务目录信息'
     }
@@ -16,6 +16,7 @@ angular.module('MscIndex.ServiceCatalog.Detail', ['ngResource']).config(function
   }
 ]).controller('CatalogDetailCtrl', [
   '$scope','$state','$location', '$stateParams', 'CatalogService', function($scope,$state,$location, $stateParams, catalogService) {
+
     $scope.sn = $stateParams.sn;
     $scope.action = $stateParams.action;
     if ($scope.action == 'create' ) {
@@ -30,7 +31,7 @@ angular.module('MscIndex.ServiceCatalog.Detail', ['ngResource']).config(function
         }
     }else{
       $scope.buttonLabel = '编辑';
-      $("#sn").attr("readonly","true");
+      $("#catalog_sn").attr("readonly","true");
       $scope.catalog = catalogService.get({sn:$scope.sn}, function() {
           //alert('got catalog data');
       });
