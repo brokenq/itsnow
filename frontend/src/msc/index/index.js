@@ -5,6 +5,7 @@ angular.module('Itsnow.MscIndex', [
   'Itsnow.Index',
   'MscIndex.Templates',
   'MscIndex.Account',
+  'MscIndex.AccountView',
   'MscIndex.Host',
   'MscIndex.Dict',
   'MscIndex.HostNew',

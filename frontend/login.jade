@@ -1,6 +1,7 @@
 -var sysName = '<%=sysName%>'
 -var styles = [<% styles.forEach( function(file){ print('"' + file + '",') }); %>]
 -var scripts = [<% scripts.forEach( function(file){ print('"' + file + '",') }); %>]
+-var version = '<%=version%>'
 !!! 5
 html(lang="zh-CN", ng-app="Itsnow.#{sysName}Login")
   head
@@ -10,6 +11,8 @@ html(lang="zh-CN", ng-app="Itsnow.#{sysName}Login")
     link(rel="icon", type="image/icon", href="/assets/favicon.ico")
     each style in styles
       link(rel="stylesheet", type="text/css", href=style)
+    script(type="text/javascript")
+      window.VERSION = "#{version}";
     each js in scripts
       script(type="text/javascript", src=js)
     title(ng-bind="pageTitle")

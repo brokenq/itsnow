@@ -1,5 +1,5 @@
 # List accounts
-angular.module('MscIndex.Account', ['ngTable','ngResource'])
+angular.module('MscIndex.Account', ['ngTable','ngResource', 'ngSanitize','dnt.action.service'])
   .config ($stateProvider)->
     $stateProvider.state 'accounts',
       url: '/accounts',
@@ -17,17 +17,43 @@ angular.module('MscIndex.Account', ['ngTable','ngResource'])
   .factory('AccountService', ['$resource', ($resource) ->
     $resource("/admin/api/accounts")
   ])
-  .filter('formatSubDomain', ->
-    (subDomain) ->
-      "http://" + subDomain + ".itsnow.com"
-  )
+  .filter('formatSubDomain', ['$sce', ($sce)->
+    (account) ->
+      link = "http://" + account.domain + ".itsnow.com"
+      if account.process? and account.process.status == 'Running'
+        $sce.trustAsHtml '<a target="_blank" href="' + link + '">' + link + '</a>'
+      else
+        link
+  ])
   .filter('formatAccountStatus', ->
     (status) ->
       return "待审核" if status == 'New'
       return "已批准" if status == 'Valid'
       return "被拒绝" if status == 'Rejected'
   )
-  .controller 'AccountListCtrl',['$scope', '$location', '$timeout', 'ngTableParams', 'AccountService',($scope, $location, $timeout, ngTableParams, accountService)->
+  .filter('processStatusCss', ->
+    (status) ->
+      switch status
+        when 'Stopped' then 'grey'
+        when 'Running' then 'green'
+        when 'Starting' then 'light-green'
+        when 'Stopping' then 'light-orange'
+        when 'Abnormal' then 'red'
+        else #Unknown
+  )
+  .controller 'AccountListCtrl',['$scope', '$location', '$timeout', '$resource', '$http', 'ngTableParams', 'ActionService', \
+                                ($scope, $location, $timeout, $resource, $http, ngTableParams, ActionService)->
+    Accounts = $resource("/admin/api/accounts")
+    actions = 
+      approve: 
+        method: 'PUT'
+        params: 
+          action: 'approve'
+      reject:  
+        method: 'PUT'
+        params: 
+          action: 'reject'
+    Account  = $resource("/admin/api/accounts/:sn/:action", {sn: "@sn"}, actions)
     options =
       page:  1,           # show first page
       count: 10           # count per page
@@ -35,18 +61,57 @@ angular.module('MscIndex.Account', ['ngTable','ngResource'])
       total: 0,
       getData: ($defer, params) ->
         $location.search(params.url()) # put params in url
-        accountService.query(params.url(), (data, headers) ->
+        type = $location.$$path.substr($location.$$path.lastIndexOf('/')+1)
+        defaults = params.url()
+        defaults.type = type if type == 'msu' or type == 'msp'
+        Accounts.query(defaults, (data, headers) ->
           $timeout(->
             params.total(headers('total'))
             $defer.resolve($scope.accounts = data)
           , 500)
         )
-    $scope.tableParams = new ngTableParams(angular.extend(options, $location.search()), args)
     $scope.checkboxes = { 'checked': false, items: {} }
+    $scope.getAccountBySn  = (sn)->
+      return account for account in $scope.accounts when account.sn == sn
+    $scope.actionService = new ActionService({watch: $scope.checkboxes.items, mapping: $scope.getAccountBySn})
+
+    $scope.tableParams = new ngTableParams(angular.extend(options, $location.search()), args)
+    $scope.$on '$stateChangeSuccess', (e, state)->
+      if state.name == 'accounts.msu' or state.name == 'accounts.msp'
+        $scope.tableParams.reload()
+
+
+    $scope.approve = (account) ->
+      acc = new Account(account)
+      acc.$approve ->
+        # TODO 增加反馈机制, 另外，需要考虑结束操作后，是否应该当前纪录从选中的集合中移除
+        # 这个移除的工作，貌似该由Action Service完成？
+        # 包括表格的刷新，在批量操作时，每条记录都会导致表格刷新
+        # 这个问题，也应该是Action Service的perform API增强，支持设定一个成功的callback
+        # 所有的任务都完成后，action service对这个callback执行调用
+        # 或者 action service需要定义一个handler，要求这个handler提供四个方法
+        #  successOne(record), successAll(records), failureOne(record), falureAll(records)
+        $scope.tableParams.reload()
+      
+    $scope.reject = (account) ->
+      acc = new Account(account)
+      acc.$reject ->
+        $scope.tableParams.reload()
+
+    $scope.destroy = (account) ->
+      acc = new Account(account)
+      acc.$remove ->
+        $scope.tableParams.reload()
+
+    $scope.autoCreate = (account) ->
+      $http.post "/admin/api/processes/auto_create/" + account.sn, "", ->
+        $scope.tableParams.reload()
+
     # watch for check all checkbox
     $scope.$watch 'checkboxes.checked', (value)->
       angular.forEach $scope.accounts, (item)->
         $scope.checkboxes.items[item.sn] = value if angular.isDefined(item.sn)
+
     # watch for data checkboxes
     $scope.$watch('checkboxes.items', (values) ->
       return if !$scope.accounts
@@ -60,5 +125,6 @@ angular.module('MscIndex.Account', ['ngTable','ngResource'])
       # grayed checkbox
       angular.element(document.getElementById("select_all")).prop("indeterminate", (checked != 0 && unchecked != 0));
     , true)
+
   ]
 

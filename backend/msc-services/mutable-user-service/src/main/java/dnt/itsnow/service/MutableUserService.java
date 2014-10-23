@@ -44,4 +44,10 @@ public interface MutableUserService extends CommonUserService {
      * @param newPassword 新的密码，明文
      */
     void changePassword(String username, String newPassword);
+
+    /**
+     * 删除特定帐户下所有的用户
+     * @param accountId 被删除的帐户ID
+     */
+    void deleteByAccountId(Long accountId);
 }

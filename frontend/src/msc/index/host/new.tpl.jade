@@ -1,37 +1,60 @@
 //   New host
 doctype html
 
-mixin form_field(name, label, icon, tip)
+mixin widgetBox(title)
+  .col-md-offset-2.col-md-8
+    .widget-box
+      .widget-header
+        h4 #{title}
+      .widget-body
+        block
+mixin formGroup(obj, name, label, icon, tip)
+  .form-group
+    label.col-xs-12.col-sm-3.control-label.no-padding-right(for="#{obj}_#{name}") #{label}
+    .col-xs-12.col-sm-5
+      span.block.input-icon.input-icon-right
+        block
+        i(class="icon-#{icon}")
+    .help-block.col-xs-12.col-sm-reset.inline #{tip}
+mixin field(name, label)
+  input.form-control(id="host_#{name}", name="host.#{name}", ng-model="host.#{name}", required,  ng-maxlength="20", type="text", placeholder="#{label}")
+mixin fieldWithCheck(name, label, checkUrl)
+  input.form-control(id="host_#{name}", name="host.#{name}", ng-model="host.#{name}", required,  ng-maxlength="20", type="text", placeholder="#{label}", ng-check="#{checkUrl}")
+mixin configField(name, label)
+  input.form-control(id="configuration_#{name}", name="configuration.#{name}", ng-model="host.configuration.#{name}", required,  ng-maxlength="20", type="text", placeholder="#{label}")
+
+mixin selector(name, label, datas, tip)
   .form-group
     label.col-xs-12.col-sm-3.control-label.no-padding-right(for="host_#{name}") #{label}
     .col-xs-12.col-sm-5
-      span.block.input-icon.input-icon-right
-        input.form-control(id="host_#{name}", name="host.#{name}", ng-model="host.#{name}", ng-required,  ng-maxlength="20", type="text", placeholder="#{label}")
-        i(class="icon-#{icon}")
-    .help-block.col-xs-12.col-sm-reset.inline #{tip}
-mixin config_field(name, id, label, icon, tip)
-  .form-group
-    label.col-xs-12.col-sm-3.control-label.no-padding-right(for="configuration_#{id}") #{label}
-    .col-xs-12.col-sm-5
-      span.block.input-icon.input-icon-right
-        input.form-control(id="configuration_#{id}", name="configuration.#{name}", ng-model="host.configuration.#{name}", ng-required, ng-maxlength="20", type="text", placeholder="#{label}")
-        i(class="icon-#{icon}")
+      select.form-control(ng-model="host.#{name}", required)
+        option(ng-repeat="data in #{datas}", value="{{data}}") {{data}}
     .help-block.col-xs-12.col-sm-reset.inline #{tip}
 
 .row(ng-controller="HostNewCtrl")
-  form.form-horizontal(name="newHostForm", novalidate, ng-model-options="{ updateOn: 'mousedown blur' }", role="form")
-    +form_field("name",     "主机名", "star", "主机名，不要用中文，尽量为简单的英文字符")
-    +form_field("address",  "地址",   "font", "主机地址，IP地址或者域名均可")
-    +form_field("capacity", "容量",   "th", "主机上可以部署多少个MSU/MSP实例")
-    +config_field("user",        "user",        "用户名",  "user",  "用户名，默认为root")
-    +config_field("password",    "password",    "密码",    "lock",  "以上用户的密码")
-    +config_field("msu_version", "msu_version", "MSU版本", "flag",  "部署的MSU的版本号")
-    +config_field("msp_version", "msu_version", "MSP版本", "flag",  "部署的MSP的版本号")
+  form.form-horizontal(name="newHostForm", novalidate="novalidate", ng-model-options="{ updateOn: 'mousedown blur' }", role="form", ng-submit="createHost()")
+    +widgetBox("主机信息")
+      +formGroup("host", "name",     "主机名", "star", "主机名，不要用中文，尽量为简单的英文字符")
+        +fieldWithCheck("name", "主机名", "/admin/api/hosts/checkName?value={0}")
+      +formGroup("host", "address",  "地址",   "font", "主机地址，IP地址或者域名均可")
+        +fieldWithCheck("address", "地址", "/admin/api/hosts/checkAddress?value={0}")
+      +selector("type", "类型", "types", "")
+      +formGroup("host", "capacity", "容量",   "th", "主机上可以部署多少个MSU/MSP实例")
+        +field("capacity", "容量")
+    +widgetBox("配置信息")
+      +formGroup("configuration", "user", "用户名",   "user", "用户名，默认为root")
+        +configField("user", "用户名")
+      +formGroup("configuration", "password", "密码",   "password", "以上用户的密码")
+        input.form-control(id="configuration_password", name="configuration.password", ng-model="host.configuration.password", required,  ng-maxlength="20", type="password", placeholder="密码", ng-check="/admin/api/hosts/checkPassword?host={{host.address}}&username={{host.name}}&password={0}", err-type="pwError")
+      +formGroup("configuration", "msu_version", "MSU版本",   "msu_version", "部署的MSU的版本号")
+        +configField("msu_version", "MSU版本")
+      +formGroup("configuration", "msp_version", "MSP版本",   "msu_version", "部署的MSP的版本号")
+        +configField("msp_version", "MSP版本")
 
     .row-fluid.actions
       .col-xs-12.col-sm-3
       .col-xs-12.col-sm-5
-        button.btn.btn-sm.btn-primary(ng-click="createHost()")
+        button.btn.btn-sm.btn-primary(type="submit")
           i.icon-ok
           | 创建
         button.btn.btn-sm.btn-link(ui-sref="hosts")

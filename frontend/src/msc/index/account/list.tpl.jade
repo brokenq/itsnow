@@ -1,23 +1,23 @@
-mixin tool_button(action, icon, text)
-  button.btn.btn-default(type="button")
+mixin tool_button(action, icon, text, weight, rejectCss, requireCss)
+  button.btn.btn-primary.no-border(type="button", ng-click="#{action}", weight="#{weight}", reject-css="#{rejectCss}", require-css="#{requireCss}")
     span.glyphicon(class="glyphicon-#{icon}")
     | #{text}
-mixin drop_button(action, icon, text)
+mixin drop_button(action, icon, text, weight, rejectCss, requireCss)
   li
-    a(href=action)
-      span.glyphicon(class="glyphicon-#{icon}")
+    a(href="javascript:void(0)", ng-click="#{action}", weight="#{weight}", reject-css="#{rejectCss}", require-css="#{requireCss}")
+      i(class="icon-#{icon}")
       | #{text}
 mixin nav_link(value, icon, text)
-  a(ng-switch-when=value, ng-click="params.page(page.number)", href="")
+  a(ng-switch-when="#{value}", ng-click="params.page(page.number)", href="")
     span.glyphicon(class="glyphicon-#{icon}")
     | #{text}
 // 由于IDEA/WebStorm等在script tag内对jade的解析有问题，所以将这段会仅在IDE中出错的抽取到mixin中
 mixin page_navs()
-  li(ng-repeat="page in pages", ng-klass="{'disabled': !page.active, 'previous': page.type == 'prev', 'next': page.type == 'next'}", ng-show="page.type == 'prev' || page.type == 'next'", ng-switch="page.type")
+  li(ng-repeat="page in pages", ng-class="{'disabled': !page.active, 'previous': page.type == 'prev', 'next': page.type == 'next'}", ng-show="page.type == 'prev' || page.type == 'next'", ng-switch="page.type")
     +nav_link("prev", "step-backward", "上一页")
     +nav_link("next", "step-forward", "下一页")
 mixin page_size_button(count)
-  button.btn.btn-default(type="button", ng-class="{'active':params.count() == #{count}}", ng-click="params.count(#{count})")= count
+  button.btn.btn-primary.no-border(type="button", ng-class="{'active':params.count() == #{count}}", ng-click="params.count(#{count})")= count
 mixin select_all()
   input(type="checkbox", ng-model="checkboxes.checked", name="filter-checkbox", value="")#select_all
 
@@ -25,17 +25,18 @@ mixin select_all()
 
   .btn-toolbar(role="toolbar")
     .btn-group
-      +tool_button("#", "refresh", "")
+      +tool_button("tableParams.reload()", "refresh", "", "*", "", "")
     .btn-group
-      +tool_button("#", "ok", "批准")
-      +tool_button("#", "trash", "拒绝")
-      +tool_button("#", "plus", "分配服务")
+      +tool_button("actionService.perform(approve, $event)", "ok",    "批准",    "1+", "", "new")
+      +tool_button("actionService.perform(reject, $event)",  "trash", "拒绝",    "1+", "", "new")
+      +tool_button("actionService.perform(autoCreate, $event)",  "key",  "自动分配", "1+", "", "valid")
     .btn-group
-      button.btn.btn-default.dropdown-toggle(type="button",data-toggle="dropdown")
+      button.btn.btn-primary.dropdown-toggle(type="button",data-toggle="dropdown")
         | 更多操作
         span.caret
-      ul.dropdown-menu(role="menu")
-        +drop_button("#", "remove", "删除")
+      ul.dropdown-menu.user-menu(role="menu")
+        +drop_button("actionService.gotoState('process_new', $event)", "plus", "手工分配", "1", "", "valid")
+        +drop_button("actionService.perform(destroy, $event)", "trash", "删除", "1+", "valid", "")
     .btn-group.pull-right
       .nav-search#nav-search
         form.form-search
@@ -44,13 +45,18 @@ mixin select_all()
             i.icon-search.nav-search-icon
 
   table.table(template-pagination="customPager",ng-table="tableParams")
-    tr(ng-repeat="account in $data")
+    tr(ng-repeat="account in $data", ng-class="account.status.toLowerCase()", value="{{account.sn}}")
       td(width="30" style="text-align: left" header="'ngTableCheckboxHeader'")
         input(type="checkbox" ng-model="checkboxes.items[account.sn]")
-      td(data-title="'名称'") {{account.name}}
-      td(data-title="'子域名'") {{account.domain | formatSubDomain}}
-      td(data-title="'联系人'") account.user.nickName
-      td(data-title="'联系人电话'") account.user.phone
+      td(data-title="'名称'")
+        a(ui-sref="account_view({sn: '{{account.sn}}'})") {{account.name}}
+
+        a(ng-if="account.process", ui-sref="process_view({name: '{{account.process.name}}'})")
+          i.icon-cogs.pull-right(class="{{account.process.status | processStatusCss}}")
+      td(data-title="'子域名'", ng-bind-html="account | formatSubDomain")
+      td(data-title="'联系人'")
+        a(ui-sref="user_view({name: '{{account.user.name}}'})") {{account.user.name}}
+      td(data-title="'联系人电话'") {{account.user.phone}}
       td(data-title="'状态'") {{ account.status | formatAccountStatus}}
 
 script(type="text/ng-template")#ngTableCheckboxHeader

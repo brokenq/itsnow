@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 
 /**
- * Created by jacky on 2014/9/2.
+ * <h1>Public ServiceCatalog Manager</h1>
  */
 @Service
 public class PublicServiceCatalogManager extends CommonServiceCatalogManager implements PublicServiceCatalogService {
@@ -20,6 +20,7 @@ public class PublicServiceCatalogManager extends CommonServiceCatalogManager imp
     @Override
     public PublicServiceCatalog create(PublicServiceCatalog publicServiceCatalog) {
         setCommonServiceCatalogList(null);
+        setFormattedServiceCatalogList(null);
         publicServiceCatalog.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         publicServiceCatalog.setUpdatedAt(publicServiceCatalog.getCreatedAt());
         publicServiceCatalogRepository.create(publicServiceCatalog);
@@ -29,6 +30,7 @@ public class PublicServiceCatalogManager extends CommonServiceCatalogManager imp
     @Override
     public PublicServiceCatalog update(PublicServiceCatalog publicServiceCatalog) {
         setCommonServiceCatalogList(null);
+        setFormattedServiceCatalogList(null);
         publicServiceCatalog.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         publicServiceCatalogRepository.update(publicServiceCatalog);
         return publicServiceCatalog;
@@ -37,6 +39,7 @@ public class PublicServiceCatalogManager extends CommonServiceCatalogManager imp
     @Override
     public void delete(PublicServiceCatalog publicServiceCatalog) {
         setCommonServiceCatalogList(null);
+        setFormattedServiceCatalogList(null);
         publicServiceCatalogRepository.delete(publicServiceCatalog.getSn());
     }
 

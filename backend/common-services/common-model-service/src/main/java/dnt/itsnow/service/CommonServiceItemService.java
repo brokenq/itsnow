@@ -20,6 +20,13 @@ public interface CommonServiceItemService {
     List<PublicServiceItem> findAll();
 
     /**
+     * <h2>查询服务目录下的所有服务项</h2>
+     *
+     * @return 公共服务项列表
+     */
+    List<PublicServiceItem> findAllByCatalogSn(String sn);
+
+    /**
      * <h2>根据id查找公共服务项</h2>
      *
      * @param id 编号

@@ -93,4 +93,10 @@ public class ItsnowSchemaRepositoryTest {
         List<ItsnowSchema> schemas = schemaRepository.findAllByKeyword(null, new PageRequest(0, 10));
         Assert.assertTrue(schemas.size() >= 1);
     }
+
+    @Test
+    public void testCountLinkProcesses() throws Exception {
+        int count = schemaRepository.countLinkProcesses(1L);
+        Assert.assertTrue(count >= 1);
+    }
 }

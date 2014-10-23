@@ -5,11 +5,13 @@ package dnt.itsnow.repository;
 
 import dnt.itsnow.config.DeployRepositoryConfig;
 import dnt.itsnow.model.HostStatus;
+import dnt.itsnow.model.HostType;
 import dnt.itsnow.model.ItsnowHost;
 import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.util.DeployFixture;
 import junit.framework.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +19,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.sql.Timestamp;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * 测试 Itsnow Host Repository
@@ -43,11 +43,21 @@ public class ItsnowHostRepositoryTest {
         hostRepository.create(host);
         // 验证已经被创建
         Assert.assertNotNull(host.getId());
+        // clean it
+        hostRepository.deleteByAddress(host.getAddress());
     }
 
     @Test
     public void testFindByAddress() throws Exception {
         ItsnowHost host = hostRepository.findByAddress("172.16.3.4");
+        Assert.assertNotNull(host);
+        Assert.assertNotNull(host.getConfiguration());
+        Assert.assertEquals("4x2533Mhz", host.getConfiguration().getProperty("cpu"));
+    }
+
+    @Test
+    public void testFindByName() throws Exception {
+        ItsnowHost host = hostRepository.findByName("MSU/P Host A");
         Assert.assertNotNull(host);
         Assert.assertNotNull(host.getConfiguration());
         Assert.assertEquals("4x2533Mhz", host.getConfiguration().getProperty("cpu"));
@@ -89,25 +99,32 @@ public class ItsnowHostRepositoryTest {
     }
 
     @Test
+    public void testFindAllByType() throws Exception {
+        List<ItsnowHost> appHosts = hostRepository.findAllByType(HostType.APP);
+        Assert.assertEquals(1, appHosts.size());
+        List<ItsnowHost> dbHosts = hostRepository.findAllByType(HostType.DB);
+        Assert.assertEquals(1, dbHosts.size());
+        List<ItsnowHost> comHosts = hostRepository.findAllByType(HostType.COM);
+        Assert.assertEquals(1, comHosts.size());
+    }
+
+    @Test
     public void testFindAllNoKeyword() throws Exception {
         List<ItsnowHost> msHosts = hostRepository.findAllByKeyword(null, new PageRequest(0, 10));
         Assert.assertTrue(msHosts.size() >= 2);
     }
 
     @Test
-    public void testFindAllDbHosts() throws Exception {
-        List<ItsnowHost> msHosts = hostRepository.findAllDbHosts();
-        Assert.assertTrue(msHosts.size() >= 1);
-    }
-
-    @Test
     public void testUpdate() throws Exception {
         ItsnowHost host = hostRepository.findByAddress("172.16.3.4");
+        String originName = host.getName();
         host.setName("new name");
         host.setStatus(HostStatus.Running);
         host.updating();
         hostRepository.update(host);
-
+        //NOT AFFECT OTHER TEST CASE
+        host.setName(originName);
+        hostRepository.update(host);
     }
 
     @Test
@@ -119,6 +136,13 @@ public class ItsnowHostRepositoryTest {
     @Test
     public void testFindAllByConfiguration() throws Exception {
         List<ItsnowHost> hosts = hostRepository.findAllByConfiguration("mem", "8g");
-        Assert.assertEquals(2, hosts.size());
+        Assert.assertEquals(3, hosts.size());
+    }
+
+    @Test
+    @Ignore
+    public void testCountLinked() throws Exception {
+        int count = hostRepository.countLinked(1L);
+        Assert.assertEquals(2, count);
     }
 }

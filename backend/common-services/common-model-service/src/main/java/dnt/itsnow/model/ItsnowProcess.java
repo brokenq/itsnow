@@ -43,6 +43,7 @@ public class ItsnowProcess extends DeployResource{
 
     public void setAccount(Account account) {
         this.account = account;
+        if( account != null ) setAccountId(account.getId());
     }
 
     public Long getAccountId() {
@@ -59,6 +60,7 @@ public class ItsnowProcess extends DeployResource{
 
     public void setHost(ItsnowHost host) {
         this.host = host;
+        if( host != null ) setHostId(host.getId());
     }
 
     public Long getHostId() {
@@ -75,6 +77,7 @@ public class ItsnowProcess extends DeployResource{
 
     public void setSchema(ItsnowSchema schema) {
         this.schema = schema;
+        if(schema != null) setSchemaId(schema.getId());
     }
 
     public Long getSchemaId() {

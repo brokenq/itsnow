@@ -2,6 +2,7 @@ angular.module('Itsnow.Index', [
     'ui.router',
     'ngResource',
     'ngLocale',
+    'jcs-autoValidate',
     'Lib.Interceptor',
     'Lib.Directives',
     'Lib.Templates',
@@ -9,7 +10,7 @@ angular.module('Itsnow.Index', [
     'Index.Menu',
     'Index.Dialog',
     'Index.Table',
-    'jcs-autoValidate'
+    'Lib.JcsEnhance'
 ])
   .config(function ($httpProvider, $stateProvider, $urlRouterProvider) {
         $urlRouterProvider.otherwise('dashboard');
@@ -70,9 +71,11 @@ angular.module('Itsnow.Index', [
   }])
 
   // angular-auto-validate error message
-  .run(['defaultErrorMessageResolver',
-    function (defaultErrorMessageResolver) {
+  .run(['defaultErrorMessageResolver', 'validator', 'AceElementModifier',
+    function (defaultErrorMessageResolver, validator, aceElementModifier) {
       defaultErrorMessageResolver.setI18nFileRootPath('assets/json');
       defaultErrorMessageResolver.setCulture('zh-CN');
+      validator.registerDomModifier(aceElementModifier.key, aceElementModifier);
+      validator.setDefaultElementModifier(aceElementModifier.key);
     }
   ]);

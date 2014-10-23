@@ -31,7 +31,7 @@ mixin detail(label, value)
         hr
         .step-content.row-fluid.position-relative#step-container
           +stepPane(1)(class="active")
-            form.form-horizontal(novalidate,name="step1Form",role="form",ng-model-options="{ updateOn: 'mousedown blur' }")
+            form.form-horizontal(novalidate,name="step1Form",role="form")
               +fieldGroup("帐户类型","{{registration.typeHelp()}}")(class="radio")
                 label
                   input.ace#registration_type_enterprise(name="registration_type", ng-model="registration.type", value="Enterprise", type="radio")
@@ -46,54 +46,48 @@ mixin detail(label, value)
                 label
                   input.ace#registration_as_provider(name="registration_asProvider", ng-model="registration.asProvider",ng-disabled="registration.individual()", value="provider", type="checkbox")
                   span.lbl 服务供应方
-              +fieldGroup("{{registration.nameLabel()}}","请设置{{registration.nameLabel()}}")(ngClass="inputStyle('step1Form','registration_account_name')")
+              +fieldGroup("{{registration.nameLabel()}}","请设置{{registration.nameLabel()}}")
                 span.block.input-icon.input-icon-right
-                  input.form-control#registration_account_name(name="registration_account_name", ng-model="registration.account.name",ng-required,ng-minlength="2",ng-maxlength="50", ng-unique="/accounts/check_unique/name/%s", type="text", placeholder="{{registration.namePlaceholder()}}")
+                  input.form-control#registration_account_name(name="registration_account_name", ng-model="registration.account.name",ng-required,ng-minlength="2",ng-maxlength="50", ng-check="/public/accounts/check/name/{0}", type="text", placeholder="{{registration.namePlaceholder()}}")
                   i.icon-group
-              +fieldGroup("自定义域名","仅由英文,数字，下划线组合")(ngClass="inputStyle('step1Form','registration_account_domain')")
+              +fieldGroup("自定义域名","仅由英文,数字，下划线组合")
                 .input-group
                   .input-group-addon http://
-                  input.span2#registration_account_domain(name="registration_account_domain", ng-model="registration.account.domain", ng-required="true", ng-minlength="2", ng-maxlength="10",ng-unique="/accounts/check_unique/domain/%s", type="text", placeholder="2-10位", ng-pattern='/^[\\w|\\d|_]+$/')
+                  input.span2#registration_account_domain(name="registration_account_domain", ng-model="registration.account.domain", ng-required="true", ng-minlength="2", ng-maxlength="10",ng-check="/public/accounts/check/domain/{0}", type="text", placeholder="2-10位", ng-pattern='/^[\\w|\\d|_]+$/')
                   .input-group-addon .itsnow.com
           +stepPane(2)
-            form.form-horizontal(novalidate,name="step2Form",ng-model-options="{ updateOn: 'mousedown blur' }",role="form")
-              .form-group(ng-class="{'has-info': step2Form.registration_user_username.$pristine, 'has-success': step2Form.registration_user_username.$valid, 'has-error': step2Form.registration_user_username.$invalid}")
-                label.col-xs-12.col-sm-3.control-label.no-padding-right(for="registration_user_username") 用户名
-                .col-xs-12.col-sm-5
-                  span.block.input-icon.input-icon-right
-                    input.form-control#registration_user_username(name="registration_user_username", ng-model="registration.user.username", ng-required, ng-minlength="4", ng-maxlength="20", ng-pattern='/^[a-zA-Z0-9]|_|\\-|\\.]+$/', ng-unique="/users/check_unique/username/%s", type="text", placeholder="用户名")
-                    i.icon-user
-                .help-block.col-xs-12.col-sm-reset
-                  .msg-block(ng-show='step2Form.registration_user_username.$error', ng-cloak)  用户名输入有误
-                    span.msg-error(ng-show="step2Form.registration_user_username.$error.required", ng-cloak)  用户名不能为空
-
-              +fieldGroup("电子邮箱","用于找回密码，接收通知等")(ngClass="inputStyle('step2Form','registration_user_email')", for="registration_user_email")
+            form.form-horizontal(novalidate,name="step2Form",role="form")
+              +fieldGroup("用户名","管理员帐户登录名")(for="registration_user_username")
                 span.block.input-icon.input-icon-right
-                  input.form-control#registration_user_email(name="registration_user_email", ng-model="registration.user.email", ng-required, ng-unique="/users/check_unique/email/%s", type="email", placeholder="someone@company.com")
+                  input.form-control#registration_user_username(name="registration_user_username", ng-model="registration.user.username", ng-required, ng-minlength="4", ng-maxlength="20", ng-pattern='/^[a-zA-Z0-9]|_|\\-|\\.]+$/', ng-check="/public/users/check/username/{0}", type="text", placeholder="用户名")
+                  i.icon-user
+              +fieldGroup("电子邮箱","用于找回密码，接收通知等")(for="registration_user_email")
+                span.block.input-icon.input-icon-right
+                  input.form-control#registration_user_email(name="registration_user_email", ng-model="registration.user.email", ng-required, ng-check="/public/users/check/email/{0}", type="email", placeholder="someone@company.com")
                   i.icon-envelope
-              +fieldGroup("电话号码","帐号审批通过后，会通过该电话与您联系")(ngClass="inputStyle('step2Form','registration_user_phone')", for="registration_user_phone")
+              +fieldGroup("电话号码","帐号审批通过后，会通过该电话与您联系")(for="registration_user_phone")
                 span.block.input-icon.input-icon-right
-                  input.form-control#registration_user_phone(name="registration_user_phone", ng-model="registration.user.phone", ng-required, ng-unique="/users/check_unique/phone/%s", type="text", placeholder="13912345678", ng-pattern='/[\\d|-]{8,11}/')
+                  input.form-control#registration_user_phone(name="registration_user_phone", ng-model="registration.user.phone", ng-required, ng-check="/public/users/check/phone/{0}", type="text", placeholder="13912345678", ng-pattern='/[\\d|-]{8,11}/')
                   i.icon-headphones
-              +fieldGroup("密码","设置6-20位密码")(ngClass="inputStyle('step2Form','registration_user_password')", for="registration_user_password")
+              +fieldGroup("密码","设置6-20位密码")(for="registration_user_password")
                 span.block.input-icon.input-icon-right
                   input.form-control#registration_user_password(name="registration_user_password", ng-model="registration.user.password", ng-required, ng-minlength="6", ng-maxlength="20", type="password", placeholder="数字,字母，符号组合")
                   i.icon-lock
-              +fieldGroup("重复密码","重复以上密码")(ngClass="inputStyle('step2Form','registration_user_repeat_password')", for="registration_user_repeat_password")
+              +fieldGroup("重复密码","重复以上密码")(for="registration_user_repeat_password")
                 span.block.input-icon.input-icon-right
                   input.form-control#registration_user_repeat_password(name="registration_user_repeat_password", ng-model="registration.user.repeatPassword", ng-required, type="password", placeholder="重复密码",pw-check="registration_user_password")
                   i.icon-retweet
           +stepPane(3)
             form.form-horizontal(novalidate,name="step3Form", role="form")
-              +fieldGroup("营业执照","请上传营业执照复印件")(ngClass="inputStyle('step3Form','registration_attachments_yyzz')", for="registration_attachments_yyzz", ngHide="registration.individual()")
+              +fieldGroup("营业执照","请上传营业执照复印件")(for="registration_attachments_yyzz", ngHide="registration.individual()")
                 span.block.input-icon.input-icon-right
                   input.width-100.form-control#registration_attachments_yyzz(name="registration_attachments_yyzz", ng-model="registration.attachments.yyzz", ng-required, type="file")
                   i.icon-briefcase
-              +fieldGroup("税务登记证","请上传营业执照复印件")(ngClass="inputStyle('step3Form','registration_attachments_swdjz')", for="registration_attachments_swdjz", ngHide="registration.individual()")
+              +fieldGroup("税务登记证","请上传营业执照复印件")(for="registration_attachments_swdjz", ngHide="registration.individual()")
                 span.block.input-icon.input-icon-right
                   input.width-100.form-control#registration_attachments_swdjz(name="registration_attachments_swdjz", ng-model="registration.attachments.swdjz", ng-required, type="file")
                   i.icon-certificate
-              +fieldGroup("个人身份证","请上传个人身份证复印件")(ngClass="inputStyle('step3Form','registration_attachments_id_card')", for="registration_attachments_id_card", ngShow="registration.individual()")
+              +fieldGroup("个人身份证","请上传个人身份证复印件")(for="registration_attachments_id_card", ngShow="registration.individual()")
                 span.block.input-icon.input-icon-right
                   input.width-100.form-control#registration_attachments_id_card(name="registration_attachments_id_card", ng-model="registration.attachments.id_card", ng-required, type="file")
                   i.icon-credit-card

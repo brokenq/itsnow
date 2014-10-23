@@ -13,17 +13,19 @@ angular.module('MscIndex.HostNew', ['ngResource'])
         name: "srv2"
         address: "srv2"
         capacity: 50
+        type: "DB"
         configuration:
           user: "root"
           password: "secret"
-          msu_version: "0.1.9-SNAPSHOT"
-          msp_version: "0.1.9-SNAPSHOT"
+          msu_version: window.VERSION
+          msp_version: window.VERSION
 
+      $scope.types = ["DB", "APP", "COM"]
       $scope.createHost = ->
         feedback = (content) ->
           alert content
-        success = ->
-          $state.go 'hosts'
+        success = (data)->
+          $state.go 'host_view', data
         failure = (response)->
           feedback response.statusText
         host = $scope.host

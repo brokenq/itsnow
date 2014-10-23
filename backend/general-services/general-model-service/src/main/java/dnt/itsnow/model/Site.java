@@ -15,7 +15,6 @@ import java.util.Set;
  */
 public class Site extends ConfigItem {
 
-    @NotBlank
     private String sn;
     //地址
     @NotBlank

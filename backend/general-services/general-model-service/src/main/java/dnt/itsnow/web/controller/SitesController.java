@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 /**
- * <h1>地点的控制器</h1>
+ * <h1>地点管理的控制器</h1>
  * <pre>
- * <b>HTTP     URI                         方法      含义  </b>
+ * <b>HTTP     URI                   方法      含义  </b>
  * # GET      /api/sites?keyword={}  index     列出所有地点，支持过滤，分页，排序等
  * # GET      /api/sites             show      列出特定的地点
  * # POST     /api/sites             create    创建地点，账户信息通过HTTP BODY提交
@@ -43,11 +43,13 @@ public class SitesController extends SessionSupportController<Site> {
      */
     @RequestMapping
     public Page<Site> index(@RequestParam(value = "keyword", required = false) String keyword) {
-        logger.debug("Listing Sites by keyword: {}" + keyword);
+
+        logger.debug("Listing sites by keyword: {}", keyword);
 
         indexPage = siteService.findAll(keyword, pageRequest);
 
         logger.debug("Listed  {}", indexPage);
+
         return indexPage;
     }
 
@@ -58,7 +60,7 @@ public class SitesController extends SessionSupportController<Site> {
      *
      * @return 地点
      */
-    @RequestMapping("/{sn}")
+    @RequestMapping("{sn}")
     public Site show() {
         return site;
     }
@@ -72,6 +74,7 @@ public class SitesController extends SessionSupportController<Site> {
      */
     @RequestMapping(method = RequestMethod.POST)
     public Site create(@Valid @RequestBody Site site) {
+
         logger.info("Creating {}", site);
 
         try {
@@ -82,7 +85,8 @@ public class SitesController extends SessionSupportController<Site> {
             throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
         }
 
-        logger.info("Created {}", site);
+        logger.info("Created  {}", site);
+
         return site;
     }
 
@@ -93,19 +97,21 @@ public class SitesController extends SessionSupportController<Site> {
      * @param site 待更新的地点
      * @return 被更新的地点
      */
-    @RequestMapping(value = "/{sn}", method = RequestMethod.PUT)
+    @RequestMapping(value = "{sn}", method = RequestMethod.PUT)
     public Site update(@Valid @RequestBody Site site) {
 
         logger.info("Updating {}", site);
 
         this.site.apply(site);
         try {
-            siteService.update(site);
+            siteService.update(this.site);
         } catch (SiteException e) {
+            throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
+        } catch (Exception e) {
             throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
         }
 
-        logger.info("Updated {}", site);
+        logger.info("Updated  {}", this.site);
 
         return this.site;
     }
@@ -117,23 +123,25 @@ public class SitesController extends SessionSupportController<Site> {
      *
      * @return 被删除的地点
      */
-    @RequestMapping(value = "/{sn}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "{sn}", method = RequestMethod.DELETE)
     public void destroy() {
+
+        logger.warn("Deleting {}", this.site);
+
         try {
             siteService.destroy(site);
         } catch (SiteException e) {
             throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
+        } catch (Exception e) {
+            throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
         }
+
+        logger.warn("Deleted  {}", this.site);
     }
 
     @BeforeFilter({"show", "update", "destroy"})
     public void initSite(@PathVariable("sn") String sn) {
-
         this.site = siteService.findBySn(sn);//find it by sn
-
-        if (site == null) {
-            throw new WebClientSideException(HttpStatus.BAD_REQUEST, "Invalid serial number.");
-        }
-
     }
+
 }

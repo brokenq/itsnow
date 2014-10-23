@@ -40,7 +40,6 @@ public class User extends ConfigItem
     private String repeatPassword;
 
     private Long accountId;
-    @JsonIgnore
     // 用户的当前主账户，可以为空，可以变化
     private Account account;
     @JsonIgnore
@@ -241,8 +240,7 @@ public class User extends ConfigItem
         return getName().hashCode();
     }
 
-    @Override
-    public String toString() {
+    public String toFullString() {
         StringBuilder sb = new StringBuilder();
         sb.append(super.toString()).append(": ");
         sb.append("Username: ").append(this.getUsername()).append("; ");

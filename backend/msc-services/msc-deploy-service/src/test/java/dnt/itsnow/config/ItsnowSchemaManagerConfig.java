@@ -4,6 +4,7 @@
 package dnt.itsnow.config;
 
 import dnt.itsnow.repository.ItsnowSchemaRepository;
+import dnt.itsnow.service.ItsnowHostService;
 import dnt.itsnow.support.ItsnowSchemaManager;
 import org.easymock.EasyMock;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +23,10 @@ public class ItsnowSchemaManagerConfig {
         return new ItsnowSchemaManager();
     }
 
+    @Bean
+    public ItsnowHostService hostService(){
+        return EasyMock.createMock(ItsnowHostService.class);
+    }
 
     //相关mock
 

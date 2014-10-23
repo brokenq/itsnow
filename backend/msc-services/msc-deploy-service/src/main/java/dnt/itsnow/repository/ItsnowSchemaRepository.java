@@ -28,4 +28,7 @@ public interface ItsnowSchemaRepository {
     int countByKeyword(@Param("keyword") String keyword);
 
     List<ItsnowSchema> findAllByKeyword(@Param("keyword") String keyword, @Param("pageRequest") PageRequest pageRequest);
+
+    @Select("SELECT (SELECT COUNT(p.id) FROM itsnow_processes p WHERE p.schema_id = s.id) FROM itsnow_schemas s WHERE s.id = #{id}")
+    int countLinkProcesses(@Param("id") long id);
 }

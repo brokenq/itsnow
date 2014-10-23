@@ -5,9 +5,7 @@ package dnt.itsnow.support;
 
 import dnt.itsnow.exception.ItsnowHostException;
 import dnt.itsnow.exception.SystemInvokeException;
-import dnt.itsnow.model.HostStatus;
-import dnt.itsnow.model.ItsnowHost;
-import dnt.itsnow.model.SystemInvocation;
+import dnt.itsnow.model.*;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.util.PageRequest;
@@ -18,8 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * <h1>Itsnow Host Manager</h1>
@@ -27,19 +29,21 @@ import java.util.List;
 @Service
 @Transactional
 public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHostService {
+    static Pattern PATTERN = Pattern.compile("^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$");
 
     @Autowired
     ItsnowHostRepository repository;
+    private String mscAddress;
 
     @Override
     public Page<ItsnowHost> findAll(String keyword, PageRequest pageRequest) {
         logger.debug("Listing itsnow hosts by keyword: {} at {}", keyword, pageRequest);
         int total = repository.countByKeyword(keyword);
         List<ItsnowHost> hits;
-        if( total == 0 ){
+        if (total == 0) {
             hits = new ArrayList<ItsnowHost>();
-        }else{
-            if(StringUtils.isNotBlank(keyword)) keyword = "%" + keyword + "%";
+        } else {
+            if (StringUtils.isNotBlank(keyword)) keyword = "%" + keyword + "%";
             else keyword = null;
             hits = repository.findAllByKeyword(keyword, pageRequest);
         }
@@ -51,7 +55,7 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     @Override
     public List<ItsnowHost> findAllDbHosts() {
         logger.debug("Listing all itsnow hosts support mysql instance");
-        List<ItsnowHost> dbHosts = repository.findAllDbHosts();
+        List<ItsnowHost> dbHosts = repository.findAllByType(HostType.DB);
         logger.debug("Listed  {} db hosts", dbHosts.size());
         return dbHosts;
     }
@@ -62,6 +66,78 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
         ItsnowHost host = repository.findByAddress(address);
         logger.debug("Found   itsnow host: {}", host);
         return host;
+    }
+
+    @Override
+    public ItsnowHost findByName(String name) {
+        logger.debug("Finding itsnow host by name: {}", name);
+        ItsnowHost host = repository.findByName(name);
+        logger.debug("Found   itsnow host: {}", host);
+        return host;
+    }
+
+    @Override
+    public String resolveAddress(String name) throws ItsnowHostException{
+        logger.debug("Resolving host address of {}", name);
+        String hostAddress;
+        try {
+            if(mscAddress == null ) mscAddress = initMscAddress();
+        } catch (UnknownHostException e) {
+            throw new ItsnowHostException("Failed to resolve msc host: srv1.itsnow.com " , e);
+        }
+        try {
+            hostAddress = InetAddress.getByName(name).getHostAddress();
+        } catch (UnknownHostException e) {
+            if( name.toLowerCase().endsWith(".itsnow.com") )
+                throw new ItsnowHostException("Failed to resolve host name: " + name, e);
+            else
+                return resolveAddress(name + ".itsnow.com");
+        }
+        if(StringUtils.equals(mscAddress, hostAddress)){
+            throw new ItsnowHostException("Bad host name: " + name);
+        }
+        logger.debug("Resolved  host address {}", hostAddress);
+        return hostAddress;
+    }
+
+    private String initMscAddress() throws UnknownHostException {
+        String mscHost = System.getProperty("msc.host", "srv1.itsnow.com");
+        return InetAddress.getByName(mscHost).getHostAddress();
+    }
+
+    @Override
+    public String resolveName(String address) throws ItsnowHostException{
+        logger.debug("Resolve host name of {}", address);
+        if( !PATTERN.matcher(address).matches() )
+            throw new IllegalArgumentException("Bad ip address: " + address);
+        String hostName;
+        try {
+            hostName = InetAddress.getByName(address).getHostName();
+        } catch (UnknownHostException e) {
+            throw new ItsnowHostException("Failed to resolve host address: " + address, e);
+        }
+        return hostName;
+    }
+
+    @Override
+    public boolean checkPassword(String host, String username, String password) throws ItsnowHostException {
+        logger.debug("Checking {}@{} password availability", username, host);
+        SystemInvocation checkJob = translator.checkHostUser(host, username, password);
+        String jobId = invokeService.addJob(checkJob);
+        try {
+            int code = invokeService.waitJobFinished(jobId);
+            return code == 0;
+        } catch (SystemInvokeException e) {
+            throw new ItsnowHostException("Checking " + host + " password availability " , e);
+        }
+    }
+
+    @Override
+    public boolean canDelete(ItsnowHost host) {
+        logger.debug("Counting linked processes and schemas by host id: {} ", host.getId());
+        int count = repository.countLinked(host.getId());
+        logger.debug("Counted linked processes and schemas by host id: {} is {} ", host.getId(), count);
+        return count == 0;
     }
 
     @Override
@@ -133,6 +209,18 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     public long follow(ItsnowHost host, String jobId, long offset, List<String> result) {
         logger.trace("Follow {}'s job: {}", host, jobId);
         return invokeService.read(jobId, offset, result);
+    }
+
+    @Override
+    public ItsnowHost pickHost(Account account, HostType type) throws ItsnowHostException {
+        List<ItsnowHost> hostList = repository.findAllByType(type);
+        List<ItsnowHost> combineList = repository.findAllByType(HostType.COM);
+        hostList.addAll(combineList);
+        if(hostList.isEmpty())
+            throw new ItsnowHostException("There is not " + type + " host available for " + account);
+        ItsnowHost[] hosts = hostList.toArray(new ItsnowHost[hostList.size()]);
+        Arrays.sort(hosts);
+        return hosts[hosts.length-1];
     }
 
     //////////////////////////////////////////////////////////////////////////////

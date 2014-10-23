@@ -40,8 +40,8 @@ public class Account extends ConfigItem {
     @IsNotReservedDomain
     private String domain;
     private Long   userId; // 帐户管理员ID
-    @JsonIgnore
     private User   user;   // 帐户管理员
+    private ItsnowProcess process;
     //@NotBlank
     // 账户状态
     private AccountStatus status = AccountStatus.New;
@@ -159,6 +159,14 @@ public class Account extends ConfigItem {
         this.user = user;
         if(this.user == null ) this.userId = null;
         else this.userId = this.user.getId();
+    }
+
+    public ItsnowProcess getProcess() {
+        return process;
+    }
+
+    public void setProcess(ItsnowProcess process) {
+        this.process = process;
     }
 
     static {

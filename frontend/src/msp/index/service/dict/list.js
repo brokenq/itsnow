@@ -1,5 +1,5 @@
 // List System
-angular.module('Service.Dict', ['ngTable', 'ngResource', 'Service.Dictnew', 'dnt.action.service'])
+angular.module('Service.Dict', ['ngTable', 'ngResource'])
 
     .config(function ($stateProvider) {
         $stateProvider.state('dict', {
@@ -10,16 +10,17 @@ angular.module('Service.Dict', ['ngTable', 'ngResource', 'Service.Dictnew', 'dnt
     })
 
     .factory('DictService', ['$resource', function ($resource) {
-        return $resource(" /api/process-dictionaries/:sn",{},{
+        return $resource("/api/process-dictionaries/:sn/:code", {}, {
             get: { method: 'GET', params: {sn: '@sn'}},
             save: { method: 'POST'},
             update: { method: 'PUT', params: {sn: '@sn'}},
-            query: { method: 'GET', isArray: true},
+            query: { method: 'GET', params: {keyword: '@keyword'}, isArray: true},
             remove: { method: 'DELETE', params: {sn: '@sn'}},
             list: { method: 'GET', params: {sn: 'code',code:'@code'}, isArray: true}
         });
     }
     ])
+
     .filter('stateFilter', function () {
         var stateFilter = function (input) {
             if(input === '1'){
@@ -31,8 +32,7 @@ angular.module('Service.Dict', ['ngTable', 'ngResource', 'Service.Dictnew', 'dnt
         return stateFilter;
     })
 
-    .controller('DictListCtrl', ['$scope', '$location', '$timeout', 'ngTableParams', 'DictService', 'ActionService',
-        function ($scope,$location,$timeout,NgTableParams,dictService,ActionService) {
+    .controller('DictListCtrl', ['$scope', '$location', '$timeout', 'ngTableParams', 'DictService', function ($scope, $location, $timeout, NgTableParams, dictService) {
         var options = {
             page: 1,           // show first page
             count: 10           // count per page
@@ -45,7 +45,7 @@ angular.module('Service.Dict', ['ngTable', 'ngResource', 'Service.Dictnew', 'dnt
                 dictService.query(params.url(), function (data, headers) {
                         $timeout(function () {
                                 params.total(headers('total'));
-                                $defer.resolve($scope.dicts = data);
+                                $defer.resolve($scope.dict = data);
                             },
                             500
                         );
@@ -55,42 +55,26 @@ angular.module('Service.Dict', ['ngTable', 'ngResource', 'Service.Dictnew', 'dnt
         };
         $scope.tableParams = new NgTableParams(angular.extend(options, $location.search()), args);
         $scope.checkboxes = { 'checked': false, items: {} };
-        $scope.getDictBySn  = function(sn){
-            for(var i in $scope.dicts){
-                var dict = $scope.dicts[i];
-                if(dict.sn===sn){
-                    $scope.dict = dict;
-                    return dict;
-                }
-            }
-        };
-        $scope.actionService = new ActionService({watch: $scope.checkboxes.items, mapping: $scope.getDictBySn});
+
         // watch for check all checkbox
         $scope.$watch('checkboxes.checked', function (value) {
-            angular.forEach($scope.dicts, function (item) {
+            angular.forEach($scope.dict, function (item) {
                 if (angular.isDefined(item.sn)) {
                     $scope.checkboxes.items[item.sn] = value;
 
                 }
             });
         });
-        $scope.deleteDict = function (dict) {
-                dictService.remove({sn: dict.sn},function(){
-                    $scope.tableParams.reload();
-                });
-            };
-        $scope.refresh=function(){
-            $scope.tableParams.reload();
-        };
+
         // watch for data checkboxes
         $scope.$watch('checkboxes.items', function (values) {
-                if (!$scope.dicts) {
+                if (!$scope.dict) {
                     return;
                 }
                 var checked = 0;
                 var unchecked = 0;
-                var total = $scope.dicts.length;
-                angular.forEach($scope.dicts, function (item) {
+                var total = $scope.dict.length;
+                angular.forEach($scope.dict, function (item) {
                     checked += ($scope.checkboxes.items[item.sn]) || 0;
                     unchecked += (!$scope.checkboxes.items[item.sn]) || 0;
                 });

@@ -1,5 +1,6 @@
 package dnt.itsnow.support;
 
+import dnt.itsnow.model.PublicServiceCatalog;
 import dnt.itsnow.model.PublicServiceItem;
 import dnt.itsnow.repository.CommonServiceItemRepository;
 import dnt.itsnow.service.CommonServiceItemService;
@@ -7,6 +8,7 @@ import dnt.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,10 +24,19 @@ public class CommonServiceItemManager extends Bean implements CommonServiceItemS
 
     @Override
     public List<PublicServiceItem> findAll() {
-        if(commonServiceItemList==null || commonServiceItemList.isEmpty())
-            commonServiceItemList = commonServiceItemRepository.findAll();
+        return getCommonServiceItemList();
+    }
 
-        return commonServiceItemList;
+    @Override
+    public List<PublicServiceItem> findAllByCatalogSn(String sn) {
+        List<PublicServiceItem> items = new ArrayList<PublicServiceItem>();
+        List<PublicServiceItem> list = getCommonServiceItemList();
+        for(PublicServiceItem item:list){
+            PublicServiceCatalog catalog = item.getCatalog();
+            if(catalog != null && sn.equals(catalog.getSn()))
+                items.add(item);
+        }
+        return items;
     }
 
     @Override
@@ -39,6 +50,8 @@ public class CommonServiceItemManager extends Bean implements CommonServiceItemS
     }
 
     public List<PublicServiceItem> getCommonServiceItemList() {
+        if(commonServiceItemList==null || commonServiceItemList.isEmpty())
+            commonServiceItemList = commonServiceItemRepository.findAll();
         return commonServiceItemList;
     }
 

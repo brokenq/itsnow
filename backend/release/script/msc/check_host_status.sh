@@ -20,7 +20,7 @@ if [[ "$1" =~ [0-9]+\.[0-9]+\.[0-9]+\.[0-9]+ ]]; then
 else
   ip=$(host $1 | awk '{print $4}')
 fi
-msc_ip=$(hostname --ip-address)
+msc_ip=$(hostname -i)
 if [ "$ip" == "$msc_ip" ]; then
   echo "You should provide a host beside msc host"
   exit 128

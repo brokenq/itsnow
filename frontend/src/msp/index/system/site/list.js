@@ -10,65 +10,76 @@ angular.module('System.Site', ['ngTable', 'ngResource'])
     })
 
     .factory('SiteService', ['$resource', function ($resource) {
-        return $resource("/api/sites");
+        return $resource("/api/sites/:sn", {}, {
+            get: { method: 'GET', params: {sn: '@sn'}},
+            save: { method: 'POST'},
+            update: { method: 'PUT', params: {sn: '@sn'}},
+            query: { method: 'GET', params: {keyword: '@keyword'}, isArray: true},
+            remove: { method: 'DELETE', params: {sn: '@sn'}},
+            getWorkTimes: { method: 'GET', params: {name: 'workTime'}, isArray: true}
+        });
     }
     ])
 
-    .controller('SiteListCtrl', ['$scope', '$location', '$timeout', 'ngTableParams', 'SiteService', function ($scope, $location, $timeout, NgTableParams, siteService) {
-        var options = {
-            page: 1,           // show first page
-            count: 10           // count per page
-        };
+    .controller('SiteListCtrl', ['$scope', '$location', '$timeout', 'ngTableParams', 'SiteService', 'ActionService',
+        function ($scope, $location, $timeout, NgTableParams, siteService, ActionService) {
 
-        var args = {
-            total: 0,
-            getData: function ($defer, params) {
-                $location.search(params.url()); // put params in url
-                siteService.query(params.url(), function (data, headers) {
-                        $timeout(function () {
-                                params.total(headers('total'));
-                                $defer.resolve($scope.site = data);
-                            },
-                            500
-                        );
+            var options = {
+                page: 1,           // show first page
+                count: 10           // count per page
+            };
+            var args = {
+                total: 0,
+                getData: function ($defer, params) {
+                    $location.search(params.url()); // put params in url
+                    siteService.query(params.url(), function (data, headers) {
+                            $timeout(function () {
+                                    params.total(headers('total'));
+                                    $defer.resolve($scope.sites = data);
+                                },
+                                500
+                            );
+                        }
+                    );
+                }
+            };
+            $scope.tableParams = new NgTableParams(angular.extend(options, $location.search()), args);
+            $scope.checkboxes = { 'checked': false, items: {} };
+
+            $scope.getSiteBySn = function (sn) {
+                for (var i in $scope.sites) {
+                    var site = $scope.sites[i];
+                    if (site.sn === sn) {
+                        return site;
                     }
-                );
-            }
-        };
-        $scope.tableParams = new NgTableParams(angular.extend(options, $location.search()), args);
-        $scope.checkboxes = { 'checked': false, items: {} };
-
-        // watch for check all checkbox
-        $scope.$watch('checkboxes.checked', function (value) {
-            angular.forEach($scope.site, function (item) {
-                if (angular.isDefined(item.sn)) {
-                    $scope.checkboxes.items[item.sn] = value;
-
                 }
-            });
-        });
+            };
+            $scope.actionService = new ActionService({watch: $scope.checkboxes.items, mapping: $scope.getSiteBySn});
 
-        // watch for data checkboxes
-        $scope.$watch('checkboxes.items', function (values) {
-                if (!$scope.site) {
-                    return;
-                }
-                var checked = 0;
-                var unchecked = 0;
-                var total = $scope.site.length;
-                angular.forEach($scope.site, function (item) {
-                    checked += ($scope.checkboxes.items[item.sn]) || 0;
-                    unchecked += (!$scope.checkboxes.items[item.sn]) || 0;
+            // watch for check all checkbox
+            $scope.$watch('checkboxes.checked', function (value) {
+                angular.forEach($scope.sites, function (item) {
+                    if (angular.isDefined(item.sn)) {
+                        $scope.checkboxes.items[item.sn] = value;
+                    }
                 });
-                if ((unchecked === 0) || (checked === 0)) {
-                    $scope.checkboxes.checked = (checked == total);
-                }
-                // grayed checkbox
-                angular.element(document.getElementById("select_all")).prop("indeterminate", (checked !== 0 && unchecked !== 0));
-            },
-           true
-        );
+            });
 
-    }
+            $scope.remove = function (site) {
+                siteService.remove({sn: site.sn},function(){
+                    $scope.tableParams.reload();
+                });
+            };
+
+            $scope.search = function($event){
+                if($event.keyCode===13){
+                    var promise = siteService.query({keyword:$event.currentTarget.value}).$promise;
+                    promise.then(function(data){
+                        $scope.sites = data;
+                    });
+                }
+            };
+
+        }
     ]);
 

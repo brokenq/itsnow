@@ -60,7 +60,7 @@ public class CommonAccountRepositoryTest {
         Assert.notNull(account);
         Assert.notNull(account.getUserId());
         Assert.notNull(account.getUser());
-        //TODO discriminator does not work
+
         Assert.isTrue(account instanceof MscAccount);
     }
 }

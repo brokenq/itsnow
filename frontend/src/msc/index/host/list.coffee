@@ -1,5 +1,5 @@
 # List accounts
-angular.module('MscIndex.Host', ['ngTable','ngResource', 'dnt.action.service'])
+angular.module('MscIndex.Host', ['ngTable','ngResource', 'dnt.action.service', 'Lib.Filters'])
   .config ($stateProvider)->
     $stateProvider.state 'hosts',
       url: '/hosts',
@@ -9,13 +9,7 @@ angular.module('MscIndex.Host', ['ngTable','ngResource', 'dnt.action.service'])
   .factory('HostService', ['$resource', ($resource) ->
     $resource("/admin/api/hosts/:id", {id: "@id"})
   ])
-  .filter('formatHostStatus', ->
-    (status) ->
-      return "规划中" if status == 'Planing'
-      return "运行中" if status == 'Running'
-      return "有故障" if status == 'Abnormal'
-      return "已关机" if status == 'Shutdown'
-  )
+
   .controller 'HostListCtrl',['$scope', '$location', '$state', '$timeout', 'ngTableParams', 'HostService', 'ActionService', ($scope, $location, $state, $timeout, ngTableParams, hostService, ActionService)->
     options =
       page:  1,           # show first page
@@ -55,5 +49,13 @@ angular.module('MscIndex.Host', ['ngTable','ngResource', 'dnt.action.service'])
       angular.element(document.getElementById("select_all")).prop("indeterminate", (checked != 0 && unchecked != 0));
     , true)
 
+    $scope.deleteHost = (host)->
+      feedback = (content) ->
+        alert content
+      success = ->
+        window.location.reload()
+      failure = (response)->
+        feedback response.statusText
+      hostService.delete(host, success, failure)
   ]
 

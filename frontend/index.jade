@@ -1,8 +1,9 @@
 -var sysName = '<%=sysName%>'
 -var styles = [<% styles.forEach( function(file){ print('"' + file + '",') }); %>]
 -var scripts = [<% scripts.forEach( function(file){ print('"' + file + '",') }); %>]
+-var version = '<%=version%>'
 mixin dropdown_toggle(icon, badge, number)
-  a.dropdown-toggle(data-toggle="dropdown", href="#")
+  a.dropdown-toggle(data-toggle="dropdown", href="javascript:void(0)")
     i(class=icon)
     span.badge(class="badge-#{badge}")= number
 
@@ -12,7 +13,7 @@ mixin dropdown_header(icon, text)
     | #{text}
 mixin summary(text)
   li
-    a(href="#")
+    a(href="javascript:void(0)")
       | #{text}
       i.icon-arrow-right
 mixin check_option(key, value)
@@ -31,6 +32,8 @@ html(ng-app="Itsnow.#{sysName}Index")
     link(rel="icon", type="image/icon", href="/assets/favicon.ico")
     each style in styles
       link(rel="stylesheet", type="text/css", href=style)
+    script(type="text/javascript")
+      window.VERSION = "#{version}";
     each js in scripts
       script(type="text/javascript", src=js)
   body(ng-controller="IndexCtrl")
@@ -39,7 +42,7 @@ html(ng-app="Itsnow.#{sysName}Index")
 
       .navbar-container#navbar-container
         .navbar-header.pull-left
-          a.navbar-brand(href="#")
+          a.navbar-brand(href="javascript:void(0)")
             i.icon-leaf
             | ItsNow ITIL Platform
 
@@ -53,7 +56,7 @@ html(ng-app="Itsnow.#{sysName}Index")
     .main-container#main-container
       +check_option('main-container', 'fixed')
       .main-container-inner
-        a.menu-toggler#menu-toggler(href="#")
+        a.menu-toggler#menu-toggler(href="javascript:void(0)")
           span.menu-text
         .sidebar#sidebar
           +check_option('sidebar', 'fixed')
@@ -67,5 +70,5 @@ html(ng-app="Itsnow.#{sysName}Index")
 
         include index/parts/page_settings
 
-      a.btn-scroll-up.btn.btn-sm.btn-inverse(href="#")#btn-scroll-up
+      a.btn-scroll-up.btn.btn-sm.btn-inverse(href="java")#btn-scroll-up
         i.icon-double-angle-up.icon-only.bigger-110

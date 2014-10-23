@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+
 /**
  * <h1>MSC/MSU注册时用到的User服务</h1>
  * <pre>
@@ -28,8 +30,8 @@ public class PublicUsersController extends ApplicationController<User> {
     @Qualifier("plainUserService")
     CommonUserService userService;
 
-    @RequestMapping("{field}/{value}")
-    public String checkUnique(@PathVariable("field") String field, @PathVariable("value") String value ){
+    @RequestMapping("check/{field}/{value}")
+    public HashMap checkUnique(@PathVariable("field") String field, @PathVariable("value") String value ){
         User found;
         if("username".equalsIgnoreCase(field)){
             found = userService.findByUsername(value);
@@ -43,7 +45,7 @@ public class PublicUsersController extends ApplicationController<User> {
         if( found != null ){
             throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate field: " + field + " with value: " + value);
         }else{
-            return "ok";
+            return new HashMap();
         }
     }
 }

@@ -24,6 +24,7 @@ import java.util.List;
 
 import static org.easymock.EasyMock.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -141,6 +142,7 @@ public class ItsnowHostsControllerTest extends SessionSupportedControllerTest {
         host.setId(102L);
         // Service Mock 记录阶段
         expect(mockedService.findById(host.getId())).andReturn(host);
+        expect(mockedService.canDelete(host)).andReturn(true);
         mockedService.delete(host);
         expectLastCall().once();
         // 准备 Mock Request
@@ -156,5 +158,56 @@ public class ItsnowHostsControllerTest extends SessionSupportedControllerTest {
         // 对业务结果的验证
         status().isOk();
 
+    }
+
+    @Test
+    public void testCheckName() throws Exception {
+        expect(mockedService.findByName("srv2.itsnow.com")).andReturn(null);
+        expect(mockedService.resolveAddress("srv2.itsnow.com")).andReturn("172.16.3.4");
+        MockHttpServletRequestBuilder request = get("/admin/api/hosts/checkName?value=srv2.itsnow.com");
+        decorate(request);
+
+        replay(mockedService);
+        // 执行
+        ResultActions result =this.browser.perform(request);
+
+        // 对业务结果的验证
+        decorate(result);
+        status().isOk();
+        content().string("{\"address\":\"172.16.3.4\"}");
+    }
+
+    @Test
+    public void testCheckAddress() throws Exception {
+        expect(mockedService.findByAddress("172.16.3.4")).andReturn(null);
+        expect(mockedService.findByName("srv2.itsnow.com")).andReturn(null);
+        expect(mockedService.resolveName("172.16.3.4")).andReturn("srv2.itsnow.com");
+        MockHttpServletRequestBuilder request = get("/admin/api/hosts/checkAddress?value=172.16.3.4");
+        decorate(request);
+
+        replay(mockedService);
+        // 执行
+        ResultActions result =this.browser.perform(request);
+
+        // 对业务结果的验证
+        decorate(result);
+        status().isOk();
+        content().string("{\"name\":\"srv2.itsnow.com\"}");
+    }
+
+    @Test
+    public void testCheckPassword() throws Exception {
+        expect(mockedService.checkPassword("172.16.3.4", "srv2.itsnow.com", "itsnow@team")).andReturn(true);
+        MockHttpServletRequestBuilder request = get("/admin/api/hosts/checkPassword?host=172.16.3.4&username=srv2.itsnow.com&password=itsnow@team");
+        decorate(request);
+
+        replay(mockedService);
+        // 执行
+        ResultActions result =this.browser.perform(request);
+
+        // 对业务结果的验证
+        decorate(result);
+        status().isOk();
+        content().string("{}");
     }
 }

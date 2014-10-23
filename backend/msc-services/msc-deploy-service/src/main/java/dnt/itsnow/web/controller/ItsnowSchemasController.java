@@ -5,6 +5,7 @@ import dnt.itsnow.model.ItsnowSchema;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
+import dnt.itsnow.platform.web.exception.WebServerSideException;
 import dnt.itsnow.service.ItsnowSchemaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -88,6 +89,8 @@ public class ItsnowSchemasController extends SessionSupportController<ItsnowSche
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
     public void destroy() {
         logger.debug("Destroying {}", currentSchema);
+        if( !service.canDelete(currentSchema) )
+            throw new WebClientSideException(NOT_ACCEPTABLE, "Can't delete the itsnow schema for which is associated with the active processes");
         try {
             service.delete(currentSchema);
         } catch (ItsnowSchemaException e) {
