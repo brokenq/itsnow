@@ -5,7 +5,10 @@ package dnt.itsnow.repository;
 
 import dnt.itsnow.model.ItsnowSchema;
 import dnt.itsnow.platform.util.PageRequest;
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -28,7 +31,4 @@ public interface ItsnowSchemaRepository {
     int countByKeyword(@Param("keyword") String keyword);
 
     List<ItsnowSchema> findAllByKeyword(@Param("keyword") String keyword, @Param("pageRequest") PageRequest pageRequest);
-
-    @Select("SELECT (SELECT COUNT(p.id) FROM itsnow_processes p WHERE p.schema_id = s.id) FROM itsnow_schemas s WHERE s.id = #{id}")
-    int countLinkProcesses(@Param("id") long id);
 }
