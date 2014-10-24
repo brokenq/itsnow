@@ -5,10 +5,10 @@
 <mapper namespace="dnt.itsnow.repository.DictionaryRepository">
 
     <select id="count" resultType="java.lang.Integer">
-        <bind name="pattern" value="'%' + keyword + '%' "/>
         SELECT COUNT(0) FROM dictionaries
         <where>
             <if test="keyword != null and keyword != ''">
+                <bind name="pattern" value="'%' + keyword + '%' "/>
                 name LIKE #{pattern}
             </if>
         </where>
@@ -19,10 +19,10 @@
     </sql>
 
     <select id="findAll" resultType="Dictionary">
-        <bind name="pattern" value="'%' + keyword + '%' "/>
         <include refid="select"></include>
         <where>
             <if test="keyword != null and keyword != ''">
+                <bind name="pattern" value="'%' + keyword + '%' "/>
                 name LIKE #{pattern}
             </if>
         </where>

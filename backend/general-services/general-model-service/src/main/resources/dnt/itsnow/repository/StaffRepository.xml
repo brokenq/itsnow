@@ -88,20 +88,20 @@
     </select>
 
     <select id="count" resultType="java.lang.Integer">
-        <bind name="pattern" value="'%' + keyword + '%' "/>
         SELECT COUNT(0) FROM staffs
         <where>
             <if test="keyword != null and keyword != ''">
+                <bind name="pattern" value="'%' + keyword + '%' "/>
                 name LIKE #{pattern}
             </if>
         </where>
     </select>
 
     <select id="findAll" parameterType="string" resultMap="staffResult">
-        <bind name="pattern" value="'%' + keyword + '%' "/>
         <include refid="select"/>
         <where>
             <if test="keyword != null and keyword != ''">
+                <bind name="pattern" value="'%' + keyword + '%' "/>
                 stf.name LIKE #{pattern}
             </if>
         </where>

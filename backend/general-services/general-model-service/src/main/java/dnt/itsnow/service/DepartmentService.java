@@ -50,4 +50,11 @@ public interface DepartmentService {
      */
     public List<Department> findAll(String keyword, boolean isTree);
 
+    /**
+     * <h2>查询所有包含有此ID的子部门</h2>
+     * @param id 当前部门的ID
+     * @return 当前部门下的子部门
+     */
+    public List<Department> findAllByParentId(long id);
+
 }

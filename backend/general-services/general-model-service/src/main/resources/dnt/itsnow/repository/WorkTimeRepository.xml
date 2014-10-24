@@ -9,10 +9,10 @@
     </sql>
 
     <select id="count" resultType="java.lang.Integer">
-        <bind name="pattern" value="'%' + keyword + '%' "/>
         SELECT COUNT(0) FROM sites
         <where>
             <if test="keyword != null and keyword != ''">
+                <bind name="pattern" value="'%' + keyword + '%' "/>
                 name LIKE #{pattern}
             </if>
         </where>
@@ -24,10 +24,10 @@
     </select>
 
     <select id="findAll" resultType="WorkTime">
-        <bind name="pattern" value="'%' + keyword + '%' "/>
         <include refid="select"/>
         <where>
             <if test="keyword != null and keyword != ''">
+                <bind name="pattern" value="'%' + keyword + '%' "/>
                 name LIKE #{pattern}
             </if>
         </where>

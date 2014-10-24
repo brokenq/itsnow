@@ -15,17 +15,31 @@
                             input#form-field-mask-1.form-control(type='text', ng-model='department.name', name='titleRepeat', required, remote-validation-dept-name)
                     hr
                     div
+                        label(for='form-field-mask-2')
+                            | 展示顺序
+                        .input-group
+                            input#form-field-mask-2.form-control(type='number',min="0" ,max="99", ng-model='department.position', required)
+                    hr
+                    label 地点（可多选）
+                    div(multi-select,
+                        input-model="sites",
+                        button-label="name",
+                        item-label="name",
+                        tick-property="ticked")
+                    hr
+                    label 上级部门
+                    div(multi-select,
+                        input-model="parentDepartments",
+                        button-label="name",
+                        item-label="name",
+                        selection-mode="single",
+                        tick-property="ticked")
+                    hr
+                    div
                         label(for='form-field-9') 描述
                         textarea#form-field-9.form-control.limited(
                             ng-model='department.description',
                             ng-maxlength="50")
-                    hr
-                    label 地点（可多选）
-                    div(multi-select
-                        input-model="sites"
-                        button-label="name"
-                        item-label="name"
-                        tick-property="ticked")
                     hr
                     div.form-actions.center
                         button.btn.btn-sm.btn-success(type='submit')

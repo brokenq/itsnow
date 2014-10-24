@@ -46,6 +46,27 @@ angular.module('System.Department.Form', ['multi-select', 'ngResource'])
                 return selectedSites;
             };
 
+            var selectedParentDeptIdFun = function () {
+                var parentId;
+                delete $scope.parentDepartments.$promise;
+                delete $scope.parentDepartments.$resolved;
+                for (var i in $scope.parentDepartments) {
+                    if ($scope.parentDepartments[i].ticked === true) {
+                        parentId = $scope.parentDepartments[i].id;
+                    }
+                }
+                return parentId;
+            };
+
+            var formatDataBySubmit = function () {
+                var department = $scope.department;
+                department.sites = selectedSiteFun();
+                department.parentId = selectedParentDeptIdFun();
+                department.$promise = undefined;
+                department.$resolved = undefined;
+                return department;
+            };
+
             if (sn !== null && sn !== "" && sn !== undefined) {
 
                 $("#form-field-mask-1").remove("remote-validation-dept-name");
@@ -54,8 +75,7 @@ angular.module('System.Department.Form', ['multi-select', 'ngResource'])
                 promise.then(function (data) {
                     $scope.department = data;
 
-                    var prms = siteService.query().$promise;
-                    prms.then(function (data) {
+                    siteService.query(function (data) {
                         $scope.sites = data;
                         for (var i in $scope.sites) {
                             for (var j in $scope.department.sites) {
@@ -66,19 +86,26 @@ angular.module('System.Department.Form', ['multi-select', 'ngResource'])
                         }
                     });
 
+                    deptService.query({isTree: false}, function (data) {
+                        for (var i in data) {
+                            $scope.parentDepartments = data;
+                            if ($scope.parentDepartments[i].id == $scope.department.parentId) {
+                                $scope.parentDepartments[i].ticked = true;
+                            }
+                            if($scope.parentDepartments[i].id == $scope.department.id){
+                                $scope.parentDepartments.splice(i,1);
+                            }
+                        }
+                    });
+
                 });
 
                 $scope.submit = function () {
 
-                    var selectedSite = selectedSiteFun();
-
-                    var department = $scope.department;
-                    department.sites = selectedSite;
-                    department.$promise = undefined;
-                    department.$resolved = undefined;
+                    var department = formatDataBySubmit();
 
                     deptService.update({name: department.name}, department, function () {
-                        $location.path('/dept');
+                        $location.path('/department');
                     }, function (data) {
                         alert(data);
                     });
@@ -92,14 +119,14 @@ angular.module('System.Department.Form', ['multi-select', 'ngResource'])
                     $scope.sites = data;
                 });
 
+                deptService.query({isTree: false}, function (data) {
+                    $scope.parentDepartments = data;
+                });
+
                 $scope.submit = function () {
+                    var department = formatDataBySubmit();
 
-                    var selectedSite = selectedSiteFun();
-
-                    var department = $scope.department;
-                    department.sites = selectedSite;
-
-                    deptService.save($scope.department, function () {
+                    deptService.save(department, function () {
                         $location.path('/department');
                     }, function (data) {
                         alert(data);

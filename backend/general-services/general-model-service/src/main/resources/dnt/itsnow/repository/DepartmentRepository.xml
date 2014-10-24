@@ -75,10 +75,10 @@
     </sql>
 
     <select id="findAll" resultMap="departmentResult">
-        <bind name="pattern" value="'%' + keyword + '%' "/>
         <include refid="select"></include>
         <where>
             <if test="keyword != null and keyword != ''">
+                <bind name="pattern" value="'%' + keyword + '%' "/>
                 d.name LIKE #{pattern}
             </if>
         </where>

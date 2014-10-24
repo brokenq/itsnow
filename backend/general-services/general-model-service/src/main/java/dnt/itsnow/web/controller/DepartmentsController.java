@@ -19,12 +19,13 @@ import java.util.List;
 /**
  * <h1>部门控制器</h1>
  * <pre>
- * <b>HTTP    URI                          方法      含义</b>
- * # GET      /api/departments?isTree={}   index     列出所有部门，支持树形结构展现
- * # GET      /api/departments/{sn}        show      列出特定的部门信息
- * # POST     /api/departments             create    创建部门，账户信息通过HTTP BODY提交
- * # PUT      /api/departments/{sn}        update    修改部门，账户信息通过HTTP BODY提交
- * # DELETE   /api/departments/{sn}        destroy   删除部门
+ * <b>HTTP    URI                                    方法       含义</b>
+ * # GET      /api/departments?isTree={}             index      列出所有部门，支持树形结构展现
+ * # GET      /api/departments/{sn}                  show       列出特定的部门信息
+ * # GET      /api/departments/check_child/{id}      checkChild 检查是否含有子部门
+ * # POST     /api/departments                       create     创建部门，账户信息通过HTTP BODY提交
+ * # PUT      /api/departments/{sn}                  update     修改部门，账户信息通过HTTP BODY提交
+ * # DELETE   /api/departments/{sn}                  destroy    删除部门
  * </pre>
  */
 @RestController
@@ -40,8 +41,9 @@ public class DepartmentsController extends SessionSupportController<Department> 
      * <h2>获得所有的部门</h2>
      * <p/>
      * GET /api/departments
+     *
      * @param keyword 查询关键字
-     * @param isTree 树形结构标记
+     * @param isTree  树形结构标记
      * @return 部门列表
      */
     @RequestMapping
@@ -68,6 +70,16 @@ public class DepartmentsController extends SessionSupportController<Department> 
     @RequestMapping("{sn}")
     public Department show() {
         return department;
+    }
+
+    @RequestMapping("/check_child/{id}")
+    public Boolean checkChild(@PathVariable("id") long id) {
+        List<Department> departments = departmentService.findAllByParentId(id);
+        if (departments != null && departments.size() > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

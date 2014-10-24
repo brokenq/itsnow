@@ -80,10 +80,10 @@
     </sql>
 
     <select id="count" resultType="java.lang.Integer">
-        <bind name="pattern" value="'%' + keyword + '%' "/>
         SELECT COUNT(0) FROM sites
         <where>
             <if test="keyword != null and keyword != ''">
+                <bind name="pattern" value="'%' + keyword + '%' "/>
                 name LIKE #{pattern} OR address LIKE #{pattern}
             </if>
         </where>
@@ -95,10 +95,10 @@
     </select>
 
     <select id="findAll" resultMap="siteResult">
-        <bind name="pattern" value="'%' + keyword + '%' "/>
         <include refid="selectSite"/>
         <where>
             <if test="keyword != null and keyword != ''">
+                <bind name="pattern" value="'%' + keyword + '%' "/>
                 s.name LIKE #{pattern} OR s.address LIKE #{pattern}
             </if>
         </where>

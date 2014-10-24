@@ -25,10 +25,10 @@
     </resultMap>
 
     <select id="count" resultType="java.lang.Integer">
-        <bind name="pattern" value="'%' + keyword + '%' "/>
         SELECT COUNT(0) FROM roles
         <where>
             <if test="keyword != null and keyword != ''">
+                <bind name="pattern" value="'%' + keyword + '%' "/>
                 name LIKE #{pattern}
             </if>
         </where>
@@ -64,10 +64,10 @@
     </select>
 
     <select id="findAll" resultMap="roleResult">
-        <bind name="pattern" value="'%' + keyword + '%' "/>
         <include refid="select"></include>
         <where>
             <if test="keyword != null and keyword != ''">
+                <bind name="pattern" value="'%' + keyword + '%' "/>
                 r.name LIKE #{pattern}
             </if>
         </where>

@@ -13,7 +13,7 @@ public interface DepartmentRepository {
 
     @Options(useGeneratedKeys = true, keyColumn = "id")
     @Insert("INSERT INTO departments (sn, name, parent_id, position, description, created_at, updated_at) VALUES " +
-            "(#{sn}, #{name}, #{parent.id}, #{position}, #{description}, #{createdAt}, #{updatedAt})")
+            "(#{sn}, #{name}, #{parentId}, #{position}, #{description}, #{createdAt}, #{updatedAt})")
     public void create(Department department);
 
     @Delete("DELETE FROM departments WHERE sn = #{sn}")
@@ -22,7 +22,7 @@ public interface DepartmentRepository {
     @Update("UPDATE departments SET " +
             " sn                    = #{sn}, " +
             " name                  = #{name}, " +
-            " parent_id             = #{parent.id}," +
+            " parent_id             = #{parentId}," +
             " position              = #{position}," +
             " description           = #{description}," +
             " created_at            = #{createdAt}, " +
@@ -31,6 +31,9 @@ public interface DepartmentRepository {
     public void update(Department department);
 
     public List<Department> findAll(@Param("keyword") String keyword);
+
+    @Select("select * from departments where parent_id = #{parentId}")
+    public List<Department> findAllByParentId(@Param("parentId") long parentId);
 
     public Department findBySn(@Param("sn") String sn);
 

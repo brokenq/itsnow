@@ -66,8 +66,7 @@ public class RoleRepositoryTest {
 
     @Test
     public void testCount() throws Exception {
-        Integer count = repository.count("");
-        System.out.print("count:"+count);
+        Integer count = repository.count(null);
         Assert.assertSame(Integer.class, count.getClass());
     }
 
