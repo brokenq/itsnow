@@ -20,7 +20,7 @@ angular.module('MscIndex.DictDetail', ['ngTable', 'ngResource'])
         $scope.datas=[
             {name: '有效',id:'1',state:'1'},
             {name: '无效',id:'2',state:'2'}
-         ]
+         ];
         $scope.resetDict=function(){
             $scope.dict={
                  code:'',
@@ -28,7 +28,7 @@ angular.module('MscIndex.DictDetail', ['ngTable', 'ngResource'])
                  display:'',
                  val:'',
                  state:''
-            }
+            };
         };
         if (sn !== null && sn !== "" && sn !== undefined) {
             DictService.get({sn:sn},function(data){
@@ -42,7 +42,7 @@ angular.module('MscIndex.DictDetail', ['ngTable', 'ngResource'])
                 }, function (data) {
                     alert(data);
                 });
-            }
+            };
          }else{
 
             $scope.autoCom=function(){
@@ -54,7 +54,7 @@ angular.module('MscIndex.DictDetail', ['ngTable', 'ngResource'])
                 DictService.save($scope.dict,function(){
                     $location.path('/dict');
                 });
-            }
+            };
         }
 }
 ]);

@@ -9,7 +9,7 @@ doctype html
            .col-xs-12
              span(ng-repeat="workdate in workdates")
                input(type="checkbox" ,id="{{workdate.id}}",ng-checked="selection.indexOf(workdate.name)>-1",ng-click="toggleSelection(workdate.name)")
-               {{workdate.name}}
+               span {{workdate.name}}
     .form-group
       label.col-xs-12.col-sm-3.control-label.no-padding-right(for="worktimes") 工作时间：
       .col-xs-12.col-sm-5

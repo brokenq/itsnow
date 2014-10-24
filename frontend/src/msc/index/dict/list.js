@@ -10,7 +10,7 @@ angular.module('MscIndex.Dict', ['ngTable', 'ngResource', 'dnt.action.service','
     })
 
     .factory('DictService', ['$resource', function ($resource) {
-        return $resource(" /api/process-dictionaries/:sn",{},{
+        return $resource(" /api/dictionaries/:sn",{},{
             get: { method: 'GET', params: {sn: '@sn'}},
             save: { method: 'POST'},
             update: { method: 'PUT', params: {sn: '@sn'}},
