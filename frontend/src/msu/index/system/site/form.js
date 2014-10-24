@@ -101,13 +101,13 @@ angular.module('System.Site.Form', ['ngResource', 'jcs-autoValidate'])
 
                 $scope.site = undefined;
 
-                var promise = dictService.list({code: 'inc003'}).$promise;
-                promise.then(function (data) {
+                var promise1 = dictService.list({code: 'inc003'}).$promise;
+                promise1.then(function (data) {
                     $scope.dictionaries = data;
                 });
 
-                promise = workTimeService.query().$promise;
-                promise.then(function (data) {
+                promise1 = workTimeService.query().$promise;
+                promise1.then(function (data) {
                     $scope.workTimes = data;
                 });
 
