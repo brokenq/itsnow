@@ -7,6 +7,7 @@ angular.module('MsuIndex.System', [
   'System.Role.Form',
   'System.Site',
   'System.WorkTime',
+'System.WorkTimeDetail',
   'System.Department',
   'System.Group',
   'System.Staff'

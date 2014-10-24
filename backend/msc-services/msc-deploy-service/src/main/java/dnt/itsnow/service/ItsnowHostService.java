@@ -131,11 +131,12 @@ public interface ItsnowHostService {
      */
     boolean checkPassword(String host, String username, String password) throws ItsnowHostException;
 
+
     /**
-     * <h2>主机是否可删除</h2>
-     * <p>如果主机有关联的进程或Schema，则不能删除，返回false；否则返回true</p>
-     * @param host 主机对象
-     * @return true：可删除；false：不可删除
+     * <h2>根据主机类型查询主机列表</h2>
+     *
+     *  @param type 主机类型
+     *  throws ItsnowHostException
      */
-    boolean canDelete(ItsnowHost host);
+    List<ItsnowHost> findByType(String type);
 }

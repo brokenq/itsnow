@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * <h1>流程字典业务实现类</h1>
@@ -59,6 +60,7 @@ public class ProcessDictionaryManager extends Bean implements ProcessDictionaryS
         }
         dictionary.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         dictionary.setUpdatedAt(dictionary.getCreatedAt());
+        dictionary.setSn(UUID.randomUUID().toString());
         repository.create(dictionary);
 
         logger.info("Created dictionary :{}", dictionary);

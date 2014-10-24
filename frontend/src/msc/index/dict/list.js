@@ -1,27 +1,38 @@
 // List System
-angular.module('System.WorkTime', ['ngTable', 'ngResource'])
+angular.module('MscIndex.Dict', ['ngTable', 'ngResource', 'dnt.action.service','MscIndex.DictDetail'])
 
     .config(function ($stateProvider) {
-        $stateProvider.state('worktime', {
-            url: '/worktime',
-            templateUrl: 'system/work_time/list.tpl.jade',
-            data: {pageTitle: '工作时间管理'}
+        $stateProvider.state('dict', {
+            url: '/dict',
+            templateUrl: 'dict/list.tpl.jade',
+            data: {pageTitle: '流程字典管理'}
         });
     })
 
-    .factory('WorkTimeService', ['$resource', function ($resource) {
-        return $resource(" /api/work-times/:sn",{},{
+    .factory('DictService', ['$resource', function ($resource) {
+        return $resource(" /api/process-dictionaries/:sn",{},{
             get: { method: 'GET', params: {sn: '@sn'}},
             save: { method: 'POST'},
             update: { method: 'PUT', params: {sn: '@sn'}},
             query: { method: 'GET', isArray: true},
             remove: { method: 'DELETE', params: {sn: '@sn'}}
-           // list: { method: 'GET', params: {sn: 'code',code:'@code'}, isArray: true}
         });
     }
     ])
 
-    .controller('WorkTimeListCtrl', ['$scope', '$location', '$timeout', 'ngTableParams', 'WorkTimeService', 'ActionService',function ($scope, $location, $timeout, NgTableParams, workTimeService,ActionService) {
+    .filter('stateFilter', function () {
+        var stateFilter = function (input) {
+            if(input === '1'){
+                return '有效';
+            }else{
+                return '无效';
+            }
+        };
+        return stateFilter;
+    })
+
+    .controller('DictListCtrl', ['$scope', '$location', '$timeout', 'ngTableParams', 'DictService', 'ActionService',
+        function ($scope,$location,$timeout,NgTableParams,dictService,ActionService) {
         var options = {
             page: 1,           // show first page
             count: 10           // count per page
@@ -31,10 +42,10 @@ angular.module('System.WorkTime', ['ngTable', 'ngResource'])
             total: 0,
             getData: function ($defer, params) {
                 $location.search(params.url()); // put params in url
-                workTimeService.query(params.url(), function (data, headers) {
+                dictService.query(params.url(), function (data, headers) {
                         $timeout(function () {
                                 params.total(headers('total'));
-                                $defer.resolve($scope.workTimes = data);
+                                $defer.resolve($scope.dicts = data);
                             },
                             500
                         );
@@ -44,40 +55,42 @@ angular.module('System.WorkTime', ['ngTable', 'ngResource'])
         };
         $scope.tableParams = new NgTableParams(angular.extend(options, $location.search()), args);
         $scope.checkboxes = { 'checked': false, items: {} };
-        $scope.getWorkTimeBySn  = function(sn){
-            for(var i in $scope.workTimes){
-                var worktime = $scope.workTimes[i];
-                if(worktime.sn===sn){
-                    $scope.worktime = worktime;
-                    return worktime;
+        $scope.getDictBySn  = function(sn){
+            for(var i in $scope.dicts){
+                var dict = $scope.dicts[i];
+                if(dict.sn===sn){
+                    $scope.dict = dict;
+                    return dict;
                 }
             }
         };
-        $scope.actionService = new ActionService({watch: $scope.checkboxes.items, mapping: $scope.getWorkTimeBySn});
+        $scope.actionService = new ActionService({watch: $scope.checkboxes.items, mapping: $scope.getDictBySn})
         // watch for check all checkbox
-        $scope.deleteWorkTime = function (worktime) {
-            workTimeService.remove({sn: worktime.sn},function(){
-                $scope.tableParams.reload();
-            });
-        };
         $scope.$watch('checkboxes.checked', function (value) {
-            angular.forEach($scope.workTimes, function (item) {
+            angular.forEach($scope.dicts, function (item) {
                 if (angular.isDefined(item.sn)) {
                     $scope.checkboxes.items[item.sn] = value;
 
                 }
             });
         });
-
+        $scope.deleteDict = function (dict) {
+                dictService.remove({sn: dict.sn},function(){
+                    $scope.tableParams.reload();
+                });
+            };
+        $scope.refresh=function(){
+            $scope.tableParams.reload();
+        }
         // watch for data checkboxes
         $scope.$watch('checkboxes.items', function (values) {
-                if (!$scope.workTimes) {
+                if (!$scope.dicts) {
                     return;
                 }
                 var checked = 0;
                 var unchecked = 0;
-                var total = $scope.workTimes.length;
-                angular.forEach($scope.workTimes, function (item) {
+                var total = $scope.dicts.length;
+                angular.forEach($scope.dicts, function (item) {
                     checked += ($scope.checkboxes.items[item.sn]) || 0;
                     unchecked += (!$scope.checkboxes.items[item.sn]) || 0;
                 });

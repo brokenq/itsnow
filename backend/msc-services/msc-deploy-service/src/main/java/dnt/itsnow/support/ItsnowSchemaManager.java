@@ -121,11 +121,5 @@ public class ItsnowSchemaManager extends ItsnowResourceManager implements Itsnow
         schema.setProperty("port", host.getProperty("db.port", "3306"));
         return schema;
     }
-    @Override
-    public boolean canDelete(ItsnowSchema schema){
-        logger.debug("Counting link processes by schema id: {} ", schema.getId());
-        int count = repository.countLinkProcesses(schema.getId());
-        logger.debug("Counted link processes by schema id: {} is {} ", schema.getId(), count);
-        return count == 0;
-    }
+
 }

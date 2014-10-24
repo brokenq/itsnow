@@ -2,7 +2,7 @@ angular.module('MspIndex.IncidentOpened', ['ngTable', 'ngResource'])
     .config(['$stateProvider',function($stateProvider) {
         $stateProvider
             .state('incidents-opened',{
-                url:'/opened',
+                url:'/incident/opened',
                 templateUrl:'incident/incident.opened.tpl.jade',
                 controller:'IncidentListCtrl',
                 data: {

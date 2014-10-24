@@ -13,7 +13,7 @@ mixin page_navs()
         +nav_link("prev", "step-backward", "上一页")
         +nav_link("next", "step-forward", "下一页")
 mixin page_size_button(count)
-    button.btn.btn-primary.no-border(type="button", ng-class="{'active':params.count() == #{count}}", ng-click="params.count(#{count})")= count
+  button.btn.btn-primary.no-border(type="button", ng-class="{'active':params.count() == #{count}}", ng-click="params.count(#{count})")= count
 mixin select_all()
     input(type="checkbox", ng-model="selection.checked", name="filter-checkbox", value="")#select_all
 

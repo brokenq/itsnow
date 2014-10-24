@@ -53,9 +53,6 @@ public interface ItsnowHostRepository {
 
     List<ItsnowHost> findAllByConfiguration(@Param("name")String name, @Param("value") String value);
 
-    // 统计 主机关联的进程和Schema的 数量总和
-    @Select("SELECT (SELECT COUNT(p.id) FROM itsnow_processes p WHERE p.host_id = h.id) " +
-            "      +(SELECT COUNT(s.id) FROM itsnow_schemas s WHERE s.host_id = h.id)   " +
-            "FROM itsnow_hosts h WHERE h.id = #{id}" )
-    int countLinked(@Param("id") long id);
+    @Select("SELECT * FROM itsnow_hosts WHERE type = #{type}")
+    List<ItsnowHost> findByType(String type);
 }

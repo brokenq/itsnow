@@ -17,7 +17,7 @@
             h.updated_at    AS host_updated_at,
             p.name          AS process_name
         FROM itsnow_schemas s
-            LEFT OUTER JOIN itsnow_hosts h ON s.host_id = h.id
+            JOIN itsnow_hosts h ON s.host_id = h.id
             LEFT OUTER JOIN itsnow_processes p ON s.id = p.schema_id
     </sql>
     <select id="findByName" resultMap="schemaResult">
@@ -61,6 +61,6 @@
         <result column="configuration" property="configuration" typeHandler="dnt.itsnow.util.PropertiesHandler"/>
         <result column="host_id" property="hostId"/>
         <association property="host" columnPrefix="host_" resultMap="dnt.itsnow.repository.ItsnowHostRepository.hostResult"/>
-        <collection property="processes" columnPrefix="process_" resultMap="dnt.itsnow.repository.ItsnowProcessRepository.basicProcessResult"/>
+        <association property="process" columnPrefix="process_" resultMap="dnt.itsnow.repository.ItsnowProcessRepository.basicProcessResult"/>
     </resultMap>
 </mapper>

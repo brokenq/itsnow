@@ -1,7 +1,7 @@
-mixin tool_button(action, icon, text)
-  button.btn.btn-default(type="button")
+mixin tool_button(action, icon, text, weight, rejectCss, requireCss)
+  button.btn.btn-primary.no-border(type="button", ng-click="#{action}", weight="#{weight}", reject-css="#{rejectCss}", require-css="#{requireCss}")
     span.glyphicon(class="glyphicon-#{icon}")
-    | #{text}
+      | #{text}
 mixin drop_button(action, icon, text)
   li
     a(href=action)
@@ -17,7 +17,7 @@ mixin page_navs()
     +nav_link("prev", "step-backward", "上一页")
     +nav_link("next", "step-forward", "下一页")
 mixin page_size_button(count)
-  button.btn.btn-default(type="button", ng-class="{'active':params.count() == #{count}}", ng-click="params.count(#{count})")= count
+  button.btn.btn-primary.no-border(type="button", ng-class="{'active':params.count() == #{count}}", ng-click="params.count(#{count})")= count
 mixin select_all()
   input(type="checkbox", ng-model="checkboxes.checked", name="filter-checkbox", value="")#select_all
 
@@ -25,11 +25,11 @@ mixin select_all()
 
   .btn-toolbar(role="toolbar")
     .btn-group
-      +tool_button("#", "refresh", "")
+        +tool_button("refresh()", "refresh", "", "*", "", "")
     .btn-group
-        +tool_button("#", "new", "新建")
-        +tool_button("#", "edit", "编辑")
-        +tool_button("#", "remove", "删除")
+       +tool_button("actionService.gotoState('worktime_new', $event)", "new", "新建", "*", "", "")
+       +tool_button("actionService.gotoState('worktime_edit', $event)", "edit", "编辑", "1", "", "")
+       +tool_button("actionService.perform(deleteWorkTime, $event)", "remove", "删除", "1+", "", "")
     //.btn-group
     //  button.btn.btn-default.dropdown-toggle(type="button",data-toggle="dropdown")
     //    | 更多操作

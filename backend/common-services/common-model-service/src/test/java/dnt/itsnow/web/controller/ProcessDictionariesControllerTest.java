@@ -59,7 +59,7 @@ public class ProcessDictionariesControllerTest extends SessionSupportedControlle
         dictionaries = new ArrayList<ProcessDictionary>();
         dictionaries.add(dictionary);
 
-        reset(processDictionaryService);
+       reset(processDictionaryService);
     }
 
     @Test
@@ -85,7 +85,7 @@ public class ProcessDictionariesControllerTest extends SessionSupportedControlle
         MockHttpServletRequestBuilder request = get("/api/process-dictionaries");
         request = decorate(request);
 
-        replay(processDictionaryService);
+      replay(processDictionaryService);
 
         // 执行
         ResultActions result = this.browser.perform(request);

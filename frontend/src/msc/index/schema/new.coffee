@@ -6,15 +6,15 @@ angular.module('MscIndex.SchemaNew', ['ngResource'])
       templateUrl: 'schema/new.tpl.jade'
       data: {pageTitle: '新增Schema'}
 
-  .controller 'schemaNewCtrl', ['$scope', '$location', '$timeout', '$state', 'SchemaService', 'HostService'
-    ($scope, $location, $timeout, $state, schemaService, hostService)->
+  .controller 'schemaNewCtrl', ['$scope', '$location', '$timeout', '$state', 'SchemaService', 'HostService', '$http'
+    ($scope, $location, $timeout, $state, schemaService, hostService, $http)->
       $scope.schema =
         name: ""
         hostId: ""
         configuration:
           user: ""
           password: ""
-      $scope.hosts = hostService.query()
+      $http.get('/admin/api/hosts/list/type/DB').success (hosts)-> $scope.hosts = hosts
 
       $scope.createSchema = ->
         feedback = (content) ->
