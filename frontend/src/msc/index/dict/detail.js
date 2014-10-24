@@ -44,6 +44,10 @@ angular.module('MscIndex.DictDetail', ['ngTable', 'ngResource'])
                 });
             }
          }else{
+
+            $scope.autoCom=function(){
+                alert("change 改变！！");
+            };
             $scope.changeDict=function(){
                 $scope.dict.$promise = undefined;
                 $scope.dict.$resolved = undefined;

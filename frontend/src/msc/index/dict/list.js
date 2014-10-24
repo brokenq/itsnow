@@ -64,7 +64,7 @@ angular.module('MscIndex.Dict', ['ngTable', 'ngResource', 'dnt.action.service','
                 }
             }
         };
-        $scope.actionService = new ActionService({watch: $scope.checkboxes.items, mapping: $scope.getDictBySn})
+        $scope.actionService = new ActionService({watch: $scope.checkboxes.items, mapping: $scope.getDictBySn});
         // watch for check all checkbox
         $scope.$watch('checkboxes.checked', function (value) {
             angular.forEach($scope.dicts, function (item) {
@@ -81,7 +81,7 @@ angular.module('MscIndex.Dict', ['ngTable', 'ngResource', 'dnt.action.service','
             };
         $scope.refresh=function(){
             $scope.tableParams.reload();
-        }
+        };
         // watch for data checkboxes
         $scope.$watch('checkboxes.items', function (values) {
                 if (!$scope.dicts) {
