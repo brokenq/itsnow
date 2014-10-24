@@ -14,7 +14,7 @@ public class Workflow extends ConfigItem {
     private ActReProcdef actReProcdef;
     private ServiceItem serviceItem;
     private String serviceTtemType;
-    private ProcessDictionary processDictionary;
+    private Dictionary dictionary;
 
     /** 公共服务目录标记 */
     public static final String PUBLIC_SERVICE_ITEM = "0";
@@ -38,12 +38,12 @@ public class Workflow extends ConfigItem {
         this.actReProcdef = actReProcdef;
     }
 
-    public ProcessDictionary getProcessDictionary() {
-        return processDictionary;
+    public Dictionary getDictionary() {
+        return dictionary;
     }
 
-    public void setProcessDictionary(ProcessDictionary processDictionary) {
-        this.processDictionary = processDictionary;
+    public void setDictionary(Dictionary dictionary) {
+        this.dictionary = dictionary;
     }
 
     public ServiceItem getServiceItem() {
@@ -77,7 +77,7 @@ public class Workflow extends ConfigItem {
         sb.append(", actReProcdef=").append(actReProcdef);
         sb.append(", serviceItem=").append(serviceItem);
         sb.append(", serviceTtemType='").append(serviceTtemType).append('\'');
-        sb.append(", processDictionary=").append(processDictionary);
+        sb.append(", dictionary=").append(dictionary);
         sb.append('}');
         return sb.toString();
     }

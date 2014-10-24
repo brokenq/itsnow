@@ -84,10 +84,17 @@ angular.module('System.Role', ['ngTable', 'ngResource', 'dnt.action.service'])
 
             $scope.deleteRole = function (role) {
                 roleService.remove({name: role.name},function(){
-//                    console.log('remove function backcalling!');
                     $scope.tableParams.reload();
-//                    console.log('remove function backcalled!');
                 });
+            };
+
+            $scope.search = function($event){
+                if($event.keyCode===13){
+                    var promise = roleService.query({keyword:$event.currentTarget.value}).$promise;
+                    promise.then(function(data){
+                        $scope.roles = data;
+                    });
+                }
             };
 
         }

@@ -1,13 +1,13 @@
 package itsnow.dnt.support;
 
 import dnt.itsnow.model.Department;
-import dnt.itsnow.model.ProcessDictionary;
+import dnt.itsnow.model.Dictionary;
 import dnt.itsnow.model.Site;
 import dnt.itsnow.model.WorkTime;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.service.DepartmentService;
-import dnt.itsnow.service.ProcessDictionaryService;
+import dnt.itsnow.service.DictionaryService;
 import dnt.itsnow.service.SiteService;
 import dnt.itsnow.service.WorkTimeService;
 import itsnow.dnt.config.SiteManagerConfig;
@@ -38,7 +38,7 @@ public class SiteManagerTest {
     SiteService service;
 
     @Autowired
-    ProcessDictionaryService dictionaryService;
+    DictionaryService dictionaryService;
 
     @Autowired
     DepartmentService departmentService;
@@ -74,8 +74,8 @@ public class SiteManagerTest {
         site.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         site.setUpdatedAt(site.getCreatedAt());
 
-        ProcessDictionary dictionary = dictionaryService.findBySn("001");
-        site.setProcessDictionary(dictionary);
+        Dictionary dictionary = dictionaryService.findBySn("001");
+        site.setDictionary(dictionary);
 
         WorkTime workTime = workTimeService.findBySn("plan1");
         site.setWorkTime(workTime);

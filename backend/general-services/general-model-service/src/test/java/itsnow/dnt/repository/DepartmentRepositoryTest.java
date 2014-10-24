@@ -1,8 +1,6 @@
 package itsnow.dnt.repository;
 
-import dnt.itsnow.model.ProcessDictionary;
 import dnt.itsnow.model.Department;
-import dnt.itsnow.model.WorkTime;
 import dnt.itsnow.repository.DepartmentRepository;
 import dnt.itsnow.repository.SiteDeptRepository;
 import itsnow.dnt.config.DepartmentRepositoryConfig;
@@ -13,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.sql.Timestamp;
 
 /**
  * <h1>测试DepartmentRepository的Mybatis的Mapping配置是否正确</h1>
@@ -45,7 +41,7 @@ public class DepartmentRepositoryTest {
 
     @Test
     public void testDelete() throws Exception {
-        String sn = "004";
+        String sn = "008";
         Department department = repository.findBySn(sn);
         Assert.assertNotNull(department);
 
@@ -66,7 +62,7 @@ public class DepartmentRepositoryTest {
 
     @Test
     public void testFind() throws Exception {
-        Assert.assertNotNull(repository.findAll());
+        Assert.assertNotNull(repository.findAll(""));
     }
 
     @Test

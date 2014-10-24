@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS sites (
   created_at             TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at             TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (work_time_id) REFERENCES work_times (id),
-  FOREIGN KEY (process_dictionary_id) REFERENCES process_dictionaries (id)
+  FOREIGN KEY (process_dictionary_id) REFERENCES dictionaries (id)
 );
 
 -- //@UNDO

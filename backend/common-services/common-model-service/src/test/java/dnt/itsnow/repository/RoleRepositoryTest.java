@@ -66,14 +66,13 @@ public class RoleRepositoryTest {
 
     @Test
     public void testCount() throws Exception {
-        Long count = repository.count(null);
-        System.out.print("count:"+count);
-        Assert.assertSame(Long.class, count.getClass());
+        Integer count = repository.count(null);
+        Assert.assertSame(Integer.class, count.getClass());
     }
 
     @Test
     public void testFind() throws Exception {
-        List<Role> roles = repository.findAll(null, pageRequest);
+        List<Role> roles = repository.findAll("", pageRequest);
         Assert.assertNotNull(roles);
     }
 

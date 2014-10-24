@@ -1,4 +1,4 @@
--- // insert_process_dictionaries
+-- // insert_dictionaries
 -- Migration SQL that makes the change goes here.
 DELETE FROM act_re_procdef;
 INSERT INTO act_re_procdef

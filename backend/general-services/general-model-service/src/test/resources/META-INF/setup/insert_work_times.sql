@@ -1,4 +1,4 @@
--- // insert_process_dictionaries
+-- // insert_dictionaries
 -- Migration SQL that makes the change goes here.
 
 INSERT INTO work_times (sn, name, work_days, start_at, end_at, description) VALUES

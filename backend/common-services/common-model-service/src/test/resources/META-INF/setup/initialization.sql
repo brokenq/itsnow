@@ -1,1 +1,1 @@
-DELETE FROM process_dictionaries;
+DELETE FROM dictionaries;

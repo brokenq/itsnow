@@ -8,7 +8,6 @@ import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.repository.StaffRepository;
 import dnt.itsnow.service.StaffService;
 import dnt.spring.Bean;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +15,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 /**
- * <h1>类功能说明</h1>
+ * <h1>员工管理业务实现层</h1>
  */
 @Service
 public class StaffManager extends Bean implements StaffService {
@@ -26,56 +25,74 @@ public class StaffManager extends Bean implements StaffService {
 
     @Override
     public Page<Staff> findAll(String keyword, Pageable pageable) {
-        logger.debug("Finding staff by keyword: {}", keyword);
-        if(StringUtils.isBlank(keyword)){
-            int total = staffRepository.count();
-            List<Staff> staffs = staffRepository.find("updated_at", "desc", pageable.getOffset(), pageable.getPageSize());
-            return new DefaultPage<Staff>(staffs, pageable, total);
-        }else{
-            int total = staffRepository.countByKeyword("%"+keyword+"%");
-            List<Staff> staffs = staffRepository.findByKeyword("%"+keyword+"%","updated_at","desc", pageable.getOffset(), pageable.getPageSize());
-            return new DefaultPage<Staff>(staffs, pageable, total);
-        }
+
+        logger.debug("Finding staffs by keyword: {}", keyword);
+
+        int total = staffRepository.count(keyword);
+        List<Staff> staffs = staffRepository.findAll(keyword, pageable);
+        DefaultPage<Staff> page = new DefaultPage<Staff>(staffs, pageable, total);
+
+        logger.debug("Found   staffs {}", page.getContent());
+
+        return page;
     }
 
     @Override
     public Staff findByNo(String no) {
-        logger.debug("Finding Staff by no: {}", no);
 
-        return staffRepository.findByNo(no);
+        logger.debug("Finding Staff by NO. : {}", no);
+
+        Staff staff = staffRepository.findByNo(no);
+
+        logger.debug("Found   {}", staff);
+
+        return staff;
     }
 
     @Override
     public Staff create(Staff staff) throws StaffException {
-        logger.info("Creating staff {}", staff);
-        if(staff == null){
+
+        logger.info("Creating {}", staff);
+
+        if (staff == null) {
             throw new StaffException("Staff entry can not be empty.");
         }
-        staff.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        staff.setUpdatedAt(staff.getCreatedAt());
+        staff.creating();
         staffRepository.create(staff);
+
+        logger.info("Created  {}", staff);
 
         return staff;
     }
 
     @Override
     public Staff update(Staff staff) throws StaffException {
-        logger.info("Updating staff {}", staff);
-        if(staff==null){
+
+        logger.info("Updating {}", staff);
+
+        if (staff == null) {
             throw new StaffException("Staff entry can not be empty.");
         }
+        staff.updating();
         staffRepository.update(staff);
+
+        logger.info("Updated  {}", staff);
 
         return staff;
     }
 
     @Override
     public Staff destroy(Staff staff) throws StaffException {
-        logger.warn("Deleting staff {}", staff);
-        if(staff==null){
+
+        logger.warn("Deleting {}", staff);
+
+        if (staff == null) {
             throw new StaffException("Staff entry can not be empty.");
         }
         staffRepository.delete(staff.getNo());
+
+        logger.warn("Deleted  {}", staff);
+
         return staff;
     }
 }

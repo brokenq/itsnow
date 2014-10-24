@@ -1,9 +1,11 @@
 package itsnow.dnt.repository;
 
 import dnt.itsnow.model.*;
+import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.repository.StaffRepository;
 import itsnow.dnt.config.StaffRepositoryConfig;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,13 @@ public class StaffRepositoryTest {
 
     @Autowired
     StaffRepository repository;
+
+    PageRequest pageRequest;
+
+    @Before
+    public void setUp() throws Exception {
+        pageRequest = new PageRequest(0, 1);
+    }
 
     @Test
     public void testCreate() throws Exception {
@@ -62,16 +71,14 @@ public class StaffRepositoryTest {
 
     @Test
     public void testDelete() throws Exception {
-        List<Staff> staffs = repository.find("updated_at", "desc", 0, 10);
-        String no = staffs.get(0).getNo();
+        String no = "007";
         repository.delete(no);
         Assert.assertNull(repository.findByNo(no));
     }
 
     @Test
     public void testUpdate() throws Exception {
-        List<Staff> staffs = repository.find("updated_at", "desc", 0, 10);
-        String no = staffs.get(0).getNo();
+        String no = "001";
         Staff staff = repository.findByNo(no);
         staff.setDescription("改变成新地址");
         repository.update(staff);
@@ -80,31 +87,19 @@ public class StaffRepositoryTest {
 
     @Test
     public void testCount() throws Exception {
-        Assert.assertNotNull(repository.count());
+        Assert.assertNotNull(repository.count(""));
     }
 
     @Test
     public void testFind() throws Exception {
-        List<Staff> staffs = repository.find("updated_at", "desc",  0, 10);
+        List<Staff> staffs = repository.findAll("", pageRequest);
         Assert.assertNotNull(staffs);
     }
 
     @Test
-    public void testCountByKeyword() throws Exception {
-        Assert.assertNotNull(repository.countByKeyword("%钱%"));
-    }
-
-    @Test
-    public void testFindByKeyword() throws Exception {
-        Assert.assertNotNull(repository.findByKeyword("%钱%","updated_at","desc", 0, 10));
-    }
-
-    @Test
     public void testFindBySn() throws Exception {
-        List<Staff> staffs = repository.find("updated_at", "desc", 0, 10);
-        String no = staffs.get(0).getNo();
-        Assert.assertNotNull(repository.findByNo(no));
-        Assert.assertNull(repository.findByNo(no+""+no));
+        Assert.assertNotNull(repository.findByNo("001"));
+        Assert.assertNull(repository.findByNo("no exit of sn"));
     }
 
 }

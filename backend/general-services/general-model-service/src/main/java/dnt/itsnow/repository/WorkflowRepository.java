@@ -16,7 +16,7 @@ public interface WorkflowRepository {
     @Insert("INSERT INTO workflows " +
             "(sn, name, description, act_re_procdef_id, service_item_id, service_item_type, process_dictionary_id, created_at, updated_at) " +
             "VALUES " +
-            "(#{sn}, #{name}, #{description}, #{actReProcdef.id_}, #{serviceItem.id}, #{serviceTtemType}, #{processDictionary.id}, #{createdAt}, #{updatedAt})")
+            "(#{sn}, #{name}, #{description}, #{actReProcdef.id_}, #{serviceItem.id}, #{serviceTtemType}, #{dictionary.id}, #{createdAt}, #{updatedAt})")
     public void create(Workflow workflow);
 
     @Delete("DELETE FROM workflows WHERE sn = #{sn}")
@@ -29,7 +29,7 @@ public interface WorkflowRepository {
             " act_re_procdef_id     = #{actReProcdef.id_}," +
             " service_item_id      = #{serviceItem.id}," +
             " service_item_type    = #{serviceTtemType}," +
-            " process_dictionary_id = #{processDictionary.id}, " +
+            " process_dictionary_id = #{dictionary.id}, " +
             " created_at            = #{createdAt}, " +
             " updated_at            = #{updatedAt} " +
             " WHERE id              = #{id} ")

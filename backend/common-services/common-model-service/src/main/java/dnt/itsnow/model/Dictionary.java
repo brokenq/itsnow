@@ -9,7 +9,7 @@ import org.hibernate.validator.constraints.NotBlank;
  * <h1>流程字典对象</h1>
  * <p/>
  */
-public class ProcessDictionary extends ConfigItem {
+public class Dictionary extends ConfigItem {
 
 
     @NotBlank
@@ -73,7 +73,7 @@ public class ProcessDictionary extends ConfigItem {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("ProcessDictionary{");
+        final StringBuffer sb = new StringBuffer("Dictionary{");
         sb.append("sn='").append(sn).append('\'');
         sb.append(", code='").append(code).append('\'');
         sb.append(", display='").append(display).append('\'');

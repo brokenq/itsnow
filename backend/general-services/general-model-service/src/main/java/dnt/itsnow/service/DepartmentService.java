@@ -8,7 +8,7 @@ import dnt.itsnow.platform.service.Pageable;
 import java.util.List;
 
 /**
- * <h1>部门业务层</h1>
+ * <h1>部门管理业务层</h1>
  */
 public interface DepartmentService {
 
@@ -44,9 +44,17 @@ public interface DepartmentService {
 
     /**
      * <h2>查询所有的部门</h2>
+     * @param keyword 查询关键字
      * @param isTree 是否生成树形结构标记，true为生成
      * @return 部门集合
      */
-    public List<Department> findAll(boolean isTree);
+    public List<Department> findAll(String keyword, boolean isTree);
+
+    /**
+     * <h2>查询所有包含有此ID的子部门</h2>
+     * @param id 当前部门的ID
+     * @return 当前部门下的子部门
+     */
+    public List<Department> findAllByParentId(long id);
 
 }

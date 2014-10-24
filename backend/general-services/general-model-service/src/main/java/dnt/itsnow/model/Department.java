@@ -17,8 +17,10 @@ public class Department extends ConfigItem implements Comparable<Department> {
     private String sn;
     // 展示顺序
     private Long position;
-    // 所属部门
+    // 包含地点
     private List<Site> sites;
+    // 包含员工
+    private List<Staff> staffs;
 
     // 上级部门ID
     private Long parentId;
@@ -94,13 +96,21 @@ public class Department extends ConfigItem implements Comparable<Department> {
         this.children = children;
     }
 
+    public List<Staff> getStaffs() {
+        return staffs;
+    }
+
+    public void setStaffs(List<Staff> staffs) {
+        this.staffs = staffs;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Department{");
         sb.append("sn='").append(sn).append('\'');
+        sb.append(", name=").append(getName());
         sb.append(", position=").append(position);
-        sb.append(", sites=").append(sites);
-        sb.append(", parentId=").append(parentId);
+        sb.append(", description=").append(getDescription());
         sb.append('}');
         return sb.toString();
     }

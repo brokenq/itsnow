@@ -1,5 +1,5 @@
 // List System
-angular.module('System.Department', ['ngTable', 'ngResource', 'ui.tree'])
+angular.module('System.Department', ['ngTable', 'ngResource'])
 
     .config(function ($stateProvider) {
         $stateProvider.state('department', {
@@ -9,10 +9,14 @@ angular.module('System.Department', ['ngTable', 'ngResource', 'ui.tree'])
         });
     })
 
-    .factory('DepartmentService', ['$resource', function ($resource) {
-        return $resource("/api/departments/:sn", {}, {
-            query : {method:'GET', params:{isTree:true}, isArray:true},
-            show : {method:'GET', params:{sn:'@sn'}}
+    .factory('DeptService', ['$resource', function ($resource) {
+        return $resource("/api/departments/:sn/:id", {}, {
+            get: { method: 'GET', params: {sn: '@sn'}},
+            checkChild: { method: 'GET', params: {sn: 'check_child',id: '@id'}},
+            save: { method: 'POST'},
+            update: { method: 'PUT', params: {sn: '@sn'}},
+            query: {method: 'GET', params: {isTree: '@isTree', keyword: '@keyword'}, isArray: true},
+            remove: { method: 'DELETE', params: {sn: '@sn'}}
         });
     }
     ])
@@ -32,25 +36,80 @@ angular.module('System.Department', ['ngTable', 'ngResource', 'ui.tree'])
         return siteFilter;
     })
 
-    .controller('DepartmentListCtrl', ['$scope', 'DepartmentService', function ($scope, departmentService) {
+    .controller('DeptListCtrl', ['$scope', '$location', 'DeptService', 'ngTableParams', 'ActionService',
+        function ($scope, $location, deptService, NgTableParams, ActionService) {
 
-        var promise = departmentService.query().$promise;
-        promise.then(function (data) {
-            $scope.departments = data;
-        });
+            // ngTable Config
+            var options = {
+                page: 1,             // show first page
+                count: 100           // count per page
+            };
+            var args = {
+                counts: [],          // hide page counts control
+                total: 0,            // value less than count hide pagination
+                getData: function ($defer, params) {
+                    $location.search(params.url()); // put params in url
+                    deptService.query({isTree:true}, function (data, headers) {
+                            params.total(headers('total'));
+                            $defer.resolve($scope.departments = data);
+                        }
+                    );
+                }
+            };
+            $scope.tableParams = new NgTableParams(angular.extend(options, $location.search()), args);
+            $scope.checkboxes = { 'checked': false, items: {} };
 
-        $scope.show = function(sn){
-            console.log("sn:"+sn);
-            promise = departmentService.show({sn:sn}).$promise;
-            promise.then(function (data) {
-                $scope.departmentDetail = data;
+            // ActionService Config
+            $scope.getDeptBySn = function (sn) {
+                for (var i in $scope.departments) {
+                    var dept = $scope.departments[i];
+                    if (dept.sn === sn) {
+                        return dept;
+                    }
+                }
+            };
+            $scope.actionService = new ActionService({watch: $scope.checkboxes.items, mapping: $scope.getDeptBySn});
+
+            // watch for check all checkbox
+            $scope.$watch('checkboxes.checked', function (value) {
+                angular.forEach($scope.departments, function (item) {
+                    if (angular.isDefined(item.sn)) {
+                        $scope.checkboxes.items[item.sn] = value;
+                    }
+                });
             });
-        };
 
-        $scope.toggle = function(scope) {
-            scope.toggle();
-        };
+            $scope.remove = function (dept) {
+                deptService.checkChild({id: dept.id},function(data){
+                    console.log(data);
+                    if(data===true){
+                        if(window.confirm('你所选择的部门，下属有子部门，确定删除吗？')){
+                            deptService.remove({sn: dept.sn}, function () {
+                                delete $scope.checkboxes.items[dept.sn];
+                                $scope.tableParams.reload();
+                            });
+                        }else{
+                            return false;
+                        }
+                    }else{
+                        deptService.remove({sn: dept.sn}, function () {
+                            delete $scope.checkboxes.items[dept.sn];
+                            $scope.tableParams.reload();
+                        });
+                    }
+                });
 
-    }
+            };
+
+            $scope.search = function($event){
+                if($event.keyCode===13){
+                    var promise = deptService.query({isTree:false,keyword:$event.currentTarget.value}).$promise;
+                    promise.then(function(data){
+                        $scope.departments = data;
+                    });
+                }
+            };
+
+        }
     ]);
 

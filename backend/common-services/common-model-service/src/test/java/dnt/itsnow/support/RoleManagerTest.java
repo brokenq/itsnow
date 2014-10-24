@@ -36,7 +36,7 @@ public class RoleManagerTest {
 
     @Test
     public void testFindAll() throws Exception {
-        Page<Role> roles = service.findAll(null, pageRequest);
+        Page<Role> roles = service.findAll("", pageRequest);
         Assert.assertTrue(roles.getContent().size()>0);
     }
 

@@ -1,13 +1,13 @@
 package dnt.itsnow.repository;
 
-import dnt.itsnow.model.Site;
 import dnt.itsnow.model.Staff;
+import dnt.itsnow.platform.service.Pageable;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
 /**
- * <h1>地点类持久层</h1>
+ * <h1>员工管理持久层</h1>
  */
 public interface StaffRepository {
 
@@ -37,23 +37,11 @@ public interface StaffRepository {
             " WHERE id     = #{id} ")
     public void update(Staff staff);
 
-    @Select("select count(0) from staffs")
-    public int count();
+    public int count(@Param("keyword") String keyword);
 
-    public List<Staff> find(
-            @Param("sort") String sort,
-            @Param("dir") String dir,
-            @Param("offset") int offset,
-            @Param("size") int size);
-
-    @Select("select count(*) from staffs where name like #{keyword}")
-    public int countByKeyword(@Param("keyword") String keyword);
-
-    public List<Staff> findByKeyword(@Param("keyword") String keyword,
-                                    @Param("sort") String sort,
-                                    @Param("dir") String dir,
-                                    @Param("offset") int offset,
-                                    @Param("size") int size);
+    public List<Staff> findAll(
+            @Param("keyword") String keyword,
+            @Param("pageable") Pageable pageable);
 
     public Staff findByNo(@Param("no") String no);
 }

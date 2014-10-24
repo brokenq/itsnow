@@ -17,14 +17,15 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * <h1>部门的控制器</h1>
+ * <h1>部门控制器</h1>
  * <pre>
- * <b>HTTP    URI                          方法      含义</b>
- * # GET      /api/departments?isTree={}   index     列出所有部门，支持树形结构展现
- * # GET      /api/departments/{sn}        show      列出特定的部门信息
- * # POST     /api/departments             create    创建部门，账户信息通过HTTP BODY提交
- * # PUT      /api/departments/{sn}        update    修改部门，账户信息通过HTTP BODY提交
- * # DELETE   /api/departments/{sn}        destroy   删除部门
+ * <b>HTTP    URI                                    方法       含义</b>
+ * # GET      /api/departments?isTree={}             index      列出所有部门，支持树形结构展现
+ * # GET      /api/departments/{sn}                  show       列出特定的部门信息
+ * # GET      /api/departments/check_child/{id}      checkChild 检查是否含有子部门
+ * # POST     /api/departments                       create     创建部门，账户信息通过HTTP BODY提交
+ * # PUT      /api/departments/{sn}                  update     修改部门，账户信息通过HTTP BODY提交
+ * # DELETE   /api/departments/{sn}                  destroy    删除部门
  * </pre>
  */
 @RestController
@@ -41,17 +42,20 @@ public class DepartmentsController extends SessionSupportController<Department> 
      * <p/>
      * GET /api/departments
      *
-     * @param isTree 树形结构标记
+     * @param keyword 查询关键字
+     * @param isTree  树形结构标记
      * @return 部门列表
      */
     @RequestMapping
-    public List<Department> index(@RequestParam(value = "isTree", defaultValue = "true") boolean isTree) {
+    public List<Department> index(
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "isTree", defaultValue = "true") boolean isTree) {
 
-        logger.debug("Listing Department, show tree is {}", isTree);
+        logger.debug("Listing Department by keyword {}, show tree is {}", keyword, isTree);
 
-        List<Department> departments = departmentService.findAll(isTree);
+        List<Department> departments = departmentService.findAll(keyword, isTree);
 
-        logger.debug("Listed Department {}", departments);
+        logger.debug("Listed  {}", departments);
 
         return departments;
     }
@@ -66,6 +70,16 @@ public class DepartmentsController extends SessionSupportController<Department> 
     @RequestMapping("{sn}")
     public Department show() {
         return department;
+    }
+
+    @RequestMapping("/check_child/{id}")
+    public Boolean checkChild(@PathVariable("id") long id) {
+        List<Department> departments = departmentService.findAllByParentId(id);
+        if (departments != null && departments.size() > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -105,7 +119,7 @@ public class DepartmentsController extends SessionSupportController<Department> 
     @RequestMapping(value = "{sn}", method = RequestMethod.PUT)
     public Department update(@Valid @RequestBody Department department) {
 
-        logger.info("Updateing {}", department);
+        logger.info("Updating {}", department);
 
         this.department.apply(department);
         try {
@@ -116,7 +130,7 @@ public class DepartmentsController extends SessionSupportController<Department> 
             throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
         }
 
-        logger.info("Updated {}", this.department);
+        logger.info("Updated  {}", this.department);
 
         return this.department;
     }
@@ -129,9 +143,9 @@ public class DepartmentsController extends SessionSupportController<Department> 
      * @return 被删除的部门
      */
     @RequestMapping(value = "{sn}", method = RequestMethod.DELETE)
-    public Department destroy() {
+    public void destroy() {
 
-        logger.warn("destroying department {}", department);
+        logger.warn("Deleting {}", department);
 
         try {
             departmentService.destroy(department);
@@ -141,9 +155,7 @@ public class DepartmentsController extends SessionSupportController<Department> 
             throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
         }
 
-        logger.warn("destroyed department");
-
-        return department;
+        logger.warn("Deleted  {}", department);
     }
 
     @BeforeFilter({"show", "update", "destroy"})

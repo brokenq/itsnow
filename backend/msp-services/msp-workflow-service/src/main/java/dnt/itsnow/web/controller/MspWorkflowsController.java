@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.InputStream;
-import java.util.List;
 
 /**
  * <h1>MSP工作流配置信息控制器</h1>
@@ -90,7 +89,7 @@ public class MspWorkflowsController extends SessionSupportController<Workflow> {
 
             // 部署单个流程定义
             InputStream inputStream = file.getInputStream() ;
-            activitiEngineService.deploySingleProcess(inputStream, workflow.getName(), workflow.getProcessDictionary().getVal());
+            activitiEngineService.deploySingleProcess(inputStream, workflow.getName(), workflow.getDictionary().getVal());
         } catch (WorkflowException e) {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
         } catch (Exception e) {

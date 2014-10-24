@@ -5,6 +5,7 @@ import dnt.itsnow.model.WorkTime;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
+import dnt.itsnow.platform.web.exception.WebServerSideException;
 import dnt.itsnow.service.WorkTimeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,7 +14,15 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 /**
- * <h1>WorkTime Controller</h1>
+ * <h1>工作时间管理控制器</h1>
+ * <pre>
+ * <b>HTTP     URI                        方法      含义  </b>
+ * # GET      /api/work-times?keyword={}  index     列出所有工作时间，支持过滤，分页，排序等
+ * # GET      /api/work-times             show      列出特定的工作时间
+ * # POST     /api/work-times             create    创建工作时间，账户信息通过HTTP BODY提交
+ * # PUT      /api/work-times/{sn}        update    修改工作时间，账户信息通过HTTP BODY提交
+ * # DELETE   /api/work-times/{sn}        destroy   删除工作时间
+ * </pre>
  */
 @RestController
 @RequestMapping("/api/work-times")
@@ -24,70 +33,110 @@ public class WorkTimesController extends SessionSupportController<WorkTime> {
     @Autowired
     private WorkTimeService service;
 
+    /**
+     * <h2>获得所有的员工</h2>
+     *
+     * GET /api/work-times
+     * @param keyword 查询关键字
+     * @return 员工列表
+     */
     @RequestMapping
     public Page<WorkTime> index(@RequestParam(value = "keyword", required = false) String keyword){
-        logger.debug("Listing Work Times by keyword: {}", keyword);
+
+        logger.debug("Listing work times by keyword: {}", keyword);
 
         indexPage = service.findAll(keyword, pageRequest);
 
         logger.debug("Listed  {}", indexPage);
+
         return indexPage;
     }
 
-    @RequestMapping("/{sn}")
+    /**
+     * <h2>查看一个工作时间</h2>
+     * <p/>
+     * GET /api/work-times/{sn}
+     *
+     * @return 工作时间
+     */
+    @RequestMapping("{sn}")
     public WorkTime show(){
-        if (workTime == null) {
-            throw new WebClientSideException(HttpStatus.BAD_REQUEST, "The work time sn must be specified");
-        }
         return workTime;
     }
 
+    /**
+     * <h2>创建一个工作时间</h2>
+     * <p/>
+     * POST /api/work-times
+     * @param workTime 待新建的工作时间
+     * @return 新建的工作时间
+     */
     @RequestMapping(method = RequestMethod.POST)
     public WorkTime create(@Valid @RequestBody WorkTime workTime){
-        logger.info("Creating {}", workTime.getName());
+
+        logger.info("Creating {}", workTime);
 
         try {
             workTime = service.create(workTime);
         } catch (WorkTimeException e) {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }  catch (Exception e) {
+            throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
         }
 
-        logger.info("Created  {}", workTime.getName());
+        logger.info("Created  {}", workTime);
+
         return workTime;
     }
 
-    @RequestMapping(value = "/{sn}", method = RequestMethod.PUT)
+    /**
+     * <h2>更新一个工作时间</h2>
+     * <p/>
+     * PUT /api/work-times/{sn}
+     * @param workTime 待更新的工作时间
+     * @return 被更新的工作时间
+     */
+    @RequestMapping(value = "{sn}", method = RequestMethod.PUT)
     public WorkTime update(@Valid @RequestBody WorkTime workTime){
-        logger.info("Updateing {}", workTime.getName());
 
-        if (workTime == null) {
-            throw new WebClientSideException(HttpStatus.BAD_REQUEST, "The work time sn must be specified");
-        }
+        logger.info("Updating {}", workTime);
 
         this.workTime.apply(workTime);
         try {
-            workTime = service.update(workTime);
+            service.update(this.workTime);
         } catch (WorkTimeException e) {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }  catch (Exception e) {
+            throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
         }
 
-        logger.info("Updated {}", workTime.getName());
+        logger.info("Updated  {}", this.workTime);
 
-        return workTime;
+        return this.workTime;
     }
 
-    @RequestMapping(value = "/{sn}", method = RequestMethod.DELETE)
+    /**
+     * <h2>删除一个工作时间</h2>
+     * <p/>
+     * DELETE /api/work-times/{sn}
+     *
+     * @return 被删除的工作时间
+     */
+    @RequestMapping(value = "{sn}", method = RequestMethod.DELETE)
     public WorkTime destroy(){
 
-        if (workTime == null) {
-            throw new WebClientSideException(HttpStatus.BAD_REQUEST, "The work time sn must be specified");
-        }
+        logger.warn("Deleting {}", workTime);
 
         try {
             service.destroy(workTime.getSn());
         } catch (WorkTimeException e) {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }  catch (Exception e) {
+            throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
         }
+
+        logger.warn("Deleted  {}", workTime);
+
         return workTime;
     }
 

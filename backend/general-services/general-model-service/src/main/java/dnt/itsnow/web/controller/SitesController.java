@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 /**
- * <h1>地点管理的控制器</h1>
+ * <h1>地点管理控制器</h1>
  * <pre>
  * <b>HTTP     URI                   方法      含义  </b>
  * # GET      /api/sites?keyword={}  index     列出所有地点，支持过滤，分页，排序等
@@ -126,7 +126,7 @@ public class SitesController extends SessionSupportController<Site> {
     @RequestMapping(value = "{sn}", method = RequestMethod.DELETE)
     public void destroy() {
 
-        logger.warn("Deleting {}", this.site);
+        logger.warn("Deleting {}", site);
 
         try {
             siteService.destroy(site);
@@ -136,7 +136,7 @@ public class SitesController extends SessionSupportController<Site> {
             throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
         }
 
-        logger.warn("Deleted  {}", this.site);
+        logger.warn("Deleted  {}", site);
     }
 
     @BeforeFilter({"show", "update", "destroy"})

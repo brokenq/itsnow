@@ -1,7 +1,7 @@
 package itsnow.dnt.web.controller;
 
 import dnt.itsnow.model.ActReProcdef;
-import dnt.itsnow.model.ProcessDictionary;
+import dnt.itsnow.model.Dictionary;
 import dnt.itsnow.model.ServiceItem;
 import dnt.itsnow.model.Workflow;
 import dnt.itsnow.platform.util.DefaultPage;
@@ -51,9 +51,9 @@ public class MspWorkflowsControllerTest extends SessionSupportedControllerTest {
         workflow.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         workflow.setUpdatedAt(workflow.getCreatedAt());
 
-        ProcessDictionary dictionary = new ProcessDictionary();
+        Dictionary dictionary = new Dictionary();
         dictionary.setId(1L);
-        workflow.setProcessDictionary(dictionary);
+        workflow.setDictionary(dictionary);
 
         ActReProcdef actReProcdef = new ActReProcdef();
         actReProcdef.setId_("1");
