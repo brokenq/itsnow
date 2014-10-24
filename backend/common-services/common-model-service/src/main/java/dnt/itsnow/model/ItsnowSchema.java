@@ -6,7 +6,6 @@ package dnt.itsnow.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 /**
  * Itsnow DB Schema
@@ -14,7 +13,7 @@ import java.util.List;
 public class ItsnowSchema extends DeployResource {
     private Long hostId;
     private ItsnowHost host;
-    private List<ItsnowProcess> processes;
+    private ItsnowProcess process;
 
     @NotNull
     @Override
@@ -36,14 +35,15 @@ public class ItsnowSchema extends DeployResource {
 
     public void setHost(ItsnowHost host) {
         this.host = host;
+        if(host != null ) setHostId(host.getId());
     }
 
-    public List<ItsnowProcess> getProcesses() {
-        return processes;
+    public ItsnowProcess getProcess() {
+        return process;
     }
 
-    public void setProcesses(List<ItsnowProcess> processes) {
-        this.processes = processes;
+    public void setProcess(ItsnowProcess process) {
+        this.process = process;
     }
 
     @Override

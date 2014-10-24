@@ -157,7 +157,8 @@ public class ItsnowProcessesController extends SessionSupportController<ItsnowPr
            logger.info("Auto created  Itsnow Process {} for account with sn {}", process, account);
        } catch (ItsnowProcessException e) {
            throw new WebServerSideException(HttpStatus.INTERNAL_SERVER_ERROR,
-                                            "Can't auto create process for " + account);
+                                            "Can't auto create process for " + account +
+                                            ", because of: " + e.getMessage());
        }
        return process;
     }
@@ -172,7 +173,8 @@ public class ItsnowProcessesController extends SessionSupportController<ItsnowPr
             logger.info("Suggested  Itsnow Process {} for account with sn {}", process, account);
         } catch (ItsnowProcessException e) {
             throw new WebServerSideException(HttpStatus.INTERNAL_SERVER_ERROR,
-                                             "Can't auto new process for " + account);
+                                             "Can't auto new process for " + account +
+                                             ", because of: " + e.getMessage());
         }
         return process;
     }

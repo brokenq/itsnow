@@ -117,8 +117,18 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
             throw new ItsnowProcessException("Can't auto new process for account not valid");
         if( account.getProcess() != null )
             throw new ItsnowProcessException("Can't auto new process for account with process");
-        ItsnowHost host = autoAssignHost(account);
-        ItsnowSchema schema = autoAssignSchema(account, host);
+        ItsnowHost host;
+        try {
+            host = autoAssignHost(account);
+        } catch (ItsnowHostException e) {
+            throw new ItsnowProcessException(e.getMessage(), e);
+        }
+        ItsnowSchema schema;
+        try {
+            schema = autoAssignSchema(account, host);
+        } catch (ItsnowHostException e) {
+            throw new ItsnowProcessException(e.getMessage(), e );
+        }
         ItsnowProcess process = autoAssignProcess(account, host, schema);
         logger.info("Suggested  itsnow process for {}", account);
         return process;
@@ -274,11 +284,11 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
         return process;
     }
 
-    ItsnowHost autoAssignHost(Account account) {
+    ItsnowHost autoAssignHost(Account account) throws ItsnowHostException {
         return hostService.pickHost(account, HostType.APP );
     }
 
-    ItsnowSchema autoAssignSchema(Account account, ItsnowHost host) {
+    ItsnowSchema autoAssignSchema(Account account, ItsnowHost host) throws ItsnowHostException {
         return schemaService.pickSchema(account, host);
     }
 

@@ -43,12 +43,11 @@ div(ui-view='')
     table.table.table-hover.table-bordered(template-pagination="customPager",ng-table="tableParams")#table
       tr(ng-repeat="schema in $data", value="{{schema.id}}", ng-class="status", ng-init="status = {deletable: deletable}")
         td(width="30" style="text-align: left" header="'ngTableCheckboxHeader'")
-          input(type='text', ng-hide='true', ng-model='status', ng-init="status = (schema.processes == null || schema.processes.length == 0 ? 'deletable' : '')")
+          input(type='text', ng-hide='true', ng-model='status', ng-init="status = (schema.process == null ? 'deletable' : '')")
           input(type="checkbox" ng-model="selection.items[schema.id]")
         td(data-title="'Schema'") {{schema.name}}
         td(data-title="'主机名'") {{schema.host.name}}
-        td(data-title="'服务进程'")
-          span(ng-repeat="process in schema.processes") {{process.name}}
+        td(data-title="'服务进程'") {{schema.process.name}}
         td(data-title="'数据库用户名'") {{schema.configuration.user}}
         td(data-title="'数据库密码'") {{schema.configuration.password}}
   script(type="text/ng-template")#ngTableCheckboxHeader

@@ -12,10 +12,11 @@ angular.module('MscIndex.ServiceCatalog.Detail', ['ngResource']).config(function
         get: { method: 'GET', params: {sn: '@sn'}},
         update:{method:'PUT', params: {sn: '@sn'}},
         save:{method:'POST'},
-        dddd:{method:'DELETE'}, params: {sn: '@sn'}});
+        remove:{method:'DELETE'}, params: {sn: '@sn'}});
   }
 ]).controller('CatalogDetailCtrl', [
   '$scope','$state','$location', '$stateParams', 'CatalogService', function($scope,$state,$location, $stateParams, catalogService) {
+
     $scope.sn = $stateParams.sn;
     $scope.action = $stateParams.action;
     if ($scope.action == 'create' ) {
@@ -30,10 +31,11 @@ angular.module('MscIndex.ServiceCatalog.Detail', ['ngResource']).config(function
         }
     }else{
       $scope.buttonLabel = '编辑';
-      $("#sn").attr("readonly","true");
+      $("#catalog_sn").attr("readonly","true");
       $scope.catalog = catalogService.get({sn:$scope.sn}, function() {
-            //alert('got catalog data:'+$scope.catalog);
+          //alert('got catalog data');
       });
+
     }
 
     $scope.process = function () {

@@ -3,6 +3,7 @@
  */
 package dnt.itsnow.support;
 
+import dnt.itsnow.exception.ItsnowHostException;
 import dnt.itsnow.exception.ItsnowSchemaException;
 import dnt.itsnow.exception.SystemInvokeException;
 import dnt.itsnow.model.*;
@@ -99,7 +100,7 @@ public class ItsnowSchemaManager extends ItsnowResourceManager implements Itsnow
     }
 
     @Override
-    public ItsnowSchema pickSchema(Account account, ItsnowHost host) {
+    public ItsnowSchema pickSchema(Account account, ItsnowHost host) throws ItsnowHostException {
         //如果当前应用所在的主机是数据库主机或者混合主机，且由剩余容量，则把schema就近分配则该主机上
         if(host.getType() != HostType.APP /*DB or COMBINED(mixed)*/ && host.getLeftCapacity() > 0 ) {
             return autoAssignSchema(account,host);
@@ -120,11 +121,5 @@ public class ItsnowSchemaManager extends ItsnowResourceManager implements Itsnow
         schema.setProperty("port", host.getProperty("db.port", "3306"));
         return schema;
     }
-    @Override
-    public boolean canDelete(ItsnowSchema schema){
-        logger.debug("Counting link processes by schema id: {} ", schema.getId());
-        int count = repository.countLinkProcesses(schema.getId());
-        logger.debug("Counted link processes by schema id: {} is {} ", schema.getId(), count);
-        return count == 0;
-    }
+
 }

@@ -133,11 +133,11 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     }
 
     @Override
-    public boolean canDelete(ItsnowHost host) {
-        logger.debug("Counting linked processes and schemas by host id: {} ", host.getId());
-        int count = repository.countLinked(host.getId());
-        logger.debug("Counted linked processes and schemas by host id: {} is {} ", host.getId(), count);
-        return count == 0;
+    public List<ItsnowHost> findByType(String type) {
+        logger.debug("Finding itsnow host by type = {}", type);
+        List<ItsnowHost> hosts = repository.findByType(type);
+        logger.debug("Found size of itsnow host is {}", hosts.size());
+        return hosts;
     }
 
     @Override
@@ -212,10 +212,12 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     }
 
     @Override
-    public ItsnowHost pickHost(Account account, HostType type) {
+    public ItsnowHost pickHost(Account account, HostType type) throws ItsnowHostException {
         List<ItsnowHost> hostList = repository.findAllByType(type);
         List<ItsnowHost> combineList = repository.findAllByType(HostType.COM);
         hostList.addAll(combineList);
+        if(hostList.isEmpty())
+            throw new ItsnowHostException("There is not " + type + " host available for " + account);
         ItsnowHost[] hosts = hostList.toArray(new ItsnowHost[hostList.size()]);
         Arrays.sort(hosts);
         return hosts[hosts.length-1];

@@ -73,8 +73,8 @@ angular.module('MsuIndex.Contract', ['ngTable', 'ngResource']).config(function($
 
     $scope.process =  function(cid) {
         $state.go('contract-create');
-    }
-    $scope.tableParams = new ngTableParams(angular.extend(options, $location.search()), args);
+    };
+    $scope.tableParams = new NgTableParams(angular.extend(options, $location.search()), args);
     $scope.checkboxes = {
       'checked': false,
       items: {}

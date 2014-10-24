@@ -5,26 +5,27 @@ import dnt.itsnow.model.ItsnowSchema;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
-import dnt.itsnow.platform.web.exception.WebServerSideException;
 import dnt.itsnow.service.ItsnowSchemaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import java.util.HashMap;
+
+import static org.springframework.http.HttpStatus.*;
 
 /**
  * <h1>Itsnow schemas web controller</h1>
  * <pre>
- * <b>HTTP     URI               方法       含义  </b>
- * GET    /admin/api/schemas       index     列出所有Schema，支持过滤，分页，排序等
- * GET    /admin/api/schemas/{id}  show      查看特定的Schema信息
- * POST   /admin/api/schemas       create    创建Schema资源
- * PUT    /admin/api/schemas/{id}  update    修改Schema信息
- * DELETE /admin/api/schemas/{id}  destroy   删除特定的Schema信息
+ * <b>HTTP     URI                                  方法       含义  </b>
+ * GET    /admin/api/schemas                        index     列出所有Schema，支持过滤，分页，排序等
+ * GET    /admin/api/schemas/{id}                   show      查看特定的Schema信息
+ * POST   /admin/api/schemas                        create    创建Schema资源
+ * PUT    /admin/api/schemas/{id}                   update    修改Schema信息
+ * DELETE /admin/api/schemas/{id}                   destroy   删除特定的Schema信息
+ * POST   /admin/api/schemas/check/{field}/{value}  check     校验Schema字段
  * </pre>
  */
 @RestController
@@ -89,13 +90,31 @@ public class ItsnowSchemasController extends SessionSupportController<ItsnowSche
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
     public void destroy() {
         logger.debug("Destroying {}", currentSchema);
-        if( !service.canDelete(currentSchema) )
-            throw new WebClientSideException(NOT_ACCEPTABLE, "Can't delete the itsnow schema for which is associated with the active processes");
         try {
             service.delete(currentSchema);
         } catch (ItsnowSchemaException e) {
             throw new WebClientSideException(NOT_ACCEPTABLE, e.getMessage());
         }
+    }
+
+    /**
+     * <h2>校验Schema字段</h2>
+     * <p/>
+     * POST   /admin/api/schemas/check/{field}/{value}
+     */
+    @RequestMapping("check/{field}/{value}")
+    public HashMap check(@PathVariable("field") String field, @PathVariable("value") String value) {
+        logger.debug("Checking itsnow schema field = {}, value = {}", field, value);
+        ItsnowSchema schema;
+        if ("name".equalsIgnoreCase(field)) {
+            schema = service.findByName(value);
+        } else {
+            throw new WebClientSideException(HttpStatus.BAD_REQUEST, "Can't check schema field: " + field);
+        }
+
+        if (null != schema)
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate field: " + field + " with value: " + value);
+        return new HashMap();
     }
 
     @BeforeFilter({"show", "destroy"})

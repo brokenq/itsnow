@@ -11,8 +11,7 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 public class Dictionary extends ConfigItem {
 
-    @NotBlank
-    private String sn;
+
     @NotBlank
     private String code;
     @NotBlank
@@ -22,6 +21,7 @@ public class Dictionary extends ConfigItem {
     @NotBlank
     private String state;
     private String type;
+    private String sn;
 
     public String getSn() {
         return sn;

@@ -13,10 +13,10 @@ import java.util.Set;
  */
 public class WorkTime extends ConfigItem {
 
-    @NotBlank
+   // @NotBlank
     private String sn;
     //工作日: 1,2,3,4 这样，1代表周一，0代表周日
-    @NotBlank
+   // @NotBlank
     private String workDays;
     // 开始时间，如 8:00
     @NotBlank
