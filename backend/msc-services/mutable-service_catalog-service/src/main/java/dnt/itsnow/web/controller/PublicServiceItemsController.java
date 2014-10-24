@@ -41,7 +41,8 @@ public class PublicServiceItemsController extends SessionSupportController<Publi
      */
     @RequestMapping
     public List<PublicServiceItem> index(){
-        return publicServiceItemService.findAll();
+        List list = serviceCatalog.getItems();
+        return list;
     }
     
     /**

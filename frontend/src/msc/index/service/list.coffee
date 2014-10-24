@@ -61,6 +61,8 @@
       $scope.$watch 'selection.checked', (value)->
         angular.forEach $scope.catalogs, (item)->
           $scope.selection.items[item.sn] = value if angular.isDefined(item.sn)
+          angular.forEach item,(child)->
+            $scope.selection.items[child.id] = value if angular.isDefined(child.id)
       # watch for data checkboxes
       $scope.$watch('selection.items', (values) ->
         return if !$scope.catalogs
