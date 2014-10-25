@@ -49,6 +49,8 @@
             <properties>
                 <target.name>msc</target.name>
                 <target.title>Msc</target.title>
+                <target.label>运营商</target.label>
+                <target.skin>skin-1</target.skin>
             </properties>
         </profile>
         <profile>
@@ -56,6 +58,8 @@
             <properties>
                 <target.name>msu</target.name>
                 <target.title>Msu</target.title>
+                <target.label>企业</target.label>
+                <target.skin>default</target.skin>
             </properties>
         </profile>
         <profile>
@@ -63,6 +67,8 @@
             <properties>
                 <target.name>msp</target.name>
                 <target.title>Msp</target.title>
+                <target.label>供应商</target.label>
+                <target.skin>skin-3</target.skin>
             </properties>
         </profile>
     </profiles>
@@ -86,9 +92,11 @@
 {
     "name":    "${target.name}",
     "title":   "${target.title}",
+    "label":   "${target.label}",
     "version": "${target.version}",
     "index":   "${target.index}",
-    "login":   "${target.login}"
+    "login":   "${target.login}",
+    "skin" :   "${target.skin}"
 }
 
                                 </echo>

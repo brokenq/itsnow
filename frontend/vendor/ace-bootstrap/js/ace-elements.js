@@ -45,7 +45,7 @@ jQuery(function() {
 		 else this.$element.parent().removeClass('ace-file-multiple');
 
 		this.$element.parent().find(':not(input[type=file])').remove();//remove all except our input, good for when changing settings
-		this.$element.after('<label class="file-label" data-title="'+this.settings.btn_choose+'"><span class="file-name" data-title="'+this.settings.no_file+'">'+(this.settings.no_icon ? '<i class="'+this.settings.no_icon+'"></i>' : '')+'</span></label>'+(remove_btn ? '<a class="remove" href="#"><i class="'+this.settings.icon_remove+'"></i></a>' : ''));
+		this.$element.after('<label class="file-label" data-title="'+this.settings.btn_choose+'"><span class="file-name" data-title="'+this.settings.no_file+'">'+(this.settings.no_icon ? '<i class="'+this.settings.no_icon+'"></i>' : '')+'</span></label>'+(remove_btn ? '<a class="remove" href="javascript:void(0)"><i class="'+this.settings.icon_remove+'"></i></a>' : ''));
 		this.$label = this.$element.next();
 
 		this.$label.on('click', function(){//firefox mobile doesn't allow 'tap'!
@@ -502,11 +502,11 @@ jQuery(function() {
 					$class += ' selected';
 					color = this.value;
 				}
-				colors += '<li><a class="'+$class+'" href="#" style="background-color:'+this.value+';" data-color="'+this.value+'"></a></li>';
+				colors += '<li><a class="'+$class+'" href="javascript:void(0)" style="background-color:'+this.value+';" data-color="'+this.value+'"></a></li>';
 			}).end().on('change.ace_inner_call', function(){
 					$(this).next().find('.btn-colorpicker').css('background-color', this.value);
 			})
-			.after('<div class="dropdown dropdown-colorpicker"><a data-toggle="dropdown" class="dropdown-toggle" href="#"><span class="btn-colorpicker" style="background-color:'+color+'"></span></a><ul class="dropdown-menu'+(settings.caret? ' dropdown-caret' : '')+(settings.pull_right ? ' pull-right' : '')+'">'+colors+'</ul></div>')
+			.after('<div class="dropdown dropdown-colorpicker"><a data-toggle="dropdown" class="dropdown-toggle" href="javascript:void(0)"><span class="btn-colorpicker" style="background-color:'+color+'"></span></a><ul class="dropdown-menu'+(settings.caret? ' dropdown-caret' : '')+(settings.pull_right ? ' pull-right' : '')+'">'+colors+'</ul></div>')
 			.next().find('.dropdown-menu').on(ace.click_event, function(e) {
 				var a = $(e.target);
 				if(!a.is('.colorpick-btn')) return false;
