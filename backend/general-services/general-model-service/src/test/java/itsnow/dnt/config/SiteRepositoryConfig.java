@@ -17,13 +17,21 @@ public class SiteRepositoryConfig extends RepositoryConfigWithH2 {
 
     protected String[] sqlScripts() {
         return new String[]{
-                "classpath:META-INF/migrate/20140720144647_create_process_dictionaries.sql@up",
+                "classpath:META-INF/setup/create_accounts.sql@up",
+                "classpath:META-INF/setup/create_users.sql@up",
+                "classpath:META-INF/setup/create_staffs.sql@up",
+                "classpath:META-INF/migrate/20140720144647_create_dictionaries.sql@up",
                 "classpath:META-INF/migrate/20140721113250_create_work_times.sql@up",
                 "classpath:META-INF/migrate/20140722130944_create_sites.sql@up",
                 "classpath:META-INF/migrate/20140722130950_create_departments.sql@up",
                 "classpath:META-INF/migrate/20140902160038_create_site_depts.sql@up",
-                "classpath:META-INF/setup/initialization.sql",
-                "classpath:META-INF/migrate/20140904124504_insert_process_dictionaries.sql@up",
+
+                "classpath:META-INF/setup/initialization_site.sql",
+
+                "classpath:META-INF/setup/insert_accounts.sql@up",
+                "classpath:META-INF/setup/insert_users.sql@up",
+                "classpath:META-INF/setup/insert_staffs.sql@up",
+                "classpath:META-INF/migrate/20140904124504_insert_dictionaries.sql@up",
                 "classpath:META-INF/setup/insert_work_times.sql@up",
                 "classpath:META-INF/migrate/20140909150904_insert_sites.sql@up",
                 "classpath:META-INF/migrate/20140909152504_insert_departments.sql@up",

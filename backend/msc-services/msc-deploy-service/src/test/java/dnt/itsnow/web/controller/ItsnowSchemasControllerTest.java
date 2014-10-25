@@ -20,9 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -101,7 +99,6 @@ public class ItsnowSchemasControllerTest extends SessionSupportedControllerTest 
         schema.setId(102L);
         // Service Mock 记录阶段
         expect(mockedService.findById(schema.getId())).andReturn(schema);
-        expect(mockedService.canDelete(schema)).andReturn(true);
         mockedService.delete(schema);
         expectLastCall().once();
         // 准备 Mock Request
@@ -128,5 +125,24 @@ public class ItsnowSchemasControllerTest extends SessionSupportedControllerTest 
 
     void replayAll(){
         replay(mockedService);
+    }
+
+    @Test
+    public void testCheck() throws Exception {
+        // Service Mock 记录阶段
+        expect(mockedService.findByName(schema.getName())).andReturn(schema);
+        // 准备 Mock Request
+        MockHttpServletRequestBuilder request = delete("/admin/api/schemas/check/name/" + schema.getName());
+        decorate(request);
+
+        // Mock 准备播放
+        replay(mockedService);
+
+        // 执行
+        this.browser.perform(request);
+
+        // 对业务结果的验证
+        status().isConflict();
+
     }
 }

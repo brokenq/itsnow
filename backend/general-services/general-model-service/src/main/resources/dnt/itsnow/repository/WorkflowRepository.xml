@@ -31,7 +31,7 @@
             <result property="icon" column="serviceItemIcon"/>
             <result property="description" column="serviceItemDescription"/>
         </association>
-        <association property="processDictionary" column="process_dictionary_id" javaType="ProcessDictionary">
+        <association property="dictionary" column="process_dictionary_id" javaType="Dictionary">
             <id property="id" column="dictionaryId"/>
             <result property="code" column="dictionaryCode"/>
             <result property="name" column="dictionaryName"/>
@@ -65,7 +65,7 @@
         FROM   workflows flow
         LEFT JOIN act_re_procdef a
         ON flow.act_re_procdef_id = a.id_
-        LEFT JOIN process_dictionaries p
+        LEFT JOIN dictionaries p
         ON flow.process_dictionary_id = p.id
         <if test="serviceTtemType == 1">
             LEFT JOIN itsnow_msc.public_service_items serviceItem

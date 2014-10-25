@@ -7,7 +7,6 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Set;
 
 /**
  * <h1>MSU/MSP的Site</h1>
@@ -22,8 +21,8 @@ public class Site extends ConfigItem {
     //工作时间
     @NotNull
     private WorkTime workTime;
-    // 流程字典
-    private ProcessDictionary processDictionary;
+    // 字典
+    private Dictionary dictionary;
     // 部门
     private List<Department> departments;
 
@@ -51,12 +50,12 @@ public class Site extends ConfigItem {
         this.sn = sn;
     }
 
-    public ProcessDictionary getProcessDictionary() {
-        return processDictionary;
+    public Dictionary getDictionary() {
+        return dictionary;
     }
 
-    public void setProcessDictionary(ProcessDictionary processDictionary) {
-        this.processDictionary = processDictionary;
+    public void setDictionary(Dictionary dictionary) {
+        this.dictionary = dictionary;
     }
 
     public List<Department> getDepartments() {
@@ -73,7 +72,7 @@ public class Site extends ConfigItem {
         sb.append("sn='").append(sn).append('\'');
         sb.append(", address='").append(address).append('\'');
         sb.append(", workTime=").append(workTime);
-        sb.append(", processDictionary=").append(processDictionary);
+        sb.append(", dictionary=").append(dictionary);
         sb.append(", departments=").append(departments);
         sb.append('}');
         return sb.toString();

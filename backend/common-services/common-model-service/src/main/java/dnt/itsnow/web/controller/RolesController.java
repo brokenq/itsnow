@@ -65,11 +65,11 @@ public class RolesController extends SessionSupportController<Role> {
     @RequestMapping(value="{name}", method = RequestMethod.GET)
     public Role show(@PathVariable("name") String name) {
 
-        logger.debug("Listing role name:{}" + name);
+        logger.debug("Listing {}", name);
 
         role = service.findByName(name);
 
-        logger.debug("Listed role size:{}", indexPage.getContent().size());
+        logger.debug("Listed  {}", indexPage);
 
         return role;
     }
@@ -120,7 +120,7 @@ public class RolesController extends SessionSupportController<Role> {
             throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
         }
 
-        logger.info("Updated {}", this.role);
+        logger.info("Updated  {}", this.role);
 
         return this.role;
     }
@@ -156,7 +156,7 @@ public class RolesController extends SessionSupportController<Role> {
 
         List<User> users = service.findUsersByAccount(mainAccount);
 
-        logger.info("Listed {}", users);
+        logger.info("Listed  {}", users);
 
         return users;
     }

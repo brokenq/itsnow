@@ -42,15 +42,11 @@ public class SiteManager extends Bean implements SiteService {
 
         logger.debug("Finding sites by keyword: {}", keyword);
 
-        if (StringUtils.isNotBlank(keyword)) {
-            keyword = "%" + keyword + "%";
-        }
-
         int total = siteRepository.count(keyword);
         List<Site> sites = siteRepository.findAll(keyword, pageable);
         DefaultPage<Site> page = new DefaultPage<Site>(sites, pageable, total);
 
-        logger.debug("Found {}", page.getContent());
+        logger.debug("Found   {}", page.getContent());
 
         return page;
     }
@@ -95,7 +91,7 @@ public class SiteManager extends Bean implements SiteService {
     @Override
     public Site update(Site site) throws SiteException {
 
-        logger.info("Updating site {}", site);
+        logger.info("Updating {}", site);
 
         if (site == null) {
             throw new SiteException("Site entry can not be empty.");
@@ -108,7 +104,7 @@ public class SiteManager extends Bean implements SiteService {
             siteDeptRepository.create(new SiteDept(site, department));
         }
 
-        logger.info("Updated  site {}", site);
+        logger.info("Updated  {}", site);
 
         return site;
     }
@@ -116,7 +112,7 @@ public class SiteManager extends Bean implements SiteService {
     @Override
     public void destroy(Site site) throws SiteException {
 
-        logger.warn("Deleting site {}", site);
+        logger.warn("Deleting {}", site);
 
         if (site == null) {
             throw new SiteException("Site entry can not be empty.");
@@ -124,6 +120,6 @@ public class SiteManager extends Bean implements SiteService {
         siteDeptRepository.deleteSiteAndDeptRelationBySiteId(site.getId());
         siteRepository.delete(site.getSn());
 
-        logger.warn("Deleted site  {}", site);
+        logger.warn("Deleted  {}", site);
     }
 }

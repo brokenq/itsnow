@@ -21,15 +21,72 @@
             <result property="address" column="siteAddress"/>
             <result property="description" column="siteDescription"/>
         </collection>
+        <!-- 一对多关系 -->
+        <collection property="staffs" ofType="Staff">
+            <id property="id" column="staffId"/>
+            <result property="no" column="staffNo"/>
+            <result property="name" column="staffName"/>
+            <result property="description" column="staffDescription"/>
+            <result property="mobilePhone" column="staffMobilePhone"/>
+            <result property="fixedPhone" column="staffFixedPhone"/>
+            <result property="email" column="staffEmail"/>
+            <result property="title" column="staffTitle"/>
+            <result property="type" column="staffType"/>
+            <result property="status" column="staffStatus"/>
+        </collection>
     </resultMap>
 
+    <sql id="select">
+        SELECT d.id,
+            d.sn,
+            d.name,
+            d.parent_id,
+            d.position,
+            d.description,
+            d.created_at,
+            d.updated_at,
+            s.id            AS siteId,
+            s.sn            AS siteSn,
+            s.name          AS siteName,
+            s.address       AS siteAddress,
+            s.description   AS siteDescription,
+            s.id            AS siteId,
+            s.sn            AS siteSn,
+            s.NAME          AS siteName,
+            s.address       AS siteAddress,
+            s.description   AS siteDescription,
+            stf.id          AS staffId,
+            stf.no          AS staffNo,
+            stf.name        AS staffName,
+            stf.description AS staffDescription,
+            stf.mobile_phone AS staffMobilePhone,
+            stf.fixed_phone  AS staffFixedPhone,
+            stf.email       AS staffEmail,
+            stf.title       AS staffTitle,
+            stf.type        AS staffType,
+            stf.status      AS staffStatus
+        FROM   departments d
+            LEFT JOIN site_depts sd
+                ON d.id = sd.dept_id
+            LEFT JOIN sites s
+                ON sd.site_id = s.id
+            LEFT JOIN staffs stf
+                ON stf.dept_id = d.id
+    </sql>
+
+    <select id="findAll" resultMap="departmentResult">
+        <include refid="select"></include>
+        <where>
+            <if test="keyword != null and keyword != ''">
+                <bind name="pattern" value="'%' + keyword + '%' "/>
+                d.name LIKE #{pattern}
+            </if>
+        </where>
+    </select>
+
     <select id="findBySn" resultMap="departmentResult">
-        select d.id, d.sn, d.name, d.parent_id, d.position, d.description, d.created_at, d.updated_at,
-        s.id as siteId, s.sn as siteSn, s.name as siteName, s.address as siteAddress, s.description as siteDescription
-        from departments d
-        left join site_depts sd on  d.id = sd.dept_id
-        left join sites s on sd.site_id = s.id
-        where d.sn = #{sn}
+        <include refid="select"></include>
+        WHERE  d.sn = #{sn}
     </select>
 
 </mapper>

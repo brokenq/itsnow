@@ -23,11 +23,10 @@ mixin select_all()
 
 div(ui-view='')
  .container(ng-controller="CatalogListCtrl")
-
   .btn-toolbar(role="toolbar")
     .btn-group
       +tool_button("actionService.gotoState('services.catalog', $event)", "refresh", "刷新","*","","")
-      +tool_button("actionService.perform(create, $event)", "create", "新建", "*", "", "")
+      +tool_button("actionService.perform(create, $event)", "plus", "新建", "1", "", "")
       +tool_button("actionService.gotoState('services.catalog.detail', $event)", "edit", "编辑", "1", "", "")
       +tool_button("actionService.perform(remove, $event)", "remove", "删除", "1+", "", "")
     .btn-group
@@ -41,27 +40,27 @@ div(ui-view='')
             input.nav-search-input(type="text", placeholder="服务目录名称...",autocomplete="off")#nav-search-input
             i.icon-search.nav-search-icon
 
-  table.table.table-hover.table-bordered(template-pagination="customPager",ng-table="tableParams")
-    tr(ng-repeat="catalog in $data", value="{{catalog.sn}}")
-      td(width="30" style="text-align: left" header="'ngTableCheckboxHeader'")
-        input(type="checkbox" ng-model="selection.items[catalog.sn]")
-      td(data-title="'名称'") {{catalog.sn}}
-      td(data-title="'标题'") {{catalog.title}}
-      td(data-title="'描述'") {{catalog.description}}
-      td(data-title="'父ID'") {{catalog.parentId}}
-      td(data-title="'创建时间'") {{catalog.createdAt | formatTime}}
-      td(data-title="'更新时间'") {{catalog.updatedAt | formatTime}}
+  table.table.table-hover.table-bordered(ng-table="tableParams")
+    tbody(ng-repeat="catalog in $data", value="{{catalog.sn}}")
+        tr
+          td(width="30" style="text-align: left" header="'ngTableCheckboxHeader'")
+            input(type="checkbox" ng-model="selection.items[catalog.sn]")
+          td(data-title="'图标'")
+            img(ng-src="{{catalog.icon}}")
+          td(data-title="'名称'") {{catalog.sn}}
+          td(data-title="'标题'") {{catalog.title}}
+          td(data-title="'描述'") {{catalog.description}} {{selection.items}}
+          td(data-title="'更新时间'") {{catalog.updatedAt | formatTime}}
+        tr(ng-repeat="item in catalog.items")
+          td(width="30" style="text-align: left" header="'ngTableCheckboxHeader'")
+
+          td(data-title="'图标'")
+              img(ng-src="{{item.icon}}")
+          td(data-title="'名称'") {{item.brief}}
+          td(data-title="'标题'") {{item.title}}
+          td(data-title="'描述'") {{item.description}}
+          td(data-title="'更新时间'") {{item.updatedAt | formatTime}}
 
 
 script(type="text/ng-template")#ngTableCheckboxHeader
   +select_all()
-script(type="text/ng-template")#customPager
-  ul.pager.ng-cloak
-    +page_navs()
-    li
-      .btn-group
-        +page_size_button(5)
-        +page_size_button(10)
-        +page_size_button(25)
-        +page_size_button(50)
-        +page_size_button(100)

@@ -30,11 +30,11 @@ mixin select_all()
       .nav-search#nav-search
         form.form-search
           span.input-icon
-            input.nav-search-input(type="text", placeholder="请输入角色名称...",autocomplete="off")#nav-search-input
+            input.nav-search-input(type="text", placeholder="请输入角色名称...", autocomplete="off", ng-keypress="search($event)")#nav-search-input
             i.icon-search.nav-search-icon
 
     table.table.table-hover.table-bordered(template-pagination="customPager",ng-table="tableParams")#table
-      tr(ng-repeat="role in $data", value="{{role.name}}")
+      tr(ng-repeat="role in roles", value="{{role.name}}")
           td(width="30" style="text-align: left;" header="'ngTableCheckboxHeader'")
               input(type="checkbox" ng-model="selection.items[role.name]")
           +td("cursor: pointer; cursor: hand;", "'角色名'", "{{role.name}}")

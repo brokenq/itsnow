@@ -1,12 +1,13 @@
 package dnt.itsnow.repository;
 
 import dnt.itsnow.model.WorkTime;
+import dnt.itsnow.platform.service.Pageable;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
 /**
- * <h1>类功能说明</h1>
+ * <h1>工作时间持久层</h1>
  */
 public interface WorkTimeRepository {
 
@@ -30,27 +31,12 @@ public interface WorkTimeRepository {
             " WHERE id    = #{id} ")
     public void update(WorkTime workTime);
 
-    @Select("select count(0) from work_times")
-    public int count();
+    public int count(@Param("keyword") String keyword);
 
-    @Select("select * from work_times order by ${sort} ${dir} limit #{offset}, #{size}")
-    public List<WorkTime> find(
-            @Param("sort") String sort,
-            @Param("dir") String dir,
-            @Param("offset") int offset,
-            @Param("size") int size);
+    public List<WorkTime> findAll(
+            @Param("keyword") String keyword,
+            @Param("pageable") Pageable pageable);
 
-    @Select("select count(*) from work_times where name like #{keyword} or sn like #{keyword}")
-    public int countByKeyword(@Param("keyword") String keyword);
-
-    @Select("select * from work_times where name like #{keyword} or sn like #{keyword}" +
-            " order by ${sort} ${dir} limit #{offset}, #{size}")
-    public List<WorkTime> findByKeyword(@Param("keyword") String keyword,
-                                                 @Param("sort") String sort,
-                                                 @Param("dir") String dir,
-                                                 @Param("offset") int offset,
-                                                 @Param("size") int size);
-
-    @Select("SELECT * FROM work_times WHERE sn = #{sn}")
     public WorkTime findBySn(@Param("sn") String sn);
+
 }

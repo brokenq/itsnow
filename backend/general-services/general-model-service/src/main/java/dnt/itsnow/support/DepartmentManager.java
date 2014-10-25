@@ -10,6 +10,7 @@ import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.repository.DepartmentRepository;
 import dnt.itsnow.repository.SiteDeptRepository;
+import dnt.itsnow.repository.SiteRepository;
 import dnt.itsnow.service.DepartmentService;
 import dnt.spring.Bean;
 import org.apache.commons.lang.StringUtils;
@@ -31,17 +32,21 @@ public class DepartmentManager extends Bean implements DepartmentService {
     @Autowired
     private SiteDeptRepository siteDeptRepository;
 
+    @Autowired
+    private SiteRepository sitRepository;
+
     @Override
-    public List<Department> findAll(boolean isTree) {
+    public List<Department> findAll(String keyword, boolean isTree) {
 
-        logger.debug("Finding departments");
+        logger.debug("Finding departments by keyword, show tree is {}", keyword, isTree);
 
-        List<Department> departments = departmentRepository.findAll();
+        List<Department> departments = departmentRepository.findAll(keyword);
         if (isTree) {
             departments = buildTree(departments);
+            departments = buildTreeTable(departments);
         }
 
-        logger.debug("Found department list info : {}", departments);
+        logger.debug("Found   {}", departments);
 
         return departments;
     }
@@ -53,24 +58,39 @@ public class DepartmentManager extends Bean implements DepartmentService {
 
         Department department = departmentRepository.findBySn(sn);
 
-        logger.debug("Found Department : {}", department);
+        logger.debug("Found   {}", department);
 
         return department;
     }
 
     @Override
+    public List<Department> findAllByParentId(long id) {
+
+        logger.debug("Finding Department by id: {}", id);
+
+        List<Department> departments = departmentRepository.findAllByParentId(id);
+
+        logger.debug("Found   {}", departments);
+
+        return departments;
+    }
+
+    @Override
     public Department create(Department department) throws DepartmentException {
 
-        logger.info("Creating department {}", department);
+        logger.info("Creating {}", department);
 
         if (department == null) {
             throw new DepartmentException("Department entry can not be empty.");
         }
 
+        department.setSn(UUID.randomUUID().toString());
         department.creating();
         departmentRepository.create(department);
 
         for (Site site : department.getSites()) {
+
+            site = sitRepository.findBySn(site.getSn());
             SiteDept siteDept = new SiteDept(site, department);
 
             if (siteDeptRepository.find(siteDept) == null) {
@@ -78,7 +98,7 @@ public class DepartmentManager extends Bean implements DepartmentService {
             }
         }
 
-        logger.info("Created department {}", department);
+        logger.info("Created  {}", department);
 
         return department;
     }
@@ -86,7 +106,7 @@ public class DepartmentManager extends Bean implements DepartmentService {
     @Override
     public Department update(Department department) throws DepartmentException {
 
-        logger.info("Updating department {}", department);
+        logger.info("Updating {}", department);
 
         if (department == null) {
             throw new DepartmentException("Department entry can not be empty.");
@@ -97,10 +117,11 @@ public class DepartmentManager extends Bean implements DepartmentService {
 
         siteDeptRepository.deleteDeptAndSiteRelationByDeptId(department.getId());
         for (Site site : department.getSites()) {
+            site = sitRepository.findBySn(site.getSn());
             siteDeptRepository.create(new SiteDept(site, department));
         }
 
-        logger.info("Updating department {}", department);
+        logger.info("Updating   {}", department);
 
         return department;
     }
@@ -108,15 +129,26 @@ public class DepartmentManager extends Bean implements DepartmentService {
     @Override
     public void destroy(Department department) throws DepartmentException {
 
-        logger.warn("Deleting department {}", department);
+        logger.warn("Deleting {}", department);
 
         if (department == null) {
             throw new DepartmentException("Department entry can not be empty.");
         }
+        loopDestroy(department);
+
+        logger.warn("Deleted  {}", department);
+    }
+
+    private void loopDestroy(Department department) {
+        List<Department> subDepartments = departmentRepository.findAllByParentId(department.getId());
+        if (subDepartments != null && subDepartments.size() > 0) {
+            for(Department dept : subDepartments){
+                loopDestroy(dept);
+            }
+        }
         siteDeptRepository.deleteDeptAndSiteRelationByDeptId(department.getId());
         departmentRepository.delete(department.getSn());
-
-        logger.warn("Deleted department {}", department);
+        logger.warn("Deleted  {}", department);
     }
 
     /**
@@ -130,17 +162,45 @@ public class DepartmentManager extends Bean implements DepartmentService {
         for (Department dept : departments) {
             map.put(dept.getId(), dept);
         }
-        List<Department> topDepartments = new ArrayList<Department>();
+        List<Department> rootDepartments = new ArrayList<Department>();
         for (Department dept : departments) {
             if (dept.getParentId() != null) {
                 Department parent = map.get(dept.getParentId());
                 dept.setParent(parent);
             } else {
-                topDepartments.add(dept);
+                rootDepartments.add(dept);
             }
         }
-        Collections.sort(topDepartments);
-        return topDepartments;
+        logger.debug("rootDepartments:{}", rootDepartments);
+        Collections.sort(rootDepartments);
+        return rootDepartments;
+    }
+
+    /**
+     * 以tree table形式生成部门列表
+     *
+     * @param departments 树结构的部门列表
+     * @return
+     */
+    private List<Department> buildTreeTable(List<Department> departments) {
+        List<Department> treeTable = new LinkedList<Department>();
+        for (Department dept : departments) {
+            treeTable.add(dept);
+            loop(treeTable, dept, "");
+        }
+        return treeTable;
+    }
+
+    private void loop(List<Department> treeTable, Department dept, String symbol) {
+        if (dept.getChildren() != null && dept.getChildren().size() > 0) {
+            symbol += "──";
+            for (Department child : dept.getChildren()) {
+                child.setName(symbol + child.getName());
+                treeTable.add(child);
+                loop(treeTable, child, symbol);
+            }
+            dept.setChildren(null);
+        }
     }
 
 }

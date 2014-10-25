@@ -56,7 +56,7 @@ public class DepartmentsControllerTest extends SessionSupportedControllerTest {
 
     @Test
     public void testIndex() throws Exception {
-        expect(departmentService.findAll(anyBoolean()))
+        expect(departmentService.findAll(anyString(),anyBoolean()))
                 .andReturn(new ArrayList<Department>(departments));
 
         // 准备 Mock Request

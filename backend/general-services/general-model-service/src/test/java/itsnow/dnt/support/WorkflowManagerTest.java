@@ -41,9 +41,9 @@ public class WorkflowManagerTest {
         workflow.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         workflow.setUpdatedAt(workflow.getCreatedAt());
 
-        ProcessDictionary dictionary = new ProcessDictionary();
+        Dictionary dictionary = new Dictionary();
         dictionary.setId(1L);
-        workflow.setProcessDictionary(dictionary);
+        workflow.setDictionary(dictionary);
 
         ActReProcdef actReProcdef = new ActReProcdef();
         actReProcdef.setId_("1");

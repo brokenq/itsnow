@@ -6,9 +6,11 @@ package dnt.itsnow.web.controller;
 import dnt.itsnow.model.PublicServiceCatalog;
 import dnt.itsnow.model.PublicServiceItem;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
+import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.service.CommonServiceCatalogService;
 import dnt.itsnow.service.CommonServiceItemService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,7 +42,8 @@ public class CommonServiceItemsController extends SessionSupportController<Publi
      */
     @RequestMapping
     public List<PublicServiceItem> index(){
-        return commonServiceItemService.findAll();
+        List list = serviceCatalog.getItems();
+        return list;
     }
     
     /**
@@ -72,6 +75,9 @@ public class CommonServiceItemsController extends SessionSupportController<Publi
     @BeforeFilter
     public void initServiceCatalog(@PathVariable("sn") String catalogSn){
         serviceCatalog = commonServiceCatalogService.findBySn(catalogSn);
+        if(serviceCatalog == null)
+            throw new WebClientSideException(HttpStatus.NOT_FOUND, "Can't find the service catalog with sn: " + catalogSn);
+
     }
     
     @BeforeFilter(order = 60, value = {"show", "update", "destroy"})

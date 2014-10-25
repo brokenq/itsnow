@@ -27,6 +27,6 @@ angular.module('MsuIndex.ContractCreate', ['ngResource']).config(function($state
                     //alert('新建完成');
                     $location.path('/contracts/contract');
                 });
-            }
+            };
 
         }]);

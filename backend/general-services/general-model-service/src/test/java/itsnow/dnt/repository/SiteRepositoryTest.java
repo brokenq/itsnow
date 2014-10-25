@@ -1,10 +1,10 @@
 package itsnow.dnt.repository;
 
-import dnt.itsnow.model.ProcessDictionary;
+import dnt.itsnow.model.Dictionary;
 import dnt.itsnow.model.Site;
 import dnt.itsnow.model.WorkTime;
 import dnt.itsnow.platform.util.PageRequest;
-import dnt.itsnow.repository.ProcessDictionaryRepository;
+import dnt.itsnow.repository.DictionaryRepository;
 import dnt.itsnow.repository.SiteDeptRepository;
 import dnt.itsnow.repository.SiteRepository;
 import dnt.itsnow.repository.WorkTimeRepository;
@@ -33,7 +33,7 @@ public class SiteRepositoryTest {
     SiteRepository repository;
 
     @Autowired
-    ProcessDictionaryRepository dictionaryRepository;
+    DictionaryRepository dictionaryRepository;
 
     @Autowired
     WorkTimeRepository workTimeRepository;
@@ -54,8 +54,8 @@ public class SiteRepositoryTest {
         site.setSn("100");
         site.setName("大众四厂");
 
-        ProcessDictionary dictionary = dictionaryRepository.findBySn("001");
-        site.setProcessDictionary(dictionary);
+        Dictionary dictionary = dictionaryRepository.findBySn("001");
+        site.setDictionary(dictionary);
 
         WorkTime workTime = workTimeRepository.findBySn("plan1");
         site.setWorkTime(workTime);

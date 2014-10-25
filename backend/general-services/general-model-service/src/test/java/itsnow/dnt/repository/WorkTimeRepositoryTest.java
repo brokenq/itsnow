@@ -4,8 +4,10 @@
 package itsnow.dnt.repository;
 
 import dnt.itsnow.model.WorkTime;
+import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.repository.WorkTimeRepository;
 import itsnow.dnt.config.WorkTimeRepositoryConfig;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,13 @@ public class WorkTimeRepositoryTest {
 
     @Autowired
     WorkTimeRepository repository;
+
+    PageRequest pageRequest;
+
+    @Before
+    public void setUp() throws Exception {
+        pageRequest = new PageRequest(0, 1);
+    }
 
     @Test
     public void testCreate() throws Exception {
@@ -62,28 +71,18 @@ public class WorkTimeRepositoryTest {
 
     @Test
     public void testCount() throws Exception {
-        Assert.notNull(repository.count());
+        Assert.notNull(repository.count(""));
     }
 
     @Test
-    public void testFind() throws Exception {
-        Assert.notNull(repository.find("updated_at", "desc",  0, 10));
-    }
-
-    @Test
-    public void testCountByKeyword() throws Exception {
-        Assert.notNull(repository.countByKeyword("%工作日%"));
-    }
-
-    @Test
-    public void testFindByKeyword() throws Exception {
-        Assert.notNull(repository.findByKeyword("%工作日%","updated_at","desc", 0, 10));
+    public void testFindAll() throws Exception {
+        Assert.notNull(repository.findAll("pageRequest", pageRequest));
     }
 
     @Test
     public void testFindBySn() throws Exception {
         Assert.notNull(repository.findBySn("plan2"));
-        Assert.isNull(repository.findBySn("plan000"));
+        Assert.isNull(repository.findBySn("no exit of sn"));
     }
 
 }

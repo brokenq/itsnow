@@ -5,6 +5,7 @@ import dnt.itsnow.model.Staff;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
+import dnt.itsnow.platform.web.exception.WebServerSideException;
 import dnt.itsnow.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,7 +14,15 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 /**
- * <h1>Staffs Controller</h1>
+ * <h1>员工管理控制器</h1>
+ * <pre>
+ * <b>HTTP     URI                   方法      含义  </b>
+ * # GET      /api/staffs?keyword={}  index     列出所有员工，支持过滤，分页，排序等
+ * # GET      /api/staffs             show      列出特定的员工
+ * # POST     /api/staffs             create    创建员工，账户信息通过HTTP BODY提交
+ * # PUT      /api/staffs/{sn}        update    修改员工，账户信息通过HTTP BODY提交
+ * # DELETE   /api/staffs/{sn}        destroy   删除员工
+ * </pre>
  */
 @RestController
 @RequestMapping("/api/staffs")
@@ -25,111 +34,115 @@ public class StaffsController extends SessionSupportController<Staff> {
     private Staff staff;
 
     /**
-     * <h2>获得所有的地点</h2>
+     * <h2>获得所有的员工</h2>
      *
      * GET /api/staffs
-     *
-     * @return 地点列表
+     * @param keyword 查询关键字
+     * @return 员工列表
      */
     @RequestMapping
     public Page<Staff> index(@RequestParam(value = "keyword", required = false) String keyword){
-        logger.debug("Listing Staffs by keyword: {}", keyword);
+
+        logger.debug("Listing staffs by keyword: {}", keyword);
 
         indexPage = staffService.findAll(keyword, pageRequest);
 
-        logger.debug("Listed  {}", indexPage);
+        logger.debug("Listed  {}", indexPage.getContent());
+
         return indexPage;
     }
 
     /**
-     * <h2>查看一个地点</h2>
+     * <h2>查看一个员工</h2>
      *
      * GET /api/staffs/{no}
      *
-     * @return 地点
+     * @return 员工
      */
-    @RequestMapping("/{no}")
+    @RequestMapping("{no}")
     public Staff show(){
-        if (staff == null) {
-            throw new WebClientSideException(HttpStatus.BAD_REQUEST, "The staff no must be specified");
-        }
         return staff;
     }
 
     /**
-     * <h2>创建一个地点</h2>
+     * <h2>创建一个员工</h2>
      *
      * POST /api/staffs
-     *
-     * @return 新建的地点
+     * @param staff 待新建的员工
+     * @return 新建的员工
      */
     @RequestMapping(method = RequestMethod.POST)
     public Staff create(@Valid @RequestBody Staff staff){
-        logger.info("Creating {}", staff.getName());
+
+        logger.info("Creating {}", staff);
 
         try {
             staff = staffService.create(staff);
         } catch (StaffException e) {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }  catch (Exception e) {
+            throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
         }
 
-        logger.info("Created  {}", staff.getName());
+        logger.info("Created  {}", staff);
+
         return staff;
     }
 
     /**
-     * <h2>更新一个地点</h2>
+     * <h2>更新一个员工</h2>
      *
      * PUT /api/staffs/{no}
-     *
-     * @return 被更新的地点
+     * @param staff 待修改的员工
+     * @return 被更新的员工
      */
-    @RequestMapping(value = "/{no}", method = RequestMethod.PUT)
+    @RequestMapping(value = "{no}", method = RequestMethod.PUT)
     public Staff update(@Valid @RequestBody Staff staff){
 
-        logger.info("Updateing {}", staff.getName());
-
-        if (staff == null) {
-            throw new WebClientSideException(HttpStatus.BAD_REQUEST, "The staff no must be specified");
-        }
+        logger.info("Updating {}", staff);
 
         this.staff.apply(staff);
         try {
-            staffService.update(staff);
+            staffService.update(this.staff);
         } catch (StaffException e) {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }  catch (Exception e) {
+            throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
         }
 
-        logger.info("Updated {}", staff.getName());
+        logger.info("Updated  {}", this.staff);
 
         return this.staff;
     }
 
     /**
-     * <h2>删除一个地点</h2>
+     * <h2>删除一个员工</h2>
      *
      * DELETE /api/staffs/{no}
      *
-     * @return 被删除的地点
+     * @return 被删除的员工
      */
-    @RequestMapping(value = "/{no}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "{no}", method = RequestMethod.DELETE)
     public Staff destroy(){
 
-        if (staff == null) {
-            throw new WebClientSideException(HttpStatus.BAD_REQUEST, "The staff no must be specified");
-        }
+        logger.warn("Deleting {}", staff);
 
         try {
             staffService.destroy(staff);
         } catch (StaffException e) {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }  catch (Exception e) {
+            throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
         }
+
+        logger.warn("Deleted  {}", staff);
+
         return staff;
     }
 
     @BeforeFilter({"show", "update", "destroy"})
     public void initStaff(@PathVariable("no") String no){
-
         this.staff = staffService.findByNo(no);//find it by no
     }
+
 }

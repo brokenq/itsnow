@@ -31,7 +31,7 @@ public interface RoleRepository {
             " WHERE id    = #{id} ")
     public void update(Role role);
 
-    public Long count(@Param("keyword") String keyword);
+    public int count(@Param("keyword") String keyword);
 
     /**
      * 查询所有角色及其相关的用户信息

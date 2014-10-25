@@ -20,8 +20,8 @@ SET @SC101 = (SELECT id FROM public_service_catalogs where sn = 'SC_101');
 
 INSERT public_service_catalogs(parent_id, sn, level,title, description, icon)
 VALUES
-  (@SC101, 'SC_1011', 3,'D1', 'D1', '/assets/sc/desktop.png'),
-  (@SC101, 'SC_1012', 3,'D2', 'D2', '/assets/sc/printer.png');
+  (@SC101, 'SC_1011', 3,'D1', 'D1', '/assets/sc/mobile.png'),
+  (@SC101, 'SC_1012', 3,'D2', 'D2', '/assets/sc/mobile.png');
 
 -- //@UNDO
 -- SQL to undo the change goes here.

@@ -1,15 +1,12 @@
 package itsnow.dnt.support;
 
-import dnt.itsnow.model.ProcessDictionary;
+import dnt.itsnow.model.Dictionary;
 import dnt.itsnow.model.Department;
 import dnt.itsnow.model.Site;
 import dnt.itsnow.model.WorkTime;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.service.DepartmentService;
 import itsnow.dnt.config.DepartmentManagerConfig;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +14,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,13 +30,13 @@ public class DepartmentManagerTest {
 
     @Test
     public void testFindAllByTree() throws Exception {
-        List<Department> departments = service.findAll(true);
+        List<Department> departments = service.findAll("", true);
         Assert.assertNotNull(departments);
     }
 
     @Test
     public void testFindAllByNoTree() throws Exception {
-        List<Department> departments = service.findAll(false);
+        List<Department> departments = service.findAll("", false);
         Assert.assertNotNull(departments);
     }
 
@@ -63,9 +59,9 @@ public class DepartmentManagerTest {
         Site site = new Site();
         site.setSn("10000");
         site.setName("大众五厂");
-        ProcessDictionary dictionary = new ProcessDictionary();
+        Dictionary dictionary = new Dictionary();
         dictionary.setId(1L);
-        site.setProcessDictionary(dictionary);
+        site.setDictionary(dictionary);
         WorkTime workTime = new WorkTime();
         workTime.setId(1L);
         site.setWorkTime(workTime);
@@ -82,7 +78,7 @@ public class DepartmentManagerTest {
 
     @Test
     public void testDestroy() throws Exception {
-        String sn = "003";
+        String sn = "009";
         Department department = service.findBySn(sn);
         Assert.assertNotNull(service.findBySn(sn));
         service.destroy(department);
@@ -98,9 +94,9 @@ public class DepartmentManagerTest {
         Site site = new Site();
         site.setSn("10000");
         site.setName("大众五厂");
-        ProcessDictionary dictionary = new ProcessDictionary();
+        Dictionary dictionary = new Dictionary();
         dictionary.setId(1L);
-        site.setProcessDictionary(dictionary);
+        site.setDictionary(dictionary);
         WorkTime workTime = new WorkTime();
         workTime.setId(1L);
         site.setWorkTime(workTime);

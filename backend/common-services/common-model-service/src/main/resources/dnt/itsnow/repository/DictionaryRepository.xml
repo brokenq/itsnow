@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dnt.itsnow.repository.DictionaryRepository">
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT COUNT(0) FROM dictionaries
+        <where>
+            <if test="keyword != null and keyword != ''">
+                <bind name="pattern" value="'%' + keyword + '%' "/>
+                name LIKE #{pattern}
+            </if>
+        </where>
+    </select>
+
+    <sql id="select">
+        SELECT * FROM dictionaries
+    </sql>
+
+    <select id="findAll" resultType="Dictionary">
+        <include refid="select"></include>
+        <where>
+            <if test="keyword != null and keyword != ''">
+                <bind name="pattern" value="'%' + keyword + '%' "/>
+                name LIKE #{pattern}
+            </if>
+        </where>
+        <if test="pageable.sort != null">
+            ORDER BY #{pageable.sort}
+        </if>
+        <trim prefix="LIMIT" prefixOverrides=",">
+            <if test="pageable.offset > 0">#{pageable.offset}</if>
+            <if test="pageable.pageSize > 0">, #{pageable.pageSize}</if>
+        </trim>
+    </select>
+
+</mapper>

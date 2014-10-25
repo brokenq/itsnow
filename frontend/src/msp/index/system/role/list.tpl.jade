@@ -3,7 +3,7 @@ mixin tool_button(action, icon, text, weight, rejectCss, requireCss)
         span.glyphicon(class="glyphicon-#{icon}")
         | #{text}
 mixin td(title, name)
-    td(style="text-align: center" data-title=title) #{name}
+    td(data-title=title) #{name}
 mixin nav_link(value, icon, text)
     a(ng-switch-when="#{value}", ng-click="params.page(page.number)", href="")
         span.glyphicon(class="glyphicon-#{icon}")

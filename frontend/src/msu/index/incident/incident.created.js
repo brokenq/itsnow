@@ -62,7 +62,7 @@ angular.module('MsuIndex.IncidentCreated', ['ngTable', 'ngResource'])
                     });
                 }
             };
-            $scope.tableParams = new ngTableParams(angular.extend(options, $location.search()), args);
+            $scope.tableParams = new NgTableParams(angular.extend(options, $location.search()), args);
             $scope.checkboxes = {
                 'checked': false,
                 items: {}

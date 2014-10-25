@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS workflows
    created_at                TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
    updated_at                TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP
 --    FOREIGN KEY (act_re_procdef_id) REFERENCES act_re_procdef (id_),
---    FOREIGN KEY (process_dictionary_id) REFERENCES process_dictionaries (id)
+--    FOREIGN KEY (process_dictionary_id) REFERENCES dictionaries (id)
 );
 
 -- //@UNDO

@@ -24,11 +24,12 @@
         </collection>
     </resultMap>
 
-    <select id="count" resultType="java.lang.Long">
+    <select id="count" resultType="java.lang.Integer">
         SELECT COUNT(0) FROM roles
         <where>
             <if test="keyword != null and keyword != ''">
-                name LIKE #{keyword}
+                <bind name="pattern" value="'%' + keyword + '%' "/>
+                name LIKE #{pattern}
             </if>
         </where>
     </select>
@@ -66,7 +67,8 @@
         <include refid="select"></include>
         <where>
             <if test="keyword != null and keyword != ''">
-                r.name LIKE #{keyword}
+                <bind name="pattern" value="'%' + keyword + '%' "/>
+                r.name LIKE #{pattern}
             </if>
         </where>
         <if test="pageable.sort != null">

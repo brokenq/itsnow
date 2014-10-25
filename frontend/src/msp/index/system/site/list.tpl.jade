@@ -3,7 +3,7 @@ mixin tool_button(action, icon, text, weight, rejectCss, requireCss)
         span.glyphicon(class="glyphicon-#{icon}")
         | #{text}
 mixin td(title, name)
-    td(style="text-align: center" data-title=title) #{name}
+    td(data-title=title) #{name}
 mixin nav_link(value, icon, text)
   a(ng-switch-when=value, ng-click="params.page(page.number)", href="")
     span.glyphicon(class="glyphicon-#{icon}")
@@ -41,7 +41,7 @@ mixin select_all()
       +td("'地点名称'", "{{site.name}}")
       +td("'地址'", "{{site.address}}")
       +td("'描述'", "{{site.description}}")
-      +td("'区域'", "{{site.processDictionary.display}}")
+      +td("'区域'", "{{site.dictionary.display}}")
       +td("'工作时间'", "{{ site.workTime.startAt}} - {{ site.workTime.endAt}}")
 
 script(type="text/ng-template")#ngTableCheckboxHeader

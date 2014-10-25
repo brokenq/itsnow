@@ -10,11 +10,18 @@ angular.module('System.WorkTime', ['ngTable', 'ngResource'])
     })
 
     .factory('WorkTimeService', ['$resource', function ($resource) {
-        return $resource("/api/work-times");
+        return $resource(" /api/work-times/:sn",{},{
+            get: { method: 'GET', params: {sn: '@sn'}},
+            save: { method: 'POST'},
+            update: { method: 'PUT', params: {sn: '@sn'}},
+            query: { method: 'GET', isArray: true},
+            remove: { method: 'DELETE', params: {sn: '@sn'}}
+           // list: { method: 'GET', params: {sn: 'code',code:'@code'}, isArray: true}
+        });
     }
     ])
 
-    .controller('WorkTimeListCtrl', ['$scope', '$location', '$timeout', 'ngTableParams', 'WorkTimeService', function ($scope, $location, $timeout, NgTableParams, workTimeService) {
+    .controller('WorkTimeListCtrl', ['$scope', '$location', '$timeout', 'ngTableParams', 'WorkTimeService', 'ActionService',function ($scope, $location, $timeout, NgTableParams, workTimeService,ActionService) {
         var options = {
             page: 1,           // show first page
             count: 10           // count per page
@@ -27,7 +34,7 @@ angular.module('System.WorkTime', ['ngTable', 'ngResource'])
                 workTimeService.query(params.url(), function (data, headers) {
                         $timeout(function () {
                                 params.total(headers('total'));
-                                $defer.resolve($scope.workTime = data);
+                                $defer.resolve($scope.workTimes = data);
                             },
                             500
                         );
@@ -37,10 +44,24 @@ angular.module('System.WorkTime', ['ngTable', 'ngResource'])
         };
         $scope.tableParams = new NgTableParams(angular.extend(options, $location.search()), args);
         $scope.checkboxes = { 'checked': false, items: {} };
-
+        $scope.getWorkTimeBySn  = function(sn){
+            for(var i in $scope.workTimes){
+                var worktime = $scope.workTimes[i];
+                if(worktime.sn===sn){
+                    $scope.worktime = worktime;
+                    return worktime;
+                }
+            }
+        };
+        $scope.actionService = new ActionService({watch: $scope.checkboxes.items, mapping: $scope.getWorkTimeBySn});
         // watch for check all checkbox
+        $scope.deleteWorkTime = function (worktime) {
+            workTimeService.remove({sn: worktime.sn},function(){
+                $scope.tableParams.reload();
+            });
+        };
         $scope.$watch('checkboxes.checked', function (value) {
-            angular.forEach($scope.workTime, function (item) {
+            angular.forEach($scope.workTimes, function (item) {
                 if (angular.isDefined(item.sn)) {
                     $scope.checkboxes.items[item.sn] = value;
 
@@ -50,13 +71,13 @@ angular.module('System.WorkTime', ['ngTable', 'ngResource'])
 
         // watch for data checkboxes
         $scope.$watch('checkboxes.items', function (values) {
-                if (!$scope.workTime) {
+                if (!$scope.workTimes) {
                     return;
                 }
                 var checked = 0;
                 var unchecked = 0;
-                var total = $scope.workTime.length;
-                angular.forEach($scope.workTime, function (item) {
+                var total = $scope.workTimes.length;
+                angular.forEach($scope.workTimes, function (item) {
                     checked += ($scope.checkboxes.items[item.sn]) || 0;
                     unchecked += (!$scope.checkboxes.items[item.sn]) || 0;
                 });

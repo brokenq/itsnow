@@ -5,6 +5,7 @@ package dnt.itsnow.it;
 
 import dnt.itsnow.model.ClientUser;
 import junit.framework.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 public class ProfileTest extends AbstractTest{
 
     // 测试用户读取自身profile的url
+    @Ignore
     @Test
     public void testGetProfile() throws Exception {
         ClientUser user = withLoginUser(new Callback<ClientUser>() {

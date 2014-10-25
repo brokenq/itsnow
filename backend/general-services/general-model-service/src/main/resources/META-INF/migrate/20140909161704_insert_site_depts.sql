@@ -1,4 +1,4 @@
--- // insert_process_dictionaries
+-- // insert_dictionaries
 -- Migration SQL that makes the change goes here.
 
 SET @SITEID1 = (SELECT id from sites where sn = '001');
