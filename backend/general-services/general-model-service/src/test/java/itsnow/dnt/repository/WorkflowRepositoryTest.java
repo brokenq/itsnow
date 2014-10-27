@@ -86,12 +86,12 @@ public class WorkflowRepositoryTest {
 
     @Test
     public void testCountByKeyword() throws Exception {
-        Assert.assertNotNull(repository.count(Workflow.PRIVATE_SERVICE_ITEM, "%工作%"));
+        Assert.assertNotNull(repository.count(Workflow.PRIVATE_SERVICE_ITEM, "工作"));
     }
 
     @Test
     public void testFindByKeyword() throws Exception {
-        Assert.assertNotNull(repository.find(Workflow.PRIVATE_SERVICE_ITEM, "%工作%", pageRequest));
+        Assert.assertNotNull(repository.find(Workflow.PRIVATE_SERVICE_ITEM, "工作", pageRequest));
     }
 
     @Test

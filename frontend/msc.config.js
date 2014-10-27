@@ -131,7 +131,7 @@ module.exports = {
       '../vendor/bootstrap/dist/css/bootstrap-theme.css.map',
       '../vendor/ace-bootstrap/fonts/font1.woff',
       '../vendor/ace-bootstrap/fonts/font2.woff',
-      '../vendor/ace-bootstrap/images/*.png',
+      '../vendor/ace-bootstrap/images/*.*',
       '../vendor/ace-bootstrap/avatars/*.*',
       '../vendor/ace-bootstrap/images/gallery/*.jpg'
 //    '../vendor/fuelux/dist/fonts/fuelux.*'

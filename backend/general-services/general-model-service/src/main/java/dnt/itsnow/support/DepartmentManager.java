@@ -2,22 +2,16 @@ package dnt.itsnow.support;
 
 import dnt.itsnow.exception.DepartmentException;
 import dnt.itsnow.model.Department;
-import dnt.itsnow.model.MenuItem;
 import dnt.itsnow.model.Site;
 import dnt.itsnow.model.SiteDept;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.service.Pageable;
-import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.repository.DepartmentRepository;
 import dnt.itsnow.repository.SiteDeptRepository;
 import dnt.itsnow.repository.SiteRepository;
 import dnt.itsnow.service.DepartmentService;
 import dnt.spring.Bean;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.*;
 
 /**
@@ -73,6 +67,18 @@ public class DepartmentManager extends Bean implements DepartmentService {
         logger.debug("Found   {}", departments);
 
         return departments;
+    }
+
+    @Override
+    public Department findByName(String name) {
+
+        logger.debug("Finding Department by name: {}", name);
+
+        Department department = departmentRepository.findByName(name);
+
+        logger.debug("Found   {}", department);
+
+        return department;
     }
 
     @Override
@@ -180,7 +186,7 @@ public class DepartmentManager extends Bean implements DepartmentService {
      * 以tree table形式生成部门列表
      *
      * @param departments 树结构的部门列表
-     * @return
+     * @return 以treeTable形式展示的部门列表
      */
     private List<Department> buildTreeTable(List<Department> departments) {
         List<Department> treeTable = new LinkedList<Department>();

@@ -12,7 +12,7 @@ angular.module('System.Department', ['ngTable', 'ngResource'])
     .factory('DeptService', ['$resource', function ($resource) {
         return $resource("/api/departments/:sn/:id", {}, {
             get: { method: 'GET', params: {sn: '@sn'}},
-            checkChild: { method: 'GET', params: {sn: 'check_child',id: '@id'}},
+            checkChild: { method: 'GET', params: {sn: 'check_child', id: '@id'}, isArray: true},
             save: { method: 'POST'},
             update: { method: 'PUT', params: {sn: '@sn'}},
             query: {method: 'GET', params: {isTree: '@isTree', keyword: '@keyword'}, isArray: true},
@@ -49,7 +49,7 @@ angular.module('System.Department', ['ngTable', 'ngResource'])
                 total: 0,            // value less than count hide pagination
                 getData: function ($defer, params) {
                     $location.search(params.url()); // put params in url
-                    deptService.query({isTree:true}, function (data, headers) {
+                    deptService.query({isTree: true}, function (data, headers) {
                             params.total(headers('total'));
                             $defer.resolve($scope.departments = data);
                         }
@@ -80,31 +80,24 @@ angular.module('System.Department', ['ngTable', 'ngResource'])
             });
 
             $scope.remove = function (dept) {
-                deptService.checkChild({id: dept.id},function(data){
+                deptService.checkChild({id: dept.id}, function (data) {
                     console.log(data);
-                    if(data===true){
-                        if(window.confirm('你所选择的部门，下属有子部门，确定删除吗？')){
-                            deptService.remove({sn: dept.sn}, function () {
-                                delete $scope.checkboxes.items[dept.sn];
-                                $scope.tableParams.reload();
-                            });
-                        }else{
-                            return false;
-                        }
-                    }else{
+                    if (data.length!==0) {
+                        alert("你所选择的部门，下属有子部门，不能进行删除操作！");
+                        return false;
+                    } else {
                         deptService.remove({sn: dept.sn}, function () {
                             delete $scope.checkboxes.items[dept.sn];
                             $scope.tableParams.reload();
                         });
                     }
                 });
-
             };
 
-            $scope.search = function($event){
-                if($event.keyCode===13){
-                    var promise = deptService.query({isTree:false,keyword:$event.currentTarget.value}).$promise;
-                    promise.then(function(data){
+            $scope.search = function ($event) {
+                if ($event.keyCode === 13) {
+                    var promise = deptService.query({isTree: false, keyword: $event.currentTarget.value}).$promise;
+                    promise.then(function (data) {
                         $scope.departments = data;
                     });
                 }
