@@ -155,8 +155,9 @@ public class ItsnowProcessManagerTest {
 
     @Test
     public void testFollow() throws Exception {
-        process.setStatus(ProcessStatus.Running);
+        process.setStatus(ProcessStatus.Stopping);
         String jobId = "stop-process-job-id";
+        process.setProperty(ItsnowProcessManager.STOP_INVOCATION_ID, jobId);
         final List<String> messages = new LinkedList<String>();
         final String[] lines = {"one", "two"};
         expect(systemInvokeService.read(jobId, 0, messages)).andAnswer(new IAnswer<Long>() {
