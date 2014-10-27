@@ -262,3 +262,37 @@ git@happyonroad.net:insight/itsnow.git Rel-x.y.z 标签(tag)
 -----------
 
 1. [msc-0.2.0](http://msc.itsnow.com/login.html)
+0.2.1 发布说明
+=================
+
+1. 新增特性
+-----------
+
+1.  Frontend 新增主机资源产品化
+2.  Frontend 查看主机产品化
+3.  Frontend MSP/MSU列表界面产品化
+4.  Frontend Schema列表展示
+5.  Frontend 注册界面前端产特性品化,前后端的校验
+6.  Backend 维护主机进程和服务状态
+7.  Backend 用户会话功能
+8.  Backend 一键批准并开通MSU/MSP
+9.  Backend 手工新增和删除Schema
+10. Backend 工作时间和数据字典增删改查
+11. Backend 新增公共服务目录
+12. Backend 批准/拒绝新注册的MSU/MSP
+
+2. 问题修复
+-----------
+
+
+3. 交付物地址
+--------------
+
+1. [msc-0.2.1](http://ci.itsnow.com/repository/download/Itsnow_Sprint_Build_MSC/3832:id/msc-0.2.1.zip)
+2. [msp-0.2.1](http://ci.itsnow.com/repository/download/Itsnow_SprintBuild_MSP/3833:id/msp-0.2.1.zip)
+3. [msu-0.2.1](http://ci.itsnow.com/repository/download/Itsnow_SprintBuild_MSU/3834:id/msu-0.2.1.zip)
+
+4. 系统演示地址
+-----------
+
+1. [msc-0.2.1](http://msc.itsnow.com/login.html)
