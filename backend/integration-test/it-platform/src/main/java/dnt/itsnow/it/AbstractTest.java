@@ -38,10 +38,16 @@ public abstract class AbstractTest implements RestOperations {
 
     protected void configure(Configuration configuration) {
         configuration
-                .host(System.getProperty("it.host", "localhost"))
-                .port(Integer.valueOf(System.getProperty("it.port", "8071")))
-                .username("admin")
-                .password("secret");
+                .host(getValue("it.host", "localhost"))
+                .port(Integer.valueOf(getValue("it.port", "8071")))
+                .username(getValue("it.user", "admin"))
+                .password(getValue("it.password", "secret"));
+    }
+
+    protected String getValue(String name, String defaultValue){
+        String property = System.getProperty(name, System.getenv(defaultValue));
+        if( property == null ) return defaultValue;
+        return property;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
