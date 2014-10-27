@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * <h1>数据字典业务实现类</h1>
@@ -50,6 +51,7 @@ public class DictionaryManager extends Bean implements DictionaryService {
         if (dictionary == null) {
             throw new DictionaryException("Dictionary entry can not be empty");
         }
+        dictionary.setSn(UUID.randomUUID().toString().substring(0,8));
         dictionary.creating();
         repository.create(dictionary);
 
