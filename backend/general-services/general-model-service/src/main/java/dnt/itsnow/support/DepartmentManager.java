@@ -91,6 +91,7 @@ public class DepartmentManager extends Bean implements DepartmentService {
         }
 
         department.setSn(UUID.randomUUID().toString());
+        department.setPosition(0L);
         department.creating();
         departmentRepository.create(department);
 
