@@ -303,7 +303,8 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
         props.setProperty("type", process.getAccount().getType());
         props.setProperty("host", process.getHostAddress());
         props.setProperty("port", process.getProperty("http.port"));
-        props.setProperty("domain", process.getAccount().getDomain());
+        props.setProperty("subdomain", process.getAccount().getDomain());
+        props.setProperty("domain", System.getProperty("app.domain", "itsnow.com"));
         return createProperties(props, "nginx.vars");
     }
 

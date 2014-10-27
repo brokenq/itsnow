@@ -54,7 +54,17 @@ public class SystemInvokeManager extends Bean implements SystemInvokeService, In
 
     @Override
     public String addJob(final SystemInvocation invocation) {
-        invocation.setId(UUID.randomUUID().toString());
+        String originId = invocation.getId();
+        if( originId == null ) {
+            invocation.setId(UUID.randomUUID().toString());
+        } else if( futures.containsKey(originId)){
+            int i = 1;
+            String newId = originId + "@" + i;
+            while(futures.containsKey(newId)){
+                newId = originId + "@" + ++i;
+            }
+            invocation.setId(newId);
+        }
         InvocationExecutor executor = createExecutor(invocation);
         executors.put(invocation.getId(), executor);
         Future<Integer> future = systemInvokeExecutor.submit(executor);
@@ -63,7 +73,7 @@ public class SystemInvokeManager extends Bean implements SystemInvokeService, In
         InvocationKiller killer = createKiller(executor, future);
         long timeout = invocation.totalTimeout();
         OnceTrigger trigger = new OnceTrigger(System.currentTimeMillis() + timeout);
-        logger.debug("Schedule invocation killer after: {} ms", timeout);
+        logger.debug("Schedule invocation killer for {} after: {} ms", invocation.getId(), timeout);
         cleanScheduler.schedule(killer, trigger);
 
         broadcast(new ListenerNotifier() {

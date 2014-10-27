@@ -86,6 +86,7 @@ public class ItsnowStatusMaintainer extends ItsnowResourceManager {
         logger.debug("Checking status of {}({})", host, host.getStatus());
 
         SystemInvocation invocation = translator.check(host);
+        invocation.setId("check-host-status-" + host.getAddress());
         String id = invokeService.addJob(invocation);
         int code = -1;
         try {
@@ -124,6 +125,7 @@ public class ItsnowStatusMaintainer extends ItsnowResourceManager {
     protected void checkProcessStatus(ItsnowProcess process) {
         logger.debug("Checking status of {}({})", process, process.getStatus());
         SystemInvocation invocation = translator.check(process);
+        invocation.setId("check-process-status-" + process.getName());
         String id = invokeService.addJob(invocation);
         int code = -1;
         try {

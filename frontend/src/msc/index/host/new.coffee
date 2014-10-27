@@ -17,8 +17,8 @@ angular.module('MscIndex.HostNew', ['ngResource'])
         configuration:
           user: "root"
           password: "secret"
-          msu_version: window.VERSION
-          msp_version: window.VERSION
+          msu_version: window.system.version
+          msp_version: window.system.version
 
       $scope.types = ["DB", "APP", "COM"]
       $scope.createHost = ->
