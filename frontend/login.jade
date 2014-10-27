@@ -28,3 +28,7 @@ html(lang="zh-CN", ng-app="Itsnow.#{sysName}Login")
               .space-6
               .position-relative
                 div(ui-view="login")
+    .feedback.alert.alert-block#feedback(ng-class="feedback.klass")
+      button.close(type="button")
+        i.icon-remove
+      span#feedback_content {{feedback.message}}
