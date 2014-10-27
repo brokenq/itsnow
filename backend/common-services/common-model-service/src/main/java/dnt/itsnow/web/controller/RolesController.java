@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -159,6 +160,16 @@ public class RolesController extends SessionSupportController<Role> {
         logger.info("Listed  {}", users);
 
         return users;
+    }
+
+    @RequestMapping(value = "check/{name}", method = RequestMethod.GET)
+    public HashMap checkUnique(@PathVariable("name") String name){
+        Role role = service.findByName(name);
+        if( role != null ){
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate role name: " + role.getName());
+        }else{
+            return new HashMap();
+        }
     }
 
     @BeforeFilter({"update", "destroy"})

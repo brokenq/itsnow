@@ -46,6 +46,10 @@ html(ng-app="Itsnow.#{sysName}Index")
             i.icon-leaf
             | ItsNow ITIL Platform
 
+        .navbar-header.pull-left#loading(style="display:none;")
+            a.navbar-brand(href="javascript:void(0)")
+                img(src="assets/loading3.gif")
+
         .navbar-header.pull-right(role="navigation")
           ul.nav.ace-nav
             include index/parts/tasks

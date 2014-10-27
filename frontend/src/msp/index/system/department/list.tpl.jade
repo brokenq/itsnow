@@ -14,8 +14,8 @@ mixin select_all()
     .btn-group
         +tool_button("", "refresh", "", "*", "", "")
     .btn-group
-        +tool_button("actionService.gotoState('dept_form', $event)", "new", "新建", "*", "", "")
-        +tool_button("actionService.gotoState('dept_form', $event)", "edit", "编辑", "1", "", "")
+        +tool_button("actionService.gotoState('dept_new_form', $event)", "new", "新建", "*", "", "")
+        +tool_button("actionService.gotoState('dept_edit_form', $event)", "edit", "编辑", "1", "", "")
         +tool_button("actionService.perform(remove, $event)", "remove", "删除", "1+", "", "")
     .btn-group.pull-right
       .nav-search#nav-search
@@ -29,8 +29,8 @@ mixin select_all()
       td(width="30" style="text-align: left" header="'ngTableCheckboxHeader'")
         input(type="checkbox" ng-model="checkboxes.items[dept.sn]")
       +td("'部门名称'", "{{dept.name}}")
-      +td("'描述'", "{{dept.description}}")
       +td("'地点'", "{{dept.sites | siteFilter}}")
+      +td("'描述'", "{{dept.description}}")
 
 script(type="text/ng-template")#ngTableCheckboxHeader
   +select_all()

@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.*;
 import java.util.List;
 
 /**
- * <h1>地点类持久层</h1>
+ * <h1>流程管理持久层</h1>
  */
 public interface WorkflowRepository {
 

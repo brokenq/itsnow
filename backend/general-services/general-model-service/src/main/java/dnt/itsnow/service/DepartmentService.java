@@ -57,4 +57,10 @@ public interface DepartmentService {
      */
     public List<Department> findAllByParentId(long id);
 
+    /**
+     * <h2>根据部门名称查询</h2>
+     * @param name 部门名称
+     * @return 所查询的部门
+     */
+    Department findByName(String name);
 }

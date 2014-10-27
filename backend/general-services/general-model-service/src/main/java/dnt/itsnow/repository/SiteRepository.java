@@ -39,4 +39,6 @@ public interface SiteRepository {
 
     public Site findBySn(@Param("sn") String sn);
 
+    @Select("SELECT * FROM sites WHERE name = #{name}")
+    Site findByName(String name);
 }

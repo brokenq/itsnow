@@ -112,7 +112,7 @@ public class MspWorkflowsController extends SessionSupportController<Workflow> {
     @RequestMapping(value = "{sn}", method = RequestMethod.PUT)
     public Workflow update(@Valid @RequestBody Workflow workflow) {
 
-        logger.info("Updateing {}", workflow);
+        logger.info("Updating {}", workflow);
 
         this.workflow.apply(workflow);
         try {
@@ -123,7 +123,7 @@ public class MspWorkflowsController extends SessionSupportController<Workflow> {
             throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
         }
 
-        logger.info("Updated   {}", this.workflow);
+        logger.info("Updated  {}", this.workflow);
 
         return this.workflow;
     }
@@ -136,7 +136,7 @@ public class MspWorkflowsController extends SessionSupportController<Workflow> {
     @RequestMapping(value = "{sn}", method = RequestMethod.DELETE)
     public void destroy() {
 
-        logger.warn("Destroying workflows {}", workflow);
+        logger.warn("Deleting {}", workflow);
 
         try {
             service.destroy(workflow);
@@ -146,7 +146,7 @@ public class MspWorkflowsController extends SessionSupportController<Workflow> {
             throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
         }
 
-        logger.warn("Destroyed workflows {}", workflow);
+        logger.warn("Deleted  {}", workflow);
 
     }
 
