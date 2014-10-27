@@ -37,4 +37,6 @@ public interface DepartmentRepository {
 
     public Department findBySn(@Param("sn") String sn);
 
+    @Select("select * from departments where name = #{name}")
+    Department findByName(String name);
 }

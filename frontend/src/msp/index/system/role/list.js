@@ -41,7 +41,7 @@ angular.module('System.Role', ['ngTable', 'ngResource', 'dnt.action.service'])
 
             var options = {
                 page: 1,           // show first page
-                count: 10           // count per page
+                count: 5           // count per page
             };
             var args = {
                 total: 0,
@@ -84,6 +84,7 @@ angular.module('System.Role', ['ngTable', 'ngResource', 'dnt.action.service'])
 
             $scope.deleteRole = function (role) {
                 roleService.remove({name: role.name},function(){
+                    delete $scope.selection.items[role.name];
                     $scope.tableParams.reload();
                 });
             };
