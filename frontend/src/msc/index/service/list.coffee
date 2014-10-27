@@ -1,5 +1,5 @@
   # List catalogs
-  angular.module('MscIndex.ServiceCatalog', ['ngTable','ngResource','MscIndex.ServiceCatalog.Detail', 'dnt.action.service'])
+  angular.module('MscIndex.ServiceCatalog', ['ngTable','ngResource','MscIndex.ServiceCatalog.Detail','MscIndex.ServiceCatalog.Item', 'dnt.action.service'])
     .config ($stateProvider)->
       $stateProvider.state 'services',
         url: '/services',
@@ -52,8 +52,10 @@
           feedback response.statusText
         serviceCatalogService.remove({sn: catalog.sn}, success, failure)
 
-      $scope.create = (catalog)->
+      $scope.create_catalog = (catalog)->
         $state.go('services.catalog.detail',{'sn':catalog.sn,'action':'create'});
+      $scope.create_item = (catalog)->
+        $state.go('services.catalog.item',{'sn':catalog.sn,'action':'create'});
 
       $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.getCatalogBySn})
 
@@ -61,8 +63,8 @@
       $scope.$watch 'selection.checked', (value)->
         angular.forEach $scope.catalogs, (item)->
           $scope.selection.items[item.sn] = value if angular.isDefined(item.sn)
-          angular.forEach item,(child)->
-            $scope.selection.items[child.id] = value if angular.isDefined(child.id)
+          angular.forEach item.items,(child)->
+            $scope.selection.items[child.sn] = value if angular.isDefined(child.sn)
       # watch for data checkboxes
       $scope.$watch('selection.items', (values) ->
         return if !$scope.catalogs
@@ -72,6 +74,10 @@
         angular.forEach $scope.catalogs, (item)->
           checked   +=  ($scope.selection.items[item.sn]) || 0
           unchecked += (!$scope.selection.items[item.sn]) || 0
+          total += item.items.length;
+          angular.forEach item.items,(child)->
+            checked   +=  ($scope.selection.items[child.sn]) || 0
+            unchecked += (!$scope.selection.items[child.sn]) || 0
         $scope.selection.checked = (checked == total) if (unchecked == 0) || (checked == 0)
         # grayed checkbox
         angular.element(document.getElementById("select_all")).prop("indeterminate", (checked != 0 && unchecked != 0));

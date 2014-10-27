@@ -37,7 +37,7 @@ public class PublicServiceItemManager extends CommonServiceItemManager implement
     @Override
     public void delete(PublicServiceItem publicServiceItem) {
         setCommonServiceItemList(null);
-        publicServiceItemRepository.delete(publicServiceItem.getId());
+        publicServiceItemRepository.delete(publicServiceItem.getSn());
     }
 
     @Override

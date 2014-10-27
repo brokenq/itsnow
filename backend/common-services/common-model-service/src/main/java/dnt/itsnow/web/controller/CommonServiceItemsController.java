@@ -54,8 +54,8 @@ public class CommonServiceItemsController extends SessionSupportController<Publi
      * @return 服务项目
      */
     @RequestMapping("/{id}")
-    public PublicServiceItem show(@PathVariable("id") Long id){
-        return commonServiceItemService.findById(id);
+    public PublicServiceItem show(@PathVariable("id") String sn){
+        return commonServiceItemService.findBySn(sn);
     }
 
 

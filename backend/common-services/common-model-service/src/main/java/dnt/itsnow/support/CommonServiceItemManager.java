@@ -40,8 +40,8 @@ public class CommonServiceItemManager extends Bean implements CommonServiceItemS
     }
 
     @Override
-    public PublicServiceItem findById(Long id) {
-        return commonServiceItemRepository.findById(id);
+    public PublicServiceItem findBySn(String sn) {
+        return commonServiceItemRepository.findBySn(sn);
     }
 
     @Override
