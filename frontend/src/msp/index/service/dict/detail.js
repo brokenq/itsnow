@@ -30,7 +30,7 @@ angular.module('Service.Dictnew', ['ngTable', 'ngResource'])
                 $scope.dict=data;
             });
             $scope.changeDict=function(){
-                $scope.dict.state=$scope.dict.selectstate.value;
+                $scope.dict.state=$scope.selectstate.value;
                 $scope.dict.$promise = undefined;
                 $scope.dict.$resolved = undefined;
                 DictService.update({sn:sn}, $scope.dict, function () {
