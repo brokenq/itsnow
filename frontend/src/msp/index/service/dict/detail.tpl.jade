@@ -1,11 +1,11 @@
 //   New dict
 doctype html
-mixin form_field(name, label, icon, tip, pattern, maxLength)
+mixin form_field(name, label, icon, tip, pattern, maxLength,ngblur)
   .form-group
     label.col-xs-12.col-sm-3.control-label.no-padding-right(for="dict_#{name}") #{label}
     .col-xs-12.col-sm-5
       span.block.input-icon.input-icon-right
-        input.form-control(id="dict_#{name}", name="dict.#{name}", ng-model="dict.#{name}",  ng-maxlength="#{maxLength}", type="text", placeholder="#{label}", ng-pattern="#{pattern}",required)
+        input.form-control(id="dict_#{name}", name="dict.#{name}", ng-model="dict.#{name}", ng-blur="#{ngblur}", ng-maxlength="#{maxLength}", type="text", placeholder="#{label}", ng-pattern="#{pattern}",required)
         i(class="icon-#{icon}")
     .help-block.col-xs-12.col-sm-reset.inline #{tip}
 mixin selector(name, label, datas, tip)
@@ -18,10 +18,10 @@ mixin selector(name, label, datas, tip)
 
 .row(ng-controller="DictNewCtrl")
   form.form-horizontal(name="newDictForm", novalidate,role="form")
-    +form_field("code", "字典代码", "star", "", "", "20")
-    +form_field("name", "字典名称", "star", "", "", "20")
-    +form_field("display", "显示名", "star", "", "", "20")
-    +form_field("val", "值", "star", "", "", "20")
+    +form_field("code", "字典代码", "star", "请输入数字字母组合的字符串", "/^([a-z][A-Z][0-9])+$/", "20","autoComCode()")
+    +form_field("name", "字典名称", "star", "请输入中文字符", "/^[\u4e00-\u9fa5],{0,}+$/", "20","")
+    +form_field("display", "显示名", "star", "", "", "20","autoValidate()")
+    +form_field("val", "值", "star", "请输入数字", "^[0-9]*$", "20","")
     +selector("state", "状态","datas", "")
     .row-fluid.actions
       .col-xs-12.col-sm-3

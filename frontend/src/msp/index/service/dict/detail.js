@@ -15,21 +15,11 @@ angular.module('Service.Dictnew', ['ngTable', 'ngResource'])
     })
     .controller('DictNewCtrl', ['$http','$rootScope','$scope', '$location', '$timeout', '$state','$stateParams', 'DictService',
         function ($http,$rootScope,$scope, $location, $timeout, $state,$stateParams, DictService) {
-
         var sn=$stateParams.sn;
         $scope.datas=[
             {name: '有效',id:'1',state:'1'},
             {name: '无效',id:'2',state:'2'}
          ];
-       // $scope.autoComplete=function(){
-           // r=$rootScope.dict.code;
-          // alert($scope.dict.code);
-          //  $http({method:'GET',url:'/api/process-dictionaries/code/'+r}).success(function(data,status,headers,config){
-                //$scope.dicts=data;
-           // }).error(function(data,status,headers,config){});
-           // alert("失去焦点！");
-
-        //};
         if (sn !== null && sn !== "" && sn !== undefined) {
             DictService.get({sn:sn},function(data){
                 $scope.dict=data;
@@ -44,7 +34,40 @@ angular.module('Service.Dictnew', ['ngTable', 'ngResource'])
                 });
             };
          }else{
-          //  $rootScope.dict.state='1';
+            var dictdates={};
+            DictService.query(function(dicts){
+                dictdates=dicts;
+
+            });
+            $scope.autoComCode=function(){
+                for(var i= 0;i<dictdates.length;i++){
+
+                    if($scope.dict.code===dictdates[i].code){
+                        $scope.dict.name=dictdates[i].name;
+                        break;
+                    }
+                }
+             $scope.autoValidate=function(){
+               for(var i=0;i<dictdates.length;i++){
+                   if($scope.dict.code===dictdates[i].code){
+                       if($scope.dict.display===dictdates[i].display){
+                           $scope.dict.display="";
+                           alert("显示名已存在！！请重新输入");
+                       }
+                   }
+               }
+             };
+              //  angular.forEach(dictdates,function(dictdata){
+                 //alert(code);
+
+                //    if($scope.dict.code===dictdata.code){
+                  //      $scope.dict.name=dictdata.name;
+
+                    //}
+               // });
+            };
+
+
             $scope.changeDict=function(){
                 $scope.dict.$promise = undefined;
                 $scope.dict.$resolved = undefined;
