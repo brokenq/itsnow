@@ -17,13 +17,16 @@
     .factory('ServiceCatalogService', ['$resource', ($resource) ->
       $resource("/admin/api/public_service_catalogs/:sn",{sn:'@sn'})
     ])
+    .factory('ServiceItemService', ['$resource', ($resource) ->
+      $resource('/admin/api/public_service_catalogs/:sn/items/:isn',{sn:'@sn',isn:'@isn'})
+    ])
 
   .filter('formatTime', ->
     (time) ->
       date = new Date(time)
       return date.toLocaleString()
   )
-    .controller 'CatalogListCtrl',['$scope', '$location', '$timeout', '$state','ngTableParams', 'ServiceCatalogService', 'ActionService',($scope, $location, $timeout, $state, ngTableParams, serviceCatalogService,ActionService)->
+    .controller 'CatalogListCtrl',['$scope', '$location', '$timeout', '$state','ngTableParams', 'ServiceCatalogService','ServiceItemService', 'ActionService',($scope, $location, $timeout, $state, ngTableParams, serviceCatalogService,serviceItemService,ActionService)->
       options =
         page:  1,           # show first page
         count: 10           # count per page
@@ -35,38 +38,65 @@
             $timeout(->
               #params.total(headers('total'))
               $defer.resolve($scope.catalogs = data)
+              angular.forEach $scope.catalogs, (item)->
+                $scope.selection.types[item.sn] = 'catalog' if angular.isDefined(item.sn)
+                angular.forEach item.items,(child)->
+                  $scope.selection.types[child.sn] = 'item' if angular.isDefined(child.sn)
+                  $scope.selection.parent[child.sn] = item.sn if angular.isDefined(child.sn)
             , 500)
           )
       $scope.tableParams = new ngTableParams(angular.extend(options, $location.search()), args)
 
-      $scope.selection = {checked: false, items: {}}
+      $scope.selection = {checked: false, items: {},types:{},parent:{}}
+
       $scope.getCatalogBySn  = (sn)->
         return catalog for catalog in $scope.catalogs when catalog.sn = sn
 
       $scope.remove = (catalog)->
-        feedback = (content) ->
-          alert content
-        success = ->
-          $scope.tableParams.reload();
-        failure = (response)->
-          feedback response.statusText
-        serviceCatalogService.remove({sn: catalog.sn}, success, failure)
+        if($scope.selection.types[catalog.sn] == 'catalog')
+          feedback = (content) ->
+            alert content
+          success = ->
+            $scope.tableParams.reload()
+          failure = (response)->
+            feedback response.statusText
+          serviceCatalogService.remove({sn: catalog.sn}, success, failure)
+        else
+          feedback = (content) ->
+            alert content
+          success = ->
+            $scope.tableParams.reload()
+          failure = (response)->
+            feedback response.statusText
+          serviceItemService.remove({sn:$scope.selection.parent[catalog.sn],isn: catalog.sn}, success, failure)
 
       $scope.create_catalog = (catalog)->
-        $state.go('services.catalog.detail',{'sn':catalog.sn,'action':'create'});
+        $state.go('services.catalog.detail',{'sn':catalog.sn,'action':'create'})
       $scope.create_item = (catalog)->
-        $state.go('services.catalog.item',{'sn':catalog.sn,'action':'create'});
+        $state.go('services.catalog.item',{'sn':catalog.sn,'action':'create'})
+
+      $scope.edit = (catalog)->
+        if($scope.selection.types[catalog.sn] == 'catalog')
+          $state.go('services.catalog.detail',{'sn':catalog.sn,'action':'edit'})
+        else
+          $state.go('services.catalog.item',{'sn':$scope.selection.parent[catalog.sn],'isn':catalog.sn,'action':'edit'})
 
       $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.getCatalogBySn})
 
     # watch for check all checkbox
       $scope.$watch 'selection.checked', (value)->
+        console.log('checked:'+value)
         angular.forEach $scope.catalogs, (item)->
           $scope.selection.items[item.sn] = value if angular.isDefined(item.sn)
+          $scope.selection.types[item.sn] = 'catalog' if angular.isDefined(item.sn)
           angular.forEach item.items,(child)->
             $scope.selection.items[child.sn] = value if angular.isDefined(child.sn)
+            $scope.selection.types[child.sn] = 'item' if angular.isDefined(child.sn)
+
       # watch for data checkboxes
       $scope.$watch('selection.items', (values) ->
+        console.log(values)
+        console.log($scope.selection)
         return if !$scope.catalogs
         checked = 0
         unchecked = 0

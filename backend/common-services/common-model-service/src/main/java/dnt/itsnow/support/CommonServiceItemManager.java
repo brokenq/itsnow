@@ -1,7 +1,7 @@
 package dnt.itsnow.support;
 
-import dnt.itsnow.model.PublicServiceCatalog;
 import dnt.itsnow.model.PublicServiceItem;
+import dnt.itsnow.model.ServiceCatalog;
 import dnt.itsnow.repository.CommonServiceItemRepository;
 import dnt.itsnow.service.CommonServiceItemService;
 import dnt.spring.Bean;
@@ -32,7 +32,7 @@ public class CommonServiceItemManager extends Bean implements CommonServiceItemS
         List<PublicServiceItem> items = new ArrayList<PublicServiceItem>();
         List<PublicServiceItem> list = getCommonServiceItemList();
         for(PublicServiceItem item:list){
-            PublicServiceCatalog catalog = item.getCatalog();
+            ServiceCatalog catalog = item.getCatalog();
             if(catalog != null && sn.equals(catalog.getSn()))
                 items.add(item);
         }
