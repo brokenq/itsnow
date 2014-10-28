@@ -1,6 +1,7 @@
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.exception.SiteException;
+import dnt.itsnow.model.Role;
 import dnt.itsnow.model.Site;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 
 /**
  * <h1>地点管理控制器</h1>
@@ -137,6 +139,16 @@ public class SitesController extends SessionSupportController<Site> {
         }
 
         logger.warn("Deleted  {}", site);
+    }
+
+    @RequestMapping(value = "check/{name}", method = RequestMethod.GET)
+    public HashMap checkUnique(@PathVariable("name") String name){
+        Site site = siteService.findByName(name);
+        if( site != null ){
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate site name: " + site.getName());
+        }else{
+            return new HashMap();
+        }
     }
 
     @BeforeFilter({"show", "update", "destroy"})

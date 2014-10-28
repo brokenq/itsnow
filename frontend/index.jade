@@ -43,6 +43,10 @@ html(ng-app="Itsnow.#{sysName}Index")
             i.icon-leaf
             | ItsNow {{system.label}}系统
 
+        .navbar-header.pull-left#loading(style="display:none;")
+            a.navbar-brand(href="javascript:void(0)")
+                img(src="assets/loading3.gif")
+
         .navbar-header.pull-right(role="navigation")
           ul.nav.ace-nav
             include index/parts/tasks
@@ -69,3 +73,7 @@ html(ng-app="Itsnow.#{sysName}Index")
 
       a.btn-scroll-up.btn.btn-sm.btn-inverse(href="java")#btn-scroll-up
         i.icon-double-angle-up.icon-only.bigger-110
+    .feedback.alert.alert-block#feedback(ng-class="feedback.klass")
+      button.close(type="button")
+        i.icon-remove
+      span#feedback_content {{feedback.message}}

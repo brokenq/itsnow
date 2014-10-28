@@ -4,13 +4,13 @@
 CREATE TABLE IF NOT EXISTS departments
 (
    id           INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-   sn           VARCHAR(100)      NOT NULL,
-   name         VARCHAR(255)    NOT NULL,
-   parent_id   INT(10) UNSIGNED,
-   position     INT(10) UNSIGNED,
-   description VARCHAR(255),
-   created_at  TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
-   updated_at  TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP
+   sn           VARCHAR(100)     NOT NULL,
+   name         VARCHAR(255)     NOT NULL,
+   parent_id    INT(10) UNSIGNED,
+   position     INT(10) UNSIGNED DEFAULT 0,
+   description  VARCHAR(255),
+   created_at   TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   updated_at   TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- //@UNDO

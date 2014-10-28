@@ -5,42 +5,43 @@
 angular
     .module('Lib.Interceptor', [])
 
-    .factory('CSRFResource', ['$resource', function ($resource) {
-        return $resource('security/csrf', null, {
-            get: {
-                method: 'GET'
-            }
+    .factory('CSRFService', ['$resource', function ($resource) {
+        return $resource('security/csrf', {
+            get: { method: 'GET' }
         });
-    }])
-
-    .factory('CSRFService', ['CSRFResource', function (CSRFResource) {
-        return{
-            get: function () {
-                return CSRFResource.get().$promise;
-            }
-        };
     }])
 
     // 拦截器（只拦截POST请求）
     .factory('SessionInjector', ['$injector', '$q',
         function ($injector, $q) {
-
-          return {
-              request: function (config) {
-                var deferred = $q.defer();
-                if (config.method === 'POST' || config.method === 'PUT' || config.method === 'DELETE') {
-//                        console.log("这个是POST/PUT方法");
-                  var CSRFService = $injector.get('CSRFService');
-                  CSRFService.get().then(function (data) {
-                    config.headers[data.headerName] = data.token;
-                    deferred.resolve(config);
-                  });
-                } else {
-//                        console.log("这个是GET方法");
-                  deferred.resolve(config);
+            return {
+                request: function (config) {
+                    $("#loading").show();
+                    var deferred = $q.defer();
+                    if (config.method === 'POST' || config.method === 'PUT' || config.method === 'DELETE') {
+                        var CSRFService = $injector.get('CSRFService');
+                        var promise = CSRFService.get().$promise;
+                        promise.then(function (data) {
+                            config.headers[data.headerName] = data.token;
+                            deferred.resolve(config);
+                        });
+                    } else {
+                        deferred.resolve(config);
+                    }
+                    return deferred.promise;
+                },
+                requestError: function(rejection) {
+                    $("#loading").show();
+                    return $q.reject(rejection);
+                },
+                response: function (response) {
+                    $("#loading").hide();
+                    return response;
+                },
+                responseError: function(rejection) {
+                    $("#loading").hide();
+                    return $q.reject(rejection);
                 }
-                return deferred.promise;
-              }
             };
         }])
 
