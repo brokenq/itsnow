@@ -1,4 +1,3 @@
--- // insert_group_authorities
 -- Migration SQL that makes the change goes here.
 
 SET @administrator_gid = (SELECT id from groups where group_name = 'administrators');
@@ -14,8 +13,3 @@ INSERT INTO group_authorities(group_id, authority) VALUES
 (@reporter_gid,      'ROLE_REPORTER'),
 (@reporter_gid,      'ROLE_USER'),
 (@guest_gid,         'ROLE_GUEST');
-
--- //@UNDO
--- SQL to undo the change goes here.
-
-DELETE FROM group_authorities;

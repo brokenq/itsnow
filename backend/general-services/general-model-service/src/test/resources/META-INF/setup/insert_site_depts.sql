@@ -17,7 +17,3 @@ INSERT INTO site_depts (site_id, dept_id) VALUES
 (@SITEID2, @DEPTID1),
 (@SITEID3, @DEPTID2);
 
--- //@UNDO
--- SQL to undo the change goes here.
-
-DELETE FROM site_depts;

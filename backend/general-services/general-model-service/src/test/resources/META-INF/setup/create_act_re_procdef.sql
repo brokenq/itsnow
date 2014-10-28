@@ -1,6 +1,3 @@
--- // create_process_dictionary
--- Migration SQL that makes the change goes here.
-
 CREATE TABLE IF NOT EXISTS act_re_procdef (
   id_                   varchar(64) NOT NULL,
   rev_                  int(11) DEFAULT NULL,
@@ -18,8 +15,3 @@ CREATE TABLE IF NOT EXISTS act_re_procdef (
   PRIMARY KEY (id_),
   UNIQUE KEY act_uniq_procdef (key_,version_,tenant_id_)
 );
-
--- //@UNDO
--- SQL to undo the change goes here.
-
-DROP TABLE IF EXISTS act_re_procdef;

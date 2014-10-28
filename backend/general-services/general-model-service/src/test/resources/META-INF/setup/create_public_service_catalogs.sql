@@ -1,5 +1,3 @@
--- // create_process_dictionary
--- Migration SQL that makes the change goes here.
 
 CREATE SCHEMA IF NOT EXISTS itsnow_msc;
 CREATE TABLE IF NOT EXISTS itsnow_msc.public_service_catalogs (
@@ -15,8 +13,3 @@ CREATE TABLE IF NOT EXISTS itsnow_msc.public_service_catalogs (
   KEY parent_id (parent_id)
 --   CONSTRAINT public_service_catalogs_ibfk_1 FOREIGN KEY (parent_id) REFERENCES public_service_catalogs (id)
 );
-
--- //@UNDO
--- SQL to undo the change goes here.
-
-DROP TABLE IF EXISTS itsnow_msc.public_service_catalogs;
