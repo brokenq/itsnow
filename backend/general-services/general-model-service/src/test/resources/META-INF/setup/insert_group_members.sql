@@ -1,5 +1,3 @@
--- // insert_group_members
--- Migration SQL that makes the change goes here.
 
 SET @admins_name = 'administrators';
 SET @guests_name = 'guests';
@@ -35,7 +33,3 @@ INSERT INTO group_members(username, group_id, group_name) VALUES
 ('jason.wang',  @second_line_gid, @second_line)
 ;
 
--- //@UNDO
--- SQL to undo the change goes here.
-
-DELETE FROM group_members;

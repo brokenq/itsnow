@@ -20,7 +20,7 @@ angular.module('MscIndex.HostNew', ['ngResource'])
           msu_version: window.system.version
           msp_version: window.system.version
 
-      $scope.types = ["DB", "APP", "COM"]
+      $scope.types = [{key: "DB", value: "数据库主机"}, {key: "APP", value: "应用主机"}, {key: "COM", value: "综合主机"}]
       $scope.createHost = ->
         feedback = (content) ->
           alert content

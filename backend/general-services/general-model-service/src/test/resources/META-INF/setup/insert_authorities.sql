@@ -1,5 +1,3 @@
--- // insert_authorities
--- Migration SQL that makes the change goes here.
 
 INSERT INTO authorities(username, authority) VALUES
 ('admin',      'ROLE_ADMIN'),
@@ -17,8 +15,3 @@ INSERT INTO authorities(username, authority) VALUES
 ('rose.zhou',  'ROLE_SERVICE_DESK'),
 ('susie.qian', 'ROLE_LINE_ONE'),
 ('susie.qian', 'ROLE_LINE_TWO');
-
--- //@UNDO
--- SQL to undo the change goes here.
-
-DELETE FROM authorities;
