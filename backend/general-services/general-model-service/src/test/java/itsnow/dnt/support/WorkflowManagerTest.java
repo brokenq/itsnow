@@ -76,7 +76,7 @@ public class WorkflowManagerTest {
 
     @Test
     public void findAll() throws Exception {
-        Page<Workflow> workflows = service.findAll("%工作%", pageRequest, Workflow.PRIVATE_SERVICE_ITEM);
+        Page<Workflow> workflows = service.findAll("工作", pageRequest, Workflow.PRIVATE_SERVICE_ITEM);
         Assert.assertTrue(workflows.getContent().size() > 0);
     }
 

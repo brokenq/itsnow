@@ -80,8 +80,9 @@
     <select id="count" resultType="java.lang.Integer">
         SELECT COUNT(0) FROM workflows
         <where>
-            <if test="keyword != null">
-                name LIKE #{keyword} OR sn LIKE #{keyword}
+            <if test="keyword != null and keyword != ''">
+                <bind name="pattern" value="'%' + keyword + '%' "/>
+                name LIKE #{pattern} OR sn LIKE #{pattern}
             </if>
             <if test="serviceTtemType != null">
                 AND service_item_type = #{serviceTtemType}
@@ -92,8 +93,9 @@
     <select id="find" resultMap="workflowResult">
         <include refid="select"/>
         <where>
-            <if test="keyword != null">
-                flow.name LIKE #{keyword} OR flow.sn LIKE #{keyword}
+            <if test="keyword != null and keyword != ''">
+                <bind name="pattern" value="'%' + keyword + '%' "/>
+                flow.name LIKE #{pattern} OR flow.sn LIKE #{pattern}
             </if>
         </where>
         <if test="pageable.sort != null">
