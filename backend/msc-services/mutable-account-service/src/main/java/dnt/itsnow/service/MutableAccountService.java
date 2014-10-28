@@ -9,6 +9,8 @@ import dnt.itsnow.model.User;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 
+import java.util.List;
+
 /**
  * <h1>操控账户的服务</h1>
  */
@@ -32,4 +34,10 @@ public interface MutableAccountService extends CommonAccountService {
      * @param user    管理员信息
      */
     Account register(Account account, User user) throws AccountException;
+
+    /**
+     * <h2>查找所有 没有分配进程的账户</h2>
+     */
+    List<Account> findAllForNoProcess();
+
 }

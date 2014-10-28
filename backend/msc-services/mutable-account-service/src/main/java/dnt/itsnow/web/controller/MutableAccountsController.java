@@ -14,15 +14,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * <h1>账户服务的控制器</h1>
  * <pre>
- * <b>HTTP     URI                            方法       含义  </b>
- * # GET      /admin/api/accounts            index     列出所有相关账户，支持过滤，分页，排序等
- * # GET      /admin/api/accounts/{sn}       show      列出特定的账户
- * # PUT      /admin/api/accounts/{sn}       update    修改账户，账户信息通过HTTP BODY提交
- * # DELETE   /admin/api/accounts/{sn}       destroy   删除账户
+ * <b>HTTP     URI                                      方法       含义  </b>
+ * # GET      /admin/api/accounts                       index     列出所有相关账户，支持过滤，分页，排序等
+ * # GET      /admin/api/accounts/{sn}                  show      列出特定的账户
+ * # PUT      /admin/api/accounts/{sn}                  update    修改账户，账户信息通过HTTP BODY提交
+ * # DELETE   /admin/api/accounts/{sn}                  destroy   删除账户
+ * # GET      /admin/api/accounts/list_no_process       listForNoProcess   列出没有分配进程的账户
  *
  * 由于我们的系统架构是由前端angular项目直接展示页面，不是server side script生成页面，所以，传统 Rails Resources路由中的
  *
@@ -54,6 +56,22 @@ public class MutableAccountsController extends SessionSupportController<Account>
         indexPage = accountService.findAll(type, pageRequest);
         logger.debug("Found   accounts {}", indexPage.getTotalElements());
         return indexPage;
+    }
+
+    /**
+     * <h2>列出没有分配进程的账户</h2>
+     * <p/>
+     * GET /admin/api/accounts/list_no_process
+     *
+     * @param type 账户类型，取值可以为 msc, msu, msp
+     * @return 账户列表
+     */
+    @RequestMapping("list_no_process")
+    public List<Account> listForNoProcess() {
+        logger.debug("Listing accounts that haven't been assign process");
+        List<Account> accounts = accountService.findAllForNoProcess();
+        logger.debug("Found   size of accounts that haven't been assign process = {}", accounts.size());
+        return accounts;
     }
 
     /**

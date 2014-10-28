@@ -309,7 +309,7 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
     }
 
     File createProperties(Properties props, String name) {
-        File dumpFile = new File(System.getProperty("APP_HOME"), "tmp/" + name);
+        File dumpFile = new File(System.getProperty("app.home"), "tmp/" + name);
         FileOutputStream outputStream = null;
         try {
             outputStream = new FileOutputStream(dumpFile);
