@@ -10,10 +10,6 @@ angular.module('MscIndex.Host', ['ngTable','ngResource', 'dnt.action.service'])
     $resource("/admin/api/hosts/:id", {id: "@id"})
   ])
 
-  .factory('getHostCss', [->
-    (status)->
-  ])
-
   .controller 'HostListCtrl',['$scope', '$location', '$state', '$timeout', 'ngTableParams', 'HostService', 'ActionService', ($scope, $location, $state, $timeout, ngTableParams, hostService, ActionService)->
     options =
       page:  1,           # show first page
