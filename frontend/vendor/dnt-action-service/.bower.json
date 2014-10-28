@@ -1,6 +1,6 @@
 {
   "name": "dnt-action-service",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "ignore": [
     "**/.*",
     "node_modules",
@@ -22,13 +22,14 @@
     "angular-mocks": "~1.3.0"
   },
   "homepage": "https://github.com/brokenq/dnt-action-service",
-  "_release": "0.0.1",
+  "_release": "0.0.2",
   "_resolution": {
     "type": "version",
-    "tag": "0.0.1",
-    "commit": "8706a8ad21a3ddcccfdc92ecbd1ee724383f0c61"
+    "tag": "0.0.2",
+    "commit": "4ffbaca366790238f2ce033663c0a4241d585030"
   },
   "_source": "git://github.com/brokenq/dnt-action-service.git",
-  "_target": "~0.0.1",
-  "_originalSource": "dnt-action-service"
+  "_target": "~0.0.2",
+  "_originalSource": "dnt-action-service",
+  "_direct": true
 }

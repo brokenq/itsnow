@@ -1,5 +1,5 @@
 # List accounts
-angular.module('MscIndex.Process', ['ngTable','ngResource'])
+angular.module('MscIndex.Process', ['ngTable','ngResource', 'dnt.action.service'])
   .config ($stateProvider)->
     $stateProvider.state 'processes',
       url: '/processes',
@@ -9,16 +9,9 @@ angular.module('MscIndex.Process', ['ngTable','ngResource'])
   .factory('ProcessService', ['$resource', ($resource) ->
     $resource("/admin/api/processes/:name")
   ])
-  .filter('formatProcessStatus', ->
-    (status) ->
-      return "已停止" if status == 'Stopped'
-      return "启动中" if status == 'Starting'
-      return "运行中" if status == 'Running'
-      return "停止中" if status == 'Stopping'
-      return "有故障" if status == 'Abnormal'
-  )
-  .controller 'ProcessListCtrl',['$scope', '$location', '$timeout', 'ngTableParams', 'ProcessService', '$state',
-  ($scope, $location, $timeout, ngTableParams, processService, $state)->
+
+  .controller 'ProcessListCtrl',['$scope', '$location', '$timeout', 'ngTableParams', 'ProcessService', '$state', '$http', 'ActionService'
+  ($scope, $location, $timeout, ngTableParams, processService, $state, $http, ActionService)->
     options =
       page:  1,           # show first page
       count: 10           # count per page
@@ -33,25 +26,46 @@ angular.module('MscIndex.Process', ['ngTable','ngResource'])
           , 500)
         )
     $scope.tableParams = new ngTableParams(angular.extend(options, $location.search()), args)
-    $scope.checkboxes = { 'checked': false, items: {} }
+
+    $scope.selection = {checked: false, items: {}}
+    $scope.getProcessByName  = (name)->
+      return process for process in $scope.processes when process.name is name
+    $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.getProcessByName})
+
     # watch for check all checkbox
-    $scope.$watch 'checkboxes.checked', (value)->
+    $scope.$watch 'selection.checked', (value)->
       angular.forEach $scope.processes, (item)->
-        $scope.checkboxes.items[item.name] = value if angular.isDefined(item.name)
-    # watch for data checkboxes
-    $scope.$watch('checkboxes.items', (values) ->
+        $scope.selection.items[item.name] = value if angular.isDefined(item.name)
+    # watch for data selection
+    $scope.$watch('selection.items', (values) ->
       return if !$scope.processes
       checked = 0
       unchecked = 0
       total = $scope.processes.length
       angular.forEach $scope.processes, (item)->
-        checked   +=  ($scope.checkboxes.items[item.name]) || 0
-        unchecked += (!$scope.checkboxes.items[item.name]) || 0
-      $scope.checkboxes.checked = (checked == total) if (unchecked == 0) || (checked == 0)
+        checked   +=  ($scope.selection.items[item.name]) || 0
+        unchecked += (!$scope.selection.items[item.name]) || 0
+      $scope.selection.checked = (checked == total) if (unchecked == 0) || (checked == 0)
       # grayed checkbox
       angular.element(document.getElementById("select_all")).prop("indeterminate", (checked != 0 && unchecked != 0));
     , true)
 
+
+    $scope.feedback = (content) ->
+      alert content
+    $scope.success = ->
+      $scope.tableParams.reload()
+    $scope.failure = (response)->
+      feedback response.statusText
+
+    $scope.refresh = ->
+      $scope.tableParams.reload()
+    $scope.start = (process)->
+      $http.put "/admin/api/processes/#{process.name}/start", $scope.success, $scope.failure
+    $scope.stop = (process)->
+      $http.put "/admin/api/processes/#{process.name}/stop", $scope.success, $scope.failure
+    $scope.delete = (process)->
+      processService.delete process, $scope.success, $scope.failure
 
     $scope.viewProcess = (processName)->
       $state.go 'process_view', {name: processName}

@@ -10,7 +10,8 @@ angular.module('Itsnow.Index', [
     'Index.Menu',
     'Index.Dialog',
     'Index.Table',
-    'Lib.JcsEnhance'
+    'Lib.JcsEnhance',
+    'Lib.Filters'
 ])
   .config(function ($httpProvider, $stateProvider, $urlRouterProvider) {
         $urlRouterProvider.otherwise('dashboard');

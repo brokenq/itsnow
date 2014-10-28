@@ -123,4 +123,12 @@ public class MutableAccountManager extends CommonAccountManager implements Mutab
         created.setUser(admin);
         return this.update(created);
     }
+
+    @Override
+    public List<Account> findAllForNoProcess() {
+        logger.debug("Finding all accounts that haven't been assign process");
+        List<Account> accounts = mutableRepository.findAllForNoProcess();
+        logger.debug("Found size of all accounts that haven't been assign process: {}", accounts.size());
+        return accounts;
+    }
 }

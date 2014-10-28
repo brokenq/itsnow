@@ -1,5 +1,5 @@
 # List accounts
-angular.module('MscIndex.Host', ['ngTable','ngResource', 'dnt.action.service', 'Lib.Filters'])
+angular.module('MscIndex.Host', ['ngTable','ngResource', 'dnt.action.service'])
   .config ($stateProvider)->
     $stateProvider.state 'hosts',
       url: '/hosts',
@@ -8,6 +8,10 @@ angular.module('MscIndex.Host', ['ngTable','ngResource', 'dnt.action.service', '
 
   .factory('HostService', ['$resource', ($resource) ->
     $resource("/admin/api/hosts/:id", {id: "@id"})
+  ])
+
+  .factory('getHostCss', [->
+    (status)->
   ])
 
   .controller 'HostListCtrl',['$scope', '$location', '$state', '$timeout', 'ngTableParams', 'HostService', 'ActionService', ($scope, $location, $state, $timeout, ngTableParams, hostService, ActionService)->
