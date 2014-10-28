@@ -90,7 +90,7 @@ public class PrivateServiceItemsController extends SessionSupportController<Priv
     @BeforeFilter(order = 60, value = {"show", "destroy"})
     public void initServiceItem(@PathVariable("id") Long id){
         if(serviceCatalog != null)
-            serviceItem = (PrivateServiceItem) serviceCatalog.getItemBySn(id);
+            serviceItem = (PrivateServiceItem) serviceCatalog.getItemBySn(id+"");
     }
     
 }
