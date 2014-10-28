@@ -27,9 +27,9 @@ mixin select_all()
     .btn-group
         +tool_button("refresh()", "refresh", "", "*", "", "")
     .btn-group
-        +tool_button("actionService.gotoState('dict_new', $event)", "new", "新建", "*", "", "")
-        +tool_button("actionService.gotoState('dict_edit', $event)", "edit", "编辑", "1", "", "")
-        +tool_button("actionService.perform(deleteDict, $event)", "remove", "删除", "1+", "", "")
+        +tool_button("actionService.gotoState('dict_new')", "new", "新建", "*", "", "")
+        +tool_button("actionService.gotoState('dict_edit')", "edit", "编辑", "1", "", "")
+        +tool_button("actionService.perform(deleteDict)", "remove", "删除", "1+", "", "")
 
     //.btn-group
     //  button.btn.btn-default.dropdown-toggle(type="button",data-toggle="dropdown")

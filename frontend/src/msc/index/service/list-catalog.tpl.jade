@@ -25,10 +25,10 @@ div(ui-view='')
  .container(ng-controller="CatalogListCtrl")
   .btn-toolbar(role="toolbar")
     .btn-group
-      +tool_button("actionService.gotoState('services.catalog', $event)", "refresh", "刷新","*","","")
-      +tool_button("actionService.perform(create, $event)", "plus", "新建", "1", "", "")
-      +tool_button("actionService.gotoState('services.catalog.detail', $event)", "edit", "编辑", "1", "", "")
-      +tool_button("actionService.perform(remove, $event)", "remove", "删除", "1+", "", "")
+      +tool_button("actionService.gotoState('services.catalog')", "refresh", "刷新","*","","")
+      +tool_button("actionService.perform(create)", "plus", "新建", "1", "", "")
+      +tool_button("actionService.gotoState('services.catalog.detail')", "edit", "编辑", "1", "", "")
+      +tool_button("actionService.perform(remove)", "remove", "删除", "1+", "", "")
     .btn-group
       button.btn.btn-default.dropdown-toggle(type="button",data-toggle="dropdown")
         | 更多操作
