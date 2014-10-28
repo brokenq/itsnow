@@ -19,7 +19,7 @@ angular.module('MscIndex.Account', ['ngTable','ngResource', 'ngSanitize','dnt.ac
   ])
   .filter('formatSubDomain', ['$sce', ($sce)->
     (account) ->
-      link = "http://" + account.domain + ".itsnow.com"
+      link = window.location.protocol + "//" + account.domain + window.location.host.replace(/^msc\./,'.')
       if account.process? and account.process.status == 'Running'
         $sce.trustAsHtml '<a target="_blank" href="' + link + '">' + link + '</a>'
       else

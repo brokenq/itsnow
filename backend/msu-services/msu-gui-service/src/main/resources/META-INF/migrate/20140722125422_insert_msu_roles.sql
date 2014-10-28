@@ -1,8 +1,8 @@
 -- Migration SQL that makes the change goes here.
-DELETE FROM roles;
-INSERT INTO roles (name) VALUES
-( 'ROLE_ADMIN'),
-( 'ROLE_ANONYMOUS');
+
+INSERT INTO roles (name, description) VALUES
+( 'ROLE_ADMIN', 'Role with administrative authorities'),
+( 'ROLE_ANONYMOUS', 'Role not authenticated');
 
 -- //@UNDO
 -- SQL to undo the change goes here.
