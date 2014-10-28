@@ -21,18 +21,18 @@ INSERT INTO group_members(username, group_id, group_name) VALUES
 ('admin', @reporter_gid, @reporters_name),
 ('root',  @administrator_gid, @admins_name),
 ('root',  @monitor_gid, @monitors_name),
-('root',  @reporter_gid, @reporters_name),
-('steve.li',   @reporter_gid, @reporters_name),
-('jason.wang', @monitor_gid, @monitors_name),
-('stone.xin',  @reporter_gid, @reporters_name),
-('jacky.cao',  @monitor_gid, @monitors_name),
-('smile.tian', @monitor_gid, @monitors_name),
-('sharp.liu',  @reporter_gid, @reporters_name),
-('mike.wei',   @monitor_gid, @monitors_name),
-('jacky.cao',  @first_line_gid, @first_line),
-('jay.xiong',  @second_line_gid, @second_line),
-('steve.li',  @first_line_gid, @first_line),
-('jason.wang',  @second_line_gid, @second_line)
+('root',  @reporter_gid, @reporters_name)
+-- ('steve.li',   @reporter_gid, @reporters_name),
+-- ('jason.wang', @monitor_gid, @monitors_name),
+-- ('stone.xin',  @reporter_gid, @reporters_name),
+-- ('jacky.cao',  @monitor_gid, @monitors_name),
+-- ('smile.tian', @monitor_gid, @monitors_name),
+-- ('sharp.liu',  @reporter_gid, @reporters_name),
+-- ('mike.wei',   @monitor_gid, @monitors_name)
+-- ('jacky.cao',  @first_line_gid, @first_line),
+-- ('jay.xiong',  @second_line_gid, @second_line),
+-- ('steve.li',  @first_line_gid, @first_line),
+-- ('jason.wang',  @second_line_gid, @second_line)
 ;
 
 -- //@UNDO

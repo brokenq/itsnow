@@ -1,0 +1,97 @@
+mixin fieldGroup(title,help)
+    .form-group.has-info(ng-class!=attributes.ngClass, ng-hide!=attributes.ngHide, ng-show!=attributes.ngShow)
+        label.col-xs-12.col-sm-3.control-label.no-padding-right(for!=attributes.for) #{title}
+        .col-xs-12.col-sm-5(class!=attributes.class)
+            block
+        .help-block.col-xs-12.col-sm-reset.inline #{help}
+
+.row
+    .col-xs-12(ng-controller='StaffCtrl')
+        .row-fluid
+            .span12
+                .widget-box
+                    div.widget-header.widget-header-blue.widget-header-flat
+                        h4.lighter 员工表单
+                    .widget-body
+                        .widget-main
+                            form.form-horizontal(role='form', novalidate="novalidate", name='staffForm', ng-submit='submit(staff)')
+                                +fieldGroup("地点","此员工所在地")(for="staff_site")
+                                    span.block.input-icon.input-icon-right
+                                        select#staff_site.form-control(ng-model='site', required,
+                                            ng-options="site.name for site in sites")
+                                +fieldGroup("部门","此员工所在部门")(for="staff_dept")
+                                    span.block.input-icon.input-icon-right
+                                        select#staff_dept.form-control(ng-model='department', required,
+                                            ng-options="department.name for department in departments")
+                                +fieldGroup("员工名称","姓名")(for="staff_name")
+                                    span.block.input-icon.input-icon-right
+                                        input.form-control#staff_name(name="staff_name", ng-model='staff.name', type="text", required,
+                                            ng-minlength="2", ng-maxlength="20", ng-pattern='/^[\u4e00-\u9fa5_a-zA-Z0-9\\-\\.]+$/', placeholder="员工姓名")
+                                        i.icon-user
+                                +fieldGroup("工号","员工编号")(for="staff_name")
+                                    span.block.input-icon.input-icon-right
+                                        input.form-control#staff_no(name="staff_no", ng-model='staff.no', required, ng-minlength="2",
+                                            ng-maxlength="20", ng-pattern='/^([a-zA-Z0-9]|_|\\-|\\.)+$/', ng-readonly="false",
+                                            ng-check="/api/staffs/check/{0}", type="text", placeholder="工号")
+                                        i.icon-user
+                                        input.form-control#staff_no_other(name="staff_no_other", ng-model='staff.no', ng-readonly="true", type="text")
+                                        i.icon-user
+                                +fieldGroup("职务","员工职务")(for="staff_title")
+                                    span.block.input-icon.input-icon-right
+                                        input.form-control#staff_name(name="staff_title", ng-model='staff.title',type="text", required,
+                                            ng-minlength="2", ng-maxlength="20", ng-pattern='/^[\u4e00-\u9fa5_a-zA-Z0-9\\-\\.]+$/', placeholder="员工职务")
+                                        i.icon-user
+                                +fieldGroup("邮箱","员工邮箱")(for="staff_email")
+                                    span.block.input-icon.input-icon-right
+                                        input.form-control#staff_email(name="staff_email", ng-model='staff.email',type="email", required,
+                                            ng-minlength="2", ng-maxlength="20", placeholder="email")
+                                        i.icon-envelope-alt
+                                +fieldGroup("电话","员工固定电话")(for="staff_fixed_phone")
+                                    span.block.input-icon.input-icon-right
+                                        input.form-control#staff_fixed_phone(name="staff_fixed_phone", ng-model='staff.fixedPhone',type="text",
+                                            ng-minlength="7", ng-maxlength="20", ng-pattern='/^[0-9\\-\\(\\)]+$/', placeholder="固定电话")
+                                        i.icon-phone
+                                +fieldGroup("手机","员工手机号码")(for="staff_mobile_phone")
+                                    span.block.input-icon.input-icon-right
+                                        input.form-control#staff_mobile_phone(name="staff_mobile_phone", ng-model='staff.mobilePhone',
+                                            type="text", required, ng-minlength="11",
+                                            ng-maxlength="20", ng-pattern='/^1[0-9]+$/', placeholder="手机号码")
+                                        i.icon-phone
+                                +fieldGroup("","")(for="id-file-format")
+                                    label
+                                        input#id-file-format.ace(type='checkbox', name='file-format', ng-model="checked")
+                                        span.lbl  可登录
+                                div#register(ng-show="checked")
+                                    +fieldGroup("用户名","登录账号")(for="username")
+                                        span.block.input-icon.input-icon-right
+                                            input.form-control#username(name="username", ng-model='staff_user.name', ng-required="checked",
+                                                ng-minlength="4", ng-maxlength="20", ng-pattern='/^([a-zA-Z0-9]|_|\\-|\\.)+$/', ng-readonly="false",
+                                                ng-check="/api/roles/check/{0}", type="text", placeholder="登录名")
+                                            i.icon-user
+                                            input.form-control#username_other(name="username_other", ng-model='staff_user.name',
+                                                ng-readonly="true", type="text")
+                                            i.icon-user
+                                    +fieldGroup("密码","登录密码")(for="user_password")
+                                        span.block.input-icon.input-icon-right
+                                            input.form-control#user_password(name="user_password", ng-model='staff_user.password',ng-required="checked",
+                                                ng-minlength="4", ng-maxlength="20", ng-readonly="false",
+                                                type="password", placeholder="登录密码")
+                                            i.icon-user
+                                    +fieldGroup("确认密码","重复密码")(for="user_repeat_password")
+                                        span.block.input-icon.input-icon-right
+                                            input.form-control#user_repeat_password(name="user_repeat_password",ng-required="checked",
+                                                ng-model='staff_user.repeatPassword', ng-minlength="4",
+                                                ng-maxlength="20", ng-readonly="false", type="password", placeholder="重复密码")
+                                            i.icon-user
+                                +fieldGroup("描述","对此角色的相关描述")(for="staff_desc")
+                                    span.block.input-icon.input-icon-right
+                                        textarea.form-control.limited#staff_desc(name="staff_desc", ng-model='staff.description', ng-maxlength="100", placeholder="描述文本")
+                                        i.icon-edit
+                                .clearfix.form-actions
+                                    .col-md-offset-3.col-md-9
+                                        button.btn.btn-info#submit(type='submit', ng-disabled="submited")
+                                            i.icon-ok.bigger-110
+                                            | 提交
+                                        button.btn(type='button', ng-click="cancel()")
+                                            i.icon-undo.bigger-110
+                                            | 取消

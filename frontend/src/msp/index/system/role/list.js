@@ -82,7 +82,7 @@ angular.module('System.Role', ['ngTable', 'ngResource', 'dnt.action.service'])
                 });
             });
 
-            $scope.deleteRole = function (role) {
+            $scope.remove = function (role) {
                 roleService.remove({name: role.name},function(){
                     delete $scope.selection.items[role.name];
                     $scope.tableParams.reload();
