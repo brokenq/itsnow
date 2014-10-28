@@ -53,6 +53,4 @@ public interface ItsnowHostRepository {
 
     List<ItsnowHost> findAllByConfiguration(@Param("name")String name, @Param("value") String value);
 
-    @Select("SELECT * FROM itsnow_hosts WHERE type = #{type}")
-    List<ItsnowHost> findByType(String type);
 }

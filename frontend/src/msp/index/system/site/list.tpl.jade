@@ -23,9 +23,9 @@ mixin select_all()
     .btn-group
         +tool_button("", "refresh", "", "*", "", "")
     .btn-group
-        +tool_button("actionService.gotoState('site_new_form', $event)", "new", "新建", "*", "", "")
-        +tool_button("actionService.gotoState('site_edit_form', $event)", "edit", "编辑", "1", "", "")
-        +tool_button("actionService.perform(remove, $event)", "remove", "删除", "1+", "", "")
+        +tool_button("actionService.gotoState('site_new_form')", "new", "新建", "*", "", "")
+        +tool_button("actionService.gotoState('site_edit_form')", "edit", "编辑", "1", "", "")
+        +tool_button("actionService.perform(remove)", "remove", "删除", "1+", "", "")
     .btn-group.pull-right
       .nav-search#nav-search
         form.form-search

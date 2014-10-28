@@ -115,12 +115,20 @@ public class MutableAccountManager extends CommonAccountManager implements Mutab
     public Account register(Account account, User user) throws AccountException {
         // TODO 根据测试情况发现，此地没有事务控制
         //   user 有问题，account没有问题，account created，user fail， account没有被回退
-        //这句代码可能抛出 FK Violation exception(org.springframework.dao.DuplicateKeyException)
+        // TODO 这句代码可能抛出 FK Violation exception(org.springframework.dao.DuplicateKeyException)
         // 需要将其转化为合适的Validation异常
         Account created = this.create(account);
         user.setAccount(created);
         User admin = userService.create(user);
         created.setUser(admin);
         return this.update(created);
+    }
+
+    @Override
+    public List<Account> findAllForNoProcess() {
+        logger.debug("Finding all accounts that haven't been assign process");
+        List<Account> accounts = mutableRepository.findAllForNoProcess();
+        logger.debug("Found size of all accounts that haven't been assign process: {}", accounts.size());
+        return accounts;
     }
 }

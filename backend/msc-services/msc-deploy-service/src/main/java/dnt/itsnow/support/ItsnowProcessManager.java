@@ -310,10 +310,10 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
         process.setName("itsnow_" + account.getSn());
         process.setDescription("Itsnow process for " + account.getSn());
         process.setWd("/opt/itsnow/" + process.getName());
-        process.setProperty("rmi.port", host.getProperty("next.rmi.port", "8100"));
-        process.setProperty("debug.port", host.getProperty("next.debug.port", "8200"));
-        process.setProperty("jmx.port", host.getProperty("next.jmx.port", "8300"));
-        process.setProperty("http.port", host.getProperty("next.http.port", "8400"));
+        process.setProperty("rmi.port", host.getProperty("next.rmi.port", "8101"));
+        process.setProperty("debug.port", host.getProperty("next.debug.port", "8201"));
+        process.setProperty("jmx.port", host.getProperty("next.jmx.port", "8301"));
+        process.setProperty("http.port", host.getProperty("next.http.port", "8401"));
         return process;
     }
 

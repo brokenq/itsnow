@@ -128,6 +128,25 @@ public class MutableAccountsControllerTest extends SessionSupportedControllerTes
 
     }
 
+    @Test
+    public void testListForNoProcess() throws Exception {
+        // Service Mock 记录阶段
+        expect(accountService.findAllForNoProcess()).andReturn(accounts);
+
+        // 准备 Mock Request
+        MockHttpServletRequestBuilder request = get("/admin/api/accounts/list_no_process");
+        decorate(request);
+
+        // Mock 准备播放
+        replay(accountService);
+
+        // 执行
+        ResultActions result = this.browser.perform(request);
+
+        // 对业务结果的验证
+        decorate(result).andExpect(status().isOk());
+    }
+
     protected String accountJson(){
         return JsonSupport.toJSONString(account);
     }

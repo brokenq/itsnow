@@ -45,7 +45,7 @@ public class ItsnowProcessRepositoryTest {
         ItsnowProcess found = repository.findByName("itsnow-msc");
         Assert.assertNotNull(found);
         Assert.assertNotNull(found.getConfiguration());
-        Assert.assertEquals("8071", found.getConfiguration().getProperty("http.port"));
+        Assert.assertEquals("8400", found.getConfiguration().getProperty("http.port"));
         Assert.assertNotNull(found.getHostId());
         Assert.assertNotNull(found.getHost());
         Assert.assertNotNull(found.getSchemaId());
@@ -120,7 +120,7 @@ public class ItsnowProcessRepositoryTest {
 
     @Test
     public void testFindByConfiguration() throws Exception {
-        ItsnowProcess process = repository.findByConfiguration("http.port", "8071");
+        ItsnowProcess process = repository.findByConfiguration("http.port", "8400");
         Assert.assertNotNull(process);
 
     }

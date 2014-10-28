@@ -1,5 +1,5 @@
 # List accounts
-angular.module('MscIndex.Host', ['ngTable','ngResource', 'dnt.action.service', 'Lib.Filters'])
+angular.module('MscIndex.Host', ['ngTable','ngResource', 'dnt.action.service'])
   .config ($stateProvider)->
     $stateProvider.state 'hosts',
       url: '/hosts',
