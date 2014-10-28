@@ -8,6 +8,7 @@
         <groupId>dnt</groupId>
         <artifactId>itsnow</artifactId>
         <version>0.2.2-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <groupId>dnt.itsnow</groupId>
     <artifactId>frontend</artifactId>

@@ -8,6 +8,7 @@
         <groupId>dnt.itsnow</groupId>
         <artifactId>backend</artifactId>
         <version>0.2.2-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>msu-services</artifactId>
