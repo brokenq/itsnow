@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 /**
- * <h1>为Process Dictionar模块提供的单元测试环境</h1>
+ * <h1>为Process Dictionary模块提供的单元测试环境</h1>
  */
 @Configuration
 @Import(DatabaseConfig.class)
@@ -19,7 +19,7 @@ public class DictionaryRepositoryConfig extends RepositoryConfigWithH2 {
         return new String[]{
                 "classpath:META-INF/migrate/20140720144647_create_dictionaries.sql@up",
                 "classpath:META-INF/setup/initialization.sql",
-                "classpath:META-INF/migrate/20140904124504_insert_dictionaries.sql@up"
+                "classpath:META-INF/setup/insert_dictionaries.sql"
         };
     }
 }

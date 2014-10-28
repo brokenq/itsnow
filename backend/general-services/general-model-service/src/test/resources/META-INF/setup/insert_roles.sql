@@ -1,5 +1,3 @@
--- // insert_authorities
--- Migration SQL that makes the change goes here.
 
 INSERT INTO roles (name) VALUES
 ( 'ROLE_ADMIN'),
@@ -12,7 +10,3 @@ INSERT INTO roles (name) VALUES
 ( 'ROLE_REPORTER'),
 ( 'ROLE_GUEST');
 
--- //@UNDO
--- SQL to undo the change goes here.
-
-DELETE FROM roles;

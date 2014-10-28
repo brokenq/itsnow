@@ -1,5 +1,5 @@
 # List accounts
-angular.module('MscIndex.Account', ['ngTable','ngResource', 'ngSanitize','dnt.action.service'])
+angular.module('MscIndex.Account', ['ngTable','ngResource', 'ngSanitize','dnt.action.service', 'Lib.Feedback'])
   .config ($stateProvider)->
     $stateProvider.state 'accounts',
       url: '/accounts',
@@ -41,8 +41,8 @@ angular.module('MscIndex.Account', ['ngTable','ngResource', 'ngSanitize','dnt.ac
         when 'Abnormal' then 'red'
         else #Unknown
   )
-  .controller 'AccountListCtrl',['$scope', '$location', '$timeout', '$resource', '$http', 'ngTableParams', 'ActionService', \
-                                ($scope, $location, $timeout, $resource, $http, ngTableParams, ActionService)->
+  .controller 'AccountListCtrl',['$scope', '$location', '$timeout', '$resource', '$http', 'ngTableParams', 'ActionService', 'Feedback', \
+                                ($scope, $location, $timeout, $resource, $http, ngTableParams, ActionService, Feedback)->
     Accounts = $resource("/admin/api/accounts")
     actions = 
       approve: 
@@ -83,8 +83,9 @@ angular.module('MscIndex.Account', ['ngTable','ngResource', 'ngSanitize','dnt.ac
 
     $scope.approve = (account) ->
       acc = new Account(account)
-      acc.$approve ->
-        # TODO 增加反馈机制, 另外，需要考虑结束操作后，是否应该当前纪录从选中的集合中移除
+      acc.$approve(->
+        Feedback.success("已批准" + account.name)
+        # TODO 需要考虑结束操作后，是否应该当前纪录从选中的集合中移除
         # 这个移除的工作，貌似该由Action Service完成？
         # 包括表格的刷新，在批量操作时，每条记录都会导致表格刷新
         # 这个问题，也应该是Action Service的perform API增强，支持设定一个成功的callback
@@ -92,12 +93,16 @@ angular.module('MscIndex.Account', ['ngTable','ngResource', 'ngSanitize','dnt.ac
         # 或者 action service需要定义一个handler，要求这个handler提供四个方法
         #  successOne(record), successAll(records), failureOne(record), falureAll(records)
         $scope.tableParams.reload()
-      
+      , (resp)->
+        Feedback.error("批准" + account.name + "失败", resp)
+      )
     $scope.reject = (account) ->
       acc = new Account(account)
-      acc.$reject ->
+      acc.$reject(->
         $scope.tableParams.reload()
-
+      , (resp)->
+        Feedback.error("拒绝" + account.name + "失败", resp)
+      )
     $scope.destroy = (account) ->
       acc = new Account(account)
       acc.$remove ->

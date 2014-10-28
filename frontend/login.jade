@@ -24,11 +24,13 @@ html(lang="zh-CN", ng-app="Itsnow.#{sysName}Login")
                   i.icon-leaf.green
                   span.white ItsNow 
                   span.red  {{system.label}}系统
-                h4.blue &copy; ItsNow co.,ltd
+                h4.blue
+                  | &copy; ItsNow co.,ltd
+                  small.red {{system.version}}
               .space-6
               .position-relative
                 div(ui-view="login")
-    .feedback.alert.alert-block#feedback(ng-class="feedback.klass")
+    .feedback.alert.alert-block#feedback
       button.close(type="button")
         i.icon-remove
       span#feedback_content {{feedback.message}}

@@ -30,6 +30,7 @@ angular.module('Lib.Feedback', [])
         # ng bind with $rootScope variable is not work
         try
           html = angular.element(message)
+          html = message if html.length == 0
         catch
           html = message
 
@@ -50,7 +51,11 @@ angular.module('Lib.Feedback', [])
         this.feedback(message, {level: 2, dismiss: dismiss})
       warn: (message, dismiss) ->
         this.feedback(message, {level: -1, dismiss: dismiss})
-      error: (message, dismiss) ->
-        this.feedback(message, {level: -2, dismiss: dismiss})
+      error: (message, resp, dismiss) ->
+        try
+          extra = JSON.parse resp.data
+        catch
+          extra = resp.statusText
+        this.feedback(message + ", 错误原因：" + extra, {level: -2, dismiss: dismiss})
     }
   ]

@@ -174,7 +174,7 @@ public class ItsnowHostManagerTest {
     public void testFindByType() throws Exception {
         List<ItsnowHost> hosts = new ArrayList<ItsnowHost>();
         hosts.add(host);
-        expect(repository.findByType("DB")).andReturn(hosts);
+        expect(repository.findAllByType(HostType.DB)).andReturn(hosts);
 
         replay(systemInvokeService);
         replay(repository);

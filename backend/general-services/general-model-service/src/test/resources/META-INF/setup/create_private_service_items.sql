@@ -1,5 +1,3 @@
--- // create_process_dictionary
--- Migration SQL that makes the change goes here.
 
 CREATE TABLE IF NOT EXISTS private_service_items (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -14,7 +12,3 @@ CREATE TABLE IF NOT EXISTS private_service_items (
   PRIMARY KEY (id)
 );
 
--- //@UNDO
--- SQL to undo the change goes here.
-
-DROP TABLE IF EXISTS private_service_items;

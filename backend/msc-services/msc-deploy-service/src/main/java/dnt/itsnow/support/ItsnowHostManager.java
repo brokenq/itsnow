@@ -136,7 +136,7 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     @Override
     public List<ItsnowHost> findByType(String type) {
         logger.debug("Finding itsnow host by type = {}", type);
-        List<ItsnowHost> hosts = repository.findByType(type);
+        List<ItsnowHost> hosts = repository.findAllByType(HostType.valueOf(type.toUpperCase()));
         logger.debug("Found size of itsnow host is {}", hosts.size());
         return hosts;
     }
