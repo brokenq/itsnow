@@ -1,5 +1,4 @@
--- // insert_users
--- Migration SQL that makes the change goes here.
+
 SET @MSC_ID = (SELECT id from accounts where sn = 'msc');
 SET @MSU001 = (SELECT id from accounts where sn = 'msu_001');
 SET @MSU002 = (SELECT id from accounts where sn = 'msu_002');
@@ -39,10 +38,4 @@ UPDATE accounts SET user_id = @steven_li_id WHERE id = @MSU001;
 UPDATE accounts SET user_id = @sharp_liu_id WHERE id = @MSU002;
 UPDATE accounts SET user_id = @jacky_cao_id WHERE id = @MSP001;
 UPDATE accounts SET user_id = @rose_zhou_id WHERE id = @MSP002;
-
--- //@UNDO
--- SQL to undo the change goes here.
--- 存在其他表外键引用本表时, 就无法使用 truncate
--- TRUNCATE TABLE users;
-DELETE FROM users;-- WHERE username IN ('admin','root','monitor','reporter','demo', 'guest');
 

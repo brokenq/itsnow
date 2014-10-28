@@ -1,5 +1,3 @@
--- // create_staffs
--- Migration SQL that makes the change goes here.
 CREATE TABLE IF NOT EXISTS staffs (
   id            INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
   no           VARCHAR(50)    NOT NULL,
@@ -18,8 +16,3 @@ CREATE TABLE IF NOT EXISTS staffs (
   updated_at   TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP
 --   ,FOREIGN KEY (user_id) REFERENCES users (id)
 );
-
--- //@UNDO
--- SQL to undo the change goes here.
-
-DROP TABLE IF EXISTS staffs;

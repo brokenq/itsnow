@@ -50,7 +50,7 @@
       $scope.selection = {checked: false, items: {},types:{},parent:{}}
 
       $scope.getCatalogBySn  = (sn)->
-        return catalog for catalog in $scope.catalogs when catalog.sn = sn
+        return catalog for catalog in $scope.catalogs when catalog.sn is sn
 
       $scope.remove = (catalog)->
         if($scope.selection.types[catalog.sn] == 'catalog')

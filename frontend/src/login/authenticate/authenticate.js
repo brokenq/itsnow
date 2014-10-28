@@ -5,6 +5,7 @@ angular
   .module('Login.Authenticate', [
     'ui.router',
     'ui.bootstrap',
+    'Lib.Feedback',
     'Itsnow.Security'
   ])
 
@@ -21,8 +22,8 @@ angular
     });
   })
 
-  .controller('AuthenticateCtrl', ['$scope', '$http', 'SessionService',
-    function ($scope, $http, sessionService) {
+  .controller('AuthenticateCtrl', ['$scope', '$http', 'Feedback', 'SessionService',
+    function ($scope, $http, Feedback, sessionService) {
       $scope.credential = {username: 'admin', password: 'secret', remember: true};
 
       $scope.challenge = function () {
@@ -30,7 +31,7 @@ angular
           window.location.href = '/index.html';
         }, function(resp){
           $scope.error = resp.data;
-
+          Feedback.error("登录失败", resp);
         });
       };
     }]);

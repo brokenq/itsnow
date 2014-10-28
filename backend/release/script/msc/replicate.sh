@@ -24,6 +24,7 @@ if [ ! $2 ]; then
   exit 2
 fi
 
+server=$(hostname)
 slave=$1
 index=$2
 master_password=`cat ~/.mysql_pwd`
@@ -61,7 +62,7 @@ scp itsnow_msc.sql root@$slave:/var/lib/mysql/
 echo "Step 5,6,7 $slave import itsnow_msc and start slave"
 slave_mysql_exec "CREATE DATABASE itsnow_msc DEFAULT CHARACTER SET UTF8; USE itsnow_msc; SOURCE itsnow_msc.sql;"
 eval $(mysql -uroot -p$master_password  -e "show master status" | head -4 | tail -1 | awk '{printf("log_file=%s\nlog_pos=%s\n",$1,$2);}')
-slave_mysql_exec "CHANGE MASTER TO master_host = 'srv1', master_port = 3306, master_user='repl', master_password='repl-of-itsnow',master_log_file='$log_file',master_log_pos=$log_pos ;START SLAVE;"
+slave_mysql_exec "CHANGE MASTER TO master_host = '$server', master_port = 3306, master_user='repl', master_password='repl-of-itsnow',master_log_file='$log_file',master_log_pos=$log_pos ;START SLAVE;"
 echo "Step 8 check slave status"
 io_status=$(slave_mysql_exec "SHOW SLAVE STATUS" | head -12 | tail -1 | awk -F: '{print $2}')
 sql_status=$(slave_mysql_exec "SHOW SLAVE STATUS" | head -13 | tail -1 | awk -F: '{print $2}')

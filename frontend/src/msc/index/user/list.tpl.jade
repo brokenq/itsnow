@@ -27,7 +27,7 @@ div(ui-view='')
       .btn-group
         +tool_button("tableParams.reload()", "refresh", "", "*", "", "")
       .btn-group
-        +tool_button("actionService.gotoState('system.user.detail', $event)", "edit", "编辑", "1", "", "")
+        +tool_button("actionService.gotoState('system.user.detail')", "edit", "编辑", "1", "", "")
       .btn-group
         button.btn.btn-primary.no-border.dropdown-toggle(type="button",data-toggle="dropdown")
           | 更多操作

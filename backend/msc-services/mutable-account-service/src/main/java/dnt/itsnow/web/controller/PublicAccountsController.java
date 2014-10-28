@@ -15,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -72,6 +73,9 @@ public class PublicAccountsController extends ApplicationController<Account> {
         if("name".equalsIgnoreCase(field)){
             found = accountService.findByName(value);
         }else if("domain".equalsIgnoreCase(field)){
+            int index = Arrays.binarySearch(Account.RESERVED_DOMAINS, value.toLowerCase());
+            if( index > 0 )
+                throw new WebClientSideException(HttpStatus.BAD_REQUEST, "The domain " + value + " is system resolved" );
             found = accountService.findByDomain(value);
         }else{
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, "Can't check uniqueness of account field: " + field);

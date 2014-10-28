@@ -1,5 +1,3 @@
--- // insert_workflows
--- Migration SQL that makes the change goes here.
 
 SET @USER1 = (SELECT id from itsnow_msc.users where username = 'admin');
 SET @USER2 = (SELECT id from itsnow_msc.users where username = 'root');
@@ -19,8 +17,3 @@ INSERT INTO staffs
 ('005', '周五',  '15901968800',  '63578888', 'stone@126.com',  '工程师',  'employee', '1',   @USER2,  @SITE1,  @DEPT1),
 ('006', '吴六',  '15901968800',  '63578888', 'stone@126.com',  '工程师',  'employee', '1',   @USER2,  @SITE1,  @DEPT1),
 ('007', '郑七',  '15901968800',  '63578888', 'stone@126.com',  '工程师',  'employee', '1',   @USER2,  @SITE1,  @DEPT1);
-
--- //@UNDO
--- SQL to undo the change goes here.
-
-DELETE FROM staffs;

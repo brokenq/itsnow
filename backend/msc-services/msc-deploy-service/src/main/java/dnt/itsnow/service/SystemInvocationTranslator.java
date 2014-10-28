@@ -12,6 +12,7 @@ import dnt.itsnow.model.SystemInvocation;
  * <h1>System Invocation Translator Service</h1>
  */
 public interface SystemInvocationTranslator {
+    String getAppDomain();
     /**
      * <h2>创建一个配置特定主机的系统调用对象</h2>
      *

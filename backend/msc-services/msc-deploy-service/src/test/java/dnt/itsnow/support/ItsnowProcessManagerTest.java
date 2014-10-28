@@ -60,8 +60,8 @@ public class ItsnowProcessManagerTest {
 
     @Before
     public void setUp() throws Exception {
-        System.setProperty("APP_HOME", System.getProperty("java.io.tmpdir"));
-        FileUtils.forceMkdir(new File(System.getProperty("APP_HOME"), "tmp"));
+        System.setProperty("app.home", System.getProperty("java.io.tmpdir"));
+        FileUtils.forceMkdir(new File(System.getProperty("app.home"), "tmp"));
         host = DeployFixture.testHost();
         host.setId(1L);
         schema = DeployFixture.testSchema();
