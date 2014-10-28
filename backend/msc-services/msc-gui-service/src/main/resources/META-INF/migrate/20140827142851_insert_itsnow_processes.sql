@@ -4,7 +4,7 @@
 SET @MSC_ACCOUNT_ID = (SELECT id FROM accounts WHERE sn = 'msc');
 
 INSERT INTO itsnow_processes(host_id, schema_id, account_id, name, status, wd, configuration, description) VALUES
-  (1, 1, @MSC_ACCOUNT_ID, 'itsnow-msc', 'Running', '/opt/releases/itsnow/msc', '{"http.port": "8071", "jmx.port": "1072", "debug.port" : "1071", "rmi.port" : "1073"}', 'The MSC process');
+  (1, 1, @MSC_ACCOUNT_ID, 'itsnow-msc', 'Running', '/opt/itsnow/msc', '{"http.port": "8400", "jmx.port": "8300", "debug.port" : "8200", "rmi.port" : "8100"}', 'The MSC process');
 
 -- //@UNDO
 -- SQL to undo the change goes here.
