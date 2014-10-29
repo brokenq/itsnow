@@ -1,0 +1,48 @@
+mixin blocks(title)
+  h2 #{title}
+  hr
+  block
+mixin formGroup()
+  .form-group
+    .col-md-offset-2.col-md-8
+      block
+mixin label(label)
+  label.control-label.col-md-2 #{label}:
+mixin formField(label, value)
+  label.control-label.col-md-2 #{label}:
+  div(class!=attributes["class"])
+    input.form-control(type="text", value="#{value}", readonly)
+mixin button(name)
+  button.btn.btn-primary(type='button')&attributes(attributes) #{name}
+    block
+mixin buttonGroup(groupName,hrefName)
+  li(role="presentation")
+    a(role="menuitem",tabindex="-1",href="#{hrefName}") #{groupName}
+.form-horizontal
+  +blocks("进程信息")
+    +formGroup()
+      +formField("主机地址", "test")(class="col-md-3")
+      +formField("主机名称", "test")(class="col-md-3")
+    +formGroup()
+      +formField("主机地址", "test")(class="col-md-8")
+    +formGroup()
+      +formField("test", "test")(class="col-md-8")
+  +blocks("运行信息")
+    +formGroup()
+      +formField("test", "test")(class="col-md-3")
+      +formField("test", "test")(class="col-md-3")
+    +formGroup()
+      +formField("test", "test")(class="col-md-8")
+    +formGroup()
+      label.control-label.col-md-2 日志信息:
+      .col-md-8
+        textarea.form-control(rows='4',readonly)
+    +formGroup()
+      .col-md-1.col-md-offset-2
+        +button('取消启动')
+      .col-md-1.col-md-offset-4
+        +button('访   问')(class="dropdown-toggle",data-toggle="dropdown")
+          span.caret
+        ul.dropdown-menu(role="menu",aria-labelledby="dropdownMenu3")
+          +buttonGroup('直接访问','#')
+          +buttonGroup('通过域名访问访问','#')
