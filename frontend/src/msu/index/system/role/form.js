@@ -1,4 +1,4 @@
-angular.module('System.Role.Form', ['multi-select', 'ngResource'])
+angular.module('System.Role.Form', ['multi-select', 'ngResource', 'Lib.Feedback'])
 
     .config(function ($stateProvider) {
         $stateProvider.state('role_edit_form', {
@@ -12,8 +12,8 @@ angular.module('System.Role.Form', ['multi-select', 'ngResource'])
         });
     })
 
-    .controller('RoleCtrl', ['$scope', '$location', 'RoleService', '$stateParams',
-        function ($scope, $location, roleService, $stateParams) {
+    .controller('RoleCtrl', ['$scope', '$location', '$stateParams', 'RoleService', 'Feedback',
+        function ($scope, $location, $stateParams, roleService, feedback) {
 
             // 提交按钮是否可用，false为可用
             $scope.submited = false;
@@ -37,33 +37,35 @@ angular.module('System.Role.Form', ['multi-select', 'ngResource'])
             };
 
             // 去除不必要的对象属性，用于HTTP提交
-            var formatRoleFun = function (role) {
-                var aRole = role;
+            var formatSubmitDataFun = function () {
+                var role = $scope.role;
                 role.users = selectedUserFun();
-                delete aRole.$promise;
-                delete aRole.$resolved;
-                return aRole;
+                delete role.$promise;
+                delete role.$resolved;
+                return role;
             };
 
             // 编辑页面提交
             var submitByEditFun = function () {
                 $scope.submited = true;
-                var role = formatRoleFun($scope.role);
+                var role = formatSubmitDataFun();
                 roleService.update({name: role.name}, role, function () {
+                    feedback.success("修改角色'" + role.name + "'成功");
                     $location.path('/role');
-                }, function (data) {
-                    alert(data);
+                }, function (resp) {
+                    feedback.error("修改角色'" + role.name + "'失败", resp);
                 });
             };
 
             // 新建页面提交
             var submitByCreateFun = function () {
                 $scope.submited = true;
-                var role = formatRoleFun($scope.role);
+                var role = formatSubmitDataFun();
                 roleService.save(role, function () {
+                    feedback.success("新建角色'" + role.name + "'成功");
                     $location.path('/role');
-                }, function (data) {
-                    alert(data);
+                }, function (resp) {
+                    feedback.error("新建角色'" + role.name + "'失败", resp);
                 });
             };
 

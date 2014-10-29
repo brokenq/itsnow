@@ -19,7 +19,7 @@ mixin select_all()
 
   .btn-toolbar(role="toolbar")
     .btn-group
-      +tool_button("", "refresh", "", "*", "", "")
+      +tool_button("tableParams.reload()", "refresh", "", "*", "", "")
     .btn-group
         +tool_button("actionService.gotoState('system.role_new_form')", "new", "新建", "*", "", "")
         +tool_button("actionService.gotoState('system.role_edit_form')", "edit", "编辑", "1", "", "")

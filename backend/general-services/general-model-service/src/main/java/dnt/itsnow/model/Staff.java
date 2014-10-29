@@ -79,14 +79,6 @@ public class Staff extends ConfigItem {
         this.no = no;
     }
 
-    public String getNickName() {
-        return getName();
-    }
-
-    public void setNickName(String nickName) {
-        setName(nickName);
-    }
-
     public String getEmail() {
         return email;
     }
@@ -123,6 +115,7 @@ public class Staff extends ConfigItem {
     public String toString() {
         final StringBuffer sb = new StringBuffer("Staff{");
         sb.append("no='").append(no).append('\'');
+        sb.append(", name='").append(super.getName()).append('\'');
         sb.append(", mobilePhone='").append(mobilePhone).append('\'');
         sb.append(", fixedPhone='").append(fixedPhone).append('\'');
         sb.append(", email='").append(email).append('\'');
