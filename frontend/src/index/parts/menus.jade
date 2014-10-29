@@ -5,7 +5,7 @@
 mixin menu_item_content
   i.icon-double-angle-right(class="{{menuItem.css}}", ng-if="menuItem.parentId")
   i(class="{{menuItem.css}}", ng-if="!menuItem.parentId")
-  span {{menuItem.name}}
+  span.menu-text {{menuItem.name}}
 
 mixin menu_item_iteration(variableName)
   li(ng-repeat="menuItem in #{variableName}", ng-include="'menu-item-template'")
