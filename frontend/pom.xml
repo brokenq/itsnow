@@ -27,8 +27,8 @@
     </dependencies>
 
     <properties>
-        <target.name>itsnow</target.name>
-        <target.title>Itsnow</target.title>
+        <target.name>platform</target.name>
+        <target.title>Platform</target.title>
         <target.version>${project.version}</target.version>
         <target.index>${target.name}-index-${target.version}</target.index>
         <target.login>${target.name}-login-${target.version}</target.login>
@@ -74,6 +74,61 @@
                 <target.skin>skin-3</target.skin>
             </properties>
         </profile>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>${version.maven.antrun}</version>
+                        <inherited>false</inherited>
+                        <executions>
+                            <execution>
+                                <id>clean-frontend</id>
+                                <phase>clean</phase>
+                                <goals><goal>run</goal></goals>
+                                <configuration>
+                                    <target>
+                                        <echo message="Clean frontend build/deploy" />
+                                        <delete dir="${release.dir}/webapp/build/"/>
+                                        <delete dir="${release.dir}/webapp/deploy/"/>
+                                    </target>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>build-frontend</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <copy todir="${release.dir}/webapp/build/" overwrite="true">
+                                            <fileset dir="${project.basedir}/${target.name}/build"/>
+                                        </copy>
+                                    </target>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>compile-frontend</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <delete dir="${release.dir}/webapp/build/"/>
+                                        <copy todir="${release.dir}/webapp/deploy/" overwrite="true">
+                                            <fileset dir="${project.basedir}/${target.name}/deploy" />
+                                        </copy>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
     <build>
@@ -107,20 +162,8 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>clean-frontend</id>
-                        <phase>clean</phase>
-                        <goals><goal>run</goal></goals>
-                        <configuration>
-                            <target>
-                                <echo message="Clean frontend build/deploy" />
-                                <delete dir="${release.dir}/webapp/build/"/>
-                                <delete dir="${release.dir}/webapp/deploy/"/>
-                            </target>
-                        </configuration>
-                    </execution>
-                    <execution>
                         <id>build-frontend</id>
-                        <phase>package</phase>
+                        <phase>compile</phase>
                         <goals>
                             <goal>run</goal>
                         </goals>
@@ -130,16 +173,12 @@
                                     <arg line="build --verbose"/>
                                 </exec>
                                 <echo message="Frontend is built" />
-                                <copy todir="${release.dir}/webapp/build/" overwrite="true">
-                                    <fileset dir="${project.basedir}/${target.name}/build"/>
-                                </copy>
-
                             </target>
                         </configuration>
                     </execution>
                     <execution>
                         <id>compile-frontend</id>
-                        <phase>install</phase>
+                        <phase>verify</phase>
                         <goals>
                             <goal>run</goal>
                         </goals>
@@ -149,10 +188,6 @@
                                     <arg line="compile"/>
                                 </exec>
                                 <echo message="Frontend is compiled" />
-                                <delete dir="${release.dir}/webapp/build/"/>
-                                <copy todir="${release.dir}/webapp/deploy/" overwrite="true">
-                                    <fileset dir="${project.basedir}/${target.name}/deploy" />
-                                </copy>
                             </target>
                         </configuration>
                     </execution>
@@ -162,4 +197,6 @@
 
         </plugins>
     </build>
+
+
 </project>

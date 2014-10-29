@@ -3,7 +3,10 @@
 
 
 INSERT INTO users(id, account_id, username, nick_name, email, phone, password) VALUES
-(1, 1, 'admin',     'Administrator', 'admin@itsnow.com',    '13012345678', '54442704733e9cddaeb28d54fb631f56247d326288d9d4e09da2039dff070bd47430a0e6b3560cd2');
+(1, 1, 'admin',     'Administrator',     'admin@itsnow.com',      '13012345678', '54442704733e9cddaeb28d54fb631f56247d326288d9d4e09da2039dff070bd47430a0e6b3560cd2'),
+(2, 2, 'msu_admin', 'MSU Administrator', 'msu_admin@itsnow.com',  '13112345678', '54442704733e9cddaeb28d54fb631f56247d326288d9d4e09da2039dff070bd47430a0e6b3560cd2'),
+(3, 3, 'msp_admin', 'MSP Administrator', 'msp_admin@itsnow.com',  '13212345678', '54442704733e9cddaeb28d54fb631f56247d326288d9d4e09da2039dff070bd47430a0e6b3560cd2');
+
 -- 以上密码通过 Groovy Console
 -- import org.springframework.security.crypto.password.StandardPasswordEncoder
 -- passwordEncoder = new StandardPasswordEncoder();
@@ -13,6 +16,8 @@ INSERT INTO users(id, account_id, username, nick_name, email, phone, password) V
 -- 更新以上账户的主用户
 
 UPDATE accounts SET user_id = 1 WHERE id = 1;
+UPDATE accounts SET user_id = 2 WHERE id = 2;
+UPDATE accounts SET user_id = 3 WHERE id = 3;
 
 -- //@UNDO
 -- SQL to undo the change goes here.

@@ -27,11 +27,12 @@ public interface ItsnowHostService {
     Page<ItsnowHost> findAll(String keyword, PageRequest pageRequest);
 
     /**
-     * <h2>查找到所有的数据库主机</h2>
+     * 查找到所有的主机
      *
-     * @return 数据库主机
+     * @return find all hosts
      */
-    List<ItsnowHost> findAllDbHosts();
+    List<ItsnowHost> findAll();
+
 
     /**
      * <h2>根据地址查找主机</h2>
@@ -138,5 +139,5 @@ public interface ItsnowHostService {
      *  @param type 主机类型
      *  throws ItsnowHostException
      */
-    List<ItsnowHost> findByType(String type);
+    List<ItsnowHost> findAllByType(String type);
 }
