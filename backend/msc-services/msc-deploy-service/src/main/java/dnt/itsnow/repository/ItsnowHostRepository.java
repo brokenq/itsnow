@@ -24,7 +24,11 @@ public interface ItsnowHostRepository {
 
     ItsnowHost findByAddress(@Param("address")String address);
 
+    ItsnowHost findByIdAndAddress(@Param("id") Long id, @Param("address") String address);
+
     ItsnowHost findByName(@Param("name") String name);
+
+    ItsnowHost findByIdAndName(@Param("id") Long id, @Param("name") String name);
 
     ItsnowHost findById(@Param("id")Long id);
 

@@ -261,7 +261,7 @@ public class ItsnowProcessesControllerTest extends SessionSupportedControllerTes
         ResultActions result = this.browser.perform(request);
         // 对业务结果的验证
         result.andExpect(status().isOk())
-              .andExpect(content().string("start-job-id"));
+              .andExpect(content().string("{\"job\":\"start-job-id\"}"));
     }
 
     @Test
@@ -280,7 +280,7 @@ public class ItsnowProcessesControllerTest extends SessionSupportedControllerTes
         ResultActions result = this.browser.perform(request);
         // 对业务结果的验证
         result.andExpect(status().isOk())
-              .andExpect(content().string("stop-job-id"));
+              .andExpect(content().string("{\"job\":\"stop-job-id\"}"));
 
     }
 

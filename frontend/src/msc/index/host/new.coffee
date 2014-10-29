@@ -10,9 +10,6 @@ angular.module('MscIndex.HostNew', ['ngResource'])
     ($scope, $location, $state, hostService)->
       # Do nothing now
       $scope.host =
-        name: "srv2"
-        address: "srv2"
-        capacity: 50
         type: "DB"
         configuration:
           user: "root"

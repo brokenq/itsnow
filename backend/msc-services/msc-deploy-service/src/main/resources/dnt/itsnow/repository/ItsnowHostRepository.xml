@@ -55,10 +55,26 @@
         </where>
     </select>
 
+    <select id="findByIdAndAddress" resultMap="hostResult">
+        <include refid="selectHost"/>
+        <where>
+            id = #{id}
+            AND address = #{address}
+        </where>
+    </select>
+
     <select id="findByName" resultMap="hostResult">
         <include refid="selectHost"/>
         <where>
             name = #{name}
+        </where>
+    </select>
+
+    <select id="findByIdAndName" resultMap="hostResult">
+        <include refid="selectHost"/>
+        <where>
+            id = #{id}
+            AND name = #{name}
         </where>
     </select>
 

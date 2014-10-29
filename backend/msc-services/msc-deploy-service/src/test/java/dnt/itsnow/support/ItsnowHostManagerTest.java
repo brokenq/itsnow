@@ -182,4 +182,26 @@ public class ItsnowHostManagerTest {
         hosts = hostManager.findByType("DB");
         Assert.isTrue(1 == hosts.size());
     }
+
+    @Test
+    public void testFindByIdAndName() throws Exception {
+        expect(repository.findByIdAndName(1L, "App Host")).andReturn(host);
+
+        replay(systemInvokeService);
+        replay(repository);
+
+        host = hostManager.findByIdAndName(1L, "App Host");
+        Assert.notNull(host);
+    }
+
+    @Test
+    public void testFindByIdAndAddress() throws Exception {
+        expect(repository.findByIdAndAddress(1L, "172.16.3.4")).andReturn(host);
+
+        replay(systemInvokeService);
+        replay(repository);
+
+        host = hostManager.findByIdAndAddress(1L, "172.16.3.4");
+        Assert.notNull(host);
+    }
 }

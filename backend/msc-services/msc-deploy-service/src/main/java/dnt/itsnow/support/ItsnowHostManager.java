@@ -69,9 +69,25 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     }
 
     @Override
+    public ItsnowHost findByIdAndAddress(Long id, String address) {
+        logger.debug("Finding itsnow host by id: {} and address: {}", id, address);
+        ItsnowHost host = repository.findByIdAndAddress(id, address);
+        logger.debug("Found   itsnow host: {}", host);
+        return host;
+    }
+
+    @Override
     public ItsnowHost findByName(String name) {
         logger.debug("Finding itsnow host by name: {}", name);
         ItsnowHost host = repository.findByName(name);
+        logger.debug("Found   itsnow host: {}", host);
+        return host;
+    }
+
+    @Override
+    public ItsnowHost findByIdAndName(Long id, String name) {
+        logger.debug("Finding itsnow host by id: {} and name: {}", id, name);
+        ItsnowHost host = repository.findByIdAndName(id, name);
         logger.debug("Found   itsnow host: {}", host);
         return host;
     }
@@ -138,6 +154,21 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
         List<ItsnowHost> hosts = repository.findAllByType(HostType.valueOf(type.toUpperCase()));
         logger.debug("Found size of itsnow host is {}", hosts.size());
         return hosts;
+    }
+
+    @Override
+    public void trustMe(String host, String username, String password) throws ItsnowHostException {
+        logger.debug("Setting up trust relationship for target host: {}", host);
+        SystemInvocation trustJob = translator.trustMe(host, username, password);
+        String jobId = invokeService.addJob(trustJob);
+        int code;
+        try {
+            code = invokeService.waitJobFinished(jobId);
+        } catch (SystemInvokeException e) {
+            throw new ItsnowHostException("Checking " + host + " password availability " , e);
+        }
+        if (0 != code)
+            throw new ItsnowHostException("Failed to setup trust relationship");
     }
 
     @Override

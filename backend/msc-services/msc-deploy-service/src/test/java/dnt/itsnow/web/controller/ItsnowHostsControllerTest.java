@@ -19,15 +19,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Itsnow hosts controller test
@@ -162,9 +159,9 @@ public class ItsnowHostsControllerTest extends SessionSupportedControllerTest {
 
     @Test
     public void testCheckName() throws Exception {
-        expect(mockedService.findByName("srv2.itsnow.com")).andReturn(null);
+        expect(mockedService.findByIdAndName(1L, "srv2.itsnow.com")).andReturn(null);
         expect(mockedService.resolveAddress("srv2.itsnow.com")).andReturn("172.16.3.4");
-        MockHttpServletRequestBuilder request = get("/admin/api/hosts/checkName?value=srv2.itsnow.com");
+        MockHttpServletRequestBuilder request = get("/admin/api/hosts/checkName?id=1&value=srv2.itsnow.com");
         decorate(request);
 
         replay(mockedService);
@@ -179,10 +176,10 @@ public class ItsnowHostsControllerTest extends SessionSupportedControllerTest {
 
     @Test
     public void testCheckAddress() throws Exception {
-        expect(mockedService.findByAddress("172.16.3.4")).andReturn(null);
-        expect(mockedService.findByName("srv2.itsnow.com")).andReturn(null);
+        expect(mockedService.findByIdAndAddress(1L, "172.16.3.4")).andReturn(null);
+        expect(mockedService.findByIdAndName(1L, "srv2.itsnow.com")).andReturn(null);
         expect(mockedService.resolveName("172.16.3.4")).andReturn("srv2.itsnow.com");
-        MockHttpServletRequestBuilder request = get("/admin/api/hosts/checkAddress?value=172.16.3.4");
+        MockHttpServletRequestBuilder request = get("/admin/api/hosts/checkAddress?id=1&value=172.16.3.4");
         decorate(request);
 
         replay(mockedService);
@@ -225,4 +222,5 @@ public class ItsnowHostsControllerTest extends SessionSupportedControllerTest {
         decorate(result);
         status().isConflict();
     }
+
 }
