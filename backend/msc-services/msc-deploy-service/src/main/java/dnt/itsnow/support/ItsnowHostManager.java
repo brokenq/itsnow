@@ -33,7 +33,6 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
 
     @Autowired
     ItsnowHostRepository repository;
-    private String mscAddress;
 
     @Override
     public Page<ItsnowHost> findAll(String keyword, PageRequest pageRequest) {
@@ -53,11 +52,11 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     }
 
     @Override
-    public List<ItsnowHost> findAllDbHosts() {
-        logger.debug("Listing all itsnow hosts support mysql instance");
-        List<ItsnowHost> dbHosts = repository.findAllByType(HostType.DB);
-        logger.debug("Listed  {} db hosts", dbHosts.size());
-        return dbHosts;
+    public List<ItsnowHost> findAll() {
+        logger.debug("Finding all hosts");
+        List<ItsnowHost> hosts = repository.findAll();
+        logger.debug("Found   all hosts: {}", hosts.size());
+        return hosts;
     }
 
     @Override
@@ -82,11 +81,6 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
         String hostAddress;
         String appDomain = translator.getAppDomain();
         try {
-            if(mscAddress == null ) mscAddress = initMscAddress();
-        } catch (UnknownHostException e) {
-            throw new ItsnowHostException("Failed to resolve msc host" , e);
-        }
-        try {
             hostAddress = InetAddress.getByName(name).getHostAddress();
         } catch (UnknownHostException e) {
             if( name.toLowerCase().endsWith("." + appDomain) )
@@ -99,10 +93,6 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
         }
         logger.debug("Resolved  host address {}", hostAddress);
         return hostAddress;
-    }
-
-    private String initMscAddress() throws UnknownHostException {
-        return InetAddress.getLocalHost().getHostAddress();
     }
 
     @Override
@@ -133,7 +123,7 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     }
 
     @Override
-    public List<ItsnowHost> findByType(String type) {
+    public List<ItsnowHost> findAllByType(String type) {
         logger.debug("Finding itsnow host by type = {}", type);
         List<ItsnowHost> hosts = repository.findAllByType(HostType.valueOf(type.toUpperCase()));
         logger.debug("Found size of itsnow host is {}", hosts.size());

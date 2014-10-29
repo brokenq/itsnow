@@ -19,7 +19,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -84,7 +83,7 @@ public class ItsnowHostsControllerTest extends SessionSupportedControllerTest {
     @Test
     public void testDbIndex() throws Exception {
         // Service Mock 记录阶段
-        expect(mockedService.findAllDbHosts()).andReturn(hosts);
+        expect(mockedService.findAllByType("DB")).andReturn(hosts);
         // 准备 Mock Request
         MockHttpServletRequestBuilder request = get("/admin/api/hosts/dbs");
         decorate(request);
@@ -213,7 +212,7 @@ public class ItsnowHostsControllerTest extends SessionSupportedControllerTest {
 
     @Test
     public void testListByField() throws Exception {
-        expect(mockedService.findByType("DB")).andReturn(hosts);
+        expect(mockedService.findAllByType("DB")).andReturn(hosts);
         MockHttpServletRequestBuilder request = get("/admin/api/hosts/list/type/DB");
         decorate(request);
 

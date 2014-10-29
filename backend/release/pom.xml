@@ -41,42 +41,6 @@
  
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>net.happyonroad</groupId>
-                <artifactId>spring-component-builder</artifactId>
-                <version>${version.component-framework}</version>
-                <executions>
-                    <execution>
-                        <id>package-app</id>
-                        <goals><goal>package</goal></goals>
-                        <configuration>
-                            <output>${release.dir}</output>
-                            <appName>${app.name}</appName>
-                            <appPort>${rmi.port}</appPort>
-                            <jmx>${jmx.port}</jmx>
-                            <debug>${debug.port}</debug>
-                            <jvmOptions>-Dcomponent.feature.resolvers=dnt.itsnow.platform.services.MybatisFeatureResolver,dnt.itsnow.platform.services.SpringMvcFeatureResolver -Xms128m -Xmx256m -XX:MaxPermSize=256m -Djava.awt.headless=true</jvmOptions>
-                            <propertiesFile>${project.basedir}/config/now.properties</propertiesFile>
-                            <logbackFile>${project.basedir}/config/logback.xml</logbackFile>
-                            <files>${project.basedir}/config/nginx.conf</files>
-                            <folders>${project.basedir}/resources,${project.basedir}/webapp,${project.basedir}/db,${project.basedir}/script</folders>
-                        </configuration>
-                    </execution>
-
-                    <execution>
-                        <id>clean-app</id>
-                        <goals><goal>clean</goal></goals>
-                        <configuration>
-                            <output>${release.dir}</output>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-
     <profiles>
         <profile>
             <id>with-itsnow-msc</id>
@@ -107,6 +71,45 @@
                 <jmx.port>8302</jmx.port>
                 <http.port>8402</http.port>
             </properties>
+        </profile>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>net.happyonroad</groupId>
+                        <artifactId>spring-component-builder</artifactId>
+                        <version>${version.component-framework}</version>
+                        <executions>
+                            <execution>
+                                <id>package-app</id>
+                                <goals><goal>package</goal></goals>
+                                <configuration>
+                                    <output>${release.dir}</output>
+                                    <appName>${app.name}</appName>
+                                    <appPort>${rmi.port}</appPort>
+                                    <jmx>${jmx.port}</jmx>
+                                    <debug>${debug.port}</debug>
+                                    <jvmOptions>-Dcomponent.feature.resolvers=dnt.itsnow.platform.services.MybatisFeatureResolver,dnt.itsnow.platform.services.SpringMvcFeatureResolver -Xms128m -Xmx256m -XX:MaxPermSize=256m -Djava.awt.headless=true</jvmOptions>
+                                    <propertiesFile>${project.basedir}/config/now.properties</propertiesFile>
+                                    <logbackFile>${project.basedir}/config/logback.xml</logbackFile>
+                                    <files>${project.basedir}/config/nginx.conf</files>
+                                    <folders>${project.basedir}/resources,${project.basedir}/webapp,${project.basedir}/db,${project.basedir}/script</folders>
+                                </configuration>
+                            </execution>
+
+                            <execution>
+                                <id>clean-app</id>
+                                <goals><goal>clean</goal></goals>
+                                <configuration>
+                                    <output>${release.dir}</output>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+
         </profile>
     </profiles>
 </project>

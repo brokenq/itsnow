@@ -26,6 +26,7 @@ import java.util.Map;
  * <li>Forget/Recovery password Test</li>
  * <li>Remember Me Test</li>
  * </ul>
+ *
  */
 public class SessionTest extends AbstractTest{
     private Map<String, String> loginRequest;
