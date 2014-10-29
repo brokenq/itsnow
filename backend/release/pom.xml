@@ -41,72 +41,75 @@
  
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>net.happyonroad</groupId>
-                <artifactId>spring-component-builder</artifactId>
-                <version>${version.component-framework}</version>
-                <executions>
-                    <execution>
-                        <id>package-app</id>
-                        <goals><goal>package</goal></goals>
-                        <configuration>
-                            <output>${release.dir}</output>
-                            <appName>${app.name}</appName>
-                            <appPort>${rmi.port}</appPort>
-                            <jmx>${jmx.port}</jmx>
-                            <debug>${debug.port}</debug>
-                            <jvmOptions>-Dcomponent.feature.resolvers=dnt.itsnow.platform.services.MybatisFeatureResolver,dnt.itsnow.platform.services.SpringMvcFeatureResolver -Xms128m -Xmx256m -XX:MaxPermSize=256m -Djava.awt.headless=true</jvmOptions>
-                            <propertiesFile>${project.basedir}/config/now.properties</propertiesFile>
-                            <logbackFile>${project.basedir}/config/logback.xml</logbackFile>
-                            <files>${project.basedir}/config/nginx.conf</files>
-                            <folders>${project.basedir}/resources,${project.basedir}/webapp,${project.basedir}/db,${project.basedir}/script</folders>
-                        </configuration>
-                    </execution>
-
-                    <execution>
-                        <id>clean-app</id>
-                        <goals><goal>clean</goal></goals>
-                        <configuration>
-                            <output>${release.dir}</output>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-
     <profiles>
         <profile>
             <id>with-itsnow-msc</id>
             <properties>
                 <app.id>msc</app.id>
-                <debug.port>1071</debug.port>
-                <jmx.port>1072</jmx.port>
-                <rmi.port>1073</rmi.port>
-                <http.port>8071</http.port>
+                <rmi.port>8100</rmi.port>
+                <debug.port>8200</debug.port>
+                <jmx.port>8300</jmx.port>
+                <http.port>8400</http.port>
             </properties>
         </profile>
         <profile>
             <id>with-itsnow-msu</id>
             <properties>
-                <app.id>msu_001</app.id>
-                <debug.port>1074</debug.port>
-                <jmx.port>1075</jmx.port>
-                <rmi.port>1076</rmi.port>
-                <http.port>8072</http.port>
+                <app.id>msu</app.id>
+                <rmi.port>8101</rmi.port>
+                <debug.port>8201</debug.port>
+                <jmx.port>8301</jmx.port>
+                <http.port>8401</http.port>
             </properties>
         </profile>
         <profile>
             <id>with-itsnow-msp</id>
             <properties>
-                <app.id>msp_001</app.id>
-                <debug.port>1077</debug.port>
-                <jmx.port>1078</jmx.port>
-                <rmi.port>1079</rmi.port>
-                <http.port>8073</http.port>
+                <app.id>msp</app.id>
+                <rmi.port>8102</rmi.port>
+                <debug.port>8202</debug.port>
+                <jmx.port>8302</jmx.port>
+                <http.port>8402</http.port>
             </properties>
+        </profile>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>net.happyonroad</groupId>
+                        <artifactId>spring-component-builder</artifactId>
+                        <version>${version.component-framework}</version>
+                        <executions>
+                            <execution>
+                                <id>package-app</id>
+                                <goals><goal>package</goal></goals>
+                                <configuration>
+                                    <output>${release.dir}</output>
+                                    <appName>${app.name}</appName>
+                                    <appPort>${rmi.port}</appPort>
+                                    <jmx>${jmx.port}</jmx>
+                                    <debug>${debug.port}</debug>
+                                    <jvmOptions>-Dcomponent.feature.resolvers=dnt.itsnow.platform.services.MybatisFeatureResolver,dnt.itsnow.platform.services.SpringMvcFeatureResolver -Xms128m -Xmx256m -XX:MaxPermSize=256m -Djava.awt.headless=true</jvmOptions>
+                                    <propertiesFile>${project.basedir}/config/now.properties</propertiesFile>
+                                    <logbackFile>${project.basedir}/config/logback.xml</logbackFile>
+                                    <files>${project.basedir}/config/nginx.conf</files>
+                                    <folders>${project.basedir}/resources,${project.basedir}/webapp,${project.basedir}/db,${project.basedir}/script</folders>
+                                </configuration>
+                            </execution>
+
+                            <execution>
+                                <id>clean-app</id>
+                                <goals><goal>clean</goal></goals>
+                                <configuration>
+                                    <output>${release.dir}</output>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+
         </profile>
     </profiles>
 </project>

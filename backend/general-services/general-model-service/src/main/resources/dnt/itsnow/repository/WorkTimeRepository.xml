@@ -9,7 +9,7 @@
     </sql>
 
     <select id="count" resultType="java.lang.Integer">
-        SELECT COUNT(0) FROM sites
+        SELECT COUNT(0) FROM work_times
         <where>
             <if test="keyword != null and keyword != ''">
                 <bind name="pattern" value="'%' + keyword + '%' "/>

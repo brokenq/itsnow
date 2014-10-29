@@ -71,7 +71,7 @@ public class StaffRepositoryTest {
 
     @Test
     public void testDelete() throws Exception {
-        String no = "007";
+        String no = "005";
         repository.delete(no);
         Assert.assertNull(repository.findByNo(no));
     }
@@ -97,7 +97,7 @@ public class StaffRepositoryTest {
     }
 
     @Test
-    public void testFindBySn() throws Exception {
+    public void testFindByNo() throws Exception {
         Assert.assertNotNull(repository.findByNo("001"));
         Assert.assertNull(repository.findByNo("no exit of sn"));
     }
