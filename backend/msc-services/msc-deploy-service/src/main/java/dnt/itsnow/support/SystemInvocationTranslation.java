@@ -7,6 +7,7 @@ import dnt.itsnow.model.*;
 import dnt.itsnow.service.SystemInvocationTranslator;
 import dnt.itsnow.system.Process;
 import dnt.spring.Bean;
+import dnt.util.StringUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,16 @@ import java.util.Properties;
  */
 @Service
 public class SystemInvocationTranslation extends Bean implements SystemInvocationTranslator {
+    @Override
+    public String getAppDomain() {
+        String key = "app.domain";
+        String defaultValue = "itsnow.com";
+        String envValue = System.getenv(key);
+        if(StringUtils.isNotEmpty(envValue))
+            defaultValue = envValue;
+
+        return System.getProperty(key, defaultValue);
+    }
 
     @Override
     public SystemInvocation provision(final ItsnowHost host) {
@@ -114,6 +125,7 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
     @Override
     public SystemInvocation deploy(final ItsnowProcess itsnowProcess) {
         final String address = itsnowProcess.getHostAddress();
+        final String dbAddress = itsnowProcess.getSchema().getHostAddress();
         return (new RemoteInvocation(address) {
             // 1. 生成需要部署的msc/msu的目录(做好各种link/配置文件copy工作)
             @Override
@@ -140,7 +152,20 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
               public int perform(Process process) throws Exception {
                   return process.run("./migrate_ms.sh", itsnowProcess.getName());
               }
-          })
+          }
+          .next(new RemoteInvocation(dbAddress) {
+              // 8. 进行db migrate
+              @Override
+              public int perform(Process process) throws Exception {
+                  ItsnowSchema schema = itsnowProcess.getSchema();
+                  return process.run("./assign_user_group.sh",
+                                     schema.getName(),
+                                     schema.getProperty("user"),
+                                     schema.getProperty("password"),
+                                     itsnowProcess.getAccount().getUser().getUsername(),
+                                     "administrators");
+              }
+          }))
           .next(new LocalInvocation() {
               // 9. 将生成的 nginx.conf copy到本机(msc所在机器) 并予以加载
               @Override
@@ -303,12 +328,13 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
         props.setProperty("type", process.getAccount().getType());
         props.setProperty("host", process.getHostAddress());
         props.setProperty("port", process.getProperty("http.port"));
-        props.setProperty("domain", process.getAccount().getDomain());
+        props.setProperty("subdomain", process.getAccount().getDomain());
+        props.setProperty("domain", getAppDomain());
         return createProperties(props, "nginx.vars");
     }
 
     File createProperties(Properties props, String name) {
-        File dumpFile = new File(System.getProperty("APP_HOME"), "tmp/" + name);
+        File dumpFile = new File(System.getProperty("app.home"), "tmp/" + name);
         FileOutputStream outputStream = null;
         try {
             outputStream = new FileOutputStream(dumpFile);

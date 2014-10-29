@@ -26,7 +26,7 @@ public class WorkflowManager extends Bean implements WorkflowService {
     @Override
     public Workflow create(Workflow workflow) throws WorkflowException {
 
-        logger.info("Creating workflow {}", workflow);
+        logger.info("Creating {}", workflow);
 
         if (workflow == null) {
             throw new WorkflowException("Workflow entry can not be empty.");
@@ -35,7 +35,7 @@ public class WorkflowManager extends Bean implements WorkflowService {
         workflow.creating();
         repository.create(workflow);
 
-        logger.info("Created workflow {}", workflow);
+        logger.info("Created  {}", workflow);
 
         return workflow;
     }
@@ -43,7 +43,7 @@ public class WorkflowManager extends Bean implements WorkflowService {
     @Override
     public Workflow update(Workflow workflow) throws WorkflowException {
 
-        logger.info("Updating workflow {}", workflow);
+        logger.info("Updating {}", workflow);
 
         if (workflow == null) {
             throw new WorkflowException("Workflow entry can not be empty.");
@@ -52,7 +52,7 @@ public class WorkflowManager extends Bean implements WorkflowService {
         workflow.creating();
         repository.update(workflow);
 
-        logger.info("Updated workflow {}", workflow);
+        logger.info("Updated  {}", workflow);
 
         return workflow;
     }
@@ -60,14 +60,14 @@ public class WorkflowManager extends Bean implements WorkflowService {
     @Override
     public void destroy(Workflow workflow) throws WorkflowException {
 
-        logger.warn("Deleting workflow {}", workflow);
+        logger.warn("Deleting {}", workflow);
 
         if (workflow == null) {
             throw new WorkflowException("Workflow entry can not be empty.");
         }
         repository.delete(workflow.getSn());
 
-        logger.warn("Deleted workflow {}", workflow);
+        logger.warn("Deleted  {}", workflow);
 
     }
 
@@ -76,14 +76,11 @@ public class WorkflowManager extends Bean implements WorkflowService {
 
         logger.debug("Finding workflows by keyword: {}", keyword);
 
-        if (StringUtils.isNotBlank(keyword)) {
-            keyword = "%" + keyword + "%";
-        }
         int total = repository.count(serviceFlag, keyword);
         List<Workflow> workflows = repository.find(serviceFlag, keyword, pageable);
         DefaultPage<Workflow> page = new DefaultPage<Workflow>(workflows, pageable, total);
 
-        logger.debug("Found   workflows by keyword: {}, list of the number is {}", keyword, page.getContent().size());
+        logger.debug("Found   {}", page.getContent());
 
         return page;
     }
@@ -95,7 +92,7 @@ public class WorkflowManager extends Bean implements WorkflowService {
 
         Workflow workflow = repository.findBySn(sn, serviceFlag);
 
-        logger.debug("Found Workflow by sn, {}", workflow);
+        logger.debug("Found   {}", workflow);
 
         return workflow;
     }

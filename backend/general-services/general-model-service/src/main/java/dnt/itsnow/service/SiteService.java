@@ -48,4 +48,5 @@ public interface SiteService {
      */
     public void destroy(Site site) throws SiteException;
 
+    Site findByName(String name);
 }

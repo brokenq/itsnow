@@ -1,7 +1,6 @@
 -var sysName = '<%=sysName%>'
 -var styles = [<% styles.forEach( function(file){ print('"' + file + '",') }); %>]
 -var scripts = [<% scripts.forEach( function(file){ print('"' + file + '",') }); %>]
--var version = '<%=version%>'
 mixin dropdown_toggle(icon, badge, number)
   a.dropdown-toggle(data-toggle="dropdown", href="javascript:void(0)")
     i(class=icon)
@@ -32,11 +31,9 @@ html(ng-app="Itsnow.#{sysName}Index")
     link(rel="icon", type="image/icon", href="/assets/favicon.ico")
     each style in styles
       link(rel="stylesheet", type="text/css", href=style)
-    script(type="text/javascript")
-      window.VERSION = "#{version}";
     each js in scripts
       script(type="text/javascript", src=js)
-  body(ng-controller="IndexCtrl")
+  body(ng-controller="IndexCtrl", ng-class="system.skin")
     .navbar.navbar-default#navbar
       +check_option('navbar', 'fixed')
 
@@ -44,7 +41,11 @@ html(ng-app="Itsnow.#{sysName}Index")
         .navbar-header.pull-left
           a.navbar-brand(href="javascript:void(0)")
             i.icon-leaf
-            | ItsNow ITIL Platform
+            | ItsNow {{system.label}}系统
+            | V{{system.version}}
+        .navbar-header.pull-left#loading(style="display:none;")
+            a.navbar-brand(href="javascript:void(0)")
+                img(src="assets/loading3.gif")
 
         .navbar-header.pull-right(role="navigation")
           ul.nav.ace-nav
@@ -72,3 +73,7 @@ html(ng-app="Itsnow.#{sysName}Index")
 
       a.btn-scroll-up.btn.btn-sm.btn-inverse(href="java")#btn-scroll-up
         i.icon-double-angle-up.icon-only.bigger-110
+    .feedback.alert.alert-block#feedback
+      button.close(type="button")
+        i.icon-remove
+      span#feedback_content {{feedback.message}}

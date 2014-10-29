@@ -80,18 +80,19 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     public String resolveAddress(String name) throws ItsnowHostException{
         logger.debug("Resolving host address of {}", name);
         String hostAddress;
+        String appDomain = translator.getAppDomain();
         try {
             if(mscAddress == null ) mscAddress = initMscAddress();
         } catch (UnknownHostException e) {
-            throw new ItsnowHostException("Failed to resolve msc host: srv1.itsnow.com " , e);
+            throw new ItsnowHostException("Failed to resolve msc host" , e);
         }
         try {
             hostAddress = InetAddress.getByName(name).getHostAddress();
         } catch (UnknownHostException e) {
-            if( name.toLowerCase().endsWith(".itsnow.com") )
+            if( name.toLowerCase().endsWith("." + appDomain) )
                 throw new ItsnowHostException("Failed to resolve host name: " + name, e);
             else
-                return resolveAddress(name + ".itsnow.com");
+                return resolveAddress(name + "." + appDomain);
         }
         if(StringUtils.equals(mscAddress, hostAddress)){
             throw new ItsnowHostException("Bad host name: " + name);
@@ -101,8 +102,7 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     }
 
     private String initMscAddress() throws UnknownHostException {
-        String mscHost = System.getProperty("msc.host", "srv1.itsnow.com");
-        return InetAddress.getByName(mscHost).getHostAddress();
+        return InetAddress.getLocalHost().getHostAddress();
     }
 
     @Override
@@ -135,7 +135,7 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     @Override
     public List<ItsnowHost> findByType(String type) {
         logger.debug("Finding itsnow host by type = {}", type);
-        List<ItsnowHost> hosts = repository.findByType(type);
+        List<ItsnowHost> hosts = repository.findAllByType(HostType.valueOf(type.toUpperCase()));
         logger.debug("Found size of itsnow host is {}", hosts.size());
         return hosts;
     }
@@ -156,6 +156,7 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
             creating.setProperty("mysql.slave.index", String.valueOf(total+1) );
         }
         SystemInvocation configJob = translator.provision(creating);
+        configJob.setId("provision-" + creating.getAddress());
         configJob.setUserFlag(1);// 1 代表创建
         //需要在create主机之后，执行脚本，将主机环境配置好
         // 实际的流程是，it，运营人员开好一个虚拟机，而后通过msc的界面输入该虚拟机的信息
@@ -166,6 +167,7 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
         String invocationId = invokeService.addJob(configJob);
         creating.setProperty(CREATE_INVOCATION_ID, invocationId);
         creating.creating();
+        creating.setStatus(HostStatus.Planing);
         repository.create(creating);
         logger.info("Created  host {}", creating);
         return creating;
@@ -176,10 +178,12 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     public void delete(ItsnowHost host) throws ItsnowHostException {
         logger.warn("Deleting {}", host);
         SystemInvocation delistJob = translator.delist(host);
+        delistJob.setId("delist-" + host.getAddress());
         delistJob.setUserFlag(-1);
         String delistJobId = invokeService.addJob(delistJob);
         host.setProperty(DELETE_INVOCATION_ID, delistJobId);
         host.updating();
+        host.setStatus(HostStatus.Delisting);
         repository.update(host);
         // 因为主机下线操作比较快，所以采用同步方式
         try {
@@ -208,7 +212,12 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     @Override
     public long follow(ItsnowHost host, String jobId, long offset, List<String> result) {
         logger.trace("Follow {}'s job: {}", host, jobId);
-        return invokeService.read(jobId, offset, result);
+        if(jobId.equals(host.getProperty(CREATE_INVOCATION_ID)) && host.getStatus() == HostStatus.Planing){
+            return invokeService.read(jobId, offset, result);
+        }else if (jobId.equals(host.getProperty(DELETE_INVOCATION_ID)) && host.getStatus() == HostStatus.Delisting){
+            return invokeService.read(jobId, offset, result);
+        }
+        return -1;
     }
 
     @Override

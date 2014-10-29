@@ -23,8 +23,7 @@ import java.util.*;
  */
 public class MigrateResourcePopulator implements DatabasePopulator {
 
-    private List<Resource> scripts = new ArrayList<Resource>();
-    private Map<Resource, String> directions = new HashMap<Resource, String>();
+    private List<ResourceWithDir> scripts = new ArrayList<ResourceWithDir>();
 
     private String sqlScriptEncoding;
 
@@ -54,10 +53,7 @@ public class MigrateResourcePopulator implements DatabasePopulator {
      * @param script the path to an SQL script
      */
     public void addScript(Resource script, String direction) {
-        this.scripts.add(script);
-        if( direction != null ){
-           directions.put(script, direction);
-        }
+        this.scripts.add(new ResourceWithDir(script, direction));
     }
 
 
@@ -140,10 +136,9 @@ public class MigrateResourcePopulator implements DatabasePopulator {
      */
     @Override
     public void populate(Connection connection) throws ScriptException {
-        for (Resource script : this.scripts) {
-            String direction = directions.get(script);
+        for (ResourceWithDir resource : this.scripts) {
             ScriptUtils.executeSqlScript(connection,
-                    encodeScript(script, direction),
+                    encodeScript(resource.script, resource.direction),
                     this.continueOnError,
                     this.ignoreFailedDrops,
                     this.commentPrefix,
@@ -190,6 +185,17 @@ public class MigrateResourcePopulator implements DatabasePopulator {
             Charset charset = sqlScriptEncoding == null ? Charset.defaultCharset() : Charset.forName(sqlScriptEncoding);
             Resource filtered = new ByteArrayResource(StringUtils.join(remains, "\n").getBytes(charset));
             return new EncodedResource(filtered, charset);
+        }
+    }
+
+    static class ResourceWithDir{
+        Resource script;
+        String direction;
+
+        public ResourceWithDir(Resource script, String direction) {
+            this.script = script;
+            this.direction = direction;
+
         }
     }
 

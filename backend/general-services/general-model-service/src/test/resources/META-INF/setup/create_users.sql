@@ -1,6 +1,3 @@
--- // create_users
--- Migration SQL that makes the change goes here.
--- SET SCHEMA itsnow_msc;
 CREATE SCHEMA IF NOT EXISTS itsnow_msc;
 DROP TABLE IF EXISTS itsnow_msc.users;
 CREATE TABLE IF NOT EXISTS itsnow_msc.users (
@@ -19,8 +16,3 @@ CREATE TABLE IF NOT EXISTS itsnow_msc.users (
   updated_at        TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP
 --   FOREIGN KEY (account_id) REFERENCES accounts(id)
 );
-
--- //@UNDO
--- SQL to undo the change goes here.
-
-DROP TABLE IF EXISTS itsnow_msc.users;

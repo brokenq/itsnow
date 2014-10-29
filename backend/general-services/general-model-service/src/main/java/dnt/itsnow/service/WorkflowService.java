@@ -6,7 +6,7 @@ import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 
 /**
- * <h1>工作流配置信息业务接口层</h1>
+ * <h1>流程管理业务接口层</h1>
  */
 public interface WorkflowService {
 

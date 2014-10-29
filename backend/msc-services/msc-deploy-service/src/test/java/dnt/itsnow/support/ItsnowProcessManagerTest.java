@@ -60,8 +60,8 @@ public class ItsnowProcessManagerTest {
 
     @Before
     public void setUp() throws Exception {
-        System.setProperty("APP_HOME", System.getProperty("java.io.tmpdir"));
-        FileUtils.forceMkdir(new File(System.getProperty("APP_HOME"), "tmp"));
+        System.setProperty("app.home", System.getProperty("java.io.tmpdir"));
+        FileUtils.forceMkdir(new File(System.getProperty("app.home"), "tmp"));
         host = DeployFixture.testHost();
         host.setId(1L);
         schema = DeployFixture.testSchema();
@@ -155,8 +155,9 @@ public class ItsnowProcessManagerTest {
 
     @Test
     public void testFollow() throws Exception {
-        process.setStatus(ProcessStatus.Running);
+        process.setStatus(ProcessStatus.Stopping);
         String jobId = "stop-process-job-id";
+        process.setProperty(ItsnowProcessManager.STOP_INVOCATION_ID, jobId);
         final List<String> messages = new LinkedList<String>();
         final String[] lines = {"one", "two"};
         expect(systemInvokeService.read(jobId, 0, messages)).andAnswer(new IAnswer<Long>() {

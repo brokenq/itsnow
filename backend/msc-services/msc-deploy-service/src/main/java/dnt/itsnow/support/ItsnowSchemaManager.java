@@ -71,6 +71,7 @@ public class ItsnowSchemaManager extends ItsnowResourceManager implements Itsnow
     public ItsnowSchema create(ItsnowSchema creating) throws ItsnowSchemaException {
         logger.info("Creating itsnow schema: {}", creating);
         SystemInvocation createJob = translator.create(creating);
+        createJob.setId("create-schema-" + creating.getName());
         String invocationId = invokeService.addJob(createJob);
         try {
             invokeService.waitJobFinished(invocationId);
@@ -88,6 +89,7 @@ public class ItsnowSchemaManager extends ItsnowResourceManager implements Itsnow
     public void delete(ItsnowSchema schema) throws ItsnowSchemaException {
         logger.warn("Deleting itsnow schema: {}", schema);
         SystemInvocation dropJob = translator.drop(schema);
+        dropJob.setId("drop-schema-" + schema.getName());
         String invocationId = invokeService.addJob(dropJob);
         schema.setProperty(DELETE_INVOCATION_ID, invocationId);
         try {

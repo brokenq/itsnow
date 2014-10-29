@@ -26,7 +26,7 @@ angular.module('System.Site', ['ngTable', 'ngResource'])
 
             var options = {
                 page: 1,           // show first page
-                count: 10           // count per page
+                count: 5           // count per page
             };
             var args = {
                 total: 0,
@@ -67,6 +67,7 @@ angular.module('System.Site', ['ngTable', 'ngResource'])
 
             $scope.remove = function (site) {
                 siteService.remove({sn: site.sn},function(){
+                    delete $scope.checkboxes.items[site.sn];
                     $scope.tableParams.reload();
                 });
             };

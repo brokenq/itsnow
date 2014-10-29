@@ -11,7 +11,7 @@ public interface CommonServiceItemRepository {
 
     List<PublicServiceItem> findAll();
 
-    PublicServiceItem findById(Long id);
+    PublicServiceItem findBySn(String sn);
 
     List<PublicServiceItem> findByAccountId(Long accountId);
 }

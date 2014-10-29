@@ -1,0 +1,46 @@
+doctype html
+
+mixin widgetBox(title)
+  .col-md-offset-2.col-md-8
+    .widget-box
+      .widget-header
+        h4 #{title}
+      .widget-body
+        block
+mixin formGroup(obj, name, label, icon, tip)
+  .form-group
+    label.col-xs-12.col-sm-3.control-label.no-padding-right(for="#{obj}_#{name}") #{label}
+    .col-xs-12.col-sm-5
+      span.block.input-icon.input-icon-right
+        block
+        i(class="icon-#{icon}")
+    .help-block.col-xs-12.col-sm-reset.inline #{tip}
+mixin field(name, label)
+  input.form-control(id="item_#{name}", name="item.#{name}", ng-model="item.#{name}", required,  ng-maxlength="20", type="text", placeholder="#{label}")
+mixin fieldWithCheck(name, label, checkUrl)
+  input.form-control(id="item#{name}", name="item.#{name}", ng-model="item.#{name}", required,  ng-maxlength="20", type="text", placeholder="#{label}", ng-check="#{checkUrl}")
+
+.row(ng-controller="ItemDetailCtrl")
+  form.form-horizontal(name="itemForm", novalidate="novalidate", ng-model-options="{ updateOn: 'mousedown blur' }", role="form")
+      +formGroup("item", "sn",     "SN", "star", "服务项编号，尽量为简单的英文字符")
+        +field("sn", "名称")
+      +formGroup("item", "title",  "标题",   "font", "服务目录标题")
+        +field("title", "标题")
+      +formGroup("item", "description", "描述",   "th", "简单描述服务目录的功能或者作用")
+        +field("description", "描述")
+      +formGroup("item", "icon", "图标",   "th", "")
+        +field("icon", "图标")
+        img(ng-src="{{item.icon}}")
+      +formGroup("item", "catalog", "父节点",   "th", "父节点ID")
+        input.form-control(id="item_catalog", name="item.catalog", ng-model="item.catalog.id", required,  ng-maxlength="20", type="text", placeholder="父节点",readonly=true)
+
+    .row-fluid.actions
+      .col-xs-12.col-sm-3
+      .col-xs-12.col-sm-5
+        button.btn.btn-sm.btn-primary(type="submit",ng-click='process(item)')
+          i.icon-ok
+          | {{buttonLabel}}
+        button.btn.btn-sm(type='reset',ng-click='reset()')
+          i.icon-remove
+          | 取消
+.row

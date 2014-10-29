@@ -7,5 +7,5 @@ package dnt.itsnow.model;
  * Itsnow Host Status
  */
 public enum HostStatus {
-    Planing, Running, Abnormal, Shutdown
+    Planing, Running, Abnormal, Delisting, Shutdown
 }

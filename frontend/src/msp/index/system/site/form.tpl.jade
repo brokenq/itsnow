@@ -1,50 +1,51 @@
-.col-xs-12.col-sm-4
-    .widget-box
-        .widget-header
-            h4
-            span.widget-toolbar
-                a(href='', data-action='collapse')
-                    i.icon-chevron-up
-                a(href='', data-action='close')
-                    i.icon-remove
-        .widget-body
-            .widget-main(ng-controller='SiteCtrl')
-                form(novalidate="novalidate", role='form', name='siteForm', ng-submit='submit(site)')
-                    .row
-                        .col-xs-6
-                            div
-                                label(for='form-field-mask-1')
-                                    | 地点名称
-                                .input-group
-                                    input#form-field-mask-1.form-control(type='text', ng-model='site.name', name='titleRepeat', required)
-                        .col-xs-6
-                            div
-                                label(for='form-field-select-1') 区域
-                                select#form-field-select-1.form-control(
-                                    ng-model='dictionary',
-                                    ng-options="dictionary.display for dictionary in dictionaries",
-                                    required)
-                    hr
-                    div
-                        label(for='form-field-8') 地址
-                        textarea#form-field-8.form-control.limited(
-                            ng-model='site.address',
-                            ng-maxlength="100",
-                            required)
-                    hr
-                    div
-                        label(for='form-field-9') 描述
-                        textarea#form-field-9.form-control.limited(
-                            ng-model='site.description',
-                            ng-maxlength="100")
-                    hr
-                    div
-                        label(for='form-field-select-2') 工作时间
-                        select#form-field-select-2.form-control(
-                        ng-model='workTime',
-                        ng-options="(workTime.name+' '+workTime.startAt+'-'+workTime.endAt) for workTime in workTimes",
-                        required)
-                    div.form-actions.center
-                        button.btn.btn-sm.btn-success(type='submit')
-                            | 提交
-                            i.icon-arrow-right.icon-on-right.bigger-110
+mixin fieldGroup(title,help)
+    .form-group.has-info(ng-class!=attributes.ngClass, ng-hide!=attributes.ngHide, ng-show!=attributes.ngShow)
+        label.col-xs-12.col-sm-3.control-label.no-padding-right(for!=attributes.for) #{title}
+        .col-xs-12.col-sm-5(class!=attributes.class)
+            block
+        .help-block.col-xs-12.col-sm-reset.inline #{help}
+
+.row
+    .col-xs-12(ng-controller='SiteCtrl')
+        .row-fluid
+            .span12
+                .widget-box
+                    div.widget-header.widget-header-blue.widget-header-flat
+                        h4.lighter 地点表单
+                    .widget-body
+                        .widget-main
+                            form.form-horizontal(role='form', novalidate="novalidate", name='siteForm', ng-submit='submit(site)')
+                                +fieldGroup("地点名称","不可重复")(for="site_name")
+                                    span.block.input-icon.input-icon-right
+                                        input.form-control#site_name(name="site_name", ng-model='site.name', required, ng-minlength="4",
+                                        ng-maxlength="20", ng-pattern='/^[\u4e00-\u9fa5_a-zA-Z0-9\\-\\.]+$/', ng-readonly="false",
+                                        ng-check="/api/sites/check/{0}", type="text", placeholder="地点名称")
+                                        i.icon-user
+                                        input.form-control#site_name_other(name="site_name_other", ng-model='site.name', ng-readonly="true", type="text", style="dispaly:none;")
+                                        i.icon-user
+                                +fieldGroup("区域","部门所在区域")(for="site_area")
+                                    span.block.input-icon.input-icon-right
+                                        select#site_area.form-control(ng-model='dictionary', required,
+                                            ng-options="dictionary.display for dictionary in dictionaries")
+                                        i.icon-check
+                                +fieldGroup("地址","部门具体地址")(for="site_addr")
+                                    span.block.input-icon.input-icon-right
+                                        textarea.form-control.limited#site_addr(name="site_addr", ng-model='site.address', ng-maxlength="100", placeholder="地址信息")
+                                        i.icon-edit
+                                +fieldGroup("工作时间","部门的工作时间")(for="site_work_time")
+                                    span.block.input-icon.input-icon-right
+                                        select#site_work_time.form-control(ng-model='workTime', required,
+                                            ng-options="(workTime.name+' '+workTime.startAt+'-'+workTime.endAt) for workTime in workTimes")
+                                        i.icon-check
+                                +fieldGroup("描述","对此角色的相关描述")(for="site_desc")
+                                    span.block.input-icon.input-icon-right
+                                        textarea.form-control.limited#site_desc(name="site_desc", ng-model='site.description', ng-maxlength="100", placeholder="描述文本")
+                                        i.icon-edit
+                                .clearfix.form-actions
+                                    .col-md-offset-3.col-md-9
+                                        button.btn.btn-info#submit(type='submit', ng-disabled="submited")
+                                            i.icon-ok.bigger-110
+                                            | 提交
+                                        button.btn(type='button', ng-click="cancel()")
+                                            i.icon-undo.bigger-110
+                                            | 取消

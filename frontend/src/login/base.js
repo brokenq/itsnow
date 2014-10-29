@@ -23,6 +23,7 @@ angular.module("Itsnow.Login", [
   })
 
   .controller('LoginCtrl', ['$rootScope', '$scope', function($rootScope, $scope){
+    $rootScope.system = window.system;
     $scope.$on('$stateChangeSuccess', function(evt, toState){
         if ( angular.isDefined( toState.data.pageTitle ) ) {
             $rootScope.pageTitle = toState.data.pageTitle + ' | ItsNow' ;

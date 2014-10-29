@@ -55,10 +55,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
         //谁在前，谁优先级高
         authenticated.antMatchers(HttpMethod.POST, "api/session").anonymous()
                      .antMatchers("/login.html").anonymous() // use spring interceptor
-                .antMatchers("/api/**").hasAnyRole("ADMIN", "MONITOR", "REPORTER", "USER","LINE_ONE","LINE_TWO","ROLE_SERVICE_DESK")
+                .antMatchers("/public/api/**").anonymous()
+                .antMatchers("/api/**").authenticated()
                 .antMatchers("/admin/api/**").hasAnyRole("ADMIN")
-                .antMatchers("/monitor/api/**").hasAnyRole("MONITOR")
-                .antMatchers("/reporter/api/**").hasAnyRole("REPORTER")
                 .antMatchers("/index.html").not().anonymous()
                 .antMatchers("/routes").hasRole("ANONYMOUS")
                 .antMatchers("/**").permitAll();

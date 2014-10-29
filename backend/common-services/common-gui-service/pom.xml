@@ -7,7 +7,7 @@
     <parent>
         <groupId>dnt.itsnow</groupId>
         <artifactId>common-services</artifactId>
-        <version>0.2.1-SNAPSHOT</version>
+        <version>0.2.2-SNAPSHOT</version>
     </parent>
 
     <artifactId>common-gui-service</artifactId>

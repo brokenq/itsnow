@@ -19,16 +19,17 @@ public class DeployRepositoryConfig extends RepositoryConfigWithH2  {
 
     protected String[] sqlScripts() {
         return new String[]{
-                "classpath:META-INF/migrate/20140722112724_create_accounts.sql@up",
-                "classpath:META-INF/migrate/20140722125016_create_users.sql@up",
+                "classpath:META-INF/migrate/20140720112724_create_accounts.sql@up",
+                "classpath:META-INF/migrate/20140720125016_create_users.sql@up",
                 "classpath:META-INF/migrate/20140827112025_create_itsnow_hosts.sql@up",
                 "classpath:META-INF/migrate/20140827112030_create_itsnow_schemas.sql@up",
                 "classpath:META-INF/migrate/20140827112032_create_itsnow_processes.sql@up",
-                "classpath:META-INF/migrate/20140728142611_insert_accounts.sql@up",
-                "classpath:META-INF/migrate/20140728143025_insert_users.sql@up",
-                "classpath:META-INF/migrate/20140827112047_insert_itsnow_hosts.sql@up",
-                "classpath:META-INF/migrate/20140827142537_insert_itsnow_schemas.sql@up",
-                "classpath:META-INF/migrate/20140827142851_insert_itsnow_processes.sql@up"
+
+                "classpath:META-INF/setup/insert_accounts.sql",
+                "classpath:META-INF/setup/insert_users.sql",
+                "classpath:META-INF/setup/insert_itsnow_hosts.sql",
+                "classpath:META-INF/setup/insert_itsnow_schemas.sql",
+                "classpath:META-INF/setup/insert_itsnow_processes.sql"
         };
     }
 }

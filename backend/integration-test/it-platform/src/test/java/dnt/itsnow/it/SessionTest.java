@@ -33,8 +33,8 @@ public class SessionTest extends AbstractTest{
     @Before
     public void setUp() throws Exception {
         loginRequest = new HashMap<String, String>();
-        loginRequest.put("username", "admin");
-        loginRequest.put("password", "secret");
+        loginRequest.put("username", getValue("it.user", "admin"));
+        loginRequest.put("password", getValue("it.password", "secret"));
     }
 
     @Test

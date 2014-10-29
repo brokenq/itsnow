@@ -122,4 +122,16 @@ public class SiteManager extends Bean implements SiteService {
 
         logger.warn("Deleted  {}", site);
     }
+
+    @Override
+    public Site findByName(String name) {
+
+        logger.debug("Finding Site by name: {}", name);
+
+        Site site = siteRepository.findByName(name);
+
+        logger.debug("Found   {}", site);
+
+        return site;
+    }
 }

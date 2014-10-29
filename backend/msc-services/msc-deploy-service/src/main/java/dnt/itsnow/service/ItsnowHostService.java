@@ -95,7 +95,7 @@ public interface ItsnowHostService {
      *
      * @param host   被读取的主机对象
      * @param job    正在/已经 执行的任务描述符
-     * @param offset 信息的offset
+     * @param offset 信息的offset，如果小于0，则说明已经结束，不需要follow
      * @return 当前的位置，也是下次来读的始点
      */
     long follow(ItsnowHost host, String job, long offset, List<String> result);

@@ -1,35 +1,41 @@
-.col-xs-12.col-sm-4
-    .widget-box
-        .widget-header
-            h4
-            span.widget-toolbar
-                a(href='', data-action='collapse')
-                    i.icon-chevron-up
-                a(href='', data-action='close')
-                    i.icon-remove
-        .widget-body
-            .widget-main(ng-controller='RoleCtrl')
-                form(novalidate="novalidate", role='form', name='roleForm', ng-submit='submit(role)')
-                    div
-                        label(for='form-field-mask-1')
-                            | 角色名称
-                        .input-group
-                            input#form-field-mask-1.form-control(type='text', ng-model='role.name', name='titleRepeat', required, remote-validation)
-                    hr
-                    div
-                        label(for='form-field-9') 描述
-                        textarea#form-field-9.form-control.limited(
-                            ng-model='role.description',
-                            ng-maxlength="50")
-                    hr
-                    label(for='form-field-select-2') 用户（可多选）
-                    div(multi-select
-                        input-model="users"
-                        button-label="username"
-                        item-label="username"
-                        tick-property="ticked")
-                    hr
-                    div.form-actions.center
-                        button.btn.btn-sm.btn-success(type='submit')
-                            | 提交
-                            i.icon-arrow-right.icon-on-right.bigger-110
+mixin fieldGroup(title,help)
+    .form-group.has-info(ng-class!=attributes.ngClass, ng-hide!=attributes.ngHide, ng-show!=attributes.ngShow)
+        label.col-xs-12.col-sm-3.control-label.no-padding-right(for!=attributes.for) #{title}
+        .col-xs-12.col-sm-5(class!=attributes.class)
+            block
+        .help-block.col-xs-12.col-sm-reset.inline #{help}
+
+.row
+    .col-xs-12(ng-controller='RoleCtrl')
+        .row-fluid
+            .span12
+                .widget-box
+                    div.widget-header.widget-header-blue.widget-header-flat
+                        h4.lighter 角色表单
+                    .widget-body
+                        .widget-main
+                            form.form-horizontal(role='form', novalidate="novalidate", name='roleForm', ng-submit='submit(role)')
+                                +fieldGroup("角色名称","角色名不可重复")(for="role_name")
+                                    span.block.input-icon.input-icon-right
+                                        input.form-control#role_name(name="role_name", ng-model='role.name', required, ng-minlength="4",
+                                        ng-maxlength="20", ng-pattern='/^(ROLE_)([a-zA-Z0-9]|_|\\-|\\.)+$/', ng-readonly="false",
+                                        ng-check="/api/roles/check/{0}", type="text", placeholder="角色名")
+                                        i.icon-user
+                                        input.form-control#role_name_other(name="role_name_other", ng-model='role.name', ng-readonly="true", type="text", style="dispaly:none;")
+                                        i.icon-user
+                                +fieldGroup("用户","此角色所包含的用户")(for="role_users")
+                                    span.block.input-icon.input-icon-right
+                                        div#role_users(multi-select, input-model="users", button-label="username", item-label="username", tick-property="ticked")
+                                        i.icon-user
+                                +fieldGroup("描述","对此角色的相关描述")(for="role_desc")
+                                    span.block.input-icon.input-icon-right
+                                        textarea.form-control.limited#role_desc(name="role_desc", ng-model='role.description', ng-maxlength="100", placeholder="描述文本")
+                                        i.icon-edit
+                                .clearfix.form-actions
+                                    .col-md-offset-3.col-md-9
+                                        button.btn.btn-info#submit(type='submit', ng-disabled="submited")
+                                            i.icon-ok.bigger-110
+                                            | 提交
+                                        button.btn(type='button', ng-click="cancel()")
+                                            i.icon-undo.bigger-110
+                                            | 取消

@@ -110,6 +110,7 @@ public class CommonServiceCatalogManager extends Bean implements CommonServiceCa
         return commonServiceCatalogList;
     }
 
+    @Override
     public void setFormattedServiceCatalogList(List<PublicServiceCatalog> formattedServiceCatalogList) {
         this.formattedServiceCatalogList = formattedServiceCatalogList;
     }
@@ -121,6 +122,7 @@ public class CommonServiceCatalogManager extends Bean implements CommonServiceCa
         return formattedServiceCatalogList;
     }
 
+    @Override
     public void setCommonServiceCatalogList(List<PublicServiceCatalog> commonServiceCatalogList) {
         this.commonServiceCatalogList = commonServiceCatalogList;
     }

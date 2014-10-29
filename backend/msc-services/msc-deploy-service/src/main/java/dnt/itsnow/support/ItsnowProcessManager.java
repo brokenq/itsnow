@@ -93,6 +93,7 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
         }
 
         SystemInvocation deployJob = translator.deploy(creating);
+        deployJob.setId(String.format("deploy-process-%s", creating.getName()));
         deployJob.setUserFlag(DEPLOY_FLAG);
         String invocationId = invokeService.addJob(deployJob);
         try {
@@ -153,6 +154,7 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
         if( process.getStatus() != ProcessStatus.Stopped)
             throw new ItsnowProcessException("Can't destroy the non-stopped process with status = " + process.getStatus());
         SystemInvocation undeployJob = translator.undeploy(process);
+        undeployJob.setId(String.format("undeploy-process-%s", process.getName()));
         undeployJob.setUserFlag(UNDEPLOY_FLAG);
         String invocationId = invokeService.addJob(undeployJob);
         process.setProperty(DELETE_INVOCATION_ID, invocationId);
@@ -186,6 +188,7 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
             throw new ItsnowProcessException("Can't start the process with status = " + process.getStatus());
         // 因为启动一个系统可能是一个比较慢的事情，所以采用异步方式，任务启动之后就返回
         SystemInvocation startJob = translator.start(process);
+        startJob.setId("start-process-" + process.getName());
         startJob.setUserFlag(START_FLAG);
         process.updating();
         String invocationId = invokeService.addJob(startJob);
@@ -201,6 +204,7 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
         if( process.getStatus() == ProcessStatus.Stopped || process.getStatus() == ProcessStatus.Stopping)
             throw new ItsnowProcessException("Can't stop the " + process.getStatus() + " process");
         SystemInvocation stopJob = translator.stop(process);
+        stopJob.setId("stop-process-" + process.getName());
         stopJob.setUserFlag(STOP_FLAG);
         process.updating();
         String invocationId = invokeService.addJob(stopJob);
@@ -222,7 +226,12 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
     @Override
     public long follow(ItsnowProcess process, String jobId, long offset, List<String> result) {
         logger.trace("Follow {}'s job: {}", process, jobId);
-        return invokeService.read(jobId, offset, result);
+        if(jobId.equals(process.getProperty(START_INVOCATION_ID)) && process.getStatus() == ProcessStatus.Starting){
+            return invokeService.read(jobId, offset, result);
+        }else if (jobId.equals(process.getProperty(STOP_INVOCATION_ID)) && process.getStatus() == ProcessStatus.Stopping){
+            return invokeService.read(jobId, offset, result);
+        }
+        return -1;
     }
 
     @Override
@@ -301,10 +310,10 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
         process.setName("itsnow_" + account.getSn());
         process.setDescription("Itsnow process for " + account.getSn());
         process.setWd("/opt/itsnow/" + process.getName());
-        process.setProperty("rmi.port", host.getProperty("next.rmi.port", "8100"));
-        process.setProperty("debug.port", host.getProperty("next.debug.port", "8200"));
-        process.setProperty("jmx.port", host.getProperty("next.jmx.port", "8300"));
-        process.setProperty("http.port", host.getProperty("next.http.port", "8400"));
+        process.setProperty("rmi.port", host.getProperty("next.rmi.port", "8101"));
+        process.setProperty("debug.port", host.getProperty("next.debug.port", "8201"));
+        process.setProperty("jmx.port", host.getProperty("next.jmx.port", "8301"));
+        process.setProperty("http.port", host.getProperty("next.http.port", "8401"));
         return process;
     }
 

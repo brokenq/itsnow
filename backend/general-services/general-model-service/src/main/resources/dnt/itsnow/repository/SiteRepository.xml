@@ -33,16 +33,30 @@
             <result property="type" column="dictionaryType"/>
         </association>
         <!-- 多对多关系 -->
-        <collection property="departments" ofType="Department">
-            <id property="id" column="departmentId" />
-            <result property="name" column="departmentName" />
-            <!--<result property="parent_id" column="parent_id" />-->
-            <result property="sn" column="departmentSn" />
-            <result property="description" column="departmentDescription" />
-        </collection>
+        <collection property="departments" column="id" ofType="Department" select="selectDept" />
     </resultMap>
 
-    <sql id="selectSite">
+    <resultMap id="deptResult" type="Department">
+        <id property="id" column="departmentId" />
+        <result property="name" column="departmentName" />
+        <!--<result property="parent_id" column="parent_id" />-->
+        <result property="sn" column="departmentSn" />
+        <result property="description" column="departmentDescription" />
+    </resultMap>
+
+    <select id="selectDept" resultMap="deptResult">
+        SELECT
+            d.id          AS departmentId,
+            d.name        AS departmentName,
+            d.sn          AS departmentSn,
+            d.description AS departmentDescription
+        FROM   site_depts sd
+            LEFT JOIN departments d
+                ON sd.dept_id = d.id
+        WHERE sd.site_id = #{id}
+    </select>
+
+    <sql id="select">
         SELECT s.id,
             s.sn,
             s.name,
@@ -63,20 +77,12 @@
             p.display     AS dictionaryDisplay,
             p.val         AS dictionaryVal,
             p.state       AS dictionaryState,
-            p.type        AS dictionaryType,
-            d.id          AS departmentId,
-            d.name        AS departmentName,
-            d.sn          AS departmentSn,
-            d.description AS departmentDescription
+            p.type        AS dictionaryType
         FROM   sites s
             LEFT JOIN work_times w
                 ON s.work_time_id = w.id
             LEFT JOIN dictionaries p
                 ON s.process_dictionary_id = p.id
-            LEFT JOIN site_depts sd
-                ON s.id = sd.site_id
-            LEFT JOIN departments d
-                ON sd.dept_id = d.id
     </sql>
 
     <select id="count" resultType="java.lang.Integer">
@@ -90,12 +96,12 @@
     </select>
 
     <select id="findBySn" resultMap="siteResult">
-        <include refid="selectSite"/>
+        <include refid="select"/>
         where s.sn=#{sn}
     </select>
 
     <select id="findAll" resultMap="siteResult">
-        <include refid="selectSite"/>
+        <include refid="select"/>
         <where>
             <if test="keyword != null and keyword != ''">
                 <bind name="pattern" value="'%' + keyword + '%' "/>

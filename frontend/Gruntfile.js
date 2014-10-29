@@ -486,6 +486,11 @@ module.exports = function ( grunt ) {
       }
     },
 
+    system_config: {
+      system:{
+        output: '<%= build_dir %>'
+      }
+    },
 
     /**
      * This task compiles the karma template so that changes to its file array
@@ -770,6 +775,7 @@ module.exports = function ( grunt ) {
     'copy:build_vendor_assets',   // 将vendor的assets copy到build目录中的assets
     'copy:build_vendor_js',       // 将src目录中的js文件copy到build目录中
     'copy:build_jade',            // 将src目录中的非模板的jade文件copy到build目录
+    'system_config',
     'copy:build_index_js',
     'copy:build_login_js',
     'index:build',                // 将实际输出目录的scripts,style变量设置到 index.jade 文件中
@@ -875,8 +881,7 @@ module.exports = function ( grunt ) {
           data: {
             scripts: scripts,
             styles: styles,
-            sysName: system.title,
-            version: system.version
+            sysName: system.title
           }
         });
       }
@@ -897,8 +902,7 @@ module.exports = function ( grunt ) {
           data: {
             scripts: scripts,
             styles:  styles,
-            sysName: system.title,
-            version: system.version
+            sysName: system.title
           }
         });
       }
@@ -914,7 +918,7 @@ module.exports = function ( grunt ) {
     var bd = new BuildDir(this.data.output);
     bd.processRaw(this.data.src);
     var scripts = bd.result;
-    grunt.file.copy( '../karma/karma-unit.tpl.js', grunt.config( 'build_dir' ) + '/karma-unit.js', {
+    grunt.file.copy( '../templates/karma-unit.tpl.js', grunt.config( 'build_dir' ) + '/karma-unit.js', {
       process: function ( contents, path ) {
         return grunt.template.process( contents, {
           data: {
@@ -926,4 +930,15 @@ module.exports = function ( grunt ) {
     });
   });
 
+  grunt.registerMultiTask( 'system_config', 'Process system config templates', function () {
+    grunt.file.copy( '../templates/system-config.tpl.js', grunt.config( 'build_dir' ) + '/lib/system-config.js', {
+      process: function ( contents, path ) {
+        return grunt.template.process( contents, {
+          data: {
+            system: system
+          }
+        });
+      }
+    });
+  });
 };
