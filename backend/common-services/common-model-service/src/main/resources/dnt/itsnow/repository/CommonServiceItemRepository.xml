@@ -7,8 +7,8 @@
         SELECT i.* FROM itsnow_msc.public_service_items i
     </select>
 
-    <select id="findById" resultMap="items">
-        SELECT i.* FROM itsnow_msc.public_service_items i WHERE i.id = #{id}
+    <select id="findBySn" resultMap="items">
+        SELECT i.* FROM itsnow_msc.public_service_items i WHERE i.sn = #{sn}
     </select>
 
     <select id="findByAccountId" resultMap="items">

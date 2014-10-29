@@ -8,8 +8,8 @@ import org.apache.ibatis.annotations.*;
  */
 public interface PublicServiceItemRepository extends CommonServiceItemRepository{
 
-    @Insert("INSERT INTO itsnow_msc.public_service_items (catalog_id,title,brief,description,icon,created_at,updated_at) "+
-            " values(#{catalog.id},#{title},#{brief},#{description},#{icon},#{createdAt},#{updatedAt})")
+    @Insert("INSERT INTO itsnow_msc.public_service_items (catalog_id,sn,title,brief,description,icon,created_at,updated_at) "+
+            " values(#{catalog.id},#{sn},#{title},#{brief},#{description},#{icon},#{createdAt},#{updatedAt})")
     @Options(useGeneratedKeys = true,keyColumn = "id")
     void save(PublicServiceItem publicServiceItem);
 
@@ -21,8 +21,8 @@ public interface PublicServiceItemRepository extends CommonServiceItemRepository
             " WHERE id = #{id}")
     void update(PublicServiceItem publicServiceItem);
 
-    @Delete("DELETE FROM itsnow_msc.public_service_items WHERE id = #{id}")
-    void delete(@Param("id") Long id);
+    @Delete("DELETE FROM itsnow_msc.public_service_items WHERE sn = #{sn}")
+    void delete(@Param("sn") String sn);
 
     @Insert("INSERT INTO itsnow_msc.account_service_items(account_id,item_id) " +
             "VALUES (#{accountId},#{itemId})")

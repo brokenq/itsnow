@@ -31,6 +31,7 @@ public class ServiceItemTest extends ValidatorSupport{
         item = new ServiceItem();
         item.setId(1L);
         item.setTitle("title1");
+        item.setSn("SN-001-01");
         item.setDescription("desc1");
         item.setBrief("brief1");
         item.setCatalog(catalog);
