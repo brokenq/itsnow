@@ -35,7 +35,7 @@ mixin fieldGroup(title,help)
                                 +fieldGroup("工作时间","部门的工作时间")(for="site_work_time")
                                     span.block.input-icon.input-icon-right
                                         select#site_work_time.form-control(ng-model='workTime', required,
-                                        ng-options="(workTime.name+' '+workTime.startAt+'-'+workTime.endAt) for workTime in workTimes")
+                                            ng-options="(workTime.name+' '+workTime.startAt+'-'+workTime.endAt) for workTime in workTimes")
                                         i.icon-check
                                 +fieldGroup("描述","对此角色的相关描述")(for="site_desc")
                                     span.block.input-icon.input-icon-right

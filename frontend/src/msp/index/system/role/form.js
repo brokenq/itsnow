@@ -1,4 +1,4 @@
-angular.module('System.Role.Form', ['multi-select', 'ngResource'])
+angular.module('System.Role.Form', ['multi-select', 'ngResource', 'Lib.Feedback'])
 
     .config(function ($stateProvider) {
         $stateProvider.state('role_edit_form', {
@@ -12,8 +12,8 @@ angular.module('System.Role.Form', ['multi-select', 'ngResource'])
         });
     })
 
-    .controller('RoleCtrl', ['$scope', '$location', '$stateParams', 'RoleService',
-        function ($scope, $location, $stateParams, roleService) {
+    .controller('RoleCtrl', ['$scope', '$location', '$stateParams', 'RoleService', 'Feedback',
+        function ($scope, $location, $stateParams, roleService, feedback) {
 
             // 提交按钮是否可用，false为可用
             $scope.submited = false;
@@ -50,9 +50,10 @@ angular.module('System.Role.Form', ['multi-select', 'ngResource'])
                 $scope.submited = true;
                 var role = formatSubmitDataFun();
                 roleService.update({name: role.name}, role, function () {
+                    feedback.success("修改角色'" + role.name + "'成功");
                     $location.path('/role');
-                }, function (data) {
-                    alert(data);
+                }, function (resp) {
+                    feedback.error("修改角色'" + role.name + "'失败", resp);
                 });
             };
 
@@ -61,9 +62,10 @@ angular.module('System.Role.Form', ['multi-select', 'ngResource'])
                 $scope.submited = true;
                 var role = formatSubmitDataFun();
                 roleService.save(role, function () {
+                    feedback.success("新建角色'" + role.name + "'成功");
                     $location.path('/role');
-                }, function (data) {
-                    alert(data);
+                }, function (resp) {
+                    feedback.error("新建角色'" + role.name + "'失败", resp);
                 });
             };
 

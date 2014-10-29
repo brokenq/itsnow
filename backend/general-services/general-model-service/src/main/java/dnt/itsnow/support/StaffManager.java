@@ -58,6 +58,9 @@ public class StaffManager extends Bean implements StaffService {
             throw new StaffException("Staff entry can not be empty.");
         }
         staff.creating();
+        // TODO 暂时性硬编码这两个属性值
+        staff.setStatus("1");
+        staff.setType("employee");
         staffRepository.create(staff);
 
         logger.info("Created  {}", staff);

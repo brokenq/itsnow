@@ -39,6 +39,10 @@
         </trim>
     </select>
 
+    <select id="findAll" resultMap="hostResult">
+        <include refid="selectHost"/>
+    </select>
+
     <select id="findAllByType" resultMap="hostResult">
         <include refid="selectHost"/>
         <if test="type != null">

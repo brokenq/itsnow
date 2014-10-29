@@ -75,7 +75,7 @@ public class ItsnowHostsController extends SessionSupportController<ItsnowHost>{
     @RequestMapping("dbs")
     public List<ItsnowHost> db_index() {
         logger.debug("Listing itsnow db hosts");
-        List<ItsnowHost> dbHosts = hostService.findAllDbHosts();
+        List<ItsnowHost> dbHosts = hostService.findAllByType("DB");
         logger.debug("Found   itsnow db hosts {}", dbHosts.size());
         return dbHosts;
     }
@@ -278,7 +278,7 @@ public class ItsnowHostsController extends SessionSupportController<ItsnowHost>{
         logger.debug("Listing all itsnow schemas by field = {} and value = {}", field, value);
         List<ItsnowHost> hosts;
         if ("type".equalsIgnoreCase(field)) {
-            hosts = hostService.findByType(value);
+            hosts = hostService.findAllByType(value);
             logger.debug("Listed size of all itsnow schemas is {}", hosts.size());
             return hosts;
         }

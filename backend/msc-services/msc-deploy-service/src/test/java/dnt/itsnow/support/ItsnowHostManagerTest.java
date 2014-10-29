@@ -179,7 +179,7 @@ public class ItsnowHostManagerTest {
         replay(systemInvokeService);
         replay(repository);
 
-        hosts = hostManager.findByType("DB");
+        hosts = hostManager.findAllByType("DB");
         Assert.isTrue(1 == hosts.size());
     }
 

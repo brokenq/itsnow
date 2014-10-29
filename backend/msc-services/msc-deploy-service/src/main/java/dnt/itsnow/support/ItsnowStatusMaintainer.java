@@ -72,8 +72,9 @@ public class ItsnowStatusMaintainer extends ItsnowResourceManager {
      * 执行定时检测
      */
     public void checkHostsStatus(){
-        List<ItsnowHost> hosts = hostService.findAllDbHosts();
+        List<ItsnowHost> hosts = hostService.findAll();
         for (ItsnowHost host : hosts) {
+            if(host.getAddress().equals(mscAddress)) continue;
             checkHostStatus(host);
             rest(1000);//sleep one second
         }

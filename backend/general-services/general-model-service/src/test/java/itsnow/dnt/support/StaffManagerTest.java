@@ -44,7 +44,7 @@ public class StaffManagerTest {
     }
 
     @Test
-    public void testFindBySn() throws Exception {
+    public void testFindByNo() throws Exception {
         Assert.assertNotNull(service.findByNo("005"));
         Assert.assertNull(service.findByNo("800"));
     }
@@ -87,19 +87,18 @@ public class StaffManagerTest {
 
     @Test
     public void testDestroy() throws Exception {
-        Staff staff = service.findByNo("007");
+        Staff staff = service.findByNo("006");
         service.destroy(staff);
         Assert.assertNull(service.findByNo(staff.getNo()));
     }
 
     @Test
     public void testUpdate() throws Exception {
-        Page<Staff> staffs = service.findAll("", pageRequest);
-        Staff staff = staffs.getContent().get(0);
+        Staff staff = service.findByNo("001");
         staff.setDescription("Hello World!");
         service.update(staff);
         staff = service.findByNo(staff.getNo());
-        Assert.assertTrue(staff.getDescription() == "Hello World!");
+        Assert.assertTrue("Hello World!".equals(staff.getDescription()));
     }
 
 }

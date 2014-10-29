@@ -19,10 +19,10 @@ public class MutableAccountRepositoryConfig extends RepositoryConfigWithH2 imple
 
     protected String[] sqlScripts() {
         return new String[]{
-                "classpath:META-INF/migrate/20140722112724_create_accounts.sql@down",
-                "classpath:META-INF/migrate/20140722112724_create_accounts.sql@up",
-                "classpath:META-INF/migrate/20140722125016_create_users.sql@down",
-                "classpath:META-INF/migrate/20140722125016_create_users.sql@up",
+                "classpath:META-INF/migrate/20140720112724_create_accounts.sql@down",
+                "classpath:META-INF/migrate/20140720112724_create_accounts.sql@up",
+                "classpath:META-INF/migrate/20140720125016_create_users.sql@down",
+                "classpath:META-INF/migrate/20140720125016_create_users.sql@up",
                 "classpath:META-INF/setup/insert_accounts.sql",
                 "classpath:META-INF/setup/insert_users.sql",
                 "classpath:META-INF/setup/insert_itsnow_deploy_resources.sql",

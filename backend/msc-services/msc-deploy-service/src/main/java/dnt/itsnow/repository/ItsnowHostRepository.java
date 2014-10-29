@@ -15,7 +15,7 @@ import java.util.List;
  */
 public interface ItsnowHostRepository {
     int countByKeyword(@Param("keyword") String keyword);
-    // 默认语句不需要对varchar字符串做uppper/lower转换
+    // 默认语句不需要对varchar字符串做upper/lower转换
     // Mysql默认charset = utf8, collation为utf_general_ci, 大小写不敏感
     List<ItsnowHost> findAllByKeyword(@Param("keyword") String keyword,
                                       @Param("pageRequest") PageRequest pageRequest);
@@ -57,4 +57,5 @@ public interface ItsnowHostRepository {
 
     List<ItsnowHost> findAllByConfiguration(@Param("name")String name, @Param("value") String value);
 
+    List<ItsnowHost> findAll();
 }

@@ -1,0 +1,55 @@
+mixin field_group(title,help)
+    .form-group.has-info(ng-class!=attributes.ngClass, ng-hide!=attributes.ngHide, ng-show!=attributes.ngShow)
+        label.col-xs-12.col-sm-3.control-label.no-padding-right(for!=attributes.for) #{title}
+        .col-xs-12.col-sm-5(class!=attributes.class)
+            block
+        .help-block.col-xs-12.col-sm-reset.inline #{help}
+mixin filed_input(title,help,placeholder,model,min,max,icon)
+    +field_group(title,help)(for=model)
+        span.block.input-icon.input-icon-right
+            input.form-control(id=model, name=model, ng-model=model, placeholder=placeholder,ng-minlength=min, ng-maxlength=max,required)&attributes(attributes)
+            i(class=icon)
+.row
+    .col-xs-12(ng-controller='StaffCtrl')
+        .row-fluid
+            .span12
+                .widget-box
+                    div.widget-header.widget-header-blue.widget-header-flat
+                        h4.lighter 员工表单
+                    .widget-body
+                        .widget-main
+                            form.form-horizontal(role='form', novalidate="novalidate", name='staffForm', ng-submit='submit(staff)')
+                                +field_group("地点","员工所在地")(for="staff_site")
+                                    span.block.input-icon.input-icon-right
+                                        select#staff_site.form-control(ng-model='site', required,
+                                            ng-options="site.name for site in sites")
+                                +field_group("部门","员工所在部门")(for="staff_dept")
+                                    span.block.input-icon.input-icon-right
+                                        select#staff_dept.form-control(ng-model='department', required,
+                                            ng-options="department.name for department in departments")
+                                +filed_input("员工名称","姓名","员工姓名","staff.name","2","20","icon-user")(ng-pattern= '/^[\u4e00-\u9fa5_a-zA-Z0-9\\-\\.]+$/')(type="text")
+                                +filed_input("工号","员工编号","工号","staff.no","2","20","icon-user")(ng-pattern='/^([a-zA-Z0-9]|_|\\-|\\.)+$/')(ng-check="/api/staffs/check/{0}")(type="text")(ng-disabled="disabled")
+                                +filed_input("职务","员工职务","员工职务",'staff.title',"2","20","icon-user")(ng-pattern= '/^[\u4e00-\u9fa5_a-zA-Z0-9\\-\\.]+$/')(type="text")
+                                +filed_input("邮箱","员工邮箱","email",'staff.email',"2","20","icon-envelope-alt")(type="email")
+                                +filed_input("电话","员工固定电话","固定电话",'staff.fixedPhone',"7","20","icon-phone")(ng-pattern='/^[0-9\\-\\(\\)]+$/')(type="text")
+                                +filed_input("手机","员工手机号码","手机号码",'staff.mobilePhone',"11","20","icon-phone")(ng-pattern='/^1[0-9]+$/')(type="text")
+                                +field_group("","")(for="id-file-format")
+                                    label
+                                        input#id-file-format.ace(type='checkbox', name='file-format', ng-model="checked")
+                                        span.lbl  可登录
+                                div#register(ng-show="checked")
+                                    +filed_input("用户名","登录账号","登录名",'staff_user.name',"4","20","icon-user")(type="text")(ng-required="checked")(ng-pattern='/^([a-zA-Z0-9]|_|\\-|\\.)+$/')(ng-check="/api/roles/check/{0}")(ng-disabled="disabled")
+                                    +filed_input("密码","登录密码","登录密码",'staff_user.password',"4","20","icon-lock")(type="password")(ng-required="checked")
+                                    +filed_input("确认密码","重复密码","重复密码",'staff_user.repeatPassword',"4","20","icon-lock")(type="password")(ng-required="checked")
+                                +field_group("描述","对此角色的相关描述")(for="staff_desc")
+                                    span.block.input-icon.input-icon-right
+                                        textarea.form-control.limited#staff_desc(name="staff_desc", ng-model='staff.description', ng-maxlength="100", placeholder="描述文本")
+                                        i.icon-edit
+                                .clearfix.form-actions
+                                    .col-md-offset-3.col-md-9
+                                        button.btn.btn-info#submit(type='submit', ng-disabled="submited")
+                                            i.icon-ok.bigger-110
+                                            | 提交
+                                        button.btn(type='button', ng-click="cancel()")
+                                            i.icon-undo.bigger-110
+                                            | 取消

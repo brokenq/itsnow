@@ -27,5 +27,8 @@ public interface CommonServiceCatalogService {
      */
     PublicServiceCatalog findBySn(String sn);
 
+    void setCommonServiceCatalogList(List<PublicServiceCatalog> commonServiceCatalogList);
+
+    void setFormattedServiceCatalogList(List<PublicServiceCatalog> formattedServiceCatalogList);
 
 }
