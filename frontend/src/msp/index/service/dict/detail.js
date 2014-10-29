@@ -22,10 +22,8 @@ angular.module('Service.Dictnew', ['ngTable', 'ngResource'])
             DictService.get({sn:sn},function(data){
                 if(data.state==="1"){
                     $scope.selectstate = $scope.datas[1];
-//                    $scope.datas=["有效","无效"];
                 }else{
                     $scope.selectstate = $scope.datas[0];
-//                    $scope.datas=["无效","有效"];
                 }
                 $scope.dict=data;
             });
