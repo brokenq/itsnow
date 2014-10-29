@@ -27,8 +27,8 @@
     </dependencies>
 
     <properties>
-        <target.name>itsnow</target.name>
-        <target.title>Itsnow</target.title>
+        <target.name>platform</target.name>
+        <target.title>Platform</target.title>
         <target.version>${project.version}</target.version>
         <target.index>${target.name}-index-${target.version}</target.index>
         <target.login>${target.name}-login-${target.version}</target.login>
