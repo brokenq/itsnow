@@ -15,7 +15,7 @@ mixin fieldGroup(title,help)
                     .widget-body
                         .widget-main
                             form.form-horizontal(role='form', novalidate="novalidate", name='roleForm', ng-submit='submit(role)')
-                                +fieldGroup("角色名称","角色名不可重复")(for="role_name")
+                                +fieldGroup("角色名称","不可重复")(for="role_name")
                                     span.block.input-icon.input-icon-right
                                         input.form-control#role_name(name="role_name", ng-model='role.name', required, ng-minlength="4",
                                         ng-maxlength="20", ng-pattern='/^(ROLE_)([a-zA-Z0-9]|_|\\-|\\.)+$/', ng-readonly="false",

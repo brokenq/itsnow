@@ -1,5 +1,5 @@
 // List System
-angular.module('System.Department', ['ngTable', 'ngResource'])
+angular.module('System.Department', ['ngTable', 'ngResource', 'Lib.Feedback'])
 
     .config(function ($stateProvider) {
         $stateProvider.state('department', {
@@ -22,8 +22,8 @@ angular.module('System.Department', ['ngTable', 'ngResource'])
     ])
 
     // 过滤拼接地点后的最后一个逗号
-    .filter('siteFilter', function () {
-        var siteFilter = function (input) {
+    .filter('deptFilter', function () {
+        return function (input) {
             var name = '';
             if (input !== null && input !== undefined) {
                 for (var i = 0; i < input.length; i++) {
@@ -33,11 +33,10 @@ angular.module('System.Department', ['ngTable', 'ngResource'])
             }
             return name || '无';
         };
-        return siteFilter;
     })
 
-    .controller('DeptListCtrl', ['$scope', '$location', 'DeptService', 'ngTableParams', 'ActionService',
-        function ($scope, $location, deptService, NgTableParams, ActionService) {
+    .controller('DeptListCtrl', ['$scope', '$location', 'DeptService', 'ngTableParams', 'ActionService', 'Feedback',
+        function ($scope, $location, deptService, NgTableParams, ActionService, feedback) {
 
             // ngTable Config
             var options = {
@@ -83,12 +82,15 @@ angular.module('System.Department', ['ngTable', 'ngResource'])
                 deptService.checkChild({id: dept.id}, function (data) {
                     console.log(data);
                     if (data.length!==0) {
-                        alert("你所选择的部门，下属有子部门，不能进行删除操作！");
+                        feedback.warn("你所选择的部门，下属有子部门，不能进行删除操作！");
                         return false;
                     } else {
                         deptService.remove({sn: dept.sn}, function () {
+                            feedback.success("删除部门'" + dept.name + "'成功");
                             delete $scope.checkboxes.items[dept.sn];
                             $scope.tableParams.reload();
+                        },function(resp){
+                            feedback.error("删除部门'" + dept.name + "'失败", resp);
                         });
                     }
                 });

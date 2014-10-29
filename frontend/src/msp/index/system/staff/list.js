@@ -1,4 +1,4 @@
-angular.module('System.Staff', ['ngTable', 'ngResource'])
+angular.module('System.Staff', ['ngTable', 'ngResource', 'Lib.Feedback'])
 
     .config(function ($stateProvider) {
         $stateProvider.state('staff', {
@@ -30,8 +30,8 @@ angular.module('System.Staff', ['ngTable', 'ngResource'])
         };
     })
 
-    .controller('StaffListCtrl', ['$scope', '$location', '$timeout', 'ngTableParams', 'StaffService', 'ActionService',
-        function ($scope, $location, $timeout, NgTableParams, staffService, ActionService) {
+    .controller('StaffListCtrl', ['$scope', '$location', '$timeout', 'ngTableParams', 'StaffService', 'ActionService', 'Feedback',
+        function ($scope, $location, $timeout, NgTableParams, staffService, ActionService, feedback) {
 
             var options = {
                 page: 1,           // show first page
@@ -76,8 +76,11 @@ angular.module('System.Staff', ['ngTable', 'ngResource'])
 
             $scope.remove = function (staff) {
                 staffService.remove({no: staff.no}, function () {
+                    feedback.success("删除员工'" + staff.name + "'成功");
                     delete $scope.checkboxes.items[staff.no];
                     $scope.tableParams.reload();
+                },function(resp){
+                    feedback.error("删除员工'" + staff.name + "'失败", resp);
                 });
             };
 

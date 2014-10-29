@@ -1,4 +1,4 @@
-angular.module('System.Site.Form', ['ngResource', 'jcs-autoValidate'])
+angular.module('System.Site.Form', ['ngResource', 'jcs-autoValidate', 'Lib.Feedback'])
 
     .config(function ($stateProvider) {
         $stateProvider.state('site_edit_form', {
@@ -12,8 +12,8 @@ angular.module('System.Site.Form', ['ngResource', 'jcs-autoValidate'])
         });
     })
 
-    .controller('SiteCtrl', ['$scope', '$location', '$stateParams', 'SiteService', 'DictService', 'WorkTimeService',
-        function ($scope, $location, $stateParams, siteService, dictService, workTimeService) {
+    .controller('SiteCtrl', ['$scope', '$location', '$stateParams', 'SiteService', 'DictService', 'WorkTimeService', 'Feedback',
+        function ($scope, $location, $stateParams, siteService, dictService, workTimeService, feedback) {
 
             // 提交按钮是否可用，false为可用
             $scope.submited = false;
@@ -38,9 +38,10 @@ angular.module('System.Site.Form', ['ngResource', 'jcs-autoValidate'])
                 $scope.submited = true;
                 var site = formatSubmitDataFun();
                 siteService.update({sn: site.sn}, site, function () {
+                    feedback.success("修改地点'" + site.name + "'成功");
                     $location.path('/site');
-                }, function (data) {
-                    alert(data);
+                }, function (resp) {
+                    feedback.error("修改地点'" + site.name + "'失败", resp);
                 });
             };
 
@@ -49,9 +50,10 @@ angular.module('System.Site.Form', ['ngResource', 'jcs-autoValidate'])
                 $scope.submited = true;
                 var site = formatSubmitDataFun();
                 siteService.save(site, function () {
+                    feedback.success("新建地点'" + site.name + "'成功");
                     $location.path('/site');
-                }, function (data) {
-                    alert(data);
+                }, function (resp) {
+                    feedback.error("新建地点'" + site.name + "'失败", resp);
                 });
             };
 

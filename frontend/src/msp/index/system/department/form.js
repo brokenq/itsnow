@@ -1,4 +1,4 @@
-angular.module('System.Department.Form', ['multi-select', 'ngResource'])
+angular.module('System.Department.Form', ['multi-select', 'ngResource', 'Lib.Feedback'])
 
     .config(function ($stateProvider) {
         $stateProvider.state('dept_edit_form', {
@@ -12,8 +12,8 @@ angular.module('System.Department.Form', ['multi-select', 'ngResource'])
         });
     })
 
-    .controller('DeptCtrl', ['$scope', '$location', '$stateParams',  'DeptService', 'SiteService',
-        function ($scope, $location, $stateParams, deptService, siteService) {
+    .controller('DeptCtrl', ['$scope', '$location', '$stateParams',  'DeptService', 'SiteService', 'Feedback',
+        function ($scope, $location, $stateParams, deptService, siteService, feedback) {
 
             // 提交按钮是否可用，false为可用
             $scope.submited = false;
@@ -61,9 +61,10 @@ angular.module('System.Department.Form', ['multi-select', 'ngResource'])
                 $scope.submited = true;
                 var department = formatSubmitDataFun();
                 deptService.update({sn: department.sn}, department, function () {
+                    feedback.success("修改部门'" + department.name + "'成功");
                     $location.path('/department');
-                }, function (data) {
-                    alert(data);
+                }, function (resp) {
+                    feedback.error("修改部门'" + department.name + "'失败", resp);
                 });
             };
 
@@ -72,9 +73,10 @@ angular.module('System.Department.Form', ['multi-select', 'ngResource'])
                 $scope.submited = true;
                 var department = formatSubmitDataFun();
                 deptService.save(department, function () {
+                    feedback.success("新建部门'" + department.name + "'成功");
                     $location.path('/department');
-                }, function (data) {
-                    alert(data);
+                }, function (resp) {
+                    feedback.error("新建部门'" + department.name + "'失败", resp);
                 });
             };
 
