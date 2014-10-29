@@ -62,7 +62,7 @@ fi
 file=msc-$version.zip
 
 if [[ "$version" =~ SNAPSHOT$ ]]; then
-  target="http://$CI/guestAuth/repository/download/Itsnow_Continuous_Build/.lastFinished/$file"
+  target="http://$CI/guestAuth/repository/download/Itsnow_Daily_Build_MSC/.lastFinished/$file"
 else
   target="http://$CI/guestAuth/repository/download/Itsnow_Sprint_Build_MSC/.lastFinished/$file"
 fi
