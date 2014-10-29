@@ -14,13 +14,24 @@ import javax.validation.constraints.NotNull;
  *
  */
 public class ServiceItem extends Record{
+    @NotNull
     private String title;
     private String brief;
     private String description;
     private String icon;
-
+    @NotNull
+    private String sn;
     @NotNull
     private ServiceCatalog catalog;
+
+    public String getSn() {
+        return sn;
+    }
+
+    public void setSn(String sn) {
+        this.sn = sn;
+    }
+
 
     public String getTitle() {
         return title;

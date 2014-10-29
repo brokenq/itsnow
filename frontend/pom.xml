@@ -8,6 +8,7 @@
         <groupId>dnt</groupId>
         <artifactId>itsnow</artifactId>
         <version>0.2.2-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <groupId>dnt.itsnow</groupId>
     <artifactId>frontend</artifactId>
@@ -31,6 +32,8 @@
         <target.version>${project.version}</target.version>
         <target.index>${target.name}-index-${target.version}</target.index>
         <target.login>${target.name}-login-${target.version}</target.login>
+        <target.label>通用</target.label>
+        <target.skin>default</target.skin>
         <grunt.exec>grunt</grunt.exec>
     </properties>
 
@@ -88,7 +91,7 @@
                         </goals>
                         <configuration>
                             <target>
-                                <echo file=".target">
+                                <echo file=".target" encoding="UTF-8">
 {
     "name":    "${target.name}",
     "title":   "${target.title}",

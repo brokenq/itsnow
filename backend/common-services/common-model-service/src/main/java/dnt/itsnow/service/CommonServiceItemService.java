@@ -27,12 +27,12 @@ public interface CommonServiceItemService {
     List<PublicServiceItem> findAllByCatalogSn(String sn);
 
     /**
-     * <h2>根据id查找公共服务项</h2>
+     * <h2>根据SN查找公共服务项</h2>
      *
-     * @param id 编号
+     * @param sn 序列号
      * @return 找到的公共服务项，找不到则返回null
      */
-    PublicServiceItem findById(Long id);
+    PublicServiceItem findBySn(String sn);
 
     /**
      * <h2>根据帐户ID查找该帐户的公共服务项</h2>

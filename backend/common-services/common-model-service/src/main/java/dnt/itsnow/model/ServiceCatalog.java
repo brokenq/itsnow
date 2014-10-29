@@ -93,10 +93,10 @@ public class ServiceCatalog extends Record{
         this.level = level;
     }
 
-    public ServiceItem getItemBySn(Long id) {
+    public ServiceItem getItemBySn(String sn) {
         if( items == null ) return null;
         for (ServiceItem item : items) {
-            if( item.getId().equals(id) ) return item;
+            if( item.getSn().equals(sn) ) return item;
         }
         return null;
     }

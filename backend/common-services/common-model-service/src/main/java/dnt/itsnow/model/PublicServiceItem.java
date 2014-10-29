@@ -8,8 +8,8 @@ package dnt.itsnow.model;
  */
 public class PublicServiceItem extends ServiceItem {
 
-    @Override
+    /*@Override
     public PublicServiceCatalog getCatalog() {
         return (PublicServiceCatalog) super.getCatalog();
-    }
+    }*/
 }
