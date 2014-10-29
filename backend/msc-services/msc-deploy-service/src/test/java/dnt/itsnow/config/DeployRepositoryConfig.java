@@ -19,8 +19,8 @@ public class DeployRepositoryConfig extends RepositoryConfigWithH2  {
 
     protected String[] sqlScripts() {
         return new String[]{
-                "classpath:META-INF/migrate/20140722112724_create_accounts.sql@up",
-                "classpath:META-INF/migrate/20140722125016_create_users.sql@up",
+                "classpath:META-INF/migrate/20140720112724_create_accounts.sql@up",
+                "classpath:META-INF/migrate/20140720125016_create_users.sql@up",
                 "classpath:META-INF/migrate/20140827112025_create_itsnow_hosts.sql@up",
                 "classpath:META-INF/migrate/20140827112030_create_itsnow_schemas.sql@up",
                 "classpath:META-INF/migrate/20140827112032_create_itsnow_processes.sql@up",
