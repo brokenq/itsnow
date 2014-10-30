@@ -21,7 +21,6 @@ mixin selector(name, label, datas, tip)
     label.col-xs-12.col-sm-3.control-label.no-padding-right(for="dict_#{name}") #{label}
     .col-xs-12.col-sm-5
       select.form-control(ng-model="#{name}", ng-options="data.name for data in #{datas}", ng-init="#{name} = #{datas}[0]")
-
     .help-block.col-xs-12.col-sm-reset.inline #{tip}
 
 .row(ng-controller="DictNewCtrl")
