@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# Upgrade current msc release to a new version(maybe same version)
+# Upgrade current msp release to a new version(maybe same version)
 #
 # Usage: upgrade.sh version
 #

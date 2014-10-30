@@ -42,22 +42,6 @@
                 </configuration>
             </plugin>
 
-            <plugin>
-                <groupId>net.happyonroad</groupId>
-                <artifactId>spring-component-builder</artifactId>
-                <version>${version.component-framework}</version>
-                <executions>
-                    <execution>
-                        <id>extend-app</id>
-                        <goals><goal>extend</goal></goals>
-                        <configuration>
-                            <targetRelease>${release.dir}</targetRelease>
-                            <copyDependencies>true</copyDependencies>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
         </plugins>
     </build>
 
