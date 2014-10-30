@@ -46,7 +46,7 @@ version=$1
 file_download=msp-$version.zip
 
 if [[ "$version" =~ SNAPSHOT$ ]]; then
-  target="http://$CI/guestAuth/repository/download/Itsnow_Continuous_Build/.lastFinished/$file_download"
+  target="http://$CI/guestAuth/repository/download/Itsnow_Daily_Build_MSP/.lastFinished/$file_download"
 else
   target="http://$CI/guestAuth/repository/download/Itsnow_Sprint_Build_MSP/.lastFinished/$file_download"
 fi

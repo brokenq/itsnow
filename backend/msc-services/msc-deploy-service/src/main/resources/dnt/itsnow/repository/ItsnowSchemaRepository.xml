@@ -58,6 +58,7 @@
         </trim>
     </select>
     <resultMap id="schemaResult" type="ItsnowSchema" autoMapping="true">
+        <id column="id" property="id"/>
         <result column="configuration" property="configuration" typeHandler="dnt.itsnow.util.PropertiesHandler"/>
         <result column="host_id" property="hostId"/>
         <association property="host" columnPrefix="host_" resultMap="dnt.itsnow.repository.ItsnowHostRepository.hostResult"/>
