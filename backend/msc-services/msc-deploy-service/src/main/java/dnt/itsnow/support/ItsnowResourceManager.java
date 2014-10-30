@@ -11,6 +11,7 @@ import dnt.itsnow.service.SystemInvokeService;
 import dnt.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContextException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -18,6 +19,7 @@ import java.net.UnknownHostException;
 /**
  * <h1>Default shared code between itsnow host/schema/process manager</h1>
  */
+@Transactional
 public abstract class ItsnowResourceManager extends Bean implements SystemInvocationListener {
     public static final String CREATE_INVOCATION_ID = "createInvocationId";
     public static final String DELETE_INVOCATION_ID = "deleteInvocationId";

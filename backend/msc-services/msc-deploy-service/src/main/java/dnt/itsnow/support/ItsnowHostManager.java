@@ -14,7 +14,6 @@ import dnt.itsnow.service.ItsnowHostService;
 import dnt.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -27,7 +26,6 @@ import java.util.regex.Pattern;
  * <h1>Itsnow Host Manager</h1>
  */
 @Service
-@Transactional
 public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHostService {
     static Pattern PATTERN = Pattern.compile("^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$");
 
