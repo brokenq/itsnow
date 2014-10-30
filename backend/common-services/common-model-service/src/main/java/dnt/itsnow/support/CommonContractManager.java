@@ -17,6 +17,7 @@ import dnt.itsnow.service.CommonContractService;
 import dnt.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.List;
@@ -29,6 +30,7 @@ import java.util.List;
  *  TODO 添加测试用例
  */
 @Service
+@Transactional
 public class CommonContractManager extends Bean implements CommonContractService {
     @Autowired
     CommonContractRepository repository;

@@ -14,7 +14,6 @@ import dnt.itsnow.service.ItsnowProcessService;
 import dnt.util.NamedThreadFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -24,7 +23,6 @@ import java.util.concurrent.Executors;
  * 定时维护主机，进程的状态
  */
 @Component
-@Transactional
 public class ItsnowStatusMaintainer extends ItsnowResourceManager {
 
     @Autowired
