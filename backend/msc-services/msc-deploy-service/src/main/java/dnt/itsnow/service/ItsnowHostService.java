@@ -43,12 +43,31 @@ public interface ItsnowHostService {
     ItsnowHost findByAddress(String address);
 
     /**
+     * <h2>根据ID和地址查找主机</h2>
+     *
+     * @param id 主机ID
+     * @param address 主机地址
+     * @return 主机对象，查不到则返回null
+     */
+    ItsnowHost findByIdAndAddress(Long id, String address);
+
+    /**
      * <h2>根据name查找主机</h2>
      *
      * @param name 主机名称
      * @return 主机名称，查不到则返回null
      */
     ItsnowHost findByName(String name);
+
+    /**
+     * <h2>根据ID和name查找主机</h2>
+     *
+     * @param id 主机ID
+     * @param name 主机名称
+     * @return 主机名称，查不到则返回null
+     */
+    ItsnowHost findByIdAndName(Long id, String name);
+
 
     /**
      * <h2>根据id查找主机 </h2>
@@ -132,6 +151,15 @@ public interface ItsnowHostService {
      */
     boolean checkPassword(String host, String username, String password) throws ItsnowHostException;
 
+    /**
+     * <h2>重新建立信任关系</h2>
+     *
+     *  @param host 主机地址
+     *  @param username 用户名
+     *  @param password 密码
+     *  throws ItsnowHostException
+     */
+    void trustMe(String host, String username, String password) throws ItsnowHostException;
 
     /**
      * <h2>根据主机类型查询主机列表</h2>

@@ -10,8 +10,9 @@ angular.module('MscIndex.Schema', ['ngTable','ngResource', 'dnt.action.service']
       $resource("/admin/api/schemas/:id")
     ])
 
-  .controller 'SchemaListCtrl',['$scope', '$location', '$timeout', 'ngTableParams', 'SchemaService', 'ActionService',
-    ($scope, $location, $timeout, ngTableParams, schemaService, ActionService)->
+  .controller 'SchemaListCtrl',['$scope', '$location', '$timeout', '$resource', 'ngTableParams', 'ActionService', 'Feedback',
+    ($scope, $location, $timeout, $resource, ngTableParams, ActionService, Feedback)->
+      Schemas = $resource("/admin/api/schemas/:id", {id: "@id"})
       options =
         page:  1,           # show first page
         count: 10           # count per page
@@ -19,7 +20,7 @@ angular.module('MscIndex.Schema', ['ngTable','ngResource', 'dnt.action.service']
         total: 0,
         getData: ($defer, params) ->
           $location.search(params.url()) # put params in url
-          schemaService.query(params.url(), (data, headers) ->
+          Schemas.query(params.url(), (data, headers) ->
             $timeout(->
               params.total(headers('total'))
               $defer.resolve($scope.schemas = data)
@@ -49,12 +50,8 @@ angular.module('MscIndex.Schema', ['ngTable','ngResource', 'dnt.action.service']
         angular.element(document.getElementById("select_all")).prop("indeterminate", (checked != 0 && unchecked != 0));
       , true)
 
-      $scope.deleteSchema = (schema)->
-        feedback = (content) ->
-          alert content
-        success = ->
-          window.location.reload()
-        failure = (response)->
-          feedback response.statusText
-        schemaService.delete(schema, success, failure)
+      $scope.delete = (schema)->
+        acc = new Schemas(schema)
+        acc.$remove ->
+          $scope.tableParams.reload()
   ]

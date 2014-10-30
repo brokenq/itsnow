@@ -23,8 +23,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <h1>Itsnow processes web controller</h1>
@@ -201,12 +203,14 @@ public class ItsnowProcessesController extends SessionSupportController<ItsnowPr
      * Response: 启动进程的任务描述符
      */
     @RequestMapping(value = "{name}/start", method = RequestMethod.PUT)
-    public String start(){
+    public Map<String, String> start(){
         logger.info("Starting {}", currentProcess.getName());
+        Map<String, String> map = new HashMap<String, String>();
         try {
             String job = processService.start(currentProcess);
             logger.info("Starting process with job {}", job);
-            return job;
+            map.put("job", job);
+            return map;
         } catch (ItsnowProcessException e) {
             throw new WebClientSideException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
         }
@@ -219,12 +223,14 @@ public class ItsnowProcessesController extends SessionSupportController<ItsnowPr
      * Response: 停止进程的任务描述符
      */
     @RequestMapping(value = "{name}/stop", method = RequestMethod.PUT)
-    public String stop(){
+    public Map<String, String> stop(){
         logger.info("Stopping {}", currentProcess.getName());
+        Map<String, String> map = new HashMap<String, String>();
         try {
             String job = processService.stop(currentProcess);
             logger.info("Stopping process with job {}", job);
-            return job;
+            map.put("job", job);
+            return map;
         } catch (ItsnowProcessException e) {
             throw new WebClientSideException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
         }
