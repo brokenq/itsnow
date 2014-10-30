@@ -10,6 +10,6 @@ angular.module('MscIndex.User.Detail', ['ngResource'])
 #$resource('admin/api/users/' + $stateParams.username)
 #])
 
-.controller 'DetailCtrl', ['$scope', '$stateParams', ($scope, $stateParams)->
+.controller 'UserDetailCtrl', ['$scope', '$stateParams', ($scope, $stateParams)->
   $scope.userId = $stateParams.id;
 ]
