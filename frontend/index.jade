@@ -49,10 +49,10 @@ html(ng-app="Itsnow.#{sysName}Index")
 
         .navbar-header.pull-right(role="navigation")
           ul.nav.ace-nav
-            include index/parts/tasks
-            include index/parts/notifications
-            include index/parts/messages
-            include index/parts/profile
+            include /index/parts/tasks
+            include /index/parts/notifications
+            include /index/parts/messages
+            include /index/parts/profile
     // 主体内容
     .main-container#main-container
       +check_option('main-container', 'fixed')
@@ -61,15 +61,15 @@ html(ng-app="Itsnow.#{sysName}Index")
           span.menu-text
         .sidebar#sidebar
           +check_option('sidebar', 'fixed')
-          include index/parts/shortcuts
-          include index/parts/menus
+          include /index/parts/shortcuts
+          include /index/parts/menus
           +check_option('sidebar', 'collapsed')
 
         .main-content
-          include index/parts/breadcrumbs
+          include /index/parts/breadcrumbs
           .page-content: .row: .col-xs-12: div(ui-view)
 
-        include index/parts/page_settings
+        include /index/parts/page_settings
 
       a.btn-scroll-up.btn.btn-sm.btn-inverse(href="java")#btn-scroll-up
         i.icon-double-angle-up.icon-only.bigger-110

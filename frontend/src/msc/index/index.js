@@ -17,7 +17,7 @@ angular.module('Itsnow.MscIndex', [
   'MscIndex.Schema',
   'MscIndex.SchemaNew',
   'MscIndex.User',
-  'MscIndex.SLA',
+  'MscIndex.SLAs',
   'MscIndex.Contract',
   'MscIndex.ServiceCatalog',
   'MscIndex.System'
