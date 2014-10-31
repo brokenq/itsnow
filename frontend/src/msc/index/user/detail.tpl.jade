@@ -17,32 +17,39 @@ mixin formGroup(name, label, icon, tip)
                 i(class="icon-#{icon}")
         .help-block.col-xs-12.col-sm-reset.inline #{tip}
 mixin field(name, label)
-    input.form-control(id="user_#{name}", name="user.#{name}", ng-model="user.#{name}", type="text", placeholder="#{label}", required!=attributes["required"], ng-maxlength!=attributes["ng-maxlength"], min!=attributes["min"], max!=attributes["max"], ng-check!=attributes["ng-check"], err-type!=attributes["err-type"])
-mixin fieldNum(name, label)
-    input.form-control(id="user_#{name}", name="user.#{name}", ng-model="user.#{name}", type="number", placeholder="#{label}", min!=attributes["min"], max!=attributes["max"])
-mixin formBtn(title, icon)
+    input.form-control(id="user_#{name}", name="user.#{name}", ng-model="user.#{name}", placeholder="#{label}")&attributes(attributes)
+mixin fieldSelect(name,label)
+    select.form-control(ng-model="#{name}", ng-options="data.name for data in datas", ng-init="#{name} = datas[0]")
+mixin actionBar()
+    .row-fluid.actions
+        .col-xs-12.col-sm-8.col-md-offset-2
+            p.alert.alert-info
+                span.col-md-offset-4
+mixin submitformBtn(title, icon)
     button.btn.btn-sm.btn-primary(ng-click!=attributes["ng-click"], ui-sref!=attributes["ui-sref"], type!=attributes["type"])
         i(class="icon-#{icon}")
         | #{title}
-
+mixin removeformBtn(title, icon)
+    button.btn.btn-sm.btn-default(ng-click!=attributes["ng-click"], ui-sref!=attributes["ui-sref"], type!=attributes["type"])
+        i(class="icon-#{icon}")
+        | #{title}
 .row(ng-controller="UserDetailCtrl")
-    form.form-horizontal(name="userDeatilForm", novalidate="novalidate", ng-model-options="{ updateOn: 'mousedown blur' }", role="form", ng-submit="createHost()")
+    form.form-horizontal(name="userDeatilForm", novalidate="novalidate",ng-model-options="{ updateOn: 'mousedown blur' }", role="form", ng-submit="createUser()")
         +widgetBox("用户信息")
-            +formGroup("name","用户姓名", "", "")
-                +field("name","用户姓名")(required, ng-maxlength="20")
-            +formGroup("nicName","用户昵称",   "", "")
-                +field("nicName", "用户昵称")(required, ng-maxlength="20")
-            +formGroup("emial",  "电子邮箱",   "", "")
-                +field("email", "电子邮箱", "", "")(required,ng-check="")
-            +formGroup("phone",  "电话号码",   "", "")
-                +field("phone", "电话号码", "", "")(required)
-            +formGroup("password",  "密码",   "", "")
-                +field("password", "密码", "", "")(required)
-            +formGroup("emial",  "重复密码",   "", "")
-                +field("email", "重复密码", "", "")(required)
-        .row-fluid.actions
-            .col-xs-12.col-sm-8.col-md-offset-2
-                p.alert.alert-info
-                    span.col-md-offset-4
-                        +formBtn("创建", "ok")(type="submit")
-                        +formBtn("取消", "remove")(ui-sref="user")
+            +formGroup("name","用户姓名", "user", "")
+                +field("name","用户姓名")(type="text",required, ng-maxlength="20",ng-pattern="")
+            +formGroup("nicName","用户昵称",   "user", "")
+                +field("nicName", "用户昵称")(type="text",required, ng-maxlength="20")
+            +formGroup("emial",  "电子邮箱","envelope", "")
+                +field("email", "电子邮箱")(type="email",required,ng-check="")
+            +formGroup("phone",  "电话号码",   "headphones", "")
+                +field("phone", "电话号码")(type="text",required)
+            +formGroup("selectState","是否启用","","")
+                +fieldSelect("selectState","是否启用")
+            +formGroup("password","用户密码","lock","")
+                +field("password","用户密码")(type="password",required)
+            +formGroup("repeatPassword","重复密码","retweet","")
+                +field("repeatPassword","重复密码")(type="password",required)
+        +actionBar()
+            +submitformBtn("创建", "ok")(type="submit")
+            +removeformBtn("取消", "remove")(ui-sref="user")
