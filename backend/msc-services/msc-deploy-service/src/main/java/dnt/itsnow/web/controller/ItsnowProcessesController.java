@@ -271,6 +271,7 @@ public class ItsnowProcessesController extends SessionSupportController<ItsnowPr
         List<String> body = new LinkedList<String>();
         offset = processService.follow(currentProcess, job, offset, body);
         response.setHeader("offset", String.valueOf(offset));
+        response.setHeader("status", currentProcess.getStatus().toString());
         return StringUtils.join(body, "\n");
     }
 
