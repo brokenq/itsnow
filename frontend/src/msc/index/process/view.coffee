@@ -38,13 +38,13 @@ angular.module('MscIndex.ProcessView', ['ngResource'])
         $scope.process.startLog = ""
         $scope.process.stopLog = ""
 
-        changeButton($filter("lowercase")(process.status))
+        toggleButton($filter("lowercase")(process.status))
         getCreateLog(process.configuration.createInvocationId)
         getStartLog(process.configuration.startInvocationId)
         getStopLog(process.configuration.stopInvocationId)
       )
 
-      changeButton = (status)->
+      toggleButton = (status)->
         $("#startBtn").removeClass("show").addClass("hidden")
         $("#cancelStartingBtn").removeClass("show").addClass("hidden")
         $("#stopBtn").removeClass("show").addClass("hidden")
@@ -65,7 +65,7 @@ angular.module('MscIndex.ProcessView', ['ngResource'])
             $http.get(url).success (log, status, headers) ->
               $scope.process.creationLog += log
               createOffset = parseInt(headers("offset"))
-              changeButton($filter("lowercase")(headers("status")))
+              toggleButton($filter("lowercase")(headers("status")))
               $interval.cancel(createIntervalId) if createOffset is -1
         , 1000)
 
@@ -78,7 +78,7 @@ angular.module('MscIndex.ProcessView', ['ngResource'])
             $http.get(url).success (log, status, headers) ->
               $scope.process.startLog += log
               startOffset = parseInt(headers("offset"))
-              changeButton($filter("lowercase")(headers("status")))
+              toggleButton($filter("lowercase")(headers("status")))
               $interval.cancel(startIntervalId) if startOffset is -1
         , 1000)
 
@@ -91,7 +91,7 @@ angular.module('MscIndex.ProcessView', ['ngResource'])
             $http.get(url).success (log, status, headers) ->
               $scope.process.stopLog += log
               stopOffset = parseInt(headers("offset"))
-              changeButton($filter("lowercase")(headers("status")))
+              toggleButton($filter("lowercase")(headers("status")))
               $interval.cancel(stopIntervalId) if stopOffset is -1
         , 1000)
 
@@ -114,9 +114,10 @@ angular.module('MscIndex.ProcessView', ['ngResource'])
           Feedback.error("停止" + $scope.process.name + "失败", resp)
         )
 
-      $scope.cancel = ->
+      $scope.cancel = (type)->
+        invokeId = if type is "starting" then $scope.process.configuration.startInvocationId else $scope.process.configuration.stopInvocationId
         acc = new CancelAction($scope.process)
-        acc.$cancel({job: $scope.process.configuration.startInvocationId}, (data)->
+        acc.$cancel({job: invokeId}, ->
           Feedback.success("正在停止" + $scope.process.name)
         , (resp)->
           Feedback.error("停止" + $scope.process.name + "失败", resp)

@@ -48,9 +48,9 @@ mixin buttonGroup(label, action)
     +formGroup()
       .col-md-1.col-md-offset-4
         +button("启动", "start()")(id="startBtn", class="hidden")
-        +button("取消启动", "cancel()")(id="cancelStartingBtn", class="hidden")
+        +button("取消启动", "cancel('starting')")(id="cancelStartingBtn", class="hidden")
         +button("停止", "stop()")(id="stopBtn", class="hidden")
-        +button("取消停止", "cancel()")(id="cancelStoppingBtn", class="hidden")
+        +button("取消停止", "cancel('stopping')")(id="cancelStoppingBtn", class="hidden")
       .col-md-1.col-md-offset-2
         +button('访问', "")(class="dropdown-toggle", data-toggle="dropdown")
           span.caret
