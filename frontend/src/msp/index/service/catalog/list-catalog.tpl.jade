@@ -26,21 +26,13 @@ div(ui-view='')
   .btn-toolbar(role="toolbar")
     .btn-group
       +tool_button("actionService.gotoState('services.catalog')", "refresh", "","*","","")
-      button.btn.btn-primary.no-border.dropdown-toggle(type="button",data-toggle="dropdown")
-        span.glyphicon(class="glyphicon-plus")
-        | 新建
-        span.caret
-      ul.dropdown-menu(role="menu")
-        +drop_button("actionService.perform(create_catalog)", "plus", "服务目录", "1", "", "")
-        +drop_button("actionService.perform(create_item)", "plus", "服务项", "1", "", "")
       +tool_button("actionService.perform(edit)", "edit", "编辑", "1", "", "")
-
     .btn-group
       button.btn.btn-primary.no-border.dropdown-toggle(type="button",data-toggle="dropdown")
         | 更多操作
         span.caret
       ul.dropdown-menu(role="menu")
-        +drop_button("actionService.perform(remove)", "remove", "删除", "1+", "", "")
+
     .btn-group.pull-right
       .nav-search#nav-search
         form.form-search

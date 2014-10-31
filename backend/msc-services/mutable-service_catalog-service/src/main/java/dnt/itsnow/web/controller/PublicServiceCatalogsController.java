@@ -33,7 +33,7 @@ public class PublicServiceCatalogsController extends SessionSupportController<Pu
      */
     @RequestMapping
     public List<PublicServiceCatalog> index(){
-        List<PublicServiceCatalog> list = publicServiceCatalogService.findAll();
+        List<PublicServiceCatalog> list = publicServiceCatalogService.findAll(mainAccount.getType());
         logger.debug("Get public_service_catalogs size:{}",list.size());
         return list;
     }

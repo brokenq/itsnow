@@ -6,6 +6,7 @@
     <select id="findAllPrivate" resultMap="privateCatalogWithItems">
         SELECT c.*,
                 i.id AS item_id,
+                i.sn AS item_sn,
                 i.public_id AS item_public_id,
                 i.catalog_id AS item_catalog_id,
                 i.title AS item_title,
@@ -23,6 +24,7 @@
         i.id AS item_id,
         i.public_id AS item_public_id,
         i.catalog_id AS item_catalog_id,
+        i.sn AS item_sn,
         i.title AS item_title,
         i.brief AS item_brief,
         i.description AS item_description,

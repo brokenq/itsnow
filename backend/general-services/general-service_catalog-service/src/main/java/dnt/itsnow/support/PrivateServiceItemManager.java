@@ -27,20 +27,21 @@ public class PrivateServiceItemManager extends CommonServiceItemManager implemen
     }
 
     @Override
-    public PrivateServiceItem findPrivateById(Long id) {
-        return privateServiceItemRepository.findPrivateById(id);
+    public PrivateServiceItem findPrivateBySn(String sn) {
+        return privateServiceItemRepository.findPrivateBySn(sn);
     }
 
     @Override
     public PrivateServiceItem savePrivate(PrivateServiceItem privateServiceItem) {
         setPrivateServiceItemList(null);
-        return privateServiceItemRepository.savePrivate(privateServiceItem);
+        privateServiceItemRepository.savePrivate(privateServiceItem);
+        return privateServiceItem;
     }
 
     @Override
-    public void deletePrivate(Long id) {
+    public void deletePrivate(String sn) {
         setPrivateServiceItemList(null);
-        privateServiceItemRepository.deletePrivate(id);
+        privateServiceItemRepository.deletePrivate(sn);
     }
 
     public List<PrivateServiceItem> getPrivateServiceItemList() {

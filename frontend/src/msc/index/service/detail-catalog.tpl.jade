@@ -16,9 +16,9 @@ mixin formGroup(obj, name, label, icon, tip)
         i(class="icon-#{icon}")
     .help-block.col-xs-12.col-sm-reset.inline #{tip}
 mixin field(name, label)
-  input.form-control(id="catalog_#{name}", name="catalog.#{name}", ng-model="catalog.#{name}", required,  ng-maxlength="20", type="text", placeholder="#{label}")
+  input.form-control(id="catalog_#{name}", name="catalog.#{name}", ng-model="catalog.#{name}", required,  ng-maxlength="50", type="text", placeholder="#{label}")
 mixin fieldWithCheck(name, label, checkUrl)
-  input.form-control(id="catalog_#{name}", name="catalog.#{name}", ng-model="catalog.#{name}", required,  ng-maxlength="20", type="text", placeholder="#{label}", ng-check="#{checkUrl}")
+  input.form-control(id="catalog_#{name}", name="catalog.#{name}", ng-model="catalog.#{name}", required,  ng-maxlength="50", type="text", placeholder="#{label}", ng-check="#{checkUrl}")
 
 mixin selector(name, label, datas, tip)
   .form-group

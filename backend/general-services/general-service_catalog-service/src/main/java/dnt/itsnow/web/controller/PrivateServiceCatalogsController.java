@@ -2,8 +2,10 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.PrivateServiceCatalog;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
+import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.service.PrivateServiceCatalogService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -71,9 +73,11 @@ public class PrivateServiceCatalogsController extends SessionSupportController<P
         return null;
     }
 
-    @BeforeFilter({"show"})
+    @BeforeFilter({"show","destroy"})
     public void initServiceCatalog(@PathVariable("sn") String catalogSn){
         serviceCatalog = privateServiceCatalogService.findPrivateBySn(catalogSn);
+        if(serviceCatalog == null)
+            throw new WebClientSideException(HttpStatus.BAD_REQUEST, "Can't find private service catalog with sn:"+catalogSn);
     }
 
 }

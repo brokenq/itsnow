@@ -1,4 +1,4 @@
-package itsnow.config;
+package dnt.itsnow.config;
 
 import dnt.itsnow.service.PublicServiceCatalogService;
 import dnt.itsnow.service.PublicServiceItemService;

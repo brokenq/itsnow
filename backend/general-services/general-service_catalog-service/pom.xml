@@ -16,19 +16,4 @@
         The General service_catalog service implemented by MSP/MSU, and provide SPI to other deployment builds.
     </description>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifestEntries>
-                            <Service-Config>dnt.itsnow.config.GeneralServiceCatalogServiceConfig</Service-Config>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 </project>

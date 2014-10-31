@@ -1,10 +1,8 @@
-package itsnow.repository;
+package dnt.itsnow.repository;
 
-import dnt.itsnow.model.PublicServiceCatalog;
-import dnt.itsnow.model.PublicServiceItem;
-import dnt.itsnow.repository.PublicServiceCatalogRepository;
-import dnt.itsnow.repository.PublicServiceItemRepository;
-import itsnow.config.MutableServiceCatalogRepositoryConfig;
+import dnt.itsnow.config.PrivateServiceCatalogRepositoryConfig;
+import dnt.itsnow.model.PrivateServiceCatalog;
+import dnt.itsnow.model.PrivateServiceItem;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,48 +15,49 @@ import java.sql.Timestamp;
 import java.util.List;
 
 /**
- * <h1>测试MutableServiceItemRepository的Mybatis的Mapping配置是否正确</h1>
+ * <h1>测试PrivateServiceItemRepository的Mybatis的Mapping配置是否正确</h1>
  *
  */
-@ContextConfiguration(classes = MutableServiceCatalogRepositoryConfig.class)
+@ContextConfiguration(classes = PrivateServiceCatalogRepositoryConfig.class)
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
-public class MutableServiceItemRepositoryTest {
+public class PrivateServiceItemRepositoryTest {
     @Autowired
-    PublicServiceItemRepository repository;
+    PrivateServiceItemRepository repository;
 
     @Autowired
-    PublicServiceCatalogRepository catalogRepository;
+    PrivateServiceCatalogRepository catalogRepository;
 
     @Test
     public void testFindBySn() throws Exception {
-        PublicServiceItem item = repository.findBySn("sn-1011");
+        PrivateServiceItem item = repository.findPrivateBySn("sn-1011");
         validateItem(item);
-        Assert.isNull(repository.findBySn("Not Exist"));
+        Assert.isNull(repository.findPrivateBySn("Not Exist"));
     }
 
     @Test
     public void testCreate() throws Exception {
-        PublicServiceItem item = new PublicServiceItem();
-        PublicServiceCatalog catalog = catalogRepository.findBySn("SC_100");
+        PrivateServiceItem item = new PrivateServiceItem();
+        PrivateServiceCatalog catalog = catalogRepository.findPrivateBySn("SC_100");
         item.setCatalog(catalog);
         item.setSn("SC_TEST");
         item.setTitle("title_test");
         item.setDescription("desc_test");
         item.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         item.setUpdatedAt(item.getCreatedAt());
-        repository.save(item);
+        repository.savePrivate(item);
+        //item.setId(1L);
         Assert.notNull(item.getId());
     }
 
 
     @Test
     public void testFindAll() throws Exception {
-        List<PublicServiceItem> list = repository.findAll();
+        List<PrivateServiceItem> list = repository.findAllPrivate();
         Assert.isTrue(list.size() > 0);
     }
 
-    protected void validateItem(PublicServiceItem item) {
+    protected void validateItem(PrivateServiceItem item) {
         Assert.notNull(item);
         Assert.notNull(item.getId());
         Assert.notNull(item.getSn());

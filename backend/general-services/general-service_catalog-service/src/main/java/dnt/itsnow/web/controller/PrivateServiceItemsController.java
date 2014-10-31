@@ -46,13 +46,13 @@ public class PrivateServiceItemsController extends SessionSupportController<Priv
     /**
      * <h2>查看一个私有服务项目</h2>
      *
-     * GET /api/private_service_catalogs/{sn}/items/{id}
+     * GET /api/private_service_catalogs/{sn}/items/{isn}
      *
      * @return 服务项目
      */
-    @RequestMapping("/{id}")
-    public PrivateServiceItem show(@PathVariable("id") Long id){
-        return privateServiceItemService.findPrivateById(id);
+    @RequestMapping("/{isn}")
+    public PrivateServiceItem show(@PathVariable("isn") String isn){
+        return privateServiceItemService.findPrivateBySn(isn);
     }
 
     /**
@@ -71,14 +71,14 @@ public class PrivateServiceItemsController extends SessionSupportController<Priv
     /**
      * <h2>删除一个私有服务项目</h2>
      *
-     * DELETE /api/private_service_catalogs/{sn}/items/{id}
+     * DELETE /api/private_service_catalogs/{sn}/items/{isn}
      *
      * @return 被删除的服务项目
      */
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public PublicServiceItem destroy(@PathVariable("id") Long id){
-        privateServiceItemService.deletePrivate(id);
-        return null;
+    @RequestMapping(value = "/{isn}", method = RequestMethod.DELETE)
+    public PublicServiceItem destroy(@PathVariable("isn") String isn){
+        privateServiceItemService.deletePrivate(isn);
+        return serviceItem;
     }
 
 
@@ -88,9 +88,9 @@ public class PrivateServiceItemsController extends SessionSupportController<Priv
     }
     
     @BeforeFilter(order = 60, value = {"show", "destroy"})
-    public void initServiceItem(@PathVariable("id") Long id){
+    public void initServiceItem(@PathVariable("isn") String isn){
         if(serviceCatalog != null)
-            serviceItem = (PrivateServiceItem) serviceCatalog.getItemBySn(id+"");
+            serviceItem = (PrivateServiceItem) serviceCatalog.getItemBySn(isn);
     }
     
 }

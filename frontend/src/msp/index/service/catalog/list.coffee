@@ -1,32 +1,20 @@
   # List catalogs
-  angular.module('MscIndex.ServiceCatalog', ['ngTable','ngResource','MscIndex.ServiceCatalog.Detail','MscIndex.ServiceCatalog.Item', 'dnt.action.service'])
+  angular.module('Service.Catalog', ['ngTable','ngResource', 'dnt.action.service'])
     .config ($stateProvider)->
       $stateProvider.state 'services',
         url: '/services',
-        templateUrl: 'service/list-catalog.tpl.jade'
+        templateUrl: 'service/catalog/list-catalog.tpl.jade'
         data: {pageTitle: '服务管理'}
       $stateProvider.state 'services.catalog',
         url: '/catalog',
-        templateUrl: 'service/list-catalog.tpl.jade'
+        templateUrl: 'service/catalog/list-catalog.tpl.jade'
         data: {pageTitle: '服务目录'}
-      $stateProvider.state 'services.sla',
-        url: '/sla',
-        templateUrl: 'service/list.tpl.jade'
-        data: {pageTitle: '服务级别管理'}
 
     .factory('ServiceCatalogService', ['$resource', ($resource) ->
-      $resource("/admin/api/public_service_catalogs/:sn",{sn:'@sn'})
-    ])
-    .factory('ServiceItemService', ['$resource', ($resource) ->
-      $resource('/admin/api/public_service_catalogs/:sn/items/:isn',{sn:'@sn',isn:'@isn'})
+      $resource("/api/public_service_catalogs/accounts")
     ])
 
-  .filter('formatTime', ->
-    (time) ->
-      date = new Date(time)
-      return date.toLocaleString()
-  )
-    .controller 'CatalogListCtrl',['$scope', '$location', '$timeout', '$state','ngTableParams', 'ServiceCatalogService','ServiceItemService', 'ActionService',($scope, $location, $timeout, $state, ngTableParams, serviceCatalogService,serviceItemService,ActionService)->
+    .controller 'CatalogListCtrl',['$scope', '$location', '$timeout', '$state','ngTableParams', 'ServiceCatalogService', 'ActionService',($scope, $location, $timeout, $state, ngTableParams, serviceCatalogService,ActionService)->
       options =
         page:  1,           # show first page
         count: 10           # count per page
@@ -59,35 +47,6 @@
             console.log(item)
             return item if item.sn is sn
 
-      $scope.remove = (catalog)->
-        if($scope.selection.types[catalog.sn] == 'catalog')
-          feedback = (content) ->
-            alert content
-          success = ->
-            $scope.tableParams.reload()
-          failure = (response)->
-            feedback response.statusText
-          serviceCatalogService.remove({sn: catalog.sn}, success, failure)
-        else
-          feedback = (content) ->
-            alert content
-          success = ->
-            $scope.tableParams.reload()
-          failure = (response)->
-            feedback response.statusText
-          serviceItemService.remove({sn:$scope.selection.parent[catalog.sn],isn: catalog.sn}, success, failure)
-
-      $scope.create_catalog = (catalog)->
-        $state.go('services.catalog.detail',{'sn':catalog.sn,'action':'create'})
-
-      $scope.create_item = (catalog)->
-        $state.go('services.catalog.item',{'sn':catalog.sn,'action':'create'})
-
-      $scope.edit = (catalog)->
-        if($scope.selection.types[catalog.sn] == 'catalog')
-          $state.go('services.catalog.detail',{'sn':catalog.sn,'action':'edit'})
-        else
-          $state.go('services.catalog.item',{'sn':$scope.selection.parent[catalog.sn],'isn':catalog.sn,'action':'edit'})
 
       $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.getCatalogBySn})
 
