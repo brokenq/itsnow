@@ -34,6 +34,8 @@
         <target.login>${target.name}-login-${target.version}</target.login>
         <target.label>通用</target.label>
         <target.skin>default</target.skin>
+        <target.defaultUser>admin</target.defaultUser>
+        <target.defaultPassword>secret</target.defaultPassword>
         <grunt.exec>grunt</grunt.exec>
     </properties>
 
@@ -63,6 +65,7 @@
                 <target.title>Msu</target.title>
                 <target.label>企业</target.label>
                 <target.skin>default</target.skin>
+                <target.defaultUser>msu_admin</target.defaultUser>
             </properties>
         </profile>
         <profile>
@@ -72,6 +75,7 @@
                 <target.title>Msp</target.title>
                 <target.label>供应商</target.label>
                 <target.skin>skin-3</target.skin>
+                <target.defaultUser>msp_admin</target.defaultUser>
             </properties>
         </profile>
         <profile>
@@ -154,7 +158,9 @@
     "version": "${target.version}",
     "index":   "${target.index}",
     "login":   "${target.login}",
-    "skin" :   "${target.skin}"
+    "skin" :   "${target.skin}",
+    "defaultUser" : "${target.defaultUser}",
+    "defaultPassword" : "${target.defaultPassword}"
 }
 
                                 </echo>

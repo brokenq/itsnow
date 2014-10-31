@@ -11,6 +11,7 @@ import dnt.spring.Bean;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import java.util.UUID;
  * <h1>数据字典业务实现类</h1>
  */
 @Service
+@Transactional
 public class DictionaryManager extends Bean implements DictionaryService {
 
     @Autowired

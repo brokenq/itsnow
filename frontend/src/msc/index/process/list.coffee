@@ -67,7 +67,7 @@ angular.module('MscIndex.Process', ['ngTable','ngResource', 'dnt.action.service'
       $scope.start = (process)->
         acc = new Process(process)
         acc.$start(->
-          Feedback.success("已启动" + process.name)
+          Feedback.success("正在启动" + process.name)
           $scope.tableParams.reload()
         , (resp)->
           Feedback.error("启动" + process.name + "失败", resp)
