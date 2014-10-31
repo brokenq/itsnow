@@ -55,11 +55,23 @@ public class ItsnowHostRepositoryTest {
     }
 
     @Test
+    public void testFindByIdAndAddress() throws Exception {
+        ItsnowHost host = hostRepository.findByIdAndAddress(2L, "172.16.3.4");
+        Assert.assertNotNull(host);
+    }
+
+    @Test
     public void testFindByName() throws Exception {
         ItsnowHost host = hostRepository.findByName("App Host");
         Assert.assertNotNull(host);
         Assert.assertNotNull(host.getConfiguration());
         Assert.assertEquals("4x2533Mhz", host.getConfiguration().getProperty("cpu"));
+    }
+
+    @Test
+    public void testFindByIdAndName() throws Exception {
+        ItsnowHost host = hostRepository.findByIdAndName(2L ,"App Host");
+        Assert.assertNotNull(host);
     }
 
     @Test

@@ -103,4 +103,14 @@ public interface SystemInvocationTranslator {
      * @return 调用对象
      */
     SystemInvocation checkHostUser(String host, String username, String password);
+
+    /**
+     * <h2>重新建立信任关系</h2>
+     *
+     * @param host 主机地址
+     * @param username 用户名
+     * @param password 密码
+     * @return 调用对象
+     */
+    SystemInvocation trustMe(String host, String username, String password);
 }

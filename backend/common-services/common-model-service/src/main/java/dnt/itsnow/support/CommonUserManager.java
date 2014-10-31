@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <h1>Basic User Service</h1>
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
  * TODO 添加测试用例
  */
 @Service("plainUserService")
+@Transactional
 public class CommonUserManager extends Bean implements CommonUserService {
     @Autowired
     CommonUserRepository repository;

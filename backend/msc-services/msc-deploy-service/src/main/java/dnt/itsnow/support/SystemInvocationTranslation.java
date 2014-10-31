@@ -246,6 +246,16 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
         };
     }
 
+    @Override
+    public SystemInvocation trustMe(final String host, final String username, final String password) {
+        return new LocalInvocation() {
+            @Override
+            public int perform(Process process) throws Exception {
+                return process.run("./trust_me.sh", host, username, password);
+            }
+        };
+    }
+
     static class ScpTask extends LocalInvocation {
         private ItsnowProcess itsnowProcess;
         private File          varsFile;

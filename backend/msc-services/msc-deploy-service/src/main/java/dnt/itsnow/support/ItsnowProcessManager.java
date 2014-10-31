@@ -18,7 +18,6 @@ import dnt.itsnow.service.ItsnowSchemaService;
 import dnt.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +26,6 @@ import java.util.List;
  * <h1>Itsnow Process Manager</h1>
  */
 @Service
-@Transactional
 public class ItsnowProcessManager extends ItsnowResourceManager implements ItsnowProcessService {
     public static final String START_INVOCATION_ID = "startInvocationId";
     public static final String STOP_INVOCATION_ID = "stopInvocationId";
