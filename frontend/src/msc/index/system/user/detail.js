@@ -4,12 +4,12 @@ angular.module('MscIndex.User.Detail', [ 'ngResource'])
     .config(function ($stateProvider) {
         $stateProvider.state('createUserDetail', {
             url: '/createUserDetail',
-            templateUrl: 'user/detail.tpl.jade',
+            templateUrl: 'system/user/detail.tpl.jade',
             data: {pageTitle: '用户添加'}
         });
         $stateProvider.state('updateUserDetail',{
             url:'/updateUserDetail/{id}',
-            templateUrl:'user/detail.tpl.jade',
+            templateUrl:'system/user/detail.tpl.jade',
             data:{pageTitle:'用户修改'}
         });
     })
