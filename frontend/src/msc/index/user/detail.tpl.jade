@@ -25,6 +25,7 @@ mixin actionBar()
         .col-xs-12.col-sm-8.col-md-offset-2
             p.alert.alert-info
                 span.col-md-offset-4
+                    block
 mixin submitformBtn(title, icon)
     button.btn.btn-sm.btn-primary(ng-click!=attributes["ng-click"], ui-sref!=attributes["ui-sref"], type!=attributes["type"])
         i(class="icon-#{icon}")
