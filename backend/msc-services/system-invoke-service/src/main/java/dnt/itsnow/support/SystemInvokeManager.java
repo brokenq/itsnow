@@ -125,7 +125,7 @@ public class SystemInvokeManager extends Bean implements SystemInvokeService, In
 
     @Override
     public long read(String invocationId, long offset, final List<String> result) {
-        File logFile = new File(System.getProperty("APP_HOME"), "tmp/" + invocationId + ".log");
+        File logFile = new File(System.getProperty("app.home"), "tmp/" + invocationId + ".log");
         if( !logFile.exists() ) return offset;
         FileInputStream stream = null;
         List<String> lines = null;

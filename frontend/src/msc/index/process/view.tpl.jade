@@ -6,43 +6,54 @@ mixin formGroup()
   .form-group
     .col-md-offset-2.col-md-8
       block
-mixin label(label)
-  label.control-label.col-md-2 #{label}:
 mixin formField(label, value)
   label.control-label.col-md-2 #{label}:
-  div(class!=attributes["class"])
-    input.form-control(type="text", value="#{value}", readonly)
-mixin button(name)
-  button.btn.btn-primary(type='button')&attributes(attributes) #{name}
+  div()&attributes(attributes)
+    input.form-control(type="text", ng-model="process.#{value}", readonly)
+mixin textarea(label, value)
+  label.control-label.col-md-2 #{label}:
+  div()&attributes(attributes)
+    textarea.form-control(ng-model="process.#{value}", rows='4', readonly)
+mixin button(label, action)
+  button.btn.btn-primary(type='button', ng-click="#{action}")&attributes(attributes) #{label}
     block
-mixin buttonGroup(groupName,hrefName)
+mixin buttonGroup(label, action)
   li(role="presentation")
-    a(role="menuitem",tabindex="-1",href="#{hrefName}") #{groupName}
+    a(role="menuitem", tabindex="-1", href="javascript:void(0)", ng-click="#{action}") #{label}
+
 .form-horizontal(ng-controller="ProcessViewCtrl")
   +blocks("进程信息")
     +formGroup()
-      +formField("主机地址", "test")(class="col-md-3")
-      +formField("进程标识", "test")(class="col-md-3")
+      +formField("主机地址", "host.address")(class="col-md-3")
+      +formField("进程标识", "name")(class="col-md-3")
     +formGroup()
-      +formField("工作目录", "test")(class="col-md-8")
+      +formField("工作目录", "wd")(class="col-md-8")
     +formGroup()
-      +formField("配置属性", "test")(class="col-md-8")
+      +textarea("配置属性", "display.configuration")(class="col-md-8")
+  +blocks("数据库信息")
+    +formGroup()
+      +formField("数据库名称", "schema.name")(class="col-md-8")
+    +formGroup()
+      +textarea("数据库配置", "display.schema.configuration")(class="col-md-8")
   +blocks("运行信息")
     +formGroup()
-      +formField("进程ID", "test")(class="col-md-3")
-      +formField("进程状态", "test")(class="col-md-3")
-    //+formGroup()
-    //  +formField("test", "test")(class="col-md-8")
+      +formField("进程ID(PID)", "id")(class="col-md-3")
+      +formField("进程状态", "display.status")(class="col-md-3")
     +formGroup()
-      label.control-label.col-md-2 日志信息:
-      .col-md-8
-        textarea.form-control(rows='4',readonly)
+      +textarea("创建日志", "creationLog")(class="col-md-8")
     +formGroup()
-      .col-md-1.col-md-offset-2
-        +button('取消启动')
+      +textarea("启动日志", "startLog")(class="col-md-8")
+    +formGroup()
+      +textarea("停止日志", "stopLog")(class="col-md-8")
+    +formGroup()
       .col-md-1.col-md-offset-4
-        +button('访   问')(class="dropdown-toggle",data-toggle="dropdown")
+        +button("启动", "start()")(id="startBtn", class="hidden")
+        +button("取消启动", "cancel()")(id="cancelStartingBtn", class="hidden")
+        +button("停止", "stop()")(id="stopBtn", class="hidden")
+        +button("取消停止", "cancel()")(id="cancelStoppingBtn", class="hidden")
+      .col-md-1.col-md-offset-2
+        +button('访问', "")(class="dropdown-toggle", data-toggle="dropdown")
           span.caret
-        ul.dropdown-menu(role="menu",aria-labelledby="dropdownMenu3")
-          +buttonGroup('直接访问','#')
-          +buttonGroup('通过域名访问访问','#')
+        ul.dropdown-menu(role="menu", aria-labelledby="dropdownMenu3")
+          +buttonGroup('直接访问','')
+          +buttonGroup('通过域名访问访问','')
