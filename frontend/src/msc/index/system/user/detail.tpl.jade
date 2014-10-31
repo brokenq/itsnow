@@ -10,14 +10,14 @@ mixin widgetBox(title)
                     block
 mixin formGroup(name, label, icon, tip)
     .form-group
-        label.col-xs-12.col-sm-3.control-label.no-padding-right(for="user_#{name}") #{label}
+        label.col-xs-12.col-sm-3.control-label.no-padding-right(for="cuser_#{name}") #{label}
         .col-xs-12.col-sm-5
             span.block.input-icon.input-icon-right
                 block
                 i(class="icon-#{icon}")
         .help-block.col-xs-12.col-sm-reset.inline #{tip}
 mixin field(name, label)
-    input.form-control(id="user_#{name}", name="user.#{name}", ng-model="user.#{name}", placeholder="#{label}")&attributes(attributes)
+    input.form-control(id="cuser_#{name}", name="cuser.#{name}", ng-model="cuser.#{name}", placeholder="#{label}")&attributes(attributes)
 mixin fieldSelect(name,label)
     select.form-control(ng-model="#{name}", ng-options="data.name for data in datas", ng-init="#{name} = datas[0]")
 mixin actionBar()
@@ -35,7 +35,7 @@ mixin removeformBtn(title, icon)
         i(class="icon-#{icon}")
         | #{title}
 .row(ng-controller="UserDetailCtrl")
-    form.form-horizontal(name="userDeatilForm", novalidate="novalidate",ng-model-options="{ updateOn: 'mousedown blur' }", role="form", ng-submit="createUser()")
+    form.form-horizontal(name="userDeatilForm", novalidate="novalidate", role="form", ng-submit="createUser()")
         +widgetBox("用户信息")
             +formGroup("name","用户姓名", "user", "")
                 +field("name","用户姓名")(type="text",required, ng-maxlength="20",ng-pattern="")

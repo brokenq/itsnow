@@ -23,7 +23,13 @@ angular.module('MscIndex.User.Detail', [ 'ngResource'])
             if (id !== null && id !== "" && id !== undefined) {
 
             }else{
-
+                $scope.createUser=function(){
+                    $scope.cuser.$promise = undefined;
+                    $scope.cuser.$resolved = undefined;
+                    UserService.save($scope.cuser,function(){
+                        $location.path('/user');
+                    });
+                };
             }
         }
     ]);
