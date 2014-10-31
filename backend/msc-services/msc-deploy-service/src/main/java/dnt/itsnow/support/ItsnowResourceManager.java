@@ -10,10 +10,16 @@ import dnt.itsnow.service.SystemInvocationTranslator;
 import dnt.itsnow.service.SystemInvokeService;
 import dnt.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContextException;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * <h1>Default shared code between itsnow host/schema/process manager</h1>
  */
+@Transactional
 public abstract class ItsnowResourceManager extends Bean implements SystemInvocationListener {
     public static final String CREATE_INVOCATION_ID = "createInvocationId";
     public static final String DELETE_INVOCATION_ID = "deleteInvocationId";
@@ -23,15 +29,27 @@ public abstract class ItsnowResourceManager extends Bean implements SystemInvoca
     @Autowired
     SystemInvokeService        invokeService;
 
+    String mscAddress;
+
     @Override
     protected void performStart() {
         invokeService.addListener(this);
+        try {
+            if(mscAddress == null ) mscAddress = initMscAddress();
+        } catch (UnknownHostException e) {
+            throw new ApplicationContextException("Failed to resolve msc address" , e);
+        }
     }
 
     @Override
     protected void performStop() {
         invokeService.removeListener(this);
     }
+
+    private String initMscAddress() throws UnknownHostException {
+        return InetAddress.getLocalHost().getHostAddress();
+    }
+
 
     @Override
     public void added(SystemInvocation invocation) {

@@ -7,6 +7,7 @@ import dnt.itsnow.service.CommonServiceCatalogService;
 import dnt.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
  * <h1>Common ServiceCatalog Manager</h1>
  */
 @Service
+@Transactional
 public class CommonServiceCatalogManager extends Bean implements CommonServiceCatalogService {
 
     @Autowired

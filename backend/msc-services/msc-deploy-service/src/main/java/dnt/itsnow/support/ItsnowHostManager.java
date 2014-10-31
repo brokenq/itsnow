@@ -14,7 +14,6 @@ import dnt.itsnow.service.ItsnowHostService;
 import dnt.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -27,13 +26,11 @@ import java.util.regex.Pattern;
  * <h1>Itsnow Host Manager</h1>
  */
 @Service
-@Transactional
 public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHostService {
     static Pattern PATTERN = Pattern.compile("^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$");
 
     @Autowired
     ItsnowHostRepository repository;
-    private String mscAddress;
 
     @Override
     public Page<ItsnowHost> findAll(String keyword, PageRequest pageRequest) {
@@ -53,17 +50,25 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     }
 
     @Override
-    public List<ItsnowHost> findAllDbHosts() {
-        logger.debug("Listing all itsnow hosts support mysql instance");
-        List<ItsnowHost> dbHosts = repository.findAllByType(HostType.DB);
-        logger.debug("Listed  {} db hosts", dbHosts.size());
-        return dbHosts;
+    public List<ItsnowHost> findAll() {
+        logger.debug("Finding all hosts");
+        List<ItsnowHost> hosts = repository.findAll();
+        logger.debug("Found   all hosts: {}", hosts.size());
+        return hosts;
     }
 
     @Override
     public ItsnowHost findByAddress(String address) {
         logger.debug("Finding itsnow host by address: {}", address);
         ItsnowHost host = repository.findByAddress(address);
+        logger.debug("Found   itsnow host: {}", host);
+        return host;
+    }
+
+    @Override
+    public ItsnowHost findByIdAndAddress(Long id, String address) {
+        logger.debug("Finding itsnow host by id: {} and address: {}", id, address);
+        ItsnowHost host = repository.findByIdAndAddress(id, address);
         logger.debug("Found   itsnow host: {}", host);
         return host;
     }
@@ -77,15 +82,18 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     }
 
     @Override
+    public ItsnowHost findByIdAndName(Long id, String name) {
+        logger.debug("Finding itsnow host by id: {} and name: {}", id, name);
+        ItsnowHost host = repository.findByIdAndName(id, name);
+        logger.debug("Found   itsnow host: {}", host);
+        return host;
+    }
+
+    @Override
     public String resolveAddress(String name) throws ItsnowHostException{
         logger.debug("Resolving host address of {}", name);
         String hostAddress;
         String appDomain = translator.getAppDomain();
-        try {
-            if(mscAddress == null ) mscAddress = initMscAddress();
-        } catch (UnknownHostException e) {
-            throw new ItsnowHostException("Failed to resolve msc host" , e);
-        }
         try {
             hostAddress = InetAddress.getByName(name).getHostAddress();
         } catch (UnknownHostException e) {
@@ -99,10 +107,6 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
         }
         logger.debug("Resolved  host address {}", hostAddress);
         return hostAddress;
-    }
-
-    private String initMscAddress() throws UnknownHostException {
-        return InetAddress.getLocalHost().getHostAddress();
     }
 
     @Override
@@ -133,11 +137,26 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     }
 
     @Override
-    public List<ItsnowHost> findByType(String type) {
+    public List<ItsnowHost> findAllByType(String type) {
         logger.debug("Finding itsnow host by type = {}", type);
         List<ItsnowHost> hosts = repository.findAllByType(HostType.valueOf(type.toUpperCase()));
         logger.debug("Found size of itsnow host is {}", hosts.size());
         return hosts;
+    }
+
+    @Override
+    public void trustMe(String host, String username, String password) throws ItsnowHostException {
+        logger.debug("Setting up trust relationship for target host: {}", host);
+        SystemInvocation trustJob = translator.trustMe(host, username, password);
+        String jobId = invokeService.addJob(trustJob);
+        int code;
+        try {
+            code = invokeService.waitJobFinished(jobId);
+        } catch (SystemInvokeException e) {
+            throw new ItsnowHostException("Checking " + host + " password availability " , e);
+        }
+        if (0 != code)
+            throw new ItsnowHostException("Failed to setup trust relationship");
     }
 
     @Override

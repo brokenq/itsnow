@@ -35,8 +35,8 @@ import static org.springframework.http.HttpStatus.*;
  * PUT    /admin/api/hosts/{id}  update    修改主机信息
  * DELETE /admin/api/hosts/{id}  destroy   删除特定的主机信息
  * GET    /admin/api/hosts/{id}/follow/{invocationId} follow    获取目标主机最新的任务信息
- * GET    /admin/api/hosts/checkName?value=xx checkName 检查主机名是否唯一
- * GET    /admin/api/hosts/checkAddress?value=yy checkAddress 检查主机地址是否唯一,有效
+ * GET    /admin/api/hosts/checkName?id={id}&value={value} checkName 检查主机名是否唯一
+ * GET    /admin/api/hosts/checkAddress?id={id}&value={value} checkAddress 检查主机地址是否唯一,有效
  * GET    /admin/api/hosts/checkPassword?host={host}&username={username}&password={password} checkPassword 检查主机用户名密码是否有效
  * GET    /admin/api/hosts/list/{field}/{value}      listByField      列出所有匹配的主机
  * </pre>
@@ -75,7 +75,7 @@ public class ItsnowHostsController extends SessionSupportController<ItsnowHost>{
     @RequestMapping("dbs")
     public List<ItsnowHost> db_index() {
         logger.debug("Listing itsnow db hosts");
-        List<ItsnowHost> dbHosts = hostService.findAllDbHosts();
+        List<ItsnowHost> dbHosts = hostService.findAllByType("DB");
         logger.debug("Found   itsnow db hosts {}", dbHosts.size());
         return dbHosts;
     }
@@ -131,6 +131,29 @@ public class ItsnowHostsController extends SessionSupportController<ItsnowHost>{
             throw new WebClientSideException(NOT_ACCEPTABLE, e.getMessage());
         }
     }
+    /**
+     * <h2>修改主机信息</h2>
+     * <p/>
+     * DELETE /admin/api/hosts/{id}
+     */
+    @RequestMapping(value = "{id}", method = RequestMethod.PUT)
+    public void update(@RequestBody @Valid ItsnowHost host) {
+        logger.info("Updating {}", currentHost.getId());
+        if (!StringUtils.equals(host.getAddress(), currentHost.getAddress())) {
+            try {
+                hostService.trustMe(host.getAddress(), host.getConfiguration().getProperty("username"), host.getConfiguration().getProperty("password"));
+            }catch (ItsnowHostException e) {
+                throw new WebServerSideException(INTERNAL_SERVER_ERROR, e.getMessage());
+            }
+        }
+        currentHost.apply(host);
+        try {
+            hostService.update(currentHost);
+        } catch (ItsnowHostException e) {
+            throw new WebClientSideException(NOT_ACCEPTABLE, e.getMessage());
+        }
+        logger.info("Updated success {}", currentHost.getId());
+    }
 
     /**
      * <h2>查看特定任务的最新信息</h2>
@@ -160,15 +183,17 @@ public class ItsnowHostsController extends SessionSupportController<ItsnowHost>{
      * 主要检查主机的名称是否唯一；
      * 如果主机名可以直接ping通，则会返回目标主机的ip地址；
      * 如果ping不通，只要名称合法，也不认为是错误，但http body里面没有ip地址
-     * PUT /admin/api/hosts/checkName?value=
+     * PUT /admin/api/hosts/checkName?id={id}&value={value}
      * <pre>
      * Response body:
      * 200: {'address': '172.16.1.32'}
      * </pre>
+     * @param id 主机ID
+     * @param value 主机名
      */
     @RequestMapping("checkName")
-    public HashMap checkName(@RequestParam("value") String value ){
-      ItsnowHost host = hostService.findByName(value);
+    public HashMap  checkName(@RequestParam(value = "id", defaultValue="-1") Long id, @RequestParam("value") String value){
+      ItsnowHost host = hostService.findByIdAndName(id, value);
       if(host != null) 
           throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate host name: " + value);
 
@@ -187,14 +212,16 @@ public class ItsnowHostsController extends SessionSupportController<ItsnowHost>{
      * <p/>
      * 1. 检查主机的地址是否物理唯一；
      * 2. 检查主机地址可以直接ping通
-     * GET /admin/api/hosts/checkAddress?value=address
+     * GET /admin/api/hosts/checkAddress?id={id}&value={value}
      * <pre>
      * Response body:
      * 200: {'name': 'dev2'}
      * </pre>
+     * @param id 主机ID
+     * @param value 主机地址
      */
     @RequestMapping("checkAddress")
-    public HashMap checkAddress(@RequestParam("value")  String value ){
+    public HashMap checkAddress(@RequestParam(value = "id", defaultValue = "-1") Long id, @RequestParam("value")  String value ){
       HashMap<String,String> map = new HashMap<String,String>();
       String name;
       try{
@@ -203,11 +230,11 @@ public class ItsnowHostsController extends SessionSupportController<ItsnowHost>{
         // do not render any name indicator
         throw new WebClientSideException(HttpStatus.NOT_FOUND, "Can't reach host address: " + value);
       }
-      ItsnowHost host = hostService.findByAddress(value);
+      ItsnowHost host = hostService.findByIdAndAddress(id, value);
       if(host != null) 
           throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate host address: " + value);
 
-      host = hostService.findByName(name);
+      host = hostService.findByIdAndName(id, name);
       if(host != null) 
           throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate host name: " + name);
       map.put("name", name);
@@ -251,14 +278,14 @@ public class ItsnowHostsController extends SessionSupportController<ItsnowHost>{
         logger.debug("Listing all itsnow schemas by field = {} and value = {}", field, value);
         List<ItsnowHost> hosts;
         if ("type".equalsIgnoreCase(field)) {
-            hosts = hostService.findByType(value);
+            hosts = hostService.findAllByType(value);
             logger.debug("Listed size of all itsnow schemas is {}", hosts.size());
             return hosts;
         }
         throw new WebClientSideException(BAD_REQUEST, "Can't find itsnow schema by field " + field);
     }
 
-    @BeforeFilter({"show", "start", "stop", "cancel", "destroy", "follow"})
+    @BeforeFilter({"show", "start", "stop", "cancel", "destroy", "update", "follow"})
     public void initCurrentHost(@PathVariable("id") Long id){
         logger.debug("Finding itsnow host id = {}", id);
         currentHost = hostService.findById(id);

@@ -8,8 +8,8 @@
         <id property="id" column="id"/>
         <result property="no" column="no"/>
         <result property="name" column="name"/>
-        <result property="mobile_phone" column="mobilePhone"/>
-        <result property="fixed_phone" column="fixedPhone"/>
+        <result property="mobilePhone" column="mobile_phone"/>
+        <result property="fixedPhone" column="fixed_phone"/>
         <result property="email" column="email"/>
         <result property="title" column="title"/>
         <result property="type" column="type"/>
@@ -62,7 +62,7 @@
             u.email       AS userEmail,
             u.phone       AS userPhone,
             u.enabled     AS userEnabled,
-            u.expired     AS userEnabled,
+            u.expired     AS userExpired,
             u.locked      AS userLocked,
             s.id          AS siteId,
             s.sn          AS siteSn,
