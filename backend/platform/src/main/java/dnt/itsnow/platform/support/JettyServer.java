@@ -49,7 +49,6 @@ public class JettyServer extends Bean {
         server = new Server(new InetSocketAddress(host, port));
         server.setHandler(createHandlers());
         server.setStopAtShutdown(true);
-
         try {
             server.start();
             logger.info("Jetty bind at {}:{}", host, port);
@@ -72,7 +71,7 @@ public class JettyServer extends Bean {
         File webapp = new File(System.getProperty("app.home"), "webapp");
         String path = FilenameUtils.normalize(webapp.getAbsolutePath());
         context.setBaseResource(Resource.newResource(new File(path)));
-
+        context.setInitParameter("aliases", "true"); // support serve symbolic links
         context.setClassLoader(applicationContext.getClassLoader());
         context.getServletContext().setAttribute("application", applicationContext);
         context.setConfigurations(new Configuration[]{new JettyAnnotationConfiguration()});
