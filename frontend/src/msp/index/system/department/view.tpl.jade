@@ -1,0 +1,57 @@
+mixin blocks(title)
+  h2 #{title}
+  hr
+  block
+mixin formGroup()
+  .form-group
+    .col-md-offset-2.col-md-8
+      block
+mixin formField(label, value)
+  label.control-label.col-md-2 #{label}:
+  .col-md-3
+    input.form-control(type="text", ng-model="#{value}", readonly)
+mixin label(title)
+  label.control-label.col-md-2 #{title}:
+  .col-md-8
+    block
+mixin tableForm(number,name,mobilePhone,email,status)
+  tr
+    td #{number}
+    td #{name}
+    td #{mobilePhone}
+    td #{email}
+    td #{status}
+mixin button(href,num)
+  li
+    a(href="#{href}") #{num}
+
+.form-horizontal(ui-view ng-controller='userCtrl')
+  +blocks("部门详情")
+    +formGroup()
+      +formField("部门名称", "财务部")
+      +formField("部门地点", "大众一厂")
+    +formGroup()
+      +label('部门描述')
+        textarea.form-control(rows='4',readonly)
+    +formGroup()
+      +label('所属员工')
+        table.table.table-striped.table-bordered.table-condensed
+          tr
+            th 工号
+            th 姓名
+            th 手机
+            th 邮箱
+            th 状态
+          +tableForm('xx001', '张三', '12345678901', '1234567890912@qq.com', '在职')
+          +tableForm('xx001', '张三', '12345678901', '1234567890912@qq.com', '在职')
+          +tableForm('xx001', '张三', '12345678901', '1234567890912@qq.com', '在职')
+          +tableForm('xx001', '张三', '12345678901', '1234567890912@qq.com', '在职')
+          +tableForm('xx001', '张三', '12345678901', '1234567890912@qq.com', '在职')
+      .col-md-4.col-md-offset-4
+        ul.pagination
+          +button("#", "《")
+          +button("#","2")
+          +button("#","3")
+          +button("#","4")
+          +button("#","5")
+          +button("#","》")
