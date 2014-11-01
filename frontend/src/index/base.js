@@ -9,14 +9,12 @@ angular.module('Itsnow.Index', [
     'Index.Templates',
     'Index.Menu',
     'Index.Dialog',
-    'Index.Table',
     'Lib.JcsEnhance',
     'Lib.Filters',
     'Lib.Feedback'
 ])
   .config(function ($httpProvider, $stateProvider, $urlRouterProvider) {
         $urlRouterProvider.otherwise('dashboard');
-
         $stateProvider.state('dashboard', {
                 url: '/dashboard',
                 templateUrl: 'dashboard/dashboard.tpl.jade',

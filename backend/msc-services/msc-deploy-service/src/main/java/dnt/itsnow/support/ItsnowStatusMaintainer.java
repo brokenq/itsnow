@@ -37,6 +37,9 @@ public class ItsnowStatusMaintainer extends ItsnowResourceManager {
         super.performStart();
         hostExecutor = Executors.newSingleThreadExecutor(new NamedThreadFactory("HostStatusChecker"));
         processExecutor = Executors.newSingleThreadExecutor(new NamedThreadFactory("ProcessStatusChecker"));
+        if( "false".equalsIgnoreCase(System.getProperty("system.enableBackendTasks") ) ){
+            return;
+        }
         hostExecutor.submit(new Runnable() {
             @Override
             public void run() {

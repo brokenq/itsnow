@@ -1,0 +1,13 @@
+ui
+  li
+    a(ui-sref='slas.list') List
+  li
+    a(ui-sref='slas.new') New
+  li
+    a(ui-sref='slas.view({id: 10})') View
+  li
+    a(ui-sref='slas.edit({id: 10})') Edit
+ul
+  li.row(ng-repeat="sla in slas")
+    span.col-xs-4 {{sla.name}}
+    span.col-xs-8 {{sla.description}}

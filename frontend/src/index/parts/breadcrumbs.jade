@@ -7,5 +7,5 @@
       i.icon-home.home-icon
       a(ui-sref="/") 首页
     li(ng-repeat="breadcrumb in breadcrumbs")
-      a(ui-sref="{{breadcrumb.name}}") {{breadcrumb.data.pageTitle}}
+      a(ui-sref="{{breadcrumb.abstract ? breadcrumb.data.default || breadcrumb.name: breadcrumb.name}}") {{breadcrumb.data.pageTitle}}
 
