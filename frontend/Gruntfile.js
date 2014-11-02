@@ -665,7 +665,7 @@ module.exports = function ( grunt ) {
           '<%= index_files.coffee %>',
           '<%= login_files.coffee %>'
         ],
-        tasks: [ 'coffeelint:src', 'coffee:source', 'karma:unit:run', 'copy:build_indexjs', 'copy:build_loginjs' ]
+        tasks: [ /*'coffeelint',*/ 'coffee', /*'karma:unit:run',*/ 'copy:build_index_js', 'copy:build_login_js' ]
       },
 
       /**
