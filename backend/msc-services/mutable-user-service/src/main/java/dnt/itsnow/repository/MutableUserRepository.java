@@ -28,8 +28,8 @@ public interface MutableUserRepository extends CommonUserRepository {
      *
      * @param user 需要创建的对象
      */
-    @Insert("INSERT INTO itsnow_msc.users(account_id, username, email, phone, password, enabled, expired, created_at, updated_at) " +
-            "VALUES(#{accountId}, #{username}, #{email}, #{phone}, #{password}, TRUE, FALSE, #{createdAt}, #{updatedAt})")
+    @Insert("INSERT INTO itsnow_msc.users(account_id, username,nick_name, email, phone, password, enabled, expired, created_at, updated_at) " +
+            "VALUES(#{accountId}, #{username}, #{nickName},#{email}, #{phone}, #{password}, TRUE, FALSE, #{createdAt}, #{updatedAt})")
     @Options(useGeneratedKeys = true,keyColumn = "id")
     void create(User user);
 
@@ -63,4 +63,8 @@ public interface MutableUserRepository extends CommonUserRepository {
 
     @Delete("DELETE FROM itsnow_msc.users WHERE account_id = #{accountId}")
     void deleteAllByAccountId(@Param("accountId") Long accountId);
+    @Select("SELECT * FROM itsnow_msc.users WHERE username=#{username}")
+    User findByUsername(@Param("username") String email);
+    @Select("SELECT * FROM itsnow_msc.users WHERE email=#{email}")
+    User findByEmail(@Param("username") String email);
 }

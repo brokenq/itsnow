@@ -2,13 +2,17 @@
  * @author XiongJie, Date: 14-7-28
  */
 package dnt.itsnow.web.controller;
-
+import dnt.itsnow.model.Role;
 import dnt.itsnow.model.User;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.service.MutableUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.http.HttpStatus;
+import java.util.HashMap;
+import dnt.itsnow.platform.web.exception.WebClientSideException;
+import dnt.itsnow.platform.web.exception.WebServerSideException;
+import java.util.List;
 import javax.validation.Valid;
 
 /**
@@ -43,7 +47,19 @@ public class UsersController extends SessionSupportController<User> {
         //把数据放在http的body中
         return indexPage;
     }
+    /**
+     * <h2>查看一个用户</h2>
+     * <p/>
+     * GET /admin/api/users/{username}
+     * @param username 用户名称
+     * @return 用户实体类
+     */
+    @RequestMapping(value="{username}", method = RequestMethod.GET)
+    public User show(@PathVariable("username") String username) {
 
+        logger.debug("find user by {}", username);
+      return userService.findByUsername(username);
+    }
 
     /**
      * <h2>创建一个用户</h2>
@@ -54,8 +70,9 @@ public class UsersController extends SessionSupportController<User> {
      * @return 创建之后的用户信息，不包括密码等敏感信息
      */
     @RequestMapping(method = RequestMethod.POST)
-    public User create(@Valid User user) {
+    public User create(@Valid  @RequestBody User user) {
         logger.info("Creating {}", user.getUsername());
+        user.setAccountId(mainAccount.getId());
         User created = userService.create(user);
         cleanSensitive(created);
         logger.info("Created  {} with id {}", created.getUsername(), created.getId());
@@ -106,6 +123,24 @@ public class UsersController extends SessionSupportController<User> {
 
     }
 
+    @RequestMapping(value = "check/{username}", method = RequestMethod.GET)
+    public HashMap checkUnique(@PathVariable("username") String username){
+        User user = userService.findByUsername(username);
+        if( user != null ){
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate role name: " + user.getUsername());
+        }else{
+            return new HashMap();
+        }
+    }
+    @RequestMapping(value = "checkEmail/{email}", method = RequestMethod.GET)
+    public HashMap checkUniqueEmail(@PathVariable("email") String email){
+        User user = userService.findByEmail(email);
+        if( user != null ){
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate role name: " + user.getEmail());
+        }else{
+            return new HashMap();
+        }
+    }
     private void cleanSensitive(User user) {
         user.setPassword(null);
     }

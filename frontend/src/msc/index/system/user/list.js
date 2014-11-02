@@ -17,7 +17,13 @@ angular.module('MscIndex.User', ['ngTable', 'ngResource', 'MscIndex.User.Detail'
 })
     .factory('UserService', [
         '$resource', function ($resource) {
-            return $resource("/admin/api/users");
+            return $resource("/admin/api/users/:username",{},{
+                get: { method: 'GET', params: {username: '@username'}},
+                save: { method: 'POST'},
+                update: { method: 'PUT', params: {username: '@username'}},
+                query: { method: 'GET', isArray: true},
+                remove: { method: 'DELETE', params: {username: '@username'}}
+            });
         }
     ])
     .controller('UserListCtrl', [

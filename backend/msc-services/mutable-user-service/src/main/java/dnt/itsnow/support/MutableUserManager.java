@@ -79,4 +79,16 @@ public class MutableUserManager extends CommonUserManager
         mutableRepository.deleteAllByAccountId(accountId);
         logger.warn("Deleted  all users of account with id = {}", accountId);
     }
+
+    @Override
+    public User findByUsername(String username) {
+        logger.info("find User by {}", username);
+       return mutableRepository.findByUsername(username);
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        logger.info("find User by {}", email);
+        return  mutableRepository.findByEmail(email);
+    }
 }
