@@ -86,8 +86,7 @@ angular.module('System.Staff', ['ngTable', 'ngResource', 'Lib.Feedback'])
 
             $scope.search = function ($event) {
                 if ($event.keyCode === 13) {
-                    var promise = staffService.query({keyword: $event.currentTarget.value}).$promise;
-                    promise.then(function (data) {
+                    staffService.query({keyword: $event.currentTarget.value}).then(function (data) {
                         $scope.staffs = data;
                     });
                 }

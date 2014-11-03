@@ -27,7 +27,6 @@ mixin fieldGroup(title,help)
                                     span.block.input-icon.input-icon-right
                                         select#site_area.form-control(ng-model='dictionary', required,
                                             ng-options="dictionary.display for dictionary in dictionaries")
-                                        i.icon-check
                                 +fieldGroup("地址","部门具体地址")(for="site_addr")
                                     span.block.input-icon.input-icon-right
                                         textarea.form-control.limited#site_addr(name="site_addr", ng-model='site.address', ng-maxlength="100", placeholder="地址信息")
@@ -36,7 +35,6 @@ mixin fieldGroup(title,help)
                                     span.block.input-icon.input-icon-right
                                         select#site_work_time.form-control(ng-model='workTime', required,
                                             ng-options="(workTime.name+' '+workTime.startAt+'-'+workTime.endAt) for workTime in workTimes")
-                                        i.icon-check
                                 +fieldGroup("描述","对此角色的相关描述")(for="site_desc")
                                     span.block.input-icon.input-icon-right
                                         textarea.form-control.limited#site_desc(name="site_desc", ng-model='site.description', ng-maxlength="100", placeholder="描述文本")
