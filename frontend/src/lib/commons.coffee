@@ -50,3 +50,47 @@ angular.module('Lib.Commons', ['ngTable'])
 
     }
   ])
+
+  .factory('CacheService', [->
+    # 提供本地缓存功能, 本地缓存的数据可以多于ng table显示的当前页的数据(也就是ListCtrl的数据)
+    #
+    #   甚至可以考虑，是不是将selection service 也由这里负责
+    #    好处是selection可以跨页
+    #    坏处是selection跨页之后，用户行为的预期变化了(实际选中的数据与用户看到的不一样),需要额外的机制告知用户
+    #  selection是否跨页这个问题不应该丢给具体开发人员，应该在产品/平台层面统一
+    #  当前的结论是：不支持这个高级特性，尚未到usibility这个阶段
+    class CacheService
+
+      constructor: (@scope, @key, @callback) ->
+        instance = this
+        @records = []
+        # 这两个对外的函数，需要bind实例
+        @find = @findImpl.bind(instance)
+        @cache = @cacheImpl.bind(instance)
+      findInLocal: (key) ->
+        return record for record in @records when (record[@key]).toString() == key.toString()
+      findFromRemote: (key) ->
+        throw new Exception("Can't get record from remote API") unless @callback
+        @callback(key)
+      findImpl: (key, fetch) ->
+        local = @findInLocal(key)
+        return local if local
+        if fetch
+          remote = @findFromRemote(key)
+          remote || throw new Exception("Can't find the local/remote record with " + @key + " = " + key)
+        else
+          throw new Exception("Can't find the local record with " + @key + " = " + key)
+      cacheImpl: (records)->
+        if Array.isArray(records)
+          @cacheMany(records)
+        else
+          @cacheOne(records)
+      cacheOne: (record)->
+        @records.push record
+      cacheMany: (records)->
+        jQuery.merge(@records, records)
+        # TODO 针对数据更新，优化此地实现(identify object by id, not object)
+        jQuery.unique(@records)
+
+
+  ])

@@ -4,6 +4,7 @@ angular.module('MscIndex.SLAs',
      'ngResource',
      'ngSanitize',
      'dnt.action.service',
+     'Lib.Commons',
      'Lib.Utils',
      'Lib.Feedback'])
   .config ($stateProvider, $urlRouterProvider)->
@@ -36,7 +37,7 @@ angular.module('MscIndex.SLAs',
     $urlRouterProvider.when '/slas', '/slas/list'
 
 
-  .controller('SlasCtrl', ['$scope', ($scope) ->
+  .controller('SlasCtrl', ['$scope', 'CacheService', ($scope, CacheService) ->
     # frontend controller logic
     console.log("Initialized the SLAs controller")
     $scope.options =
@@ -60,45 +61,7 @@ angular.module('MscIndex.SLAs',
       $scope.mockSlas.push sla
       $scope.cache sla
 
-
-    # 提供本地缓存功能, 本地缓存的数据可以多于ng table显示的当前页的数据(也就是ListCtrl的数据)
-    #
-    # TODO 将这个本地缓存抽取成为可以复用的类(CacheService)
-    #   甚至可以考虑，是不是将selection service 也由这里负责
-    #    好处是selection可以跨页
-    #    坏处是selection跨页之后，用户行为的预期变化了(实际选中的数据与用户看到的不一样),需要额外的机制告知用户
-    #    这个问题不应该丢给具体开发人员，应该在产品/平台层面统一
-    #
-    $scope.cache = (data) ->
-      if Array.isArray(data)
-        $scope.cacheMany(data)
-      else
-        $scope.cacheOne(data)
-    $scope.slas = ->
-      $scope.records = [] unless $scope.records
-      $scope.records
-    $scope.cacheOne = (sla) ->
-      $scope.slas().push(sla)
-    $scope.cacheMany = (slas) ->
-      jQuery.merge($scope.slas(), slas)
-      # TODO 针对数据更新，优化此地实现(identify object by id, not object)
-      jQuery.unique($scope.slas())
-
-    $scope.getLocalSlaById = (id)->
-      return sla for sla in $scope.slas() when sla.id == parseInt(id)
-    $scope.getRemoteSlaById = (id)->
-      console.log "Hit missing sla with id: " + id
-      alert "Not implemented to get sla from remote API"
-      {id: id}  #return the simplest object now
-
-    $scope.getSlaById = (id, fetch)->
-      local = $scope.getLocalSlaById(id)
-      return local if local
-      if fetch
-        remote = $scope.getRemoteSlaById(id)
-        remote || throw new Exception("Can't find the sla local/remote with id = " + id)
-      else
-        throw new Exception("Can't find the sla local with id = " + id)
+    $scope.cacheService = new CacheService($scope, "id")
 
   ])
   .controller('SlaListCtrl', ['$scope', '$location', 'ngTableParams', 'ActionService', 'CommonService',\
@@ -108,16 +71,16 @@ angular.module('MscIndex.SLAs',
       total: 0
       getData: ($defer, params)->
         data = $scope.mockSlas.slice((params.page() - 1) * params.count(), params.page() * params.count())
-        $scope.cache data
+        $scope.cacheService.cache data
         $defer.resolve(data);
 
     $scope.selection = { 'checked': false, items: {} }
     $scope.slasTable = new NgTable(angular.extend($scope.options, $location.search()), args);
-    $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.getSlaById})
-    commonService.watchSelection($scope.selection, $scope.slas, "id")
+    $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.cacheService.find})
+    commonService.watchSelection($scope.selection, $scope.cacheService.records, "id")
   ])
   .controller('SlaViewCtrl', ['$scope', '$stateParams', ($scope, $stateParams) ->
-    sla = $scope.getSlaById $stateParams.id, true
+    sla = $scope.cacheService.find $stateParams.id, true
     $scope.sla = sla
     console.log("Initialized the SLA View controller on: " + JSON.stringify(sla))
   ])
@@ -136,7 +99,7 @@ angular.module('MscIndex.SLAs',
   ])
   .controller('SlaEditCtrl', ['$scope', '$state', '$stateParams', 'Feedback', \
                              ($scope, $state, $stateParams, feedback) ->
-    sla = $scope.getSlaById $stateParams.id, true
+    sla = $scope.cacheService.find $stateParams.id, true
     console.log("Initialized the SLA Edit controller on: " + JSON.stringify(sla))
     $scope.sla = sla
     $scope.update = ->
