@@ -77,6 +77,8 @@ public class GeneralContractDetailsController extends SessionSupportController {
         logger.info("Msu creating {} by contract sn {}", detail, contractSn);
 
         try {
+            Contract currentContract = contractService.findByAccountAndSn(mainAccount, contractSn, true);
+            detail.setContract(currentContract);
             detail = contractService.createDetail(detail, contractSn);
         } catch (ServiceException e) {
             throw new WebClientSideException(HttpStatus.NOT_ACCEPTABLE,
