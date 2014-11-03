@@ -60,10 +60,16 @@ angular.module('MscIndex.User', ['ngTable', 'ngResource', 'MscIndex.User.Detail'
                     }
                 }
             };
+
             $scope.actionService = new ActionService({
                 watch: $scope.selection.items,
                 mapping: $scope.getUserById
             });
+            $scope.deleteUser= function (user) {
+                userService.remove({username: user.username},function(){
+                    $scope.tableParams.reload();
+                });
+            };
             $scope.$watch('selection.checked', function (value) {
                 return angular.forEach($scope.users, function (item) {
                     if (angular.isDefined(item.id)) {

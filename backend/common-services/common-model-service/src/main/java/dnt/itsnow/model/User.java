@@ -38,15 +38,6 @@ public class User extends ConfigItem
 
     @NotBlank
     private String repeatPassword;
-
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
-
     private String nickName;
     private Long accountId;
     // 用户的当前主账户，可以为空，可以变化
@@ -108,7 +99,13 @@ public class User extends ConfigItem
         password = null;
         repeatPassword = null;
     }
+    public String getNickName() {
+        return nickName;
+    }
 
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
     public void setUsername(String username) {
         setName(username);
     }

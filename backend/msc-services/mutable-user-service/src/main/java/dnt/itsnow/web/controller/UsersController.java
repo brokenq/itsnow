@@ -2,7 +2,6 @@
  * @author XiongJie, Date: 14-7-28
  */
 package dnt.itsnow.web.controller;
-import dnt.itsnow.model.Role;
 import dnt.itsnow.model.User;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.service.MutableUserService;
@@ -11,8 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import java.util.HashMap;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
-import dnt.itsnow.platform.web.exception.WebServerSideException;
-import java.util.List;
 import javax.validation.Valid;
 
 /**
@@ -28,7 +25,6 @@ import javax.validation.Valid;
 public class UsersController extends SessionSupportController<User> {
     @Autowired
     MutableUserService userService;
-
     /**
      * <h2>查询用户列表</h2>
      * <p/>
@@ -90,7 +86,7 @@ public class UsersController extends SessionSupportController<User> {
      */
     @RequestMapping(value = "{username}", method = RequestMethod.PUT)
     public User update(@PathVariable("username") String username,
-                       @RequestBody @Valid  User user) {
+                       @RequestBody User user) {
         logger.info("Updating {}", username);
         User exist = userService.findByUsername(username);
         exist.apply(user);
@@ -104,7 +100,18 @@ public class UsersController extends SessionSupportController<User> {
         }
         return updated;
     }
-
+    @RequestMapping(value = "{username}", method = RequestMethod.DELETE)
+    public void destroy(@PathVariable("username") String username){
+        logger.warn("Deleting {}");
+        User exist = userService.findByUsername(username);
+        try {
+            userService.delete(exist);
+        } catch (Exception e) {
+            // 把service side异常转换为client side exception
+            throw new WebClientSideException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
+        }
+        logger.warn("Deleted  {}");
+    }
 
     /**
      * <h2>管理员更新一个用户的密码</h2>
@@ -141,6 +148,8 @@ public class UsersController extends SessionSupportController<User> {
             return new HashMap();
         }
     }
+
+
     private void cleanSensitive(User user) {
         user.setPassword(null);
     }

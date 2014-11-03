@@ -34,18 +34,18 @@ public interface MutableUserRepository extends CommonUserRepository {
     void create(User user);
 
     /**
-     * 只更新用户的用户名，email，电话, enabled, expired
+     * 只更新用户的email，电话, enabled, expired
      *
      * @param user 被更新的用户信息
      */
     @Update("UPDATE itsnow_msc.users SET " +
-            " username = #{username}, " +
             " email    = #{email}, " +
+            " nick_name =#{nickName}," +
             " phone    = #{phone}," +
             " enabled  = #{enabled}," +
             " expired  = #{expired}, " +
             " updated_at = #{updatedAt}" +
-            " WHERE id = #{id} ")
+            " WHERE username = #{username} ")
     void update(User user);
 
     /**
@@ -63,8 +63,15 @@ public interface MutableUserRepository extends CommonUserRepository {
 
     @Delete("DELETE FROM itsnow_msc.users WHERE account_id = #{accountId}")
     void deleteAllByAccountId(@Param("accountId") Long accountId);
-    @Select("SELECT * FROM itsnow_msc.users WHERE username=#{username}")
-    User findByUsername(@Param("username") String email);
+    @Select("SELECT users.expired," +
+            "users.username," +
+            "users.nick_name," +
+            "users.email," +
+            "users.enabled," +
+            "users.phone FROM itsnow_msc.users WHERE username=#{username}")
+    User findByUsername(@Param("username") String username);
     @Select("SELECT * FROM itsnow_msc.users WHERE email=#{email}")
-    User findByEmail(@Param("username") String email);
+    User findByEmail(@Param("email") String email);
+    @Delete("DELETE FROM itsnow_msc.users WHERE username = #{username}")
+    void delete(User user);
 }

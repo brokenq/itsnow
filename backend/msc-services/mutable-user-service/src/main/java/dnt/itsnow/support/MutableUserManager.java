@@ -30,6 +30,7 @@ public class MutableUserManager extends CommonUserManager
            这是底层component-framework的class loading机制需要解决的一个典型问题*/
         implements MutableUserService{
 
+
     @Autowired
     @Qualifier("globalMessageBus")
     MessageBus globalMessageBus;
@@ -91,4 +92,9 @@ public class MutableUserManager extends CommonUserManager
         logger.info("find User by {}", email);
         return  mutableRepository.findByEmail(email);
     }
+    @Override
+    public void delete(User user) {
+          mutableRepository.delete(user);
+    }
+
 }
