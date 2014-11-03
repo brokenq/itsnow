@@ -1,20 +1,17 @@
 package dnt.itsnow.model;
 
-import com.sun.istack.internal.NotNull;
 
 import java.util.Properties;
 
 /**
  * <h1>对应于 ItsnowHosts 的Client Json解析对象</h1>
  */
-public class ClientItsnowHosts extends ClientRecord {
+public class ClientItsnowHost extends ClientRecord {
 
-    @NotNull
     private String address;
     private ClientHostStatus status = ClientHostStatus.Planing;
     //这台主机一般能部署多少个Itsnow Process
     private int    capacity;
-    @NotNull
     private ClientHostType type = ClientHostType.APP;
 
     private int processesCount;

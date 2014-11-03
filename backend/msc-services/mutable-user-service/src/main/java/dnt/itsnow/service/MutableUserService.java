@@ -50,4 +50,9 @@ public interface MutableUserService extends CommonUserService {
      * @param accountId 被删除的帐户ID
      */
     void deleteByAccountId(Long accountId);
+    /**
+     * 删除用户
+     *
+     */
+    void delete(User user);
 }

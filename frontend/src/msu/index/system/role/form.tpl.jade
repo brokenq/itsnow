@@ -2,40 +2,52 @@ mixin fieldGroup(title,help)
     .form-group.has-info(ng-class!=attributes.ngClass, ng-hide!=attributes.ngHide, ng-show!=attributes.ngShow)
         label.col-xs-12.col-sm-3.control-label.no-padding-right(for!=attributes.for) #{title}
         .col-xs-12.col-sm-5(class!=attributes.class)
-            block
+            span.block.input-icon.input-icon-right
+                block
         .help-block.col-xs-12.col-sm-reset.inline #{help}
+mixin widget(title)
+    .widget-box
+        div.widget-header.widget-header-blue.widget-header-flat
+            h4.lighter #{title}
+        .widget-body
+            .widget-main
+                block
+mixin action_bar
+    .clearfix.form-actions
+        .col-md-offset-3.col-md-9
+            block
+mixin action_button(title,type,icon,level)
+    button.btn(class="btn-#{level}",type=type)&attributes(attributes)
+        i.bigger-110(class="icon-#{icon}")
+        | #{title}
+mixin action_submit
+    +action_button("提交","submit","ok","primary")(ng-disabled="submited")
+    //- attributes = merge({ng-disabled: "submited"}, attributes)
+    //+action_button("提交","submit","ok","primary")&attributes(attributes)
+mixin action_cancel
+    +action_button("取消","button","undo","default")(ng-click="cancel()")
+    //- attributes = merge({ng-click: "cancel()"}, attributes)
+    //+action_button("取消","button","undo","default")&attributes(attributes)
 
 .row
     .col-xs-12(ng-controller='RoleCtrl')
         .row-fluid
             .span12
-                .widget-box
-                    div.widget-header.widget-header-blue.widget-header-flat
-                        h4.lighter 角色表单
-                    .widget-body
-                        .widget-main
-                            form.form-horizontal(role='form', novalidate="novalidate", name='roleForm', ng-submit='submit(role)')
-                                +fieldGroup("角色名称","不可重复")(for="role_name")
-                                    span.block.input-icon.input-icon-right
-                                        input.form-control#role_name(name="role_name", ng-model='role.name', required, ng-minlength="4",
-                                        ng-maxlength="20", ng-pattern='/^(ROLE_)([a-zA-Z0-9]|_|\\-|\\.)+$/', ng-readonly="false",
-                                        ng-check="/api/roles/check/{0}", type="text", placeholder="角色名")
-                                        i.icon-user
-                                        input.form-control#role_name_other(name="role_name_other", ng-model='role.name', ng-readonly="true", type="text", style="dispaly:none;")
-                                        i.icon-user
-                                +fieldGroup("用户","此角色所包含的用户")(for="role_users")
-                                    span.block.input-icon.input-icon-right
-                                        div#role_users(multi-select, input-model="users", button-label="username", item-label="username", tick-property="ticked")
-                                        i.icon-user
-                                +fieldGroup("描述","对此角色的相关描述")(for="role_desc")
-                                    span.block.input-icon.input-icon-right
-                                        textarea.form-control.limited#role_desc(name="role_desc", ng-model='role.description', ng-maxlength="100", placeholder="描述文本")
-                                        i.icon-edit
-                                .clearfix.form-actions
-                                    .col-md-offset-3.col-md-9
-                                        button.btn.btn-info#submit(type='submit', ng-disabled="submited")
-                                            i.icon-ok.bigger-110
-                                            | 提交
-                                        button.btn(type='button', ng-click="cancel()")
-                                            i.icon-undo.bigger-110
-                                            | 取消
+                +widget("角色表单")
+                   form.form-horizontal(role='form', novalidate="novalidate", name='roleForm', ng-submit='submit(role)')
+                       +fieldGroup("角色名称","不可重复")(for="role_name")
+                           input.form-control#role_name(name="role_name", ng-model='role.name', required, ng-minlength="4",
+                           ng-maxlength="20", ng-pattern='/^(ROLE_)([a-zA-Z0-9]|_|\\-|\\.)+$/', ng-readonly="false",
+                           ng-check="/api/roles/check/{0}", type="text", placeholder="角色名")
+                           i.icon-user
+                           input.form-control#role_name_other(name="role_name_other", ng-model='role.name', ng-readonly="true", type="text", style="dispaly:none;")
+                           i.icon-user
+                       +fieldGroup("用户","此角色所包含的用户")(for="role_users")
+                           div#role_users(multi-select, input-model="users", button-label="username", item-label="username", tick-property="ticked")
+                           i.icon-user
+                       +fieldGroup("描述","对此角色的相关描述")(for="role_desc")
+                           textarea.form-control.limited#role_desc(name="role_desc", ng-model='role.description', ng-maxlength="100", placeholder="描述文本")
+                           i.icon-edit
+                       +action_bar
+                           +action_submit
+                           +action_cancel

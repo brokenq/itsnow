@@ -2,7 +2,7 @@
 angular.module('System.Role', ['ngTable', 'ngResource', 'dnt.action.service', 'Lib.Feedback'])
 
     .config(function ($stateProvider) {
-        $stateProvider.state('system.role', {
+        $stateProvider.state('role', {
             url: '/role',
             templateUrl: 'system/role/list.tpl.jade',
             data: {pageTitle: '角色管理'}

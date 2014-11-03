@@ -21,9 +21,9 @@ INSERT INTO menu_items(id, parent_id, name, state, position, css) VALUES
 (32,   3, 'SLA管理',    'services.sla',      1, 'icon-eye-open'),
 (33,   3, '字典管理',   'dict',               2,   'icon-book'),
 
-(41,   4, '角色管理',   'system.role',       0, 'icon-group'),
-(42,   4, '用户管理',   'system.user',       1, 'icon-user'),
-(43,   4, '权限管理',   'system.privilege',  2, 'icon-authenticate');
+(41,   4, '角色管理',   'role',       0, 'icon-group'),
+(42,   4, '用户管理',   'user',       1, 'icon-user'),
+(43,   4, '权限管理',   'privilege',  2, 'icon-authenticate');
 -- //@UNDO
 -- SQL to undo the change goes here.
 
