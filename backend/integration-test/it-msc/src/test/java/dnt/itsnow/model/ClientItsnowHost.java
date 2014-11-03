@@ -1,6 +1,5 @@
 package dnt.itsnow.model;
 
-import com.sun.istack.internal.NotNull;
 
 import java.util.Properties;
 
@@ -9,12 +8,10 @@ import java.util.Properties;
  */
 public class ClientItsnowHost extends ClientRecord {
 
-    @NotNull
     private String address;
     private ClientHostStatus status = ClientHostStatus.Planing;
     //这台主机一般能部署多少个Itsnow Process
     private int    capacity;
-    @NotNull
     private ClientHostType type = ClientHostType.APP;
 
     private int processesCount;
