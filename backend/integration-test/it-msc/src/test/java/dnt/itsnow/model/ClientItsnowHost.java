@@ -7,7 +7,7 @@ import java.util.Properties;
 /**
  * <h1>对应于 ItsnowHosts 的Client Json解析对象</h1>
  */
-public class ClientItsnowHosts extends ClientRecord {
+public class ClientItsnowHost extends ClientRecord {
 
     @NotNull
     private String address;
