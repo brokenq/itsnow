@@ -21,8 +21,8 @@ mixin select_all()
     .btn-group
       +tool_button("tableParams.reload()", "refresh", "", "*", "", "")
     .btn-group
-        +tool_button("actionService.gotoState('system.role_new_form')", "new", "新建", "*", "", "")
-        +tool_button("actionService.gotoState('system.role_edit_form')", "edit", "编辑", "1", "", "")
+        +tool_button("actionService.gotoState('role_new_form')", "new", "新建", "*", "", "")
+        +tool_button("actionService.gotoState('role_edit_form')", "edit", "编辑", "1", "", "")
         +tool_button("actionService.perform(deleteRole)", "remove", "删除", "1+", "", "")
     .btn-group.pull-right
       .nav-search#nav-search

@@ -1,3 +1,30 @@
+/**
+ * RESTful URL PATTERN
+ *
+ * GET    /staffs           -> List
+ * GET    /staffs/:id       -> Show
+ * GET    /staffs/new       -> New
+ * POST   /staffs           -> Create
+ * GET    /staffs/:id/edit  -> Edit
+ * PUT    /staffs/:id       -> Update
+ * GET    /staffs/:id/remove-> Remove
+ * DELETE /staffs/:id       -> Destroy
+ *
+ * GET    /staffs/interns
+ * GET    /staffs/employees
+ *
+ * GET    /staffs/:id/contracts
+ *
+ * staffs/
+ *   |- _form.tpl.jade
+ *   |- view.tpl.jade
+ *   |- new.tpl.jade
+ *   |- edit.tpl.jade
+ *   |- remove.tpl.jade
+ *   |- list.tpl.jade
+ *   |- staffs_ctrl.coffee
+ */
+
 angular.module('System.Staff.Form', ['multi-select', 'ngResource', 'Lib.Feedback'])
 
     .config(function ($stateProvider) {
@@ -21,6 +48,7 @@ angular.module('System.Staff.Form', ['multi-select', 'ngResource', 'Lib.Feedback
             // 表单cancel按钮
             $scope.cancel = function () {
                 $location.path('/staff');
+                //$state.go()
             };
 
             // 去除不必要的对象属性，用于HTTP提交
@@ -84,9 +112,7 @@ angular.module('System.Staff.Form', ['multi-select', 'ngResource', 'Lib.Feedback
                     });
                 });
 
-                $scope.submit = function () {
-                    submitByEditFun();
-                };
+                $scope.submit = submitByEditFun;
 
             } else { // 进入新建页面
                 $scope.disabled = false;
@@ -99,9 +125,7 @@ angular.module('System.Staff.Form', ['multi-select', 'ngResource', 'Lib.Feedback
                     $scope.departments = data;
                 });
 
-                $scope.submit = function () {
-                    submitByCreateFun();
-                };
+                $scope.submit = submitByCreateFun;
             }
 
         }

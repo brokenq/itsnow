@@ -14,6 +14,8 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.RequestLogHandler;
+import org.eclipse.jetty.servlet.DefaultServlet;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.WebAppContext;
@@ -47,9 +49,9 @@ public class JettyServer extends Bean {
             host = "0.0.0.0";
         }
         server = new Server(new InetSocketAddress(host, port));
+
         server.setHandler(createHandlers());
         server.setStopAtShutdown(true);
-
         try {
             server.start();
             logger.info("Jetty bind at {}:{}", host, port);
@@ -69,10 +71,12 @@ public class JettyServer extends Bean {
     private HandlerCollection createHandlers() {
         WebAppContext context = new WebAppContext();
         context.setContextPath("/");
+        //ServletHolder holder = context.addServlet(DefaultServlet.class, "/");
+        //holder.setInitParameter("aliases", "true"); // support serve symbolic links
+
         File webapp = new File(System.getProperty("app.home"), "webapp");
         String path = FilenameUtils.normalize(webapp.getAbsolutePath());
         context.setBaseResource(Resource.newResource(new File(path)));
-
         context.setClassLoader(applicationContext.getClassLoader());
         context.getServletContext().setAttribute("application", applicationContext);
         context.setConfigurations(new Configuration[]{new JettyAnnotationConfiguration()});

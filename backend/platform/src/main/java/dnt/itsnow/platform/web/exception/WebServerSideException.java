@@ -10,7 +10,18 @@ import org.springframework.web.client.HttpServerErrorException;
  * WEB层异常，异常源自服务端
  */
 public class WebServerSideException extends HttpServerErrorException {
+    private int code;
+
     public WebServerSideException(HttpStatus status, String message) {
         super(status, message);
+    }
+
+    public WebServerSideException(HttpStatus statusCode, String statusText, int code) {
+        super(statusCode, statusText);
+        this.code = code;
+    }
+
+    public int getCode() {
+        return code;
     }
 }
