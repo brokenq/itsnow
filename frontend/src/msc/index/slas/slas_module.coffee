@@ -140,6 +140,6 @@ angular.module('MscIndex.SLAs',
     console.log("Initialized the SLA Edit controller on: " + JSON.stringify(sla))
     $scope.sla = sla
     $scope.update = ->
-      feedback.success "Updating a sla " + JSON.stringify(sla)
+      feedback.success "Updated a sla " + JSON.stringify(sla)
       $state.go('slas.view', {id: sla.id})
   ])

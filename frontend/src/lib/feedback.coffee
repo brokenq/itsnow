@@ -15,10 +15,10 @@ angular.module('Lib.Feedback', [])
       # level的默认值为 1(info)
       # dismiss的默认值为 10
       feedback: (message, options) ->
-        klass = switch options.level || 1
-          when 0 then "bg-success"
-          when 1 then "bg-info"
-          when 2 then "bg-primary"
+        klass = switch options.level || 2
+          when 1 then "bg-success"
+          when 2 then "bg-info"
+          when 3 then "bg-primary"
           when -1 then "bg-warning"
           when -2 then "bg-danger"
           else "bg-info"
@@ -44,11 +44,11 @@ angular.module('Lib.Feedback', [])
         $timeout(dismissFeedback, dismiss * 1000) if dismiss > 0
 
       success: (message, dismiss) ->
-        this.feedback(message, {level: 0, dismiss: dismiss})
-      info: (message, dismiss) ->
         this.feedback(message, {level: 1, dismiss: dismiss})
-      primary: (message, dismiss) ->
+      info: (message, dismiss) ->
         this.feedback(message, {level: 2, dismiss: dismiss})
+      primary: (message, dismiss) ->
+        this.feedback(message, {level: 3, dismiss: dismiss})
       warn: (message, dismiss) ->
         this.feedback(message, {level: -1, dismiss: dismiss})
       error: (message, resp, dismiss) ->
