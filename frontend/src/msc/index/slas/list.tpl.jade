@@ -1,13 +1,18 @@
-ui
-  li
-    a(ui-sref='slas.list') List
-  li
-    a(ui-sref='slas.new') New
-  li
-    a(ui-sref='slas.view({id: 10})') View
-  li
-    a(ui-sref='slas.edit({id: 10})') Edit
-ul
-  li.row(ng-repeat="sla in slas")
-    span.col-xs-4 {{sla.name}}
-    span.col-xs-8 {{sla.description}}
+include /lib/mixins/list
+
+.container(ng-controller="SlaListCtrl")
+  +toolbar
+    +button_group
+      +tool_button("slasTable.reload()", "refresh", "", "*", "", "")
+    +button_group
+      +tool_button("actionService.gotoState('slas.new')", "plus", "新增", "*", "", "")
+      +tool_button("actionService.gotoState('slas.edit')", "pencil", "修改", "1", "", "editable")
+    +more_buttons
+      +drop_button("actionService.perform(destroy)", "trash", "删除", "1+", "", "deletable")
+
+  +list_table("slasTable","selection")
+    +row("sla", "id", "selection")
+      td(data-title="'名称'")
+        a(ui-sref="slas.view({id: '{{sla.id}}'})") {{sla.title}}
+      td(data-title="'描述'") {{sla.description}}
+      td(data-title="'SLOs'") SLOs

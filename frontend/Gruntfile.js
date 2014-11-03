@@ -178,7 +178,7 @@ module.exports = function ( grunt ) {
         options: {
           base: '<%= target.name %>/index',
           module: '<%= target.title %>Index.Templates',
-          jade: {basedir: 'msc'}
+          jade: {basedir: '.'}
         },
         src: [ '<%= index_files.ms_tpl %>' ],
         dest: '<%= build_dir %>/templates/<%= target.name %>-index.js'
