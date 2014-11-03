@@ -18,9 +18,10 @@ angular.module('MsuIndex.ContractCreate', ['ngResource'])
       query: {method: 'GET', params: {keyword: '@keyword'}, isArray: true}
   ])
 
-.controller 'ContractCtrl', ['$scope', '$state', '$stateParams', '$q', 'ContractService', 'ContractServiceCatalogService',
+.controller 'ContractCtrl', ['$scope', '$state', '$stateParams', '$q', 'ContractService', 'ContractDetailService',
+                             'ContractServiceCatalogService',
                              'Feedback',
-  ($scope, $state, $stateParams, $q, contractService, serviceCatalogService, feedback) ->
+  ($scope, $state, $stateParams, $q, contractService, contractDetailService, serviceCatalogService, feedback) ->
 
 #    deferred = $q.defer
 
@@ -35,13 +36,6 @@ angular.module('MsuIndex.ContractCreate', ['ngResource'])
         serviceCatalogs.push serviceCatalog
         serviceCatalogs.push item for item in serviceCatalog.items when serviceCatalog.items?
       $scope.serviceCatalogs = serviceCatalogs
-
-#    $scope.states = [
-#      {id: 'Draft', name: '草案'},
-#      {id: 'Purposed', name: '提议'},
-#      {id: 'Approved', name: '批准'},
-#      {id: 'Rejected', name: '拒绝'}
-#    ]
 
     #the button to add a new file input
     $('#id-add-attachment').on 'click', ()->
@@ -58,26 +52,34 @@ angular.module('MsuIndex.ContractCreate', ['ngResource'])
         $(this).closest('.row').hide 300, ()->
           $(this).remove()
 
+    $scope.cancel = () ->
+      $state.go 'contracts.contract'
+
     $scope.accept = () ->
       for serviceCatalog in $scope.serviceCatalogs
         if serviceCatalog.items?
           for item in serviceCatalog.items
             $scope.detail.itemId = item.id if item.ticked is true
-      details =[]
+
+      details = []
       details.push $scope.detail
-      $scope.contract.details = details
-      contractService.save $scope.contract, () ->
+      contractService.save($scope.contract, (data) ->
+        for detail in details
+          contractDetailService.save {sn:data.sn}, detail
         feedback.success "保存合同成功"
         $state.go 'contracts.contract'
+      ,(resp)->
+        feedback.error("保存合同失败", resp)
+      )
 
     if $stateParams.sn? and $stateParams.sn isnt ''
 #      deferred.promise.then ()->
-        contractService.get({sn:$stateParams.sn}).$promise
-        .then (data)->
-          $scope.contract = data
-          for detail in $scope.contract.details
-            for serviceCatalog in $scope.serviceCatalogs
-              if serviceCatalog.id is detail.item.id
-                serviceCatalog.ticked = true
+      contractService.get({sn: $stateParams.sn}).$promise
+      .then (data)->
+        $scope.contract = data
+        for detail in $scope.contract.details
+          for serviceCatalog in $scope.serviceCatalogs
+            if serviceCatalog.id is detail.item.id
+              serviceCatalog.ticked = true
 
 ]

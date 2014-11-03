@@ -36,9 +36,6 @@ mixin action_cancel(title)
                 +widget("合同表单")
                     form.form-horizontal(role='form', novalidate="novalidate", name='contractForm', ng-submit='accept(contract)')
                         +filed_input("合同号","必填","例如：P001","contract.sn","4","20","icon-user")(ng-pattern='/^[a-zA-Z0-9_\\-\\.]+$/', type="text", ng-check="/api/roles/check/{0}", ng-disabled="disabled")
-                        //+field_group("合同状态","单选")(for="state")
-                        //    select#status.form-control(ng-model='state', required,
-                        //    ng-options="state.name for state in states")
                         #form-attachments
                             .row
                                 .col-xs-12

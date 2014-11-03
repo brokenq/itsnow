@@ -24,8 +24,7 @@ public class MutableContractDetailManager implements MutableContractDetailServic
      */
     @Override
     public ContractDetail create(ContractDetail contractDetail) {
-        contractDetail.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        contractDetail.setUpdatedAt(contractDetail.getCreatedAt());
+        contractDetail.creating();
         mutableContractDetailRepository.create(contractDetail);
         return contractDetail;
     }

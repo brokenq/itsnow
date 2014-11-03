@@ -49,6 +49,7 @@ public interface GeneralContractService extends CommonContractService {
      * @return 合同对象
      */
     Contract approve(Account account, String sn) throws ServiceException;
+
     /**
      * <h2>拒绝特定账户下的特定合同</h2>
      *
@@ -61,9 +62,20 @@ public interface GeneralContractService extends CommonContractService {
     Contract reject(Account account, String sn) throws ServiceException;
 
     /**
+     * <h2>创建合同明细</h2>
+     *
+     * @param detail 明细
+     * @param sn 合同号
+     * @return 合同明细
+     */
+    ContractDetail createDetail(ContractDetail detail, String sn) throws ServiceException;
+
+    /**
      * <h2>更新特定合同明细</h2>
      *
      * @param detail 明细
+     * @param sn 合同号
+     * @return 合同明细
      */
     ContractDetail updateDetail(ContractDetail detail, String sn) throws ServiceException;
 }

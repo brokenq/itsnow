@@ -66,8 +66,7 @@ public class GeneralGroupManagerTest {
 
     @Test
     public void testDestroy() throws Exception {
-        Page<Group> groups = service.findAll("", pageRequest);
-        Group group = groups.getContent().get(0);
+        Group group = service.findByName("first_line");
         service.destroy(group);
         Assert.assertNull(service.findByName(group.getName()));
     }

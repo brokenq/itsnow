@@ -57,9 +57,10 @@ public class MutableContractDetailsController extends SessionSupportController<C
 
     @RequestMapping(method = RequestMethod.POST)
     public ContractDetail create(@RequestBody @Valid ContractDetail detail){
-        logger.info("Creating contract details {}: {}", detail.getTitle());
-        mutableContractDetailService.create(currentDetail);
-        return currentDetail;
+        logger.info("Creating {}", detail);
+        mutableContractDetailService.create(detail);
+        logger.info("Created  {}", detail);
+        return detail;
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.PUT)
