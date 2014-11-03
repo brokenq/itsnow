@@ -1,0 +1,37 @@
+mixin blocks(title)
+  h2 #{title}
+  hr
+  block
+mixin formGroup()
+  .form-group
+    .col-md-offset-2.col-md-8
+      block
+mixin label(label)
+  label.control-label.col-md-2 #{label}:
+mixin formField(label, value)
+  label.control-label.col-md-2 #{label}:
+  div(class!=attributes["class"])
+    input.form-control(type="text", value="#{value}", readonly)
+
+.form-horizontal(ui-view ng-controller='userCtrl')
+  +blocks("员工详情")
+    +formGroup()
+      +formField("员工工号", "12345678")(class="col-md-3")
+      +formField("所属状态", "在职")(class="col-md-3")
+    +formGroup()
+      +formField("员工姓名", "张三")(class="col-md-3")
+      +formField("电子邮件", "123456789011@qq.com")(class="col-md-3")
+    +formGroup()
+      +formField("固定电话", "1234567890")(class="col-md-3")
+      +formField("手机号码", "12345678901")(class="col-md-3")
+    +formGroup()
+      +formField("所属部门", "研发二部")(class="col-md-3")
+      +formField("所在地点", "大众一厂")(class="col-md-3")
+    +formGroup()
+      +formField("title", "xxxxx")(class="col-md-3")
+      +formField("type", "xxxxx")(class="col-md-3")
+    +formGroup()
+      label.control-label.col-md-2 员工描述:
+      .col-md-8
+        textarea.form-control(rows='4',readonly)
+ 
