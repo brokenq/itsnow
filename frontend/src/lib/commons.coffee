@@ -61,12 +61,11 @@ angular.module('Lib.Commons', ['ngTable'])
     #  当前的结论是：不支持这个高级特性，尚未到usibility这个阶段
     class CacheService
 
-      constructor: (@scope, @key, @callback) ->
-        instance = this
+      constructor: (@key, @callback) ->
         @records = []
         # 这两个对外的函数，需要bind实例
-        @find = @findImpl.bind(instance)
-        @cache = @cacheImpl.bind(instance)
+        @find = @findImpl.bind(this)
+        @cache = @cacheImpl.bind(this)
       findInLocal: (key) ->
         return record for record in @records when (record[@key]).toString() == key.toString()
       findFromRemote: (key) ->
