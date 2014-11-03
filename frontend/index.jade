@@ -1,28 +1,8 @@
 -var sysName = '<%=sysName%>'
 -var styles = [<% styles.forEach( function(file){ print('"' + file + '",') }); %>]
 -var scripts = [<% scripts.forEach( function(file){ print('"' + file + '",') }); %>]
-mixin dropdown_toggle(icon, badge, number)
-  a.dropdown-toggle(data-toggle="dropdown", href="javascript:void(0)")
-    i(class=icon)
-    span.badge(class="badge-#{badge}")= number
-
-mixin dropdown_header(icon, text)
-  li.dropdown-header
-    i(class="icon-#{icon}")
-    | #{text}
-mixin summary(text)
-  li
-    a(href="javascript:void(0)")
-      | #{text}
-      i.icon-arrow-right
-mixin check_option(key, value)
-  script(type="text/javascript").
-    try{
-      ace.settings.check('#{key}', '#{value}')
-    }catch(e){
-    }
-
 doctype html
+include /lib/mixins/global
 html(ng-app="Itsnow.#{sysName}Index")
   head(lang="zh-CN")
     title(ng-bind="pageTitle")
@@ -45,14 +25,14 @@ html(ng-app="Itsnow.#{sysName}Index")
             small V{{system.version}}
         .navbar-header.pull-left#loading(style="display:none;")
             a.navbar-brand(href="javascript:void(0)")
-                img(src="assets/loading3.gif")
+              img(src="assets/loading3.gif")
 
         .navbar-header.pull-right(role="navigation")
           ul.nav.ace-nav
-            include index/parts/tasks
-            include index/parts/notifications
-            include index/parts/messages
-            include index/parts/profile
+            include /index/parts/tasks
+            include /index/parts/notifications
+            include /index/parts/messages
+            include /index/parts/profile
     // 主体内容
     .main-container#main-container
       +check_option('main-container', 'fixed')
@@ -61,15 +41,15 @@ html(ng-app="Itsnow.#{sysName}Index")
           span.menu-text
         .sidebar#sidebar
           +check_option('sidebar', 'fixed')
-          include index/parts/shortcuts
-          include index/parts/menus
+          include /index/parts/shortcuts
+          include /index/parts/menus
           +check_option('sidebar', 'collapsed')
 
         .main-content
-          include index/parts/breadcrumbs
+          include /index/parts/breadcrumbs
           .page-content: .row: .col-xs-12: div(ui-view)
 
-        include index/parts/page_settings
+        include /index/parts/page_settings
 
       a.btn-scroll-up.btn.btn-sm.btn-inverse(href="java")#btn-scroll-up
         i.icon-double-angle-up.icon-only.bigger-110

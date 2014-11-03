@@ -1,0 +1,9 @@
+-var readonly = false
+h2 编辑 SLA
+
+form.form-horizontal(name="editSlaForm", novalidate="novalidate", ng-model-options="{ updateOn: 'mousedown blur' }", role="form", ng-submit="update()")
+  include /msc/index/slas/_form.tpl.jade
+
+  +action_bar
+    +action_submit("更新")
+    +action_cancel("取消")(ui-sref="slas.list")

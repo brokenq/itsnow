@@ -38,13 +38,14 @@ public class User extends ConfigItem
 
     @NotBlank
     private String repeatPassword;
-
+    private String nickName;
     private Long accountId;
     // 用户的当前主账户，可以为空，可以变化
     private Account account;
+    private boolean enabled ;
     @JsonIgnore
     private Set<GrantedAuthority> authorities;
-    private boolean enabled = true;   // 由一般注册流程或者管理员设置，该信息存储在user上
+// 由一般注册流程或者管理员设置，该信息存储在user上
     private boolean expired = false;  //帐号过期
     private boolean locked =  false;  // 由多次尝试登录导致的临时锁定，该信息并不存储在user上
     private boolean passwordExpired = false;// 由密码策略设置的密码是否过期，该信息也不存储在user上
@@ -98,7 +99,13 @@ public class User extends ConfigItem
         password = null;
         repeatPassword = null;
     }
+    public String getNickName() {
+        return nickName;
+    }
 
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
     public void setUsername(String username) {
         setName(username);
     }

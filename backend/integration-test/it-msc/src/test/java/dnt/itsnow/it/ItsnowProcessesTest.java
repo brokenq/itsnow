@@ -3,6 +3,7 @@ package dnt.itsnow.it;
  * Developer: Kadvin Date: 14-9-15 下午12:11
  */
 
+import dnt.itsnow.model.ClientItsnowHost;
 import dnt.itsnow.model.ClientItsnowProcess;
 import junit.framework.Assert;
 import org.junit.Ignore;
@@ -45,15 +46,48 @@ public class ItsnowProcessesTest extends AbstractTest {
 
     @Test
     public void testCreate() throws Exception {
-        final ClientItsnowProcess creating = new ClientItsnowProcess();
-        ClientItsnowProcess created = withLoginUser(new Callback<ClientItsnowProcess>() {
+        final ClientItsnowProcess creating = withLoginUser(new Callback<ClientItsnowProcess>() {
             @Override
             public ClientItsnowProcess perform(HttpHeaders headers) {
-                HttpEntity<ClientItsnowProcess> request = new HttpEntity<ClientItsnowProcess>(creating, headers);
-                return postForObject("/admin/api/processes", request, ClientItsnowProcess.class);
+                HttpEntity request = new HttpEntity(headers);
+                return getForObject("/admin/api/processes/auto_new/{accountSn}", ClientItsnowProcess.class, request, "msp_test");
             }
         });
+        Assert.assertNotNull(creating);
+        ClientItsnowHost host = withLoginUser(new Callback<ClientItsnowHost>() {
+            @Override
+            public ClientItsnowHost perform(HttpHeaders headers) {
+                HttpEntity request = new HttpEntity(headers);
+                return getForObject("/admin/api/hosts/{id}", ClientItsnowHost.class, request, 6L);
+            }
+        });
+        Assert.assertNotNull(host);
+        creating.setHostId(host.getId());
+        ClientItsnowProcess created = null;
+        try {
+            created = withLoginUser(new Callback<ClientItsnowProcess>() {
+                @Override
+                public ClientItsnowProcess perform(HttpHeaders headers) {
+                    HttpEntity<ClientItsnowProcess> request = new HttpEntity<ClientItsnowProcess>(creating, headers);
+                    return postForObject("/admin/api/processes", request, ClientItsnowProcess.class);
+                }
+            });
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
         Assert.assertNotNull(created);
+    }
+
+    @Test
+    public void testAutoNew() throws Exception {
+        ClientItsnowProcess entity = withLoginUser(new Callback<ClientItsnowProcess>() {
+            @Override
+            public ClientItsnowProcess perform(HttpHeaders headers) {
+                HttpEntity request = new HttpEntity(headers);
+                return getForObject("/admin/api/processes/auto_new/{accountSn}", ClientItsnowProcess.class, request, "msc");
+            }
+        });
+        Assert.assertNotNull(entity);
     }
 
     @Test
@@ -73,10 +107,9 @@ public class ItsnowProcessesTest extends AbstractTest {
             @Override
             public void perform(HttpHeaders headers) {
                 HttpEntity request = new HttpEntity(headers);
-                put("/admin/api/processes/{name}/start", request, "itsnow-test2");
+                put("/admin/api/processes/{name}/start", request, "itsnow_msp_test");
             }
         });
-
     }
 
     @Test
@@ -85,7 +118,7 @@ public class ItsnowProcessesTest extends AbstractTest {
             @Override
             public void perform(HttpHeaders headers) {
                 HttpEntity request = new HttpEntity(headers);
-                put("/admin/api/processes/{name}/stop", request, "itsnow-test3");
+                put("/admin/api/processes/{name}/stop", request, "itsnow_msc_test");
             }
         });
     }

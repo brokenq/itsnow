@@ -1,11 +1,11 @@
 angular.module('System.Role.Form', ['multi-select', 'ngResource', 'Lib.Feedback'])
 
     .config(function ($stateProvider) {
-        $stateProvider.state('system.role_edit_form', {
+        $stateProvider.state('role_edit_form', {
             url: '/role_form/{name}',
             templateUrl: 'system/role/form.tpl.jade',
             data: {pageTitle: '角色管理'}
-        }).state('system.role_new_form', {
+        }).state('role_new_form', {
             url: '/role_form/',
             templateUrl: 'system/role/form.tpl.jade',
             data: {pageTitle: '角色管理'}

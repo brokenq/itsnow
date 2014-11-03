@@ -1,7 +1,7 @@
 package dnt.itsnow.it;
 
 import dnt.itsnow.model.ClientHostType;
-import dnt.itsnow.model.ClientItsnowHosts;
+import dnt.itsnow.model.ClientItsnowHost;
 import junit.framework.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -20,25 +20,25 @@ public class ItsnowHostsTest extends AbstractTest {
 
     @Test
     public void testIndex() throws Exception {
-        ResponseEntity<ClientItsnowHosts[]> entities = withLoginUser(new Callback<ResponseEntity<ClientItsnowHosts[]>>() {
+        ResponseEntity<ClientItsnowHost[]> entities = withLoginUser(new Callback<ResponseEntity<ClientItsnowHost[]>>() {
             @Override
-            public ResponseEntity<ClientItsnowHosts[]> perform(HttpHeaders headers) {
-                HttpEntity<ClientItsnowHosts[]> request = new HttpEntity<ClientItsnowHosts[]>(headers);
-                return getForEntity("/admin/api/hosts", ClientItsnowHosts[].class, request);
+            public ResponseEntity<ClientItsnowHost[]> perform(HttpHeaders headers) {
+                HttpEntity<ClientItsnowHost[]> request = new HttpEntity<ClientItsnowHost[]>(headers);
+                return getForEntity("/admin/api/hosts", ClientItsnowHost[].class, request);
             }
         });
         validateIndexHeader(entities.getHeaders());
-        ClientItsnowHosts[] hosts = entities.getBody();
+        ClientItsnowHost[] hosts = entities.getBody();
         Assert.assertTrue(hosts.length > 0);
     }
 
     @Test
     public void testShow() throws Exception {
-        ClientItsnowHosts host = withLoginUser(new Callback<ClientItsnowHosts>() {
+        ClientItsnowHost host = withLoginUser(new Callback<ClientItsnowHost>() {
             @Override
-            public ClientItsnowHosts perform(HttpHeaders headers) {
+            public ClientItsnowHost perform(HttpHeaders headers) {
                 HttpEntity request = new HttpEntity(headers);
-                return getForObject("/admin/api/hosts/{id}", ClientItsnowHosts.class, request, 1L);
+                return getForObject("/admin/api/hosts/{id}", ClientItsnowHost.class, request, 1L);
             }
         });
         Assert.assertNotNull(host);
@@ -46,8 +46,8 @@ public class ItsnowHostsTest extends AbstractTest {
 
     @Test
     public void testCreate() throws Exception {
-        final ClientItsnowHosts creating = new ClientItsnowHosts();
-        creating.setName("srv7");
+        final ClientItsnowHost creating = new ClientItsnowHost();
+        creating.setName("srv7.itsnow.com");
         creating.setAddress("172.16.3.30");
         creating.setType(ClientHostType.APP);
         creating.setCapacity(5);
@@ -57,19 +57,34 @@ public class ItsnowHostsTest extends AbstractTest {
         properties.setProperty("msu.version", "0.2.2-SNAPSHOT");
         properties.setProperty("msp.version", "0.2.2-SNAPSHOT");
         creating.setConfiguration(properties);
-        ClientItsnowHosts created = null;
+        ClientItsnowHost created = null;
         try {
-            created = withLoginUser(new Callback<ClientItsnowHosts>() {
+            created = withLoginUser(new Callback<ClientItsnowHost>() {
                 @Override
-                public ClientItsnowHosts perform(HttpHeaders headers) {
+                public ClientItsnowHost perform(HttpHeaders headers) {
                     headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
-                    HttpEntity<ClientItsnowHosts> request = new HttpEntity<ClientItsnowHosts>(creating, headers);
-                    return postForObject("/admin/api/hosts", request, ClientItsnowHosts.class);
+                    HttpEntity<ClientItsnowHost> request = new HttpEntity<ClientItsnowHost>(creating, headers);
+                    return postForObject("/admin/api/hosts", request, ClientItsnowHost.class);
                 }
             });
         } catch (Exception e) {
             e.printStackTrace();
         }
         Assert.assertNotNull(created);
+    }
+
+    @Test
+    public void testDestroy() throws Exception {
+        try {
+            withLoginUser(new Job() {
+                @Override
+                public void perform(HttpHeaders headers) {
+                    HttpEntity request = new HttpEntity(headers);
+                    delete("/admin/api/hosts/{id}", request, 6L);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

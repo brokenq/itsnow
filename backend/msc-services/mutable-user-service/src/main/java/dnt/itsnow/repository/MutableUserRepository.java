@@ -28,24 +28,24 @@ public interface MutableUserRepository extends CommonUserRepository {
      *
      * @param user 需要创建的对象
      */
-    @Insert("INSERT INTO itsnow_msc.users(account_id, username, email, phone, password, enabled, expired, created_at, updated_at) " +
-            "VALUES(#{accountId}, #{username}, #{email}, #{phone}, #{password}, TRUE, FALSE, #{createdAt}, #{updatedAt})")
+    @Insert("INSERT INTO itsnow_msc.users(account_id, username,nick_name, email, phone, password, enabled, expired, created_at, updated_at) " +
+            "VALUES(#{accountId}, #{username}, #{nickName},#{email}, #{phone}, #{password}, TRUE, FALSE, #{createdAt}, #{updatedAt})")
     @Options(useGeneratedKeys = true,keyColumn = "id")
     void create(User user);
 
     /**
-     * 只更新用户的用户名，email，电话, enabled, expired
+     * 只更新用户的email，电话, enabled, expired
      *
      * @param user 被更新的用户信息
      */
     @Update("UPDATE itsnow_msc.users SET " +
-            " username = #{username}, " +
             " email    = #{email}, " +
+            " nick_name =#{nickName}," +
             " phone    = #{phone}," +
             " enabled  = #{enabled}," +
             " expired  = #{expired}, " +
             " updated_at = #{updatedAt}" +
-            " WHERE id = #{id} ")
+            " WHERE username = #{username} ")
     void update(User user);
 
     /**
@@ -63,4 +63,15 @@ public interface MutableUserRepository extends CommonUserRepository {
 
     @Delete("DELETE FROM itsnow_msc.users WHERE account_id = #{accountId}")
     void deleteAllByAccountId(@Param("accountId") Long accountId);
+    @Select("SELECT users.expired," +
+            "users.username," +
+            "users.nick_name," +
+            "users.email," +
+            "users.enabled," +
+            "users.phone FROM itsnow_msc.users WHERE username=#{username}")
+    User findByUsername(@Param("username") String username);
+    @Select("SELECT * FROM itsnow_msc.users WHERE email=#{email}")
+    User findByEmail(@Param("email") String email);
+    @Delete("DELETE FROM itsnow_msc.users WHERE username = #{username}")
+    void delete(User user);
 }
