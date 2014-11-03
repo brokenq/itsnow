@@ -43,6 +43,7 @@ angular.module('MscIndex.Account', ['ngTable','ngResource', 'ngSanitize','dnt.ac
   )
   .controller 'AccountListCtrl',['$scope', '$location', '$timeout', '$resource', '$http', 'ngTableParams', 'ActionService', 'Feedback', \
                                 ($scope, $location, $timeout, $resource, $http, ngTableParams, ActionService, Feedback)->
+    console.log("Initialized the AccountListCtrl")
     Accounts = $resource("/admin/api/accounts")
     actions = 
       approve: 

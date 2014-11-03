@@ -37,8 +37,8 @@ angular.module('MscIndex.SLAs', ['ngTable', 'ngResource', 'ngSanitize', 'dnt.act
       page:  1,           # show first page
       count: 10           # count per page
   ])
-  .controller('SlaListCtrl', ['$scope', '$location', 'ngTableParams', 'ActionService', 'SelectionService', 'Feedback',\
-                              ($scope, $location, NgTable, ActionService, SelectionService, feedback) ->
+  .controller('SlaListCtrl', ['$scope', '$location', 'ngTableParams', 'ActionService', 'CommonService', 'Feedback',\
+                              ($scope, $location, NgTable, ActionService, commonService, feedback) ->
     # frontend controller logic
     data = [
       {id: 1, title: 'SLA One', description: 'The first SLA'},
@@ -64,7 +64,7 @@ angular.module('MscIndex.SLAs', ['ngTable', 'ngResource', 'ngSanitize', 'dnt.act
     $scope.selection = { 'checked': false, items: {} }
     $scope.slasTable = new NgTable(angular.extend($scope.options, $location.search()), args);
     $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.getSlaById})
-    $scope.selectionService = new SelectionService($scope, {records: 'slas'})
+    commonService.watchSelection($scope.selection, $scope.slas, "id")
     console.log("Initialized the SLA list controller")
   ])
   .controller('SlaNewCtrl', ['$scope', ($scope) ->
