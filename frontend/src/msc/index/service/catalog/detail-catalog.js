@@ -1,7 +1,7 @@
 angular.module('MscIndex.ServiceCatalog.Detail', ['ngResource']).config(function($stateProvider) {
   return $stateProvider.state('services.catalog.detail', {
     url: '/detail/{sn}/{action}',
-    templateUrl: 'service/detail-catalog.tpl.jade',
+    templateUrl: 'service/catalog/detail-catalog.tpl.jade',
     data: {
       pageTitle: '服务目录信息'
     }

@@ -36,6 +36,14 @@ public interface PrivateServiceItemService extends CommonServiceItemService {
     PrivateServiceItem savePrivate(PrivateServiceItem privateServiceItem);
 
     /**
+     * <h2>更新新的私有服务项</h2>
+     *
+     * @param privateServiceItem 私有服务项对象
+     * @return 更新的私有服务项对象
+     */
+    PrivateServiceItem updatePrivate(PrivateServiceItem privateServiceItem);
+
+    /**
      * <h2>根据sn删除私有服务项</h2>
      *
      * @param sn 编号

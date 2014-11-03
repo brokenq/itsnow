@@ -51,13 +51,14 @@ public class PublicServiceItemManager extends CommonServiceItemManager implement
     }
 
     @Override
-    public void saveByAccount(Long itemId, Long accountId) {
-        publicServiceItemRepository.addByAccount(itemId,accountId);
+    public void saveByAccount(PublicServiceItem item,Long accountId) {
+
+        publicServiceItemRepository.addByAccount(item.getId(),accountId);
     }
 
     @Override
-    public void deleteByAccount(Long itemId, Long accountId) {
-        publicServiceItemRepository.deleteByAccount(itemId,accountId);
+    public void deleteByAccount(PublicServiceItem item,Long accountId) {
+        publicServiceItemRepository.deleteByAccount(item.getId(),accountId);
     }
 
 }

@@ -33,12 +33,23 @@ public interface PrivateServiceCatalogService extends CommonServiceCatalogServic
     PrivateServiceCatalog savePrivate(PrivateServiceCatalog privateServiceCatalog);
 
     /**
+     * <h2>更新新的私有服务目录</h2>
+     *
+     * @param privateServiceCatalog 私有服务目录对象
+     * @return 更新的私有服务目录对象
+     */
+    PrivateServiceCatalog updatePrivate(PrivateServiceCatalog privateServiceCatalog);
+
+    /**
      * <h2>根据SN删除私有服务目录</h2>
      *
-     * @param sn 序列号
+     * @param catalog 删除的服务目录
      */
-    void deletePrivate(String sn);
+    void deletePrivate(PrivateServiceCatalog catalog);
 
 
+    void setPrivateServiceCatalogList(List<PrivateServiceCatalog> privateServiceCatalogList);
+
+    void setFormattedPrivateServiceCatalogList(List<PrivateServiceCatalog> formattedPrivateServiceCatalogList);
 
 }

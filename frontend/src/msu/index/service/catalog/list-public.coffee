@@ -1,14 +1,22 @@
   # List catalogs
-  angular.module('Service.Catalog', ['ngTable','ngResource', 'dnt.action.service', 'Lib.Feedback'])
+  angular.module('Service.Catalog', ['ngTable','ngResource','Service.Catalog.Private', 'dnt.action.service', 'Lib.Feedback'])
     .config ($stateProvider)->
       $stateProvider.state 'services',
         url: '/services',
-        templateUrl: 'service/catalog/list-catalog.tpl.jade'
+        templateUrl: 'service/catalog/list-public.tpl.jade'
         data: {pageTitle: '服务管理'}
       $stateProvider.state 'services.catalog',
         url: '/catalog',
-        templateUrl: 'service/catalog/list-catalog.tpl.jade'
+        templateUrl: 'service/catalog/list-public.tpl.jade'
         data: {pageTitle: '服务目录'}
+      $stateProvider.state 'services.catalog.public',
+        url: '/public',
+        templateUrl: 'service/catalog/list-public.tpl.jade'
+        data: {pageTitle: '公共服务目录'}
+      $stateProvider.state 'services.catalog.private',
+        url: '/private',
+        templateUrl: 'service/catalog/list-private.tpl.jade'
+        data: {pageTitle: '私有服务目录'}
 
     .factory('ServiceCatalogService', ['$resource', ($resource) ->
       $resource("/api/public_service_catalogs")
@@ -19,9 +27,8 @@
     .factory('PublicServiceItemService', ['$resource', ($resource) ->
       $resource("/api/public_service_catalogs/accounts/items/:isn",{isn: '@isn'})
     ])
-
     .controller 'CatalogListCtrl',['$scope', '$location', '$timeout', '$state','ngTableParams', 'ServiceCatalogService','ServiceItemService','PublicServiceItemService', 'ActionService','Feedback', \
-                                      ($scope, $location, $timeout, $state, ngTableParams, serviceCatalogService,serviceItemService,publicServiceItemService,ActionService,Feedback)->
+                                      ($scope, $location, $timeout, $state, ngTableParams, serviceCatalogService,serviceItemService,publicServiceItemService,ActionService,feedback)->
       options =
         page:  1,           # show first page
         count: 10           # count per page
@@ -48,6 +55,7 @@
                 angular.forEach item.items,(child)->
                   $scope.selection.types[child.sn] = 'item' if angular.isDefined(child.sn)
                   $scope.selection.parent[child.sn] = item.sn if angular.isDefined(child.sn)
+
             , 500)
           )
       $scope.tableParams = new ngTableParams(angular.extend(options, $location.search()), args)
@@ -57,8 +65,10 @@
       $scope.getCatalogBySn  = (sn)->
         #return catalog for catalog in $scope.catalogs when catalog.sn is sn
         for catalog in $scope.catalogs
+          #console.log(catalog)
           #return catalog if catalog.sn is sn
           for item in catalog.items
+            #console.log(item)
             return item if item.sn is sn
 
       $scope.update = ->
@@ -68,6 +78,7 @@
               publicServiceItemService.save({isn:child.sn})
             else
               publicServiceItemService.remove({isn: child.sn})
+        feedback.success("设置公共服务目录完成！")
 
       $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.getCatalogBySn})
 

@@ -18,11 +18,11 @@ import java.util.Set;
 public class PrivateServiceItemTest extends ValidatorSupport{
     PrivateServiceItem item;
 
-    ServiceCatalog catalog;
+    PrivateServiceCatalog catalog;
 
     @Before
     public void setUp() throws Exception {
-        catalog = new ServiceCatalog();
+        catalog = new PrivateServiceCatalog();
         catalog.setId(1L);
         catalog.setSn("SN-001");
         catalog.setDescription("DESC-001");

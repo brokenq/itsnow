@@ -15,5 +15,27 @@
     <description>
         The General service_catalog service implemented by MSP/MSU, and provide SPI to other deployment builds.
     </description>
+    <dependencies>
+        <dependency>
+            <groupId>dnt.itsnow</groupId>
+            <artifactId>general-model-service</artifactId>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Default-Config>A,D,W</Default-Config>
+                            <Service-Config>dnt.itsnow.config.GeneralServiceCatalogServiceConfig</Service-Config>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

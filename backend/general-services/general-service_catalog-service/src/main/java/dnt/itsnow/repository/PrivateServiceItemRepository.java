@@ -4,6 +4,7 @@ import dnt.itsnow.model.PrivateServiceItem;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -20,6 +21,14 @@ public interface PrivateServiceItemRepository extends CommonServiceItemRepositor
             " values(#{publicId},#{catalog.id},#{sn},#{title},#{brief},#{description},#{icon},#{createdAt},#{updatedAt})")
     @Options(useGeneratedKeys = true,keyColumn = "id")
     void savePrivate(PrivateServiceItem privateServiceItem);
+
+    @Update("UPDATE private_service_items SET updated_at = #{updatedAt}," +
+            "title = #{title},"+
+            "brief = #{brief},"+
+            "description = #{description},"+
+            "icon = #{icon}"+
+            " WHERE id = #{id}")
+    void updatePrivate(PrivateServiceItem privateServiceItem);
 
     @Delete("DELETE FROM private_service_items WHERE sn = #{sn}")
     void deletePrivate(String sn);
