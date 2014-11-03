@@ -16,14 +16,14 @@ angular.module('MsuIndex.Contract', ['ngTable', 'ngResource', 'Lib.Feedback'])
 .factory('ContractService', ['$resource', ($resource) ->
     $resource '/api/contracts/:sn/:do', {},
       save: {method: 'POST'}
-      remove: {method: 'DELETE', params: {sn: '@sn'}}
-      update: {method: 'PUT', params: {sn: '@sn'}}
-      get: {method: 'GET', params: {sn: '@sn'}}
       query: {method: 'GET', params: {keyword: '@keyword'}, isArray: true}
       reject: {method: 'PUT', params: {sn: '@sn', do: 'reject'}}
       approve: {method: 'PUT', params: {sn: '@sn', do: 'approve'}}
-]
-)
+])
+
+.factory('ContractDetailService', ['$resource', ($resource) ->
+    $resource '/api/contracts/:sn/details', {sn: '@sn'}
+])
 
 .filter 'formatContractStatus', () ->
   (status)->

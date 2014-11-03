@@ -2,6 +2,7 @@ package dnt.itsnow.repository;
 
 import dnt.itsnow.model.Group;
 import dnt.itsnow.model.GroupAuthority;
+import dnt.itsnow.platform.service.Pageable;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -32,28 +33,11 @@ public interface GroupRepository {
             " WHERE id              = #{id} ")
     public void update(Group group);
 
-    @Select("select count(0) from groups")
-    public int count();
+    public int count(@Param("keyword") String keyword);
 
-    public List<Group> findAll(
-            @Param("sort") String sort,
-            @Param("dir") String dir,
-            @Param("offset") int offset,
-            @Param("size") int size);
+    public List<Group> findAll(@Param("keyword") String keyword, @Param("pageable") Pageable pageable);
 
-    @Select("select count(*) from groups where group_name like #{keyword}")
-    public int countByKeyword(@Param("keyword") String keyword);
-
-    public List<Group> findAllByKeyword(@Param("keyword") String keyword,
-                                     @Param("sort") String sort,
-                                     @Param("dir") String dir,
-                                     @Param("offset") int offset,
-                                     @Param("size") int size);
-
-    @Select("SELECT * FROM groups WHERE UPPER(group_name) LIKE UPPER('%#{keyword}%')")
-    List<Group> searchAllByKeyword(@Param("keyword") String keyword);
-
-    public Group findBySn(@Param("name") String name);
+    public Group findByName(@Param("name") String name);
 
     @Select(" SELECT ga.authority, g.group_name" +
             " FROM group_authorities ga " +
