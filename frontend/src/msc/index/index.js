@@ -21,4 +21,5 @@ angular.module('Itsnow.MscIndex', [
   'MscIndex.Contract',
   'MscIndex.ServiceCatalog',
   'MscIndex.System'
+
 ]);
