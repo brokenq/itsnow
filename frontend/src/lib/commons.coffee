@@ -8,12 +8,14 @@ angular.module('Lib.Commons', ['ngTable'])
           @param datas | datas of table
           @param key | key of selection items ###
       watchSelection: (selection, datas, key)->
-        $rootScope.$watch(selection.checked, ->         # watch for check all checkbox
-        angular.forEach datas, (data)->
-            selection.items[data[key]] = value if data[key]?
-        )
+        $rootScope.$watch( ->
+          return selection.checked
+        , (value)->         # watch for check all checkbox
+          angular.forEach datas, (data)->
+              selection.items[data[key]] = value if data[key]?
+          )
 
-        $rootScope.$watchCollection(()->        # watch for check single checkbox
+        $rootScope.$watchCollection( ->        # watch for check single checkbox
           return selection.items
         , ->
           return if !datas? or datas.length is 0
