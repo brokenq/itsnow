@@ -1,4 +1,8 @@
+-var readonly = true
 
-h2 View SLA
+h2 查看 SLA
 
 include /msc/index/slas/_form.tpl.jade
+
++action_bar
+  +action_submit("返回")(ui-sref="slas.list")

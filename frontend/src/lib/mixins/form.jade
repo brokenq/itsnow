@@ -1,3 +1,41 @@
-//
-   Created by kadvin on 14/11/1.
+//- A section contains several form groups
+mixin section(title)
+  .col-md-offset-2.col-md-8
+    .widget-box
+      .widget-header
+        h4 #{title}
+      .widget-body
+        .widget-main
+          block
+//- A group contains a input label and field
+mixin group(object, field, label, icon, tip)
+  .form-group
+    label.col-xs-12.col-sm-3.control-label.no-padding-right(for="#{object}_#{field}") #{label}
+    .col-xs-12.col-sm-5
+      span.block.input-icon.input-icon-right
+        block
+        i(class="icon-#{icon}")
+    .help-block.col-xs-12.col-sm-reset.inline #{tip}
+//- a input contains represents a input field
+mixin input(object, field)
+  input.form-control(id="#{object}_#{field}", name="#{object}.#{field}", ng-model="#{object}.#{field}")&attributes(attributes)
+//- a area contains represents a input text area
+mixin area(object, field)
+  textarea.form-control(id="#{object}_#{field}", name="#{object}.#{field}", ng-model="#{object}.#{field}")&attributes(attributes)
 
+//- the action bar in form bottom(or top)
+mixin action_bar
+  .clearfix.form-actions
+    .col-md-offset-3.col-md-9
+      block
+//- the action button in action bar
+mixin action_button(title,type,icon,level)
+  button.btn(class="btn-#{level}",type=type)&attributes(attributes)
+    i.bigger-110(class="icon-#{icon}")
+    | #{title}
+//- the default submit action
+mixin action_submit(label)
+  +action_button(label,"submit","ok","primary")(ng-disabled="submited")&attributes(attributes)
+//- the default cancel/reset action
+mixin action_cancel(label)
+  +action_button(label,"reset","undo","default")&attributes(attributes)

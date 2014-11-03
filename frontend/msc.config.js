@@ -102,7 +102,9 @@ module.exports = {
       '../vendor/angular-translate/angular-translate.js',
       '../vendor/dnt-action-service/dist/dnt-action-service.js',
       '../vendor/angular-auto-validate/dist/jcs-auto-validate.js',
-      '../vendor/isteven-angular-multiselect/angular-multi-select.js'
+      '../vendor/isteven-angular-multiselect/angular-multi-select.js'//,
+      // Add angular mock in runtime for SLA demo temporally
+      //'../vendor/angular-mocks/angular-mocks.js'
     ],
     css: [
 //    '../vendor/angular/angular-csp.css',
