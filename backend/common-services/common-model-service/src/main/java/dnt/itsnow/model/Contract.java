@@ -17,24 +17,24 @@ import java.util.List;
  *
  */
 public class Contract extends Record {
-    //合同编号
+    // 合同编号
     @NotBlank
     private String sn;
-    //合同甲方，服务采购方
-    @NotNull
+    // 合同甲方，服务采购方
+    // @NotNull
     private Long msuAccountId;
-    //@JsonIgnore
+    // @JsonIgnore
     private MsuAccount msuAccount;
     //合同乙方，服务供应方
-    //@NotNull
+    // @NotNull
     private Long mspAccountId;
-    //@JsonIgnore
+    // @JsonIgnore
     private MspAccount mspAccount;
     // MSU 是否批准
-    @NotNull
+    // @NotNull
     private ContractStatus msuStatus;
     // MSP 是否批准
-    @NotNull
+    // @NotNull
     private ContractStatus mspStatus;
 
     //合同明细

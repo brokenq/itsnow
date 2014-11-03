@@ -89,9 +89,7 @@ angular.module('System.Role.Form', ['multi-select', 'ngResource', 'Lib.Feedback'
                     });
                 });
 
-                $scope.submit = function () {
-                    submitByEditFun();
-                };
+                $scope.submit = submitByEditFun;
 
             } else { // 进入新建页面
                 $("#role_name").show();
@@ -101,9 +99,7 @@ angular.module('System.Role.Form', ['multi-select', 'ngResource', 'Lib.Feedback'
                     $scope.users = data;
                 });
 
-                $scope.submit = function () {
-                    submitByCreateFun();
-                };
+                $scope.submit = submitByCreateFun;
             }
 
         }
