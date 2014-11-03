@@ -20,12 +20,18 @@ angular.module('MscIndex.User.Detail', [ 'ngResource'])
                 {name: '启用',id:'1',state:true},
                 {name: '停用',id:'2',state:false}
             ];
+            $scope.validatePassword=function(){
+                if(($scope.cuser.password)!==($scope.cuser.repeatPassword)){
+                    $scope.cuser.repeatPassword="";
+                    alert("输入密码不一致，请重新输入！！");
+                }
+            };
             if (username !== null && username !== "" && username!== undefined) {
                 UserService.get({username:username},function(data){
-                    if(data.enabled===1){
-                        $scope.selectstate = $scope.datas[1];
-                    }else{
+                    if(data.enabled){
                         $scope.selectstate = $scope.datas[0];
+                    }else{
+                        $scope.selectstate = $scope.datas[1];
                     }
                     $scope.cuser=data;
                 });

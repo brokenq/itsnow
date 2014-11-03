@@ -42,7 +42,7 @@ public class User extends ConfigItem
     private Long accountId;
     // 用户的当前主账户，可以为空，可以变化
     private Account account;
-    private boolean enabled = true;
+    private boolean enabled ;
     @JsonIgnore
     private Set<GrantedAuthority> authorities;
 // 由一般注册流程或者管理员设置，该信息存储在user上

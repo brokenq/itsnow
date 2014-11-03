@@ -1,4 +1,4 @@
-//   detail user
+//   create user
 doctype html
 mixin widgetBox(title)
     .col-md-offset-2.col-md-8
@@ -18,8 +18,6 @@ mixin formGroup(name, label, icon, tip)
         .help-block.col-xs-12.col-sm-reset.inline #{tip}
 mixin field(name, label)
     input.form-control(id="cuser_#{name}", name="cuser.#{name}", ng-model="cuser.#{name}", placeholder="#{label}")&attributes(attributes)
-mixin fieldSelect(name,label)
-    select.form-control(ng-model="#{name}", ng-options="data.name for data in datas", ng-init="#{name} = datas[0]")
 mixin actionBar()
     .row-fluid.actions
         .col-xs-12.col-sm-8.col-md-offset-2
@@ -44,11 +42,11 @@ mixin removeformBtn(title, icon)
             +formGroup("emial",  "电子邮箱","envelope", "")
                 +field("email", "电子邮箱")(type="email",required,ng-check="/admin/api/users/checkEmail/{0}")
             +formGroup("phone",  "电话号码",   "headphones", "")
-                +field("phone", "电话号码")(type="text",required)
+                +field("phone", "电话号码")(type="text",required,ng-pattern='/^1[0-9]+$/')
             +formGroup("password","用户密码","lock","")
                 +field("password","用户密码")(type="password",required,ng-maxlength="20",ng-minlength="6")
             +formGroup("repeatPassword","重复密码","retweet","")
-                +field("repeatPassword","重复密码")(type="password",required,ng-maxlength="20",ng-minlength="4")
+                +field("repeatPassword","重复密码")(type="password",required,ng-maxlength="20",ng-minlength="6",ng-blur="validatePassword()")
         +actionBar()
             +submitformBtn("创建", "ok")(type="submit")
             +removeformBtn("取消", "remove")(ui-sref="user")

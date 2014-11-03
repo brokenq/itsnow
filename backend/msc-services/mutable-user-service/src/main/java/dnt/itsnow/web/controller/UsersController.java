@@ -5,6 +5,7 @@ package dnt.itsnow.web.controller;
 import dnt.itsnow.model.User;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.service.MutableUserService;
+import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ import javax.validation.Valid;
 public class UsersController extends SessionSupportController<User> {
     @Autowired
     MutableUserService userService;
+    private User user;
     /**
      * <h2>查询用户列表</h2>
      * <p/>
@@ -54,7 +56,7 @@ public class UsersController extends SessionSupportController<User> {
     public User show(@PathVariable("username") String username) {
 
         logger.debug("find user by {}", username);
-      return userService.findByUsername(username);
+      return this.user;
     }
 
     /**
@@ -88,10 +90,10 @@ public class UsersController extends SessionSupportController<User> {
     public User update(@PathVariable("username") String username,
                        @RequestBody User user) {
         logger.info("Updating {}", username);
-        User exist = userService.findByUsername(username);
-        exist.apply(user);
-        userService.update(exist);
-        User updated = userService.findByUsername(exist.getUsername());
+       // User exist = userService.findByUsername(username);
+        this.user.apply(user);
+        userService.update(this.user);
+        User updated = userService.findByUsername(this.user.getUsername());
         cleanSensitive(updated);
         if (updated.getUsername().equalsIgnoreCase(username)) {
             logger.info("Updated  {}", username);
@@ -103,9 +105,8 @@ public class UsersController extends SessionSupportController<User> {
     @RequestMapping(value = "{username}", method = RequestMethod.DELETE)
     public void destroy(@PathVariable("username") String username){
         logger.warn("Deleting {}");
-        User exist = userService.findByUsername(username);
         try {
-            userService.delete(exist);
+            userService.delete(this.user);
         } catch (Exception e) {
             // 把service side异常转换为client side exception
             throw new WebClientSideException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
@@ -149,6 +150,10 @@ public class UsersController extends SessionSupportController<User> {
         }
     }
 
+    @BeforeFilter({"show", "update", "destroy"})
+    public void initCurrentUser(@PathVariable("username") String username) {
+           this.user=userService.findByUsername(username);
+    }
 
     private void cleanSensitive(User user) {
         user.setPassword(null);
