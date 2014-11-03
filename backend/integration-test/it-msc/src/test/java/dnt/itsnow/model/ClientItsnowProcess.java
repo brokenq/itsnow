@@ -3,18 +3,14 @@
  */
 package dnt.itsnow.model;
 
-import com.sun.istack.internal.NotNull;
-
 import java.util.Properties;
 
 /**
  * <h1>对应于 ItsnowProcess 的Client Json解析对象</h1>
  */
 public class ClientItsnowProcess extends ClientConfigItem{
-    @NotNull
     private Long accountId;
     private ClientAccount account;
-    @NotNull
     private Long hostId;
     private ClientItsnowHost host;
 
@@ -23,7 +19,6 @@ public class ClientItsnowProcess extends ClientConfigItem{
 
     private ClientProcessStatus status;
     private Integer pid;// Process ID
-    @NotNull
     private String wd;  //Working dir
     private Properties configuration;
 
