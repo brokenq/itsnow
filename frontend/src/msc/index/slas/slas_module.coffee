@@ -61,7 +61,7 @@ angular.module('MscIndex.SLAs',
       $scope.mockSlas.push sla
       $scope.cache sla
 
-    $scope.cacheService = new CacheService($scope, "id")
+    $scope.cacheService = new CacheService("id")
 
   ])
   .controller('SlaListCtrl', ['$scope', '$location', 'ngTableParams', 'ActionService', 'CommonService',\

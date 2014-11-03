@@ -4,18 +4,16 @@
 package dnt.itsnow.platform.support;
 
 import dnt.spring.Bean;
-import org.apache.commons.io.FilenameUtils;
 import org.eclipse.jetty.annotations.AnnotationConfiguration;
 import org.eclipse.jetty.plus.annotation.ContainerInitializer;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.NCSARequestLog;
 import org.eclipse.jetty.server.RequestLog;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.AllowSymLinkAliasChecker;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.RequestLogHandler;
-import org.eclipse.jetty.servlet.DefaultServlet;
-import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.WebAppContext;
@@ -49,8 +47,8 @@ public class JettyServer extends Bean {
             host = "0.0.0.0";
         }
         server = new Server(new InetSocketAddress(host, port));
-
-        server.setHandler(createHandlers());
+        WebAppContext context = createWebContext();
+        server.setHandler(createHandlers(context));
         server.setStopAtShutdown(true);
         try {
             server.start();
@@ -68,18 +66,19 @@ public class JettyServer extends Bean {
         }
     }
 
-    private HandlerCollection createHandlers() {
+    private WebAppContext createWebContext(){
         WebAppContext context = new WebAppContext();
         context.setContextPath("/");
-        //ServletHolder holder = context.addServlet(DefaultServlet.class, "/");
-        //holder.setInitParameter("aliases", "true"); // support serve symbolic links
-
         File webapp = new File(System.getProperty("app.home"), "webapp");
-        String path = FilenameUtils.normalize(webapp.getAbsolutePath());
-        context.setBaseResource(Resource.newResource(new File(path)));
+        context.setBaseResource(Resource.newResource(webapp));
         context.setClassLoader(applicationContext.getClassLoader());
         context.getServletContext().setAttribute("application", applicationContext);
         context.setConfigurations(new Configuration[]{new JettyAnnotationConfiguration()});
+        context.addAliasCheck(new AllowSymLinkAliasChecker());
+        return context;
+    }
+
+    private HandlerCollection createHandlers(WebAppContext context) {
 
         List<Handler> handlers = new ArrayList<Handler>();
 
