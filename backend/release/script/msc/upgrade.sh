@@ -45,7 +45,7 @@ if [ ! $1 ]; then
 fi
 version=$1
 if [ ! $2 ]; then
-  build=".lastFinished"
+  build=".lastSuccessful"
 else
   build="$2:id"
 fi

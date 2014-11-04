@@ -1,3 +1,14 @@
+String::interpolate = ()->
+  return this if arguments.length is 0
+  for val, i in arguments when i >= 0
+    string = this
+    regx = new RegExp "\\{#{i - 1}\\}", "gm"
+    string = string.replace regx, val
+  return string
+Array::remove = (callback) ->
+  x = $.grep @, (e)-> callback(e)
+  @pop x
+
 angular.module('Lib.Utils', [])
   .factory('Utils', [->
     {
