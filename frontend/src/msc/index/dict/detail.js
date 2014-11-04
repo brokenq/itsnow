@@ -1,5 +1,5 @@
 // List System
-angular.module('MscIndex.DictDetail', ['ngTable', 'ngResource'])
+angular.module('MscIndex.DictDetail', ['ngTable', 'ngResource', 'Feedback'])
 
     .config(function ($stateProvider) {
         $stateProvider.state('dict_new', {
@@ -13,39 +13,71 @@ angular.module('MscIndex.DictDetail', ['ngTable', 'ngResource'])
             data:{pageTitle:'流程字典修改'}
         });
     })
-    .controller('DictNewCtrl', ['$rootScope','$scope', '$location', '$timeout', '$state','$stateParams', 'DictService',
-        function ($rootScope,$scope, $location, $timeout, $state,$stateParams, DictService) {
+    .controller('DictNewCtrl', ['$http', '$rootScope', '$scope', '$location', '$timeout', '$state', '$stateParams', 'DictService', 'Feedback',
+        function ($http, $rootScope, $scope, $location, $timeout, $state, $stateParams, DictService, Feedback) {
+            var sn = $stateParams.sn;
+            $scope.datas = [
+                {name: "无效", value: 0},
+                {name: "有效", value: 1}
+            ];
 
-        var sn=$stateParams.sn;
-        $scope.datas=[
-            {name: '有效',id:'1',state:'1'},
-            {name: '无效',id:'2',state:'2'}
-         ];
-        if (sn !== null && sn !== "" && sn !== undefined) {
-            DictService.get({sn:sn},function(data){
-                $scope.dict=data;
-            });
-            $scope.changeDict=function(){
-                $scope.dict.$promise = undefined;
-                $scope.dict.$resolved = undefined;
-                DictService.update({sn:sn}, $scope.dict, function () {
-                    $location.path('/dict');
-                }, function (data) {
-                    alert(data);
+            if (sn !== null && sn !== "" && sn !== undefined) {
+                DictService.get({sn: sn}, function (data) {
+                    if (data.state === "1") {
+                        $scope.selectstate = $scope.datas[1];
+                    } else {
+                        $scope.selectstate = $scope.datas[0];
+                    }
+                    $scope.dict = data;
                 });
-            };
-         }else{
+                $scope.changeDict = function () {
+                    $scope.dict.state = $scope.selectstate.value;
+                    $scope.dict.$promise = undefined;
+                    $scope.dict.$resolved = undefined;
+                    DictService.update({sn: sn}, $scope.dict, function () {
+                        $location.path('/dict');
+                    }, function (data) {
+                        alert(data);
+                    });
+                };
+            } else {
+                var dictdates = {};
+                DictService.query(function (dicts) {
+                    dictdates = dicts;
 
-            $scope.autoCom=function(){
-                alert("change 改变！！");
-            };
-            $scope.changeDict=function(){
-                $scope.dict.$promise = undefined;
-                $scope.dict.$resolved = undefined;
-                DictService.save($scope.dict,function(){
-                    $location.path('/dict');
                 });
-            };
+                $scope.autoComCode = function () {
+                    for (var i = 0; i < dictdates.length; i++) {
+
+                        if ($scope.dict.code === dictdates[i].code) {
+                            $scope.dict.name = dictdates[i].name;
+                            $scope.ngread = true;
+                            break;
+                        } else {
+                            $scope.dict.name = "";
+                            $scope.ngread = false;
+                        }
+                    }
+                };
+                $scope.autoValidate = function () {
+                    for (var i = 0; i < dictdates.length; i++) {
+                        if ($scope.dict.code === dictdates[i].code) {
+                            if ($scope.dict.display === dictdates[i].display) {
+                                $scope.dict.display = "";
+                                Feedback.warn("显示名已存在！！请重新输入");
+                            }
+                        }
+                    }
+
+                };
+                $scope.changeDict = function () {
+                    $scope.dict.state = $scope.selectstate.value;
+                    $scope.dict.$promise = undefined;
+                    $scope.dict.$resolved = undefined;
+                    DictService.save($scope.dict, function () {
+                        $location.path('/dict');
+                    });
+                };
+            }
         }
-}
-]);
+    ]);
