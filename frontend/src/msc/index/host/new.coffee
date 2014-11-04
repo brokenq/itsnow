@@ -10,9 +10,6 @@ angular.module('MscIndex.HostNew', ['ngResource'])
     ($scope, $location, $state, hostService)->
       # Do nothing now
       $scope.host =
-        name: "srv2"
-        address: "srv2"
-        capacity: 50
         type: "DB"
         configuration:
           user: "root"
@@ -20,7 +17,7 @@ angular.module('MscIndex.HostNew', ['ngResource'])
           msu_version: window.system.version
           msp_version: window.system.version
 
-      $scope.types = ["DB", "APP", "COM"]
+      $scope.types = [{key: "DB", value: "数据库主机"}, {key: "APP", value: "应用主机"}, {key: "COM", value: "综合主机"}]
       $scope.createHost = ->
         feedback = (content) ->
           alert content

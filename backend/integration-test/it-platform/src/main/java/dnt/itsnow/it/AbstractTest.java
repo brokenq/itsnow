@@ -39,7 +39,7 @@ public abstract class AbstractTest implements RestOperations {
     protected void configure(Configuration configuration) {
         configuration
                 .host(getValue("it.host", "localhost"))
-                .port(Integer.valueOf(getValue("it.port", "8071")))
+                .port(Integer.valueOf(getValue("it.port", "8401")))
                 .username(getValue("it.user", "admin"))
                 .password(getValue("it.password", "secret"));
     }

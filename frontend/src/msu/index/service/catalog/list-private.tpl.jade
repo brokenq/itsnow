@@ -1,0 +1,63 @@
+mixin tool_button(action, icon, text, weight, rejectCss, requireCss)
+  button.btn.btn-primary.no-border(type="button", ng-click="#{action}", weight="#{weight}", reject-css="#{rejectCss}", require-css="#{requireCss}")
+    span.glyphicon(class="glyphicon-#{icon}")
+    | #{text}
+mixin drop_button(action, icon, text, weight, rejectCss, requireCss)
+    li
+        a(href="javascript:void(0)", ng-click="#{action}", weight="#{weight}", reject-css="#{rejectCss}", require-css="#{requireCss}")
+            i(class="icon-#{icon}")
+            | #{text}
+mixin select_all()
+  input(type="checkbox", ng-model="selection.checked", name="filter-checkbox", value="")#select_all
+
+div(ui-view='')
+ .container(ng-controller="PrivateCatalogListCtrl")
+  .btn-toolbar(role="toolbar")
+    .btn-group
+      +tool_button("tableParams.reload()", "refresh", "","*","","")
+      +tool_button("actionService.gotoState('services.catalog.public')", "edit", "公共服务", "", "", "")
+    .btn-group
+      button.btn.btn-primary.no-border.dropdown-toggle(type="button",data-toggle="dropdown")
+        span.glyphicon(class="glyphicon-plus")
+        | 新建
+        span.caret
+      ul.dropdown-menu(role="menu")
+        +drop_button("actionService.perform(create_catalog)", "plus", "服务目录", "", "", "")
+        +drop_button("actionService.perform(create_item)", "plus", "服务项", "1", "", "")
+      +tool_button("actionService.perform(edit)", "edit", "编辑", "1", "", "")
+    .btn-group
+      button.btn.btn-primary.no-border.dropdown-toggle(type="button",data-toggle="dropdown")
+        | 更多操作
+        span.caret
+      ul.dropdown-menu(role="menu")
+        +drop_button("actionService.perform(remove)", "remove", "删除", "1+", "", "private")
+
+    .btn-group.pull-right
+      .nav-search#nav-search
+        form.form-search
+          span.input-icon
+            input.nav-search-input(type="text", placeholder="服务目录名称...",autocomplete="off")#nav-search-input
+            i.icon-search.nav-search-icon
+
+  table.table.table-hover.table-bordered(ng-table="tableParams")
+    tbody(ng-repeat="catalog in $data")
+        tr(value="{{catalog.sn}}",ng-class="catalog")
+          td(width="30",style="text-align: left",header="'ngTableCheckboxHeader'")
+            input(type="checkbox",ng-model="selection.items[catalog.sn]")
+          td(data-title="'图标'")
+            img(ng-src="{{catalog.icon}}")
+          td(data-title="'名称'") {{catalog.sn}}
+          td(data-title="'标题'") {{catalog.title}}
+          td(data-title="'描述'") {{catalog.description}}
+        tr(ng-repeat="item in catalog.items",ng-class="item",value="{{item.sn}}",ng-init="stype = 'item'")
+          td(width="30",style="text-align: left",header="'ngTableCheckboxHeader'")
+              input(type="checkbox",ng-model="selection.items[item.sn]")
+          td(data-title="'图标'")
+              img(ng-src="{{item.icon}}")
+          td(data-title="'名称'") *{{item.sn}}
+          td(data-title="'标题'") |{{item.title}}
+          td(data-title="'描述'") {{item.description}}
+
+
+script(type="text/ng-template")#ngTableCheckboxHeader
+  +select_all()

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# Usage: prepare_ms.sh msc 0.1.7 path/to/folder
+# Usage: prepare_ms.sh msc 0.1.7 buildNumber
 # 
 
 CI=ci.itsnow.com
@@ -13,6 +13,11 @@ if [ ! $2 ]; then
   echo "You should provide the artifact version(like 0.1.8) "
   exit 2
 fi
+if [ ! $3 ]; then
+  build=".lastSuccessful"
+else
+  build="$3:id"
+fi
 
 utype=`echo "$1" | tr "[:lower:]" "[:upper:]"`
 ltype=`echo "$1" | tr "[:upper:]" "[:lower:]"`
@@ -20,9 +25,9 @@ version=$2
 file=$ltype-$version.zip
 
 if [[ "$version" =~ SNAPSHOT$ ]]; then
-  target="http://$CI/guestAuth/repository/download/Itsnow_Continuous_Build/.lastFinished/$file"
+  target="http://$CI/guestAuth/repository/download/Itsnow_Daily_Build_$utype/$build/$file"
 else
-  target="http://$CI/guestAuth/repository/download/Itsnow_Sprint_Build_$utype/.lastFinished/$file"
+  target="http://$CI/guestAuth/repository/download/Itsnow_Sprint_Build_$utype/$build/$file"
 fi
 
 

@@ -1,56 +1,48 @@
 //   New process
 doctype html
 
-mixin form_field(name, label, icon, tip, pattern, maxLength)
+mixin widgetBox(title)
+  .col-md-offset-2.col-md-8
+    .widget-box
+      .widget-header
+        h4 #{title}
+      .widget-body
+        .widget-main
+          block
+mixin formGroup(name, label, icon, tip)
   .form-group
     label.col-xs-12.col-sm-3.control-label.no-padding-right(for="process_#{name}") #{label}
     .col-xs-12.col-sm-5
       span.block.input-icon.input-icon-right
-        input.form-control(id="process_#{name}", name="process.#{name}", ng-model="process.#{name}", ng-required,  ng-maxlength="#{maxLength}", type="text", placeholder="#{label}", ng-pattern="#{pattern}")
+        block
         i(class="icon-#{icon}")
     .help-block.col-xs-12.col-sm-reset.inline #{tip}
-mixin config_field(name, id, label, icon, tip, readonly, maxLength)
-  .form-group
-    label.col-xs-12.col-sm-3.control-label.no-padding-right(for="process_#{id}") #{label}
-    .col-xs-12.col-sm-5
-      span.block.input-icon.input-icon-right
-        input.form-control(id="process_#{id}", name="process.#{name}", ng-model="process.#{name}", ng-required, ng-maxlength="#{maxLength}", type="text", placeholder="#{label}", readonly="#{readonly}")
-        i(class="icon-#{icon}")
-    .help-block.col-xs-12.col-sm-reset.inline #{tip}
-mixin selector(name, label, datas, tip)
-  .form-group
-    label.col-xs-12.col-sm-3.control-label.no-padding-right(for="process_#{name}") #{label}
-    .col-xs-12.col-sm-5
-      select.form-control(ng-model="process.#{name}")
-        option(ng-repeat="data in #{datas}", value="{{data.id}}") {{data.name}}
-    .help-block.col-xs-12.col-sm-reset.inline #{tip}
+mixin selector(model, name, datas, value)
+  select.form-control(id="#{model}_#{name}", ng-model="#{model}.#{name}", ng-options="data.#{value} for data in #{datas}", required!=attributes["required"])
+mixin field(name, label)
+  input.form-control(id="process_#{name}", name="process.#{name}", ng-model="process.#{name}", type="text", placeholder="#{label}", required!=attributes["required"], readonly!=attributes["readonly"], ng-maxlength!=attributes["ng-maxlength"], ng-check!=attributes["ng-check"])
+mixin fieldArea(name, label, rows, cols)
+  textarea.form-control(id="process_#{name}", name="process.#{name}", ng-model="process.#{name}", placeholder="#{label}", rows="#{rows}", cols="#{cols}")
+mixin formBtn(title, icon)
+  button.btn.btn-sm.btn-primary(ng-click!=attributes["ng-click"], ui-sref!=attributes["ui-sref"], type!=attributes["type"])
+    i(class="icon-#{icon}")
+    | #{title}
+
 .row(ng-controller="ProcessNewCtrl")
-  form.form-horizontal(name="newProcessForm", novalidate, ng-model-options="{ updateOn: 'mousedown blur' }", role="form")
-    +form_field("name", "进程名称", "star", "", "/itsnow_(.)+/", "20")
-    +selector("accountId", "所属企业", "accounts", "")
-    +selector("hostId", "主机名", "hosts", "请选择可用容量较高的主机")
-    +config_field("wd", "", "工作目录", "star", "自动分配的工作目录", "readonly", "35")
-    +form_field("description", "服务描述",   "star", "", "", "20")
-    +form_field("configuration.rmi_port", "配置RMI端口",   "star", "", "", "20")
-    +form_field("configuration.jmx_port", "配置JMX端口",   "star", "", "", "20")
-    +form_field("configuration.debug_port", "配置DEBUG端口",   "star", "", "", "20")
-    +form_field("configuration.http_port", "配置HTTP端口",   "star", "", "", "20")
-    +selector("schema.hostId", "数据库主机", "hosts", "")
-    +form_field("schema.name", "数据库名",   "star", "", "", "20")
-    +form_field("schema.configuration.user", "数据库用户名",   "star", "", "", "20")
-    +form_field("schema.configuration.password", "数据库密码",   "star", "", "", "20")
-    +form_field("schema.configuration.port", "数据库端口",   "star", "", "", "20")
-    +form_field("schema.description", "数据库描述",   "star", "", "", "20")
+  form.form-horizontal(name="newProcessForm", novalidate, ng-model-options="{ updateOn: 'mousedown blur' }", role="form", ng-submit="createProcess()")
+    +widgetBox("分配服务进程")
+      +formGroup("accountId",     "所属企业", "", "所属企业名称")
+        +selector("account", "id", "accounts", "sn")(required="true")
+      +formGroup("hostId",     "应用主机", "", "请选择可用容量较高的主机")
+        +selector("process", "host", "hosts", "name")(required="true")
+      +formGroup("schemaId",     "数据库主机", "", "数据库主机地址")
+        +selector("process", "schema", "schemas", "name")(required="true")
+      +formGroup("description",     "备注信息", "", "")
+        +fieldArea("description", "备注信息", "", "")
 
     .row-fluid.actions
-      .col-xs-12.col-sm-3
-      .col-xs-12.col-sm-5
-        button.btn.btn-sm.btn-primary(ng-click="createProcess()")
-          i.icon-ok
-          | 创建服务进程
-        button.btn.btn-sm.btn-link(ui-sref="processes")
-          i.icon-remove
-          | 取消
-.row
-  pre.container-fluid
-    | {{host}}
+      .col-xs-12.col-sm-8.col-md-offset-2
+        p.alert.alert-info
+          span.col-md-offset-4
+            +formBtn("创建", "ok")(type="submit")
+            +formBtn("取消", "remove")(ui-sref="processes")

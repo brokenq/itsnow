@@ -60,6 +60,9 @@ angular.module('System.WorkTime', ['ngTable', 'ngResource'])
                 $scope.tableParams.reload();
             });
         };
+        $scope.refresh=function(){
+            $scope.tableParams.reload();
+        };
         $scope.$watch('checkboxes.checked', function (value) {
             angular.forEach($scope.workTimes, function (item) {
                 if (angular.isDefined(item.sn)) {

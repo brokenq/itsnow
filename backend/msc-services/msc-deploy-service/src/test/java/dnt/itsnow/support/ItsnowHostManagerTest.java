@@ -174,12 +174,34 @@ public class ItsnowHostManagerTest {
     public void testFindByType() throws Exception {
         List<ItsnowHost> hosts = new ArrayList<ItsnowHost>();
         hosts.add(host);
-        expect(repository.findByType("DB")).andReturn(hosts);
+        expect(repository.findAllByType(HostType.DB)).andReturn(hosts);
 
         replay(systemInvokeService);
         replay(repository);
 
-        hosts = hostManager.findByType("DB");
+        hosts = hostManager.findAllByType("DB");
         Assert.isTrue(1 == hosts.size());
+    }
+
+    @Test
+    public void testFindByIdAndName() throws Exception {
+        expect(repository.findByIdAndName(1L, "App Host")).andReturn(host);
+
+        replay(systemInvokeService);
+        replay(repository);
+
+        host = hostManager.findByIdAndName(1L, "App Host");
+        Assert.notNull(host);
+    }
+
+    @Test
+    public void testFindByIdAndAddress() throws Exception {
+        expect(repository.findByIdAndAddress(1L, "172.16.3.4")).andReturn(host);
+
+        replay(systemInvokeService);
+        replay(repository);
+
+        host = hostManager.findByIdAndAddress(1L, "172.16.3.4");
+        Assert.notNull(host);
     }
 }

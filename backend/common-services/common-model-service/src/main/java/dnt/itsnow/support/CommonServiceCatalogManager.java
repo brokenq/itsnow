@@ -7,6 +7,7 @@ import dnt.itsnow.service.CommonServiceCatalogService;
 import dnt.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
  * <h1>Common ServiceCatalog Manager</h1>
  */
 @Service
+@Transactional
 public class CommonServiceCatalogManager extends Bean implements CommonServiceCatalogService {
 
     @Autowired
@@ -27,19 +29,18 @@ public class CommonServiceCatalogManager extends Bean implements CommonServiceCa
     @Override
     public List<PublicServiceCatalog> findAll() {
         getFormattedServiceCatalogList();
+        return getTreeList(formattedServiceCatalogList);
+    }
 
-
+    private List<PublicServiceCatalog> getTreeList(List<PublicServiceCatalog> list){
         //convert list to tree object
         List<PublicServiceCatalog> treeList = new ArrayList<PublicServiceCatalog>();
-
-        for(PublicServiceCatalog catalog:formattedServiceCatalogList) {
+        for(PublicServiceCatalog catalog:list) {
             if(catalog.getParentId() == null) {
-                this.formatTreeList(treeList,catalog,formattedServiceCatalogList);
+                this.formatTreeList(treeList,catalog,list);
             }
         }
-
         return treeList;
-
     }
 
     private void formatTreeList(List<PublicServiceCatalog> treeList,PublicServiceCatalog catalog,List<PublicServiceCatalog> children){
@@ -110,6 +111,7 @@ public class CommonServiceCatalogManager extends Bean implements CommonServiceCa
         return commonServiceCatalogList;
     }
 
+    @Override
     public void setFormattedServiceCatalogList(List<PublicServiceCatalog> formattedServiceCatalogList) {
         this.formattedServiceCatalogList = formattedServiceCatalogList;
     }
@@ -121,6 +123,7 @@ public class CommonServiceCatalogManager extends Bean implements CommonServiceCa
         return formattedServiceCatalogList;
     }
 
+    @Override
     public void setCommonServiceCatalogList(List<PublicServiceCatalog> commonServiceCatalogList) {
         this.commonServiceCatalogList = commonServiceCatalogList;
     }

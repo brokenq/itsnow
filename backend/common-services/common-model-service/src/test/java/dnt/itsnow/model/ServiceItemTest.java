@@ -31,9 +31,10 @@ public class ServiceItemTest extends ValidatorSupport{
         item = new ServiceItem();
         item.setId(1L);
         item.setTitle("title1");
+        item.setSn("SN-001-01");
         item.setDescription("desc1");
         item.setBrief("brief1");
-        item.setCatalog(catalog);
+        item.setIcon("");
 
     }
 
@@ -41,13 +42,6 @@ public class ServiceItemTest extends ValidatorSupport{
     public void testValidationHappyCase() throws Exception {
         Set<ConstraintViolation<ServiceItem>> violations = validator.validate(item);
         Assert.assertTrue(violations.isEmpty());
-    }
-
-    @Test
-    public void testValidationCatalog() throws Exception {
-        item.setCatalog(null);
-        Set<ConstraintViolation<ServiceItem>> violations = validator.validate(item);
-        Assert.assertFalse(violations.isEmpty());
     }
 
     @Test

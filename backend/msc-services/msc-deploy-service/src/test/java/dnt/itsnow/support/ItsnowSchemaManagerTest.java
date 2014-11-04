@@ -118,6 +118,7 @@ public class ItsnowSchemaManagerTest {
     @Test
     public void testPickSchema() throws Exception {
         MsuAccount account = new MsuAccount();
+        account.setSn("test_acc");
         ItsnowHost host = new ItsnowHost();
         host.setType(HostType.COM);
         host.setCapacity(10);

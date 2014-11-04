@@ -20,7 +20,7 @@ import java.util.Set;
 public class PublicServiceCatalogTest extends ValidatorSupport{
     PublicServiceCatalog catalog;
 
-    PublicServiceCatalog childCatalog;
+    ServiceCatalog childCatalog;
 
     @Before
     public void setUp() throws Exception {
@@ -31,7 +31,7 @@ public class PublicServiceCatalogTest extends ValidatorSupport{
         catalog.setTitle("TITLE-001");
         catalog.setLevel(1);
 
-        childCatalog = new PublicServiceCatalog();
+        childCatalog = new ServiceCatalog();
         childCatalog.setId(2L);
         childCatalog.setSn("SN-001-01");
         childCatalog.setDescription("DESC-001-01");

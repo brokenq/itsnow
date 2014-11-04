@@ -1,5 +1,5 @@
 // List System
-angular.module('System.Department', ['ngTable', 'ngResource'])
+angular.module('System.Department', ['ngTable', 'ngResource', 'Lib.Feedback'])
 
     .config(function ($stateProvider) {
         $stateProvider.state('department', {
@@ -9,79 +9,102 @@ angular.module('System.Department', ['ngTable', 'ngResource'])
         });
     })
 
-    .factory('DepartmentService', ['$resource', function ($resource) {
-        return $resource("/api/departments");
+    .factory('DeptService', ['$resource', function ($resource) {
+        return $resource("/api/departments/:sn/:id", {}, {
+            get: { method: 'GET', params: {sn: '@sn'}},
+            checkChild: { method: 'GET', params: {sn: 'check_child', id: '@id'}, isArray: true},
+            save: { method: 'POST'},
+            update: { method: 'PUT', params: {sn: '@sn'}},
+            query: {method: 'GET', params: {isTree: '@isTree', keyword: '@keyword'}, isArray: true},
+            remove: { method: 'DELETE', params: {sn: '@sn'}}
+        });
     }
     ])
 
     // 过滤拼接地点后的最后一个逗号
-    .filter('siteFilter', function () {
-        var siteFilter = function (input) {
+    .filter('deptFilter', function () {
+        return function (input) {
             var name = '';
-            for (var i = 0; i < input.length; i++) {
-                name += input[i].name + ',';
+            if (input !== null && input !== undefined) {
+                for (var i = 0; i < input.length; i++) {
+                    name += input[i].name + ',';
+                }
+                name = name.substring(0, name.length - 1);
             }
-            name = name.substring(0, name.length - 1);
-            return name;
+            return name || '无';
         };
-        return siteFilter;
     })
 
-    .controller('DepartmentListCtrl', ['$scope', '$location', '$timeout', 'ngTableParams', 'DepartmentService', function ($scope, $location, $timeout, NgTableParams, departmentService) {
-        var options = {
-            page: 1,           // show first page
-            count: 10           // count per page
-        };
+    .controller('DeptListCtrl', ['$scope', '$location', 'DeptService', 'ngTableParams', 'ActionService', 'Feedback',
+        function ($scope, $location, deptService, NgTableParams, ActionService, feedback) {
 
-        var args = {
-            total: 0,
-            getData: function ($defer, params) {
-                $location.search(params.url()); // put params in url
-                departmentService.query(params.url(), function (data, headers) {
-                        $timeout(function () {
-                                params.total(headers('total'));
-                                $defer.resolve($scope.department = data);
-                            },
-                            500
-                        );
+            // ngTable Config
+            var options = {
+                page: 1,             // show first page
+                count: 100           // count per page
+            };
+            var args = {
+                counts: [],          // hide page counts control
+                total: 0,            // value less than count hide pagination
+                getData: function ($defer, params) {
+                    $location.search(params.url()); // put params in url
+                    deptService.query({isTree: true}, function (data, headers) {
+                            params.total(headers('total'));
+                            $defer.resolve($scope.departments = data);
+                        }
+                    );
+                }
+            };
+            $scope.tableParams = new NgTableParams(angular.extend(options, $location.search()), args);
+            $scope.checkboxes = { 'checked': false, items: {} };
+
+            // ActionService Config
+            $scope.getDeptBySn = function (sn) {
+                for (var i in $scope.departments) {
+                    var dept = $scope.departments[i];
+                    if (dept.sn === sn) {
+                        return dept;
                     }
-                );
-            }
-        };
-        $scope.tableParams = new NgTableParams(angular.extend(options, $location.search()), args);
-        $scope.checkboxes = { 'checked': false, items: {} };
-
-        // watch for check all checkbox
-        $scope.$watch('checkboxes.checked', function (value) {
-            angular.forEach($scope.department, function (item) {
-                if (angular.isDefined(item.sn)) {
-                    $scope.checkboxes.items[item.sn] = value;
-
                 }
-            });
-        });
+            };
+            $scope.actionService = new ActionService({watch: $scope.checkboxes.items, mapping: $scope.getDeptBySn});
 
-        // watch for data checkboxes
-        $scope.$watch('checkboxes.items', function (values) {
-                if (!$scope.department) {
-                    return;
-                }
-                var checked = 0;
-                var unchecked = 0;
-                var total = $scope.department.length;
-                angular.forEach($scope.department, function (item) {
-                    checked += ($scope.checkboxes.items[item.sn]) || 0;
-                    unchecked += (!$scope.checkboxes.items[item.sn]) || 0;
+            // watch for check all checkbox
+            $scope.$watch('checkboxes.checked', function (value) {
+                angular.forEach($scope.departments, function (item) {
+                    if (angular.isDefined(item.sn)) {
+                        $scope.checkboxes.items[item.sn] = value;
+                    }
                 });
-                if ((unchecked === 0) || (checked === 0)) {
-                    $scope.checkboxes.checked = (checked == total);
-                }
-                // grayed checkbox
-                angular.element(document.getElementById("select_all")).prop("indeterminate", (checked !== 0 && unchecked !== 0));
-            },
-           true
-        );
+            });
 
-    }
+            $scope.remove = function (dept) {
+                deptService.checkChild({id: dept.id}, function (data) {
+                    console.log(data);
+                    if (data.length!==0) {
+                        feedback.warn("你所选择的部门，下属有子部门，不能进行删除操作！");
+                        return false;
+                    } else {
+                        deptService.remove({sn: dept.sn}, function () {
+                            feedback.success("删除部门'" + dept.name + "'成功");
+                            delete $scope.checkboxes.items[dept.sn];
+                            $scope.tableParams.reload();
+                        },function(resp){
+                            feedback.error("删除部门'" + dept.name + "'失败", resp);
+                        });
+                    }
+                });
+            };
+
+            $scope.search = function ($event) {
+                if ($event.keyCode === 13) {
+                    var promise = deptService.query({isTree: false, keyword: $event.currentTarget.value}).$promise;
+                    promise.then(function (data) {
+                        $scope.departments = data;
+                    });
+                }
+            };
+
+        }
     ]);
 

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <h1>根据UserRepository加载用户的UserDetailsService</h1>
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
  * TODO 添加测试用例
  */
 @Service("groupedUserService")
+@Transactional
 public class GroupedUserDetailsService implements CommonUserService, UserDetailsService {
     @Autowired
     @Qualifier("plainUserService") // 代码中的qualifier 就是 context 中的bean名称或id

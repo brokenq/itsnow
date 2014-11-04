@@ -15,7 +15,18 @@
             h.description   AS host_description ,
             h.created_at    AS host_created_at,
             h.updated_at    AS host_updated_at,
-            p.name          AS process_name
+            p.id            AS process_id,
+            p.account_id    AS process_account_id   ,
+            p.host_id       AS process_host_id      ,
+            p.schema_id     AS process_schema_id    ,
+            p.name          AS process_name         ,
+            p.pid           AS process_pid          ,
+            p.wd            AS process_wd           ,
+            p.configuration AS process_configuration,
+            p.status        AS process_status       ,
+            p.description   AS process_description  ,
+            p.created_at    AS process_created_at   ,
+            p.updated_at    AS process_updated_at
         FROM itsnow_schemas s
             JOIN itsnow_hosts h ON s.host_id = h.id
             LEFT OUTER JOIN itsnow_processes p ON s.id = p.schema_id
@@ -58,6 +69,7 @@
         </trim>
     </select>
     <resultMap id="schemaResult" type="ItsnowSchema" autoMapping="true">
+        <id column="id" property="id"/>
         <result column="configuration" property="configuration" typeHandler="dnt.itsnow.util.PropertiesHandler"/>
         <result column="host_id" property="hostId"/>
         <association property="host" columnPrefix="host_" resultMap="dnt.itsnow.repository.ItsnowHostRepository.hostResult"/>

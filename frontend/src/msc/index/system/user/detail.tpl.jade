@@ -1,0 +1,52 @@
+//   create user
+doctype html
+mixin widgetBox(title)
+    .col-md-offset-2.col-md-8
+        .widget-box
+            .widget-header
+                h4 #{title}
+            .widget-body
+                .widget-main
+                    block
+mixin formGroup(name, label, icon, tip)
+    .form-group
+        label.col-xs-12.col-sm-3.control-label.no-padding-right(for="cuser_#{name}") #{label}
+        .col-xs-12.col-sm-5
+            span.block.input-icon.input-icon-right
+                block
+                i(class="icon-#{icon}")
+        .help-block.col-xs-12.col-sm-reset.inline #{tip}
+mixin field(name, label)
+    input.form-control(id="cuser_#{name}", name="cuser.#{name}", ng-model="cuser.#{name}", placeholder="#{label}")&attributes(attributes)
+mixin actionBar()
+    .row-fluid.actions
+        .col-xs-12.col-sm-8.col-md-offset-2
+            p.alert.alert-info
+                span.col-md-offset-4
+                    block
+mixin submitformBtn(title, icon)
+    button.btn.btn-sm.btn-primary(ng-click!=attributes["ng-click"], ui-sref!=attributes["ui-sref"], type!=attributes["type"])
+        i(class="icon-#{icon}")
+        | #{title}
+mixin removeformBtn(title, icon)
+    button.btn.btn-sm.btn-default(ng-click!=attributes["ng-click"], ui-sref!=attributes["ui-sref"], type!=attributes["type"])
+        i(class="icon-#{icon}")
+        | #{title}
+.row(ng-controller="UserDetailCtrl")
+    form.form-horizontal(name="userDeatilForm", novalidate="novalidate", role="form", ng-submit="createUser()")
+        +widgetBox("用户信息")
+            +formGroup("username","用户姓名", "user", "")
+                +field("username","用户姓名")(type="text",required, ng-maxlength="20",ng-minlength="4",ng-check="/admin/api/users/check/{0}",ng-pattern="/^[a-zA-Z0-9]|_|\-|\.]+$/")
+            +formGroup("nickName","用户昵称",   "user", "")
+                +field("nickName", "用户昵称")(type="text",required, ng-maxlength="20",ng-minlength="4")
+            +formGroup("emial",  "电子邮箱","envelope", "")
+                +field("email", "电子邮箱")(type="email",required,ng-check="/admin/api/users/checkEmail/{0}")
+            +formGroup("phone",  "电话号码",   "headphones", "")
+                +field("phone", "电话号码")(type="text",required,ng-pattern='/^1[0-9]+$/')
+            +formGroup("password","用户密码","lock","")
+                +field("password","用户密码")(type="password",required,ng-maxlength="20",ng-minlength="6")
+            +formGroup("repeatPassword","重复密码","retweet","")
+                +field("repeatPassword","重复密码")(type="password",required,ng-maxlength="20",ng-minlength="6",ng-blur="validatePassword()")
+        +actionBar()
+            +submitformBtn("创建", "ok")(type="submit")
+            +removeformBtn("取消", "remove")(ui-sref="user")

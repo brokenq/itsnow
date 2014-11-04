@@ -1,7 +1,9 @@
-package dnt.itsnow.it; /**
+package dnt.itsnow.it;
+/**
  * Developer: Kadvin Date: 14-9-15 下午12:11
  */
 
+import dnt.itsnow.model.ClientItsnowHost;
 import dnt.itsnow.model.ClientItsnowProcess;
 import junit.framework.Assert;
 import org.junit.Ignore;
@@ -15,6 +17,8 @@ import org.springframework.http.ResponseEntity;
  */
 @Ignore
 public class ItsnowProcessesTest extends AbstractTest {
+
+    private final String processName = "itsnow_msp_test";
 
     @Test
     public void testIndex() throws Exception {
@@ -36,7 +40,7 @@ public class ItsnowProcessesTest extends AbstractTest {
             @Override
             public ClientItsnowProcess perform(HttpHeaders headers) {
                 HttpEntity entity = new HttpEntity(headers);
-                return getForObject("/admin/api/processes/{name}", ClientItsnowProcess.class , entity, "itsnow-msc");
+                return getForObject("/admin/api/processes/{name}", ClientItsnowProcess.class , entity, processName);
             }
         });
         Assert.assertNotNull(process);
@@ -44,15 +48,48 @@ public class ItsnowProcessesTest extends AbstractTest {
 
     @Test
     public void testCreate() throws Exception {
-        final ClientItsnowProcess creating = new ClientItsnowProcess();
-        ClientItsnowProcess created = withLoginUser(new Callback<ClientItsnowProcess>() {
+        final ClientItsnowProcess creating = withLoginUser(new Callback<ClientItsnowProcess>() {
             @Override
             public ClientItsnowProcess perform(HttpHeaders headers) {
-                HttpEntity<ClientItsnowProcess> request = new HttpEntity<ClientItsnowProcess>(creating, headers);
-                return postForObject("/admin/api/processes", request, ClientItsnowProcess.class);
+                HttpEntity request = new HttpEntity(headers);
+                return getForObject("/admin/api/processes/auto_new/{accountSn}", ClientItsnowProcess.class, request, "msp_test");
             }
         });
+        Assert.assertNotNull(creating);
+        ClientItsnowHost host = withLoginUser(new Callback<ClientItsnowHost>() {
+            @Override
+            public ClientItsnowHost perform(HttpHeaders headers) {
+                HttpEntity request = new HttpEntity(headers);
+                return getForObject("/admin/api/hosts/{id}", ClientItsnowHost.class, request, 18L);
+            }
+        });
+        Assert.assertNotNull(host);
+        creating.setHostId(host.getId());
+        ClientItsnowProcess created = null;
+        try {
+            created = withLoginUser(new Callback<ClientItsnowProcess>() {
+                @Override
+                public ClientItsnowProcess perform(HttpHeaders headers) {
+                    HttpEntity<ClientItsnowProcess> request = new HttpEntity<ClientItsnowProcess>(creating, headers);
+                    return postForObject("/admin/api/processes", request, ClientItsnowProcess.class);
+                }
+            });
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
         Assert.assertNotNull(created);
+    }
+
+    @Test
+    public void testAutoNew() throws Exception {
+        ClientItsnowProcess entity = withLoginUser(new Callback<ClientItsnowProcess>() {
+            @Override
+            public ClientItsnowProcess perform(HttpHeaders headers) {
+                HttpEntity request = new HttpEntity(headers);
+                return getForObject("/admin/api/processes/auto_new/{accountSn}", ClientItsnowProcess.class, request, "msc");
+            }
+        });
+        Assert.assertNotNull(entity);
     }
 
     @Test
@@ -61,7 +98,7 @@ public class ItsnowProcessesTest extends AbstractTest {
             @Override
             public void perform(HttpHeaders headers) {
                 HttpEntity request = new HttpEntity(headers);
-                delete("/admin/api/processes/{name}", request, "itsnow-test1");
+                delete("/admin/api/processes/{name}", request, "itsnow-msp");
             }
         });
     }
@@ -72,10 +109,9 @@ public class ItsnowProcessesTest extends AbstractTest {
             @Override
             public void perform(HttpHeaders headers) {
                 HttpEntity request = new HttpEntity(headers);
-                put("/admin/api/processes/{name}/start", request, "itsnow-test2");
+                put("/admin/api/processes/{name}/start", request, processName);
             }
         });
-
     }
 
     @Test
@@ -84,7 +120,7 @@ public class ItsnowProcessesTest extends AbstractTest {
             @Override
             public void perform(HttpHeaders headers) {
                 HttpEntity request = new HttpEntity(headers);
-                put("/admin/api/processes/{name}/stop", request, "itsnow-test3");
+                put("/admin/api/processes/{name}/stop", request, processName);
             }
         });
     }
@@ -95,7 +131,7 @@ public class ItsnowProcessesTest extends AbstractTest {
             @Override
             public void perform(HttpHeaders headers) {
                 HttpEntity request = new HttpEntity(headers);
-                put("/admin/api/processes/{name}/cancel", request, "itsnow-test4");
+                put("/admin/api/processes/{name}/cancel", request, processName);
             }
         });
 

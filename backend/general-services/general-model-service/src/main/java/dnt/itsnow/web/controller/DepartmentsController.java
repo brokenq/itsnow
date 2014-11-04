@@ -5,6 +5,7 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.exception.DepartmentException;
 import dnt.itsnow.model.Department;
+import dnt.itsnow.model.Role;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.platform.web.exception.WebServerSideException;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -73,13 +75,9 @@ public class DepartmentsController extends SessionSupportController<Department> 
     }
 
     @RequestMapping("/check_child/{id}")
-    public Boolean checkChild(@PathVariable("id") long id) {
+    public List<Department> checkChild(@PathVariable("id") long id) {
         List<Department> departments = departmentService.findAllByParentId(id);
-        if (departments != null && departments.size() > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return departments;
     }
 
     /**
@@ -121,18 +119,19 @@ public class DepartmentsController extends SessionSupportController<Department> 
 
         logger.info("Updating {}", department);
 
-        this.department.apply(department);
+//        this.department.apply(department);
         try {
-            departmentService.update(this.department);
+            logger.info("Updating this.department: {}", department);
+            departmentService.update(department);
         } catch (DepartmentException e) {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
         } catch (Exception e) {
             throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
         }
 
-        logger.info("Updated  {}", this.department);
+        logger.info("Updated  {}", department);
 
-        return this.department;
+        return department;
     }
 
     /**
@@ -156,6 +155,22 @@ public class DepartmentsController extends SessionSupportController<Department> 
         }
 
         logger.warn("Deleted  {}", department);
+    }
+
+    @RequestMapping(value = "check/{name}", method = RequestMethod.GET)
+    public HashMap checkUnique(@PathVariable("name") String name){
+
+        logger.debug("Check   unique department name: {}", name);
+
+        Department department = departmentService.findByName(name);
+
+        logger.debug("Checked unique {}", department);
+
+        if( department != null ){
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate department name: " + department.getName());
+        }else{
+            return new HashMap();
+        }
     }
 
     @BeforeFilter({"show", "update", "destroy"})

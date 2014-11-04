@@ -1,38 +1,27 @@
-angular.module('System.Department.Form', ['multi-select', 'ngResource'])
+angular.module('System.Department.Form', ['multi-select', 'ngResource', 'Lib.Feedback'])
 
     .config(function ($stateProvider) {
-        $stateProvider.state('dept_form', {
+        $stateProvider.state('dept_edit_form', {
             url: '/dept_form/{sn}',
+            templateUrl: 'system/department/form.tpl.jade',
+            data: {pageTitle: '部门管理'}
+        }).state('dept_new_form', {
+            url: '/dept_form/',
             templateUrl: 'system/department/form.tpl.jade',
             data: {pageTitle: '部门管理'}
         });
     })
 
-    .directive('remoteValidationDeptName', function ($http) {
-        return {
-            require: 'ngModel',
-            link: function (scope, elm, attrs, ctrl) {
-                elm.bind('keyup', function () {
-                    $http({method: 'GET', url: '/api/departments/' + scope.department.name}).
-                        success(function (data, status, headers, config) {
-                            if (data === '') {
-                                ctrl.$setValidity('titleRepeat', true);
-                            } else {
-                                ctrl.$setValidity('titleRepeat', false);
-                            }
-                        }).
-                        error(function (data, status, headers, config) {
-                            ctrl.$setValidity('titleRepeat', false);
-                        });
-                });
-            }
-        };
-    })
+    .controller('DeptCtrl', ['$scope', '$location', '$stateParams',  'DeptService', 'SiteService', 'Feedback',
+        function ($scope, $location, $stateParams, deptService, siteService, feedback) {
 
-    .controller('DeptCtrl', ['$scope', '$location', 'DeptService', '$stateParams', 'SiteService',
-        function ($scope, $location, deptService, $stateParams, siteService) {
+            // 提交按钮是否可用，false为可用
+            $scope.submited = false;
 
-            var sn = $stateParams.sn;
+            // 表单cancel按钮
+            $scope.cancel = function () {
+                $location.path('/department');
+            };
 
             var selectedSiteFun = function () {
                 var selectedSites = [];
@@ -47,7 +36,7 @@ angular.module('System.Department.Form', ['multi-select', 'ngResource'])
             };
 
             var selectedParentDeptIdFun = function () {
-                var parentId;
+                var parentId = null;
                 delete $scope.parentDepartments.$promise;
                 delete $scope.parentDepartments.$resolved;
                 for (var i in $scope.parentDepartments) {
@@ -58,7 +47,7 @@ angular.module('System.Department.Form', ['multi-select', 'ngResource'])
                 return parentId;
             };
 
-            var formatDataBySubmit = function () {
+            var formatSubmitDataFun = function () {
                 var department = $scope.department;
                 department.sites = selectedSiteFun();
                 department.parentId = selectedParentDeptIdFun();
@@ -67,9 +56,35 @@ angular.module('System.Department.Form', ['multi-select', 'ngResource'])
                 return department;
             };
 
+            // 编辑页面提交
+            var submitByEditFun = function () {
+                $scope.submited = true;
+                var department = formatSubmitDataFun();
+                deptService.update({sn: department.sn}, department, function () {
+                    feedback.success("修改部门'" + department.name + "'成功");
+                    $location.path('/department');
+                }, function (resp) {
+                    feedback.error("修改部门'" + department.name + "'失败", resp);
+                });
+            };
+
+            // 新建页面提交
+            var submitByCreateFun = function () {
+                $scope.submited = true;
+                var department = formatSubmitDataFun();
+                deptService.save(department, function () {
+                    feedback.success("新建部门'" + department.name + "'成功");
+                    $location.path('/department');
+                }, function (resp) {
+                    feedback.error("新建部门'" + department.name + "'失败", resp);
+                });
+            };
+
+            var sn = $stateParams.sn;
             if (sn !== null && sn !== "" && sn !== undefined) {
 
-                $("#form-field-mask-1").remove("remote-validation-dept-name");
+                $("#dept_name").hide();
+                $("#dept_name_other").show();
 
                 var promise = deptService.get({sn: sn}).$promise;
                 promise.then(function (data) {
@@ -86,7 +101,7 @@ angular.module('System.Department.Form', ['multi-select', 'ngResource'])
                         }
                     });
 
-                    deptService.query({isTree: false}, function (data) {
+                    deptService.query({isTree: true}, function (data) {
                         for (var i in data) {
                             $scope.parentDepartments = data;
                             if ($scope.parentDepartments[i].id == $scope.department.parentId) {
@@ -101,36 +116,23 @@ angular.module('System.Department.Form', ['multi-select', 'ngResource'])
                 });
 
                 $scope.submit = function () {
-
-                    var department = formatDataBySubmit();
-
-                    deptService.update({name: department.name}, department, function () {
-                        $location.path('/department');
-                    }, function (data) {
-                        alert(data);
-                    });
+                    submitByEditFun();
                 };
 
             } else {
-
-                $("#form-field-mask-1").attr("remote-validation-dept-name", "");
+                $("#dept_name").show();
+                $("#dept_name_other").hide();
 
                 siteService.query(function (data) {
                     $scope.sites = data;
                 });
 
-                deptService.query({isTree: false}, function (data) {
+                deptService.query({isTree: true}, function (data) {
                     $scope.parentDepartments = data;
                 });
 
                 $scope.submit = function () {
-                    var department = formatDataBySubmit();
-
-                    deptService.save(department, function () {
-                        $location.path('/department');
-                    }, function (data) {
-                        alert(data);
-                    });
+                    submitByCreateFun();
                 };
             }
 

@@ -10,12 +10,14 @@ import dnt.spring.Bean;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <h1>基本的账户服务</h1>
  * 提供给当前用户，仅提供其关联的企业的帐户信息只读功能
  */
 @Service
+@Transactional
 public class CommonAccountManager extends Bean implements CommonAccountService {
 
     @Autowired

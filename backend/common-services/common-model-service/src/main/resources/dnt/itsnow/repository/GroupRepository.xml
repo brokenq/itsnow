@@ -12,23 +12,40 @@
         <result property="updatedAt" column="updated_at"/>
     </resultMap>
 
-    <select id="findBySn" parameterType="string" resultType="Group" resultMap="groupResult">
-        select g.id, g.group_name, g.description, g.created_at, g.updated_at
-        from groups g
-        where g.group_name=#{name}
+    <select id="count" resultType="java.lang.Integer">
+        SELECT COUNT(0) FROM groups
+        <where>
+            <if test="keyword != null and keyword != ''">
+                <bind name="pattern" value="'%' + keyword + '%' "/>
+                name LIKE #{pattern}
+            </if>
+        </where>
     </select>
 
-    <select id="findAll" parameterType="string" resultType="Group" resultMap="groupResult">
-        select g.id, g.group_name, g.description, g.created_at, g.updated_at
-        from groups g
-        order by ${sort} ${dir} limit #{offset}, #{size}
+    <sql id="select">
+        SELECT * FROM groups
+    </sql>
+
+    <select id="findByName" resultMap="groupResult">
+        <include refid="select"></include>
+        WHERE group_name = #{name}
     </select>
 
-    <select id="findAllByKeyword" parameterType="string" resultType="Group" resultMap="groupResult">
-        select g.id, g.group_name, g.description, g.created_at, g.updated_at
-        from groups g
-        where g.group_name like #{keyword}
-        order by ${sort} ${dir} limit #{offset}, #{size}
+    <select id="findAll" resultMap="groupResult">
+        <include refid="select"></include>
+        <where>
+            <if test="keyword != null and keyword != ''">
+                <bind name="pattern" value="'%' + keyword + '%' "/>
+                group_name LIKE #{pattern}
+            </if>
+        </where>
+        <if test="pageable.sort != null">
+            ORDER BY #{pageable.sort}
+        </if>
+        <trim prefix="LIMIT" prefixOverrides=",">
+            <if test="pageable.offset > 0">#{pageable.offset}</if>
+            <if test="pageable.pageSize > 0">, #{pageable.pageSize}</if>
+        </trim>
     </select>
 
 </mapper>

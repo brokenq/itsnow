@@ -16,7 +16,6 @@ import dnt.itsnow.service.ItsnowSchemaService;
 import dnt.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +25,6 @@ import java.util.UUID;
  * <h1>Itsnow Schema Manager</h1>
  */
 @Service
-@Transactional
 public class ItsnowSchemaManager extends ItsnowResourceManager implements ItsnowSchemaService {
     @Autowired
     ItsnowHostService hostService;
@@ -88,6 +86,9 @@ public class ItsnowSchemaManager extends ItsnowResourceManager implements Itsnow
     @Override
     public void delete(ItsnowSchema schema) throws ItsnowSchemaException {
         logger.warn("Deleting itsnow schema: {}", schema);
+        if( schema.getHostAddress() == null ){
+            schema = findById(schema.getId());
+        }
         SystemInvocation dropJob = translator.drop(schema);
         dropJob.setId("drop-schema-" + schema.getName());
         String invocationId = invokeService.addJob(dropJob);
@@ -117,7 +118,7 @@ public class ItsnowSchemaManager extends ItsnowResourceManager implements Itsnow
         schema.setHost(host);
         schema.setName("itsnow_" + account.getSn());
         schema.setDescription("schema for " + account.getName());
-        schema.setProperty("user", "root");
+        schema.setProperty("user", account.getSn());
         String password = UUID.randomUUID().toString().substring(0, 8);
         schema.setProperty("password", password);
         schema.setProperty("port", host.getProperty("db.port", "3306"));

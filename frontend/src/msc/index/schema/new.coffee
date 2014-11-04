@@ -15,6 +15,7 @@ angular.module('MscIndex.SchemaNew', ['ngResource'])
           user: ""
           password: ""
       $http.get('/admin/api/hosts/list/type/DB').success (hosts)-> $scope.hosts = hosts
+      $http.get('/admin/api/hosts/list/type/COM').success (hosts)-> $scope.hosts.push hosts
 
       $scope.createSchema = ->
         feedback = (content) ->

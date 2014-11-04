@@ -55,11 +55,23 @@ public class ItsnowHostRepositoryTest {
     }
 
     @Test
+    public void testFindByIdAndAddress() throws Exception {
+        ItsnowHost host = hostRepository.findByIdAndAddress(2L, "172.16.3.4");
+        Assert.assertNotNull(host);
+    }
+
+    @Test
     public void testFindByName() throws Exception {
-        ItsnowHost host = hostRepository.findByName("MSU/P Host A");
+        ItsnowHost host = hostRepository.findByName("App Host");
         Assert.assertNotNull(host);
         Assert.assertNotNull(host.getConfiguration());
         Assert.assertEquals("4x2533Mhz", host.getConfiguration().getProperty("cpu"));
+    }
+
+    @Test
+    public void testFindByIdAndName() throws Exception {
+        ItsnowHost host = hostRepository.findByIdAndName(2L ,"App Host");
+        Assert.assertNotNull(host);
     }
 
     @Test
@@ -94,7 +106,7 @@ public class ItsnowHostRepositoryTest {
     public void testFindAllByKeyword() throws Exception {
         //实际环境中，大小写不敏感，但H2 database没有很好的支持，所以在测试用例中不进行case insensitive测试
         List<ItsnowHost> msHosts = hostRepository.findAllByKeyword("%MS%", new PageRequest(0, 10));
-        Assert.assertEquals(2, msHosts.size());
+        Assert.assertEquals(1, msHosts.size());
     }
 
     @Test
@@ -135,13 +147,7 @@ public class ItsnowHostRepositoryTest {
     @Test
     public void testFindAllByConfiguration() throws Exception {
         List<ItsnowHost> hosts = hostRepository.findAllByConfiguration("mem", "8g");
-        Assert.assertEquals(3, hosts.size());
-    }
-
-    @Test
-    public void testFindByType() throws Exception {
-        List<ItsnowHost> hosts = hostRepository.findByType("DB");
-        Assert.assertEquals(1, hosts.size());
+        Assert.assertEquals(2, hosts.size());
     }
 
 }

@@ -296,3 +296,41 @@ git@happyonroad.net:insight/itsnow.git Rel-x.y.z 标签(tag)
 -----------
 
 1. [msc-0.2.1](http://msc.itsnow.com/login.html)
+0.2.2 发布说明
+=================
+
+1. 新增特性
+-----------
+
+1.   Frontend 批量启动，单个停止服务进程，数据联动
+2.   Frontend MSU服务目录列表页面展示
+3.   Frontend 表格的按钮状态与用户选择情况联动
+4.   Frontend 用户操作反馈
+5.   Frontend 合同管理列表ActionService集成
+6    Frontend 优化注册交互异常流程
+7    Frontend 同一模块多个不同页面的组织
+8.   Backend  修改部署系统，支持子域名系统
+9.   Backend  分离三个子系统的展示
+10.  Backend  分配服务进程功能的产品化
+11.  Backend  启动/停止服务进程
+12.  Backend  MSU设置公共，私有服务目录
+13   Backend  部署模块系统集成测试
+14.  Backend  MSU确认/拒绝合同
+
+
+2. 问题修复
+-----------
+1 解决前端界面菜单缩小化后显示变形的bug
+2 解决Grunt Watch问题
+
+3. 交付物地址
+--------------
+
+1. [msc-0.2.2](http://ci.itsnow.com/repository/download/Itsnow_Sprint_Build_MSC/3832:id/msc-0.2.2.zip)
+2. [msp-0.2.2](http://ci.itsnow.com/repository/download/Itsnow_SprintBuild_MSP/3833:id/msp-0.2.2.zip)
+3. [msu-0.2.2](http://ci.itsnow.com/repository/download/Itsnow_SprintBuild_MSU/3834:id/msu-0.2.2.zip)
+
+4. 系统演示地址
+-----------
+
+1. [msc-0.2.2](http://msc.itsnow.com/login.html)

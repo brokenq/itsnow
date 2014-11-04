@@ -49,26 +49,13 @@ public class CommonServiceItemsController extends SessionSupportController<Publi
     /**
      * <h2>查看一个服务项目</h2>
      *
-     * GET /api/public_service_catalogs/{sn}/items/{id}
+     * GET /api/public_service_catalogs/{sn}/items/{isn}
      *
      * @return 服务项目
      */
-    @RequestMapping("/{id}")
-    public PublicServiceItem show(@PathVariable("id") Long id){
-        return commonServiceItemService.findById(id);
-    }
-
-
-    /**
-     * <h2>获得该帐户下所有的服务项</h2>
-     *
-     * GET /api/public_service_catalogs/{sn}/items/accounts/{accountId}
-     *
-     * @return 服务项列表
-     */
-    @RequestMapping("/accounts/{accountId}")
-    public List<PublicServiceItem> indexAccount(@PathVariable("accountId") Long accountId){
-        return commonServiceItemService.findByAccountId(accountId);
+    @RequestMapping("/{isn}")
+    public PublicServiceItem show(@PathVariable("isn") String sn){
+        return commonServiceItemService.findBySn(sn);
     }
 
 
@@ -81,9 +68,9 @@ public class CommonServiceItemsController extends SessionSupportController<Publi
     }
     
     @BeforeFilter(order = 60, value = {"show", "update", "destroy"})
-    public void initServiceItem(@PathVariable("id") Long id){
+    public void initServiceItem(@PathVariable("isn") String isn){
         if(serviceCatalog != null)
-            serviceItem = (PublicServiceItem) serviceCatalog.getItemBySn(id);
+            serviceItem = (PublicServiceItem) serviceCatalog.getItemBySn(isn);
     }
     
 }

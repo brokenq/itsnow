@@ -1,66 +1,73 @@
-angular.module('System.Site.Form', ['ngResource', 'jcs-autoValidate'])
+angular.module('System.Site.Form', ['ngResource', 'jcs-autoValidate', 'Lib.Feedback'])
 
     .config(function ($stateProvider) {
-        $stateProvider.state('site_form', {
+        $stateProvider.state('site_edit_form', {
             url: '/site_form/{sn}',
+            templateUrl: 'system/site/form.tpl.jade',
+            data: {pageTitle: '地点管理'}
+        }).state('site_new_form', {
+            url: '/site_form/',
             templateUrl: 'system/site/form.tpl.jade',
             data: {pageTitle: '地点管理'}
         });
     })
 
-    // 获取被选中的用户名
-    .factory('RoleFormService', ['$scope', function ($scope) {
+    .controller('SiteCtrl', ['$scope', '$location', '$stateParams', 'SiteService', 'DictService', 'WorkTimeService', 'Feedback',
+        function ($scope, $location, $stateParams, siteService, dictService, workTimeService, feedback) {
 
-        var selected = function () {
-            var selectedUser = [];
-            for (var i in $scope.users) {
-                if ($scope.users[i].ticked === true) {
-                    var myUser = {};
-                    myUser.name = $scope.users[i].name;
-                    selectedUser.push(myUser);
-                }
-            }
-            $scope.role.users = selectedUser;
-        };
+            // 提交按钮是否可用，false为可用
+            $scope.submited = false;
 
-        return selected;
-    }
-    ])
+            // 表单cancel按钮
+            $scope.cancel = function () {
+                $location.path('/site');
+            };
 
-    .directive('remoteValidation', function ($http) {
-        return {
-            require: 'ngModel',
-            link: function (scope, elm, attrs, ctrl) {
-                elm.bind('keyup', function () {
-                    $http({method: 'GET', url: '/api/site/' + scope.site.sn}).
-                        success(function (data, status, headers, config) {
-                            if (data === '') {
-                                ctrl.$setValidity('titleRepeat', true);
-                            } else {
-                                ctrl.$setValidity('titleRepeat', false);
-                            }
-                        }).
-                        error(function (data, status, headers, config) {
-                            ctrl.$setValidity('titleRepeat', false);
-                        });
+            // 去除不必要的对象属性，用于HTTP提交
+            var formatSubmitDataFun = function () {
+                var site = $scope.site;
+                site.dictionary = $scope.dictionary;
+                site.workTime = $scope.workTime;
+                delete site.$promise;
+                delete site.$resolved;
+                return site;
+            };
+
+            // 编辑页面提交
+            var submitByEditFun = function () {
+                $scope.submited = true;
+                var site = formatSubmitDataFun();
+                siteService.update({sn: site.sn}, site, function () {
+                    feedback.success("修改地点'" + site.name + "'成功");
+                    $location.path('/site');
+                }, function (resp) {
+                    feedback.error("修改地点'" + site.name + "'失败", resp);
                 });
-            }
-        };
-    })
+            };
 
-    .controller('SiteCtrl', ['$scope', '$location', 'SiteService', '$stateParams', 'DictService', 'WorkTimeService',
-        function ($scope, $location, siteService, $stateParams, dictService, workTimeService) {
+            // 新建页面提交
+            var submitByCreateFun = function () {
+                $scope.submited = true;
+                var site = formatSubmitDataFun();
+                siteService.save(site, function () {
+                    feedback.success("新建地点'" + site.name + "'成功");
+                    $location.path('/site');
+                }, function (resp) {
+                    feedback.error("新建地点'" + site.name + "'失败", resp);
+                });
+            };
 
             var sn = $stateParams.sn;
-
             if (sn !== null && sn !== "" && sn !== undefined) {
+
+                $("#site_name").hide();
+                $("#site_name_other").show();
 
                 var promise = siteService.get({sn: sn}).$promise;
                 promise.then(function (data) {
                     $scope.site = data;
 
-                    var prms = dictService.list({code: 'inc003'}).$promise;
-                    prms.then(function (data) {
+                    dictService.list({code: 'inc003'}, function (data) {
                         $scope.dictionaries = data;
                         for (var i in $scope.dictionaries) {
                             if ($scope.dictionaries[i].sn == $scope.site.dictionary.sn) {
@@ -69,8 +76,7 @@ angular.module('System.Site.Form', ['ngResource', 'jcs-autoValidate'])
                         }
                     });
 
-                    prms = workTimeService.query().$promise;
-                    prms.then(function (data) {
+                    workTimeService.query(function (data) {
                         $scope.workTimes = data;
                         $scope.workTime = $scope.site.workTime;
                         for (var i in $scope.workTimes) {
@@ -83,45 +89,23 @@ angular.module('System.Site.Form', ['ngResource', 'jcs-autoValidate'])
                 });
 
                 $scope.submit = function () {
-
-                    var site = $scope.site;
-                    site.dictionary = $scope.dictionary;
-                    site.workTime = $scope.workTime;
-                    site.$promise = undefined;
-                    site.$resolved = undefined;
-
-                    siteService.update({sn: site.sn}, site, function () {
-                        $location.path('/site');
-                    }, function (data) {
-                        alert(data);
-                    });
+                    submitByEditFun();
                 };
 
             } else {
+                $("#site_name").show();
+                $("#site_name_other").hide();
 
-                $scope.site = undefined;
-
-                var promise1 = dictService.list({code: 'inc003'}).$promise;
-                promise1.then(function (data) {
+                dictService.list({code: 'inc003'}, function (data) {
                     $scope.dictionaries = data;
                 });
 
-                promise1 = workTimeService.query().$promise;
-                promise1.then(function (data) {
+                workTimeService.query(function (data) {
                     $scope.workTimes = data;
                 });
 
                 $scope.submit = function () {
-
-                    var site = $scope.site;
-                    site.dictionary = $scope.dictionary;
-                    site.workTime = $scope.workTime;
-
-                    siteService.save(site, function () {
-                        $location.path('/site');
-                    }, function (data) {
-                        alert(data);
-                    });
+                    submitByCreateFun();
                 };
             }
         }

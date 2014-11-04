@@ -25,6 +25,7 @@ fi
 
 # /bin/rm -f $folder/$instance
 # do not real deleted while testing
+/bin/rm -f $folder/deleted_$id
 /bin/mv -f $folder/$instance $folder/deleted_$id
 
 echo "$folder/$instance is removed!"

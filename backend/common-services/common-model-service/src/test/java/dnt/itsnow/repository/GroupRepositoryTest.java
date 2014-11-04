@@ -3,6 +3,8 @@ package dnt.itsnow.repository;
 import dnt.itsnow.config.GroupRepositoryConfig;
 import dnt.itsnow.model.Group;
 import dnt.itsnow.model.Role;
+import dnt.itsnow.platform.util.PageRequest;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +28,20 @@ public class GroupRepositoryTest {
     @Autowired
     GroupRepository repository;
 
+    PageRequest pageRequest;
+
+    @Before
+    public void setUp() throws Exception {
+        pageRequest = new PageRequest(0, 1);
+    }
+
     @Test
     public void testCreate() throws Exception {
         Group group = new Group();
         group.setName("用户");
         group.setDescription("This is a test.");
-        group.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        group.setUpdatedAt(group.getCreatedAt());
+        group.creating();
+        group.updating();
 
         repository.create(group);
         Assert.notNull(group.getId());
@@ -40,50 +49,36 @@ public class GroupRepositoryTest {
 
     @Test
     public void testDelete() throws Exception {
-        List<Group> groups = repository.findAll("updated_at", "desc", 0, 1);
-        Group group = groups.get(0);
+        Group group = repository.findByName("second_line");
         repository.deleteGroupAuthority(group.getId());
         repository.deleteGroupMember(group.getId());
         repository.delete(group.getName());
-        Assert.isNull(repository.findBySn(group.getName()));
+        Assert.isNull(repository.findByName(group.getName()));
     }
 
     @Test
     public void testUpdate() throws Exception {
-        List<Group> groups = repository.findAll("updated_at", "desc", 0, 1);
-        Group group = groups.get(0);
+        Group group = repository.findByName("guests");
         group.setDescription("Hello World!");
         repository.update(group);
-        group = repository.findBySn(group.getName());
-        Assert.isTrue(group.getDescription().equals("Hello World!"));
+        group = repository.findByName(group.getName());
+        Assert.isTrue("Hello World!".equals(group.getDescription()));
     }
 
     @Test
     public void testCount() throws Exception {
-        Assert.notNull(repository.count());
+        Assert.notNull(repository.count(""));
     }
 
     @Test
     public void testFind() throws Exception {
-        Assert.notNull(repository.findAll("updated_at", "desc",  0, 10));
+        Assert.notNull(repository.findAll("", pageRequest));
     }
 
     @Test
-    public void testCountByKeyword() throws Exception {
-        Assert.notNull(repository.countByKeyword("%s%"));
-    }
-
-    @Test
-    public void testFindByKeyword() throws Exception {
-        Assert.notNull(repository.findAllByKeyword("%s%","updated_at","desc", 0, 10));
-    }
-
-    @Test
-    public void testFindBySn() throws Exception {
-        List<Group> groups = repository.findAll("updated_at", "desc", 0, 1);
-        Group group = groups.get(0);
-        Assert.notNull(repository.findBySn(group.getName()));
-        Assert.isNull(repository.findBySn("1000000"));
+    public void testFindByName() throws Exception {
+        Assert.notNull(repository.findByName("guests"));
+        Assert.isNull(repository.findByName("no record!"));
     }
 
 }

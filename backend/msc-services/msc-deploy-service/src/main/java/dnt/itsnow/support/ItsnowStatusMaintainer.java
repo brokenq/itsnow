@@ -14,7 +14,6 @@ import dnt.itsnow.service.ItsnowProcessService;
 import dnt.util.NamedThreadFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -24,7 +23,6 @@ import java.util.concurrent.Executors;
  * 定时维护主机，进程的状态
  */
 @Component
-@Transactional
 public class ItsnowStatusMaintainer extends ItsnowResourceManager {
 
     @Autowired
@@ -39,6 +37,9 @@ public class ItsnowStatusMaintainer extends ItsnowResourceManager {
         super.performStart();
         hostExecutor = Executors.newSingleThreadExecutor(new NamedThreadFactory("HostStatusChecker"));
         processExecutor = Executors.newSingleThreadExecutor(new NamedThreadFactory("ProcessStatusChecker"));
+        if( "false".equalsIgnoreCase(System.getProperty("system.enableBackendTasks") ) ){
+            return;
+        }
         hostExecutor.submit(new Runnable() {
             @Override
             public void run() {
@@ -72,8 +73,9 @@ public class ItsnowStatusMaintainer extends ItsnowResourceManager {
      * 执行定时检测
      */
     public void checkHostsStatus(){
-        List<ItsnowHost> hosts = hostService.findAllDbHosts();
+        List<ItsnowHost> hosts = hostService.findAll();
         for (ItsnowHost host : hosts) {
+            if(host.getAddress().equals(mscAddress)) continue;
             checkHostStatus(host);
             rest(1000);//sleep one second
         }

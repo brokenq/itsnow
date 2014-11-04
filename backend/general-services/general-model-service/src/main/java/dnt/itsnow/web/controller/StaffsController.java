@@ -1,6 +1,7 @@
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.exception.StaffException;
+import dnt.itsnow.model.Role;
 import dnt.itsnow.model.Staff;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 
 /**
  * <h1>员工管理控制器</h1>
@@ -138,6 +140,16 @@ public class StaffsController extends SessionSupportController<Staff> {
         logger.warn("Deleted  {}", staff);
 
         return staff;
+    }
+
+    @RequestMapping(value = "check/{no}", method = RequestMethod.GET)
+    public HashMap checkUnique(@PathVariable("no") String no){
+        Staff staff = staffService.findByNo(no);
+        if( staff != null ){
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate staff NO.: " + staff.getNo());
+        }else{
+            return new HashMap();
+        }
     }
 
     @BeforeFilter({"show", "update", "destroy"})

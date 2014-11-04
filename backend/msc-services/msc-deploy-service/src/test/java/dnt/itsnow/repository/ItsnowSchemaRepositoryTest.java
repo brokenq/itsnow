@@ -48,7 +48,7 @@ public class ItsnowSchemaRepositoryTest {
         Assert.assertNotNull(found.getConfiguration());
         Assert.assertNotNull(found.getHost());
         Assert.assertNotNull(found.getHostId());
-        Assert.assertEquals("root", found.getConfiguration().getProperty("user"));
+        Assert.assertEquals("itsnow", found.getConfiguration().getProperty("user"));
     }
 
     @Test
@@ -58,7 +58,7 @@ public class ItsnowSchemaRepositoryTest {
         Assert.assertNotNull(found.getConfiguration());
         Assert.assertNotNull(found.getHost());
         Assert.assertNotNull(found.getHostId());
-        Assert.assertEquals("root", found.getConfiguration().getProperty("user"));
+        Assert.assertEquals("itsnow", found.getConfiguration().getProperty("user"));
     }
 
     @Test

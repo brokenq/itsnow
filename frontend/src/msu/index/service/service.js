@@ -1,8 +1,9 @@
 /**
- * The MSP Application
+ * The MSU Application
  */
 
 angular.module('MsuIndex.Service', [
   'Service.Dict',
-  'Service.Workflow'
+  'Service.Workflow',
+  'Service.Catalog'
 ]);

@@ -1,5 +1,5 @@
 // List System
-angular.module('System.Site', ['ngTable', 'ngResource'])
+angular.module('System.Site', ['ngTable', 'ngResource', 'Lib.Feedback'])
 
     .config(function ($stateProvider) {
         $stateProvider.state('site', {
@@ -21,12 +21,12 @@ angular.module('System.Site', ['ngTable', 'ngResource'])
     }
     ])
 
-    .controller('SiteListCtrl', ['$scope', '$location', '$timeout', 'ngTableParams', 'SiteService', 'ActionService',
-        function ($scope, $location, $timeout, NgTableParams, siteService, ActionService) {
+    .controller('SiteListCtrl', ['$scope', '$location', '$timeout', 'ngTableParams', 'SiteService', 'ActionService', 'Feedback',
+        function ($scope, $location, $timeout, NgTableParams, siteService, ActionService, feedback) {
 
             var options = {
                 page: 1,           // show first page
-                count: 10           // count per page
+                count: 5           // count per page
             };
             var args = {
                 total: 0,
@@ -67,7 +67,11 @@ angular.module('System.Site', ['ngTable', 'ngResource'])
 
             $scope.remove = function (site) {
                 siteService.remove({sn: site.sn},function(){
+                    feedback.success("删除地点'" + site.name + "'成功");
+                    delete $scope.checkboxes.items[site.sn];
                     $scope.tableParams.reload();
+                },function(resp){
+                    feedback.error("删除地点'" + site.name + "'失败", resp);
                 });
             };
 

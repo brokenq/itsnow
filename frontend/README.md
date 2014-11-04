@@ -273,7 +273,42 @@ angular.module('Index.Menu', []).
 
 ### 4.4 其他系统组件
 
-1. Ajax指示
-2. 消息反馈
-3. 对话框交互
-4. 批量操作/进度对话框
+1.Ajax指示
+
+2.消息反馈
+
+  angular模块：`Lib.Feedback`
+  angular服务：`Feedback`
+
+  Feedback API：
+
+```
+  feedback(message, options{level, dismiss})
+  success(message, dismiss{*})
+  info(message, dismiss{*})
+  primary(message, dismiss{*})
+  warn(message, dismiss{*})
+  error(message, resp, dismiss{*})
+```
+
+使用示例：
+
+   
+```
+angular.module('MscIndex.Account', ['ngTable','ngResource', 'ngSanitize','dnt.action.service', 'Lib.Feedback'])
+  .controller 'AccountListCtrl',['$scope', '$location', '$timeout', '$resource', '$http', 'ngTableParams', 'ActionService', 'Feedback', \
+                                ($scope, $location, $timeout, $resource, $http, ngTableParams, ActionService, Feedback)->
+    $scope.approve = (account) ->
+      acc = new Account(account)
+      acc.$approve(->
+        Feedback.success("已批准" + account.name)
+        $scope.tableParams.reload()
+      , (resp)->
+        Feedback.error("批准" + account.name + "失败", resp)
+      )
+
+```
+
+3.对话框交互
+
+4.批量操作/进度对话框

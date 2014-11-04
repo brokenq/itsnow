@@ -74,4 +74,18 @@ public class ContractDetail extends Record{
     public void setIcon(String icon) {
         this.icon = icon;
     }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("ContractDetail{");
+        sb.append("contract=").append(contract);
+        sb.append(", title='").append(title).append('\'');
+        sb.append(", brief='").append(brief).append('\'');
+        sb.append(", description='").append(description).append('\'');
+        sb.append(", icon='").append(icon).append('\'');
+        sb.append(", publicServiceItem=").append(publicServiceItem);
+        sb.append(", itemId=").append(itemId);
+        sb.append('}');
+        return sb.toString();
+    }
 }

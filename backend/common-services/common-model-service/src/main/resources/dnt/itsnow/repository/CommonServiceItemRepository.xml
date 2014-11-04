@@ -7,8 +7,18 @@
         SELECT i.* FROM itsnow_msc.public_service_items i
     </select>
 
-    <select id="findById" resultMap="items">
-        SELECT i.* FROM itsnow_msc.public_service_items i WHERE i.id = #{id}
+    <select id="findBySn" resultMap="items">
+        SELECT i.* ,
+                c.parent_id AS catalog_parent_id,
+                c.sn AS catalog_sn,
+                c.title AS catalog_title,
+                c.description AS catalog_description,
+                c.icon AS catalog_icon,
+                c.level AS catalog_level,
+                c.created_at AS catalog_created_at,
+                c.updated_at AS catalog_updated_at
+        FROM itsnow_msc.public_service_items i join itsnow_msc.public_service_catalogs c
+        ON i.catalog_id = c.id WHERE i.sn = #{sn}
     </select>
 
     <select id="findByAccountId" resultMap="items">
@@ -19,7 +29,7 @@
 
     <resultMap id="items" type="PublicServiceItem" autoMapping="true">
         <id property="id" column="id"/>
-        <association property="catalog" javaType="PublicServiceCatalog" autoMapping="true">
+        <association property="catalog" javaType="PublicServiceCatalog" columnPrefix="catalog_" autoMapping="true">
             <id column="catalog_id" property="id"></id>
         </association>
     </resultMap>

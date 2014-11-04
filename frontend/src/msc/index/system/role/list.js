@@ -1,8 +1,8 @@
 // List System
-angular.module('System.Role', ['ngTable', 'ngResource', 'dnt.action.service'])
+angular.module('System.Role', ['ngTable', 'ngResource', 'dnt.action.service', 'Lib.Feedback'])
 
     .config(function ($stateProvider) {
-        $stateProvider.state('system.role', {
+        $stateProvider.state('role', {
             url: '/role',
             templateUrl: 'system/role/list.tpl.jade',
             data: {pageTitle: '角色管理'}
@@ -14,7 +14,7 @@ angular.module('System.Role', ['ngTable', 'ngResource', 'dnt.action.service'])
             get: { method: 'GET', params: {name: '@name'}},
             save: { method: 'POST'},
             update: { method: 'PUT', params: {name: '@name'}},
-            query: { method: 'GET', isArray: true},
+            query: { method: 'GET', params: {keyword: '@keyword'}, isArray: true},
             remove: { method: 'DELETE', params: {name: '@name'}},
             getUsers: { method: 'GET', params: {name: 'users'}, isArray: true}
         });
@@ -23,7 +23,7 @@ angular.module('System.Role', ['ngTable', 'ngResource', 'dnt.action.service'])
 
     // 过滤拼接地点后的最后一个逗号
     .filter('colFilter', function () {
-        var colFilter = function (input) {
+        return function (input) {
             var name = '';
             if (input !== null && input !== undefined) {
                 for (var i = 0; i < input.length; i++) {
@@ -33,15 +33,14 @@ angular.module('System.Role', ['ngTable', 'ngResource', 'dnt.action.service'])
             }
             return name || '无';
         };
-        return colFilter;
     })
 
-    .controller('RoleListCtrl', ['$scope', '$location', '$timeout', 'ngTableParams', 'RoleService', 'ActionService',
-        function ($scope, $location, $timeout, NgTableParams, roleService, ActionService) {
+    .controller('RoleListCtrl', ['$scope', '$location', '$timeout', 'ngTableParams', 'RoleService', 'ActionService', 'Feedback',
+        function ($scope, $location, $timeout, NgTableParams, roleService, ActionService, feedback) {
 
             var options = {
                 page: 1,           // show first page
-                count: 10           // count per page
+                count: 5           // count per page
             };
             var args = {
                 total: 0,
@@ -84,7 +83,11 @@ angular.module('System.Role', ['ngTable', 'ngResource', 'dnt.action.service'])
 
             $scope.deleteRole = function (role) {
                 roleService.remove({name: role.name},function(){
+                    feedback.success("删除角色'" + role.name + "'成功");
+                    delete $scope.selection.items[role.name];
                     $scope.tableParams.reload();
+                },function(resp){
+                    feedback.error("删除角色'" + role.name + "'失败", resp);
                 });
             };
 

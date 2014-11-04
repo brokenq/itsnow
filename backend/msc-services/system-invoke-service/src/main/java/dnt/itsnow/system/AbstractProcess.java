@@ -112,7 +112,7 @@ class Redirector implements Runnable {
         FileOutputStream dest = null;
         try {
             if (!file.exists()) FileUtils.touch(file);
-            dest = new FileOutputStream(file, true);
+            dest = new FileOutputStream(file, false);// not use append mode
             byte[] buffer = new byte[1024];
             for (int n = 0; n != -1; n = src.read(buffer)) {
                 dest.write(buffer, 0, n);

@@ -39,6 +39,10 @@
         </trim>
     </select>
 
+    <select id="findAll" resultMap="hostResult">
+        <include refid="selectHost"/>
+    </select>
+
     <select id="findAllByType" resultMap="hostResult">
         <include refid="selectHost"/>
         <if test="type != null">
@@ -55,10 +59,26 @@
         </where>
     </select>
 
+    <select id="findByIdAndAddress" resultMap="hostResult">
+        <include refid="selectHost"/>
+        <where>
+            id = #{id}
+            AND address = #{address}
+        </where>
+    </select>
+
     <select id="findByName" resultMap="hostResult">
         <include refid="selectHost"/>
         <where>
             name = #{name}
+        </where>
+    </select>
+
+    <select id="findByIdAndName" resultMap="hostResult">
+        <include refid="selectHost"/>
+        <where>
+            id = #{id}
+            AND name = #{name}
         </where>
     </select>
 

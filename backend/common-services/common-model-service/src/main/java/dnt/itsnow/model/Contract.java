@@ -17,26 +17,26 @@ import java.util.List;
  *
  */
 public class Contract extends Record {
-    //合同编号
+
+    // 合同编号
     @NotBlank
     private String sn;
-    //合同甲方，服务采购方
-    @NotNull
+    // 合同甲方，服务采购方
+    // @NotNull
     private Long msuAccountId;
-    //@JsonIgnore
+    // @JsonIgnore
     private MsuAccount msuAccount;
     //合同乙方，服务供应方
-    //@NotNull
+    // @NotNull
     private Long mspAccountId;
-    //@JsonIgnore
+    // @JsonIgnore
     private MspAccount mspAccount;
     // MSU 是否批准
-    @NotNull
+    // @NotNull
     private ContractStatus msuStatus;
     // MSP 是否批准
-    @NotNull
+    // @NotNull
     private ContractStatus mspStatus;
-
     //合同明细
     @JsonIgnore
     private List<ContractDetail> details;
@@ -121,5 +121,20 @@ public class Contract extends Record {
     @JsonIgnore
     public boolean isApprovedByMsp() {
         return mspStatus.isApproved();
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Contract{");
+        sb.append("sn='").append(sn).append('\'');
+        sb.append(", msuAccountId=").append(msuAccountId);
+        sb.append(", msuAccount=").append(msuAccount);
+        sb.append(", mspAccountId=").append(mspAccountId);
+        sb.append(", mspAccount=").append(mspAccount);
+        sb.append(", msuStatus=").append(msuStatus);
+        sb.append(", mspStatus=").append(mspStatus);
+        sb.append(", details=").append(details);
+        sb.append('}');
+        return sb.toString();
     }
 }

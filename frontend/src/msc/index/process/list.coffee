@@ -1,5 +1,5 @@
 # List accounts
-angular.module('MscIndex.Process', ['ngTable','ngResource'])
+angular.module('MscIndex.Process', ['ngTable','ngResource', 'dnt.action.service'])
   .config ($stateProvider)->
     $stateProvider.state 'processes',
       url: '/processes',
@@ -9,51 +9,47 @@ angular.module('MscIndex.Process', ['ngTable','ngResource'])
   .factory('ProcessService', ['$resource', ($resource) ->
     $resource("/admin/api/processes/:name")
   ])
-  .filter('formatProcessStatus', ->
-    (status) ->
-      return "已停止" if status == 'Stopped'
-      return "启动中" if status == 'Starting'
-      return "运行中" if status == 'Running'
-      return "停止中" if status == 'Stopping'
-      return "有故障" if status == 'Abnormal'
-  )
-  .controller 'ProcessListCtrl',['$scope', '$location', '$timeout', 'ngTableParams', 'ProcessService', '$state',
-  ($scope, $location, $timeout, ngTableParams, processService, $state)->
-    options =
-      page:  1,           # show first page
-      count: 10           # count per page
-    args =
-      total: 0,
-      getData: ($defer, params) ->
-        $location.search(params.url()) # put params in url
-        processService.query(params.url(), (data, headers) ->
-          $timeout(->
-            params.total(headers('total'))
-            $defer.resolve($scope.processes = data)
-          , 500)
-        )
-    $scope.tableParams = new ngTableParams(angular.extend(options, $location.search()), args)
-    $scope.checkboxes = { 'checked': false, items: {} }
-    # watch for check all checkbox
-    $scope.$watch 'checkboxes.checked', (value)->
-      angular.forEach $scope.processes, (item)->
-        $scope.checkboxes.items[item.name] = value if angular.isDefined(item.name)
-    # watch for data checkboxes
-    $scope.$watch('checkboxes.items', (values) ->
-      return if !$scope.processes
-      checked = 0
-      unchecked = 0
-      total = $scope.processes.length
-      angular.forEach $scope.processes, (item)->
-        checked   +=  ($scope.checkboxes.items[item.name]) || 0
-        unchecked += (!$scope.checkboxes.items[item.name]) || 0
-      $scope.checkboxes.checked = (checked == total) if (unchecked == 0) || (checked == 0)
-      # grayed checkbox
-      angular.element(document.getElementById("select_all")).prop("indeterminate", (checked != 0 && unchecked != 0));
-    , true)
 
+  .controller 'ProcessListCtrl',['$scope', '$location', '$timeout', '$resource', '$state', '$http', 'ngTableParams', 'ActionService', 'Feedback', 'CommonService', \
+                                 ($scope,   $location,   $timeout,   $resource,   $state,   $http,   ngTableParams,   ActionService,   Feedback,   commonService)->
+    Processes = $resource("/admin/api/processes/:name", {name: "@name"})
+    actions =
+      start: {method: 'PUT', params: {action: 'start'}}
+      stop:  {method: 'PUT', params: {action: 'stop'}}
+    Process = $resource("/admin/api/processes/:name/:action", {name: "@name"}, actions)
 
-    $scope.viewProcess = (processName)->
-      $state.go 'process_view', {name: processName}
+    $scope.processes = []
+    $scope.selection = {checked: false, items: {}}
+    $scope.tableParams = commonService.instanceTable Processes, $scope.processes
+    commonService.watchSelection $scope.selection, $scope.processes, "name"
+
+    $scope.getProcessByName  = (name)->
+      return process for process in $scope.processes when process.name is name
+    $scope.actionService = new ActionService {watch: $scope.selection.items, mapping: $scope.getProcessByName}
+
+    $scope.refresh = ->
+      $scope.tableParams.reload()
+
+    $scope.start = (process)->
+      acc = new Process process
+      acc.$start ->
+        Feedback.success "正在启动#{process.name}"
+        $scope.tableParams.reload()
+      , (resp)->
+        Feedback.error "启动#{process.name}失败", resp
+
+    $scope.stop = (process)->
+      acc = new Process process
+      acc.$stop ->
+        Feedback.success "已停止#{process.name}"
+        $scope.tableParams.reload()
+      , (resp)->
+        Feedback.error "停止#{process.name}失败", resp
+
+    $scope.delete = (process)->
+      acc = new Process process
+      acc.$remove ->
+        $scope.tableParams.reload()
+
   ]
 
