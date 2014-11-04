@@ -7,8 +7,8 @@
         SELECT i.* FROM private_service_items i
     </select>
 
-    <select id="findPrivateById" resultMap="privateItems">
-        SELECT i.* FROM private_service_items i WHERE i.id = #{id}
+    <select id="findPrivateBySn" resultMap="privateItems">
+        SELECT i.* FROM private_service_items i WHERE i.sn = #{sn}
     </select>
 
     <resultMap id="privateItems" type="PrivateServiceItem" autoMapping="true">

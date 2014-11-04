@@ -15,7 +15,12 @@
     <description>
         The General service_catalog service implemented by MSP/MSU, and provide SPI to other deployment builds.
     </description>
-
+    <dependencies>
+        <dependency>
+            <groupId>dnt.itsnow</groupId>
+            <artifactId>general-model-service</artifactId>
+        </dependency>
+    </dependencies>
     <build>
         <plugins>
             <plugin>
@@ -24,6 +29,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
+                            <Default-Config>A,D,W</Default-Config>
                             <Service-Config>dnt.itsnow.config.GeneralServiceCatalogServiceConfig</Service-Config>
                         </manifestEntries>
                     </archive>
@@ -31,4 +37,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>

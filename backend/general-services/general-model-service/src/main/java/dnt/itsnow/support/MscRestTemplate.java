@@ -5,6 +5,7 @@ package dnt.itsnow.support;
 
 import dnt.itsnow.util.Configuration;
 import dnt.itsnow.util.ItsnowCsrfToken;
+import dnt.spring.Bean;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -23,7 +24,7 @@ import java.util.Set;
  */
 @SuppressWarnings("UnusedDeclaration")
 @Service("mscRestTemplate")
-public class MscRestTemplate implements RestOperations {
+public class MscRestTemplate extends Bean implements RestOperations {
     private RestTemplate template = new RestTemplate();
 
 

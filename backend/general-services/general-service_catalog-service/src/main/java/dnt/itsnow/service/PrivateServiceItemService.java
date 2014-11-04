@@ -20,11 +20,11 @@ public interface PrivateServiceItemService extends CommonServiceItemService {
     List<PrivateServiceItem> findAllPrivate();
 
     /**
-     * <h2>根据id查找私有服务项<   *
-     * @param id 编号
+     * <h2>根据sn查找私有服务项<   *
+     * @param sn 编号
      * @return 找到的私有服务项，找不到则返回null
      */
-    PrivateServiceItem findPrivateById(Long id);
+    PrivateServiceItem findPrivateBySn(String sn);
 
 
     /**
@@ -36,10 +36,18 @@ public interface PrivateServiceItemService extends CommonServiceItemService {
     PrivateServiceItem savePrivate(PrivateServiceItem privateServiceItem);
 
     /**
-     * <h2>根据id删除私有服务项</h2>
+     * <h2>更新新的私有服务项</h2>
      *
-     * @param id 编号
+     * @param privateServiceItem 私有服务项对象
+     * @return 更新的私有服务项对象
      */
-    void deletePrivate(Long id);
+    PrivateServiceItem updatePrivate(PrivateServiceItem privateServiceItem);
+
+    /**
+     * <h2>根据sn删除私有服务项</h2>
+     *
+     * @param sn 编号
+     */
+    void deletePrivate(String sn);
 
 }

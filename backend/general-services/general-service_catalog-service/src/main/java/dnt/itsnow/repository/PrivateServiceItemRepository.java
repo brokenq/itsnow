@@ -3,6 +3,8 @@ package dnt.itsnow.repository;
 import dnt.itsnow.model.PrivateServiceItem;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -13,12 +15,21 @@ public interface PrivateServiceItemRepository extends CommonServiceItemRepositor
 
     List<PrivateServiceItem> findAllPrivate();
 
-    PrivateServiceItem findPrivateById(Long id);
+    PrivateServiceItem findPrivateBySn(String sn);
 
-    @Insert("INSERT INTO private_service_items (public_id,catalog_id,title,brief,description,icon) "+
-            " values(#{public_id},#{catalog.id},#{title},#{brief},#{description},#{icon})")
-    PrivateServiceItem savePrivate(PrivateServiceItem privateServiceItem);
+    @Insert("INSERT INTO private_service_items (public_id,catalog_id,sn,title,brief,description,icon,created_at,updated_at) "+
+            " values(#{publicId},#{catalog.id},#{sn},#{title},#{brief},#{description},#{icon},#{createdAt},#{updatedAt})")
+    @Options(useGeneratedKeys = true,keyColumn = "id")
+    void savePrivate(PrivateServiceItem privateServiceItem);
 
-    @Delete("DELETE FROM private_service_items WHERE id = #{id}")
-    void deletePrivate(Long id);
+    @Update("UPDATE private_service_items SET updated_at = #{updatedAt}," +
+            "title = #{title},"+
+            "brief = #{brief},"+
+            "description = #{description},"+
+            "icon = #{icon}"+
+            " WHERE id = #{id}")
+    void updatePrivate(PrivateServiceItem privateServiceItem);
+
+    @Delete("DELETE FROM private_service_items WHERE sn = #{sn}")
+    void deletePrivate(String sn);
 }

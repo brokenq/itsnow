@@ -1,13 +1,13 @@
 package dnt.itsnow.support;
 
 import dnt.itsnow.model.PrivateServiceCatalog;
-import dnt.itsnow.model.PublicServiceCatalog;
-import dnt.itsnow.model.ServiceCatalog;
+import dnt.itsnow.model.ServiceItem;
 import dnt.itsnow.repository.PrivateServiceCatalogRepository;
 import dnt.itsnow.service.PrivateServiceCatalogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,29 +22,16 @@ public class PrivateServiceCatalogManager extends CommonServiceCatalogManager im
     private  List<PrivateServiceCatalog> privateServiceCatalogList;
 
     @Override
-    public List<PrivateServiceCatalog> findAllPrivate() {
-        if(privateServiceCatalogList==null || privateServiceCatalogList.isEmpty())
-            privateServiceCatalogList = privateServiceCatalogRepository.findAllPrivate();
+    public void setFormattedPrivateServiceCatalogList(List<PrivateServiceCatalog> formattedPrivateServiceCatalogList) {
+        this.formattedPrivateServiceCatalogList = formattedPrivateServiceCatalogList;
+    }
 
-        List<PrivateServiceCatalog> list = new ArrayList<PrivateServiceCatalog>();
-        for(PrivateServiceCatalog node1 : privateServiceCatalogList){
-            boolean mark = false;
-            for(PublicServiceCatalog node2 : privateServiceCatalogList){
-                if(node1.getParentId()!=null && node1.getParentId().equals(node2.getId())){
-                    mark = true;
-                    if(node2.getChildren() == null){
-                        node2.setChildren(new ArrayList<ServiceCatalog>());
-                    }
-                    if(!node2.getChildren().contains(node1))
-                        node2.getChildren().add(node1);
-                    break;
-                }
-            }
-            if(!mark){
-                list.add(node1);
-            }
-        }
-        return list;
+    private  List<PrivateServiceCatalog> formattedPrivateServiceCatalogList;
+
+    @Override
+    public List<PrivateServiceCatalog> findAllPrivate() {
+        getFormattedPrivateServiceCatalogList();
+        return getTreeList(formattedPrivateServiceCatalogList);
     }
 
     @Override
@@ -55,20 +42,90 @@ public class PrivateServiceCatalogManager extends CommonServiceCatalogManager im
     @Override
     public PrivateServiceCatalog savePrivate(PrivateServiceCatalog privateServiceCatalog) {
         setPrivateServiceCatalogList(null);
-        return privateServiceCatalogRepository.savePrivate(privateServiceCatalog);
+        setFormattedPrivateServiceCatalogList(null);
+        privateServiceCatalog.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        privateServiceCatalog.setUpdatedAt(privateServiceCatalog.getCreatedAt());
+        privateServiceCatalogRepository.savePrivate(privateServiceCatalog);
+        return privateServiceCatalog;
     }
 
     @Override
-    public void deletePrivate(String sn) {
+    public PrivateServiceCatalog updatePrivate(PrivateServiceCatalog privateServiceCatalog) {
         setPrivateServiceCatalogList(null);
-        privateServiceCatalogRepository.deletePrivate(sn);
+        setFormattedPrivateServiceCatalogList(null);
+        privateServiceCatalog.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        privateServiceCatalogRepository.updatePrivate(privateServiceCatalog);
+        return privateServiceCatalog;
+    }
+
+    @Override
+    public void deletePrivate(PrivateServiceCatalog catalog) {
+        setPrivateServiceCatalogList(null);
+        setFormattedPrivateServiceCatalogList(null);
+        privateServiceCatalogRepository.deletePrivate(catalog.getSn());
     }
 
     public List<PrivateServiceCatalog> getPrivateServiceCatalogList() {
+        if(privateServiceCatalogList==null || privateServiceCatalogList.isEmpty()) {
+            privateServiceCatalogList = privateServiceCatalogRepository.findAllPrivate();
+        }
         return privateServiceCatalogList;
     }
 
+    @Override
     public void setPrivateServiceCatalogList(List<PrivateServiceCatalog> privateServiceCatalogList) {
         this.privateServiceCatalogList = privateServiceCatalogList;
+    }
+
+    public List<PrivateServiceCatalog> getFormattedPrivateServiceCatalogList() {
+        if(formattedPrivateServiceCatalogList==null || formattedPrivateServiceCatalogList.isEmpty()) {
+            formattedPrivateServiceCatalogList = formatServiceCatalogs(getPrivateServiceCatalogList());
+        }
+        return formattedPrivateServiceCatalogList;
+    }
+
+    private List<PrivateServiceCatalog> formatServiceCatalogs(List<PrivateServiceCatalog> list){
+        if(list == null || list.isEmpty())
+            return list;
+        for(PrivateServiceCatalog catalog:list){
+            formatServiceCatalog(catalog);
+        }
+        return list;
+    }
+
+    private void formatServiceCatalog(PrivateServiceCatalog catalog){
+        int level = catalog.getLevel()-1;
+        String str = "";
+        for(ServiceItem item:catalog.getItems()){
+            str = "";
+            for(int i=0;i<=level;i++)
+                str = str +"--";
+            item.setTitle(str+item.getTitle());
+        }
+        str = "";
+        for(int i=0;i<level;i++)
+            str = str +"--";
+        catalog.setTitle(str+catalog.getTitle());
+
+    }
+
+    private List<PrivateServiceCatalog> getTreeList(List<PrivateServiceCatalog> list){
+        //convert list to tree object
+        List<PrivateServiceCatalog> treeList = new ArrayList<PrivateServiceCatalog>();
+        for(PrivateServiceCatalog catalog:list) {
+            if(catalog.getParentId() == null) {
+                this.formatTreeList(treeList,catalog,list);
+            }
+        }
+        return treeList;
+    }
+
+    private void formatTreeList(List<PrivateServiceCatalog> treeList,PrivateServiceCatalog catalog,List<PrivateServiceCatalog> children){
+        treeList.add(catalog);
+        for(PrivateServiceCatalog node1 : children){
+            if(node1.getParentId() != null && node1.getParentId().equals(catalog.getId())){
+                this.formatTreeList(treeList,node1,children);
+            }
+        }
     }
 }

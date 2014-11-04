@@ -2,7 +2,7 @@ angular.module('MsuIndex.IncidentDetail', ['ngTable', 'ngResource'])
     .config(['$stateProvider',function($stateProvider) {
         $stateProvider
             .state('incidents-create',{
-                url:'/create',
+                url:'/incidents/create',
                 templateUrl:'incident/incident.detail.tpl.jade',
                 controller:'MsuCreateIncidentCtrl',
                 data: {
@@ -10,8 +10,8 @@ angular.module('MsuIndex.IncidentDetail', ['ngTable', 'ngResource'])
                 }
             })
             .state('incidents-action',{
-                url:'/{id}/{action}',
-                templateUrl:'incident/incident.detail.tpl.html',
+                url:'/incidents/{id}/{action}',
+                templateUrl:'incident/incident.detail.tpl.jade',
                 controller:'MsuCreateIncidentCtrl',
                 data: {
                     pageTitle: '处理故障单'

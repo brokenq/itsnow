@@ -1,4 +1,4 @@
-package itsnow.config;
+package dnt.itsnow.config;
 
 import dnt.itsnow.platform.repository.DatabaseConfig;
 import dnt.itsnow.test.config.RepositoryConfigWithH2;

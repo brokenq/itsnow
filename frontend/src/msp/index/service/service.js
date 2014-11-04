@@ -4,5 +4,6 @@
 
 angular.module('MspIndex.Service', [
   'Service.Dict',
-  'Service.Workflow'
+  'Service.Workflow',
+  'Service.Catalog'
 ]);

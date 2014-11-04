@@ -1,32 +1,15 @@
   # List catalogs
-  angular.module('MscIndex.ServiceCatalog', ['ngTable','ngResource','MscIndex.ServiceCatalog.Detail','MscIndex.ServiceCatalog.Item', 'dnt.action.service'])
-    .config ($stateProvider)->
-      $stateProvider.state 'services',
-        url: '/services',
-        templateUrl: 'service/list-catalog.tpl.jade'
-        data: {pageTitle: '服务管理'}
-      $stateProvider.state 'services.catalog',
-        url: '/catalog',
-        templateUrl: 'service/list-catalog.tpl.jade'
-        data: {pageTitle: '服务目录'}
-      $stateProvider.state 'services.sla',
-        url: '/sla',
-        templateUrl: 'service/list.tpl.jade'
-        data: {pageTitle: '服务级别管理'}
+  angular.module('Service.Catalog.Private', ['ngTable','ngResource','Service.Catalog.Private.Detail','Service.Catalog.Private.Item', 'dnt.action.service', 'Lib.Feedback'])
 
-    .factory('ServiceCatalogService', ['$resource', ($resource) ->
-      $resource("/admin/api/public_service_catalogs/:sn",{sn:'@sn'})
+    .factory('PrivateService', ['$resource', ($resource) ->
+      $resource("/api/private_service_catalogs/:sn",{sn:'@sn'})
     ])
-    .factory('ServiceItemService', ['$resource', ($resource) ->
-      $resource('/admin/api/public_service_catalogs/:sn/items/:isn',{sn:'@sn',isn:'@isn'})
+    .factory('PrivateItemService', ['$resource', ($resource) ->
+      $resource('/api/private_service_catalogs/:sn/items/:isn',{sn:'@sn',isn:'@isn'})
     ])
 
-  .filter('formatTime', ->
-    (time) ->
-      date = new Date(time)
-      return date.toLocaleString()
-  )
-    .controller 'CatalogListCtrl',['$scope', '$location', '$timeout', '$state','ngTableParams', 'ServiceCatalogService','ServiceItemService', 'ActionService',($scope, $location, $timeout, $state, ngTableParams, serviceCatalogService,serviceItemService,ActionService)->
+    .controller 'PrivateCatalogListCtrl',['$scope', '$location', '$timeout', '$state','ngTableParams', 'PrivateService','PrivateItemService', 'ActionService','Feedback', \
+                                            ($scope, $location, $timeout, $state, ngTableParams, privateService,privateItemService,ActionService,feedback)->
       options =
         page:  1,           # show first page
         count: 10           # count per page
@@ -34,7 +17,7 @@
         total: 0,
         getData: ($defer, params) ->
           #$location.search(params.url()) # put params in url
-          serviceCatalogService.query(params.url(), (data, headers) ->
+          privateService.query(params.url(), (data, headers) ->
             $timeout(->
               #params.total(headers('total'))
               $defer.resolve($scope.catalogs = data)
@@ -50,42 +33,46 @@
       $scope.selection = {checked: false, items: {},types:{},parent:{}}
 
       $scope.getCatalogBySn  = (sn)->
-        return catalog for catalog in $scope.catalogs when catalog.sn is sn
+        #return catalog for catalog in $scope.catalogs when catalog.sn is sn
+        for catalog in $scope.catalogs
+          return catalog if catalog.sn is sn
+          for item in catalog.items
+            return item if item.sn is sn
 
       $scope.remove = (catalog)->
         if($scope.selection.types[catalog.sn] == 'catalog')
-          feedback = (content) ->
-            alert content
-          success = ->
+          privateService.remove({sn: catalog.sn},->
+            feedback.success('删除服务目录'+catalog.sn+'成功')
+            delete $scope.selection.items[catalog.sn]
             $scope.tableParams.reload()
-          failure = (response)->
-            feedback response.statusText
-          serviceCatalogService.remove({sn: catalog.sn}, success, failure)
+          ,(resp)->
+            feedback.error('删除服务目录'+catalog.sn+'失败')
+          )
         else
-          feedback = (content) ->
-            alert content
-          success = ->
+          privateItemService.remove({sn:$scope.selection.parent[catalog.sn],isn: catalog.sn}, ->
+            feedback.success('删除服务项'+catalog.sn+'成功')
+            delete $scope.selection.items[catalog.sn]
             $scope.tableParams.reload()
-          failure = (response)->
-            feedback response.statusText
-          serviceItemService.remove({sn:$scope.selection.parent[catalog.sn],isn: catalog.sn}, success, failure)
+          ,(resp)->
+            feedback.error('删除服务项'+catalog.sn+'失败')
+          )
 
       $scope.create_catalog = (catalog)->
-        $state.go('services.catalog.detail',{'sn':catalog.sn,'action':'create'})
+        $state.go('services.catalog.private.detail',{'sn':catalog.sn,'action':'create'})
+
       $scope.create_item = (catalog)->
-        $state.go('services.catalog.item',{'sn':catalog.sn,'action':'create'})
+        $state.go('services.catalog.private.item',{'sn':catalog.sn,'action':'create'})
 
       $scope.edit = (catalog)->
         if($scope.selection.types[catalog.sn] == 'catalog')
-          $state.go('services.catalog.detail',{'sn':catalog.sn,'action':'edit'})
+          $state.go('services.catalog.private.detail',{'sn':catalog.sn,'action':'edit'})
         else
-          $state.go('services.catalog.item',{'sn':$scope.selection.parent[catalog.sn],'isn':catalog.sn,'action':'edit'})
+          $state.go('services.catalog.private.item',{'sn':$scope.selection.parent[catalog.sn],'isn':catalog.sn,'action':'edit'})
 
       $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.getCatalogBySn})
 
     # watch for check all checkbox
       $scope.$watch 'selection.checked', (value)->
-        console.log('checked:'+value)
         angular.forEach $scope.catalogs, (item)->
           $scope.selection.items[item.sn] = value if angular.isDefined(item.sn)
           $scope.selection.types[item.sn] = 'catalog' if angular.isDefined(item.sn)
@@ -95,8 +82,6 @@
 
       # watch for data checkboxes
       $scope.$watch('selection.items', (values) ->
-        console.log(values)
-        console.log($scope.selection)
         return if !$scope.catalogs
         checked = 0
         unchecked = 0

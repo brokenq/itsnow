@@ -51,7 +51,7 @@ public class DatabaseConfig {
 
         String dbName = System.getProperty("db.name", "itsnow_" + appId);
         System.setProperty("db.name", dbName);
-        String dbUrl = String.format("jdbc:mysql://%s:%s/%s", dbHost, dbPort, dbName);
+        String dbUrl = String.format("jdbc:mysql://%s:%s/%s?useUnicode=true&characterEncoding=UTF8", dbHost, dbPort, dbName);
         dataSource.setUrl(dbUrl);
         dataSource.setUsername(dbUser);
         dataSource.setPassword(dbPass);

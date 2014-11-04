@@ -36,17 +36,17 @@ public interface PublicServiceItemService extends CommonServiceItemService {
     /**
      * <h2>新增帐户的公共服务项</h2>
      *
-     * @param itemId 服务项ID
+     * @param item 服务项
      * @param accountId 帐户ID
      */
-    void saveByAccount(Long itemId,Long accountId);
+    void saveByAccount(PublicServiceItem item,Long accountId);
 
     /**
      * <h2>删除帐户的公共服务项</h2>
      *
-     * @param itemId 服务项ID
+     * @param item 服务项
      * @param accountId 帐户ID
      */
-    void deleteByAccount(Long itemId,Long accountId);
+    void deleteByAccount(PublicServiceItem item,Long accountId);
 
 }
