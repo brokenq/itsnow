@@ -66,6 +66,7 @@ angular.module('Lib.Commons', ['ngTable'])
         # 这两个对外的函数，需要bind实例
         @find = @findImpl.bind(this)
         @cache = @cacheImpl.bind(this)
+        @expire = @expireImpl.bind(this)
       findInLocal: (key) ->
         return record for record in @records when (record[@key]).toString() == key.toString()
       findFromRemote: (key) ->
@@ -80,16 +81,15 @@ angular.module('Lib.Commons', ['ngTable'])
         else
           throw "Can't find the local record with " + @key + " = " + key
       cacheImpl: (records)->
-        if Array.isArray(records)
-          @cacheMany(records)
-        else
-          @cacheOne(records)
-      cacheOne: (record)->
-        @records.push record
-      cacheMany: (records)->
+        records = [records] unless Array.isArray records
+        @expire(records)
         jQuery.merge(@records, records)
-        # TODO 针对数据更新，优化此地实现(identify object by id, not object)
-        jQuery.unique(@records)
+      expireImpl: (records)->
+        records = [records] unless Array.isArray records
+        cache = this
+        for record in records
+          @records.remove (exist)->
+            record[cache.key].toString() == exist[cache.key].toString()
 
 
   ])

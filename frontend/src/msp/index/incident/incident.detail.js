@@ -1,4 +1,4 @@
-angular.module('MspIndex.IncidentDetail', ['ngTable', 'ngResource'])
+angular.module('MspIndex.IncidentDetail', ['ngTable', 'ngResource','Lib.Feedback'])
     .config(['$stateProvider',function($stateProvider) {
         $stateProvider
             .state('incidents-create',{
@@ -114,8 +114,8 @@ angular.module('MspIndex.IncidentDetail', ['ngTable', 'ngResource'])
         };
 
     })
-    .controller('MspCreateIncidentCtrl', ['$rootScope','$scope','$stateParams', 'MspCreateIncidentService','MspQueryIncidentTaskService','MspProcessIncidentService', '$location','IncidentModelService',
-    function ($rootScope,$scope,$stateParams, mspCreateIncidentService,mspQueryIncidentTaskService,mspProcessIncidentService, $location,incidentModelService) {
+    .controller('MspCreateIncidentCtrl', ['$rootScope','$scope','$stateParams', 'MspCreateIncidentService','MspQueryIncidentTaskService','MspProcessIncidentService', '$location','IncidentModelService','Feedback',
+    function ($rootScope,$scope,$stateParams, mspCreateIncidentService,mspQueryIncidentTaskService,mspProcessIncidentService, $location,incidentModelService,feedback) {
 
         $scope.selectedModel = incidentModelService.selectedModel;
         $scope.action = $stateParams.action;
@@ -167,7 +167,7 @@ angular.module('MspIndex.IncidentDetail', ['ngTable', 'ngResource'])
 
                 }
             }, function error(msg) {
-                alert('出错：'+msg);
+                feedback.error('出错：'+msg);
             });
         }
 
@@ -175,14 +175,14 @@ angular.module('MspIndex.IncidentDetail', ['ngTable', 'ngResource'])
             if($scope.action == 'detail') {
                 mspProcessIncidentService.complete({mspInstanceId:$scope.incident.mspInstanceId,taskId:taskId}, $scope.incident,function (data) {
                     if(data.result==='success'){
-                        alert($scope.buttonLabel+"成功");
-                        $location.path('/opened');
+                        feedback.success($scope.buttonLabel+"成功");
+                        $location.path('/incident/opened');
                     }
                 });
             }else {
                 mspCreateIncidentService.start($scope.incident, function () {
-                    alert($scope.buttonLabel+"成功");
-                    $location.path('/opened');
+                    feedback.success($scope.buttonLabel+"成功");
+                    $location.path('/incident/opened');
                 });
             }
         };

@@ -51,7 +51,8 @@ mixin select_all()
       td(data-title="'状态'") {{incident.msuStatus | formatIncidentStatus}}
       td(data-title="'创建时间'") {{incident.createdAt | formatTime}}
       td(data-title="'关闭时间'") {{incident.closeTime | formatTime}}
-      td(data-title="'服务商'") {{incident.mspAccountId}}
+      td(data-title="'服务商'") {{incident.mspAccountName}}
+      td(data-title="'服务商状态'") {{incident.mspStatus | formatIncidentStatus}}
 
 script(type="text/ng-template")#ngTableCheckboxHeader
   +select_all()

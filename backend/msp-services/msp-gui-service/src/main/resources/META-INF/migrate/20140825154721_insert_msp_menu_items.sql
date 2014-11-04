@@ -19,7 +19,7 @@ INSERT INTO menu_items(id, parent_id, name, state, position, css) VALUES
 (21, 2, '合同管理', 'contracts.contract',0, 'icon-tag'),
 
 (31, 3, '服务目录', 'services.catalog', 0, 'icon-th'),
-(32, 3, 'SLA管理', 'services.sla',      1, 'icon-eye-open'),
+(32, 3, 'SLA管理', 'slas.list',      1, 'icon-eye-open'),
 (33, 3, '字典管理', 'dict',    1, 'icon-book'),
 (34, 3, '流程管理', 'workflow',1, 'icon-task'),
 

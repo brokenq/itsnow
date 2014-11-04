@@ -1,5 +1,5 @@
 mixin tool_button(action, icon, text)
-  button.btn.btn-default(type="button")
+  button.btn.btn-default(type="button",ng-click="#{action}")
     span.glyphicon(class="glyphicon-#{icon}")
     | #{text}
 mixin drop_button(action, icon, text)
@@ -25,7 +25,7 @@ mixin select_all()
 
   .btn-toolbar(role="toolbar")
     .btn-group
-      +tool_button("#", "refresh", "")
+      +tool_button("tableParams.reload()", "refresh", "")
     .btn-group
       button.btn.btn-default.dropdown-toggle(type="button",data-toggle="dropdown")
         | 更多操作
@@ -51,7 +51,8 @@ mixin select_all()
       td(data-title="'状态'") {{incident.mspStatus | formatIncidentStatus}}
       td(data-title="'创建时间'") {{incident.createdAt | formatTime}}
       td(data-title="'关闭时间'") {{incident.closeTime | formatTime}}
-      td(data-title="'服务商'") {{incident.mspAccountId}}
+      td(data-title="'用户'") {{incident.msuAccountName}}
+      td(data-title="'用户状态'") {{incident.msuStatus | formatIncidentStatus}}
 
 script(type="text/ng-template")#ngTableCheckboxHeader
   +select_all()

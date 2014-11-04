@@ -21,7 +21,7 @@
     ])
 
     .controller 'CatalogListCtrl',['$scope', '$location', '$timeout', '$state','ngTableParams', 'ServiceCatalogService','ServiceItemService','PublicServiceItemService', 'ActionService','Feedback', \
-                                      ($scope, $location, $timeout, $state, ngTableParams, serviceCatalogService,serviceItemService,publicServiceItemService,ActionService,Feedback)->
+                                      ($scope, $location, $timeout, $state, ngTableParams, serviceCatalogService,serviceItemService,publicServiceItemService,ActionService,feedback)->
       options =
         page:  1,           # show first page
         count: 10           # count per page
@@ -68,6 +68,7 @@
               publicServiceItemService.save({isn:child.sn})
             else
               publicServiceItemService.remove({isn: child.sn})
+        feedback.success('设置公共服务目录完成！')
 
       $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.getCatalogBySn})
 
