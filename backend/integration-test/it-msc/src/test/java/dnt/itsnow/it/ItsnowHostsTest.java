@@ -49,7 +49,7 @@ public class ItsnowHostsTest extends AbstractTest {
         final ClientItsnowHost creating = new ClientItsnowHost();
         creating.setName("srv7.itsnow.com");
         creating.setAddress("172.16.3.30");
-        creating.setType(ClientHostType.APP);
+        creating.setType(ClientHostType.COM);
         creating.setCapacity(5);
         Properties properties = new Properties();
         properties.setProperty("user", "root");
