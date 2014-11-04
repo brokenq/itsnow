@@ -21,15 +21,6 @@ angular.module('MscIndex.DictDetail', ['ngTable', 'ngResource'])
             {name: '有效',id:'1',state:'1'},
             {name: '无效',id:'2',state:'2'}
          ];
-        $scope.resetDict=function(){
-            $scope.dict={
-                 code:'',
-                 name:'',
-                 display:'',
-                 val:'',
-                 state:''
-            };
-        };
         if (sn !== null && sn !== "" && sn !== undefined) {
             DictService.get({sn:sn},function(data){
                 $scope.dict=data;

@@ -13,7 +13,7 @@ mixin form_field(name, label, icon, tip, pattern, maxLength,ngblur,ngread)
     label.col-xs-12.col-sm-3.control-label.no-padding-right(for="dict_#{name}") #{label}
     .col-xs-12.col-sm-5
       span.block.input-icon.input-icon-right
-        input.form-control(id="dict_#{name}", name="dict.#{name}", ng-model="dict.#{name}", ng-change="#{ngblur}", ng-maxlength="#{maxLength}", type="text", placeholder="#{label}", ng-pattern="#{pattern}",required,ng-readonly="#{ngread}")
+        input.form-control(id="dict_#{name}", name="dict.#{name}", ng-model="dict.#{name}", ng-blur="#{ngblur}", ng-maxlength="#{maxLength}", type="text", placeholder="#{label}", ng-pattern="#{pattern}",required,ng-readonly="#{ngread}")
         i(class="icon-#{icon}")
     .help-block.col-xs-12.col-sm-reset.inline #{tip}
 mixin selector(name, label, datas, tip)
