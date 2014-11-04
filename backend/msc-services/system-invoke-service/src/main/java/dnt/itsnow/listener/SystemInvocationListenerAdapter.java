@@ -11,6 +11,11 @@ import dnt.itsnow.model.SystemInvocation;
  */
 public abstract class SystemInvocationListenerAdapter  implements SystemInvocationListener{
     @Override
+    public boolean care(SystemInvocation invocation) {
+        return true;
+    }
+
+    @Override
     public void added(SystemInvocation invocation) {
 
     }

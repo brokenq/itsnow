@@ -27,6 +27,10 @@ import java.util.regex.Pattern;
  */
 @Service
 public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHostService {
+    private static final String TRUST_HOST_PREFIX = "setup-trust-";
+    private static final String PROVISION_HOST    = "provision-host-";
+    private static final String DELIST_HOST       = "delist-host-";
+
     static Pattern PATTERN = Pattern.compile("^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$");
 
     @Autowired
@@ -148,6 +152,7 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     public void trustMe(String host, String username, String password) throws ItsnowHostException {
         logger.debug("Setting up trust relationship for target host: {}", host);
         SystemInvocation trustJob = translator.trustMe(host, username, password);
+        trustJob.setId(TRUST_HOST_PREFIX + host);
         String jobId = invokeService.addJob(trustJob);
         int code;
         try {
@@ -175,7 +180,7 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
             creating.setProperty("mysql.slave.index", String.valueOf(total+1) );
         }
         SystemInvocation configJob = translator.provision(creating);
-        configJob.setId("provision-" + creating.getAddress());
+        configJob.setId(PROVISION_HOST + creating.getAddress());
         configJob.setUserFlag(1);// 1 代表创建
         //需要在create主机之后，执行脚本，将主机环境配置好
         // 实际的流程是，it，运营人员开好一个虚拟机，而后通过msc的界面输入该虚拟机的信息
@@ -197,7 +202,7 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     public void delete(ItsnowHost host) throws ItsnowHostException {
         logger.warn("Deleting {}", host);
         SystemInvocation delistJob = translator.delist(host);
-        delistJob.setId("delist-" + host.getAddress());
+        delistJob.setId(DELIST_HOST + host.getAddress());
         delistJob.setUserFlag(-1);
         String delistJobId = invokeService.addJob(delistJob);
         host.setProperty(DELETE_INVOCATION_ID, delistJobId);
@@ -257,6 +262,12 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     //////////////////////////////////////////////////////////////////////////////
     // 监听 主机配置任务的执行情况，并通过repository更新相应的host状态
     //////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public boolean care(SystemInvocation invocation) {
+        String id = invocation.getId();
+        return id.startsWith(TRUST_HOST_PREFIX) || id.startsWith(PROVISION_HOST) || id.startsWith(DELIST_HOST);
+    }
 
     @Override
     public void finished(SystemInvocation invocation) {
