@@ -130,7 +130,7 @@ public class GeneralContractsController extends SessionSupportController {
     public HashMap checkUnique(@PathVariable("sn") String sn){
         Contract contract;
         try {
-            contract = contractService.findByAccountAndSn(mainAccount, sn, false);
+            contract = contractService.findBySn(sn);
         } catch (ServiceException e) {
             throw new WebClientSideException(HttpStatus.NOT_ACCEPTABLE,
                     "the contract can't be check:" + e.getMessage());

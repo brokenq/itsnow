@@ -21,10 +21,13 @@ angular.module('MsuIndex.ContractCreate', ['ngResource'])
     #查询服务目录
     serviceCatalogService.query (data)->
       serviceCatalogs = []
+      closeGroup = {}
       for serviceCatalog in data
         serviceCatalog.multiSelectGroup = true
         serviceCatalogs.push serviceCatalog
         serviceCatalogs.push item for item in serviceCatalog.items when serviceCatalog.items?
+        closeGroup.multiSelectGroup = false
+        serviceCatalogs.push closeGroup
       $scope.serviceCatalogs = serviceCatalogs
 
     $scope.cancel = () ->

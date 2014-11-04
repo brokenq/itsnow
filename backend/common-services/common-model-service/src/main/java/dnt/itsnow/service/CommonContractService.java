@@ -31,4 +31,12 @@ public interface CommonContractService {
      * @return 合同对象
      */
     Contract findByAccountAndSn(Account account, String sn, boolean withDetails) throws ServiceException;
+
+    /**
+     * <h2>根据SN查找合同</h2>
+     * @param sn 合同SN
+     * @return 合同实体类
+     * @throws ServiceException
+     */
+    Contract findBySn(String sn) throws ServiceException;
 }

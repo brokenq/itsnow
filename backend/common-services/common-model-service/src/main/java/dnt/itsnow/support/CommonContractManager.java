@@ -86,6 +86,11 @@ public class CommonContractManager extends Bean implements CommonContractService
         //}
     }
 
+    @Override
+    public Contract findBySn(String sn) throws ServiceException {
+        return repository.findBySn(sn);
+    }
+
     private void formatContract(Contract contract){
         if(contract == null)
             return;
