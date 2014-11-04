@@ -45,7 +45,7 @@ if [ $host_status -ne 0 ]; then
   echo "Host shutdown or not trusting me, unknown"
   exit 3
 fi
-ssh root@$host "/opt/itsnow/itsnow_$name/bin/itsnow-$name status"
+ssh root@$host "/opt/itsnow/itsnow_$name/bin/itsnow-$name status" > /dev/null
 if [ $? -eq 0 ]; then
   exit 2 # process is ok
 else
