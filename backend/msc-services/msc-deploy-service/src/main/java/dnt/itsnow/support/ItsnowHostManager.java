@@ -248,7 +248,10 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
             throw new ItsnowHostException("There is not " + type + " host available for " + account);
         ItsnowHost[] hosts = hostList.toArray(new ItsnowHost[hostList.size()]);
         Arrays.sort(hosts);
-        return hosts[hosts.length-1];
+        ItsnowHost host = hosts[hosts.length - 1];
+        if( host.getLeftCapacity() <= 0 )
+            throw new ItsnowHostException("There is no host available");
+        return host;
     }
 
     //////////////////////////////////////////////////////////////////////////////
