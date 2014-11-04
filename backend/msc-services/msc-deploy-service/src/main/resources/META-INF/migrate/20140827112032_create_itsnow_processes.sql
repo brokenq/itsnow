@@ -11,7 +11,7 @@ CREATE TABLE itsnow_processes (
   name          VARCHAR(50)      NOT NULL,
   pid           INT(10) UNSIGNED,
   wd            VARCHAR(255)     NOT NULL,
-  configuration VARCHAR(255),
+  configuration TEXT,
   status        VARCHAR(50)               DEFAULT 'Stopped',
   description   VARCHAR(255),
   created_at    TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
