@@ -1,5 +1,5 @@
 // List System
-angular.module('MscIndex.DictDetail', ['ngTable', 'ngResource', 'Feedback'])
+angular.module('MscIndex.DictDetail', ['ngTable', 'ngResource', 'Lib.Feedback'])
 
     .config(function ($stateProvider) {
         $stateProvider.state('dict_new', {
