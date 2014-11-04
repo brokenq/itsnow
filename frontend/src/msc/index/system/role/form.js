@@ -6,21 +6,21 @@ angular.module('System.Role.Form', ['multi-select', 'ngResource', 'Lib.Feedback'
             templateUrl: 'system/role/form.tpl.jade',
             data: {pageTitle: '角色管理'}
         }).state('role_new_form', {
-            url: '/role_form/',
+            url: '/role_form',
             templateUrl: 'system/role/form.tpl.jade',
             data: {pageTitle: '角色管理'}
         });
     })
 
-    .controller('RoleCtrl', ['$scope', '$location', 'RoleService', '$stateParams', 'Feedback',
-        function ($scope, $location, roleService, $stateParams, feedback) {
+    .controller('RoleCtrl', ['$scope', '$location', '$state', 'RoleService', '$stateParams', 'Feedback',
+        function ($scope, $location, $state, roleService, $stateParams, feedback) {
 
             // 提交按钮是否可用，false为可用
             $scope.submited = false;
 
             // 表单cancel按钮
             $scope.cancel = function () {
-                $location.path('/system/role');
+                $state.go("role");
             };
 
             // 获取下拉复选框选中的用户
@@ -51,7 +51,7 @@ angular.module('System.Role.Form', ['multi-select', 'ngResource', 'Lib.Feedback'
                 var role = formatRoleFun($scope.role);
                 roleService.update({name: role.name}, role, function () {
                     feedback.success("修改角色'" + role.name + "'成功");
-                    $location.path('/system/role');
+                    $state.go("role");
                 }, function (resp) {
                     feedback.error("修改角色'" + role.name + "'失败", resp);
                 });
@@ -63,7 +63,7 @@ angular.module('System.Role.Form', ['multi-select', 'ngResource', 'Lib.Feedback'
                 var role = formatRoleFun($scope.role);
                 roleService.save(role, function () {
                     feedback.success("新建角色'" + role.name + "'成功");
-                    $location.path('/system/role');
+                    $state.go("role");
                 }, function (resp) {
                     feedback.error("新建角色'" + role.name + "'失败", resp);
                 });

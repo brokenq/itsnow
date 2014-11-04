@@ -21,10 +21,8 @@ mixin select_all()
             +tool_button("tableParams.reload()", "refresh", "", "*", "", "")
         .btn-group
             +tool_button("actionService.gotoState('contract_new')", "new", "新建", "*", "", "")
-            +tool_button("actionService.gotoState('contract_edit')", "edit", "编辑", "1", "", "")
             +tool_button("actionService.perform(approve)", "approve", "批准", "1+", "", "")
             +tool_button("actionService.perform(reject)", "reject", "拒绝", "1+", "", "")
-            +tool_button("actionService.perform(remove)", "remove", "删除", "1+", "", "")
         .btn-group.pull-right
             .nav-search#nav-search
                 form.form-search

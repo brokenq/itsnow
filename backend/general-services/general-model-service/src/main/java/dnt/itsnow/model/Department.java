@@ -108,6 +108,7 @@ public class Department extends ConfigItem implements Comparable<Department> {
     public String toString() {
         final StringBuffer sb = new StringBuffer("Department{");
         sb.append("sn='").append(sn).append('\'');
+        sb.append(", parentId=").append(parentId);
         sb.append(", name=").append(getName());
         sb.append(", position=").append(position);
         sb.append(", description=").append(getDescription());

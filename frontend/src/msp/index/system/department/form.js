@@ -36,7 +36,7 @@ angular.module('System.Department.Form', ['multi-select', 'ngResource', 'Lib.Fee
             };
 
             var selectedParentDeptIdFun = function () {
-                var parentId;
+                var parentId = null;
                 delete $scope.parentDepartments.$promise;
                 delete $scope.parentDepartments.$resolved;
                 for (var i in $scope.parentDepartments) {
