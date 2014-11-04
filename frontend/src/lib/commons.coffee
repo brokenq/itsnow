@@ -69,16 +69,16 @@ angular.module('Lib.Commons', ['ngTable'])
       findInLocal: (key) ->
         return record for record in @records when (record[@key]).toString() == key.toString()
       findFromRemote: (key) ->
-        throw new Exception("Can't get record from remote API") unless @callback
+        throw "Can't get record from remote API" unless @callback
         @callback(key)
       findImpl: (key, fetch) ->
         local = @findInLocal(key)
         return local if local
         if fetch
           remote = @findFromRemote(key)
-          remote || throw new Exception("Can't find the local/remote record with " + @key + " = " + key)
+          remote || throw "Can't find the local/remote record with " + @key + " = " + key
         else
-          throw new Exception("Can't find the local record with " + @key + " = " + key)
+          throw "Can't find the local record with " + @key + " = " + key
       cacheImpl: (records)->
         if Array.isArray(records)
           @cacheMany(records)

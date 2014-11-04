@@ -58,7 +58,7 @@ public class ItsnowProcessesTest extends AbstractTest {
             @Override
             public ClientItsnowHost perform(HttpHeaders headers) {
                 HttpEntity request = new HttpEntity(headers);
-                return getForObject("/admin/api/hosts/{id}", ClientItsnowHost.class, request, 6L);
+                return getForObject("/admin/api/hosts/{id}", ClientItsnowHost.class, request, 15L);
             }
         });
         Assert.assertNotNull(host);
