@@ -1,1 +1,55 @@
-include ./_form.tpl.jade
+mixin field_group(title,help)
+    .form-group.has-info(ng-class!=attributes.ngClass, ng-hide!=attributes.ngHide, ng-show!=attributes.ngShow)
+        label.col-xs-12.col-sm-3.control-label.no-padding-right(for!=attributes.for) #{title}
+        .col-xs-12.col-sm-5(class!=attributes.class)
+            span.block.input-icon.input-icon-right
+                block
+        .help-block.col-xs-12.col-sm-reset.inline #{help}
+    mixin filed_input(title,help,placeholder,model,min,max,icon)
+        +field_group(title,help)(for=model)
+            input.form-control(id=model, ng-model=model, placeholder=placeholder, ng-minlength=min, ng-maxlength=max, required)&attributes(attributes)
+            i(class=icon)
+    mixin widget(title)
+        .widget-box
+            div.widget-header.widget-header-blue.widget-header-flat
+                h4.lighter #{title}
+            .widget-body
+                .widget-main
+                    block
+    mixin action_bar
+        .clearfix.form-actions
+            .col-md-offset-3.col-md-9
+                block
+    mixin action_button(title,type,icon,level)
+        button.btn(class="btn-#{level}",type=type)&attributes(attributes)
+            i.bigger-110(class="icon-#{icon}")
+            | #{title}
+    mixin action_submit(title)
+        +action_button(title,"submit","ok","primary")(ng-disabled="submited")
+    mixin action_cancel(title)
+        +action_button(title,"button","undo","default")(ng-click="cancel()")
+            .row
+        .col-xs-12(ng-controller='ContractCtrl')
+            .row-fluid
+                .span12
+                    +widget("合同表单")
+                        form.form-horizontal(role='form', novalidate="novalidate", name='contractForm', ng-submit='accept(contract)')
+                            +filed_input("合同号","必填","例如：P001","contract.sn","4","20","icon-user")(ng-pattern='/^[a-zA-Z0-9_\\-\\.]+$/', type="text", ng-check="/api/contracts/{0}/check")
+                            #form-attachments
+                                .row
+                                    .col-xs-12
+                                        .row-fluid
+                                            .span12
+                                                +widget("合同详情")
+                                                    +filed_input("名称","必填","例如：P001","detail.title","4","20","icon-user")(ng-pattern='/^[\u4e00-\u9fa5_a-zA-Z0-9\\-\\.]+$/', type="text")
+                                                    +filed_input("简介","必填","简介","detail.brief","4","20","icon-user")(ng-pattern='/^[\u4e00-\u9fa5_a-zA-Z0-9\\-\\.]+$/', type="text")
+                                                    +filed_input("描述","必填","条款描述","detail.description","4","20","icon-user")(ng-pattern='/^[\u4e00-\u9fa5_a-zA-Z0-9\\-\\.]+$/', type="text")
+                                                    +field_group("服务目录","必填")(for="service_catalog")
+                                                        div#service_catalog(multi-select, selection-mode="single", input-model="serviceCatalogs", button-label="title", item-label="title", tick-property="ticked", group-property="multiSelectGroup")
+                                                        i.icon-user
+                            +action_bar
+                                +action_submit("提交")
+                                +action_cancel("返回")
+                                //buttonid#id-add-attachment.btn.btn-danger(type=button)
+                                //    i.icon-paper-clip.bigger-140
+                                //    | 添加详情

@@ -97,6 +97,15 @@ angular.module('MsuIndex.Contract', ['ngTable', 'ngResource', 'Lib.Feedback'])
         , (resp)->
           feedback.error "拒绝失败", resp )
 
+      $scope.remove = (contract) ->
+        contractService.remove({sn:contract.sn}
+        ,()->
+          feedback.success "删除合同'#{contract.name}'成功"
+          delete $scope.selection.items[contract.sn]
+          $scope.tableParams.reload()
+        ,(resp) ->
+          feedback.error "删除合同'#{contract.name}'失败", resp )
+
       $scope.search = ($event) ->
         if $event.keyCode is 13
           contractService.query {keyword: $event.currentTarget.value}, (data)->
