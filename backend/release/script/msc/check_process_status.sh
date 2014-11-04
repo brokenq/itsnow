@@ -47,7 +47,7 @@ if [ $host_status -ne 0 ]; then
 fi
 ssh root@$host "/opt/itsnow/itsnow_$name/bin/itsnow-$name status" > /dev/null
 if [ $? -eq 0 ]; then
-  exit 2 # process is ok
+  exit 0 # process is ok
 else
   exit 1
 fi
