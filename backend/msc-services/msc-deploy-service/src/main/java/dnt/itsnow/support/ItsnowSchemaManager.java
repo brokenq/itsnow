@@ -86,7 +86,7 @@ public class ItsnowSchemaManager extends ItsnowResourceManager implements Itsnow
     @Override
     public void delete(ItsnowSchema schema) throws ItsnowSchemaException {
         logger.warn("Deleting itsnow schema: {}", schema);
-        if( schema.getHost() == null ){
+        if( schema.getHostAddress() == null ){
             schema = findById(schema.getId());
         }
         SystemInvocation dropJob = translator.drop(schema);
