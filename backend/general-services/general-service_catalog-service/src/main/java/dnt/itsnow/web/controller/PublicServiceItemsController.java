@@ -7,6 +7,7 @@ import dnt.itsnow.model.PrivateServiceItem;
 import dnt.itsnow.model.PublicServiceItem;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
+import dnt.itsnow.platform.web.exception.WebServerSideException;
 import dnt.itsnow.service.CommonServiceItemService;
 import dnt.itsnow.service.PublicServiceItemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,11 @@ public class PublicServiceItemsController extends SessionSupportController<Priva
      */
     @RequestMapping(value = "{isn}", method = RequestMethod.POST)
     public void createByAccount(@PathVariable("isn") String isn){
-        publicServiceItemService.createByAccount(serviceItem, mainAccount);
+        try{
+            publicServiceItemService.createByAccount(serviceItem, mainAccount);
+        }catch(Exception e){
+            throw new WebServerSideException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 
     /**
@@ -50,7 +55,11 @@ public class PublicServiceItemsController extends SessionSupportController<Priva
      */
     @RequestMapping(value = "{isn}", method = RequestMethod.DELETE)
     public void destroyByAccount(@PathVariable("isn") String isn){
-        publicServiceItemService.deleteByAccount(serviceItem, mainAccount);
+        try {
+            publicServiceItemService.deleteByAccount(serviceItem, mainAccount);
+        }catch(Exception e){
+            throw new WebServerSideException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 
     
