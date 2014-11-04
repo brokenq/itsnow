@@ -39,8 +39,7 @@ public class GeneralGroupRepositoryTest {
 
     @Test
     public void testDelete() throws Exception {
-        List<Group> groups = repository.findAll("updated_at", "desc", 0, 1);
-        Group group = groups.get(0);
+        Group group = repository.findByName("second_line");
         repository.deleteGroupAuthority(group.getId());
         repository.deleteGroupMember(group.getId());
         repository.delete(group.getName());

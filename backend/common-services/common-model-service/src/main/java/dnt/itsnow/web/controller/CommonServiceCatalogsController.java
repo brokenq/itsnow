@@ -4,7 +4,9 @@
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.PublicServiceCatalog;
+import dnt.itsnow.model.PublicServiceItem;
 import dnt.itsnow.service.CommonServiceCatalogService;
+import dnt.itsnow.service.CommonServiceItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,9 +21,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/public_service_catalogs")
 public class CommonServiceCatalogsController extends SessionSupportController<PublicServiceCatalog> {
-    //PublicServiceCatalog serviceCatalog;
+    PublicServiceCatalog serviceCatalog;
     @Autowired
     CommonServiceCatalogService commonServiceCatalogService;
+
+    @Autowired
+    CommonServiceItemService commonServiceItemService;
     /**
      * <h2>获得所有的服务目录</h2>
      *
@@ -31,6 +36,7 @@ public class CommonServiceCatalogsController extends SessionSupportController<Pu
      */
     @RequestMapping
     public List<PublicServiceCatalog> index(){
+
         List<PublicServiceCatalog> list = commonServiceCatalogService.findAll();
         logger.debug("Get public_service_catalogs size:{}",list.size());
         return list;
@@ -46,6 +52,18 @@ public class CommonServiceCatalogsController extends SessionSupportController<Pu
     @RequestMapping("{sn}")
     public PublicServiceCatalog show(@PathVariable("sn") String sn){
         return commonServiceCatalogService.findBySn(sn);
+    }
+
+    /**
+     * <h2>获得该帐户下所有的服务项</h2>
+     *
+     * GET /api/public_service_catalogs/accounts/{accountId}
+     *
+     * @return 服务项列表
+     */
+    @RequestMapping("/accounts")
+    public List<PublicServiceItem> indexAccount(){
+        return commonServiceItemService.findByAccountId(mainAccount.getId());
     }
 
 

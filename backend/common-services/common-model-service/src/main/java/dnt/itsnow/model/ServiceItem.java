@@ -21,8 +21,8 @@ public class ServiceItem extends Record{
     private String icon;
     @NotNull
     private String sn;
-    @NotNull
-    private ServiceCatalog catalog;
+    //@NotNull
+    //private ServiceCatalog catalog;
 
     public String getSn() {
         return sn;
@@ -65,11 +65,12 @@ public class ServiceItem extends Record{
         this.icon = icon;
     }
 
-    public ServiceCatalog getCatalog() {
+    /*public ServiceCatalog getCatalog() {
         return catalog;
     }
 
     public void setCatalog(ServiceCatalog catalog) {
         this.catalog = catalog;
-    }
+    }*/
+
 }

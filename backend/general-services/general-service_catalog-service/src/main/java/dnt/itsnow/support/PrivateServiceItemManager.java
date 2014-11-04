@@ -2,6 +2,7 @@ package dnt.itsnow.support;
 
 import dnt.itsnow.model.PrivateServiceItem;
 import dnt.itsnow.repository.PrivateServiceItemRepository;
+import dnt.itsnow.service.PrivateServiceCatalogService;
 import dnt.itsnow.service.PrivateServiceItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,10 @@ public class PrivateServiceItemManager extends CommonServiceItemManager implemen
 
     private  List<PrivateServiceItem> privateServiceItemList;
 
+    @Autowired
+    private PrivateServiceCatalogService catalogService;
+
+
     @Override
     public List<PrivateServiceItem> findAllPrivate() {
         if(privateServiceItemList==null || privateServiceItemList.isEmpty())
@@ -27,20 +32,34 @@ public class PrivateServiceItemManager extends CommonServiceItemManager implemen
     }
 
     @Override
-    public PrivateServiceItem findPrivateById(Long id) {
-        return privateServiceItemRepository.findPrivateById(id);
+    public PrivateServiceItem findPrivateBySn(String sn) {
+        return privateServiceItemRepository.findPrivateBySn(sn);
     }
 
     @Override
     public PrivateServiceItem savePrivate(PrivateServiceItem privateServiceItem) {
         setPrivateServiceItemList(null);
-        return privateServiceItemRepository.savePrivate(privateServiceItem);
+        catalogService.setPrivateServiceCatalogList(null);
+        catalogService.setFormattedPrivateServiceCatalogList(null);
+        privateServiceItemRepository.savePrivate(privateServiceItem);
+        return privateServiceItem;
     }
 
     @Override
-    public void deletePrivate(Long id) {
+    public PrivateServiceItem updatePrivate(PrivateServiceItem privateServiceItem) {
         setPrivateServiceItemList(null);
-        privateServiceItemRepository.deletePrivate(id);
+        catalogService.setPrivateServiceCatalogList(null);
+        catalogService.setFormattedPrivateServiceCatalogList(null);
+        privateServiceItemRepository.updatePrivate(privateServiceItem);
+        return privateServiceItem;
+    }
+
+    @Override
+    public void deletePrivate(String sn) {
+        setPrivateServiceItemList(null);
+        catalogService.setPrivateServiceCatalogList(null);
+        catalogService.setFormattedPrivateServiceCatalogList(null);
+        privateServiceItemRepository.deletePrivate(sn);
     }
 
     public List<PrivateServiceItem> getPrivateServiceItemList() {

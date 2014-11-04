@@ -65,6 +65,14 @@ public class GeneralContractManager extends CommonContractManager implements Gen
     }
 
     @Override
+    public ContractDetail createDetail(ContractDetail detail, String contractSn) throws ServiceException {
+        logger.info("Creating {}", detail);
+        facade.postForEntity("/admin/api/contracts/{sn}/details", detail, ContractDetail.class, contractSn);
+        logger.info("Created  {}", detail);
+        return detail;
+    }
+
+    @Override
     public ContractDetail updateDetail(ContractDetail detail, String sn) {
         logger.info("Updating {}", detail);
         facade.put("/admin/api/contracts/{sn}/details/{}",

@@ -44,6 +44,11 @@ if [ ! $1 ]; then
   exit 1
 fi
 version=$1
+if [ ! $2 ]; then
+  build=".lastFinished"
+else
+  build="$2:id"
+fi
 
 cd $itsnow_dir
 old_version=$(cat msc/bin/start.sh | grep APP_TARGET | head -1 | awk -Frelease\- '{print $2}')
@@ -62,9 +67,9 @@ fi
 file=msc-$version.zip
 
 if [[ "$version" =~ SNAPSHOT$ ]]; then
-  target="http://$CI/guestAuth/repository/download/Itsnow_Daily_Build_MSC/.lastFinished/$file"
+  target="http://$CI/guestAuth/repository/download/Itsnow_Daily_Build_MSC/$build/$file"
 else
-  target="http://$CI/guestAuth/repository/download/Itsnow_Sprint_Build_MSC/.lastFinished/$file"
+  target="http://$CI/guestAuth/repository/download/Itsnow_Sprint_Build_MSC/$build/$file"
 fi
 
 # wget will override previous same version
@@ -112,7 +117,7 @@ $cp $upgrading/resources/redis-master.conf /etc/redis.conf
 $cp /usr/my.cnf /usr/my.cnf.bak
 $cp $upgrading/resources/my-master.cnf /usr/my.cnf
 $cp $upgrading/resources/my-slave.cnf  /opt/system/config/my.conf
-service mysql restart
+# service mysql restart
 
 
 $cp $upgrading/resources/redis /opt/system/config

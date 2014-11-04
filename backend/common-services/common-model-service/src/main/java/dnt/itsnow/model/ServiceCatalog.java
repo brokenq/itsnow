@@ -27,7 +27,7 @@ public class ServiceCatalog extends Record{
     @NotNull
     private Integer level;
 
-    private List<ServiceItem> items;
+    //private List<ServiceItem> items;
 
     public List<ServiceCatalog> getChildren() {
         return children;
@@ -77,13 +77,13 @@ public class ServiceCatalog extends Record{
         this.icon = icon;
     }
 
-    public List<ServiceItem> getItems() {
+    /*public List<ServiceItem> getItems() {
         return items;
     }
 
     public void setItems(List<ServiceItem> items) {
         this.items = items;
-    }
+    }*/
 
     public Integer getLevel() {
         return level;
@@ -93,11 +93,11 @@ public class ServiceCatalog extends Record{
         this.level = level;
     }
 
-    public ServiceItem getItemBySn(String sn) {
+    /*public ServiceItem getItemBySn(String sn) {
         if( items == null ) return null;
         for (ServiceItem item : items) {
             if( item.getSn().equals(sn) ) return item;
         }
         return null;
-    }
+    }*/
 }

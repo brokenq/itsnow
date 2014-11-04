@@ -2,8 +2,10 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.PrivateServiceCatalog;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
+import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.service.PrivateServiceCatalogService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -41,7 +43,7 @@ public class PrivateServiceCatalogsController extends SessionSupportController<P
      *
      * @return 服务目录
      */
-    @RequestMapping(value = "/{sn}",method = RequestMethod.GET)
+    @RequestMapping(value = "{sn}",method = RequestMethod.GET)
     public PrivateServiceCatalog show(@PathVariable("sn") String sn){
         return serviceCatalog;
     }
@@ -54,8 +56,21 @@ public class PrivateServiceCatalogsController extends SessionSupportController<P
      * @return 被更新的服务目录
      */
     @RequestMapping(method = RequestMethod.POST)
-    public PrivateServiceCatalog add(@Valid @RequestBody PrivateServiceCatalog serviceCatalog){
+    public PrivateServiceCatalog create(@Valid @RequestBody PrivateServiceCatalog serviceCatalog){
         return privateServiceCatalogService.savePrivate(serviceCatalog);
+    }
+
+    /**
+     * <h2>更新一个服务目录</h2>
+     *
+     * PUT /api/private_service_catalogs/{sn}
+     *
+     * @return 被更新的服务目录
+     */
+    @RequestMapping(value = "{sn}", method = RequestMethod.PUT)
+    public PrivateServiceCatalog update(@Valid @RequestBody PrivateServiceCatalog serviceCatalog){
+        this.serviceCatalog.apply(serviceCatalog);
+        return privateServiceCatalogService.updatePrivate(serviceCatalog);
     }
 
     /**
@@ -65,15 +80,17 @@ public class PrivateServiceCatalogsController extends SessionSupportController<P
      *
      * @return 被删除的服务目录
      */
-    @RequestMapping(value = "/{sn}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "{sn}", method = RequestMethod.DELETE)
     public PrivateServiceCatalog destroy(@PathVariable("sn") String sn){
-        privateServiceCatalogService.deletePrivate(sn);
-        return null;
+        privateServiceCatalogService.deletePrivate(serviceCatalog);
+        return serviceCatalog;
     }
 
-    @BeforeFilter({"show"})
+    @BeforeFilter({"show","destroy","update"})
     public void initServiceCatalog(@PathVariable("sn") String catalogSn){
         serviceCatalog = privateServiceCatalogService.findPrivateBySn(catalogSn);
+        if(serviceCatalog == null)
+            throw new WebClientSideException(HttpStatus.BAD_REQUEST, "Can't find private service catalog with sn:"+catalogSn);
     }
 
 }

@@ -36,16 +36,13 @@ mixin action_cancel(title)
                 +widget("合同表单")
                     form.form-horizontal(role='form', novalidate="novalidate", name='contractForm', ng-submit='accept(contract)')
                         +filed_input("合同号","必填","例如：P001","contract.sn","4","20","icon-user")(ng-pattern='/^[a-zA-Z0-9_\\-\\.]+$/', type="text", ng-check="/api/roles/check/{0}", ng-disabled="disabled")
-                        //+field_group("合同状态","单选")(for="state")
-                        //    select#status.form-control(ng-model='state', required,
-                        //    ng-options="state.name for state in states")
                         #form-attachments
                             .row
                                 .col-xs-12
                                     .row-fluid
                                         .span12
                                             +widget("合同详情")
-                                                //+filed_input("详情号","必填","例如：P001","detail.sn","4","20","icon-user")(ng-pattern='/^[a-zA-Z0-9_\\-\\.]+$/', type="text", ng-check="/api/roles/check/{0}", ng-disabled="disabled")
+                                                +filed_input("名称","必填","例如：P001","detail.title","4","20","icon-user")(ng-pattern='/^[\u4e00-\u9fa5_a-zA-Z0-9\\-\\.]+$/', type="text", ng-disabled="disabled")
                                                 +filed_input("简介","必填","简介","detail.brief","4","20","icon-user")(ng-pattern='/^[\u4e00-\u9fa5_a-zA-Z0-9\\-\\.]+$/', type="text", ng-disabled="disabled")
                                                 +filed_input("描述","必填","条款描述","detail.description","4","20","icon-user")(ng-pattern='/^[\u4e00-\u9fa5_a-zA-Z0-9\\-\\.]+$/', type="text", ng-disabled="disabled")
                                                 +field_group("服务目录","必填")(for="service_catalog")

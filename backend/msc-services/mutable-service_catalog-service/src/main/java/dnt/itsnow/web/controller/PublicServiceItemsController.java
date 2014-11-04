@@ -5,7 +5,6 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.PublicServiceCatalog;
 import dnt.itsnow.model.PublicServiceItem;
-import dnt.itsnow.model.ServiceCatalog;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.service.PublicServiceCatalogService;
@@ -99,23 +98,27 @@ public class PublicServiceItemsController extends SessionSupportController<Publi
     /**
      * <h2>删除帐户的一个服务项目</h2>
      *
-     * DELETE /admin/api/public_service_catalogs/{sn}/items/accounts/{isn}
+     * PUT /admin/api/public_service_catalogs/{sn}/items/{isn}/remove?accountId=''
      *
      */
-    @RequestMapping(value = "/accounts/{id}", method = RequestMethod.DELETE)
-    public void destroyByAccount(@PathVariable("id") Long accountId,@RequestParam("itemId") Long itemId){
-        publicServiceItemService.deleteByAccount(itemId,accountId);
+    @RequestMapping(value = "{isn}/account/{accountId}/remove", method = RequestMethod.PUT)
+    public void destroyByAccount(@PathVariable("isn") String isn,@PathVariable("accountId") Long accountId){
+        logger.info("Remove service item {} of Account:{}",isn,accountId);
+        publicServiceItemService.deleteByAccount(serviceItem,accountId);
+        logger.info("Removed service item {} of Account:{}",isn,accountId);
     }
 
     /**
      * <h2>增加帐户的一个服务项目</h2>
      *
-     * PUT /admin/api/public_service_catalogs/{sn}/items/accounts/{id}
+     * PUT /admin/api/public_service_catalogs/{sn}/items/{isn}/create?accountId=''
      *
      */
-    @RequestMapping(value = "/accounts/{id}", method = RequestMethod.PUT)
-    public void addByAccount(@PathVariable("id") Long accountId,@RequestParam("itemId") Long itemId){
-        publicServiceItemService.saveByAccount(itemId,accountId);
+    @RequestMapping(value = "{isn}/account/{accountId}/create", method = RequestMethod.PUT)
+    public void addByAccount(@PathVariable("isn") String isn,@PathVariable("accountId") Long accountId){
+        logger.info("Add service item {} of Account:{}",isn,accountId);
+        publicServiceItemService.saveByAccount(serviceItem,accountId);
+        logger.info("Added service item {} of Account:{}",isn,accountId);
     }
 
     @BeforeFilter
@@ -126,11 +129,11 @@ public class PublicServiceItemsController extends SessionSupportController<Publi
 
     }
     
-    @BeforeFilter(order = 60, value = {"show", "update", "destroy"})
+    @BeforeFilter(order = 60, value = {"show", "update", "destroy","addByAccount","destroyByAccount"})
     public void initServiceItem(@PathVariable("isn") String isn){
         if(serviceCatalog != null) {
             serviceItem = (PublicServiceItem) serviceCatalog.getItemBySn(isn);
-            ServiceCatalog catalog = new ServiceCatalog();
+            PublicServiceCatalog catalog = new PublicServiceCatalog();
             catalog.apply(serviceCatalog);
             catalog.setItems(null);
             serviceItem.setCatalog(catalog);

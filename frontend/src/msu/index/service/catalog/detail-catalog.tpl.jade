@@ -1,0 +1,57 @@
+doctype html
+
+mixin widgetBox(title)
+  .col-md-offset-2.col-md-8
+    .widget-box
+      .widget-header
+        h4 #{title}
+      .widget-body
+        block
+mixin formGroup(obj, name, label, icon, tip)
+  .form-group
+    label.col-xs-12.col-sm-3.control-label.no-padding-right(for="#{obj}_#{name}") #{label}
+    .col-xs-12.col-sm-5
+      span.block.input-icon.input-icon-right
+        block
+        i(class="icon-#{icon}")
+    .help-block.col-xs-12.col-sm-reset.inline #{tip}
+mixin field(name, label)
+  input.form-control(id="catalog_#{name}", name="catalog.#{name}", ng-model="catalog.#{name}", required,  ng-maxlength="50", type="text", placeholder="#{label}")
+mixin fieldWithCheck(name, label, checkUrl)
+  input.form-control(id="catalog_#{name}", name="catalog.#{name}", ng-model="catalog.#{name}", required,  ng-maxlength="50", type="text", placeholder="#{label}", ng-check="#{checkUrl}")
+
+mixin selector(name, label, datas, tip)
+  .form-group
+    label.col-xs-12.col-sm-3.control-label.no-padding-right(for="host_#{name}") #{label}
+    .col-xs-12.col-sm-5
+      select.form-control(ng-model="host.#{name}", required)
+        option(ng-repeat="data in #{datas}", value="{{data}}") {{data}}
+    .help-block.col-xs-12.col-sm-reset.inline #{tip}
+
+
+.row(ng-controller="CatalogDetailCtrl")
+  form.form-horizontal(name="catalogForm", novalidate="novalidate", ng-model-options="{ updateOn: 'mousedown blur' }", role="form")
+      +formGroup("catalog", "sn",     "SN", "star", "服务目录编号，尽量为简单的英文字符")
+        +field("sn", "名称")
+      +formGroup("catalog", "title",  "标题",   "font", "服务目录标题")
+        +field("title", "标题")
+      +formGroup("catalog", "description", "描述",   "th", "简单描述服务目录的功能或者作用")
+        +field("description", "描述")
+      +formGroup("catalog", "icon", "图标",   "th", "")
+        +field("icon", "图标")
+        img(ng-src="{{catalog.icon}}")
+      +formGroup("catalog", "parentId", "父节点",   "th", "父节点ID")
+        input.form-control(id="catalog_parentId", name="catalog.parentId", ng-model="catalog.parentId", required,  ng-maxlength="20", type="text", placeholder="父节点",readonly=true)
+      +formGroup("catalog", "level", "层次",   "level", "当前所属层次")
+        input.form-control(id="catalog_level", name="catalog.level", ng-model="catalog.level", required,  ng-maxlength="20", type="text", placeholder="层次",readonly=true)
+
+    .row-fluid.actions
+      .col-xs-12.col-sm-3
+      .col-xs-12.col-sm-5
+        button.btn.btn-sm.btn-primary(type="submit",ng-click='process(catalog)')
+          i.icon-ok
+          | {{buttonLabel}}
+        button.btn.btn-sm(type='reset',ng-click='reset()')
+          i.icon-remove
+          | 取消
+.row

@@ -166,7 +166,10 @@ module.exports = function ( grunt ) {
           // 所以其需要指定 options.jade.filename
           // see: https://github.com/karlgoldstein/grunt-html2js/pull/48
           // 如果这里有多个在不同目录下的 tpl.jade include 其他jade，这将会玩不转
-          jade: {filename: 'index/dashboard/dashboard.tpl.jade'}
+          // 所以，我们应该基于html2js，设置的jade basedir选项，采用绝对路径include
+          jade: {
+            basedir: '.'
+          }
         },
         src: [ '<%= index_files.index_tpl %>' ],
         dest: '<%= build_dir %>/templates/index.js'
@@ -174,7 +177,8 @@ module.exports = function ( grunt ) {
       ms_index: {
         options: {
           base: '<%= target.name %>/index',
-          module: '<%= target.title %>Index.Templates'
+          module: '<%= target.title %>Index.Templates',
+          jade: {basedir: '.'}
         },
         src: [ '<%= index_files.ms_tpl %>' ],
         dest: '<%= build_dir %>/templates/<%= target.name %>-index.js'
@@ -533,7 +537,7 @@ module.exports = function ( grunt ) {
     },
 
     /**
-     * The `index` task compiles the `index.html` file as a Grunt template. CSS
+     * The `index` task compiles the `index.jade` file as a Grunt template. CSS
      * and JS files co-exist here but they get split apart later.
      */
     index: {
@@ -677,6 +681,26 @@ module.exports = function ( grunt ) {
           'assets/**/*'
         ],
         tasks: [ 'copy:build_assets', 'copy:build_vendor_assets' ]
+      },
+
+      /**
+       * When the app skeleton changes, we need rebuilt them
+       */
+      index_skeletons: {
+        files: [
+            '../index.jade'
+        ],
+        tasks: ['copy:build_jade', 'index:build', 'jade:index']
+      },
+      login_skeletons: {
+        files: [
+            '../login.jade'
+        ],
+        tasks: ['copy:build_jade', 'login:build', 'jade:login']
+      },
+      system_config:{
+        files: '../.target',
+        tasks: ['system_config']
       },
 
       /**

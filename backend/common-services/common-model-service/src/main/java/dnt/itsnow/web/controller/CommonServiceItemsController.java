@@ -53,22 +53,9 @@ public class CommonServiceItemsController extends SessionSupportController<Publi
      *
      * @return 服务项目
      */
-    @RequestMapping("/{id}")
+    @RequestMapping("/{isn}")
     public PublicServiceItem show(@PathVariable("isn") String sn){
         return commonServiceItemService.findBySn(sn);
-    }
-
-
-    /**
-     * <h2>获得该帐户下所有的服务项</h2>
-     *
-     * GET /api/public_service_catalogs/{sn}/items/accounts/{accountId}
-     *
-     * @return 服务项列表
-     */
-    @RequestMapping("/accounts/{accountId}")
-    public List<PublicServiceItem> indexAccount(@PathVariable("accountId") Long accountId){
-        return commonServiceItemService.findByAccountId(accountId);
     }
 
 

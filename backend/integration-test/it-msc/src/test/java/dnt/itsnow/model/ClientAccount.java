@@ -11,7 +11,29 @@ public class ClientAccount extends ClientConfigItem{
     private String sn;
     private String domain;
     private Long   userId; // 帐户管理员ID
-    private String status;
+    private ClientUser user;
+    private ClientItsnowProcess process;
+    private ClientAccountStatus status = ClientAccountStatus.New;
+
+    public ClientItsnowProcess getProcess() {
+        return process;
+    }
+
+    public void setProcess(ClientItsnowProcess process) {
+        this.process = process;
+    }
+
+    public void setStatus(ClientAccountStatus status) {
+        this.status = status;
+    }
+
+    public ClientUser getUser() {
+        return user;
+    }
+
+    public void setUser(ClientUser user) {
+        this.user = user;
+    }
 
     public String getType() {
         return type;
@@ -45,11 +67,4 @@ public class ClientAccount extends ClientConfigItem{
         this.userId = userId;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 }
