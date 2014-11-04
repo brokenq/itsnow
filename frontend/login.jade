@@ -31,7 +31,7 @@ html(lang="zh-CN", ng-app="Itsnow.#{sysName}Login")
               .space-6
               .position-relative
                 div(ui-view="login")
-    .feedback.alert.alert-block#feedback
+    .feedback.alert.alert-block#feedback(style="display:none")
       button.close(type="button")
         i.icon-remove
       span#feedback_content {{feedback.message}}

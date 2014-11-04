@@ -37,12 +37,13 @@ angular.module('MscIndex.SLAs',
     $urlRouterProvider.when '/slas', '/slas/list'
 
 
-  .controller('SlasCtrl', ['$scope', 'CacheService', ($scope, CacheService) ->
+  .controller('SlasCtrl', ['$scope', '$state', 'Feedback', 'CacheService', ($scope, $state, feedback, CacheService) ->
     # frontend controller logic
     console.log("Initialized the SLAs controller")
     $scope.options =
       page:  1,           # show first page
       count: 10           # count per page
+    # Below are mock codes, should be replaced by
     $scope.mockSlas = [
         {id: 1,  title: 'SLA One',    description: 'The first SLA'},
         {id: 2,  title: 'SLA Two',    description: 'The second SLA'},
@@ -60,6 +61,16 @@ angular.module('MscIndex.SLAs',
     $scope.mockCreate = (sla)->
       $scope.mockSlas.push sla
       $scope.cacheService.cache sla
+
+    $scope.mockDestroy = (sla)->
+      $scope.mockSlas.remove sla
+      $scope.cacheService.expire sla
+
+    # 之所以把destroy方法放在这里，因为理论上，view/edit页面也可以发起删除操作
+    $scope.destroy = (sla)->
+      $scope.mockDestroy sla
+      feedback.success "Destroyed a SLA " + JSON.stringify(sla)
+      $state.go('slas.list')
 
     $scope.cacheService = new CacheService("id")
 
@@ -92,7 +103,7 @@ angular.module('MscIndex.SLAs',
       maxId = $scope.mockSlas[$scope.mockSlas.length - 1].id
       sla.id = maxId + 1
       $scope.mockCreate sla
-      feedback.success "Created a sla " + JSON.stringify(sla)
+      feedback.success "Created a SLA " + JSON.stringify(sla)
       $state.go('slas.view', {id: sla.id})
     $scope.sla = sla
 
@@ -103,6 +114,6 @@ angular.module('MscIndex.SLAs',
     console.log("Initialized the SLA Edit controller on: " + JSON.stringify(sla))
     $scope.sla = sla
     $scope.update = ->
-      feedback.success "Updated a sla " + JSON.stringify(sla)
+      feedback.success "Updated a SLA " + JSON.stringify(sla)
       $state.go('slas.view', {id: sla.id})
   ])
