@@ -1,5 +1,5 @@
 // List System
-angular.module('Service.Dictnew', ['ngTable', 'ngResource'])
+angular.module('Service.Dictnew', ['ngTable', 'ngResource','Lib.Feedback'])
 
     .config(function ($stateProvider) {
         $stateProvider.state('dict_new', {
@@ -13,8 +13,8 @@ angular.module('Service.Dictnew', ['ngTable', 'ngResource'])
             data:{pageTitle:'流程字典修改'}
         });
     })
-    .controller('DictNewCtrl', ['$http','$rootScope','$scope', '$location', '$timeout', '$state','$stateParams', 'DictService',
-        function ($http,$rootScope,$scope, $location, $timeout, $state,$stateParams, DictService) {
+    .controller('DictNewCtrl', ['$http','$rootScope','$scope', '$location', '$timeout', '$state','$stateParams', 'DictService','Feedback',
+        function ($http,$rootScope,$scope, $location, $timeout, $state,$stateParams, DictService,Feedback) {
         var sn=$stateParams.sn;
             $scope.datas=[{name:"无效",value:0},{name:"有效",value:1}];
 
@@ -57,14 +57,12 @@ angular.module('Service.Dictnew', ['ngTable', 'ngResource'])
                    if($scope.dict.code===dictdates[i].code){
                        if($scope.dict.display===dictdates[i].display){
                            $scope.dict.display="";
-                           alert("显示名已存在！！请重新输入");
+                           Feedback.warn("显示名已存在！！请重新输入");
                        }
                    }
                }
 
             };
-
-
             $scope.changeDict=function(){
                 $scope.dict.state=$scope.selectstate.value;
                 $scope.dict.$promise = undefined;
