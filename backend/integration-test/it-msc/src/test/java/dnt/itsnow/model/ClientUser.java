@@ -7,6 +7,7 @@ package dnt.itsnow.model;
  * <h1>对应于User的Client Json解析对象</h1>
  */
 public class ClientUser extends ClientConfigItem{
+    private String nickName;
     private String email;
     private String phone;
     private String password;
@@ -32,6 +33,14 @@ public class ClientUser extends ClientConfigItem{
 
     public void setUsername(String username) {
         this.setName(username);
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     public String getEmail() {

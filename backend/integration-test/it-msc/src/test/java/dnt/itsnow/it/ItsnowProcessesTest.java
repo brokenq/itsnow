@@ -18,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 @Ignore
 public class ItsnowProcessesTest extends AbstractTest {
 
+    private final String processName = "itsnow_msp_test";
+
     @Test
     public void testIndex() throws Exception {
         ResponseEntity<ClientItsnowProcess[]> entities = withLoginUser(new Callback<ResponseEntity<ClientItsnowProcess[]>>() {
@@ -38,7 +40,7 @@ public class ItsnowProcessesTest extends AbstractTest {
             @Override
             public ClientItsnowProcess perform(HttpHeaders headers) {
                 HttpEntity entity = new HttpEntity(headers);
-                return getForObject("/admin/api/processes/{name}", ClientItsnowProcess.class , entity, "itsnow-msc");
+                return getForObject("/admin/api/processes/{name}", ClientItsnowProcess.class , entity, processName);
             }
         });
         Assert.assertNotNull(process);
@@ -58,7 +60,7 @@ public class ItsnowProcessesTest extends AbstractTest {
             @Override
             public ClientItsnowHost perform(HttpHeaders headers) {
                 HttpEntity request = new HttpEntity(headers);
-                return getForObject("/admin/api/hosts/{id}", ClientItsnowHost.class, request, 6L);
+                return getForObject("/admin/api/hosts/{id}", ClientItsnowHost.class, request, 18L);
             }
         });
         Assert.assertNotNull(host);
@@ -96,7 +98,7 @@ public class ItsnowProcessesTest extends AbstractTest {
             @Override
             public void perform(HttpHeaders headers) {
                 HttpEntity request = new HttpEntity(headers);
-                delete("/admin/api/processes/{name}", request, "itsnow-test1");
+                delete("/admin/api/processes/{name}", request, "itsnow-msp");
             }
         });
     }
@@ -107,7 +109,7 @@ public class ItsnowProcessesTest extends AbstractTest {
             @Override
             public void perform(HttpHeaders headers) {
                 HttpEntity request = new HttpEntity(headers);
-                put("/admin/api/processes/{name}/start", request, "itsnow_msp_test");
+                put("/admin/api/processes/{name}/start", request, processName);
             }
         });
     }
@@ -118,7 +120,7 @@ public class ItsnowProcessesTest extends AbstractTest {
             @Override
             public void perform(HttpHeaders headers) {
                 HttpEntity request = new HttpEntity(headers);
-                put("/admin/api/processes/{name}/stop", request, "itsnow_msc_test");
+                put("/admin/api/processes/{name}/stop", request, processName);
             }
         });
     }
@@ -129,7 +131,7 @@ public class ItsnowProcessesTest extends AbstractTest {
             @Override
             public void perform(HttpHeaders headers) {
                 HttpEntity request = new HttpEntity(headers);
-                put("/admin/api/processes/{name}/cancel", request, "itsnow-test4");
+                put("/admin/api/processes/{name}/cancel", request, processName);
             }
         });
 

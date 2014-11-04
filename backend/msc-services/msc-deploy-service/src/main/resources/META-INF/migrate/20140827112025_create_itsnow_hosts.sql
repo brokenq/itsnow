@@ -8,7 +8,7 @@ CREATE TABLE itsnow_hosts (
   type          VARCHAR(50) NOT NULL,
   capacity      INT(10) UNSIGNED NOT NULL DEFAULT 20,
   status        VARCHAR(50)               DEFAULT 'Planing',
-  configuration VARCHAR(255),
+  configuration TEXT,
   description   VARCHAR(255),
   created_at    TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at    TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,

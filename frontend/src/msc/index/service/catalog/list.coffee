@@ -9,11 +9,6 @@
         url: '/catalog',
         templateUrl: 'service/catalog/list-catalog.tpl.jade'
         data: {pageTitle: '服务目录'}
-      $stateProvider.state 'services.sla',
-        url: '/sla',
-        templateUrl: 'service/list.tpl.jade'
-        data: {pageTitle: '服务级别管理'}
-
     .factory('ServiceCatalogService', ['$resource', ($resource) ->
       $resource("/admin/api/public_service_catalogs/:sn",{sn:'@sn'})
     ])
