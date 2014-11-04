@@ -178,7 +178,7 @@ public class SystemInvokeManager extends Bean implements SystemInvokeService, In
             broadcast(new ListenerNotifier() {
                 @Override
                 public void notify(SystemInvocationListener listener) {
-                    listener.cancelled(executor.invocation);
+                    if(listener.care(executor.invocation)) listener.cancelled(executor.invocation);
                 }
             });
         }

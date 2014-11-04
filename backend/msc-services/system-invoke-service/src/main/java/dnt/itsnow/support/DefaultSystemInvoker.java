@@ -44,7 +44,7 @@ public class DefaultSystemInvoker extends Bean implements SystemInvoker {
             broadcaster.broadcast(new ListenerNotifier() {
                 @Override
                 public void notify(SystemInvocationListener listener) {
-                    listener.stepExecuted(invocation);
+                    if(listener.care(invocation)) listener.stepExecuted(invocation);
                 }
 
             });
