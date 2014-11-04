@@ -86,6 +86,7 @@
         return if !$scope.catalogs
         checked = 0
         unchecked = 0
+        total = 0
         #total = $scope.catalogs.length
         angular.forEach $scope.catalogs, (item)->
           #checked   +=  ($scope.selection.items[item.sn]) || 0
