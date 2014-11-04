@@ -1,3 +1,4 @@
+
 mixin tool_button(action, icon, text, weight, rejectCss, requireCss)
   button.btn.btn-primary.no-border(type="button", ng-click="#{action}", weight="#{weight}", reject-css="#{rejectCss}", require-css="#{requireCss}")
     span.glyphicon(class="glyphicon-#{icon}")

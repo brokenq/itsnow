@@ -58,7 +58,7 @@ public class ItsnowProcessesTest extends AbstractTest {
             @Override
             public ClientItsnowHost perform(HttpHeaders headers) {
                 HttpEntity request = new HttpEntity(headers);
-                return getForObject("/admin/api/hosts/{id}", ClientItsnowHost.class, request, 6L);
+                return getForObject("/admin/api/hosts/{id}", ClientItsnowHost.class, request, 17L);
             }
         });
         Assert.assertNotNull(host);
@@ -118,7 +118,7 @@ public class ItsnowProcessesTest extends AbstractTest {
             @Override
             public void perform(HttpHeaders headers) {
                 HttpEntity request = new HttpEntity(headers);
-                put("/admin/api/processes/{name}/stop", request, "itsnow_msc_test");
+                put("/admin/api/processes/{name}/stop", request, "itsnow_msp_test");
             }
         });
     }

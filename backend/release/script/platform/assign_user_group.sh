@@ -27,7 +27,7 @@ fi
 if [ ! $5 ]; then
   group="administrators"
 else
-  group = $5
+  group=$5
 fi
 
 mysql -u$2 -p$3 -D$1<<SQL
