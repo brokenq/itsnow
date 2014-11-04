@@ -24,6 +24,8 @@ import java.util.concurrent.Executors;
  */
 @Component
 public class ItsnowStatusMaintainer extends ItsnowResourceManager {
+    static final String CHECK_HOST_STATUS = "check-host-status-";
+    static final String CHECK_PROC_STATUS = "check-process-status-";
 
     @Autowired
     ItsnowHostService    hostService;
@@ -68,6 +70,11 @@ public class ItsnowStatusMaintainer extends ItsnowResourceManager {
         processExecutor.shutdown();
     }
 
+    @Override
+    public boolean care(SystemInvocation invocation) {
+        String id = invocation.getId();
+        return id.startsWith(CHECK_HOST_STATUS) || id.startsWith(CHECK_PROC_STATUS);
+    }
 
     /**
      * 执行定时检测
@@ -88,7 +95,7 @@ public class ItsnowStatusMaintainer extends ItsnowResourceManager {
         logger.debug("Checking status of {}({})", host, host.getStatus());
 
         SystemInvocation invocation = translator.check(host);
-        invocation.setId("check-host-status-" + host.getAddress());
+        invocation.setId(CHECK_HOST_STATUS + host.getAddress());
         String id = invokeService.addJob(invocation);
         int code = -1;
         try {
@@ -127,7 +134,7 @@ public class ItsnowStatusMaintainer extends ItsnowResourceManager {
     protected void checkProcessStatus(ItsnowProcess process) {
         logger.debug("Checking status of {}({})", process, process.getStatus());
         SystemInvocation invocation = translator.check(process);
-        invocation.setId("check-process-status-" + process.getName());
+        invocation.setId(CHECK_PROC_STATUS + process.getName());
         String id = invokeService.addJob(invocation);
         int code = -1;
         try {

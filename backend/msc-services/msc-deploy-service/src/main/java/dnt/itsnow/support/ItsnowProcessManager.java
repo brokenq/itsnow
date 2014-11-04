@@ -30,6 +30,11 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
     public static final String START_INVOCATION_ID = "startInvocationId";
     public static final String STOP_INVOCATION_ID = "stopInvocationId";
 
+    static final String DEPLOY_PROCESS_PRFIX = "deploy-process-";
+    static final String UNDEPLOY_PROCESS_PRFIX = "undeploy-process-";
+    static final String START_PROCESS_PRFIX = "start-process-";
+    static final String STOP_PROCESS_PRFIX = "stop-process-";
+
     private static final int DEPLOY_FLAG = 1;
     private static final int UNDEPLOY_FLAG = -1;
     private static final int START_FLAG = 2;
@@ -91,7 +96,7 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
         }
 
         SystemInvocation deployJob = translator.deploy(creating);
-        deployJob.setId(String.format("deploy-process-%s", creating.getName()));
+        deployJob.setId(DEPLOY_PROCESS_PRFIX + creating.getName());
         deployJob.setUserFlag(DEPLOY_FLAG);
         String invocationId = invokeService.addJob(deployJob);
         try {
@@ -152,7 +157,7 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
         if( process.getStatus() != ProcessStatus.Stopped)
             throw new ItsnowProcessException("Can't destroy the non-stopped process with status = " + process.getStatus());
         SystemInvocation undeployJob = translator.undeploy(process);
-        undeployJob.setId(String.format("undeploy-process-%s", process.getName()));
+        undeployJob.setId(UNDEPLOY_PROCESS_PRFIX + process.getName());
         undeployJob.setUserFlag(UNDEPLOY_FLAG);
         String invocationId = invokeService.addJob(undeployJob);
         process.setProperty(DELETE_INVOCATION_ID, invocationId);
@@ -186,7 +191,7 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
             throw new ItsnowProcessException("Can't start the process with status = " + process.getStatus());
         // 因为启动一个系统可能是一个比较慢的事情，所以采用异步方式，任务启动之后就返回
         SystemInvocation startJob = translator.start(process);
-        startJob.setId("start-process-" + process.getName());
+        startJob.setId(START_PROCESS_PRFIX + process.getName());
         startJob.setUserFlag(START_FLAG);
         process.updating();
         String invocationId = invokeService.addJob(startJob);
@@ -202,7 +207,7 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
         if( process.getStatus() == ProcessStatus.Stopped || process.getStatus() == ProcessStatus.Stopping)
             throw new ItsnowProcessException("Can't stop the " + process.getStatus() + " process");
         SystemInvocation stopJob = translator.stop(process);
-        stopJob.setId("stop-process-" + process.getName());
+        stopJob.setId(STOP_PROCESS_PRFIX + process.getName());
         stopJob.setUserFlag(STOP_FLAG);
         process.updating();
         String invocationId = invokeService.addJob(stopJob);
@@ -230,6 +235,13 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
             return invokeService.read(jobId, offset, result);
         }
         return -1;
+    }
+
+    @Override
+    public boolean care(SystemInvocation invocation) {
+        String id = invocation.getId();
+        return id.startsWith(DEPLOY_PROCESS_PRFIX) || id.startsWith(UNDEPLOY_PROCESS_PRFIX)
+               || id.startsWith(START_PROCESS_PRFIX) || id.startsWith(STOP_PROCESS_PRFIX);
     }
 
     @Override

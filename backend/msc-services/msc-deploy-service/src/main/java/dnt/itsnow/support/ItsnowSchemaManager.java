@@ -26,6 +26,9 @@ import java.util.UUID;
  */
 @Service
 public class ItsnowSchemaManager extends ItsnowResourceManager implements ItsnowSchemaService {
+    static final String CREATE_SCHEMA_PRFIX = "create-schema-";
+    static final String DROP_SCHEMA_PRFIX = "drop-schema-";
+
     @Autowired
     ItsnowHostService hostService;
 
@@ -69,7 +72,7 @@ public class ItsnowSchemaManager extends ItsnowResourceManager implements Itsnow
     public ItsnowSchema create(ItsnowSchema creating) throws ItsnowSchemaException {
         logger.info("Creating itsnow schema: {}", creating);
         SystemInvocation createJob = translator.create(creating);
-        createJob.setId("create-schema-" + creating.getName());
+        createJob.setId(CREATE_SCHEMA_PRFIX + creating.getName());
         String invocationId = invokeService.addJob(createJob);
         try {
             invokeService.waitJobFinished(invocationId);
@@ -90,7 +93,7 @@ public class ItsnowSchemaManager extends ItsnowResourceManager implements Itsnow
             schema = findById(schema.getId());
         }
         SystemInvocation dropJob = translator.drop(schema);
-        dropJob.setId("drop-schema-" + schema.getName());
+        dropJob.setId(DROP_SCHEMA_PRFIX + schema.getName());
         String invocationId = invokeService.addJob(dropJob);
         schema.setProperty(DELETE_INVOCATION_ID, invocationId);
         try {
@@ -125,4 +128,9 @@ public class ItsnowSchemaManager extends ItsnowResourceManager implements Itsnow
         return schema;
     }
 
+    @Override
+    public boolean care(SystemInvocation invocation) {
+        String id = invocation.getId();
+        return id.startsWith(CREATE_SCHEMA_PRFIX) || id.startsWith(DROP_SCHEMA_PRFIX);
+    }
 }

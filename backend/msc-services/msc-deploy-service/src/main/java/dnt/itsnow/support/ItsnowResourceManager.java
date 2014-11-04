@@ -50,6 +50,10 @@ public abstract class ItsnowResourceManager extends Bean implements SystemInvoca
         return InetAddress.getLocalHost().getHostAddress();
     }
 
+    @Override
+    public boolean care(SystemInvocation invocation) {
+        return true;
+    }
 
     @Override
     public void added(SystemInvocation invocation) {

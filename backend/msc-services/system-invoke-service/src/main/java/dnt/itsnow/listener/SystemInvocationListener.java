@@ -13,6 +13,12 @@ import java.util.EventListener;
  */
 public interface SystemInvocationListener extends EventListener {
     /**
+     * 询问这个  listener 是否关心该调用消息
+     * @param invocation 调用
+     * @return  是否关心
+     */
+    boolean care(SystemInvocation invocation);
+    /**
      * 当一个系统调用被加入到系统任务中时，本监听者将会被通过该接口通知到
      *
      * @param invocation 调用

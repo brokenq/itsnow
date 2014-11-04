@@ -78,7 +78,7 @@ public class SystemInvokeManager extends Bean implements SystemInvokeService, In
 
         broadcast(new ListenerNotifier() {
             public void notify(SystemInvocationListener listener) {
-                listener.added(invocation);
+                if( listener.care(invocation)) listener.added(invocation);
             }
         });
         return invocation.getId();
@@ -197,7 +197,7 @@ public class SystemInvokeManager extends Bean implements SystemInvokeService, In
             broadcast(new ListenerNotifier() {
                 @Override
                 public void notify(SystemInvocationListener listener) {
-                    listener.started(invocation);
+                    if(listener.care(invocation)) listener.started(invocation);
                 }
             });
             // perform real invocation
@@ -207,7 +207,7 @@ public class SystemInvokeManager extends Bean implements SystemInvokeService, In
                 broadcast(new ListenerNotifier() {
                     @Override
                     public void notify(SystemInvocationListener listener) {
-                        listener.finished(invocation);
+                        if(listener.care(invocation)) listener.finished(invocation);
                     }
                 });
                 return result;
@@ -217,7 +217,7 @@ public class SystemInvokeManager extends Bean implements SystemInvokeService, In
                 broadcast(new ListenerNotifier() {
                     @Override
                     public void notify(SystemInvocationListener listener) {
-                        listener.failed(invocation, e);
+                        if(listener.care(invocation)) listener.failed(invocation, e);
                     }
                 });
                 return 1;
