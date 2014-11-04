@@ -149,12 +149,13 @@ angular.module('MsuIndex.IncidentDetail', ['ngTable', 'ngResource','Lib.Feedback
 
             promise.then(function success(data) {
                 for (var i in data.tasksList) {
-                    taskId = data.tasksList[i].taskId;
-                    taskName = data.tasksList[i].taskName;
-                    taskAction = data.tasksList[i].taskDescription;
-                    //alert('task id:'+taskId+' name:'+taskName+' Description:'+taskAction);
-                    $scope.buttonLabel = getActionButton(taskAction);
-
+                    if(angular.isDefined(data.tasksList[i].taskId)) {
+                        taskId = data.tasksList[i].taskId;
+                        taskName = data.tasksList[i].taskName;
+                        taskAction = data.tasksList[i].taskDescription;
+                        //alert('task id:'+taskId+' name:'+taskName+' Description:'+taskAction);
+                        $scope.buttonLabel = getActionButton(taskAction);
+                    }
                 }
             }, function error(msg) {
                 feedback.error('出错：'+msg);
