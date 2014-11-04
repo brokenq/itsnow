@@ -115,7 +115,7 @@ public class ItsnowSchemaManager extends ItsnowResourceManager implements Itsnow
         schema.setHost(host);
         schema.setName("itsnow_" + account.getSn());
         schema.setDescription("schema for " + account.getName());
-        schema.setProperty("user", "root");
+        schema.setProperty("user", account.getSn());
         String password = UUID.randomUUID().toString().substring(0, 8);
         schema.setProperty("password", password);
         schema.setProperty("port", host.getProperty("db.port", "3306"));
