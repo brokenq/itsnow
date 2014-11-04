@@ -26,7 +26,8 @@ html(lang="zh-CN", ng-app="Itsnow.#{sysName}Login")
                   span.red  {{system.label}}系统
                 h4.blue
                   | &copy; ItsNow co.,ltd &nbsp;
-                  small.red {{system.version}}
+                  small.yellow {{system.version}}
+                  small.yellow @{{system.builtAt}}
               .space-6
               .position-relative
                 div(ui-view="login")

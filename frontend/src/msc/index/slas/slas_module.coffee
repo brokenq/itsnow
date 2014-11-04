@@ -59,7 +59,7 @@ angular.module('MscIndex.SLAs',
 
     $scope.mockCreate = (sla)->
       $scope.mockSlas.push sla
-      $scope.cache sla
+      $scope.cacheService.cache sla
 
     $scope.cacheService = new CacheService("id")
 

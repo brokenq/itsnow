@@ -537,7 +537,7 @@ module.exports = function ( grunt ) {
     },
 
     /**
-     * The `index` task compiles the `index.html` file as a Grunt template. CSS
+     * The `index` task compiles the `index.jade` file as a Grunt template. CSS
      * and JS files co-exist here but they get split apart later.
      */
     index: {
@@ -681,6 +681,26 @@ module.exports = function ( grunt ) {
           'assets/**/*'
         ],
         tasks: [ 'copy:build_assets', 'copy:build_vendor_assets' ]
+      },
+
+      /**
+       * When the app skeleton changes, we need rebuilt them
+       */
+      index_skeletons: {
+        files: [
+            '../index.jade'
+        ],
+        tasks: ['copy:build_jade', 'index:build', 'jade:index']
+      },
+      login_skeletons: {
+        files: [
+            '../login.jade'
+        ],
+        tasks: ['copy:build_jade', 'login:build', 'jade:login']
+      },
+      system_config:{
+        files: '../.target',
+        tasks: ['system_config']
       },
 
       /**

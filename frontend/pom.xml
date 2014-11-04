@@ -36,6 +36,7 @@
         <target.skin>default</target.skin>
         <target.defaultUser>admin</target.defaultUser>
         <target.defaultPassword>secret</target.defaultPassword>
+        <target.builtAt>${maven.build.timestamp}</target.builtAt>
         <grunt.exec>grunt</grunt.exec>
     </properties>
 
@@ -160,7 +161,8 @@
     "login":   "${target.login}",
     "skin" :   "${target.skin}",
     "defaultUser" : "${target.defaultUser}",
-    "defaultPassword" : "${target.defaultPassword}"
+    "defaultPassword" : "${target.defaultPassword}",
+    "builtAt" : "${target.builtAt}"
 }
 
                                 </echo>
