@@ -49,7 +49,7 @@ public class GeneralContractsController extends SessionSupportController {
             contract = contractService.approve(mainAccount, sn);
         } catch (ServiceException e) {
             throw new WebClientSideException(HttpStatus.NOT_ACCEPTABLE,
-                    "the contract can't be approved:" + e.getMessage());
+                    "the contract can't be approved, cause: " + e.getMessage());
         } catch (RestClientException e) {
             throw new WebServerSideException(HttpStatus.BAD_GATEWAY, e.getMessage());
         }
@@ -71,7 +71,7 @@ public class GeneralContractsController extends SessionSupportController {
             contract = contractService.reject(mainAccount, sn);
         } catch (ServiceException e) {
             throw new WebClientSideException(HttpStatus.NOT_ACCEPTABLE,
-                    "the contract can't be rejected:" + e.getMessage());
+                    "the contract can't be rejected, cause: " + e.getMessage());
         } catch (RestClientException e) {
             throw new WebServerSideException(HttpStatus.BAD_GATEWAY, e.getMessage());
         }

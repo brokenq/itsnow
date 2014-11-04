@@ -16,32 +16,42 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestOperations;
 
 /**
- *  <h1> The general contract manager</h1>
- *
- *  MSU/MSP的合同管理
+ * <h1> The general contract manager</h1>
+ * <p/>
+ * MSU/MSP的合同管理
  */
 @Service
 public class GeneralContractManager extends CommonContractManager implements GeneralContractService {
+
     @Autowired
     @Qualifier("mscRestTemplate")
     RestOperations facade;
 
     @Override
     public Contract approve(Account account, String sn) throws ServiceException {
-        logger.info("Approving {} {}", account, sn);
+
+        logger.info("Approving {}, contract sn {}", account, sn);
+
         Contract contract = findByAccountAndSn(account, sn, true);
+
+        logger.debug("Found {}", contract);
+
         if (account.isMsu()) {
-            if (contract.isApprovedByMsu()) {
+            if (contract.getMspAccountId() == null) {
+                throw new ContractException("The contract has not yet been accept by MSP");
+            } else if (contract.isApprovedByMsu()) {
                 throw new ContractException("The contract has been approved by msu");
             }
         } else if (account.isMsp()) {
             if (contract.isApprovedByMsp()) {
-                throw new ContractException("The contract has been approved by msu");
+                throw new ContractException("The contract has been approved by msp");
             }
         }
         facade.put("/admin/api/contracts/{sn}/approve", null, contract.getSn());
-        contract = repository.findBySn(sn);//update it after put
+        contract = findByAccountAndSn(account, sn, true);
+
         logger.info("Approved  {} {}", account, sn);
+
         return contract;
     }
 
@@ -49,17 +59,23 @@ public class GeneralContractManager extends CommonContractManager implements Gen
     public Contract reject(Account account, String sn) throws ServiceException {
         logger.info("Rejecting {} {}", account, sn);
         Contract contract = findByAccountAndSn(account, sn, true);
-        if( account.isMsu() ){
+
+        logger.debug("Found {}", contract);
+
+        if (account.isMsu()) {
+            if (contract.getMspAccountId() == null) {
+                throw new ContractException("The contract has not yet been accept by MSP");
+            }
             //if( !contract.isApprovedByMsu() ){
             //    throw new ServiceException("The contract has been rejected by msu");
             //}
-        }else if (account.isMsp() ){
-            if( !contract.isApprovedByMsp() ){
+        } else if (account.isMsp()) {
+            if (!contract.isApprovedByMsp()) {
                 throw new ServiceException("The contract has been rejected by msu");
             }
         }
         facade.put("/admin/api/contracts/{sn}/reject", null, contract.getSn());
-        contract = repository.findBySn(sn);//update it after put
+        contract = findByAccountAndSn(account, sn, true);
         logger.info("Rejected  {} {}", account, sn);
         return contract;
     }
@@ -82,7 +98,7 @@ public class GeneralContractManager extends CommonContractManager implements Gen
     }
 
     @Override
-    public Contract bid(Account account, String sn) throws ServiceException{
+    public Contract bid(Account account, String sn) throws ServiceException {
         logger.info("Msp bid contract:{} {}", account, sn);
         Contract contract = findByAccountAndSn(account, sn, true);
         contract.setMspStatus(ContractStatus.Purposed);
@@ -93,13 +109,12 @@ public class GeneralContractManager extends CommonContractManager implements Gen
     }
 
     @Override
-    public Contract create(Account account, Contract contract) throws ServiceException{
+    public Contract create(Account account, Contract contract) throws ServiceException {
         contract.setMsuStatus(ContractStatus.Draft);
         contract.setMsuAccountId(account.getId());
-        facade.postForEntity("/admin/api/contracts",contract,Contract.class);
+        facade.postForEntity("/admin/api/contracts", contract, Contract.class);
         logger.info("Created  {}", contract);
         return contract;
     }
-
 
 }
