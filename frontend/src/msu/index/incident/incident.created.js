@@ -2,7 +2,7 @@ angular.module('MsuIndex.IncidentCreated', ['ngTable', 'ngResource'])
     .config(['$stateProvider',function($stateProvider) {
         $stateProvider
             .state('incidents-created',{
-                url:'/created',
+                url:'/incidents/created',
                 templateUrl:'incident/incident.created.tpl.jade',
                 data: {
                     pageTitle: '我创建的故障单'
@@ -44,7 +44,7 @@ angular.module('MsuIndex.IncidentCreated', ['ngTable', 'ngResource'])
         };
     })
     .controller('CreatedIncidentListCtrl', [
-        '$scope', '$location', '$timeout', 'ngTableParams', 'CreatedIncidentService', function($scope, $location, $timeout, ngTableParams, createdIncidentService) {
+        '$scope', '$location', '$timeout', 'ngTableParams', 'CreatedIncidentService', function($scope, $location, $timeout, NgTableParams, createdIncidentService) {
             var args, options;
             options = {
                 page: 1,

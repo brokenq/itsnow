@@ -1,4 +1,4 @@
-angular.module('MsuIndex.IncidentDetail', ['ngTable', 'ngResource'])
+angular.module('MsuIndex.IncidentDetail', ['ngTable', 'ngResource','Lib.Feedback'])
     .config(['$stateProvider',function($stateProvider) {
         $stateProvider
             .state('incidents-create',{
@@ -109,8 +109,8 @@ angular.module('MsuIndex.IncidentDetail', ['ngTable', 'ngResource'])
         };
 
     })
-    .controller('MsuCreateIncidentCtrl', ['$rootScope','$scope','$stateParams', 'MsuCreateIncidentService','MsuQueryIncidentTaskService','MsuProcessIncidentService', '$location','IncidentModelService',
-    function ($rootScope,$scope,$stateParams, msuCreateIncidentService,msuQueryIncidentTaskService,msuProcessIncidentService, $location,incidentModelService) {
+    .controller('MsuCreateIncidentCtrl', ['$rootScope','$scope','$stateParams', 'MsuCreateIncidentService','MsuQueryIncidentTaskService','MsuProcessIncidentService', '$location','IncidentModelService','Feedback',
+    function ($rootScope,$scope,$stateParams, msuCreateIncidentService,msuQueryIncidentTaskService,msuProcessIncidentService, $location,incidentModelService,feedback) {
 
         $scope.selectedModel = incidentModelService.selectedModel;
         $scope.action = $stateParams.action;
@@ -157,7 +157,7 @@ angular.module('MsuIndex.IncidentDetail', ['ngTable', 'ngResource'])
 
                 }
             }, function error(msg) {
-                alert('出错：'+msg);
+                feedback.error('出错：'+msg);
             });
         }
 
@@ -165,14 +165,14 @@ angular.module('MsuIndex.IncidentDetail', ['ngTable', 'ngResource'])
             if($scope.action == 'detail') {
                 msuProcessIncidentService.complete({msuInstanceId:$scope.incident.msuInstanceId,taskId:taskId}, $scope.incident,function (data) {
                     if(data.result==='success'){
-                        alert($scope.buttonLabel+"成功");
-                        $location.path('/opened');
+                        feedback.success($scope.buttonLabel+"成功");
+                        $location.path('/incidents/opened');
                     }
                 });
             }else {
                 msuCreateIncidentService.start($scope.incident, function () {
-                    alert($scope.buttonLabel+"成功");
-                    $location.path('/created');
+                    feedback.success($scope.buttonLabel+"成功");
+                    $location.path('/incidents/created');
                 });
             }
         };

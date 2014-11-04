@@ -100,6 +100,18 @@
             input#resolved.ace(type='checkbox', ng-model='incident.resolved', name='resolved')
             span.lbl
               | 是否解决
+        div(ng-show='buttonLabel === "分析"')
+          div(ng-show="incident.assignedGroup == 'ROLE_LINE_ONE'")
+            label.block
+              input#canProcess.ace(type='checkbox', ng-model='incident.canProcess', name='canProcess')
+              span.lbl
+                | 能否处理
+          div(ng-show="incident.assignedGroup == 'ROLE_LINE_TWO'")
+            label.block
+              input#hardwareError.ace(type='checkbox', ng-model='incident.hardwareError', name='hardwareError')
+              span.lbl
+                | 是否硬件故障
+
         div(ng-hide='buttonLabel==="新建"')
           .form-group
             .col-sm-offset-1.col-sm-11
