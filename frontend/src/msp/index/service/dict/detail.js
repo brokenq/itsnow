@@ -50,6 +50,9 @@ angular.module('Service.Dictnew', ['ngTable', 'ngResource','Lib.Feedback'])
                         $scope.dict.name=dictdates[i].name;
                         $scope.ngread=true;
                         break;
+                    }else{
+                        $scope.dict.name="";
+                        $scope.ngread=false;
                     }
                 }};
              $scope.autoValidate=function(){
