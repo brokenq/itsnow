@@ -7,9 +7,9 @@ angular.module('MscIndex.Dict',
      'Lib.Commons',
      'Lib.Utils',
      'Lib.Feedback'])
-  .config ($stateProvider, $urlRouterProvider)->
+.config ($stateProvider, $urlRouterProvider)->
     $stateProvider.state 'dict',
-      url: '/dicts',
+      url: '/dict',
       abstract: true,
       templateUrl: 'dict/index.tpl.jade',
       controller: 'DictCtrl',
@@ -37,46 +37,42 @@ angular.module('MscIndex.Dict',
     $urlRouterProvider.when '/dict', '/dict/list'
 
 .factory('DictService', ['$resource', ($resource) ->
-    $resource(" /api/dictionaries/:sn", {sn: "@sn"})
-  ])
-
-  .controller('DictCtrl', ['$scope', '$state', 'Feedback', 'CacheService', ($scope, $state, feedback, CacheService) ->
-    # frontend controller logic
-    console.log("Initialized the Dict controller")
-
-
-  ])
-  .controller('DictListCtrl', ['$scope', '$location', 'ngTableParams', 'ActionService', 'CommonService','DictService',\
-                              ($scope, $location, NgTable, ActionService, commonService,DictService) ->
+     $resource(" /api/dictionaries/:sn", {sn: "@sn"})
+])
+.filter "stateFilter", ->
+  stateFilter = (input) ->
+    if input is "1"
+      "有效"
+    else
+      "无效"
+  stateFilter
+.controller('DictCtrl', () ->
+)
+.controller('DictListCtrl', ['$scope', '$location','ActionService', 'CommonService','DictService',"Feedback",\
+                              ($scope, $location, ActionService, commonService,DictService,feedback) ->
     console.log("Initialized the Dict list controller")
-    Dict = $resource("/api/dictionaries/:sn", {sn: "@sn"})
     $scope.dicts = []
     $scope.selection = {checked: false, items: {}}
-    $scope.tableParams = commonService.instanceTable(Dict, $scope.dicts)
-    commonService.watchSelection($scope.selection, $scope.dicts, "id")
+    $scope.dictTable = commonService.instanceTable(DictService, $scope.dicts)
+    commonService.watchSelection($scope.selection, $scope.dicts, "sn")
     $scope.getDictBySn  = (sn)->
-      return dict for dict in $scope.dicts when dict.sn is parseInt sn
+      return dict for dict in $scope.dicts when dict.sn is sn
     $scope.actionService = new ActionService {watch: $scope.selection.items, mapping: $scope.getDictBySn}
     $scope.refresh = ->
       $scope.tableParams.reload()
-    $scope.delete = (dict)->
+    $scope.destroy= (dict)->
       dict = new Dict(dict)
       dict.$remove ->
       $scope.tableParams.reload()
-  ])
-  .controller('DictViewCtrl', ['$scope', '$stateParams', \
+])
+.controller('DictViewCtrl', ['$scope', '$stateParams', \
                              ($scope, $stateParams) ->
-  ])
-  .controller('DictNewCtrl', ['$scope', '$state', 'Feedback', \
+])
+.controller('DictNewCtrl', ['$scope', '$state', 'Feedback', \
                              ($scope, $state, feedback) ->
 
-  ])
-  .controller('DictEditCtrl', ['$scope', '$state', '$stateParams', 'Feedback', \
+])
+.controller('DictEditCtrl', ['$scope', '$state', '$stateParams', 'Feedback', \
                              ($scope, $state, $stateParams, feedback) ->
-#    sla = $scope.cacheService.find $stateParams.id, true
-#    console.log("Initialized the SLA Edit controller on: " + JSON.stringify(sla))
-#    $scope.sla = sla
-#    $scope.update = ->
-#      feedback.success "Updated a SLA " + JSON.stringify(sla)
-#      $state.go('slas.view', {id: sla.id})
-  ])
+
+])
