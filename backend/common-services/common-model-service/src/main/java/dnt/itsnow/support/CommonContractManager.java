@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,14 +33,14 @@ import java.util.List;
 @Service
 @Transactional
 public class CommonContractManager extends Bean implements CommonContractService {
-    @Autowired
-    CommonContractRepository repository;
 
     @Autowired
-    //CommonAccountRepository accountRepository;
+    CommonContractRepository repository;
+    @Autowired
     CommonAccountService accountService;
+
     @Override
-    public Page<Contract> findAllByAccount(Account account, Pageable pageable) throws ServiceException{
+    public Page<Contract> findAllByAccount(Account account, Boolean own, Pageable pageable) throws ServiceException{
         Assert.notNull(account, "the account shouldn't be null");
         if(account.isMsc()) {
             long total = repository.count();
@@ -58,7 +59,7 @@ public class CommonContractManager extends Bean implements CommonContractService
             return new DefaultPage<Contract>(contracts, pageable, total);
         }else if(account.isMsp()){
             long total = repository.countByMspAccountId(account.getId());
-            List<Contract> contracts = repository.findAllByMspAccountId(account.getId(), pageable);
+            List<Contract> contracts = repository.findAllByMspAccountId(account.getId(), own, pageable);
             for(Contract contract:contracts){
                 this.formatContract(contract);
             }

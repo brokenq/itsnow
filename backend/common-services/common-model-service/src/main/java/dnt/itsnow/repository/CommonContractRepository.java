@@ -31,7 +31,7 @@ public interface CommonContractRepository {
 
     List<Contract> findAllByMsuAccountId(@Param("msuId") long msuId, @Param("pageable")Pageable pageable);
 
-    List<Contract> findAllByMspAccountId(@Param("mspId") long mspId, @Param("pageable")Pageable pageable);
+    List<Contract> findAllByMspAccountId(@Param("mspId") Long mspId, @Param("own") Boolean own, @Param("pageable")Pageable pageable);
 
     // 需要加载details
     Contract findBySn(String sn);
