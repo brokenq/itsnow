@@ -30,7 +30,7 @@ mixin action_bar
       block
 //- the action button in action bar
 mixin action_button(title,type,icon,level)
-  button.btn(class="btn-#{level}",type=type)&attributes(attributes)
+  button.btn.no-border(class="btn-#{level}",type=type)&attributes(attributes)
     i.bigger-110(class="icon-#{icon}")
     | #{title}
 //- the default submit action
