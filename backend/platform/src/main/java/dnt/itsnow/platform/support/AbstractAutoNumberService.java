@@ -14,7 +14,8 @@ import java.util.Map;
  */
 public abstract class AbstractAutoNumberService implements AutoNumberService {
 
-    private Map<String, NumberRule> configurations = new HashMap<String, NumberRule>();
+
+    protected Map<String, NumberRule> configurations = new HashMap<String, NumberRule>();
 
     @Override
     public void configure(String catalog, String rule) {
@@ -22,28 +23,28 @@ public abstract class AbstractAutoNumberService implements AutoNumberService {
         configurations.put(process(catalog), numberRule);
     }
 
-    @Override
-    public String next(String catalog) {
-        NumberRule rule = configurations.get(process(catalog));
+    public NumberRule getConfiguration(String catalog){
+        String name = process(catalog);
+        NumberRule rule = configurations.get(name);
         if( rule == null ){
-            rule = NumberRule.parse(process(catalog) + "_%06d/1000");
-            configurations.put(process(catalog), rule);
+            rule = NumberRule.parse(name + "_%06d/1000");
+            setConfiguration(name, rule);
         }
-        long next = nextValue(catalog, rule.start);
-        return String.format(rule.format, next);
+        return rule;
     }
 
-    protected abstract long nextValue(String catalog, long start);
+    public void setConfiguration(String catalog, NumberRule rule){
+        configurations.put(process(catalog), rule);
+    }
 
-
-    String process(String catalog) {
+    protected String process(String catalog) {
         return catalog.toUpperCase();
     }
 
-    static class NumberRule{
+    protected static class NumberRule{
 
-        private final String format;
-        private final long start;
+        final String format;
+        final long start;
 
         public NumberRule(String format, long start) {
             this.format = format;
@@ -52,6 +53,14 @@ public abstract class AbstractAutoNumberService implements AutoNumberService {
 
         public NumberRule(String rule) {
             this(rule, 0L);
+        }
+
+        public long getStart() {
+            return start;
+        }
+
+        public String getFormat() {
+            return format;
         }
 
         public static NumberRule parse(String rule) {
