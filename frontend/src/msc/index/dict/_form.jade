@@ -1,0 +1,15 @@
+//- include the form mixins
+include /lib/mixins/form
+//- this form need includer provide variable:
+		readonly : true | false
++section("字典基本信息")
+	+group("dict","code", "字典代码", "star", "字典代码")
+		+input("dict","code")(readonly=readonly)
+	+group("dict", "name", "字典名称", "star", "字典名称")
+		+input("dict", "name")(readonly=readonly)
+	+group("dict", "display", "显示名", "star", "显示名")
+		+input("dict", "display")(readonly=readonly)
+	+group("dict", "val", "值", "star", "值")
+		+input("dict", "val")(readonly=readonly)
+	+group("dict", "description", "描述", "star", "字典说明")
+		+area("dict", "description")(readonly=readonly)
