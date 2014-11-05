@@ -9,8 +9,8 @@ package dnt.itsnow.model;
 public class Sequence {
     private String catalog;
     private String rule;
-    private long start;
-    private int increment;
+    private int    increment;
+    private long value;
 
     public Sequence() {
     }
@@ -36,19 +36,19 @@ public class Sequence {
         this.rule = rule;
     }
 
-    public void setStart(long start) {
-        this.start = start;
-    }
-
-    public long getStart() {
-        return start;
-    }
-
     public int getIncrement() {
         return increment;
     }
 
     public void setIncrement(int increment) {
         this.increment = increment;
+    }
+
+    public long getValue() {
+        return value;
+    }
+
+    public void setValue(long value) {
+        this.value = value;
     }
 }

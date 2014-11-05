@@ -22,16 +22,19 @@ public interface SequenceRepository {
     long setValue(@Param("catalog") String catalog, @Param("value") int value);
 
     @Select("SELECT * FROM sequences")
-    @ResultMap("sequenceMap")
+    @ResultMap("sequenceResult")
     List<Sequence> findAll();
 
     @Select("SELECT * FROM sequences WHERE catalog = #{catalog}")
-    @ResultMap("sequenceMap")
+    @ResultMap("sequenceResult")
     Sequence findByCatalog(@Param("catalog") String catalog);
 
-    @Update("UPDATE sequences SET rule = #{rule} WHERE catalog = #{catalog}")
+    @Update("UPDATE sequences SET rule = #{rule}, increment = #{increment} WHERE catalog = #{catalog}")
     void update(Sequence sequence);
 
-    @Insert("INSERT INTO sequences(catalog, rule, value, increment) VALUES(#{catalog}, #{rule}, #{start}, #{increment})")
+    @Insert("INSERT INTO sequences(catalog, rule, value, increment) VALUES(#{catalog}, #{rule}, #{value}, #{increment})")
     void create(Sequence sequence);
+
+    @Delete("DELETE FROM sequences WHERE catalog = #{catalog}")
+    void deleteByCatalog(@Param("catalog") String catalog);
 }

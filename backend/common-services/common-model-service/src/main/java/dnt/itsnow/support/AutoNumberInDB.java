@@ -5,6 +5,7 @@ package dnt.itsnow.support;
 
 import dnt.itsnow.model.Sequence;
 import dnt.itsnow.platform.support.AbstractAutoNumberService;
+import dnt.itsnow.platform.util.NumberRule;
 import dnt.itsnow.repository.SequenceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.Lifecycle;
@@ -18,7 +19,7 @@ import java.util.List;
  *
  * 这个服务类似于Oracle的sequence服务，基于某张持久化表
  */
-@Service
+@Service("autoNumberInDB")
 @Transactional
 public class AutoNumberInDB extends AbstractAutoNumberService implements Lifecycle{
     @Autowired
@@ -32,11 +33,12 @@ public class AutoNumberInDB extends AbstractAutoNumberService implements Lifecyc
         NumberRule numberRule = NumberRule.parse(rule);
         if( sequence != null ){
             sequence.setRule(rule);
-            sequence.setStart(numberRule.getStart());
+            sequence.setIncrement(numberRule.getIncrement());
             repository.update(sequence);
         }else{
             sequence = new Sequence(catalog, rule);
-            sequence.setStart(numberRule.getStart());
+            sequence.setValue(numberRule.getStart());
+            sequence.setIncrement(numberRule.getIncrement());
             repository.create(sequence);
         }
         setConfiguration(catalog, numberRule);

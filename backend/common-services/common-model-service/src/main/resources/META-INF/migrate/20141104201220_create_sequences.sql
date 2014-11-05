@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS sequences (
   value       INT(10)          NOT NULL DEFAULT 1,
   increment   INT(10)          NOT NULL DEFAULT 1,
   PRIMARY KEY (catalog)
-);
+)ENGINE=MyISAM;
 
 DROP FUNCTION IF EXISTS curr_val;
 DELIMITER $

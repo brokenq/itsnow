@@ -3,6 +3,8 @@
  */
 package dnt.itsnow.platform.support;
 
+import dnt.itsnow.platform.util.NumberRule;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 

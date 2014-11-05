@@ -13,13 +13,14 @@ import org.springframework.context.annotation.Import;
  */
 @Configuration
 @Import(DatabaseConfig.class)
-public class SequencetRepositoryConfig extends RepositoryConfigWithH2 {
+public class SequenceRepositoryConfig extends RepositoryConfigWithH2 {
 
     protected String[] sqlScripts() {
         // 由于 common 模块并不依赖于mutable模块，而且也无法依赖
         // 所以，为了做这些测试，需要copy一份mutable schema过来
         return new String[]{
-                "classpath:META-INF/migrate/20141104201220_create_sequences.sql"
+                "classpath:META-INF/setup/create_sequences.sql",
+                "classpath:META-INF/setup/insert_sequences.sql"
         };
     }
 }

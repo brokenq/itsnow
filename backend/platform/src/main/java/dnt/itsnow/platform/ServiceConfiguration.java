@@ -3,7 +3,6 @@
  */
 package dnt.itsnow.platform;
 
-import dnt.itsnow.platform.service.AutoNumberService;
 import dnt.itsnow.platform.web.security.DelegateSecurityConfigurer;
 import net.happyonroad.spring.service.AbstractServiceConfig;
 import org.apache.ibatis.session.Configuration;
@@ -31,6 +30,6 @@ public class ServiceConfiguration extends AbstractServiceConfig {
         exportService(DelegateSecurityConfigurer.class);
 
         //一般工具服务
-        exportService(AutoNumberService.class);
+        //exportService(AutoNumberService.class);
     }
 }
