@@ -121,7 +121,7 @@ public class DepartmentsController extends SessionSupportController<Department> 
 
 //        this.department.apply(department);
         try {
-            logger.info("Updating this.department: {}", department);
+            logger.info("Updating department after apply: {}", department);
             departmentService.update(department);
         } catch (DepartmentException e) {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());

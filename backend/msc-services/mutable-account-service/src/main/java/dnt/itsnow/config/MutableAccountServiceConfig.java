@@ -3,6 +3,7 @@
  */
 package dnt.itsnow.config;
 
+import dnt.itsnow.platform.service.AutoNumberService;
 import dnt.itsnow.service.MutableUserService;
 
 /** The mutable account service config */
@@ -11,5 +12,6 @@ public class MutableAccountServiceConfig extends DefaultMutableServiceConfig{
     public void defineServices() {
         super.defineServices();
         importService(MutableUserService.class);
+        importService(AutoNumberService.class);
     }
 }

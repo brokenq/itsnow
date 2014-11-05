@@ -15,6 +15,7 @@ import dnt.itsnow.repository.MutableAccountRepository;
 import dnt.itsnow.service.MutableAccountService;
 import dnt.itsnow.service.MutableUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -30,6 +31,7 @@ public class MutableAccountManager extends CommonAccountManager implements Mutab
     @Autowired
     MutableAccountRepository mutableRepository;
     @Autowired
+    @Qualifier("autoNumberInDB")
     AutoNumberService        autoNumberService;
     @Autowired
     MutableUserService       userService;

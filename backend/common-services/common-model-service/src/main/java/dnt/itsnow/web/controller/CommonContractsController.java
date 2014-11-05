@@ -15,15 +15,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <h1>合同控制器</h1>
  * 面向当前用户所服务的企业，获取其相关的合同信息
  * <pre>
- * <b>HTTP     URI                        方法       含义  </b>
- * # GET      /api/contracts              index     列出所有相关合同，支持过滤，分页，排序等
- * # GET      /api/contracts/{sn}         show      列出特定的合同
+ * <b>HTTP     URI                         方法        含义  </b>
+ * # GET      /api/contracts?own={boolean} index     列出所有相关合同，支持过滤，分页，排序等
+ * # GET      /api/contracts/{sn}          show      列出特定的合同
  * </pre>
  * TODO 添加测试用例
  */
@@ -41,10 +42,10 @@ public class CommonContractsController extends SessionSupportController<Contract
      * @return 合同列表，其中的合同信息不包括Contract Detail
      */
     @RequestMapping
-    public Page<Contract> index( ) {
+    public Page<Contract> index(@RequestParam(value = "own", defaultValue = "false") boolean own) {
         logger.debug("Listing contracts");
         try {
-            indexPage = contractService.findAllByAccount(mainAccount, pageRequest);
+            indexPage = contractService.findAllByAccount(mainAccount, own, pageRequest);
         } catch (ServiceException e) {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST,
                     "Your main account can't list contracts: " + e.getMessage());

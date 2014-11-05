@@ -4,6 +4,7 @@
 package dnt.itsnow.config;
 
 import dnt.itsnow.platform.config.DefaultServiceConfig;
+import dnt.itsnow.platform.service.AutoNumberService;
 import dnt.itsnow.platform.web.security.DelegateSecurityConfigurer;
 import dnt.itsnow.service.CommonAccountService;
 import dnt.itsnow.service.CommonUserService;
@@ -19,6 +20,6 @@ public class CommonModelServiceConfig extends DefaultServiceConfig {
 
         exportService(CommonAccountService.class);
         exportService(CommonUserService.class, "plain", "plainUserService");
-
+        exportService(AutoNumberService.class);
     }
 }
