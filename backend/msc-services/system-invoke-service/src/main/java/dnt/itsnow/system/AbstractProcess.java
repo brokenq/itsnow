@@ -79,7 +79,7 @@ public abstract class AbstractProcess<T extends SystemInvocation> implements Pro
             IOUtils.write("\t", outputStream);
         IOUtils.write(e.getClass().getName().getBytes(), outputStream);
         IOUtils.write(":", outputStream);
-        IOUtils.write(e.getLocalizedMessage().getBytes(Charset.forName("UTF8")), outputStream);
+        IOUtils.write(e.getLocalizedMessage().getBytes(Charset.forName("UTF-8")), outputStream);
         IOUtils.write("\n", outputStream);
         if (e.getCause() != null && e.getCause() != e) {
             recordError(e.getCause(), outputStream, indent + 1);
@@ -94,7 +94,7 @@ public abstract class AbstractProcess<T extends SystemInvocation> implements Pro
     }
 
     private Future<?> pipe(final InputStream src, final File file) {
-        return systemInvokeExecutor.submit(new Redirector(src, file));
+        return systemInvokeExecutor.submit(new Redirector(src, file, invocation.getSequence() > 0));
     }
 
 }
@@ -102,17 +102,19 @@ public abstract class AbstractProcess<T extends SystemInvocation> implements Pro
 class Redirector implements Runnable {
     private final InputStream src;
     private final File        file;
+    private final boolean     append;
 
-    public Redirector(InputStream src, File file) {
+    public Redirector(InputStream src, File file, boolean append) {
         this.src = src;
         this.file = file;
+        this.append = append;
     }
 
     public void run() {
         FileOutputStream dest = null;
         try {
             if (!file.exists()) FileUtils.touch(file);
-            dest = new FileOutputStream(file, false);// not use append mode
+            dest = new FileOutputStream(file, append);// not use append mode
             byte[] buffer = new byte[1024];
             for (int n = 0; n != -1; n = src.read(buffer)) {
                 dest.write(buffer, 0, n);

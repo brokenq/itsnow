@@ -25,6 +25,8 @@
         <typeAlias type="dnt.itsnow.model.ItsnowHost" alias="ItsnowHost"/>
         <typeAlias type="dnt.itsnow.model.ItsnowSchema" alias="ItsnowSchema"/>
         <typeAlias type="dnt.itsnow.model.ItsnowProcess" alias="ItsnowProcess"/>
+
+        <typeAlias type="dnt.itsnow.model.Sequence" alias="Sequence"/>
     </typeAliases>
 
     <typeHandlers>

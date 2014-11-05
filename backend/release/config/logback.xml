@@ -27,7 +27,7 @@
         <appender-ref ref="Rolling" />
     </root>
 
-    <logger name="dnt.itsnow" level="DEBUG" />
+    <logger name="dnt.itsnow" level="INFO" />
     <logger name="dnt.itsnow.platform.web.support.ExtendedRequestMappingHandlerMapping" level="INFO" />
     <logger name="dnt.itsnow.demo.repository" level="INFO" />
     <logger name="net.happyonroad.spring.service.SpringServicePackage" level="INFO" />
@@ -35,5 +35,6 @@
     <logger name="dnt.itsnow.support.DefaultSystemInvoker" level="INFO" />
     <logger name="dnt.itsnow.support.ItsnowResourceManager" level="INFO" />
     <logger name="dnt.itsnow.support.ItsnowStatusMaintainer" level="INFO" />
+    <logger name="dnt.itsnow.support.SystemInvokeManager" level="INFO" />
 
 </configuration>
