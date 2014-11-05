@@ -14,16 +14,18 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 
 /**
  * <h1>合同控制器</h1>
  * 面向当前用户所服务的企业，获取其相关的合同信息
  * <pre>
- * <b>HTTP     URI                        方法       含义  </b>
- * # POST     /api/contracts/             invite     MSU新建合同
- * # PUT      /api/contracts/{sn}/bid     bid        MSP投标
- * # PUT      /api/contracts/{sn}/approve approve   签订合同
- * # PUT      /api/contracts/{sn}/reject  reject    拒签合同
+ * <b>HTTP     URI                        方法        含义  </b>
+ * # POST     /api/contracts/             invite      MSU新建合同
+ * # PUT      /api/contracts/{sn}/bid     bid         MSP投标
+ * # PUT      /api/contracts/{sn}/approve approve     签订合同
+ * # PUT      /api/contracts/{sn}/reject  reject      拒签合同
+ * # GET      /api/contracts/{sn}/check   checkUnique 配合前台进行唯一性校验
  * </pre>
  * 以上有损操作，并非是本系统直接执行（没有条件，没有权限）
  * 而是向msc发起请求执行(ContractService实现者)
@@ -111,7 +113,7 @@ public class GeneralContractsController extends SessionSupportController {
     @RequestMapping(value="/{sn}/bid",method = RequestMethod.PUT)
     public Contract bid(@PathVariable("sn") String sn) {
         logger.info("Msp bid contract:{}", sn);
-        Contract contract = null;
+        Contract contract;
         try {
             contract = contractService.bid(mainAccount,sn);
         } catch (ServiceException e) {
@@ -123,4 +125,23 @@ public class GeneralContractsController extends SessionSupportController {
         logger.debug("Bid contract: {}", contract);
         return contract;
     }
+
+    @RequestMapping(value = "{sn}/check", method = RequestMethod.GET)
+    public HashMap checkUnique(@PathVariable("sn") String sn){
+        Contract contract;
+        try {
+            contract = contractService.findBySn(sn);
+        } catch (ServiceException e) {
+            throw new WebClientSideException(HttpStatus.NOT_ACCEPTABLE,
+                    "the contract can't be check:" + e.getMessage());
+        } catch (RestClientException e) {
+            throw new WebServerSideException(HttpStatus.BAD_GATEWAY, e.getMessage());
+        }
+        if( contract != null ){
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate contract sn: " + contract.getSn());
+        }else{
+            return new HashMap();
+        }
+    }
+
 }

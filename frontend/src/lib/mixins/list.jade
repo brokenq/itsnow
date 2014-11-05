@@ -32,9 +32,9 @@ mixin drop_button(action, icon, text, weight, rejectCss, requireCss)
 
 //- *********** Main Table *****************
 
-//- the list table
-mixin list_table(name, selection)
-  table.table.table-hover(template-pagination="customPager", ng-table=name)
+//- the table with pagination
+mixin page_table(name, selection)
+  table.table(template-pagination="customPager", ng-table=name)
     block
   script(type="text/ng-template")#ngTableCheckboxHeader
     +select_all(selection)
@@ -47,6 +47,15 @@ mixin list_table(name, selection)
         +page_size_button(25)
         +page_size_button(50)
         +page_size_button(100)
+
+//- the table without pagination
+mixin common_table(name, selection)
+  table.table(ng-table=name)
+    block
+  script(type="text/ng-template")#ngTableCheckboxHeader
+    +select_all(selection)
+
+
 //- the select all checkbox of the list table
 mixin select_all(selection)
   input(type="checkbox", ng-model="#{selection}.checked", name="filter-checkbox", value="")#select_all

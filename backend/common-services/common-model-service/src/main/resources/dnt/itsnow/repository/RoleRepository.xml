@@ -17,6 +17,7 @@
     <resultMap id="userResult" type="User">
         <result property="id" column="userId"/>
         <result property="name" column="username"/>
+        <result property="nickName" column="userNickName"/>
         <result property="email" column="userEmail"/>
         <result property="phone" column="userPhone"/>
         <result property="accountId" column="userAccountId"/>
@@ -28,7 +29,8 @@
 
     <select id="selectUser" resultMap="userResult">
         SELECT u.id               AS userId,
-            u.username,
+               u.username,
+               u.nick_name        AS userNickName,
                u.email            AS userEmail,
                u.phone            AS userPhone,
                u.account_id       AS userAccountId,

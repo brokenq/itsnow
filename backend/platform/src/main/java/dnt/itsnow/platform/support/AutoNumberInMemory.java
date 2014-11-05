@@ -3,6 +3,8 @@
  */
 package dnt.itsnow.platform.support;
 
+import dnt.itsnow.platform.util.NumberRule;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -13,7 +15,16 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AutoNumberInMemory extends AbstractAutoNumberService {
     private Map<String, Long> sequences = new ConcurrentHashMap<String, Long>();
+
+
     @Override
+    public String next(String catalog) {
+        NumberRule rule = getConfiguration(catalog);
+        long next = nextValue(catalog, rule.getStart());
+        return String.format(rule.getFormat(), next);
+    }
+
+
     protected long nextValue(String catalog, long start) {
         Long seq = sequences.get(catalog);
         if( seq == null ){

@@ -26,7 +26,12 @@
     </select>
     <select id="findAllByMspAccountId" resultType="Contract">
         SELECT * FROM itsnow_msc.contracts
-        WHERE (msp_account_id = #{mspId} OR msp_account_id is null)
+        <where>
+            msp_account_id = #{mspId}
+            <if test="own == false">
+                OR msp_account_id is null
+            </if>
+        </where>
         <if test="pageable.sort != null">
             ORDER BY #{pageable.sort}
         </if>

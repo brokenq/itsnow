@@ -5,7 +5,7 @@
 angular.module('Itsnow.MspIndex', [
   'Itsnow.Index',
   'MspIndex.Templates',
-  'MspIndex.Contract',
+  'MscIndex.Contracts',
   'MspIndex.IncidentDetail',
   'MspIndex.IncidentOpened',
   'MspIndex.IncidentClosed',

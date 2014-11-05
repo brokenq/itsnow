@@ -16,6 +16,7 @@ angular.module('MsuIndex.Contract', ['ngTable', 'ngResource', 'Lib.Feedback'])
 .factory('ContractService', ['$resource', ($resource) ->
     $resource '/api/contracts/:sn/:do', {},
       save: {method: 'POST'}
+      get: {method: 'GET', params: {sn: '@sn'}}
       query: {method: 'GET', params: {keyword: '@keyword'}, isArray: true}
       reject: {method: 'PUT', params: {sn: '@sn', do: 'reject'}}
       approve: {method: 'PUT', params: {sn: '@sn', do: 'approve'}}
