@@ -15,7 +15,8 @@ angular.module('MscIndex.Account', ['ngTable','ngResource', 'ngSanitize','dnt.ac
       data: {pageTitle: '服务商管理'}
 
   .factory('AccountService', ['$resource', ($resource) ->
-    $resource("/admin/api/accounts")
+    $resource "/admin/api/accounts/:sn",{},
+      get: {method:"GET", params:{sn:'@sn'}}
   ])
   .filter('formatSubDomain', ['$sce', ($sce)->
     (account) ->

@@ -19,5 +19,8 @@ angular.module('Itsnow.MscIndex', [
   'MscIndex.SLA',
   'MscIndex.Contract',
   'MscIndex.ServiceCatalog',
-  'MscIndex.System'
+  'MscIndex.System',
+  'MscIndex.SchemaView'
+
+
 ]);

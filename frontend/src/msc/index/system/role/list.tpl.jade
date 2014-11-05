@@ -35,7 +35,8 @@ mixin select_all()
     tr(ng-repeat="role in roles", value="{{role.name}}")
       td(width="30" style="text-align: left;" header="'ngTableCheckboxHeader'")
         input(type="checkbox" ng-model="selection.items[role.name]")
-      td(data-title="'角色名'") {{role.name}}
+      td(data-title="'角色名'")
+        a(ui-sref="role_view({name: '{{role.name}}'})") {{role.name}}
       td(data-title="'用户名称'") {{role.users | colFilter}}
       td(data-title="'描述'") {{role.description}}
 

@@ -45,7 +45,8 @@ div(ui-view='')
         td(width="30" style="text-align: left" header="'ngTableCheckboxHeader'")
           input(type='text', ng-hide='true', ng-model='status', ng-init="status = (schema.process == null ? 'deletable' : '')")
           input(type="checkbox" ng-model="selection.items[schema.id]")
-        td(data-title="'Schema'") {{schema.name}}
+        td(data-title="'Schema'")
+          a(ui-sref="schema_view({id: '{{schema.id}}'})") {{schema.name}}
         td(data-title="'主机名'") {{schema.host.name}}
         td(data-title="'服务进程'") {{schema.process.name}}
         td(data-title="'数据库用户名'") {{schema.configuration.user}}

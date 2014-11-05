@@ -7,7 +7,9 @@ angular.module('MscIndex.AccountView', ['ngResource'])
       data:
         pageTitle: '查看帐户'
 
-  .controller 'AccountViewCtrl', ['$scope', '$state', '$stateParams', '$http', ($scope, $state, $stateParams, $http)->
-
+  .controller 'AccountViewCtrl', ['$scope', '$state', '$stateParams', '$http', 'AccountService' ,
+    ($scope, $state, $stateParams, $http, accountService)->
+      accountService.get {sn:$stateParams.sn}, (data)->
+        $scope.account = data
   ]
 
