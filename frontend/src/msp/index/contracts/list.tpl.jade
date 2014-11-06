@@ -7,7 +7,7 @@ include /lib/mixins/list
     +button_group
       +tool_button("actionService.perform(accept)", "plus", "签约", "*", "", "")
 
-  +list_table("contractsTable","selection")
+  +page_table("contractsTable","selection")
     +row("contract", "sn", "selection")
       td(data-title="'合同名称'")
         a(ui-sref="contract.view(contract)") {{contract.sn}}
