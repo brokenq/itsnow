@@ -15,12 +15,12 @@ angular.module('MscIndex.Accounts',
       templateUrl: 'accounts/index.tpl.jade'
       data: {pageTitle: '帐户管理', default: 'accounts.msu_list'}
     $stateProvider.state 'accounts.msu_list',
-      url: '/msu',
+      url: '^/msu_accounts',
       controller: 'AccountListCtrl',
       templateUrl: 'accounts/list.tpl.jade'
       data: {pageTitle: '企业管理'}
     $stateProvider.state 'accounts.msp_list',
-      url: '/msp',
+      url: '^/msp_accounts',
       controller: 'AccountListCtrl',
       templateUrl: 'accounts/list.tpl.jade'
       data: {pageTitle: '服务商管理'}
@@ -117,7 +117,10 @@ angular.module('MscIndex.Accounts',
         $location.search(params.url()) # put params in url
         type = $location.$$path.substr($location.$$path.lastIndexOf('/')+1)
         defaults = params.url()
-        defaults.type = type if type == 'msu' or type == 'msp'
+        if type == 'msu_accounts'
+          defaults.type = "msu"
+        else if type == 'msp_accounts'
+          defaults.type = "msp"
         Accounts.query(defaults, (data, headers) ->
           $timeout(->
             params.total(headers('total'))
