@@ -1,4 +1,4 @@
-angular.module('MscIndex.WorkTimes',
+angular.module('System.WorkTime',
     ['ngTable',
      'ngResource',
      'ngSanitize',
@@ -10,27 +10,27 @@ angular.module('MscIndex.WorkTimes',
     $stateProvider.state 'worketimes',
       url: '/worktimes',
       abstract: true,
-      templateUrl: 'worktimes/index.tpl.jade',
+      templateUrl: 'system/worktimes/index.tpl.jade',
       controller: 'WorkTimeCtrl',
       data: {pageTitle: '工作时间管理', default: 'worktimes.list'}
     $stateProvider.state 'worktimes.list',
       url: '/list',
-      templateUrl: 'worktimes/list.tpl.jade'
+      templateUrl: 'system/worktimes/list.tpl.jade'
       controller: 'WorkTimeListCtrl',
       data: {pageTitle: '时间列表'}
     $stateProvider.state 'worktimes.new',
       url: '/new',
-      templateUrl: 'worktimes/new.tpl.jade'
+      templateUrl: 'system/worktimes/new.tpl.jade'
       controller: 'WorkTimeNewCtrl',
       data: {pageTitle: '新增时间'}
     $stateProvider.state 'worktimes.view',
       url: '/{id}',
-      templateUrl: 'worktimes/view.tpl.jade'
+      templateUrl: 'system/worktimes/view.tpl.jade'
       controller: 'WorkTimeViewCtrl',
       data: {pageTitle: '查看工作时间'}
     $stateProvider.state 'worktimes.edit',
       url: '/{id}/edit',
-      templateUrl: 'worktimes/edit.tpl.jade'
+      templateUrl: 'system/worktimes/edit.tpl.jade'
       controller: 'WorkTimeEditCtrl',
       data: {pageTitle: '编辑时间'}
     $urlRouterProvider.when '/worktimes', '/worktimes/list'

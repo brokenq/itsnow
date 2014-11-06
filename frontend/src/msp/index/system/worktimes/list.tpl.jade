@@ -12,7 +12,7 @@ include /lib/mixins/list
 
   +page_table("worktimesTable","selection")
     +row("worktime", "id", "selection")(class="editable deletable")
-      td(data-title="'名称'")
-        a(ui-sref="slas.view(sla)") {{sla.title}}
-      td(data-title="'描述'") {{sla.description}}
-      td(data-title="'SLOs'") SLOs
+      td(data-title="'工作日'")  {{workTime.name}}
+      td(data-title="'起始时间'") {{workTime.startAt}}
+      td(data-title="'结束时间'")  {{workTime.endAt}}
+      td(data-title="'描述'")   {{workTime.description}}
