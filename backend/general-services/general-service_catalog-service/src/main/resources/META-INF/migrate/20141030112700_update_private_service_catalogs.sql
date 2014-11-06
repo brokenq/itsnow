@@ -9,4 +9,4 @@ ADD COLUMN level INT(10) NOT NULL DEFAULT 1 AFTER icon;
 -- SQL to undo the change goes here.
 
 
-DROP TABLE private_service_items IF EXISTS;
+DROP TABLE IF EXISTS private_service_items;

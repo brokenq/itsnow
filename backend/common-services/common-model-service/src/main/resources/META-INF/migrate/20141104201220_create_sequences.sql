@@ -10,7 +10,6 @@ CREATE TABLE IF NOT EXISTS sequences (
 )ENGINE=MyISAM;
 
 DROP FUNCTION IF EXISTS curr_val;
-DELIMITER $
 CREATE FUNCTION curr_val (name VARCHAR(50))
          RETURNS INTEGER
          LANGUAGE SQL
@@ -25,12 +24,10 @@ BEGIN
                    FROM sequences
                    WHERE catalog = name;
          RETURN result;
-END
-$
-DELIMITER ;
+END;
 
 DROP FUNCTION IF EXISTS next_val;
-DELIMITER $
+
 CREATE FUNCTION next_val (name VARCHAR(50))
          RETURNS INTEGER
          LANGUAGE SQL
@@ -43,12 +40,10 @@ BEGIN
                    SET value = value + increment
                    WHERE catalog = name;
          RETURN curr_val(name);
-END
-$
-DELIMITER ;
+END;
 
 DROP FUNCTION IF EXISTS set_val;
-DELIMITER $
+
 CREATE FUNCTION set_val (name VARCHAR(50), val INTEGER)
          RETURNS INTEGER
          LANGUAGE SQL
@@ -61,11 +56,7 @@ BEGIN
                    SET value = val
                    WHERE catalog = name;
          RETURN curr_val(name);
-END
-$
-DELIMITER ;
-
-
+END ;
 
 -- //@UNDO
 -- SQL to undo the change goes here.
