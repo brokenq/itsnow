@@ -1,10 +1,6 @@
 -- // insert public_service_catalogs
 -- Migration SQL that makes the change goes here.
-<<<<<<< HEAD:backend/msc-services/mutable-service_catalog-service/src/main/resources/META-INF/migrate/20141027103000_insert_public_service_catalogs.sql
-INSERT public_service_catalogs(id,parent_id, sn, `level`, title, description, icon)
-=======
 INSERT INTO public_service_catalogs(id,parent_id, sn,level, title, description, icon)
->>>>>>> 362a4dae340823bd46c005bb7f28b17b7ebcedcc:backend/msc-services/mutable-service_catalog-service/src/main/resources/META-INF/migrate/20141027103610_insert_public_service_catalogs.sql
 VALUES
  (1,NULL, 'SC_100',1, 'Hardware', 'Services related to hardware purchase, upgrading RAM, requesting a laptop or a desktop', '/assets/sc/hardware.png'),
  (2,NULL, 'SC_200',1, 'Internet', 'Services related to internet access, WiFi access, creating a VPN account, booking a domain', '/assets/sc/internet.png'),
@@ -12,11 +8,7 @@ VALUES
  (4,NULL, 'SC_400',1, 'User Accounts', 'Services related to hiring a new employee, requesting a department/place change', '/assets/sc/user-accounts.png'),
  (5,NULL, 'SC_500',1, 'Application Login', 'Services related to application login like creating CRM account, SAP account, MSSQL account', '/assets/sc/application-login.png');
 
-<<<<<<< HEAD:backend/msc-services/mutable-service_catalog-service/src/main/resources/META-INF/migrate/20141027103000_insert_public_service_catalogs.sql
-INSERT public_service_catalogs(id,parent_id, sn, `level`, title, description, icon)
-=======
 INSERT INTO public_service_catalogs(id,parent_id, sn,level, title, description, icon)
->>>>>>> 362a4dae340823bd46c005bb7f28b17b7ebcedcc:backend/msc-services/mutable-service_catalog-service/src/main/resources/META-INF/migrate/20141027103610_insert_public_service_catalogs.sql
 VALUES
   (6,1, 'SC_101',2, 'Desktop', 'Services related to desktop computer', '/assets/sc/desktop.png'),
   (7,1, 'SC_102',2, 'Laptop', 'Services related to laptop', '/assets/sc/laptop.png'),

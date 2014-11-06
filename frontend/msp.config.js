@@ -95,7 +95,6 @@ module.exports = {
       '../vendor/ace-bootstrap/js/ace-extra.js',
       '../vendor/typehead.js/bs2/typeahead-bs2.js',
       '../vendor/ng-table/ng-table.js',
-      '../vendor/ng-grid/ng-grid-2.0.11.debug.js',
       '../vendor/angular-ui-tree/dist/angular-ui-tree.js',
       '../vendor/angular-dialog-service/dialogs.js',
       '../vendor/angular-dialog-service/dialogs-default-translations.js',
@@ -110,7 +109,6 @@ module.exports = {
       '../vendor/bootstrap/dist/css/bootstrap-theme.css',
       '../vendor/ace-bootstrap/css/*.css',
       '../vendor/ng-table/ng-table.css',
-      '../vendor/ng-grid/ng-grid.css',
       '../vendor/angular-dialog-service/dialogs.css',
       '../vendor/angular-ui-tree/dist/angular-ui-tree.min.css',
       '../vendor/isteven-angular-multiselect/angular-multi-select.css'
