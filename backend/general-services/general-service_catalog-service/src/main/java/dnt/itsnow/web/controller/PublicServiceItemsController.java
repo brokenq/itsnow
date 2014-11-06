@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestClientException;
 
 /**
  * <h1>私有服务项管理控制器</h1>
@@ -42,9 +43,10 @@ public class PublicServiceItemsController extends SessionSupportController<Priva
     public void createByAccount(@PathVariable("isn") String isn){
         try{
             publicServiceItemService.createByAccount(serviceItem, mainAccount);
-        }catch(Exception e){
-            throw new WebServerSideException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }catch (RestClientException e) {
+            throw new WebServerSideException(HttpStatus.BAD_GATEWAY, e.getMessage());
         }
+
     }
 
     /**
@@ -57,8 +59,8 @@ public class PublicServiceItemsController extends SessionSupportController<Priva
     public void destroyByAccount(@PathVariable("isn") String isn){
         try {
             publicServiceItemService.deleteByAccount(serviceItem, mainAccount);
-        }catch(Exception e){
-            throw new WebServerSideException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }catch (RestClientException e) {
+            throw new WebServerSideException(HttpStatus.BAD_GATEWAY, e.getMessage());
         }
     }
 

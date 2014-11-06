@@ -6,13 +6,16 @@ import dnt.itsnow.service.PublicServiceCatalogService;
 import dnt.itsnow.service.PublicServiceItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * PublicServiceItemManager
  */
 @Service
+@Transactional
 public class PublicServiceItemManager extends CommonServiceItemManager implements PublicServiceItemService {
 
     @Autowired
@@ -20,6 +23,8 @@ public class PublicServiceItemManager extends CommonServiceItemManager implement
 
     @Autowired
     PublicServiceCatalogService catalogService;
+
+    private List<PublicServiceItem> items;
 
     @Override
     public PublicServiceItem create(PublicServiceItem publicServiceItem) {
@@ -52,7 +57,11 @@ public class PublicServiceItemManager extends CommonServiceItemManager implement
 
     @Override
     public void saveByAccount(PublicServiceItem item,Long accountId) {
-
+        items = publicServiceItemRepository.findByAccountId(accountId);
+        for(PublicServiceItem si:items){
+            if(si.getId() == item.getId())
+                return;
+        }
         publicServiceItemRepository.addByAccount(item.getId(),accountId);
     }
 

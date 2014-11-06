@@ -13900,12 +13900,13 @@ th[aria-selected=true] .ui-jqgrid-sortable {
 .ace-settings-container {
   position: absolute;
   right: 0;
-  top: 50px;
+  top: 40px;
   z-index: 12;
 }
 .breadcrumbs-fixed .ace-settings-container {
   top: 9px;
 }
+/*
 .btn.ace-settings-btn {
   float: left;
   display: inline-block;
@@ -13917,6 +13918,8 @@ th[aria-selected=true] .ui-jqgrid-sortable {
   vertical-align: top;
   margin: 0;
 }
+*/
+
 .btn.ace-settings-btn:hover,
 .btn.ace-settings-btn.open {
   opacity: 1;

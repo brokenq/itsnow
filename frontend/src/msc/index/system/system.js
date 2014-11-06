@@ -5,5 +5,6 @@
 angular.module('MscIndex.System', [
   'System.Roles',
   'MscIndex.User',
-  'System.Group'
+  'System.Group',
+  'MscIndex.RoleView'
 ]);

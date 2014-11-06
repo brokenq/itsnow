@@ -8,6 +8,8 @@ angular.module('MscIndex.HostView', ['ngResource'])
 
   .controller 'HostViewCtrl', ['$scope', '$state', '$stateParams', 'HostService', '$http',
     ($scope, $state, $stateParams, hostService, $http)->
+      #hostService.query (data)->
+        #$scope.host = data
       promise = hostService.get({id: $stateParams.id}).$promise
       promise.then (host) ->
         $scope.host = host

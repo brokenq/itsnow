@@ -5,6 +5,7 @@ import dnt.itsnow.repository.PublicServiceCatalogRepository;
 import dnt.itsnow.service.PublicServiceCatalogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 
@@ -12,6 +13,7 @@ import java.sql.Timestamp;
  * <h1>Public ServiceCatalog Manager</h1>
  */
 @Service
+@Transactional
 public class PublicServiceCatalogManager extends CommonServiceCatalogManager implements PublicServiceCatalogService {
 
     @Autowired

@@ -4,8 +4,7 @@
 angular.module('Itsnow.MscIndex', [
   'Itsnow.Index',
   'MscIndex.Templates',
-  'MscIndex.Account',
-  'MscIndex.AccountView',
+  'MscIndex.Accounts',
   'MscIndex.Host',
   'MscIndex.Dict',
   'MscIndex.HostNew',
@@ -20,6 +19,7 @@ angular.module('Itsnow.MscIndex', [
   'MscIndex.SLAs',
   'MscIndex.Contract',
   'MscIndex.ServiceCatalog',
-  'MscIndex.System'
+  'MscIndex.System',
+  'MscIndex.SchemaView'
 
 ]);

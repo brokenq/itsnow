@@ -2,8 +2,7 @@ mixin tool_button(action, icon, text, weight, rejectCss, requireCss)
     button.btn.btn-primary.no-border(type="button", ng-click=action, weight=weight, reject-css=rejectCss, require-css=requireCss)
         span.glyphicon(class="glyphicon-#{icon}")
         | #{text}
-mixin td(title, name)
-    td(data-title=title) #{name}
+
 // 由于IDEA/WebStorm等在script tag内对jade的解析有问题，所以将这段会仅在IDE中出错的抽取到mixin中
 mixin select_all()
   input(type="checkbox", ng-model="checkboxes.checked", name="filter-checkbox", value="")#select_all
@@ -28,9 +27,12 @@ mixin select_all()
     tr(ng-repeat="dept in departments", value="{{dept.sn}}")
       td(width="30" style="text-align: left" header="'ngTableCheckboxHeader'")
         input(type="checkbox" ng-model="checkboxes.items[dept.sn]")
-      +td("'部门名称'", "{{dept.name}}")
-      +td("'地点'", "{{dept.sites | deptFilter}}")
-      +td("'描述'", "{{dept.description}}")
+      td(data-title="'部门名称'")
+        a(ui-sref="dept_view({sn: '{{dept.sn}}'})") {{dept.name}}
+      td(data-title="'地点'") {{dept.sites | deptFilter}}
+      td(data-title="'描述'") {{dept.description}}
+
+
 
 script(type="text/ng-template")#ngTableCheckboxHeader
   +select_all()

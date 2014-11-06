@@ -3,6 +3,7 @@
  */
 package dnt.itsnow.config;
 
+import dnt.itsnow.platform.service.AutoNumberService;
 import dnt.itsnow.service.CommonAccountService;
 import dnt.itsnow.service.WorkflowService;
 import org.springframework.web.client.RestOperations;
@@ -20,6 +21,8 @@ public class GeneralModelServiceConfig extends DefaultGeneralServiceConfig {
         importService(CommonAccountService.class);
         exportService(RestOperations.class);
         exportService(WorkflowService.class);
+
+        importService(AutoNumberService.class);
 
         // export local redis service
         exportService(MutableCacheService.class, "local", "localCacheService") ;

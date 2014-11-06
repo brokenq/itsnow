@@ -37,7 +37,8 @@ mixin select_all()
             td(width="30" style="text-align: left;" header="'ngTableCheckboxHeader'")
                 input(type="checkbox" ng-model="checkboxes.items[staff.no]")
             td(data-title="'工号'") {{staff.no}}
-            td(data-title="'名称'") {{staff.name}}
+            td(data-title="'名称'")
+              a(ui-sref="staff_view({no: '{{staff.no}}'})") {{staff.name}}
             td(data-title="'登录名'") {{staff.user.name}}
             td(data-title="'职务'") {{staff.title}}
             td(data-title="'部门'") {{staff.department.name}}

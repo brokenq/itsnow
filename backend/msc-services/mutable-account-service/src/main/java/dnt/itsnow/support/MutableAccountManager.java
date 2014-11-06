@@ -31,7 +31,6 @@ public class MutableAccountManager extends CommonAccountManager implements Mutab
     @Autowired
     MutableAccountRepository mutableRepository;
     @Autowired
-    @Qualifier("autoNumberInDB")
     AutoNumberService        autoNumberService;
     @Autowired
     MutableUserService       userService;
