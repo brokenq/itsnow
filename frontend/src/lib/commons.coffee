@@ -71,7 +71,9 @@ angular.module('Lib.Commons', ['ngTable'])
         return record for record in @records when (record[@key]).toString() == key.toString()
       findFromRemote: (key) ->
         throw "Can't get record from remote API" unless @callback
-        @callback(key)
+        found = @callback(key)
+        @cache(found) if found
+        found
       findImpl: (key, fetch) ->
         local = @findInLocal(key)
         return local if local

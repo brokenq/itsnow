@@ -44,7 +44,7 @@ public class MutableContractsController extends SessionSupportController<Contrac
     public Page<Contract> index(){
         logger.debug("Listing contracts");
         try {
-            indexPage = mutableContractService.findAllByAccount(mainAccount, pageRequest);
+            indexPage = mutableContractService.findAllByAccount(mainAccount,false, pageRequest);
             logger.debug("Found   {}", indexPage);
         }
         catch (ServiceException e) {
@@ -60,8 +60,8 @@ public class MutableContractsController extends SessionSupportController<Contrac
      *
      * @return 合同
      */
-    @RequestMapping(value="/{sn}",method=RequestMethod.GET)
-    public Contract show(@PathVariable("sn")String sn){
+    @RequestMapping(value="{sn}",method=RequestMethod.GET)
+    public Contract show(){
         return contract;
     }
 
@@ -84,7 +84,7 @@ public class MutableContractsController extends SessionSupportController<Contrac
      *
      * @return 被更新的合同
      */
-    @RequestMapping(value = "/{sn}", method = RequestMethod.PUT)
+    @RequestMapping(value = "{sn}", method = RequestMethod.PUT)
     public Contract update(@Valid @RequestBody Contract contract){
         this.contract.apply(contract);
         return mutableContractService.update(contract);
@@ -97,7 +97,7 @@ public class MutableContractsController extends SessionSupportController<Contrac
      *
      * @return 合同
      */
-    @RequestMapping(value = "/{sn}/bid", method = RequestMethod.PUT)
+    @RequestMapping(value = "{sn}/bid", method = RequestMethod.PUT)
     public Contract bid(@Valid @RequestBody Contract contract){
         logger.debug("msp bid contract:{}",contract.getSn());
         this.contract.apply(contract);
@@ -111,7 +111,7 @@ public class MutableContractsController extends SessionSupportController<Contrac
      *
      * @return 被批准的合同
      */
-    @RequestMapping(value = "/{sn}/approve", method = RequestMethod.PUT)
+    @RequestMapping(value = "{sn}/approve", method = RequestMethod.PUT)
     public Contract approve(){
         logger.debug("msu approve contract:{}", contract.getSn());
         return mutableContractService.approve(contract);
@@ -124,7 +124,7 @@ public class MutableContractsController extends SessionSupportController<Contrac
      *
      * @return 被拒绝的合同
      */
-    @RequestMapping(value = "/{sn}/reject", method = RequestMethod.PUT)
+    @RequestMapping(value = "{sn}/reject", method = RequestMethod.PUT)
     public Contract reject(){
         logger.debug("msu reject contract:{}",contract.getSn());
         return mutableContractService.reject(contract);
@@ -137,7 +137,7 @@ public class MutableContractsController extends SessionSupportController<Contrac
      *
      * @return 被删除的合同
      */
-    @RequestMapping(value = "/{sn}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "{sn}", method = RequestMethod.DELETE)
     public Contract destroy(@PathVariable("sn")String sn){
         mutableContractService.delete(contract);
         return contract;
