@@ -1,0 +1,9 @@
+-var nameReadonly = true
+h2 编辑 角色
+
+form.form-horizontal(name="editRoleForm", novalidate="novalidate", ng-model-options="{ updateOn: 'mousedown blur' }", role="form", ng-submit="update()")
+  include /msc/index/system/roles/_form.jade
+
+  +action_bar
+    +action_submit("更新")
+    +action_cancel("取消")(ui-sref="roles.list")

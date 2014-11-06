@@ -3,46 +3,32 @@ mixin blocks(title)
   hr
   block
 mixin formGroup()
-  .form-group
-    .col-md-offset-2.col-md-8
-      block
-mixin label(label)
-  label.control-label.col-md-2 #{label}:
+    .form-group
+      .col-md-offset-2.col-md-8
+        block
+mixin label(title)
+  label.control-label.col-md-2 #{title}:
+  .col-md-8
+    block
 mixin formField(label, value)
   label.control-label.col-md-2 #{label}:
-  div(class!=attributes["class"])
-    input.form-control(type="text", value="#{value}", readonly)
-mixin button(name)
-  button.btn.btn-primary(type='button')&attributes(attributes) #{name}
-    block
-mixin buttonGroup(groupName,hrefName)
-  li(role="presentation")
-    a(role="menuitem",tabindex="-1",href="#{hrefName}") #{groupName}
-.form-horizontal
-  +blocks("进程信息")
+  div()&attributes(attributes)
+    input.form-control(type="text", ng-model="#{value}", readonly)
+.form-horizontal(ui-view ng-controller='AccountViewCtrl')
+  +blocks("账户信息")
     +formGroup()
-      +formField("主机地址", "test")(class="col-md-3")
-      +formField("主机名称", "test")(class="col-md-3")
+      +formField("企业名称", "account.name")(class="col-md-3")
+      +formField("子域名", "account.domain")(class="col-md-3")
     +formGroup()
-      +formField("主机地址", "test")(class="col-md-8")
+      +formField("账户状态", "account.status")(class="col-md-3")
+      +formField("注册时间", "account.createdAt")(class="col-md-3")
     +formGroup()
-      +formField("test", "test")(class="col-md-8")
-  +blocks("运行信息")
+      +label('账户描述')
+        textarea.form-control(rows='4',ng-model="account.description",readonly)
+  +blocks("管理员信息")
     +formGroup()
-      +formField("test", "test")(class="col-md-3")
-      +formField("test", "test")(class="col-md-3")
+      +formField("用户名", "account.user.name")(class="col-md-3")
+      +formField("昵称", "account.user.nickName")(class="col-md-3")
     +formGroup()
-      +formField("test", "test")(class="col-md-8")
-    +formGroup()
-      label.control-label.col-md-2 日志信息:
-      .col-md-8
-        textarea.form-control(rows='4',readonly)
-    +formGroup()
-      .col-md-1.col-md-offset-2
-        +button('取消启动')
-      .col-md-1.col-md-offset-4
-        +button('访   问')(class="dropdown-toggle",data-toggle="dropdown")
-          span.caret
-        ul.dropdown-menu(role="menu",aria-labelledby="dropdownMenu3")
-          +buttonGroup('直接访问','#')
-          +buttonGroup('通过域名访问访问','#')
+      +formField("邮箱", "account.user.email")(class="col-md-3")
+      +formField("手机", "account.user.phone")(class="col-md-3")
