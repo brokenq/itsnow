@@ -28,7 +28,7 @@ angular.module('MscIndex.Dict',
       url: '/{sn}',
       templateUrl: 'dict/view.tpl.jade'
       controller: 'DictViewCtrl',
-      data: {pageTitle: '查看SLA'}
+      data: {pageTitle: '查看字典'}
     $stateProvider.state 'dict.edit',
       url: '/{id}/edit',
       templateUrl: 'dict/edit.tpl.jade'
@@ -67,6 +67,7 @@ angular.module('MscIndex.Dict',
 ])
 .controller('DictViewCtrl', ['$scope', '$stateParams', \
                              ($scope, $stateParams) ->
+
 ])
 .controller('DictNewCtrl', ['$scope', '$state', 'Feedback', \
                              ($scope, $state, feedback) ->
