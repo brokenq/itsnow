@@ -15,7 +15,7 @@ mixin label(title)
   .col-md-8
     block
 mixin tableForm(number,name,mobilePhone,email,status)
-  tr
+  tr(ng-repeat="staff in department.staffs")
     td #{number}
     td #{name}
     td #{mobilePhone}
@@ -25,14 +25,14 @@ mixin button(href,num)
   li
     a(href="#{href}") #{num}
 
-.form-horizontal(ui-view ng-controller='userCtrl')
+.form-horizontal(ui-view ng-controller='departmentViewCtrl')
   +blocks("部门详情")
     +formGroup()
-      +formField("部门名称", "财务部")
-      +formField("部门地点", "大众一厂")
+      +formField("部门名称", "department.name")
+      +formField("部门地点", "department.sites[0].name")
     +formGroup()
       +label('部门描述')
-        textarea.form-control(rows='4',readonly)
+        textarea.form-control(rows='4',ng-model="department.description",readonly)
     +formGroup()
       +label('所属员工')
         table.table.table-striped.table-bordered.table-condensed
@@ -42,11 +42,8 @@ mixin button(href,num)
             th 手机
             th 邮箱
             th 状态
-          +tableForm('xx001', '张三', '12345678901', '1234567890912@qq.com', '在职')
-          +tableForm('xx001', '张三', '12345678901', '1234567890912@qq.com', '在职')
-          +tableForm('xx001', '张三', '12345678901', '1234567890912@qq.com', '在职')
-          +tableForm('xx001', '张三', '12345678901', '1234567890912@qq.com', '在职')
-          +tableForm('xx001', '张三', '12345678901', '1234567890912@qq.com', '在职')
+          +tableForm('{{staff.no}}', '{{staff.name}}', '{{staff.mobilePhone}}', '{{staff.email}}', '{{staff.status | staffStatusFilter}}')
+
       .col-md-4.col-md-offset-4
         ul.pagination
           +button("#", "《")

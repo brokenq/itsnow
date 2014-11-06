@@ -2,8 +2,6 @@ mixin tool_button(action, icon, text, weight, rejectCss, requireCss)
     button.btn.btn-primary.no-border(type="button", ng-click=action, weight=weight, reject-css=rejectCss, require-css=requireCss)
         span.glyphicon(class="glyphicon-#{icon}")
         | #{text}
-mixin td(title, name)
-    td(data-title=title) #{name}
 mixin nav_link(value, icon, text)
   a(ng-switch-when=value, ng-click="params.page(page.number)", href="")
     span.glyphicon(class="glyphicon-#{icon}")
@@ -37,11 +35,12 @@ mixin select_all()
     tr(ng-repeat="site in sites", value="{{site.sn}}")
       td(width="30" style="text-align: left" header="'ngTableCheckboxHeader'")
         input(type="checkbox" ng-model="checkboxes.items[site.sn]")
-      +td("'地点名称'", "{{site.name}}")
-      +td("'地址'", "{{site.address}}")
-      +td("'描述'", "{{site.description}}")
-      +td("'区域'", "{{site.dictionary.display}}")
-      +td("'工作时间'", "{{ site.workTime.startAt}} - {{ site.workTime.endAt}}")
+      td(data-title="'地点名称'")
+        a(ui-sref="site_view({sn: '{{site.sn}}'})") {{site.name}}
+      td(data-title="'地址'") {{site.address}}
+      td(data-title="'描述'") {{site.description}}
+      td(data-title="'区域'") {{site.display}}
+      td(data-title="'工作时间'") {{ site.workTime.startAt}} - {{ site.workTime.endAt}}
 
 script(type="text/ng-template")#ngTableCheckboxHeader
   +select_all()
