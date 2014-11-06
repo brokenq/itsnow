@@ -678,7 +678,7 @@ module.exports = function ( grunt ) {
        */
       assets: {
         files: [
-          'assets/**/*'
+          'assets/**/*', '<%=vendor_files.css%>'
         ],
         tasks: [ 'copy:build_assets', 'copy:build_vendor_assets' ]
       },
@@ -688,7 +688,7 @@ module.exports = function ( grunt ) {
        */
       index_skeletons: {
         files: [
-            '../index.jade'
+            '../index.jade', 'index/**/*.jade', '!index/**/*.tpl.jade'
         ],
         tasks: ['copy:build_jade', 'index:build', 'jade:index']
       },
