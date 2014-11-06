@@ -37,7 +37,8 @@ angular.module('MscIndex.SLAs',
     $urlRouterProvider.when '/slas', '/slas/list'
 
 
-  .controller('SlasCtrl', ['$scope', '$state', 'Feedback', 'CacheService', ($scope, $state, feedback, CacheService) ->
+  .controller('SlasCtrl', ['$scope', '$state', 'Feedback', 'CacheService', \
+                           ($scope,   $state,   feedback,   CacheService) ->
     # frontend controller logic
     console.log("Initialized the SLAs controller")
     $scope.options =
@@ -76,11 +77,12 @@ angular.module('MscIndex.SLAs',
 
   ])
   .controller('SlaListCtrl', ['$scope', '$location', 'ngTableParams', 'ActionService', 'CommonService',\
-                              ($scope, $location, NgTable, ActionService, commonService) ->
+                              ($scope,   $location,   NgTable,         ActionService,   commonService) ->
     console.log("Initialized the SLA list controller")
     args =
       total: 0
       getData: ($defer, params)->
+        params.total  $scope.mockSlas.length
         data = $scope.mockSlas.slice((params.page() - 1) * params.count(), params.page() * params.count())
         $scope.cacheService.cache data
         $defer.resolve(data);

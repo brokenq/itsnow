@@ -17,7 +17,7 @@ mixin tool_button(action, icon, text, weight, rejectCss, requireCss)
 //- a more buttons indicator
 mixin more_buttons
   +button_group
-    button.btn.btn-primary.dropdown-toggle(type="button",data-toggle="dropdown")
+    button.btn.btn-primary.no-border.dropdown-toggle(type="button",data-toggle="dropdown")
       | 更多操作
       span.caret
     ul.dropdown-menu.user-menu(role="menu")
