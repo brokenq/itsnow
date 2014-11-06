@@ -8,7 +8,7 @@ mixin formGroup()
       block
 mixin formField(label, value)
   label.control-label.col-md-2 #{label}:
-  .col-md-3
+  div()&attributes(attributes)
     input.form-control(type="text", ng-model="#{value}", readonly)
 mixin label(title)
   label.control-label.col-md-2 #{title}:
@@ -31,24 +31,28 @@ mixin tR(name,description)
     th #{name}
     th #{description}
 
-.form-horizontal(ui-view ng-controller='egCtrl')
+.form-horizontal(ui-view ng-controller='userViewCtrl')
   +blocks("用户详情")
     +formGroup()
-      +formField("用户名", "张三丰")
-      +formField("昵称", "xxxx")
+      +formField("用户名", "user.username")(class="col-md-3")
+      +formField("昵称", "user.nickname")(class="col-md-3")
     +formGroup()
-      +formField("邮箱", "")
-      +formField("手机", "xxxx")
+      +formField("邮箱", "user.email")(class="col-md-3")
+      +formField("手机", "user.phone")(class="col-md-3")
     +formGroup()
-      +formField("是否过期", "已过期")
-      +formField("是否锁定", "未锁定")
+      +formField("是否过期", "user.expired")(class="col-md-3")
+      +formField("是否锁定", "user.locked")(class="col-md-3")
     +formGroup()
-      +formField("用户状态", "已冻结")
-      +formField("注册时间", "xxxx")
+      +formField("用户状态", "user.enabled")(class="col-md-3")
+      +formField("注册时间", "user.createdAt")(class="col-md-3")
+
     +formGroup()
-      +label('所属账户')
+      +formField("所属账户", "user.account.name")(class="col-md-8")
+
+    +formGroup()
+      +label('所属角色')
         +table()
-          +tableForm('msp', ', so on Windows you may want to invoke it from a Git Bash window.')
+          +tableForm('{{}}', '{{}}')
 
     +formGroup()
       +label('所属组')
