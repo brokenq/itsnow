@@ -11,8 +11,8 @@ include /lib/mixins/list
       +drop_button("actionService.perform(destroy)", "trash", "删除", "1+", "", "deletable")
 
   +page_table("worktimesTable","selection")
-    +row("worktime", "id", "selection")(class="editable deletable")
-      td(data-title="'工作日'")  {{workTime.name}}
-      td(data-title="'起始时间'") {{workTime.startAt}}
-      td(data-title="'结束时间'")  {{workTime.endAt}}
-      td(data-title="'描述'")   {{workTime.description}}
+    +row("worktime", "sn", "selection")(class="editable deletable")
+      td(data-title="'工作日'")  {{worktime.name}}
+      td(data-title="'起始时间'") {{worktime.startAt}}
+      td(data-title="'结束时间'")  {{worktime.endAt}}
+      td(data-title="'描述'")   {{worktime.description}}
