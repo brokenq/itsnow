@@ -17,7 +17,7 @@ INSERT INTO menu_items(id, parent_id, name, state, position, css) VALUES
 (18, 1, '组管理',   'group',     7, 'icon-th-large'),
 
 (21, 2, '邀约管理', 'contracts.list',0, 'icon-tag'),
-(21, 2, '我的合约', 'contracts.my_list',1, 'icon-tag'),
+(22, 2, '我的合约', 'contracts.my_list',1, 'icon-tag'),
 
 (31, 3, '服务目录', 'services.catalog', 0, 'icon-th'),
 (32, 3, 'SLA管理', 'slas.list',      1, 'icon-eye-open'),
