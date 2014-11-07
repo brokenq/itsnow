@@ -69,7 +69,7 @@ mixin detail(label, value)
                 +file("registration", "attachments.yyzz")(ng-required, class="width-100")
               +group("registration", "attachments.rwdjz", "税务登记证","certificate","请上传税务登记证复印件")(ng-hide="registration.individual()")
                 +file("registration", "attachments.swdjz")(ng-required, class="width-100")
-              +group("registration", "attachments.id_card", "个人身份证", "card","请上传个人身份证复印件")(ng-show="registration.individual()")
+              +group("registration", "attachments.id_card", "个人身份证", "credit-card","请上传个人身份证复印件")(ng-show="registration.individual()")
                 +file("registration","attachments.id_card")(ng-required, class="width-100")
 
           +stepPane(4)

@@ -31,7 +31,7 @@ master_password=`cat ~/.mysql_pwd`
 slave_password=`ssh root@$slave "cat /root/.mysql_pwd"`
 
 function slave_mysql_exec(){
-  ssh root@$slave "cd /var/lib/mysql && mysql -uroot -p$slave_password --auto-vertical-output -e \"$1\" "
+  ssh root@$slave "cd /var/lib/mysql && mysql 2>/dev/null -uroot -p$slave_password --auto-vertical-output -e \"$1\" "
 }
 
 FIFO="/tmp/mysql-pipe.$$"
@@ -42,7 +42,7 @@ RC=0
 # background with its input from the FIFO:
 exec 3<>${FIFO}
 
-mysql -uroot -p$master_password <${FIFO} &
+mysql 2>/dev/null -uroot -p$master_password <${FIFO} &
 MYSQL=$!
 trap "rm -f ${FIFO};kill -1 ${MYSQL} 2>&-" 0
 
@@ -56,12 +56,12 @@ sed "s/server-id=[0-9]\+/server-id=$index/g" /opt/system/config/my-slave.cnf  > 
 scp $slave.cnf root@$slave:/usr/my.cnf
 ssh root@$slave "service mysql restart"
 echo "Step 3 dump master itsnow_msc"
-mysqldump -uroot -p$master_password itsnow_msc > itsnow_msc.sql
+mysqldump 2>/dev/null -uroot -p$master_password itsnow_msc > itsnow_msc.sql
 echo "Step 4 copy itsnow_msc.sql to $slave"
 scp itsnow_msc.sql root@$slave:/var/lib/mysql/
 echo "Step 5,6,7 $slave import itsnow_msc and start slave"
 slave_mysql_exec "CREATE DATABASE itsnow_msc DEFAULT CHARACTER SET UTF8; USE itsnow_msc; SOURCE itsnow_msc.sql;"
-eval $(mysql -uroot -p$master_password  -e "show master status" | head -4 | tail -1 | awk '{printf("log_file=%s\nlog_pos=%s\n",$1,$2);}')
+eval $(mysql 2>/dev/null -uroot -p$master_password  -e "show master status" | head -4 | tail -1 | awk '{printf("log_file=%s\nlog_pos=%s\n",$1,$2);}')
 slave_mysql_exec "CHANGE MASTER TO master_host = '$server', master_port = 3306, master_user='repl', master_password='repl-of-itsnow',master_log_file='$log_file',master_log_pos=$log_pos ;START SLAVE;"
 echo "Step 8 check slave status"
 io_status=$(slave_mysql_exec "SHOW SLAVE STATUS" | head -12 | tail -1 | awk -F: '{print $2}')
