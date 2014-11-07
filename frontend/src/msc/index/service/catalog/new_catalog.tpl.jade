@@ -1,0 +1,10 @@
+-var readonly = false
+-var editReadonly = false
+h2 新增 服务目录
+
+form.form-horizontal(name="newCatalogForm", novalidate="novalidate", ng-model-options="{ updateOn: 'mousedown blur' }", role="form", ng-submit="create()")
+  include /msc/index/service/catalog/_form_catalog.jade
+
+  +action_bar
+    +action_submit("创建")
+    +action_cancel("取消")(ui-sref="catalog.list")

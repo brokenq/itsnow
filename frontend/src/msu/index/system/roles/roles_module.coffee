@@ -86,7 +86,7 @@ angular.module('System.Roles',
         return selectedUsers
 
       # 去除不必要的对象属性，用于HTTP提交
-      $scope.formatRoleFun = (role, users) ->
+      $scope.formatData = (role, users) ->
         aRole = role
         aRole.users = selectedUsersFun(users)
         delete aRole.$promise;
@@ -133,7 +133,7 @@ angular.module('System.Roles',
 
       create = () ->
         $scope.submited = true
-        role = $scope.formatRoleFun($scope.role, $scope.users)
+        role = $scope.formatData($scope.role, $scope.users)
         roleService.save role, () ->
           feedback.success "新建角色#{role.name}成功"
           $state.go "roles.list"
@@ -155,7 +155,7 @@ angular.module('System.Roles',
       # 编辑页面提交
       update = () ->
         $scope.submited = true
-        role = $scope.formatRoleFun($scope.role, $scope.users)
+        role = $scope.formatData($scope.role, $scope.users)
         roleService.update {name: role.name}, role, () ->
           feedback.success "修改角色#{role.name}成功"
           $state.go "roles.list"
