@@ -1,0 +1,10 @@
+-var readonly = false
+-var editReadonly = true
+h2 编辑 服务目录
+
+form.form-horizontal(name="editCatalogForm", novalidate="novalidate", ng-model-options="{ updateOn: 'mousedown blur' }", role="form", ng-submit="update()")
+  include /msc/index/service/catalog/_form_catalog.jade
+
+  +action_bar
+    +action_submit("更新")
+    +action_cancel("取消")(ui-sref="catalog.list")
