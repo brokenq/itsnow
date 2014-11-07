@@ -36,7 +36,7 @@ angular.module('System.WorkTime',
   $urlRouterProvider.when '/worktimes', '/worktimes/list'
 .factory('WorkTimeService', ['$resource', ($resource) ->
     $resource("/api/work-times/:sn", {sn: "@sn"})
-])
+  ])
 .controller('WorkTimeCtrl', ['$scope', '$state', 'Feedback', 'CacheService',
     ($scope, $state, feedback, CacheService) ->
       $scope.workdates = [
@@ -70,14 +70,15 @@ angular.module('System.WorkTime',
         }
       ]
 ])
-.controller('WorkTimeListCtrl',['$scope', '$location', 'ngTableParams', 'ActionService', 'WorkTimeService', 'CommonService',
+.controller('WorkTimeListCtrl',
+  ['$scope', '$location', 'ngTableParams', 'ActionService', 'WorkTimeService', 'CommonService',
     ($scope, $location, NgTable, ActionService, WorkTimeService, commonService) ->
 ])
 .controller('WorkTimeViewCtrl', ['$scope', '$stateParams', ($scope, $stateParams) ->
 ])
-.controller('WorkTimeNewCtrl', ['$scope', '$state', 'Feedback','WorkTimeService'
-    ($scope, $state, feedback,WorkTimeService) ->
+.controller('WorkTimeNewCtrl', ['$scope', '$state', 'Feedback', 'WorkTimeService'
+    ($scope, $state, feedback, WorkTimeService) ->
 ])
-.controller('WorkTimeEditCtrl', ['$scope', '$state', '$stateParams','WorkTimeService', 'Feedback',
-    ($scope, $state, $stateParams, WorkTimeService,feedback) ->
+.controller('WorkTimeEditCtrl', ['$scope', '$state', '$stateParams', 'WorkTimeService', 'Feedback',
+    ($scope, $state, $stateParams, WorkTimeService, feedback) ->
 ])
