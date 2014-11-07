@@ -2,6 +2,7 @@ angular.module('Itsnow.Index', [
     'ui.router',
     'ngResource',
     'ngLocale',
+    'ngSanitize',
     'jcs-autoValidate',
     'Lib.Interceptor',
     'Lib.Directives',

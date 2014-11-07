@@ -7,7 +7,9 @@ angular.module("Itsnow.Login", [
     'ui.router',
     'jcs-autoValidate',
 
-
+    'Lib.Feedback',
+    'Lib.Commons',
+    'Lib.Utils',
     'Lib.Interceptor',
     'Lib.Templates',
     'Lib.Directives',

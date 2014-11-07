@@ -3,8 +3,7 @@
  */
 
 angular.module('MsuIndex.System', [
-  'System.Role',
-  'System.Role.Form',
+  'System.Roles',
   'System.Site',
   'System.Site.Form',
   'System.WorkTime',

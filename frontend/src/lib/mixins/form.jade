@@ -9,19 +9,32 @@ mixin section(title)
           block
 //- A group contains a input label and field
 mixin group(object, field, label, icon, tip)
-  .form-group
-    label.col-xs-12.col-sm-3.control-label.no-padding-right(for="#{object}_#{field}") #{label}
+  .form-group.has-info&attributes(attributes)
+    label.col-xs-12.col-sm-3.control-label.no-padding-right(for="#{object}_#{field.replace('.','_')}") #{label}
     .col-xs-12.col-sm-5
       span.block.input-icon.input-icon-right
         block
-        i(class="icon-#{icon}")
+        if icon 
+          i(class="icon-#{icon}")
     .help-block.col-xs-12.col-sm-reset.inline #{tip}
 //- a input contains represents a input field
 mixin input(object, field)
-  input.form-control(id="#{object}_#{field}", name="#{object}.#{field}", ng-model="#{object}.#{field}")&attributes(attributes)
+  input.form-control(id="#{object}_#{field.replace('.','_')}", name="#{object}.#{field}", ng-model="#{object}.#{field}")&attributes(attributes)
+//- a text input contains represents a input field
+mixin text(object, field)
+  +input(object,field)(type="text")&attributes(attributes)
+//- a radio input contains represents a input field
+mixin radio(object, field)
+  +input(object,field)(type="radio")&attributes(attributes)
+//- a checkbox input contains represents a input field
+mixin checkbox(object, field)
+  +input(object,field)(type="checkbox")&attributes(attributes)
+//- a file input contains represents a input field
+mixin file(object, field)
+  +input(object,field)(type="file")&attributes(attributes)
 //- a area contains represents a input text area
 mixin area(object, field)
-  textarea.form-control(id="#{object}_#{field}", name="#{object}.#{field}", ng-model="#{object}.#{field}")&attributes(attributes)
+  textarea.form-control(id="#{object}_#{field.replace('.','_')}", name="#{object}.#{field}", ng-model="#{object}.#{field}")&attributes(attributes)
 
 //- the action bar in form bottom(or top)
 mixin action_bar
