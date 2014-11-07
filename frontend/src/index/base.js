@@ -3,6 +3,8 @@ angular.module('Itsnow.Index', [
     'ngResource',
     'ngLocale',
     'ngSanitize',
+    'ngTable',
+    'dnt.action.service',
     'jcs-autoValidate',
     'Lib.Interceptor',
     'Lib.Directives',
@@ -13,6 +15,7 @@ angular.module('Itsnow.Index', [
     'Lib.JcsEnhance',
     'Lib.Filters',
     'Lib.Feedback',
+    'Lib.Utils',
     'Lib.Commons'
 ])
   .config(function ($httpProvider, $stateProvider, $urlRouterProvider) {
