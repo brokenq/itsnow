@@ -1,0 +1,9 @@
+-var nameReadonly = true
+h2 编辑 部门
+
+form.form-horizontal(name="editSiteForm", novalidate="novalidate", ng-model-options="{ updateOn: 'mousedown blur' }", role="form", ng-submit="update()")
+  include /msp/index/system/sites/_form.jade
+
+  +action_bar
+    +action_submit("更新")
+    +action_cancel("取消")(ui-sref="sites.list")
