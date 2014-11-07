@@ -31,7 +31,7 @@ master_password=`cat ~/.mysql_pwd`
 slave_password=`ssh root@$slave "cat /root/.mysql_pwd"`
 
 function slave_mysql_exec(){
-  ssh root@$slave "cd /var/lib/mysql && mysql 2>/dev/null -uroot -p$slave_password --auto-vertical-output -e \"$1\" "
+  ssh root@$slave "cd /var/lib/mysql && MYSQL_PWD=$slave_password mysql -uroot --auto-vertical-output -e \"$1\" "
 }
 
 FIFO="/tmp/mysql-pipe.$$"
@@ -42,7 +42,7 @@ RC=0
 # background with its input from the FIFO:
 exec 3<>${FIFO}
 
-mysql 2>/dev/null -uroot -p$master_password <${FIFO} &
+MYSQL_PWD=$master_password mysql -uroot <${FIFO} &
 MYSQL=$!
 trap "rm -f ${FIFO};kill -1 ${MYSQL} 2>&-" 0
 
@@ -56,7 +56,7 @@ sed "s/server-id=[0-9]\+/server-id=$index/g" /opt/system/config/my-slave.cnf  > 
 scp $slave.cnf root@$slave:/usr/my.cnf
 ssh root@$slave "service mysql restart"
 echo "Step 3 dump master itsnow_msc"
-mysqldump 2>/dev/null -uroot -p$master_password itsnow_msc > itsnow_msc.sql
+MYSQL_PWD=$master_password mysqldump -uroot itsnow_msc > itsnow_msc.sql
 echo "Step 4 copy itsnow_msc.sql to $slave"
 scp itsnow_msc.sql root@$slave:/var/lib/mysql/
 echo "Step 5,6,7 $slave import itsnow_msc and start slave"

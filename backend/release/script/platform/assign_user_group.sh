@@ -30,7 +30,7 @@ else
   group=$5
 fi
 
-mysql 2>/dev/null -u$2 -p$3 -D$1<<SQL
+MYSQL_PWD=$3 mysql -u$2 -D$1<<SQL
     SET @group_id = (SELECT id FROM groups WHERE group_name = '$group');
     INSERT INTO group_members(username, group_id, group_name) VALUES('$user', @group_id, '$group');
 SQL
