@@ -167,9 +167,7 @@ module.exports = function ( grunt ) {
           // see: https://github.com/karlgoldstein/grunt-html2js/pull/48
           // 如果这里有多个在不同目录下的 tpl.jade include 其他jade，这将会玩不转
           // 所以，我们应该基于html2js，设置的jade basedir选项，采用绝对路径include
-          jade: {
-            basedir: '.'
-          }
+          jade: {basedir: '.'}
         },
         src: [ '<%= index_files.index_tpl %>' ],
         dest: '<%= build_dir %>/templates/index.js'
@@ -189,7 +187,8 @@ module.exports = function ( grunt ) {
       login: {
         options: {
           base: 'login',
-          module: 'Login.Templates'
+          module: 'Login.Templates',
+          jade: {basedir: '.'}
         },
         src: [ '<%= login_files.login_tpl %>' ],
         dest: '<%= build_dir %>/templates/login.js'
@@ -197,7 +196,8 @@ module.exports = function ( grunt ) {
       ms_login: {
         options: {
           base: '<%= target.name %>/login',
-          module: '<%=target.title%>Login.Templates'
+          module: '<%=target.title%>Login.Templates',
+          jade: {basedir: '.'}
         },
         src: [ '<%= login_files.ms_tpl %>' ],
         dest: '<%= build_dir %>/templates/<%= target.name %>-login.js'
@@ -688,13 +688,13 @@ module.exports = function ( grunt ) {
        */
       index_skeletons: {
         files: [
-            '../index.jade', 'index/**/*.jade', '!index/**/*.tpl.jade'
+            '../index.jade', 'lib/**/*.jade', 'index/**/*.jade', '!**/*.tpl.jade'
         ],
         tasks: ['copy:build_jade', 'index:build', 'jade:index']
       },
       login_skeletons: {
         files: [
-            '../login.jade'
+            '../login.jade', 'lib/**/*.jade', 'login/**/*.jade', '!**/*.tpl.jade'
         ],
         tasks: ['copy:build_jade', 'login:build', 'jade:login']
       },

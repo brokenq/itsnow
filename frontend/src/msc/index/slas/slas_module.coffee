@@ -1,12 +1,5 @@
 
-angular.module('MscIndex.SLAs',
-    ['ngTable',
-     'ngResource',
-     'ngSanitize',
-     'dnt.action.service',
-     'Lib.Commons',
-     'Lib.Utils',
-     'Lib.Feedback'])
+angular.module('MscIndex.SLAs', [])
   .config ($stateProvider, $urlRouterProvider)->
     $stateProvider.state 'slas',
       url: '/slas',
