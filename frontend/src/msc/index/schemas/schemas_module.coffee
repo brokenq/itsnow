@@ -118,8 +118,10 @@ angular.module('MscIndex.Schemas', [])
     $scope.schema = schema
     console.log "Initialized the Schema Edit controller on: #{JSON.stringify schema}"
     $scope.hosts = []
-    $http.get('/admin/api/hosts/list/type/DB').success (hosts)-> $scope.hosts = $scope.hosts.concat hosts
-    $http.get('/admin/api/hosts/list/type/COM').success (hosts)-> $scope.hosts = $scope.hosts.concat hosts
+    $http.get('/admin/api/hosts/list/type/DB').success (hosts)->
+      $scope.hosts = $scope.hosts.concat hosts if hosts? and hosts.length > 0
+    $http.get('/admin/api/hosts/list/type/COM').success (hosts)->
+      $scope.hosts = $scope.hosts.concat hosts if hosts? and hosts.length > 0
     Schemas = $scope.services
 
     $scope.update = ->

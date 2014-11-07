@@ -28,35 +28,44 @@ angular.module('MscIndex.Processes', [])
                                 ($scope,   $resource,   feedback,   CacheService) ->
     console.log("Initialized the Processes controller")
     $scope.options = {page: 1, count: 10}
-    $scope.cacheService = new CacheService "name"
     actions =
       start:  {method: 'PUT', params: {action: 'start'}}
       stop:   {method: 'PUT', params: {action: 'stop'}}
-    $scope.services =  $resource("/admin/api/processes/:name")
+    $scope.services =  $resource("/admin/api/processes/:name", {name: "@name"})
     $scope.service = $resource("/admin/api/processes/:name/:action", {name: "@name"}, actions)
+    $scope.cacheService = new CacheService "name", (value)->
+      data = {}
+      $.ajax
+        url:    "/admin/api/processes/#{value}"
+        async:  false
+        type:   "GET"
+        success: (response)->
+          data = response
+      return data
 
-    CancelAction = $resource("/admin/api/processes/:name/cancel/:job", {name: "@name", job: "@job"}, {cancel: {method: "PUT"}})
     Processes = $scope.services
     Process = $scope.service
-    $scope.start = (process, succCallback, errCallback)->
+    CancelAction = $resource("/admin/api/processes/:name/cancel/:job", {name: "@name", job: "@job"}, {cancel: {method: "PUT"}})
+
+    $scope.execStart = (process, succCallback, errCallback)->
       acc = new Process process
-      acc.$start ->
+      acc.$start (data)->
         feedback.success "正在启动 #{process.name} 进程"
-        succCallback() if succCallback
+        succCallback(data["job"]) if succCallback
       , (resp)->
         feedback.error "启动 #{process.name} 进程失败", resp
         errCallback() if errCallback
 
-    $scope.stop = (process, succCallback, errCallback)->
+    $scope.execStop = (process, succCallback, errCallback)->
       acc = new Process process
-      acc.$stop ->
+      acc.$stop (data)->
         feedback.success "已停止 #{process.name} 进程"
-        succCallback() if succCallback
+        succCallback(data["job"]) if succCallback
       , (resp)->
         feedback.error "停止 #{process.name} 进程失败", resp
         errCallback() if errCallback
 
-    $scope.cancel = (process, type, succCallback, errCallback)->
+    $scope.execCancel = (process, type, succCallback, errCallback)->
       if type is "starting"
         invokeId = process.configuration.startInvocationId
         status = "启动中"
@@ -71,7 +80,7 @@ angular.module('MscIndex.Processes', [])
         feedback.error "取消#{status}的进程 #{process.name} 失败", resp
         errCallback() if errCallback
 
-    $scope.destroy = (process, succCallback, errCallback)->
+    $scope.execDestroy = (process, succCallback, errCallback)->
       acc = new Processes process
       acc.$remove ->
         feedback.success "已删除 #{process.name} 进程"
@@ -99,29 +108,38 @@ angular.module('MscIndex.Processes', [])
     commonService.watchSelection($scope.selection, $scope.cacheService.records, "name")
     $scope.actionService = new ActionService {watch: $scope.selection.items, mapping: $scope.cacheService.find}
 
-    $scope.reload = ->
-      $scope.processesTable.reload()
+    $scope.start = (process)->
+      $scope.execStart process, ->
+        $scope.processesTable.reload()
+    $scope.stop = (process)->
+      $scope.execStop process, ->
+        $scope.processesTable.reload()
+    $scope.cancel = (process)->
+      $scope.execCancel process, ->
+        $scope.processesTable.reload()
+    $scope.destroy = (process)->
+      $scope.execDestroy process, ->
+        $scope.processesTable.reload()
 
   ])
 
-  .controller('ProcessNewCtrl', ['$scope', '$state', '$http', 'Feedback', \
-                                 ($scope,   $state,   $http,   feedback)->
+  .controller('ProcessNewCtrl', ['$scope', '$state', '$http', '$resource', 'Feedback', \
+                                 ($scope,   $state,   $http,   $resource,   feedback)->
     console.log("Initialized the Process New controller")
     process = {}
     $scope.process = process
-    Processes = $scope.services
-    $http.get("/admin/api/accounts/list_no_process").success (accounts)->
-      $scope.accounts = accounts
-    $http.get("/admin/api/schemas").success (schemas)->
-      $scope.schemas = schemas
-    hosts = []
+    Processes = $resource("/admin/api/processes")
+
+    $http.get("/admin/api/accounts/list_no_process").success (accounts)-> $scope.accounts = accounts
+    $http.get("/admin/api/schemas").success (schemas)-> $scope.schemas = schemas
+    $scope.hosts = []
     $http.get("/admin/api/hosts/list/type/APP").success (hosts)->
-      hosts = hosts if hosts? and hosts.length > 0
-      $http.get("/admin/api/hosts/list/type/COM").success (hosts)->
-        hosts = hosts.concat hosts if hosts? and hosts.length > 0
+      $scope.hosts = $scope.hosts.concat hosts if hosts? and hosts.length > 0
+    $http.get("/admin/api/hosts/list/type/COM").success (hosts)->
+      $scope.hosts = $scope.hosts.concat hosts if hosts? and hosts.length > 0
 
     getHostById = (id)->
-      return host for host in hosts when host.id is parseInt id
+      return host for host in $scope.hosts when host.id is parseInt id
     $scope.$watch 'account.id', (account)->
       if account?
         $http.get("/admin/api/processes/auto_new/#{account.sn}").success (data)->
@@ -132,9 +150,9 @@ angular.module('MscIndex.Processes', [])
 
     $scope.create = ->
       acc = new Processes process
-      acc.$save ->
+      acc.$save (response)->
         feedback.success "正在创建 #{process.name} 进程"
-        $state.go "processes.view", process
+        $state.go "processes.view", response
       , (resp)->
         feedback.error "创建 #{process.name} 进程失败", resp
   ])
@@ -144,17 +162,23 @@ angular.module('MscIndex.Processes', [])
       process = $scope.cacheService.find $stateParams.name, true
       $scope.process = process
       console.log "Initialized the Process View controller on: #{JSON.stringify process}"
+
       process.display =
-        status: null
-        configuration: null
+        status: $filter("formatProcessStatus")(process.status)
+        configuration: JSON.stringify process.configuration
         schema:
-          configuration: null
-      process.display.status = $filter("formatProcessStatus")(process.status)
-      process.display.configuration = JSON.stringify process.configuration
-      process.display.schema.configuration = JSON.stringify process.schema.configuration
+          configuration: JSON.stringify process.schema.configuration if process.schema?
       process.creationLog = ""
       process.startLog = ""
       process.stopLog = ""
+
+      $http.get("/admin/api/accounts/list_no_process").success (accounts)-> $scope.accounts = accounts
+      $http.get("/admin/api/schemas").success (schemas)-> $scope.schemas = schemas
+      $scope.hosts = []
+      $http.get("/admin/api/hosts/list/type/APP").success (hosts)->
+        $scope.hosts = $scope.hosts.concat hosts if hosts? and hosts.length > 0
+      $http.get("/admin/api/hosts/list/type/COM").success (hosts)->
+        $scope.hosts = $scope.hosts.concat hosts if hosts? and hosts.length > 0
 
       toggleButton = (status)->
         $("#startBtn").removeClass("show").addClass("hidden")
@@ -212,5 +236,12 @@ angular.module('MscIndex.Processes', [])
       $scope.getCreateLog(process.configuration.createInvocationId)
       $scope.getStartLog(process.configuration.startInvocationId)
       $scope.getStopLog(process.configuration.stopInvocationId)
+
+      $scope.start = ->
+        $scope.execStart process, $scope.getStartLog
+      $scope.stop = ->
+        $scope.execStop process, $scope.getStopLog
+      $scope.cancel = ->
+        $scope.execCancel process
 
   ])
