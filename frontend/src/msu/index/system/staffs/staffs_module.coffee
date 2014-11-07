@@ -1,12 +1,5 @@
-angular.module('System.Staffs',
-  ['ngTable',
-   'ngResource',
-   'ngSanitize',
-   'dnt.action.service',
-   'Lib.Commons',
-   'Lib.Utils',
-   'Lib.Feedback',
-   'multi-select'])
+angular.module('System.Staffs', ['multi-select'])
+
 .config ($stateProvider, $urlRouterProvider)->
   $stateProvider.state 'staffs',
     url: '/staffs',
@@ -122,14 +115,14 @@ angular.module('System.Staffs',
     $log.log "Initialized the Staff View controller on: " + JSON.stringify($scope.staff)
   ])
 
-.controller('StaffNewCtrl', ['$scope', '$state', '$log', 'Feedback', 'StaffService', 'SiteService', 'DeptService',
-    ($scope, $state, $log, feedback, staffService, siteService, deptService) ->
+.controller('StaffNewCtrl', ['$scope', '$state', '$log', 'Feedback', 'StaffService', 'SiteService', 'DepartmentService',
+    ($scope, $state, $log, feedback, staffService, siteService, departmentService) ->
       $log.log "Initialized the Staff New controller"
 
       siteService.query (data) ->
         $scope.sites = data
 
-      deptService.query (data) ->
+      departmentService.query (data) ->
         $scope.departments = data
 
       $scope.create = () ->
@@ -143,8 +136,8 @@ angular.module('System.Staffs',
   ])
 
 .controller('StaffEditCtrl',
-  ['$scope', '$state', '$log', '$stateParams', 'Feedback', 'StaffService', 'SiteService', 'DeptService',
-    ($scope, $state, $log, $stateParams, feedback, staffService, siteService, deptService) ->
+  ['$scope', '$state', '$log', '$stateParams', 'Feedback', 'StaffService', 'SiteService', 'DepartmentService',
+    ($scope, $state, $log, $stateParams, feedback, staffService, siteService, departmentService) ->
       $scope.staff = $scope.cacheService.find $stateParams.no, true
       $log.log "Initialized the Staff Edit controller on: " + JSON.stringify($scope.staff)
 
@@ -156,7 +149,7 @@ angular.module('System.Staffs',
 #            if site.sn == $scope.staff.site.sn
 #              $scope.site = site
           $scope.site = site for site in $scope.sites when site.sn == $scope.staff.site.sn
-        deptService.query (data) ->
+        departmentService.query (data) ->
           $scope.departments = data
           for department in $scope.departments
             if department.sn == $scope.staff.department.sn
