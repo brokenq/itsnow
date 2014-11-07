@@ -35,7 +35,13 @@ angular.module('System.WorkTime',
     data: {pageTitle: '编辑时间'}
   $urlRouterProvider.when '/worktimes', '/worktimes/list'
 .factory('WorkTimeService', ['$resource', ($resource) ->
-    $resource("/api/work-times/:sn", {sn: "@sn"})
+    $resource("/api/work-times/:sn", {},
+      get: { method: 'GET', params: {sn: '@sn'}},
+      save: { method: 'POST'},
+      update: { method: 'PUT', params: {sn: '@sn'}},
+      query: { method: 'GET', params: {keyword: '@keyword'}, isArray: true},
+      remove: { method: 'DELETE', params: {sn: '@sn'}}
+    )
   ])
 .controller('WorkTimeCtrl', ['$scope', '$state', 'Feedback', 'CacheService',
     ($scope, $state, feedback, CacheService) ->
@@ -69,10 +75,16 @@ angular.module('System.WorkTime',
           name: "星期天"
         }
       ]
-])
+      $scope.options =
+        page: 1, # show first page
+        count: 10 # count per page
+
+      $scope.cacheService = new CacheService("sn")
+  ])
 .controller('WorkTimeListCtrl',
   ['$scope', '$location', 'ngTableParams', 'ActionService', 'WorkTimeService', 'CommonService',
     ($scope, $location, NgTable, ActionService, WorkTimeService, commonService) ->
+
 ])
 .controller('WorkTimeViewCtrl', ['$scope', '$stateParams', ($scope, $stateParams) ->
 ])
