@@ -16,6 +16,7 @@ angular
         function ($injector, $q) {
             return {
                 request: function (config) {
+                    $("#home").hide();
                     $("#loading").show();
                     var deferred = $q.defer();
                     if (config.method === 'POST' || config.method === 'PUT' || config.method === 'DELETE') {
@@ -31,14 +32,17 @@ angular
                     return deferred.promise;
                 },
                 requestError: function(rejection) {
+                    $("#home").hide();
                     $("#loading").show();
                     return $q.reject(rejection);
                 },
                 response: function (response) {
+                    $("#home").show();
                     $("#loading").hide();
                     return response;
                 },
                 responseError: function(rejection) {
+                    $("#home").show();
                     $("#loading").hide();
                     return $q.reject(rejection);
                 }
