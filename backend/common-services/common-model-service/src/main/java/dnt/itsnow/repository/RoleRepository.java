@@ -24,7 +24,7 @@ public interface RoleRepository {
     public void delete(@Param("name") String name);
 
     @Update("UPDATE roles SET " +
-            " name        = #{name}, " +
+//            " name        = #{name}, " +
             " description = #{description}, " +
             " created_at  = #{createdAt}, " +
             " updated_at  = #{updatedAt} " +

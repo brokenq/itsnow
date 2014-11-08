@@ -1,11 +1,11 @@
 package dnt.itsnow.web.controller;
 
-import dnt.itsnow.config.MscGroupsControllerConfig;
+import dnt.itsnow.config.GroupsControllerConfig;
 import dnt.itsnow.model.Group;
 import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.service.CommonUserService;
-import dnt.itsnow.service.MscGroupService;
+import dnt.itsnow.service.GroupService;
 import dnt.itsnow.test.controller.SessionSupportedControllerTest;
 import dnt.support.JsonSupport;
 import org.junit.After;
@@ -17,7 +17,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import java.net.URI;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,14 +24,14 @@ import static org.easymock.EasyMock.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ContextConfiguration(classes = MscGroupsControllerConfig.class)
-public class MscGroupsControllerTest extends SessionSupportedControllerTest {
+@ContextConfiguration(classes = GroupsControllerConfig.class)
+public class GroupsControllerTest extends SessionSupportedControllerTest {
 
     @Autowired
     CommonUserService userService;
 
     @Autowired
-    MscGroupService groupService;
+    GroupService groupService;
 
     Group group;
 
@@ -43,10 +42,9 @@ public class MscGroupsControllerTest extends SessionSupportedControllerTest {
 
         group = new Group();
         group.setId(1L);
-        group.setName("GROUP_TEST");
+        group.setName("用户测试组");
         group.setDescription("This is a test.");
-        group.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        group.setUpdatedAt(group.getCreatedAt());
+        group.creating();
 
         groups = new ArrayList<Group>();
         groups.add(group);
@@ -61,7 +59,7 @@ public class MscGroupsControllerTest extends SessionSupportedControllerTest {
                 .andReturn(new DefaultPage<Group>(groups));
 
         // 准备 Mock Request
-        MockHttpServletRequestBuilder request = get("/api/msc-groups");
+        MockHttpServletRequestBuilder request = get("/api/groups");
         request = decorate(request);
 
         replay(groupService);
@@ -71,17 +69,15 @@ public class MscGroupsControllerTest extends SessionSupportedControllerTest {
 
         // 对业务结果的验证
         decorate(result).andExpect(status().isOk());
-
     }
 
     @Test
     public void testShow() throws Exception {
 
-        expect(groupService.findAllRelevantInfo(anyString(), anyObject(PageRequest.class)))
-                .andReturn(new DefaultPage<Group>(groups));
+        expect(groupService.findByName(anyString())).andReturn(group);
 
         // 准备 Mock Request
-        MockHttpServletRequestBuilder request = get("/api/msc-groups/GROUP_TEST");
+        MockHttpServletRequestBuilder request = get("/api/groups/user");
         request = decorate(request);
 
         replay(groupService);
@@ -91,7 +87,6 @@ public class MscGroupsControllerTest extends SessionSupportedControllerTest {
 
         // 对业务结果的验证
         decorate(result).andExpect(status().isOk());
-
     }
 
     @Test
@@ -100,31 +95,29 @@ public class MscGroupsControllerTest extends SessionSupportedControllerTest {
         expect(groupService.update(anyObject(Group.class))).andReturn(group);
         replay(groupService);
 
-        MockHttpServletRequestBuilder request = put("/api/msc-groups/GROUP_TEST").content(groupJson());
+        MockHttpServletRequestBuilder request = put("/api/groups/user").content(groupJson());
         decorate(request);
 
         ResultActions result = this.browser.perform(request);
         decorate(result).andExpect(status().isOk());
-
     }
 
     @Test
     public void testDestroy() throws Exception {
         expect(groupService.findByName(anyString())).andReturn(group);
-        groupService.destroy(anyObject(Group.class));
+        expect(groupService.destroy(anyObject(Group.class))).andReturn(group);
         expectLastCall().once();
 
         replay(groupService);
 
-        URI uri = new URI("/api/msc-groups/GROUP_TEST");
+        URI uri = new URI("/api/groups/user");
 
         MockHttpServletRequestBuilder request = delete(uri);
         decorate(request);
         this.browser.perform(request).andExpect(status().isOk());
-
     }
 
-    protected String groupJson(){
+    protected String groupJson() {
         return JsonSupport.toJSONString(group);
     }
 

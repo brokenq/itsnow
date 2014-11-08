@@ -1,10 +1,10 @@
 package dnt.itsnow.support;
 
-import dnt.itsnow.config.MscGroupManagerConfig;
+import dnt.itsnow.config.GroupManagerConfig;
 import dnt.itsnow.model.Group;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.util.PageRequest;
-import dnt.itsnow.service.MscGroupService;
+import dnt.itsnow.service.GroupService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,20 +14,18 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.sql.Timestamp;
-
 /**
  * <h1>Class Usage</h1>
  */
-@ContextConfiguration(classes = MscGroupManagerConfig.class)
+@ContextConfiguration(classes = GroupManagerConfig.class)
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
-public class MscGroupManagerTest {
+public class GroupManagerTest {
 
     PageRequest pageRequest;
 
     @Autowired
-    MscGroupService service;
+    GroupService service;
 
     @Before
     public void setUp() throws Exception {
@@ -36,23 +34,22 @@ public class MscGroupManagerTest {
 
     @Test
     public void testFindAll() throws Exception {
-        Page<Group> groups = service.findAll("", pageRequest);
-        Assert.assertTrue(groups.getContent().size()>0);
+        Page<Group> page = service.findAll("", pageRequest);
+        Assert.assertTrue(page.getContent().size() > 0);
     }
 
     @Test
-    public void testFindByName() throws Exception {
+    public void testFindBySn() throws Exception {
         Assert.assertNotNull(service.findByName("administrators"));
-        Assert.assertNull(service.findByName("1000000"));
+        Assert.assertNull(service.findByName("not-exist-record"));
     }
 
     @Test
     public void testCreate() throws Exception {
         Group group = new Group();
-        group.setName("GROUP_SERVICE_TEST");
+        group.setName("用户测试组");
         group.setDescription("This is a test.");
-        group.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        group.setUpdatedAt(group.getCreatedAt());
+        group.creating();
         service.create(group);
         Assert.assertNotNull(group.getId());
     }
@@ -60,7 +57,6 @@ public class MscGroupManagerTest {
     @Test
     public void testDestroy() throws Exception {
         Group group = service.findByName("first_line");
-        Assert.assertNotNull(group);
         service.destroy(group);
         Assert.assertNull(service.findByName(group.getName()));
     }
@@ -72,12 +68,6 @@ public class MscGroupManagerTest {
         service.update(group);
         group = service.findByName(group.getName());
         Assert.assertTrue(group.getDescription().equals("Hello World!"));
-    }
-
-    @Test
-    public void testFindAllRelevantInfo() throws Exception {
-        Page<Group> groups = service.findAllRelevantInfo("administrators", pageRequest);
-        Assert.assertTrue(groups.getContent().size()>0);
     }
 
 }

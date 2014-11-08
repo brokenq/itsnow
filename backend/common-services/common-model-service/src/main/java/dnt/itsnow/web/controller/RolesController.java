@@ -60,19 +60,12 @@ public class RolesController extends SessionSupportController<Role> {
      * <h2>查看一个角色</h2>
      * <p/>
      * GET /api/roles/{name}
-     * @param name 角色名称
+     *
      * @return 角色实体类
      */
     @RequestMapping(value="{name}", method = RequestMethod.GET)
-    public Role show(@PathVariable("name") String name) {
-
-        logger.debug("Listing {}", name);
-
-        role = service.findByName(name);
-
-        logger.debug("Listed  {}", indexPage);
-
-        return role;
+    public Role show() {
+        return this.role;
     }
 
     /**
@@ -172,7 +165,7 @@ public class RolesController extends SessionSupportController<Role> {
         }
     }
 
-    @BeforeFilter({"update", "destroy"})
+    @BeforeFilter({"show", "update", "destroy"})
     public void initRole(@PathVariable("name") String name) {
         this.role = service.findByName(name);//find it by name
     }

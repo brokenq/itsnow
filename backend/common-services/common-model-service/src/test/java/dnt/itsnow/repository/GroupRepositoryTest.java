@@ -2,7 +2,6 @@ package dnt.itsnow.repository;
 
 import dnt.itsnow.config.GroupRepositoryConfig;
 import dnt.itsnow.model.Group;
-import dnt.itsnow.model.Role;
 import dnt.itsnow.platform.util.PageRequest;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,10 +12,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * <h1>测试GroupRepository的Mybatis的Mapping配置是否正确</h1>
  */
@@ -25,10 +20,10 @@ import java.util.List;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class GroupRepositoryTest {
 
+    PageRequest pageRequest;
+
     @Autowired
     GroupRepository repository;
-
-    PageRequest pageRequest;
 
     @Before
     public void setUp() throws Exception {
@@ -38,10 +33,9 @@ public class GroupRepositoryTest {
     @Test
     public void testCreate() throws Exception {
         Group group = new Group();
-        group.setName("用户");
+        group.setName("用户测试组");
         group.setDescription("This is a test.");
         group.creating();
-        group.updating();
 
         repository.create(group);
         Assert.notNull(group.getId());
@@ -58,27 +52,22 @@ public class GroupRepositoryTest {
 
     @Test
     public void testUpdate() throws Exception {
-        Group group = repository.findByName("guests");
+        Group group = repository.findByName("administrators");
         group.setDescription("Hello World!");
         repository.update(group);
         group = repository.findByName(group.getName());
-        Assert.isTrue("Hello World!".equals(group.getDescription()));
+        Assert.isTrue(group.getDescription().equals("Hello World!"));
     }
 
     @Test
     public void testCount() throws Exception {
-        Assert.notNull(repository.count(""));
-    }
-
-    @Test
-    public void testFind() throws Exception {
-        Assert.notNull(repository.findAll("", pageRequest));
+        Assert.notNull(repository.count(null));
     }
 
     @Test
     public void testFindByName() throws Exception {
-        Assert.notNull(repository.findByName("guests"));
-        Assert.isNull(repository.findByName("no record!"));
+        Assert.notNull(repository.findByName("administrators"));
+        Assert.isNull(repository.findByName("not-exist-record"));
     }
 
 }
