@@ -1,5 +1,5 @@
 // List System
-angular.module('Service.Dict', ['ngTable', 'ngResource','Service.Dictnew'])
+angular.module('Service.Dictzz', ['ngTable', 'ngResource','Service.Dictnew'])
 
     .config(function ($stateProvider) {
         $stateProvider.state('dict', {

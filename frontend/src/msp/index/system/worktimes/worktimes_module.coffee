@@ -34,7 +34,7 @@ angular.module('System.WorkTime',
     controller: 'WorkTimeEditCtrl',
     data: {pageTitle: '编辑时间'}
   $urlRouterProvider.when '/worktimes', '/worktimes/list'
-.controller('WorkTimeCtrl', ['$scope', '$resource','$state', 'Feedback', 'CacheService',
+.controller('WorkTimeCtrl', ['$scope', '$resource','$state', 'Feedback', 'CacheService',\
     ($scope,$resource, $state, feedback, CacheService) ->
       $scope.init = ()->
         $scope.workdates= [
