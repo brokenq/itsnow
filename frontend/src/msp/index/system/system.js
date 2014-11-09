@@ -4,15 +4,9 @@
 
 angular.module('MspIndex.System', [
   'System.Roles',
-  'System.Site',
-  'System.Site.Form',
-  'System.SiteView',
+  'System.Sites',
   'System.WorkTime',
-  'System.Department',
-  'System.Department.Form',
+  'System.Departments',
   'System.Group',
-  'System.Staff',
-  'System.Staff.Form',
-  'System.DeptView',
-  'System.StaffView'
+  'System.Staffs'
 ]);

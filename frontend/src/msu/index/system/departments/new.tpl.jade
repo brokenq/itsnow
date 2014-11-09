@@ -1,0 +1,10 @@
+-var disabled = false
+
+h2 新增 部门
+
+form.form-horizontal(name="newDepartmentForm", novalidate="novalidate", role="form", ng-submit="create()")
+  include /msu/index/system/departments/_form.jade
+
+  +action_bar
+    +action_submit("创建")
+    +action_cancel("取消")(ui-sref="departments.list")

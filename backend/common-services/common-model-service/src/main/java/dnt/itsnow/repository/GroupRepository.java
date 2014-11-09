@@ -11,9 +11,6 @@ import java.util.Set;
 /**
  * <h1>Group Repository</h1>
  * <p/>
- * 演示动态schema
- * <p/>
- * TODO 编写测试用例
  */
 public interface GroupRepository {
 
@@ -24,6 +21,12 @@ public interface GroupRepository {
 
     @Delete("DELETE FROM groups WHERE group_name = #{name}")
     public void delete(@Param("name") String name);
+
+    @Delete("DELETE FROM group_authorities WHERE group_id  = #{id}")
+    public void deleteGroupAuthority(@Param("id") Long id);
+
+    @Delete("DELETE FROM group_members WHERE group_id  = #{id}")
+    public void deleteGroupMember(@Param("id") Long id);
 
     @Update("UPDATE groups SET " +
             " group_name            = #{name}, " +
@@ -39,18 +42,13 @@ public interface GroupRepository {
 
     public Group findByName(@Param("name") String name);
 
-    @Select(" SELECT ga.authority, g.group_name" +
+    @Select(" SELECT ga." +
+            "authority, g.group_name" +
             " FROM group_authorities ga " +
             " INNER JOIN groups g ON ga.group_id = g.id " +
             " INNER JOIN group_members gm ON gm.group_id = g.id" +
             " WHERE UPPER(gm.username) = UPPER(#{username})" +
             " GROUP BY ga.authority, g.group_name")
     Set<GroupAuthority> findUserAuthorities(@Param("username") String username);
-
-    @Delete("DELETE FROM group_authorities WHERE group_id  = #{id}")
-    public void deleteGroupAuthority(@Param("id") Long id);
-
-    @Delete("DELETE FROM group_members WHERE group_id  = #{id}")
-    public void deleteGroupMember(@Param("id") Long id);
 
 }

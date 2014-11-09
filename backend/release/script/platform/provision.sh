@@ -87,5 +87,8 @@ else
 fi
 echo $new_pwd > /root/.mysql_pwd
 
+# Set mysql constants
+MYSQL_PWD=$new_pwd mysql -uroot -e "SET GLOBAL log_bin_trust_function_creators = 1;" 
+
 echo "MySQL password reset and store in /root/.mysql_pwd"
 

@@ -1,0 +1,8 @@
+h2 新增 合同
+
+form.form-horizontal(name="newContractForm", novalidate="novalidate", role="form", ng-submit="create()")
+  include /msu/index/contracts/_form.jade
+
+  +action_bar
+    +action_submit("创建")
+    +action_cancel("取消")(ui-sref="contracts.list")
