@@ -9,7 +9,7 @@ include /lib/mixins/form
       .row
         .col-xs-12
           span(ng-repeat="workdate in workdates")
-            input(type="checkbox" ,id="{{workdate.id}}",ng-checked="selectWorkDates.indexOf(workdate.name)>-1",ng-click="toggleSelection(workdate.name)")
+            input(type="checkbox" ,id="{{workdate.id}}",ng-checked="workdate.checked",ng-click="toggleCheckboxes(workdate)")
             span {{workdate.name}}
   .form-group
     label.col-xs-12.col-sm-3.control-label.no-padding-right(for="worktimes") 工作时间：

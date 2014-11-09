@@ -34,63 +34,93 @@ angular.module('System.WorkTime',
     controller: 'WorkTimeEditCtrl',
     data: {pageTitle: '编辑时间'}
   $urlRouterProvider.when '/worktimes', '/worktimes/list'
-.factory('WorkTimeService', ['$resource', ($resource) ->
-    $resource("/api/work-times/:sn", {},
-      get: { method: 'GET', params: {sn: '@sn'}},
-      save: { method: 'POST'},
-      update: { method: 'PUT', params: {sn: '@sn'}},
-      query: { method: 'GET', params: {keyword: '@keyword'}, isArray: true},
-      remove: { method: 'DELETE', params: {sn: '@sn'}}
-    )
-  ])
-.controller('WorkTimeCtrl', ['$scope', '$state', 'Feedback', 'CacheService',
-    ($scope, $state, feedback, CacheService) ->
-      $scope.workdates = [
-        {
-          id: "1"
-          name: "星期一"
-        }
-        {
-          id: "2"
-          name: "星期二"
-        }
-        {
-          id: "3"
-          name: "星期三"
-        }
-        {
-          id: "4"
-          name: "星期四"
-        }
-        {
-          id: "5"
-          name: "星期五"
-        }
-        {
-          id: "6"
-          name: "星期六"
-        }
-        {
-          id: "7"
-          name: "星期天"
-        }
-      ]
-      $scope.options =
-        page: 1, # show first page
-        count: 10 # count per page
+.controller('WorkTimeCtrl', ['$scope', '$resource','$state', 'Feedback', 'CacheService',
+    ($scope,$resource, $state, feedback, CacheService) ->
+      $scope.init = ()->
+        $scope.workdates= [
+            { id: "1" ,name: "星期一", checked:false}
+            { id: "2" ,name: "星期二", checked:false}
+            { id: "3" ,name: "星期三", checked:false}
+            { id: "4" ,name: "星期四", checked:false}
+            { id: "5" ,name: "星期五", checked:false}
+            { id: "6" ,name: "星期六", checked:false}
+            { id: "7" ,name: "星期天", checked:false}
+        ]
+      $scope.init()
+      console.log("Initialized the worktimes controller")
+      $scope.options = {page: 1, count: 10}
+      $scope.cacheService = new CacheService "sn"
+      $scope.services = $resource("/api/work-times/:sn", {sn: "@sn"})
 
-      $scope.cacheService = new CacheService("sn")
+      WorkTime=$scope.services
+      $scope.destroy = (worktime, succCallback, errCallback)->
+        worktime = new WorkTime worktime
+        worktime.$remove ->
+            feedback.success "已删除 #{worktime.sn} 工作时间"
+            succCallback() if succCallback
+        , (resp)->
+            feedback.error "删除 #{worktime.sn} 工作时间失败", resp
+            errCallback() if errCallback
   ])
-.controller('WorkTimeListCtrl',
-  ['$scope', '$location', 'ngTableParams', 'ActionService', 'WorkTimeService', 'CommonService',
-    ($scope, $location, NgTable, ActionService, WorkTimeService, commonService) ->
+.controller('WorkTimeListCtrl',['$scope', '$location', 'ngTableParams', 'ActionService','CommonService',
+   ($scope, $location, NgTable, ActionService, commonService) ->
+     console.log("Initialized the worktime list controller")
+     Worktimes= $scope.services
+     args =
+       total: 0
+       getData: ($defer, params)->
+         $location.search params.url() # put params in url
+         Worktimes.query params.url(), (datas, headers) ->
+          params.total headers 'total'
+          $defer.resolve $scope.worktimes = datas; $scope.cacheService.cache datas
+     $scope.selection = {checked: false, items: {}}
+     $scope.worktimesTable = new NgTable(angular.extend($scope.options, $location.search()), args);
+     commonService.watchSelection($scope.selection, $scope.cacheService.records, "sn")
+     $scope.actionService = new ActionService {watch: $scope.selection.items, mapping: $scope.cacheService.find}
+     $scope.reload = ->
+       $scope.worktimesTable.reload()
+])
 
+.controller('WorkTimeNewCtrl', ['$scope', '$state', 'Feedback',
+  ($scope, $state, feedback) ->
+    $
+    ids =[]
+    names =[]
+    $scope.toggleCheckboxes=(workdate) ->
+      workdate.checked=!(workdate.checked)
+    for workdate in $scope.workdates
+      console.log("workdate.checked"+workdate.checked)
+      if workdate.checked is true
+        ids.push workdate.id
+        names.push workdate.name
+    $scope.create=() ->
+       $scope.worktime.name=names.join()
+       $scope.worktime.$promise = `undefined`
+       $scope.worktime.$resolved = `undefined`
+       $scope.services.save $scope.worktime, ->
+         $state.go "worktimes.list"
+         return
 ])
-.controller('WorkTimeViewCtrl', ['$scope', '$stateParams', ($scope, $stateParams) ->
-])
-.controller('WorkTimeNewCtrl', ['$scope', '$state', 'Feedback', 'WorkTimeService'
-    ($scope, $state, feedback, WorkTimeService) ->
-])
-.controller('WorkTimeEditCtrl', ['$scope', '$state', '$stateParams', 'WorkTimeService', 'Feedback',
-    ($scope, $state, $stateParams, WorkTimeService, feedback) ->
+.controller('WorkTimeEditCtrl', ['$scope', '$state', '$stateParams', 'Feedback',
+    ($scope, $state, $stateParams,feedback) ->
+      $scope.selectWorkDates=[]
+      sn=$stateParams.sn
+      $scope.services.get
+        sn: sn
+      , (data) ->
+        $scope.worktime = data
+        $scope.selectWorkDates= data.name.split(",")
+        return
+      $scope.update=() ->
+        $scope.worktime.name=$scope.selectWorkDates
+        $scope.worktime.$promise = `undefined`
+        $scope.worktime.$resolved = `undefined`
+        $scope.services.update {sn: sn}, $scope.worktime, () ->
+          feedback.success "修改#{$scope.worktime.sn}成功"
+          $state.go "worktimes.list"
+        , (resp) ->
+          feedback.error("修改#{$scope.worktime.sn}失败", resp);
+
+
+
 ])
