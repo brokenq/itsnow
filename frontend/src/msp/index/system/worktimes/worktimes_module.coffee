@@ -47,23 +47,23 @@ angular.module('System.WorkTime',
             { id: "7" ,name: "星期天", checked:false}
         ]
       $scope.init()
+      $scope.toggleCheckboxes=(workdate) ->
+        workdate.checked=!(workdate.checked)
       console.log("Initialized the worktimes controller")
       $scope.options = {page: 1, count: 10}
       $scope.cacheService = new CacheService "sn"
-      $scope.services = $resource("/api/work-times/:sn", {sn: "@sn"})
+      $scope.services = $resource("/api/work-times/:sn", {},
+        get: { method: 'GET', params: {sn: '@sn'}},
+        save: { method: 'POST'},
+        update: { method: 'PUT', params: {sn: '@sn'}},
+        query: { method: 'GET', isArray: true},
+        remove: { method: 'DELETE', params: {sn: '@sn'}}
+      )
 
-      WorkTime=$scope.services
-      $scope.destroy = (worktime, succCallback, errCallback)->
-        worktime = new WorkTime worktime
-        worktime.$remove ->
-            feedback.success "已删除 #{worktime.sn} 工作时间"
-            succCallback() if succCallback
-        , (resp)->
-            feedback.error "删除 #{worktime.sn} 工作时间失败", resp
-            errCallback() if errCallback
+
   ])
-.controller('WorkTimeListCtrl',['$scope', '$location', 'ngTableParams', 'ActionService','CommonService',
-   ($scope, $location, NgTable, ActionService, commonService) ->
+.controller('WorkTimeListCtrl',['$scope', '$location', 'ngTableParams', 'ActionService','CommonService','Feedback',\
+                               ($scope,     $location,  NgTable,         ActionService,   commonService,feedback) ->
      console.log("Initialized the worktime list controller")
      Worktimes= $scope.services
      args =
@@ -77,13 +77,20 @@ angular.module('System.WorkTime',
      $scope.worktimesTable = new NgTable(angular.extend($scope.options, $location.search()), args);
      commonService.watchSelection($scope.selection, $scope.cacheService.records, "sn")
      $scope.actionService = new ActionService {watch: $scope.selection.items, mapping: $scope.cacheService.find}
+     $scope.destroy = (worktime) ->
+       $scope.services.remove {sn: worktime.sn}, () ->
+         feedback.success "删除时间#{worktime.sn}成功"
+         $scope.worktimesTable.reload()
+       , (resp) ->
+         feedback.error("删除时间#{worktime.sn}失败", resp)
+
      $scope.reload = ->
        $scope.worktimesTable.reload()
+
 ])
 
-.controller('WorkTimeNewCtrl', ['$scope', '$state', 'Feedback',
-  ($scope, $state, feedback) ->
-    $
+.controller('WorkTimeNewCtrl', ['$scope', '$state', 'Feedback',\
+                               ($scope,     $state,   feedback) ->
     ids =[]
     names =[]
     $scope.toggleCheckboxes=(workdate) ->
@@ -94,15 +101,22 @@ angular.module('System.WorkTime',
         ids.push workdate.id
         names.push workdate.name
     $scope.create=() ->
-       $scope.worktime.name=names.join()
-       $scope.worktime.$promise = `undefined`
-       $scope.worktime.$resolved = `undefined`
-       $scope.services.save $scope.worktime, ->
-         $state.go "worktimes.list"
-         return
+      for workdate in $scope.workdates
+        if workdate.checked is true
+          ids.push workdate.id
+          names.push workdate.name
+      $scope.init()
+      $scope.worktime.name=names.join()
+      $scope.worktime.$promise = `undefined`
+      $scope.worktime.$resolved = `undefined`
+      $scope.services.save $scope.worktime, ->
+        $state.go "worktimes.list"
+        return
 ])
-.controller('WorkTimeEditCtrl', ['$scope', '$state', '$stateParams', 'Feedback',
-    ($scope, $state, $stateParams,feedback) ->
+.controller('WorkTimeEditCtrl', ['$scope', '$state', '$stateParams', 'Feedback',\
+                                ($scope,    $state,   $stateParams,  feedback) ->
+      ids =[]
+      names =[]
       $scope.selectWorkDates=[]
       sn=$stateParams.sn
       $scope.services.get
@@ -110,9 +124,17 @@ angular.module('System.WorkTime',
       , (data) ->
         $scope.worktime = data
         $scope.selectWorkDates= data.name.split(",")
+        for workdate in $scope.workdates
+          if($scope.selectWorkDates.indexOf(workdate.name)>-1)
+           workdate.checked=true
         return
       $scope.update=() ->
-        $scope.worktime.name=$scope.selectWorkDates
+        for workdate in $scope.workdates
+          if workdate.checked is true
+            ids.push workdate.id
+            names.push workdate.name
+        $scope.init()
+        $scope.worktime.name=names.join()
         $scope.worktime.$promise = `undefined`
         $scope.worktime.$resolved = `undefined`
         $scope.services.update {sn: sn}, $scope.worktime, () ->
