@@ -3,8 +3,8 @@
 h2 新增 字典
 
 form.form-horizontal(name="newDictForm", novalidate="novalidate", ng-model-options="{ updateOn: 'mousedown blur' }", role="form", ng-submit="create()")
-  include /msc/index/dict/_form.jade
+  include /msc/index/service/dicts/_form.jade
 
   +action_bar
     +action_submit("创建")
-    +action_cancel("取消")(ui-sref="dict.list")
+    +action_cancel("取消")(ui-sref="dicts.list")

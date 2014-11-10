@@ -2,7 +2,7 @@
 h2 编辑 SLA
 
 form.form-horizontal(name="editDictForm", novalidate="novalidate", ng-model-options="{ updateOn: 'mousedown blur' }", role="form", ng-submit="update()")
-  include /msc/index/dict/_form.jade
+  include /msc/index/service/dicts/_form.jade
 
   +action_bar
     +action_submit("更新")
