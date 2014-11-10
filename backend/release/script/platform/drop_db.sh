@@ -17,7 +17,7 @@ fi
 schema=$1
 user=$2
 mysql_pwd=`cat /root/.mysql_pwd`
-mysql -uroot -p$mysql_pwd <<SQL
+MYSQL_PWD=$mysql_pwd mysql -uroot <<SQL
   DROP DATABASE $schema ;
   REVOKE SELECT ON itsnow_msc.* FROM '$user'@'%' ;
   DROP USER '$user'@'%' ;

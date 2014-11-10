@@ -18,7 +18,7 @@ angular.module('MscIndex.Contracts',
     templateUrl: 'contracts/list.tpl.jade'
     controller: 'ContractListCtrl',
     data: {pageTitle: '邀约管理'}
-  $stateProvider.state 'contracts.my_list',
+  $stateProvider.state 'contracts.my-list',
     url: '/my_list',
     templateUrl: 'contracts/my_list.tpl.jade'
     controller: 'ContractMyListCtrl',
@@ -35,11 +35,7 @@ angular.module('MscIndex.Contracts',
       query: {method: 'GET', params: {keyword: '@keyword'}, isArray: true}
       get: {method: 'GET', params: {sn: '@sn'}}
       bid: {method: 'PUT', params: {sn: '@sn', bid: 'bid'}}
-  ])
-
-.factory('OwnContractService', ['$resource', ($resource) ->
-    $resource "/api/contracts/", {},
-      query: {method: 'GET', params: {own: true}, isArray: true}
+      ownQuery: {method: 'GET', params: {keyword: '@keyword', own: true}, isArray: true}
   ])
 
 .filter 'formatContractStatus', () ->
@@ -57,19 +53,33 @@ angular.module('MscIndex.Contracts',
     date = new Date(time)
     date.toLocaleString()
 
-.controller('ContractsCtrl', () ->
-)
-.controller('ContractListCtrl',
-  ['$scope', 'ActionService', 'CommonService', 'ContractService', 'Feedback',
-    ($scope, ActionService, commonService, contractService, feedback) ->
-      $scope.selection = { 'checked': false, items: {} }
-      $scope.contracts = []
-      $scope.contractsTable = commonService.instanceTable(contractService, $scope.contracts)
-      commonService.watchSelection($scope.selection, $scope.contracts, "sn")
+.controller('ContractsCtrl', ['$scope', '$log', 'CacheService', ($scope, $log, CacheService) ->
+    # frontend controller logic
+    $log.log "Initialized the Contracts controller"
+    $scope.options =
+      page: 1, # show first page
+      count: 10 # count per page
 
-      $scope.getContractBySn = (sn)->
-        return contract for contract in $scope.contracts when contract.sn is sn
-      $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.getContractBySn})
+    $scope.cacheService = new CacheService("sn")
+  ])
+.controller('ContractListCtrl',
+  ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'CommonService', 'ContractService', 'Feedback',
+    ($scope, $location, $log, NgTable, ActionService, commonService, contractService, feedback) ->
+      $log.log "Initialized the Contracts list controller"
+
+      args =
+        total: 0,
+        getData: ($defer, params) ->
+          $location.search(params.url()); # put params in url
+          contractService.query params.url(), (data, headers) ->
+            params.total headers('total')
+            $scope.cacheService.cache data
+            $defer.resolve data
+
+      $scope.selection = { checked: false, items: {} }
+      $scope.contractsTable = new NgTable(angular.extend($scope.options, $location.search()), args)
+      $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.cacheService.find})
+      commonService.watchSelection($scope.selection, $scope.cacheService.records, "sn")
 
       $scope.accept = (contract)->
         contractService.bid {sn: contract.sn}, ()->
@@ -78,20 +88,26 @@ angular.module('MscIndex.Contracts',
 
   ])
 .controller('ContractMyListCtrl',
-  ['$scope', 'ActionService', 'CommonService', 'OwnContractService',
-    ($scope, ActionService, commonService, ownContractService) ->
-      $scope.selection = { 'checked': false, items: {} }
-      $scope.contracts = []
-      $scope.contractsTable = commonService.instanceTable(ownContractService, $scope.contracts)
-      commonService.watchSelection($scope.selection, $scope.contracts, "sn")
+  ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'CommonService', 'ContractService',
+    ($scope, $location, $log, NgTable, ActionService, commonService, contractService) ->
+      $log.log "Initialized the Contracts list controller"
 
-      $scope.getContractBySn = (sn)->
-        return contract for contract in $scope.contracts when contract.sn is sn
-      $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.getContractBySn})
+      args =
+        total: 0,
+        getData: ($defer, params) ->
+          $location.search(params.url()); # put params in url
+          contractService.ownQuery params.url(), (data, headers) ->
+            params.total headers('total')
+            $scope.cacheService.cache data
+            $defer.resolve data
+
+      $scope.selection = { checked: false, items: {} }
+      $scope.contractsTable = new NgTable(angular.extend($scope.options, $location.search()), args)
+      $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.cacheService.find})
+      commonService.watchSelection($scope.selection, $scope.cacheService.records, "sn")
   ])
-.controller('ContractViewCtrl', ['$scope', '$stateParams', 'ContractService', ($scope, $stateParams, contractService) ->
-    contractService.get {sn: $stateParams.sn}, (data)->
-      $scope.contract = data
-    console.log "Initialized the SLA View controller on: " + JSON.stringify($scope.contract)
+.controller('ContractViewCtrl', ['$scope', '$stateParams', '$log', ($scope, $stateParams, $log) ->
+    $scope.contract = $scope.cacheService.find $stateParams.sn, true
+    $log.log "Initialized the Contract View controller on: " + JSON.stringify($scope.contract)
   ])
 

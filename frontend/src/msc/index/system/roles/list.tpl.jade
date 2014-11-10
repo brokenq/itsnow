@@ -13,6 +13,6 @@ include /lib/mixins/list
   +page_table("rolesTable","selection")
     +row("role", "name", "selection")(class="editable deletable")
       td(data-title="'角色名'")
-        a(ui-sref="roles.view") {{role.name}}
+        a(ui-sref="roles.view(role)") {{role.name}}
       td(data-title="'用户名称'") {{role.users | colFilter}}
       td(data-title="'描述'") {{role.description}}

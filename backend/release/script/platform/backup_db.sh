@@ -29,6 +29,6 @@ mysql_pwd=`cat /root/.mysql_pwd`
 
 echo "Backup $schema $today"
 echo "Mysql exporting $schema -> $file ..."
-mysqldump -uroot -p$mysql_pwd $schema | gzip > $file
+MYSQL_PWD=$mysql_pwd mysqldump -uroot $schema | gzip > $file
 echo "Mysql exported  $schema -> $file ..."
 

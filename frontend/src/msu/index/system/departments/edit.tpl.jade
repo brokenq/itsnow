@@ -1,0 +1,9 @@
+-var disabled = true
+h2 编辑 部门
+
+form.form-horizontal(name="editDepartmentForm", novalidate="novalidate", role="form", ng-submit="update()")
+  include /msu/index/system/departments/_form.jade
+
+  +action_bar
+    +action_submit("更新")
+    +action_cancel("取消")(ui-sref="departments.list")

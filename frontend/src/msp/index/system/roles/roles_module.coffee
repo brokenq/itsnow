@@ -86,7 +86,7 @@ angular.module('System.Roles',
         return selectedUsers
 
       # 去除不必要的对象属性，用于HTTP提交
-      $scope.formatRoleFun = (role, users) ->
+      $scope.formatData = (role, users) ->
         aRole = role
         aRole.users = selectedUsersFun(users)
         delete aRole.$promise;
@@ -124,16 +124,16 @@ angular.module('System.Roles',
 
 .controller('RoleViewCtrl', ['$scope', '$stateParams', '$log', ($scope, $stateParams, $log) ->
     $scope.role = $scope.cacheService.find $stateParams.name, true
-    $log.log "Initialized the SLA View controller on: " + JSON.stringify($scope.role)
+    $log.log "Initialized the Role View controller on: " + JSON.stringify($scope.role)
   ])
 
 .controller('RoleNewCtrl', ['$scope', '$state', '$log', 'Feedback', 'RoleService',
     ($scope, $state, $log, feedback, roleService) ->
-      $log.log "Initialized the SLA New controller"
+      $log.log "Initialized the Role New controller"
 
       create = () ->
         $scope.submited = true
-        role = $scope.formatRoleFun($scope.role, $scope.users)
+        role = $scope.formatData($scope.role, $scope.users)
         roleService.save role, () ->
           feedback.success "新建角色#{role.name}成功"
           $state.go "roles.list"
@@ -150,12 +150,12 @@ angular.module('System.Roles',
     ($scope, $state, $log, $stateParams, feedback, roleService) ->
 
       $scope.role = $scope.cacheService.find $stateParams.name, true
-      $log.log "Initialized the SLA Edit controller on: " + JSON.stringify($scope.role)
+      $log.log "Initialized the Role Edit controller on: " + JSON.stringify($scope.role)
 
       # 编辑页面提交
       update = () ->
         $scope.submited = true
-        role = $scope.formatRoleFun($scope.role, $scope.users)
+        role = $scope.formatData($scope.role, $scope.users)
         roleService.update {name: role.name}, role, () ->
           feedback.success "修改角色#{role.name}成功"
           $state.go "roles.list"

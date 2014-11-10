@@ -5,8 +5,7 @@
 angular.module('Itsnow.MsuIndex', [
   'Itsnow.Index',
   'MsuIndex.Templates',
-  'MsuIndex.Contract',
-  'MsuIndex.ContractCreate',
+  'MsuIndex.Contracts',
   'MsuIndex.IncidentDetail',
   'MsuIndex.IncidentCreated',
   'MsuIndex.IncidentOpened',

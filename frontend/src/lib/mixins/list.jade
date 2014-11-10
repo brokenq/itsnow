@@ -34,7 +34,7 @@ mixin drop_button(action, icon, text, weight, rejectCss, requireCss)
 
 //- the table with pagination
 mixin page_table(name, selection)
-  table.table(template-pagination="customPager", ng-table=name)
+  table.table.table-hover(template-pagination="customPager", ng-table=name)
     block
   script(type="text/ng-template")#ngTableCheckboxHeader
     +select_all(selection)
@@ -50,7 +50,7 @@ mixin page_table(name, selection)
 
 //- the table without pagination
 mixin common_table(name, selection)
-  table.table(ng-table=name)
+  table.table.table-hover(ng-table=name)
     block
   script(type="text/ng-template")#ngTableCheckboxHeader
     +select_all(selection)

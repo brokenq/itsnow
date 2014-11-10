@@ -10,7 +10,7 @@ include /lib/mixins/list
   +page_table("contractsTable","selection")
     +row("contract", "sn", "selection")
       td(data-title="'合同名称'")
-        a(ui-sref="contract.view(contract)") {{contract.sn}}
+        a(ui-sref="contracts.view(contract)") {{contract.sn}}
       td(data-title="'企业帐户'") {{contract.msuAccount.name}}
       td(data-title="'状态'") {{contract.msuStatus | formatContractStatus}}
       td(data-title="'服务商状态'") {{contract.mspStatus | formatContractStatus}}
