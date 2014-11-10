@@ -1,0 +1,11 @@
+-var readonly = false
+-var disabled_type = ""
+
+h2 编辑 主机
+
+form.form-horizontal(name="editHostForm", novalidate="novalidate", ng-model-options="{ updateOn: 'mousedown blur' }", role="form", ng-submit="update()")
+  include /msc/index/hosts/_form.jade
+
+  +action_bar
+    +action_submit("更新")
+    +action_cancel("取消")(ui-sref="hosts.list")

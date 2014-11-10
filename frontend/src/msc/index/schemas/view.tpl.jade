@@ -1,0 +1,49 @@
+include /lib/mixins/form
+
+mixin blocks(title)
+  h2 #{title}
+  hr
+  block
+mixin formGroup()
+  .form-group
+    .col-md-offset-2.col-md-8
+      block
+mixin label(title)
+  label.control-label.col-md-2 #{title}:
+  .col-md-8
+    block
+mixin progressBar(capacity, processPercent, schemaPercent)
+  .progress
+    .progress-bar.progress-bar-success.progress-bar-striped.active(style="width: #{processPercent}%") #{processPercent}%
+    .progress-bar.progress-bar-info.progress-bar-striped.active(style="width: #{schemaPercent}%") #{schemaPercent}%
+mixin formField(label, value)
+  label.control-label.col-md-2 #{label}:
+  div()&attributes(attributes)
+    input.form-control(type="text", ng-model="#{value}", readonly)
+.form-horizontal(ui-view ng-controller='SchemaViewCtrl')
+  +blocks("数据库信息")
+    +formGroup()
+      +formField("数据库名称", "schema.name")(class="col-md-8")
+    +formGroup()
+      +formField("数据库用户名", "schema.configuration.user")(class="col-md-3")
+      +formField("数据库密码", "schema.configuration.password")(class="col-md-3")
+    +formGroup()
+      +label('数据库描述')
+        textarea.form-control(rows='4',readonly,ng-model="schema.description")
+  +blocks("主机信息")
+    +formGroup()
+      +formField("主机名", "schema.host.name")(class="col-md-3")
+      +formField("主机地址", "schema.host.address")(class="col-md-3")
+    +formGroup()
+      +formField("主机类型", "schema.host.type")(class="col-md-3")
+      +formField("主机状态", "schema.display.host.status")(class="col-md-3")
+    +formGroup()
+      +label('主机使用率')
+        +progressBar("{{host.capacity}}", "{{schema.display.host.processesCount}}", "{{schema.display.host.schemasCount}}")
+    +blocks("进程信息")
+      +formGroup()
+        +formField("进程名称", "schema.process.name")(class="col-md-3")
+        +formField("进程状态", "schema.display.process.status")(class="col-md-3")
+
++action_bar
+  +action_submit("返回")(ui-sref="schemas.list")

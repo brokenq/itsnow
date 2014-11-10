@@ -29,7 +29,7 @@ module.exports = {
 
     lib_tpl: [ '/lib/**/*.tpl.html', '/lib/**/*.tpl.jade' ],
     index_tpl: [ 'index/**/*.tpl.html', 'index/**/*.tpl.jade' ],
-    ms_tpl: [ 'msc/index/**/*.tpl.html', 'msc/index/**/*.tpl.jade' ],
+    ms_tpl: [ 'msc/index/**/*.tpl.html', 'msc/index/**/*.tpl.jade', 'msc/index/**/*.jade' ],
 
     less: 'less/index.less'
   },
@@ -99,7 +99,6 @@ module.exports = {
       '../vendor/angular-dialog-service/dialogs.js',
       '../vendor/angular-dialog-service/dialogs-default-translations.js',
       '../vendor/angular-translate/angular-translate.js',
-      '../vendor/dnt-action-service/dist/dnt-action-service.js',
       '../vendor/angular-auto-validate/dist/jcs-auto-validate.js',
       '../vendor/isteven-angular-multiselect/angular-multi-select.js'//,
       // Add angular mock in runtime for SLA demo temporally
