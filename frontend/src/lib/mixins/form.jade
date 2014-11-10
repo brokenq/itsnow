@@ -35,6 +35,9 @@ mixin file(object, field)
 //- a area contains represents a input text area
 mixin area(object, field)
   textarea.form-control(id="#{object}_#{field.replace('.','_')}", name="#{object}.#{field}", ng-model="#{object}.#{field}")&attributes(attributes)
+//- a select contains represents a select field
+mixin select(object, field)
+  select.form-control(id="#{object}_#{field}", name="#{object}.#{field}", ng-model="#{object}.#{field}")&attributes(attributes)
 
 //- the action bar in form bottom(or top)
 mixin action_bar

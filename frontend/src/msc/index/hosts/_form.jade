@@ -1,0 +1,23 @@
+//- include the form mixins
+include /lib/mixins/form
+//- this form need includer provide variable:
+    readonly : true | false
++section("主机信息")
+  +group("host", "name", "名称", "star", "主机名，不要用中文，尽量为简单的英文字符")
+    +input("host", "name")(readonly=readonly, required="true", ng-maxlength="20", ng-pattern="/^[0-9a-zA-Z_.]*$/", ng-check="/admin/api/hosts/checkName?id=&value={0}")
+  +group("host", "address", "地址", "font", "主机地址，IP地址或者域名均可")
+    +input("host", "address")(readonly=readonly, required="true", ng-maxlength="20", ng-check="/admin/api/hosts/checkAddress?id=&value={0}")
+  +group("host", "type", "类型", "th-list", "主机类型")
+    +select("host", "type")(ng-disabled=disabled_type, required="true", ng-options="type.key as type.value for type in types")
+  +group("host", "capacity", "容量", "th", "主机上可以部署多少个MSU/MSP实例")
+    +input("host", "capacity")(readonly=readonly, type="number", required="true", min="0", max="9999")
+
++section("配置信息")
+  +group("host", "configuration.user", "用户名", "user", "用户名，默认为root")
+    +input("host", "configuration.user")(readonly=readonly, required="true", ng-maxlength="20")
+  +group("host", "configuration.password", "密码", "lock", "以上用户的密码")
+    +input("host", "configuration.password")(readonly=readonly, required="true", ng-maxlength="20", ng-check="/admin/api/hosts/checkPassword?host={{host.address}}&username={{host.configuration.user}}&password={0}", err-type="pwError")
+  +group("host", "configuration.msu_version", "MSU版本", "tag", "部署的MSU的版本号")
+    +input("host", "configuration.msu_version")(readonly=readonly, required="true", ng-maxlength="20")
+  +group("host", "configuration.msp_version", "MSP版本", "tag", "部署的MSP的版本号")
+    +input("host", "configuration.msp_version")(readonly=readonly, required="true", ng-maxlength="20")
