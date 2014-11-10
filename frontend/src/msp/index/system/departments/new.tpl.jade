@@ -1,8 +1,10 @@
 -var disabled = false
+//- include the form mixins
+include /lib/mixins/form
 
 h2 新增 部门
 
-form.form-horizontal(name="newDepartmentForm", novalidate="novalidate", role="form", ng-submit="create()")
++form("newDepartmentForm")(ng-submit="create()")
   include /msp/index/system/departments/_form.jade
 
   +action_bar
