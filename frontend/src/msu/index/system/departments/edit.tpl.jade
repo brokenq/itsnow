@@ -1,7 +1,9 @@
 -var disabled = true
+//- include the form mixins
+include /lib/mixins/form
 h2 编辑 部门
 
-form.form-horizontal(name="editDepartmentForm", novalidate="novalidate", role="form", ng-submit="update()")
++form("editDepartmentForm")(ng-submit="update()")
   include /msu/index/system/departments/_form.jade
 
   +action_bar

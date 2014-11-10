@@ -1,6 +1,8 @@
 h2 新增 合同
+//- include the form mixins
+include /lib/mixins/form
 
-form.form-horizontal(name="newContractForm", novalidate="novalidate", role="form", ng-submit="create()")
++form("newContractForm")(ng-submit="create()")
   include /msu/index/contracts/_form.jade
 
   +action_bar
