@@ -1,4 +1,4 @@
-angular.module('MscIndex.User', ['ngTable', 'ngResource', 'MscIndex.User.Detail', 'dnt.action.service']).config(function ($stateProvider) {
+angular.module('MscIndex.Userzz', ['ngTable', 'ngResource', 'MscIndex.User.Detail', 'dnt.action.service']).config(function ($stateProvider) {
     return $stateProvider.state('user', {
         url: '/user',
         templateUrl: 'system/user/list.tpl.jade',

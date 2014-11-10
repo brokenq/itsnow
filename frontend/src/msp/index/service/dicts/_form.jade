@@ -11,5 +11,5 @@ include /lib/mixins/form
 		+input("dict", "display")(readonly=readonly)
 	+group("dict", "val", "值", "star", "值")
 		+input("dict", "val")(readonly=readonly)
-	+group("selectState", "", "状态", "", "")
+	+group("selectState", "", "是否开启", "", "")
 		select.form-control(ng-model="selectState", ng-options="data.name for data in statedatas", ng-init="selectState = statedatas[0]")

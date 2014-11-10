@@ -1,0 +1,21 @@
+//- include the form mixins
+include /lib/mixins/form
+//- this form need includer provide variable:
+    readonly : true | false
++section("用户基本信息")
+  +group("cuser","username","用户姓名", "user", "")
+    +input("cuser","username")(type="text",required, ng-maxlength="20",ng-minlength="4",ng-pattern="/^[a-zA-Z0-9]|_|\-|\.]+$/")
+  +group("cuser","nickName","用户昵称",   "user", "")
+    +input("cuser","nickName")(type="text",required, ng-maxlength="20",ng-minlength="4")
+  +group("cuser","emial",  "电子邮箱","envelope", "")
+    +input("cuser","email")(type="email",required)
+  +group("cuser","phone",  "电话号码",   "headphones", "")
+    +input("cuser", "phone")(type="text",required,ng-pattern='/^1[0-9]+$/')
+  div(ng-show="createview")
+    +group("cuser","password","用户密码","lock","")
+      +input("cuser","password")(type="password",ng-maxlength="20",ng-minlength="6")
+    +group("cuser","repeatPassword","重复密码","retweet","")
+      +input("cuser","repeatPassword")(type="password",ng-maxlength="20",ng-minlength="6",ng-blur="")
+  div(ng-show="updateview")
+    +group("selectState", "", "是否开启", "", "")
+      select.form-control(ng-model="selectState", ng-options="data.name for data in statedatas", ng-init="selectState = statedatas[0]")
