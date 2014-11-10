@@ -1,0 +1,16 @@
+//- include the form mixins
+include /lib/mixins/form
+//- this form need includer provide variable:
+    readonly : true | false
++section("基本信息")
+  +group("item", "catalog.sn", "父节点",   "th", "父节点")
+    +input("item","catalog.sn")(readonly=true,required)
+  +group("item", "sn","编号", "star", "服务目录编号，简单的英文字符+数字组合")
+    +input("item", "sn")(readonly=editReadonly, required)
+  +group("item", "title",  "标题",   "font", "服务目录标题")
+    +input("item", "title")(readonly=readonly, required)
+  +group("item", "description", "描述",   "th", "简单描述服务目录的功能或者作用")
+    +area("item", "description")(readonly=readonly)
+  +group("item", "icon", "图标",   "th", "")
+    +input("item", "icon")(readonly=readonly)
+    img(ng-src="{{item.icon}}")
