@@ -1,0 +1,11 @@
+-var readonly = false
+-var disabled_type = ""
+
+h2 新增 主机
+
+form.form-horizontal(name="newHostForm", novalidate="novalidate", ng-model-options="{ updateOn: 'mousedown blur' }", role="form", ng-submit="create()")
+  include /msc/index/hosts/_form.jade
+
+  +action_bar
+    +action_submit("创建")
+    +action_cancel("取消")(ui-sref="hosts.list")

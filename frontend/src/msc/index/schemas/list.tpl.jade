@@ -1,0 +1,22 @@
+include /lib/mixins/list
+
+.datalist
+  +toolbar
+    +button_group
+      +tool_button("schemasTable.reload()", "refresh", "", "*", "", "")
+    +button_group
+      +tool_button("actionService.gotoState('schemas.new')", "plus", "新增", "*", "", "")
+      +tool_button("actionService.gotoState('schemas.edit')", "pencil", "修改", "1", "", "editable")
+    +more_buttons
+      +drop_button("actionService.perform(destroy)", "trash", "删除", "1+", "", "deletable")
+
+  +page_table("schemasTable", "selection")
+    +row("schema", "id", "selection")(class="editable deletable")
+      td(data-title="'数据库'")
+        a(ui-sref="schemas.view(schema)") {{schema.name}}
+      td(data-title="'主机名'")
+        a(ui-sref="hosts.view(schema.host)") {{schema.host.name}}
+      td(data-title="'服务进程'")
+        a(ui-sref="processes.view(schema.process)") {{schema.process.name}}
+      td(data-title="'数据库用户名'") {{schema.configuration.user}}
+      td(data-title="'数据库密码'") {{schema.configuration.password}}

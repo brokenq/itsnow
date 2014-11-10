@@ -107,6 +107,7 @@ public class RoleManager extends Bean implements RoleService {
 
         if (role.getUsers() != null) {
             repository.deleteRoleAndUserRelationByRoleName(role.getName());
+            repository.deleteRoleAndGroupRelationByRoleName(role.getName());
             UserAuthority userAuthority;
             for (User user : role.getUsers()) {
                 userAuthority = new UserAuthority();

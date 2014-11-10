@@ -18,8 +18,8 @@ angular.module('MscIndex.Contracts',
     templateUrl: 'contracts/list.tpl.jade'
     controller: 'ContractListCtrl',
     data: {pageTitle: '邀约管理'}
-  $stateProvider.state 'contracts.my_list',
-    url: '/my-list',
+  $stateProvider.state 'contracts.my-list',
+    url: '/my_list',
     templateUrl: 'contracts/my_list.tpl.jade'
     controller: 'ContractMyListCtrl',
     data: {pageTitle: '我的合约'}

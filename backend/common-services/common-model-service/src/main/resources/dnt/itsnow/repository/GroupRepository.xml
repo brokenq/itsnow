@@ -4,13 +4,23 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="dnt.itsnow.repository.GroupRepository">
 
-    <resultMap id="groupResult" type="Group">
+    <resultMap id="groupResult" type="Group" autoMapping="true">
         <id property="id" column="id"/>
         <result property="name" column="group_name"/>
-        <result property="description" column="description"/>
-        <result property="createdAt" column="created_at"/>
-        <result property="updatedAt" column="updated_at"/>
+        <collection property="users" column="group_name" ofType="User" select="selectUser" />
     </resultMap>
+
+    <resultMap id="userResult" type="User" autoMapping="true">
+        <id property="id" column="id"/>
+    </resultMap>
+
+    <select id="selectUser" resultMap="userResult">
+        SELECT u.*
+        FROM   group_members gm
+               LEFT JOIN itsnow_msc.users u
+                      ON u.username = gm.username
+        WHERE #{group_name} = gm.group_name
+    </select>
 
     <select id="count" resultType="java.lang.Integer">
         SELECT COUNT(0) FROM groups

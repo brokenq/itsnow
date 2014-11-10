@@ -1,9 +1,4 @@
-/**
- * xiongjie on 14-7-23.
- */
 package dnt.itsnow.model;
-
-import org.hibernate.validator.constraints.NotBlank;
 
 import java.util.List;
 
@@ -14,25 +9,38 @@ import java.util.List;
  *
  * group#name == group#groupName
  *
- * TODO 添加测试用例
- * TODO add group to members support
  */
 public class Group extends ConfigItem {
 
-    private List<GroupDetail> details;
+    private String sn;
 
-    public List<GroupDetail> getDetails() {
-        return details;
+    private List<User> users;
+
+    public List<User> getUsers() {
+        return users;
     }
 
-    public void setDetails(List<GroupDetail> details) {
-        this.details = details;
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
+
+    public String getSn() {
+        return sn;
+    }
+
+    public void setSn(String sn) {
+        this.sn = sn;
     }
 
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Group{");
-        sb.append("details=").append(details);
+        sb.append("sn='").append(sn).append('\'');
+        sb.append(", name='").append(getName()).append('\'');
+        sb.append(", description='").append(getDescription()).append('\'');
+        sb.append(", created_at='").append(getCreatedAt()).append('\'');
+        sb.append(", update_at='").append(getUpdatedAt()).append('\'');
+        sb.append(", users='").append(users).append('\'');
         sb.append('}');
         return sb.toString();
     }

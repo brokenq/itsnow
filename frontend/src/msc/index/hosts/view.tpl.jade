@@ -1,0 +1,11 @@
+-var readonly = true
+-var disabled_type = "host.type"
+
+h2 查看 主机
+
+include /msc/index/hosts/_form.jade
+
++section("日志信息")
+  +area("host", "creationLog")(readonly=readonly)
++action_bar
+  +action_submit("返回")(ui-sref="hosts.list")
