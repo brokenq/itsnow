@@ -1,0 +1,13 @@
+//- include the form mixins
+include /lib/mixins/form
+//- this form need includer provide variable:
+    readonly : true | false
++section("用户基本信息")
+  +group("username","用户姓名", "user", "")
+    +input("username","用户姓名")(type="text",required, ng-maxlength="20",ng-minlength="4",ng-pattern="/^[a-zA-Z0-9]|_|\-|\.]+$/")
+  +group("nickName","用户昵称",   "user", "")
+    +input("nickName", "用户昵称")(type="text",required, ng-maxlength="20",ng-minlength="4")
+  +group("emial",  "电子邮箱","envelope", "")
+    +input("email", "电子邮箱")(type="email",required)
+  +group("phone",  "电话号码",   "headphones", "")
+    +input("phone", "电话号码")(type="text",required,ng-pattern='/^1[0-9]+$/')
