@@ -1,8 +1,9 @@
 -var readonly = false
 -var editReadonly = true
+include /lib/mixins/form
 h2 编辑 服务项
 
-form.form-horizontal(name="editItemForm", novalidate="novalidate", ng-model-options="{ updateOn: 'mousedown blur' }", role="form", ng-submit="update()")
++form("editItemForm")(ng-submit="update()")
   include /msu/index/service/catalog/_form_item.jade
 
   +action_bar
