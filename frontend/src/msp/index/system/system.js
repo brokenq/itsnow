@@ -8,5 +8,6 @@ angular.module('MspIndex.System', [
   'System.WorkTime',
   'System.Departments',
   'System.Group',
-  'System.Staffs'
+  'System.Staffs',
+  'System.User'
 ]);

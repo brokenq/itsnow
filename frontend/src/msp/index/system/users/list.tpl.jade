@@ -1,18 +1,20 @@
 include /lib/mixins/list
 .container
-	+toolbar
-		+button_group
-			+tool_button("dictTable.reload()", "refresh", "", "*", "", "")
-		+button_group
-			+tool_button("actionService.gotoState('dicts.new')", "plus", "新增", "*", "", "")
-			+tool_button("actionService.gotoState('dicts.edit')", "pencil", "修改", "1", "", "editable")
-		+more_buttons
-			+drop_button("actionService.perform(destroy)", "trash", "删除", "1+", "", "deletable")
-	+page_table("dictsTable","selection")
-		+row("dict", "sn", "selection")(class="editable deletable")
-			td(data-title="'字典代码'")
-				a(ui-sref="dict.view(dict)") {{dict.code}}
-			td(data-title="'字典名称'") {{dict.name}}
-			td(data-title="'展示'") {{dict.display}}
-			td(data-title="'值'") {{dict.val}}
-			td(data-title="'状态'") {{dict.state|stateFilter}}
+  +toolbar
+    +button_group
+      +tool_button("usersTable.reload()", "refresh", "", "*", "", "")
+    +button_group
+      +tool_button("actionService.gotoState('users.new')", "plus", "新增", "*", "", "")
+      +tool_button("actionService.gotoState('users.edit')", "pencil", "修改", "1", "", "editable")
+    +more_buttons
+      +drop_button("actionService.perform(destroy)", "trash", "删除", "1+", "", "deletable")
+  +page_table("usersTable","selection")
+    +row("user", "username", "selection")(class="editable deletable")
+      td(data-title="'姓名'")
+        a(ui-sref="user_view({name: '{{user.name}}'})") {{user | formatUser}}
+      td(data-title="'所属帐户'")
+        a(ui-sref="account_view({sn: '{{user.account.sn}}'})") {{user.account.name}}
+      td(data-title="'邮箱'")
+        a(href="mailto:{{user.email}}") {{user.email}}
+      td(data-title="'电话'", align="right") {{user.phone}}
+      td(data-title="'是否启用'") {{user.enabled == '1' ? '启用' : '停用'}}
