@@ -1,4 +1,4 @@
-angular.module('System.Workflows', ['multi-select'])
+angular.module('Service.Workflows', ['multi-select'])
 .config ($stateProvider, $urlRouterProvider)->
   $stateProvider.state 'workflows',
     url: '/workflows',

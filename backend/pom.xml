@@ -30,6 +30,7 @@
     <modules>
         <module>platform</module>
         <module>release</module>
+        <module>repository</module>
         <module>common-services</module>
     </modules>
 
