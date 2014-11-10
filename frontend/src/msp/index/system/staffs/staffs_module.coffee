@@ -1,12 +1,4 @@
-angular.module('System.Staffs',
-  ['ngTable',
-   'ngResource',
-   'ngSanitize',
-   'dnt.action.service',
-   'Lib.Commons',
-   'Lib.Utils',
-   'Lib.Feedback',
-   'multi-select'])
+angular.module('System.Staffs', ['multi-select'])
 .config ($stateProvider, $urlRouterProvider)->
   $stateProvider.state 'staffs',
     url: '/staffs',
@@ -152,9 +144,9 @@ angular.module('System.Staffs',
         $scope.staff = data
         siteService.query (data) ->
           $scope.sites = data
-#          for site in $scope.sites
-#            if site.sn == $scope.staff.site.sn
-#              $scope.site = site
+          #          for site in $scope.sites
+          #            if site.sn == $scope.staff.site.sn
+          #              $scope.site = site
           $scope.site = site for site in $scope.sites when site.sn == $scope.staff.site.sn
         departmentService.query (data) ->
           $scope.departments = data

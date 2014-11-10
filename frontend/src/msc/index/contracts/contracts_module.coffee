@@ -26,7 +26,7 @@ angular.module('MscIndex.Contracts',
   $urlRouterProvider.when '/contracts', '/contracts/list'
 
 .factory('ContractService', ['$resource', ($resource) ->
-    $resource("/admin/api/contracts",{},{
+    $resource("/admin/api/contracts", {}, {
       query: { method: 'GET', params: {keyword: '@keyword'}, isArray: true}
     });
   ])
@@ -47,7 +47,6 @@ angular.module('MscIndex.Contracts',
 
 .controller('ContractsCtrl', ['$scope', '$state', '$log', 'Feedback', 'CacheService',
     ($scope, $state, $log, feedback, CacheService) ->
-
       $log.log "Initialized the Contracts controller"
       $scope.options =
         page: 1, # show first page

@@ -1,0 +1,10 @@
+-var disabled = false
+
+h2 新增 角色
+
+form.form-horizontal(name="newWorkflowForm", novalidate="novalidate", role="form", ng-submit="create()")
+  include /msp/index/service/workflows/_form.jade
+
+  +action_bar
+    +action_submit("创建")
+    +action_cancel("取消")(ui-sref="roles.list")

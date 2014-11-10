@@ -1,0 +1,17 @@
+//- include the form mixins
+include /lib/mixins/form
+//- this form need includer provide variable:
+    disabled : true | false
++section("基本信息")
+  +group("workflow", "name", "名称", "user", "流程名称")
+    +input("workflow", "name")(type="text", ng-disabled=disabled, required, ng-minlength="4", ng-maxlength="20",
+         ng-pattern='/^(ROLE_)([a-zA-Z0-9]|_|\\-|\\.)+$/', ng-check="/api/workflows/check/{0}", placeholder="流程名称")
+  +group("workflow", "dictionary", "类型", "", "此流程类型")
+    select#workflow_dictionary.form-control(ng-model='dictionary', required, ng-options="dictionary.display for dictionary in dictionaries")
+  +group("workflow", "service_catalog", "服务目录", "", "流程所在的服务目录")
+    div#workflow_service_catalog(multi-select, selection-mode="single", input-model="serviceCatalogs", button-label="title",
+    item-label="title", tick-property="ticked", group-property="multiSelectGroup")
+  +group("workflow", "service_catalog", "服务目录", "", "流程所在的服务目录")
+    +input("workflow", "name")(type='file', nv-file-select='', uploader='uploader')
+  +group("workflow", "description", "描述", "edit", "角色说明")
+    +area("workflow", "description")

@@ -126,23 +126,23 @@ angular.module('MsuIndex.Contracts', ['multi-select'])
           serviceCatalogs.push closeGroup
         $scope.serviceCatalogs = serviceCatalogs
 
-        $scope.cancel = () ->
-          $state.go 'contracts.list'
+      $scope.cancel = () ->
+        $state.go 'contracts.list'
 
-        $scope.create = () ->
-          for serviceCatalog in $scope.serviceCatalogs
-            if serviceCatalog.items?
-              for item in serviceCatalog.items
-                $scope.detail.itemId = item.id if item.ticked is true
-          details = []
-          details.push $scope.detail
-          contractService.save($scope.contract, (data) ->
-            for detail in details
-              contractDetailService.save {sn:data.sn}, detail
-            feedback.success "保存合同成功"
-            $state.go 'contracts.list'
-          ,(resp)->
-            feedback.error("保存合同失败", resp)
-          )
+      $scope.create = () ->
+        for serviceCatalog in $scope.serviceCatalogs
+          if serviceCatalog.items?
+            for item in serviceCatalog.items
+              $scope.detail.itemId = item.id if item.ticked is true
+        details = []
+        details.push $scope.detail
+        contractService.save($scope.contract, (data) ->
+          for detail in details
+            contractDetailService.save {sn:data.sn}, detail
+          feedback.success "保存合同成功"
+          $state.go 'contracts.list'
+        ,(resp)->
+          feedback.error("保存合同失败", resp)
+        )
   ])
 

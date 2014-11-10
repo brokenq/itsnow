@@ -1,0 +1,9 @@
+-var disabled = true
+h2 编辑 流程
+
+form.form-horizontal(name="editWorkflowForm", novalidate="novalidate", role="form", ng-submit="update()")
+  include /msp/index/service/workflows/_form.jade
+
+  +action_bar
+    +action_submit("更新")
+    +action_cancel("取消")(ui-sref="workflows.list")

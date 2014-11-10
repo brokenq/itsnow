@@ -1,7 +1,7 @@
 //- include the form mixins
 include /lib/mixins/form
 //- this form need includer provide variable:
-    readonly : true | false
+    disabled : true | false
 +section("基本信息")
   +group("staff", "no", "工号", "user", "员工编号")
     +input("staff", "no")(type="text", ng-disabled=disabled, required, ng-minlength="2", ng-maxlength="20",

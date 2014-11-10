@@ -1,11 +1,4 @@
-angular.module('MscIndex.Contracts',
-  ['ngTable',
-   'ngResource',
-   'ngSanitize',
-   'dnt.action.service',
-   'Lib.Commons',
-   'Lib.Utils',
-   'Lib.Feedback'])
+angular.module('MscIndex.Contracts', [])
 .config ($stateProvider, $urlRouterProvider)->
   $stateProvider.state 'contracts',
     url: '/contracts',

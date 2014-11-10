@@ -49,7 +49,7 @@ angular.module('System.Departments', ['multi-select'])
     else '无'
 )
 
-.controller('DepartmentsCtrl', ['$scope', '$state', '$log', 'Feedback', 'CacheService',\
+.controller('DepartmentsCtrl', ['$scope', '$state', '$log', 'Feedback', 'CacheService',
     ($scope, $state, $log, feedback, CacheService) ->
       # frontend controller logic
       $log.log "Initialized the Departments controller"
@@ -94,12 +94,12 @@ angular.module('System.Departments', ['multi-select'])
   ])
 
 .controller('DepartmentListCtrl',
-  ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'CommonService', 'DepartmentService', 'Feedback',\
+  ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'CommonService', 'DepartmentService', 'Feedback',
     ($scope, $location, $log, NgTable, ActionService, commonService, departmentService, feedback) ->
       $log.log "Initialized the Department list controller"
 
       args =
-        counts: [],          # hide page counts control
+        counts: [], # hide page counts control
         total: 0,
         getData: ($defer, params) ->
           $location.search(params.url()); # put params in url
@@ -127,7 +127,7 @@ angular.module('System.Departments', ['multi-select'])
     $log.log "Initialized the Department View controller on: " + JSON.stringify($scope.department)
   ])
 
-.controller('DepartmentNewCtrl', ['$scope', '$state', '$log', 'Feedback', 'DepartmentService', 'SiteService',\
+.controller('DepartmentNewCtrl', ['$scope', '$state', '$log', 'Feedback', 'DepartmentService', 'SiteService',
     ($scope, $state, $log, feedback, departmentService, siteService) ->
       $log.log "Initialized the Department New controller"
 
@@ -147,9 +147,9 @@ angular.module('System.Departments', ['multi-select'])
           feedback.error("新建部门#{department.name}失败", resp)
   ])
 
-.controller('DepartmentEditCtrl', ['$scope', '$state', '$log', '$stateParams', 'Feedback', 'DepartmentService', 'SiteService', \
+.controller('DepartmentEditCtrl',
+  ['$scope', '$state', '$log', '$stateParams', 'Feedback', 'DepartmentService', 'SiteService',
     ($scope, $state, $log, $stateParams, feedback, departmentService, siteService) ->
-
       $scope.department = $scope.cacheService.find $stateParams.sn, true
       $log.log "Initialized the Department Edit controller on: " + JSON.stringify($scope.department)
 
@@ -169,7 +169,7 @@ angular.module('System.Departments', ['multi-select'])
             if parentDept.id == $scope.department.parentId
               parentDept.ticked = true
             if parentDept.id == $scope.department.id
-              $scope.parentDepartments.splice(index,1);
+              $scope.parentDepartments.splice(index, 1);
 
       # 编辑页面提交
       $scope.update = () ->
