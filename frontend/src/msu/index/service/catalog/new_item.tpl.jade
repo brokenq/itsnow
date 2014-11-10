@@ -1,0 +1,10 @@
+-var readonly = false
+-var editReadonly = false
+h2 新增 服务项
+
+form.form-horizontal(name="newItemForm", novalidate="novalidate", ng-model-options="{ updateOn: 'mousedown blur' }", role="form", ng-submit="create()")
+  include /msu/index/service/catalog/_form_item.jade
+
+  +action_bar
+    +action_submit("创建")
+    +action_cancel("取消")(ui-sref="catalog.private.list")
