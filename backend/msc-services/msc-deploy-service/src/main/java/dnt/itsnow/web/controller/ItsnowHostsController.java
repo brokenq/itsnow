@@ -289,14 +289,15 @@ public class ItsnowHostsController extends SessionSupportController<ItsnowHost>{
     /**
      * <h2>等待主机创建完成</h2>
      * <p/>
-     * PUT  /admin/api/hosts/wait/{invocationId}    wait    等待主机创建完成
+     * GET  /admin/api/hosts/{id}/wait/{invocationId}    wait    等待主机创建完成
      * @param invocationId 创建主机调用ID
      */
-    @RequestMapping(value = "wait/{invocationId}", method = RequestMethod.PUT)
-    public void waitHostCreation(@PathVariable("invocationId") String invocationId) {
+    @RequestMapping("{id}/wait/{invocationId}")
+    public void waitHostCreation(@PathVariable("id") Long hostId,
+                                 @PathVariable("invocationId") String invocationId) {
         logger.debug("Waiting for host create complete which invocationId = {} ", invocationId);
         try {
-            hostService.waitHostCreation(invocationId);
+            hostService.waitHostCreation(hostId, invocationId);
         } catch (ItsnowHostException e) {
             throw new WebServerSideException(INTERNAL_SERVER_ERROR, e.getMessage());
         }

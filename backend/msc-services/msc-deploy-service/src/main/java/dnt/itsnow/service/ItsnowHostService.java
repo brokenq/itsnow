@@ -172,8 +172,8 @@ public interface ItsnowHostService {
     /**
      * <h2>等待主机创建完成</h2>
      *
-     *  @param invocationId 调用ID
-     *  throws ItsnowHostException
+     * @param hostId
+     * @param invocationId 调用ID
      */
-    void waitHostCreation(String invocationId) throws ItsnowHostException;
+    void waitHostCreation(Long hostId, String invocationId) throws ItsnowHostException;
 }
