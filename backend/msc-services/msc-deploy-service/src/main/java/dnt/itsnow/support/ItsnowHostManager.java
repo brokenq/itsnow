@@ -197,7 +197,7 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
         return creating;
     }
 
-    public void waitHostCreation(String jobId) throws ItsnowHostException {
+    public void waitHostCreation(Long hostId, String jobId) throws ItsnowHostException {
         if( !invokeService.isFinished(jobId) ){
             try {
                 invokeService.waitJobFinished(jobId);
@@ -205,8 +205,8 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
                 throw new ItsnowHostException("Error while wait the job " + jobId + " finished");
             }
         }
-        ItsnowHost host = repository.findByConfiguration(CREATE_INVOCATION_ID, jobId);
-        if(host == null) throw new ItsnowHostException("The job id " + jobId+ " is invalid");
+        ItsnowHost host = repository.findById(hostId);
+        if(host == null) throw new ItsnowHostException("The host id " + hostId+ " is invalid");
         if( host.getStatus() != HostStatus.Running){
             throw new ItsnowHostException("The host is not state in Running, but: " + host.getStatus());
         }
