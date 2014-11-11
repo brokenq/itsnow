@@ -1,4 +1,3 @@
-
 angular.module('MscIndex.User',[])
 .config ($stateProvider, $urlRouterProvider)->
     $stateProvider.state 'users',
@@ -74,6 +73,7 @@ angular.module('MscIndex.User',[])
     ($scope,     $state,   feedback) ->
       $scope.createview=true
       $scope.updateview=false
+      $scope.ngdis=false
       $scope.create=() ->
         $scope.cuser.$promise = `undefined`
         $scope.cuser.$resolved = `undefined`
@@ -85,6 +85,7 @@ angular.module('MscIndex.User',[])
     ($scope,    $state,   $stateParams,  feedback) ->
       $scope.createview=false
       $scope.updateview=true
+      $scope.ngdis=true
       username=$stateParams.username
       $scope.services.get
         username: username

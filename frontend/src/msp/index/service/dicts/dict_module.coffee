@@ -1,12 +1,5 @@
 
-angular.module('Service.Dict',
-    ['ngTable',
-     'ngResource',
-     'ngSanitize',
-     'dnt.action.service',
-     'Lib.Commons',
-     'Lib.Utils',
-     'Lib.Feedback'])
+angular.module('Service.Dict',[])
 .config ($stateProvider, $urlRouterProvider)->
     $stateProvider.state 'dicts',
       url: '/dicts',
@@ -54,9 +47,22 @@ angular.module('Service.Dict',
         query: { method: 'GET', isArray: true},
         remove: { method: 'DELETE', params: {sn: '@sn'}}
       )
+      dictdates = {}
+      $scope.service.query (dictdates) ->
+        dictdates = dictdates
+        return
+      $scope.autoComeplete(dictdates) = ->
+        for dictdate in dictdates
+          if($scope.dict.code is dictdate.code)
+            $scope.dict.name=dictdate.name
+            $scope.ngread=true
+            break
+          else
+            $scope.dict.name=""
+            $scope.ngread=false
   ])
 .controller('DictListCtrl',['$scope', '$location', 'ngTableParams', 'ActionService','CommonService','Feedback',\
-                               ($scope,     $location,  NgTable,         ActionService,   commonService,feedback) ->
+                           ($scope,     $location,  NgTable,         ActionService,   commonService,feedback) ->
     Dicts= $scope.services
     args =
       total: 0
@@ -72,7 +78,7 @@ angular.module('Service.Dict',
     $scope.destroy = (dict) ->
       $scope.services.remove {sn: dict.sn}, () ->
         feedback.success "删除时间#{dict.sn}成功"
-        $scope.worktimesTable.reload()
+        $scope.dictsTable.reload()
       , (resp) ->
         feedback.error("删除时间#{dict.sn}失败", resp)
     $scope.reload = ->
@@ -80,17 +86,22 @@ angular.module('Service.Dict',
 
 ])
 .controller('DictNewCtrl', ['$scope', '$state', 'Feedback',
-    ($scope,     $state,   feedback) ->
+                          ($scope,     $state,   feedback) ->
+      dictdates = {}
+      $scope.service.query (dictdates) ->
+        dictdates = dictdates
+        return
+
       $scope.create=() ->
         $scope.dict.state = $scope.selectState.value;
-        $scope.worktime.$promise = `undefined`
-        $scope.worktime.$resolved = `undefined`
+        $scope.dict.$promise = `undefined`
+        $scope.dict.$resolved = `undefined`
         $scope.services.save $scope.dict, ->
           $state.go "dicts.list"
           return
   ])
-.controller('DictEditCtrl', ['$scope', '$state', '$stateParams', 'Feedback',
-    ($scope,    $state,   $stateParams,  feedback) ->
+.controller('DictEditCtrl', ['$scope', '$state', '$stateParams', 'Feedback',\
+                            ($scope,    $state,   $stateParams,  feedback) ->
       sn=$stateParams.sn
       $scope.services.get
         sn: sn
@@ -110,7 +121,4 @@ angular.module('Service.Dict',
           $state.go "dicts.list"
         , (resp) ->
           feedback.error("修改#{$scope.dict.sn}失败", resp);
-
-
-
   ])

@@ -145,7 +145,9 @@ public class UsersController extends SessionSupportController<User> {
     }
     @RequestMapping(value = "checkEmail/{email}", method = RequestMethod.GET)
     public HashMap checkUniqueEmail(@PathVariable("email") String email){
+        logger.info("find byemail:{}",email);
         User user = userService.findByEmail(email);
+        logger.info("return user{}",user);
         if( user != null ){
             throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate role name: " + user.getEmail());
         }else{

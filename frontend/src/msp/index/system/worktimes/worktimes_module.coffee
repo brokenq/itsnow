@@ -1,11 +1,4 @@
-angular.module('System.WorkTime',
-  ['ngTable',
-   'ngResource',
-   'ngSanitize',
-   'dnt.action.service',
-   'Lib.Commons',
-   'Lib.Utils',
-   'Lib.Feedback'])
+angular.module('System.WorkTime',[])
 .config ($stateProvider, $urlRouterProvider)->
   $stateProvider.state 'worktimes',
     url: '/worktimes',
@@ -60,7 +53,6 @@ angular.module('System.WorkTime',
         remove: { method: 'DELETE', params: {sn: '@sn'}}
       )
 
-
   ])
 .controller('WorkTimeListCtrl',['$scope', '$location', 'ngTableParams', 'ActionService','CommonService','Feedback',\
                                ($scope,     $location,  NgTable,         ActionService,   commonService,feedback) ->
@@ -96,7 +88,6 @@ angular.module('System.WorkTime',
     $scope.toggleCheckboxes=(workdate) ->
       workdate.checked=!(workdate.checked)
     for workdate in $scope.workdates
-      console.log("workdate.checked"+workdate.checked)
       if workdate.checked is true
         ids.push workdate.id
         names.push workdate.name
