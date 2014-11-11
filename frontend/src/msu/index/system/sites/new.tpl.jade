@@ -1,8 +1,10 @@
 -var readonly = false
+//- include the form mixins
+include /lib/mixins/form
 
 h2 新增 部门
 
-form.form-horizontal(name="newSiteForm", novalidate="novalidate", ng-model-options="{ updateOn: 'mousedown blur' }", role="form", ng-submit="create()")
++form("newSiteForm")(ng-submit="create()")
   include /msu/index/system/sites/_form.jade
 
   +action_bar

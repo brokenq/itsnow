@@ -1,9 +1,11 @@
 -var readonly = false
 -var disabled_type = ""
+//- include the form mixins
+include /lib/mixins/form
 
 h2 新增 主机
 
-form.form-horizontal(name="newHostForm", novalidate="novalidate", ng-model-options="{ updateOn: 'mousedown blur' }", role="form", ng-submit="create()")
++form("newHostForm")(ng-submit="create()")
   include /msc/index/hosts/_form.jade
 
   +action_bar

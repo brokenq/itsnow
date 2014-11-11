@@ -1,0 +1,11 @@
+-var readonly = false
+-var editReadonly = true
+include /lib/mixins/form
+h2 编辑 服务项
+
++form("editItemForm")(ng-submit="update()")
+  include /msu/index/service/catalog/_form_item.jade
+
+  +action_bar
+    +action_submit("更新")
+    +action_cancel("取消")(ui-sref="catalog.private.list")
