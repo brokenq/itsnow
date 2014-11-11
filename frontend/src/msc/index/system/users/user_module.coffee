@@ -46,7 +46,7 @@ angular.module('MscIndex.User',[])
       )
   ])
 .controller('UserListCtrl',['$scope', '$location', 'ngTableParams', 'ActionService','CommonService','Feedback',\
-                               ($scope,     $location,  NgTable,         ActionService,   commonService,feedback) ->
+                           ($scope, $location,  NgTable,         ActionService,   commonService,feedback) ->
     Users= $scope.services
     args =
       total: 0
@@ -70,8 +70,8 @@ angular.module('MscIndex.User',[])
       $scope.usersTable.reload()
 
 ])
-.controller('UserNewCtrl', ['$scope', '$state', 'Feedback',
-    ($scope,     $state,   feedback) ->
+.controller('UserNewCtrl', ['$scope', '$state', 'Feedback',\
+                           ($scope,     $state,   feedback) ->
       $scope.createview=true
       $scope.updateview=false
       $scope.ngdis=false
