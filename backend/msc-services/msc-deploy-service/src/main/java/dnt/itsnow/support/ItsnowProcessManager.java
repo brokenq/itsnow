@@ -238,6 +238,22 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
     }
 
     @Override
+    public void waitStarted(String job) throws ItsnowProcessException{
+        if( !invokeService.isFinished(job) ){
+            try {
+                invokeService.waitJobFinished(job);
+            } catch (SystemInvokeException e) {
+                throw new ItsnowProcessException("Error while wait the job " + job + " finished");
+            }
+        }
+        ItsnowProcess process = repository.findByConfiguration(START_INVOCATION_ID, job);
+        if(process == null) throw new ItsnowProcessException("The job id " + job + " is invalid");
+        if( process.getStatus() != ProcessStatus.Running){
+            throw new ItsnowProcessException("The process is not state in Running, but: " + process.getStatus());
+        }
+    }
+
+    @Override
     public boolean care(SystemInvocation invocation) {
         String id = invocation.getId();
         return id.startsWith(DEPLOY_PROCESS_PRFIX) || id.startsWith(UNDEPLOY_PROCESS_PRFIX)
