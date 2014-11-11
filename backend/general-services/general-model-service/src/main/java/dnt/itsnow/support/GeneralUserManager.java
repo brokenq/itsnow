@@ -7,6 +7,7 @@ import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.repository.GeneralUserRespository;
 import dnt.itsnow.service.GeneralUserService;
+import dnt.support.JsonSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -34,21 +35,22 @@ public class GeneralUserManager extends CommonUserManager implements GeneralUser
     @Override
     public User create(User user) {
         logger.info("Creating {}", user);
-        user.setPassword(encode(user.getPassword()));
-        user.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        user.setUpdatedAt(user.getCreatedAt());
         facade.postForEntity("/admin/api/users", user, User.class);
         return user;
     }
 
     @Override
     public void update(User user) {
-
+        logger.info("Updating {}", user);
+        facade.put("/admin/api/users/{username}",
+                user, user.getUsername());
+        logger.info("Updated  {}", user);
     }
-
     @Override
     public void delete(User user) {
-
+       logger.info("delete{}",user);
+        facade.delete("/admin/api/users/{username}",user.getUsername());
+       logger.info("delete{}",user);
     }
 
     @Override
