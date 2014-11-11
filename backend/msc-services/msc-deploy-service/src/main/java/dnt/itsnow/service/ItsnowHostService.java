@@ -168,4 +168,12 @@ public interface ItsnowHostService {
      *  throws ItsnowHostException
      */
     List<ItsnowHost> findAllByType(String type);
+
+    /**
+     * <h2>等待主机创建完成</h2>
+     *
+     * @param hostId
+     * @param invocationId 调用ID
+     */
+    void waitHostCreation(Long hostId, String invocationId) throws ItsnowHostException;
 }

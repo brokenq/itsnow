@@ -27,7 +27,7 @@
 
         <version.activiti.engine>5.15.1</version.activiti.engine>
 
-        <version.component-framework>0.1.7</version.component-framework>
+        <version.component-framework>0.1.6</version.component-framework>
         <version.components>0.1.9</version.components>
 
         <version.commons-fileupload>1.2</version.commons-fileupload>

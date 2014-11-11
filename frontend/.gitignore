@@ -8,3 +8,4 @@ ms?/*deploy*/
 node_modules/
 .target
 npm_debug.log
+npm-debug.log

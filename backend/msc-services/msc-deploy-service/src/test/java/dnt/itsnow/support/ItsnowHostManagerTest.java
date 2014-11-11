@@ -36,7 +36,6 @@ import static org.easymock.EasyMock.*;
 @ContextConfiguration(classes = ItsnowHostManagerConfig.class)
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
-@Ignore
 public class ItsnowHostManagerTest {
     @Autowired
     ItsnowHostManager    hostManager;

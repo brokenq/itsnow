@@ -8,10 +8,13 @@ import dnt.itsnow.service.SystemInvocationTranslator;
 import dnt.itsnow.system.Process;
 import dnt.spring.Bean;
 import dnt.util.StringUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.net.InetAddress;
+import java.util.Collection;
 import java.util.Properties;
 
 /**
@@ -134,11 +137,7 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
                                    itsnowProcess.getAccount().getType().toLowerCase(),
                                    itsnowProcess.getName());
             }
-        }).next(new ScpTask(itsnowProcess, nowVars(itsnowProcess), "config/now.vars"))
-          .next(new ScpTask(itsnowProcess, dbVars(itsnowProcess), "db/migrate/environments/production.vars"))
-          .next(new ScpTask(itsnowProcess, shVars(itsnowProcess), "bin/sh.vars"))
-          .next(new ScpTask(itsnowProcess, wrapperVars(itsnowProcess), "config/wrapper.vars"))
-          .next(new ScpTask(itsnowProcess, nginxVars(itsnowProcess), "config/nginx.vars"))
+        }).next(new ScpTask(itsnowProcess, appVars(itsnowProcess), ".itsnow"))
           .next(new RemoteInvocation(address) {
               // 7. 实际开始部署
               @Override
@@ -277,71 +276,49 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
         }
     }
 
-    File nowVars(ItsnowProcess process) {
-        Properties props = new Properties(process.getConfiguration());
+    File appVars(ItsnowProcess process) {
+        String home = "/opt/itsnow/" + process.getName();
+        Properties props = new Properties();
+        props.setProperty("app.id", process.getIdentifier());
+        props.setProperty("app.name", process.getName());
+        props.setProperty("app.longName", process.getDisplayName());
+        props.setProperty("app.description", process.getDescription());
+        props.setProperty("app.base", home);
+        props.setProperty("app.host", process.getHostAddress());
+        props.setProperty("app.domain", getAppDomain());
+        props.setProperty("app.subdomain", process.getAccount().getDomain());
+        props.setProperty("msc.host", getMscAddress());
+
+        String type = process.getAccount().getType();
+        props.setProperty("app.type", type);
+        String version = process.getHost().getProperty(type + ".version");
+        props.setProperty("app.version", version);
+        props.setProperty("app.fwkVersion", process.getHost().getProperty(type + ".fwkVersion", getMscFwkVersion()));
+
+        props.setProperty("app.rmi.port", process.getProperty("rmi.port"));
+        props.setProperty("app.jmx.port", process.getProperty("jmx.port"));
+        props.setProperty("app.debug.port", process.getProperty("debug.port"));
+        props.setProperty("app.http.port", process.getProperty("http.port"));
+
         ItsnowSchema schema = process.getSchema();
         String port = schema.getProperty("port");
         if (port == null) port = "3306";
-        props.setProperty("app.name", process.getDisplayName());
-        props.setProperty("app.id", process.getIdentifier());
         props.setProperty("db.host", schema.getHostAddress());
+        props.setProperty("db.port", port);
         props.setProperty("db.name", schema.getName());
         props.setProperty("db.user", schema.getProperty("user"));
         props.setProperty("db.password", schema.getProperty("password"));
-        props.setProperty("db.port", port);
+
+        props.setProperty("log.file", process.getName());
+        props.setProperty("log.fileCount", process.getProperty("log.fileCount", "10"));
+        props.setProperty("log.itsnowLevel", process.getProperty("log.itsnowLevel","INFO"));
+        props.setProperty("log.rootLevel", process.getProperty("log.rootLevel","WARN"));
         // http jmx redis configuration is stored in process configuration
         // 有个 redis.local.index(1-31) 必须与其他实例不一样
         //props.setProperty("http.port", process.getProperty("http.port"));
-        return createProperties(props, "now.vars");
+        return createProperties(props, "app.vars");
     }
 
-    File dbVars(ItsnowProcess process) {
-        Properties props = new Properties();
-        ItsnowSchema schema = process.getSchema();
-        String port = schema.getProperty("port");
-        if (port == null) port = "3306";
-        props.setProperty("db.host", schema.getHostAddress());
-        props.setProperty("db.port", port);
-        props.setProperty("db.name", schema.getName());
-        props.setProperty("username", schema.getProperty("user"));
-        props.setProperty("password", schema.getProperty("password"));
-        return createProperties(props, "production.vars");
-    }
-
-    File shVars(ItsnowProcess process) {
-        Properties props = new Properties();
-        props.setProperty("APP_NAME", process.getDisplayName());
-        props.setProperty("APP_PORT", process.getProperty("rmi.port"));
-        props.setProperty("jmxremote.port", process.getProperty("jmx.port"));
-        props.setProperty("address", process.getProperty("debug.port"));
-        return createProperties(props, "sh.vars");
-    }
-
-    File wrapperVars(ItsnowProcess process) {
-        // for config/wrapper.conf, bin/itsnow-$id
-        Properties props = new Properties();
-        String home = "/opt/itsnow/" + process.getName();
-        props.setProperty("wrapper.working.dir", home);
-        props.setProperty("APP_NAME", process.getName());
-        props.setProperty("APP_LONG_NAME", process.getDisplayName());
-        props.setProperty("app.home", home);
-        props.setProperty("app.name", process.getDisplayName());
-        props.setProperty("app.port", process.getProperty("rmi.port"));
-        props.setProperty("jmxremote.port", process.getProperty("jmx.port"));
-        props.setProperty("address", process.getProperty("debug.port"));
-        return createProperties(props, "wrapper.vars");
-    }
-
-    File nginxVars(ItsnowProcess process) {
-        Properties props = new Properties();
-        props.setProperty("instance", process.getName());
-        props.setProperty("type", process.getAccount().getType());
-        props.setProperty("host", process.getHostAddress());
-        props.setProperty("port", process.getProperty("http.port"));
-        props.setProperty("subdomain", process.getAccount().getDomain());
-        props.setProperty("domain", getAppDomain());
-        return createProperties(props, "nginx.vars");
-    }
 
     File createProperties(Properties props, String name) {
         File dumpFile = new File(System.getProperty("app.home"), "tmp/" + name);
@@ -357,6 +334,29 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
             IOUtils.closeQuietly(outputStream);
         }
         return dumpFile;
+    }
+
+    private String getMscAddress(){
+        try {
+            return InetAddress.getLocalHost().getHostName();
+        } catch (Exception ex){
+            return "msc." + getAppDomain();
+        }
+    }
+
+    private String getMscFwkVersion(){
+        File mscHome = new File(System.getProperty("app.home"));
+        Collection<File> jars =
+                FileUtils.listFiles(mscHome, new String[]{"jar"}, false);
+        if( jars.isEmpty() )
+        {
+            return "0.0.1";// an minimal one for testing
+            //throw new IllegalStateException("Can't auto detect the framework version in " + mscHome.getAbsolutePath());
+        }
+        File jar = jars.iterator().next();
+        String[] parts = jar.getName().split("-");
+        String versionAndSuffix = parts[parts.length-1];
+        return versionAndSuffix.split("\\.")[0];
     }
 
 }
