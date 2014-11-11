@@ -27,18 +27,19 @@ import static org.springframework.http.HttpStatus.*;
 /**
  * <h1>Itsnow hosts web controller</h1>
  * <pre>
- * <b>HTTP     URI               方法       含义  </b>
- * GET    /admin/api/hosts       index     列出所有主机，支持过滤，分页，排序等
- * GET    /admin/api/hosts/dbs   db_index  列出所有数据库主机
- * GET    /admin/api/hosts/{id}  show      查看特定的主机信息
- * POST   /admin/api/hosts       create    创建主机资源
- * PUT    /admin/api/hosts/{id}  update    修改主机信息
- * DELETE /admin/api/hosts/{id}  destroy   删除特定的主机信息
- * GET    /admin/api/hosts/{id}/follow/{invocationId} follow    获取目标主机最新的任务信息
- * GET    /admin/api/hosts/checkName?id={id}&value={value} checkName 检查主机名是否唯一
- * GET    /admin/api/hosts/checkAddress?id={id}&value={value} checkAddress 检查主机地址是否唯一,有效
+ * <b>HTTP     URI                                              方法                 含义  </b>
+ * GET    /admin/api/hosts                                      index               列出所有主机，支持过滤，分页，排序等
+ * GET    /admin/api/hosts/dbs                                  db_index            列出所有数据库主机
+ * GET    /admin/api/hosts/{id}                                 show                查看特定的主机信息
+ * POST   /admin/api/hosts                                      create              创建主机资源
+ * PUT    /admin/api/hosts/{id}                                 update              修改主机信息
+ * DELETE /admin/api/hosts/{id}                                 destroy             删除特定的主机信息
+ * GET    /admin/api/hosts/{id}/follow/{invocationId}           follow              获取目标主机最新的任务信息
+ * GET    /admin/api/hosts/checkName?id={id}&value={value}      checkName           检查主机名是否唯一
+ * GET    /admin/api/hosts/checkAddress?id={id}&value={value}   checkAddress        检查主机地址是否唯一,有效
+ * GET    /admin/api/hosts/list/{field}/{value}                 listByField         列出所有匹配的主机
+ * PUT    /admin/api/hosts/wait/{invocationId}                  waitHostCreation    等待主机创建完成
  * GET    /admin/api/hosts/checkPassword?host={host}&username={username}&password={password} checkPassword 检查主机用户名密码是否有效
- * GET    /admin/api/hosts/list/{field}/{value}      listByField      列出所有匹配的主机
  * </pre>
  */
 @RestController
@@ -283,6 +284,22 @@ public class ItsnowHostsController extends SessionSupportController<ItsnowHost>{
             return hosts;
         }
         throw new WebClientSideException(BAD_REQUEST, "Can't find itsnow schema by field " + field);
+    }
+
+    /**
+     * <h2>等待主机创建完成</h2>
+     * <p/>
+     * PUT  /admin/api/hosts/wait/{invocationId}    wait    等待主机创建完成
+     * @param invocationId 创建主机调用ID
+     */
+    @RequestMapping(value = "wait/{invocationId}", method = RequestMethod.PUT)
+    public void waitHostCreation(@PathVariable("invocationId") String invocationId) {
+        logger.debug("Waiting for host create complete which invocationId = {} ", invocationId);
+        try {
+            hostService.waitHostCreation(invocationId);
+        } catch (ItsnowHostException e) {
+            throw new WebServerSideException(INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 
     @BeforeFilter({"show", "start", "stop", "cancel", "destroy", "update", "follow"})

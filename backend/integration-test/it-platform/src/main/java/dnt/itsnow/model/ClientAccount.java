@@ -67,4 +67,7 @@ public class ClientAccount extends ClientConfigItem{
         this.userId = userId;
     }
 
+    public ClientAccountStatus getStatus() {
+        return status;
+    }
 }

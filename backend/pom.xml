@@ -104,12 +104,13 @@
             <!--Platform -->
             <dependency>
                 <groupId>dnt.itsnow</groupId>
-                <artifactId>platform</artifactId>
+                <artifactId>release</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>dnt.itsnow</groupId>
-                <artifactId>release</artifactId>
+                <artifactId>platform</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

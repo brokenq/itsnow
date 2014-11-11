@@ -10,7 +10,9 @@ INSERT INTO users(id, account_id, username, nick_name, email, phone, password) V
 (5, 2, 'msu_user_two', 'MSU User Line Two', 'msu_two@itsnow.com',  '13112345678', '54442704733e9cddaeb28d54fb631f56247d326288d9d4e09da2039dff070bd47430a0e6b3560cd2'),
 (6, 3, 'msp_user_one', 'MSP User Line One', 'msp_one@itsnow.com',  '13112345678', '54442704733e9cddaeb28d54fb631f56247d326288d9d4e09da2039dff070bd47430a0e6b3560cd2'),
 (7, 3, 'msp_user_two', 'MSP User Line Two', 'msp_two@itsnow.com',  '13112345678', '54442704733e9cddaeb28d54fb631f56247d326288d9d4e09da2039dff070bd47430a0e6b3560cd2'),
-(8, 3, 'msp_user_desk', 'MSP User Service Desk', 'msp_servicedesk@itsnow.com',  '13112345678', '54442704733e9cddaeb28d54fb631f56247d326288d9d4e09da2039dff070bd47430a0e6b3560cd2');
+(8, 3, 'msp_user_desk', 'MSP User Service Desk', 'msp_servicedesk@itsnow.com',  '13112345678', '54442704733e9cddaeb28d54fb631f56247d326288d9d4e09da2039dff070bd47430a0e6b3560cd2'),
+-- 由于注册功能有问题影响到集成测试，目前暂时先预先insert msp_test测试数据
+(9, 4, 'msp_test', 'MSP Testor', 'msp_test@itsnow.com',  '13112345678', '54442704733e9cddaeb28d54fb631f56247d326288d9d4e09da2039dff070bd47430a0e6b3560cd2');
 
 -- 以上密码通过 Groovy Console
 -- import org.springframework.security.crypto.password.StandardPasswordEncoder
@@ -23,6 +25,7 @@ INSERT INTO users(id, account_id, username, nick_name, email, phone, password) V
 UPDATE accounts SET user_id = 1 WHERE id = 1;
 UPDATE accounts SET user_id = 2 WHERE id = 2;
 UPDATE accounts SET user_id = 3 WHERE id = 3;
+UPDATE accounts SET user_id = 4 WHERE id = 4;
 
 -- //@UNDO
 -- SQL to undo the change goes here.

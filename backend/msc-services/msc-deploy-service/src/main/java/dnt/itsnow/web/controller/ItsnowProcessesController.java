@@ -31,17 +31,18 @@ import java.util.Map;
 /**
  * <h1>Itsnow processes web controller</h1>
  * <pre>
- * <b>HTTP     URI                                      方法       含义  </b>
- * GET    /admin/api/processes                          index      列出所有进程，支持过滤，分页，排序等
- * GET    /admin/api/processes/auto_new/{accountSn}     autoNew    手工分配时，为特定帐户自动的进程信息
- * POST   /admin/api/processes/auto_create/{accountSn}  autoCreate 自动分配，为特定帐户自动分配一个进程
- * POST   /admin/api/processes                          create     为特定帐户分配(创建)进程
- * GET    /admin/api/processes/{name}                   show       查看特定进程的信息
- * PUT    /admin/api/processes/{name}/start             start      启动进程
- * PUT    /admin/api/processes/{name}/stop              stop       停止进程
- * PUT    /admin/api/processes/{name}/cancel            cancel     取消最近的操作(启动/停止)
- * DELETE /admin/api/processes/{name}                   destroy    删除进程对象
- * GET    /admin/api/processes/{name}/follow/{job}      follow     获取特定进程最新的任务信息
+ * <b>HTTP     URI                                      方法             含义  </b>
+ * GET    /admin/api/processes                          index           列出所有进程，支持过滤，分页，排序等
+ * GET    /admin/api/processes/auto_new/{accountSn}     autoNew         手工分配时，为特定帐户自动的进程信息
+ * POST   /admin/api/processes/auto_create/{accountSn}  autoCreate      自动分配，为特定帐户自动分配一个进程
+ * POST   /admin/api/processes                          create          为特定帐户分配(创建)进程
+ * GET    /admin/api/processes/{name}                   show            查看特定进程的信息
+ * PUT    /admin/api/processes/{name}/start             start           启动进程
+ * PUT    /admin/api/processes/{name}/stop              stop            停止进程
+ * PUT    /admin/api/processes/{name}/cancel            cancel          取消最近的操作(启动/停止)
+ * DELETE /admin/api/processes/{name}                   destroy         删除进程对象
+ * GET    /admin/api/processes/{name}/follow/{job}      follow          获取特定进程最新的任务信息
+ * PUT    /admin/api/processes/wait/{job}               waitStarted     等待进程启动完成
  * </pre>
  */
 @RestController
@@ -273,6 +274,22 @@ public class ItsnowProcessesController extends SessionSupportController<ItsnowPr
         response.setHeader("offset", String.valueOf(offset));
         response.setHeader("status", currentProcess.getStatus().toString());
         return StringUtils.join(body, "\n");
+    }
+
+    /**
+     * <h2>等待进程启动完成</h2>
+     * <p/>
+     * PUT    /admin/api/processes/wait/{job} 等待进程启动完成
+     * @param job 进程启动invocationId
+     */
+    @RequestMapping(value = "wait/{job}", method = RequestMethod.PUT)
+    public void waitStarted( @PathVariable("job") String job){
+        logger.debug("Waiting for starting process which invocationId = {}", job);
+        try {
+            processService.waitStarted(job);
+        } catch (Exception e) {
+            throw new WebServerSideException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 
 

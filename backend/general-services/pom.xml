@@ -28,10 +28,6 @@
     <dependencies>
         <dependency>
             <groupId>dnt.itsnow</groupId>
-            <artifactId>platform</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>dnt.itsnow</groupId>
             <artifactId>common-model-service</artifactId>
         </dependency>
     </dependencies>
