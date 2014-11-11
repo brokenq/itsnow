@@ -42,8 +42,8 @@ public class DeployFixture {
         Properties properties = new Properties();
         properties.setProperty("user", "root");
         properties.setProperty("password", "dev@dnt");
-        properties.setProperty("msu.version", "0.2.2-SNAPSHOT");
-        properties.setProperty("msp.version", "0.2.2-SNAPSHOT");
+        properties.setProperty("msu.version", "0.2.3-SNAPSHOT");
+        properties.setProperty("msp.version", "0.2.3-SNAPSHOT");
         creating.setConfiguration(properties);
         return creating;
     }

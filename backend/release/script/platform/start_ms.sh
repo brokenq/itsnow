@@ -7,7 +7,7 @@
 #
 #  1. cd target/path/
 #  2. clean logs/wrapper.log
-#  3. bin/itsnow-$id start
+#  3. bin/itsnow_$id start
 #  4. check logs/wrapper.log
 
 if [ ! $1 ]; then
@@ -16,7 +16,7 @@ if [ ! $1 ]; then
 fi
 instance=$1
 id=$(echo $instance | sed s/itsnow.\\?//)
-launcher="bin/itsnow-$id"
+launcher="bin/itsnow_$id"
 
 if [ $2 ]; then
   folder=$2

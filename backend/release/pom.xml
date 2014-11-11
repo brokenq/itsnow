@@ -23,7 +23,7 @@
         <http.port>8070</http.port>
         <app.id>platform</app.id>
         <app.version>${project.version}</app.version>
-        <app.name>Itsnow-${app.id}</app.name>
+        <app.name>itsnow_${app.id}</app.name>
         <db.name>itsnow_${app.id}</db.name>
     </properties>
 
@@ -41,20 +41,23 @@
         </dependency>
  
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>${version.maven.jar}</version>
                 <configuration>
-                    <skipIfEmpty>false</skipIfEmpty>
+                    <archive>
+                        <manifestEntries>
+                            <Main-Class>dnt.itsnow.release.Configure</Main-Class>
+                            <Class-Path>commons-io.commons-io-2.4.jar</Class-Path>
+                        </manifestEntries>
+                    </archive>
                 </configuration>
             </plugin>
+
         </plugins>
     </build>
-
     <profiles>
         <profile>
             <id>with-itsnow-msc</id>
