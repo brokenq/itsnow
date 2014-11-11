@@ -1,0 +1,12 @@
+itsnow=bin/itsnow_#{app.id}
+start.bat=bin/
+stop.bat=bin/
+start.sh=bin/
+stop.sh=bin/
+now.properties=config/
+nginx.conf=config/
+logback.xml=config/
+wrapper.conf=config/
+development.properties=db/migrate/environments/
+my-slave.cnf=/usr/my.cnf
+redis-slave.conf=/etc/redis.conf
