@@ -1,11 +1,11 @@
--var readonly = true
+-var readonly = false
 //- include the form mixins
 include /lib/mixins/form
 
-h2 处理 故障单
+h2 新增 故障单
 
-+form("actionIncidentForm")(ng-submit="action()")
-  include /msp/index/incidents/_form.jade
++form("newIncidentForm")(ng-submit="create()")
+  include /msu/index/incidents/_form.jade
 
   +action_bar
     +action_submit("{{buttonLabel}}")
