@@ -72,6 +72,7 @@ angular.module('System.WorkTime',[])
      $scope.destroy = (worktime) ->
        $scope.services.remove {sn: worktime.sn}, () ->
          feedback.success "删除时间#{worktime.sn}成功"
+         delete $scope.selection.items[worktime.sn]
          $scope.worktimesTable.reload()
        , (resp) ->
          feedback.error("删除时间#{worktime.sn}失败", resp)
