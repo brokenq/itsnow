@@ -34,8 +34,8 @@ angular.module('MscIndex.Dict', [])
     else
       "无效"
   stateFilter
-.controller('DictCtrl', ['$scope', '$resource', '$state', 'Feedback', 'CacheService',
-    ($scope, $resource, $state, feedback, CacheService) ->
+.controller('DictCtrl', ['$scope', '$resource', '$state', 'Feedback', 'CacheService',\
+                          ($scope,  $resource,  $state,    feedback,   CacheService) ->
       $scope.statedatas = [
         {name: "无效", value: 0},
         {name: "有效", value: 1}
@@ -55,8 +55,8 @@ angular.module('MscIndex.Dict', [])
         return
 
   ])
-.controller('DictListCtrl', ['$scope', '$location', 'ngTableParams', 'ActionService', 'CommonService', 'Feedback',
-    ($scope, $location, NgTable, ActionService, commonService, feedback) ->
+.controller('DictListCtrl', ['$scope', '$location', 'ngTableParams', 'ActionService', 'CommonService', 'Feedback',\
+                            ($scope, $location, NgTable, ActionService, commonService, feedback) ->
       Dicts = $scope.services
       args =
         total: 0
@@ -107,7 +107,7 @@ angular.module('MscIndex.Dict', [])
           return
   ])
 .controller('DictEditCtrl', ['$scope', '$state', '$stateParams', 'Feedback',\
-    ($scope, $state, $stateParams, feedback) ->
+                            ($scope,   $state,    $stateParams,   feedback) ->
       sn = $stateParams.sn
       $scope.services.get
         sn: sn

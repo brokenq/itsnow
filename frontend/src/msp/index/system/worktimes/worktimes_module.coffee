@@ -135,6 +135,4 @@ angular.module('System.WorkTime',[])
         , (resp) ->
           feedback.error("修改#{$scope.worktime.sn}失败", resp);
 
-
-
 ])
