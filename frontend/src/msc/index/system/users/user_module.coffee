@@ -62,6 +62,7 @@ angular.module('MscIndex.User',[])
     $scope.destroy = (user) ->
       $scope.services.remove {username: user.username}, () ->
         feedback.success "删除用户#{user.username}成功"
+        delete $scope.selection.items[user.username]
         $scope.usersTable.reload()
       , (resp) ->
         feedback.error("删除用户#{user.username}失败", resp)

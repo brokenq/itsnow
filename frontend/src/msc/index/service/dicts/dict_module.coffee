@@ -73,6 +73,7 @@ angular.module('MscIndex.Dict', [])
       $scope.destroy = (dict) ->
         $scope.services.remove {sn: dict.sn}, () ->
           feedback.success "删除时间#{dict.sn}成功"
+          delete $scope.selection.items[dict.sn]
           $scope.dictsTable.reload()
         , (resp) ->
           feedback.error("删除时间#{dict.sn}失败", resp)
