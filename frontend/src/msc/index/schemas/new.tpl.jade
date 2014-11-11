@@ -1,8 +1,10 @@
 -var readonly = false
+//- include the form mixins
+include /lib/mixins/form
 
 h2 新增 数据库
 
-form.form-horizontal(name="newSchemaForm", novalidate="novalidate", ng-model-options="{ updateOn: 'mousedown blur' }", role="form", ng-submit="create()")
++form("newSchemaForm")(ng-submit="create()")
   include /msc/index/schemas/_form.jade
 
   +action_bar

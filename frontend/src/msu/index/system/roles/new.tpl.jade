@@ -1,8 +1,10 @@
 -var readonly = false
+//- include the form mixins
+include /lib/mixins/form
 
 h2 新增 角色
 
-form.form-horizontal(name="newRoleForm", novalidate="novalidate", ng-model-options="{ updateOn: 'mousedown blur' }", role="form", ng-submit="create()")
++form("newRoleForm")(ng-submit="create()")
   include /msu/index/system/roles/_form.jade
 
   +action_bar

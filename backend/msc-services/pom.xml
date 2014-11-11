@@ -6,8 +6,9 @@
     <packaging>pom</packaging>
     <parent>
         <groupId>dnt.itsnow</groupId>
-        <artifactId>backend</artifactId>
+        <artifactId>repository</artifactId>
         <version>0.2.3-SNAPSHOT</version>
+        <relativePath>../repository/pom.xml</relativePath>
     </parent>
 
     <artifactId>msc-services</artifactId>
@@ -31,10 +32,6 @@
     </modules>
 
     <dependencies>
-        <dependency>
-            <groupId>dnt.itsnow</groupId>
-            <artifactId>platform</artifactId>
-        </dependency>
         <dependency>
             <groupId>dnt.itsnow</groupId>
             <artifactId>common-model-service</artifactId>
@@ -92,34 +89,4 @@
             </plugin>
         </plugins>
     </build>
-    <profiles>
-        <profile>
-            <id>release</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>net.happyonroad</groupId>
-                        <artifactId>spring-component-builder</artifactId>
-                        <version>${version.component-framework}</version>
-                        <executions>
-                            <execution>
-                                <id>extend-app</id>
-                                <goals><goal>extend</goal></goals>
-                                <configuration>
-                                    <targetRelease>${release.dir}</targetRelease>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>un_extend-app</id>
-                                <goals><goal>un_extend</goal></goals>
-                                <configuration>
-                                    <targetRelease>${release.dir}</targetRelease>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>

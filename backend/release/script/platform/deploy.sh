@@ -13,10 +13,7 @@
 # 
 #  Usage  deploy.sh instance path/to/itsnow
 #
-#   1. interpolate config/now.properties (app.id, http.port,  mysql host/port/user/password, redis host/port/index)
-#   2. create and interpolate db/migrate/environments/production.properites
-#   3. interpolate bin/*.sh
-#   4. interpolate config/wrapper.conf bin/itsnow-$id
+#   java -jar lib/dnt.itsnow.release-x.y.z.jar path/to/instance resources/app.vars
 
 
 script_dir=$(cd `dirname $0` && pwd )
@@ -33,36 +30,10 @@ if [ $2 ]; then
 else
   folder="/opt/itsnow"
 fi
+target=$folder/$instance
+cd $target
 
-function interpolate_file(){
-  if [ $2 ]; then
-    vars=$2
-  else
-    vars=$(echo $1 | sed s/\\..*$/.vars/)
-  fi
-  if [ $3 ]; then
-     intp=$script_dir/$3
-  else
-     intp=$script_dir/interpolate.sh
-  fi
-  if [ -f $vars ]; then
-    echo "Interpolating $1 by $vars"
-    /bin/cp -f $1 $1.bak
-    $intp $1 $vars
-  else
-    echo "There is no $vars for $1"
-  fi
-}
-
-cd $folder/$instance
-
-interpolate_file config/now.properties
-interpolate_file db/migrate/environments/production.properties
-interpolate_file bin/start.sh bin/sh.vars
-interpolate_file bin/stop.sh bin/sh.vars
-interpolate_file config/wrapper.conf
-interpolate_file bin/itsnow-$id config/wrapper.vars
-interpolate_file config/nginx.conf config/nginx.vars interpolate2.sh
+java -jar lib/dnt.itsnow.release.*.jar $target .itsnow
 
 echo "$folder/$instance deployed"
 

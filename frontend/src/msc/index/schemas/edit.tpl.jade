@@ -1,8 +1,10 @@
 -var readonly = false
+//- include the form mixins
+include /lib/mixins/form
 
 h2 编辑 数据库
 
-form.form-horizontal(name="editSchemaForm", novalidate="novalidate", ng-model-options="{ updateOn: 'mousedown blur' }", role="form", ng-submit="update()")
++form("editSchemaForm")(ng-submit="update()")
   include /msc/index/schemas/_form.jade
 
   +action_bar

@@ -9,6 +9,7 @@
         <artifactId>backend</artifactId>
         <version>0.2.3-SNAPSHOT</version>
     </parent>
+
     <artifactId>release</artifactId>
     <name>Itsnow Release</name>
     <description>
@@ -40,7 +41,23 @@
         </dependency>
  
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${version.maven.jar}</version>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Main-Class>dnt.itsnow.release.Configure</Main-Class>
+                            <Class-Path>commons-io.commons-io-2.4.jar</Class-Path>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
 
+        </plugins>
+    </build>
     <profiles>
         <profile>
             <id>with-itsnow-msc</id>

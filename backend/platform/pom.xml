@@ -140,6 +140,19 @@
 
     <build>
         <plugins>
+<!--
+            <plugin>
+                <groupId>net.happyonroad</groupId>
+                <artifactId>spring-component-builder</artifactId>
+                <version>${version.component-framework}</version>
+                <executions>
+                    <execution>
+                        <id>index-detail</id>
+                        <goals><goal>detail</goal></goals>
+                    </execution>
+                </executions>
+            </plugin>
+-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>

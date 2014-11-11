@@ -5,7 +5,7 @@ package dnt.itsnow.it; /**
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dnt.itsnow.model.ClientAccount;
 import dnt.itsnow.model.ClientAccountRegistration;
-import dnt.itsnow.model.ClientUser;
+import dnt.itsnow.util.DeployFixture;
 import junit.framework.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -19,6 +19,70 @@ import org.springframework.http.ResponseEntity;
 @Ignore
 public class AccountsTest extends AbstractTest {
 
+    private static AccountsTest test;
+
+    public ClientAccount signUp() throws Exception {
+        final ClientAccountRegistration registration = DeployFixture.testRegistration();
+
+        String json = new ObjectMapper().writeValueAsString(registration);
+        System.out.println(json);
+
+        try {
+            return withCsrf(new Callback<ClientAccount>() {
+                @Override
+                public ClientAccount perform(HttpHeaders headers) {
+                    HttpEntity<ClientAccountRegistration> request = new HttpEntity<ClientAccountRegistration>(registration, headers);
+                    return postForObject("/public/accounts", request, ClientAccount.class);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void approve(final ClientAccount account) throws Exception {
+        try {
+            withLoginUser(new Job() {
+                @Override
+                public void perform(HttpHeaders headers) {
+                    HttpEntity request = new HttpEntity(headers);
+                    put("/admin/api/accounts/{sn}/approve", request, account.getSn());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void destroy(final ClientAccount account) throws Exception {
+        try {
+            withLoginUser(new Job() {
+                @Override
+                public void perform(HttpHeaders headers) {
+                    HttpEntity request = new HttpEntity(headers);
+                    delete("/admin/api/accounts/{sn}", request, account.getSn());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ClientAccount show(final ClientAccount account) throws Exception {
+        try {
+            return withLoginUser(new Callback<ClientAccount>() {
+                @Override
+                public ClientAccount perform(HttpHeaders headers) {
+                    HttpEntity request = new HttpEntity(headers);
+                    return getForObject("/admin/api/accounts/{sn}", ClientAccount.class, request, account.getSn());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     @Test
     public void testIndex() throws Exception {
@@ -32,51 +96,6 @@ public class AccountsTest extends AbstractTest {
         ClientAccount[] clientAccounts = entities.getBody();
         Assert.assertTrue(clientAccounts.length > 2);
         validateIndexHeader(entities.getHeaders());
-    }
-
-    @Test
-    public void testShow() throws Exception {
-        ClientAccount mscAccount = withLoginUser(new Callback<ClientAccount>() {
-            @Override
-            public ClientAccount perform(HttpHeaders headers) {
-                HttpEntity request = new HttpEntity(headers);
-                return getForObject("/admin/api/accounts/{sn}", ClientAccount.class, request, "msc");
-            }
-        });
-        Assert.assertNotNull(mscAccount);
-    }
-
-    @Test
-    public void testSignup() throws Exception {
-        final ClientAccountRegistration registration = new ClientAccountRegistration();
-        registration.setType("Enterprise");
-        registration.setAsUser(true);
-
-        ClientAccount account = new ClientAccount();
-        account.setName("it-account");
-        account.setDomain("it-domain");
-        account.setType("base");
-        registration.setAccount(account);
-
-        ClientUser user = new ClientUser();
-        user.setName("it-user");
-        user.setEmail("test@it.com");
-        user.setPhone("12345678901");
-        user.setPassword("123456");
-        user.setRepeatPassword("123456");
-        registration.setUser(user);
-
-        String json = new ObjectMapper().writeValueAsString(registration);
-        System.out.println(json);
-
-        ClientAccount createdAccount = withCsrf(new Callback<ClientAccount>() {
-            @Override
-            public ClientAccount perform(HttpHeaders headers) {
-                HttpEntity<ClientAccountRegistration> request = new HttpEntity<ClientAccountRegistration>(registration, headers);
-                return postForObject("/public/accounts", request, ClientAccount.class);
-            }
-        });
-        Assert.assertNotNull(createdAccount);
     }
 
 }
