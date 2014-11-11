@@ -4,14 +4,15 @@ include /lib/mixins/form
     disabled : true | false
 +section("基本信息")
   +group("workflow", "name", "名称", "user", "流程名称")
-    +input("workflow", "name")(type="text", ng-disabled=disabled, required, ng-minlength="4", ng-maxlength="20",
-         ng-pattern='/^(ROLE_)([a-zA-Z0-9]|_|\\-|\\.)+$/', ng-check="/api/workflows/check/{0}", placeholder="流程名称")
+    +text("workflow", "name")(ng-disabled=disabled, required, ng-minlength="4", ng-maxlength="20",
+    ng-pattern='/^([a-zA-Z0-9]|_|\\-|\\.)+$/', ng-check="/api/workflows/{0}/check", placeholder="流程名称")
   +group("workflow", "dictionary", "类型", "", "此流程类型")
     select#workflow_dictionary.form-control(ng-model='dictionary', required, ng-options="dictionary.display for dictionary in dictionaries")
-  +group("workflow", "service_catalog", "服务目录", "", "流程所在的服务目录")
-    div#workflow_service_catalog(multi-select, selection-mode="single", input-model="serviceCatalogs", button-label="title",
-    item-label="title", tick-property="ticked", group-property="multiSelectGroup")
-  +group("workflow", "service_catalog", "服务目录", "", "流程所在的服务目录")
-    +input("workflow", "name")(type='file', nv-file-select='', uploader='uploader')
-  +group("workflow", "description", "描述", "edit", "角色说明")
+  +group("workflow", "service_catalog", "服务目录", "book", "流程所在的服务目录")
+    div#workflow_servicecatalog(multi-select, selection-mode="single", input-model="serviceCatalogs", button-label="title",
+    item-label="title", tick-property="ticked", group-property="multiSelectGroup", disable-property="checkboxDisabled")
+  +group("workflow", "file", "配置文件", "", "上传部署工作流文件")
+    //+file("workflow", "file")(nv-file-select='', uploader='uploader')
+    +file("workflow", "file")(ng-file-select="onFileSelect($files)", onclick="this.value=null", ng-disabled=disabled)
+  +group("workflow", "description", "描述", "edit", "说明")
     +area("workflow", "description")

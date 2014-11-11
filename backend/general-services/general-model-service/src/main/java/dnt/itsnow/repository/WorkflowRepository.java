@@ -45,4 +45,6 @@ public interface WorkflowRepository {
 
     public Workflow findBySn(@Param("sn") String sn, @Param("serviceTtemType") String serviceTtemType);
 
+    @Select("DELETE FROM workflows WHERE name = #{name}")
+    Workflow findByName(@Param("name") String name);
 }

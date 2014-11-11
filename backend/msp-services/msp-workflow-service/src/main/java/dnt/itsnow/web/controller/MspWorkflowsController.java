@@ -13,8 +13,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 
 /**
  * <h1>MSP工作流配置信息控制器</h1>
@@ -23,6 +27,7 @@ import java.io.InputStream;
  * # GET      /api/msp_workflows           index     列出所有工作流配置信息支持分页、关键字过滤
  * # GET      /api/msp_workflows/{sn}      show      列出指定的工作流配置信息
  * # POST     /api/msp_workflows           create    创建工作流配置信息，账户信息通过HTTP BODY提交
+ * # POST     /api/msp_workflows/upload    upload    上传工作流配置文件
  * # PUT      /api/msp_workflows/{sn}      update    修改工作流配置信息，账户信息通过HTTP BODY提交
  * # DELETE   /api/msp_workflows/{sn}      destroy   删除工作流配置信息
  * </pre>
@@ -38,6 +43,8 @@ public class MspWorkflowsController extends SessionSupportController<Workflow> {
     private ActivitiEngineService activitiEngineService;
 
     private Workflow workflow;
+
+    private MultipartFile file;
 
     /**
      * <h2>获得所有的工作流配置信息列表</h2>
@@ -80,18 +87,19 @@ public class MspWorkflowsController extends SessionSupportController<Workflow> {
      * @return 新建的工作流配置信息
      */
     @RequestMapping(method = RequestMethod.POST)
-    public Workflow create(@Valid @RequestBody Workflow workflow, @RequestParam("file") MultipartFile file) {
+    public Workflow create(@Valid @RequestBody Workflow workflow) {
 
         logger.info("Creating {}", workflow);
 
         try {
             workflow = service.create(workflow);
-
             // 部署单个流程定义
-            InputStream inputStream = file.getInputStream() ;
+            InputStream inputStream = file.getInputStream();
             activitiEngineService.deploySingleProcess(inputStream, workflow.getName(), workflow.getDictionary().getVal());
         } catch (WorkflowException e) {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (IOException e) {
+            throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, "Workflow create failed, "+e.getMessage());
         } catch (Exception e) {
             throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
         }
@@ -99,6 +107,46 @@ public class MspWorkflowsController extends SessionSupportController<Workflow> {
         logger.info("Created  {}", workflow);
 
         return workflow;
+    }
+
+    /**
+     * <h2>上传流程配置文件</h2>
+     * <p></p>
+     * POST /api/workflows/upload
+     *
+     * @param request 请求
+     * @param file 上传的文件
+     */
+    @RequestMapping(value="/upload", method = RequestMethod.POST)
+    public void upload(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
+
+        this.file = file;
+        logger.info("Uploading {}", this.file);
+        logger.info("Get class name {}", Workflow.class);
+
+        try {
+            // 判断文件是否为空
+            if (!this.file.isEmpty()) {
+                // 文件保存路径
+                String filePath = request.getSession().getServletContext().getRealPath("/") + "/data/"
+                        + this.file.getOriginalFilename();
+                File workflowFile = new File(filePath);
+                // 若路径不存在都自动创建
+                if (!workflowFile.exists()) {
+                    workflowFile.mkdirs();
+                }
+                // 转存文件
+                this.file.transferTo(workflowFile);
+            }
+        } catch (IOException e) {
+            throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, "Upload file failed cause by network, "+e.getMessage());
+        } catch ( IllegalStateException e) {
+            throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
+        } catch (Exception e) {
+            throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
+        }
+
+        logger.info("Uploaded  {}", this.file);
     }
 
     /**
@@ -148,6 +196,22 @@ public class MspWorkflowsController extends SessionSupportController<Workflow> {
 
         logger.warn("Deleted  {}", workflow);
 
+    }
+
+    @RequestMapping(value = "{name}/check", method = RequestMethod.GET)
+    public HashMap checkUnique(@PathVariable("name") String name){
+
+        logger.debug("Check   unique workflow name: {}", name);
+
+        Workflow workflow = service.findByName(name);
+
+        logger.debug("Checked unique {}", workflow);
+
+        if( workflow != null ){
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate workflow name: " + workflow.getName());
+        }else{
+            return new HashMap();
+        }
     }
 
     @BeforeFilter({"show", "update", "destroy"})

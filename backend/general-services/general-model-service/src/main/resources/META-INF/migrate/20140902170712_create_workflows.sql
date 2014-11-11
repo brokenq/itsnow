@@ -4,7 +4,7 @@
 CREATE TABLE IF NOT EXISTS workflows
 (
    id                         INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-   sn                         VARCHAR(10),
+   sn                         VARCHAR(100),
    name                       VARCHAR(255),
    description                VARCHAR(500),
    act_re_procdef_id          INT(10) UNSIGNED,

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * <h1>工作流管理业务实现层</h1>
@@ -32,6 +33,7 @@ public class WorkflowManager extends Bean implements WorkflowService {
             throw new WorkflowException("Workflow entry can not be empty.");
         }
 
+        workflow.setSn(UUID.randomUUID().toString());
         workflow.creating();
         repository.create(workflow);
 
@@ -91,6 +93,18 @@ public class WorkflowManager extends Bean implements WorkflowService {
         logger.debug("Finding Workflow by sn: {}", sn);
 
         Workflow workflow = repository.findBySn(sn, serviceFlag);
+
+        logger.debug("Found   {}", workflow);
+
+        return workflow;
+    }
+
+    @Override
+    public Workflow findByName(String name) {
+
+        logger.debug("Finding Workflow by name: {}", name);
+
+        Workflow workflow = repository.findByName(name);
 
         logger.debug("Found   {}", workflow);
 

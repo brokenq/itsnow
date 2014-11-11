@@ -1,10 +1,12 @@
 -var disabled = false
+//- include the form mixins
+include /lib/mixins/form
 
-h2 新增 角色
+h2 新增 流程
 
-form.form-horizontal(name="newWorkflowForm", novalidate="novalidate", role="form", ng-submit="create()")
++form("newWorkflowForm")(ng-submit="create()", enctype="multipart/form-data")
   include /msp/index/service/workflows/_form.jade
 
   +action_bar
     +action_submit("创建")
-    +action_cancel("取消")(ui-sref="roles.list")
+    +action_cancel("取消")(ui-sref="workflows.list")

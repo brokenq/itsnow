@@ -1,4 +1,4 @@
-angular.module('Service.Workflows', ['multi-select'])
+angular.module('Service.Workflows', ['multi-select','angularFileUpload'])
 .config ($stateProvider, $urlRouterProvider)->
   $stateProvider.state 'workflows',
     url: '/workflows',
@@ -38,7 +38,12 @@ angular.module('Service.Workflows', ['multi-select'])
     )
   ])
 
-.controller('WorkflowsCtrl', ['$scope', '$state', '$log', 'Feedback', 'CacheService',
+.factory("ContractServiceCatalogService", ["$resource", ($resource)->
+    $resource '/api/public_service_catalogs/:sn', {sn: '@sn'},
+      query: {method: 'GET', params: {keyword: '@keyword'}, isArray: true}
+  ])
+
+.controller('WorkflowsCtrl', ['$scope', '$state', '$log', 'Feedback', 'CacheService',\
     ($scope, $state, $log, feedback, CacheService) ->
       # frontend controller logic
       $log.log "Initialized the Workflows controller"
@@ -55,11 +60,21 @@ angular.module('Service.Workflows', ['multi-select'])
       $scope.cancel = () ->
         $state.go "workflows.list"
 
+      # 获取下拉框选中的服务目录
+      selectedServiceItem = (serviceCatalogs) ->
+        serviceItem = {}
+        for serviceCatalog in serviceCatalogs
+          if serviceCatalog.items?
+            for item in serviceCatalog.items
+              if item.ticked is true
+                serviceItem.id = item.id
+                return serviceItem
+
       # 去除不必要的对象属性，用于HTTP提交
-      $scope.formatData = (workflow, dictionary, serviceItem) ->
+      $scope.formatData = (workflow, dictionary, serviceCatalogs) ->
         aWorkflow = workflow
         aWorkflow.dictionary = dictionary
-        aWorkflow.serviceItem = serviceItem
+        aWorkflow.serviceItem = selectedServiceItem(serviceCatalogs)
         delete aWorkflow.$promise;
         delete aWorkflow.$resolved;
         return aWorkflow
@@ -98,8 +113,8 @@ angular.module('Service.Workflows', ['multi-select'])
     $log.log "Initialized the Workflow View controller on: " + JSON.stringify($scope.workflow)
   ])
 
-.controller('WorkflowNewCtrl', ['$scope', '$state', '$log', 'Feedback', 'WorkflowService', 'DictService', 'ContractServiceCatalogService',\
-    ($scope, $state, $log, feedback, workflowService, dictService, serviceCatalogService) ->
+.controller('WorkflowNewCtrl', ['$scope', '$state', '$log', 'Feedback', 'WorkflowService', 'DictService', 'ContractServiceCatalogService', '$upload',\
+    ($scope, $state, $log, feedback, workflowService, dictService, serviceCatalogService, $upload) ->
 
       $log.log "Initialized the Workflow New controller"
 
@@ -109,23 +124,48 @@ angular.module('Service.Workflows', ['multi-select'])
       #查询服务目录
       serviceCatalogService.query (data)->
         serviceCatalogs = []
-        closeGroup = {}
+#        closeGroup = {}
+#        closeGroup.multiSelectGroup = false
         for serviceCatalog in data
-          serviceCatalog.multiSelectGroup = true
+#          serviceCatalog.multiSelectGroup = true
+          serviceCatalog.checkboxDisabled = true
           serviceCatalogs.push serviceCatalog
           serviceCatalogs.push item for item in serviceCatalog.items when serviceCatalog.items?
-          closeGroup.multiSelectGroup = false
-          serviceCatalogs.push closeGroup
+#          serviceCatalogs.push closeGroup
         $scope.serviceCatalogs = serviceCatalogs
 
-      $scope.create = () ->
-        $scope.submited = true
-        workflow = $scope.formatData($scope.workflow, $scope.dictionary, $scope.catalog)
-        workflowService.save workflow, () ->
-          feedback.success "新建流程#{workflow.sn}成功"
-          $state.go "workflows.list"
+      $scope.selectedFiles = []
+      $scope.onFileSelect = ($files) ->
+        $scope.selectedFiles = $files
+
+      $scope.create = ()->
+
+        if $scope.selectedFiles.length<=0
+          feedback.warn("未选择文件！")
+          return
+        if $scope.selectedFiles[0].name.indexOf('.bpmn20.xml') < 0
+          feedback.warn("上传文件格式错误！")
+          return
+        if $scope.selectedFiles[0].size>1048576
+          feedback.warn("上传文件大小超过最大限制(1M)！")
+          return
+
+        upload = $upload.upload({
+          url: '/api/msp_workflows/upload'
+          method: "POST"
+          file: $scope.selectedFiles[0]
+        })
+
+        upload.then () ->
+          $scope.submited = true
+          workflow = $scope.formatData($scope.workflow, $scope.dictionary, $scope.serviceCatalogs)
+          workflowService.save workflow, () ->
+            feedback.success "新建流程#{workflow.name}成功"
+            $state.go "workflows.list"
+          , (resp) ->
+            feedback.error("新建流程#{workflow.name}失败", resp)
         , (resp) ->
-          feedback.error("新建流程#{workflow.sn}失败", resp)
+          feedback.error("文件上传失败，请重新创建", resp)
   ])
 
 .controller('WorkflowEditCtrl', ['$scope', '$state', '$log', '$stateParams', 'Feedback', 'WorkflowService', 'DictService', 'ContractServiceCatalogService',\

@@ -29,6 +29,9 @@
 
         <version.component-framework>0.1.7</version.component-framework>
         <version.components>0.1.9</version.components>
+
+        <version.commons-fileupload>1.2</version.commons-fileupload>
+
         <release.root>/opt/releases/itsnow</release.root>
         <release.dir>${release.root}/itsnow-${project.version}</release.dir>
     </properties>
@@ -215,6 +218,13 @@
                         <artifactId>commons-pool</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+
+            <!--platform dependency-->
+            <dependency>
+                <groupId>commons-fileupload</groupId>
+                <artifactId>commons-fileupload</artifactId>
+                <version>${version.commons-fileupload}</version>
             </dependency>
 
         </dependencies>
