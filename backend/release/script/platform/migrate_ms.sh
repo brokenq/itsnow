@@ -18,7 +18,7 @@ echo "Migrating for $instance"
 
 cd $folder/$instance/db
 chmod +x bin/migrate
-bin/migrate --env=production up
+bin/migrate up
 
 if [ $? -eq 0 ]; then
   echo "Migrated for $instance"

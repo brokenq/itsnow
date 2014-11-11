@@ -40,26 +40,16 @@ for file in $(ls $type/bin/wrapper*); do
   part=$(echo $file | sed s/$type//)
   ln -s $folder/$file $instance$part
 done
-cp $folder/$type/bin/itsnow-* $instance/bin/itsnow-$id
-cp $folder/$type/bin/*.sh $instance/bin/
-chmod +x $instance/bin/*.sh
-chmod +x $instance/bin/itsnow-$id
 
 echo "Prepare db folder for $instance"
 db_list="db/bin db/lib db/LICENSE db/NOTICE db/migrate/drivers db/migrate/scripts db/migrate/README "
 for file in $db_list; do
   ln -s $folder/$type/$file    $instance/$file
 done
-cp $folder/$type/db/migrate/environments/* $instance/db/migrate/environments
-cp $folder/$type/db/migrate/environments/development.properties $instance/db/migrate/environments/production.properties
 
-cp -r $type/config/* $instance/config/
-base_list="boot lib script repository resources"
+base_list="boot lib script repository resources webapp"
 for file in $base_list; do
   ln -s $folder/$type/$file    $instance/$file
 done
-
-echo "Copy webapp to overide jetty webresource check alias constraint"
-cp -r $type/webapp $instance/
 
 echo "$folder/$instance created"

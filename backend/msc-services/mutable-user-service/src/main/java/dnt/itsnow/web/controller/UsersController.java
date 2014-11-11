@@ -14,7 +14,7 @@ import dnt.itsnow.platform.web.exception.WebClientSideException;
 import javax.validation.Valid;
 
 /**
- * <h1>具备一定权限的管理者对用户的管理</h1>
+ * <h1>MSP/MSU对用户的管理</h1>
  * <p/>
  * 因为站在管理者的角度看来，有许多个用户，所以该控制器取名为复数
  * <p/>
@@ -69,8 +69,11 @@ public class UsersController extends SessionSupportController<User> {
      */
     @RequestMapping(method = RequestMethod.POST)
     public User create(@Valid  @RequestBody User user) {
-        logger.info("Creating {}", user.getUsername());
-        user.setAccountId(mainAccount.getId());
+        logger.info("Creating {}", user);
+        logger.info("userAccountId:{}",user.getAccountId());
+        if(user.getAccountId()==null){
+            user.setAccountId(mainAccount.getId());
+        }
         User created = userService.create(user);
         cleanSensitive(created);
         logger.info("Created  {} with id {}", created.getUsername(), created.getId());
@@ -142,7 +145,9 @@ public class UsersController extends SessionSupportController<User> {
     }
     @RequestMapping(value = "checkEmail/{email}", method = RequestMethod.GET)
     public HashMap checkUniqueEmail(@PathVariable("email") String email){
+        logger.info("find byemail:{}",email);
         User user = userService.findByEmail(email);
+        logger.info("return user{}",user);
         if( user != null ){
             throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate role name: " + user.getEmail());
         }else{

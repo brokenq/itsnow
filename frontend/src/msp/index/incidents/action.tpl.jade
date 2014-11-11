@@ -8,7 +8,5 @@ h2 处理 故障单
   include /msp/index/incidents/_form.jade
 
   +action_bar
-    button.btn.no-border(class="btn-primary",type=submit)
-      i.bigger-110(class="icon-ok")
-      | {{buttonLabel}}
+    +action_submit("{{buttonLabel}}")
     +action_cancel("取消")(ui-sref="incidents.opened")

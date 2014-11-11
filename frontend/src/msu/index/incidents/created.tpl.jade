@@ -1,0 +1,20 @@
+include /lib/mixins/list
+.datalist
+    +toolbar
+        +button_group
+            +tool_button("incidentsTable.reload()", "refresh", "", "*", "", "")
+
+    +page_table("incidentsTable","selection")
+        +row("incident", "msuInstanceId", "selection")(class="editable deletable")
+            td(data-title="'故障单号'")
+                a(ui-sref="incidents.view(incident)"){{incident.number}}
+            td(data-title="'请求人'") {{incident.requesterName}}
+            td(data-title="'分类'") {{incident.category}}
+            td(data-title="'优先级'") {{incident.priority}}
+            td(data-title="'故障描述'") {{incident.requestDescription}}
+            td(data-title="'状态'") {{incident.msuStatus| formatIncidentStatus}}
+            td(data-title="'创建时间'") {{incident.createdAt | formatTime}}
+            td(data-title="'关闭时间'") {{incident.closeTime | formatTime}}
+            td(data-title="'服务商'") {{incident.mspAccountName}}
+            td(data-title="'服务商状态'") {{incident.mspStatus | formatIncidentStatus}}
+                                                

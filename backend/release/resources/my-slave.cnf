@@ -10,7 +10,7 @@
 # Remove leading # to turn on a very important data integrity option: logging
 # changes to the binary log between backups.
 # log_bin
-server-id=2
+server-id=#{db.slaveId}
 
 
 # These are commonly set, remove the # and set as required.
