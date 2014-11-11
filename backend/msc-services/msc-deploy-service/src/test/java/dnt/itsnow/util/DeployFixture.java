@@ -21,6 +21,8 @@ public class DeployFixture {
         host.setProperty("user", "root");
         host.setProperty("password", "root1234");
         host.setProperty("mysql.slave.index", "8");
+        host.setProperty("msu.version", "0.2.2");
+        host.setProperty("msp.version", "0.2.2");
         host.creating();
         return host;
     }
