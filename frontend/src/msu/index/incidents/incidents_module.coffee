@@ -1,5 +1,5 @@
   # List catalogs
-  angular.module('MspIndex.Incidents',
+  angular.module('MsuIndex.Incidents',
     ['ngTable',
      'ngResource',
      'Lib.Commons',
@@ -23,18 +23,23 @@
         templateUrl: 'incidents/closed.tpl.jade',
         controller: 'ClosedListCtrl',
         data: {pageTitle: '已关闭故障单'}
+      $stateProvider.state 'incidents.created',
+        url: '/created',
+        templateUrl: 'incidents/created.tpl.jade',
+        controller: 'CreatedListCtrl',
+        data: {pageTitle: '我创建的故障单'}
       $stateProvider.state 'incidents.create',
         url: '/create',
         templateUrl: 'incidents/new.tpl.jade',
         controller: 'IncidentCreateCtrl',
         data: {pageTitle: '新建故障单'}
       $stateProvider.state 'incidents.view',
-        url: '/{mspInstanceId}/view',
+        url: '/{msuInstanceId}/view',
         templateUrl: 'incidents/view.tpl.jade',
         controller: 'IncidentViewCtrl',
         data: {pageTitle: '查看故障单'}
       $stateProvider.state 'incidents.action',
-        url:'/{mspInstanceId}/action',
+        url:'/{msuInstanceId}/action',
         templateUrl:'incidents/action.tpl.jade',
         controller:'IncidentProcessCtrl',
         data: {pageTitle: '处理故障单'}
@@ -42,25 +47,35 @@
 
 
     .factory('IncidentService', ['$resource', ($resource) ->
-      $resource("/api/msp-incidents/:mspInstanceId",{},
-        get: { method: 'GET', params: {mspInstanceId:'@mspInstanceId'}},
+      $resource("/api/msu-incidents/:msuInstanceId",{},
+        get: { method: 'GET', params: {msuInstanceId:'@msuInstanceId'}},
         query: { method: 'GET', isArray: true})
     ])
 
     .factory('ClosedIncidentService', ['$resource', ($resource) ->
-      $resource("/api/msp-incidents/closed")
+      $resource("/api/msu-incidents/closed")
+    ])
+
+    .factory('CreatedIncidentService', ['$resource', ($resource) ->
+      $resource("/api/msu-incidents/created")
     ])
 
     #新建故障工单
     .factory('IncidentStartService', ['$resource', ($resource) ->
-      $resource("/api/msp-incidents/start",{},
+      $resource("/api/msu-incidents/start",{},
         start: {method: 'POST'})
+    ])
+
+    #查询字典数据
+    .factory('DictionariesService', ['$resource', ($resource) ->
+      $resource("/api/dictionaries/code/:code",{code:'@code'},
+        query: { method: 'GET', isArray: true})
     ])
 
     #签收/分析/处理/关闭故障工单
     .factory('IncidentActionService', ['$resource',($resource) ->
-      $resource('/api/msp-incidents/:mspInstanceId/:taskId/complete', {},
-        complete: {method: 'PUT',params:{mspInstanceId:'@mspInstanceId',taskId:'@taskId'}})
+      $resource('/api/msu-incidents/:msuInstanceId/:taskId/complete', {},
+        complete: {method: 'PUT',params:{msuInstanceId:'@msuInstanceId',taskId:'@taskId'}})
     ])
 
     .filter('formatIncidentStatus', ()->
@@ -75,19 +90,31 @@
     .filter('formatTime', () ->
       return (time) ->
         date = new Date(time)
-        return date.toLocaleString();
+        return date.toLocaleString()
     )
 
-    .controller('IncidentCtrl',['$scope', '$state', '$log', 'Feedback','CacheService',
-      ($scope, $state, $log, feedback,CacheService) ->
+    .controller('IncidentCtrl',['$scope', '$state', '$log', 'Feedback','DictionariesService','CacheService',
+      ($scope, $state, $log, feedback,dictService,CacheService) ->
         # frontend controller logic
         $log.log "Initialized the Incident controller"
         $scope.options =
           page: 1, # show first page
           count: 10 # count per page
         # 提交按钮是否已经执行了提交操作，false为未执行，则按钮可用
-        $scope.cacheService = new CacheService("mspInstanceId")
+        $scope.cacheService = new CacheService("msuInstanceId")
         $scope.submited = false
+        dictService.query({code:'inc002'},(data)->
+          $scope.impacts = data
+        )
+        dictService.query({code:'inc001'},(data)->
+          $scope.priorities = data
+        )
+        dictService.query({code:'inc004'},(data)->
+          $scope.urgencies = data
+        )
+        dictService.query({code:'inc005'},(data)->
+          $scope.requestTypes = data
+        )
 
     ])
 
@@ -129,7 +156,28 @@
         $scope.selection = { checked: false, items: {} }
         $scope.incidentsTable = new NgTable(angular.extend($scope.options, $location.search()), args);
         $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.cacheService.find})
-        commonService.watchSelection($scope.selection, $scope.cacheService.records, "mspInstanceId")
+        commonService.watchSelection($scope.selection, $scope.cacheService.records, "msuInstanceId")
+
+    ])
+
+  .controller('CreatedListCtrl',
+    ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'CommonService', 'CreatedIncidentService', 'Feedback',
+      ($scope, $location, $log, NgTable, ActionService, commonService, createdIncidentService, feedback) ->
+        $log.log "Initialized the Incident Created List controller"
+
+        args =
+          total: 0,
+          getData: ($defer, params) ->
+            $location.search(params.url()); # put params in url
+            createdIncidentService.query params.url(), (data, headers) ->
+              params.total headers('total')
+              $scope.cacheService.cache data
+              $defer.resolve $scope.incidents = data
+
+        $scope.selection = { checked: false, items: {} }
+        $scope.incidentsTable = new NgTable(angular.extend($scope.options, $location.search()), args);
+        $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.cacheService.find})
+        commonService.watchSelection($scope.selection, $scope.cacheService.records, "msuInstanceId")
 
     ])
 
@@ -137,7 +185,7 @@
       ($scope, $state, $log,incidentStartService, feedback,CacheService) ->
         $log.log "Initialized the Incident Create controller"
         $scope.incident = {number:'INC001',createdBy:'admin'}
-
+        $scope.buttonLabel = "创建"
         $scope.create = ->
           $scope.submited = true
           catalog = $scope.catalog
@@ -152,13 +200,14 @@
     .controller('IncidentViewCtrl',['$scope', '$state','$stateParams', '$log', 'Feedback','CacheService',
       ($scope, $state,$stateParams, $log, feedback,CacheService) ->
         $log.log "Initialized the Incident View controller"
-        $scope.incident = $scope.cacheService.find $stateParams.mspInstanceId,true
+        $scope.buttonLabel = "返回"
+        $scope.incident = $scope.cacheService.find $stateParams.msuInstanceId,true
     ])
 
     .controller('IncidentProcessCtrl',['$scope', '$state','$stateParams', '$log', 'Feedback','IncidentService','IncidentActionService',
       ($scope, $state,$stateParams, $log, feedback,incidentService,incidentActionService) ->
         $log.log "Initialized the Incident Process controller"
-        $scope.incident = $scope.cacheService.find $stateParams.mspInstanceId,true
+        $scope.incident = $scope.cacheService.find $stateParams.msuInstanceId,true
         $scope.buttonLabel = "提交"
 
         $scope.getActionButton = (status) ->
@@ -175,7 +224,7 @@
           else
             return '新建'
 
-        incidentService.get({mspInstanceId:$stateParams.mspInstanceId}, (data)->
+        incidentService.get({msuInstanceId:$stateParams.msuInstanceId}, (data)->
           $scope.tasks = data
           for task in data.tasksList
             if(angular.isDefined(task.taskId))
@@ -185,13 +234,13 @@
               console.warn('id:'+$scope.taskId+' name:'+$scope.taskName+' action:'+$scope.taskAction)
               $scope.buttonLabel = $scope.getActionButton $scope.taskAction
         ,(resp)->
-          feedback.error("查询任务"+$stateParams.mspInstanceId+"失败",resp)
+          feedback.error("查询任务"+$stateParams.msuInstanceId+"失败",resp)
         )
 
         $scope.action = (incident)->
-          incidentActionService.complete({mspInstanceId:$scope.incident.mspInstanceId,taskId:$scope.taskId},$scope.incident,->
+          incidentActionService.complete({msuInstanceId:$scope.incident.msuInstanceId,taskId:$scope.taskId},$scope.incident,->
             feedback.success($scope.buttonLabel+"成功")
-            $state.go("incidents.view",{mspInstanceId:$scope.incident.mspInstanceId})
+            $state.go("incidents.view",{msuInstanceId:$scope.incident.msuInstanceId})
           ,(resp)->
             feedback.error($scope.buttonLabel+"失败",resp)
           )

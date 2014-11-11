@@ -5,7 +5,7 @@ UPDATE menu_items SET state = 'catalog.list'
 WHERE state = 'services.catalog';
 
 UPDATE menu_items SET state = 'incidents.opened'
-WHERE state = 'incidents-create';
+WHERE state = 'incidents-opened';
 
 UPDATE menu_items SET state = 'incidents.closed'
 WHERE state = 'incidents-closed';

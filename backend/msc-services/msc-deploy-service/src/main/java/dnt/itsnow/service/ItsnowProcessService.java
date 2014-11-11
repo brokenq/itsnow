@@ -122,4 +122,9 @@ public interface ItsnowProcessService {
      */
     long follow(ItsnowProcess process, String job, long offset, List<String> result);
 
+    /**
+     * <h2>等待进程启动</h2>
+     * @param job     进程启动invocationId
+     */
+    void waitStarted(String job) throws ItsnowProcessException;
 }
