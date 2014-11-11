@@ -5,11 +5,13 @@ import dnt.itsnow.model.ClientAccountStatus;
 import dnt.itsnow.util.ShareDatas;
 import junit.framework.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * Prepare Account Data
  */
+@Ignore
 public class PrepareAccountsTest extends AbstractTest{
 
     private AccountsTest accountsTest;

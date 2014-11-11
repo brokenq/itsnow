@@ -5,6 +5,7 @@ import dnt.itsnow.model.ClientItsnowHost;
 import dnt.itsnow.util.DeployFixture;
 import dnt.itsnow.util.ShareDatas;
 import junit.framework.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 /**
  * 测试 hosts 管理
  */
+@Ignore
 public class ItsnowHostsTest extends AbstractTest {
 
     private static ItsnowHostsTest test;
