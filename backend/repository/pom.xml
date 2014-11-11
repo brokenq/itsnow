@@ -64,10 +64,12 @@
                         <artifactId>spring-component-builder</artifactId>
                         <version>${version.component-framework}</version>
                         <executions>
+<!--
                             <execution>
                                 <id>index-detail</id>
                                 <goals><goal>detail</goal></goals>
                             </execution>
+-->
                             <execution>
                                 <id>extend-app</id>
                                 <goals><goal>extend</goal></goals>
