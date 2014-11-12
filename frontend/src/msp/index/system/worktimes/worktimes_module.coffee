@@ -80,11 +80,11 @@ angular.module('System.WorkTime',[])
      $scope.actionService = new ActionService {watch: $scope.selection.items, mapping: $scope.cacheService.find}
      $scope.destroy = (worktime) ->
        $scope.services.remove {sn: worktime.sn}, () ->
-         feedback.success "删除时间#{worktime.sn}成功"
+         feedback.success "删除时间#{worktime.name}成功"
          delete $scope.selection.items[worktime.sn]
          $scope.worktimesTable.reload()
        , (resp) ->
-         feedback.error("删除时间#{worktime.sn}失败", resp)
+         feedback.error("删除时间#{worktime.name}失败", resp)
 
      $scope.reload = ->
        $scope.worktimesTable.reload()
