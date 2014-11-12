@@ -2,6 +2,7 @@ package dnt.itsnow.support;
 
 import dnt.itsnow.api.ActivitiEngineService;
 import dnt.spring.Bean;
+import org.activiti.engine.ActivitiObjectNotFoundException;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.delegate.Expression;
 import org.activiti.engine.delegate.event.ActivitiEventListener;
@@ -38,7 +39,8 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
     ProcessEngine processEngine;
 
     @Override
-    public boolean deploySingleProcess(String processKey,String processCategory) {
+    public Deployment deploySingleProcess(String processKey,String processCategory) {
+        Deployment deployment = null;
         try {
             //logger.info("process engine:" + processEngine.toString());
             String path = "bpmn/"+processKey+".bpmn20.xml";
@@ -50,7 +52,7 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
             db.name(processKey);
             db.category(processCategory);
             db.deploy();*/
-            Deployment deployment=processEngine.getRepositoryService().createDeployment()
+            deployment = processEngine.getRepositoryService().createDeployment()
                     .addInputStream(path, is)
                     .name(processKey)
                     .category(processCategory)
@@ -59,20 +61,21 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
             logger.info("Deployed id:"+deployment.getId()+" deploy time:"+deployment.getDeploymentTime()+" deploy name:"+deployment.getName());
         }catch(Exception e){
             logger.error("deploy process error:{}",e.getMessage());
-            return false;
+            return null;
         }
-        return true;
+        return deployment;
     }
 
     @Override
-    public void deploySingleProcess(InputStream inputStream,String processKey,String processCategory) throws IOException {
+    public Deployment deploySingleProcess(InputStream inputStream,String processKey,String processCategory) throws IOException {
+        Deployment deployment = null;
         if (inputStream == null) {
             logger.warn("ignore deploy workflow module: {}", processKey);
         } else {
             logger.debug("find workflow module: {}, deploy it!", processKey);
             //ZipInputStream zis = new ZipInputStream(inputStream);
             String path = "bpmn/"+processKey+".bpmn20.xml";
-            Deployment deployment = processEngine.getRepositoryService().createDeployment()
+            deployment = processEngine.getRepositoryService().createDeployment()
                     .addInputStream(path, inputStream)
                     .name(processKey)
                     .category(processCategory)
@@ -80,7 +83,24 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
             processEngine.getRepositoryService().createDeployment().activateProcessDefinitionsOn(new Date());
             logger.info("deployed id:"+deployment.getId()+" name:"+deployment.getName()+" category:"+deployment.getCategory());
             logger.info("deployed count:"+processEngine.getRepositoryService().createDeploymentQuery().count());
+
+            ProcessDefinition definition = processEngine.getRepositoryService().createProcessDefinitionQuery().deploymentId(deployment.getId()).singleResult();
+            InputStream processDiagram = processEngine.getRepositoryService()
+                    .getProcessDiagram(definition.getId());
+            //FileUtils.copyInputStreamToFile(processDiagram, new File("/diagram.png"));
         }
+        return deployment;
+    }
+
+    @Override
+    public ProcessDefinition getProcessDefinitionByDeploymentId(String deploymentId){
+        return processEngine.getRepositoryService().createProcessDefinitionQuery().deploymentId(deploymentId).singleResult();
+    }
+
+    @Override
+    public InputStream getImageById(String processKey){
+        ProcessDefinition definition = processEngine.getRepositoryService().createProcessDefinitionQuery().processDefinitionKey(processKey).singleResult();
+        return processEngine.getRepositoryService().getProcessDiagram(definition.getId());
     }
 
     @Override
@@ -119,15 +139,35 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
     }
 
     @Override
-    public ProcessInstance startProcessInstanceByKey(String key,Map<String, Object> variables,String assignee){
+    public ProcessInstance startProcessInstanceByKey(String processKey,Map<String, Object> variables,String assignee){
         ProcessInstance processInstance = null;
         try{
             processEngine.getIdentityService().setAuthenticatedUserId(assignee);
-            processInstance =  processEngine.getRuntimeService().startProcessInstanceByKey(key,variables);
+            processInstance =  processEngine.getRuntimeService().startProcessInstanceByKey(processKey,variables);
         }finally {
             processEngine.getIdentityService().setAuthenticatedUserId(null);
         }
         return processInstance;
+    }
+    @Override
+    public void stopProcessInstanceByKey(String key,String deleteReason){
+        List<ProcessInstance> list = this.queryAllInstancesByKey(key);
+        for(ProcessInstance instance:list){
+            stopProcessInstanceById(instance.getProcessInstanceId(),deleteReason);
+        }
+    }
+    @Override
+    public void stopProcessInstanceById(String instanceId,String deleteReason){
+        try{
+            processEngine.getRuntimeService().deleteProcessInstance(instanceId,deleteReason);
+        }catch(ActivitiObjectNotFoundException e){
+            logger.error("stop instance:{} error:{}",instanceId,e.getMessage());
+        }
+    }
+
+    @Override
+    public List<ProcessInstance> queryAllInstancesByKey(String processKey){
+        return processEngine.getRuntimeService().createProcessInstanceQuery().processDefinitionKey(processKey).list();
     }
 
     @Override
@@ -146,8 +186,8 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
     }
 
     @Override
-    public List<Task> queryTasksAssignee(String userName,String key){
-        return processEngine.getTaskService().createTaskQuery().taskAssignee(userName).processDefinitionKey(key).list();
+    public List<Task> queryTasksAssignee(String userName,String processKey){
+        return processEngine.getTaskService().createTaskQuery().taskAssignee(userName).processDefinitionKey(processKey).list();
     }
 
     @Override
@@ -156,18 +196,18 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
     }
 
     @Override
-    public List<Task> queryTasksCandidateUser(String userName, String key) {
-        return processEngine.getTaskService().createTaskQuery().taskCandidateUser(userName).processDefinitionKey(key).list();
+    public List<Task> queryTasksCandidateUser(String userName, String processKey) {
+        return processEngine.getTaskService().createTaskQuery().taskCandidateUser(userName).processDefinitionKey(processKey).list();
     }
 
     @Override
-    public List<HistoricProcessInstance> queryTasksFinished(String userName, String key){
-        return processEngine.getHistoryService().createHistoricProcessInstanceQuery().involvedUser(userName).processDefinitionKey(key).finished().orderByProcessInstanceEndTime().desc().list();
+    public List<HistoricProcessInstance> queryTasksFinished(String userName, String processKey){
+        return processEngine.getHistoryService().createHistoricProcessInstanceQuery().involvedUser(userName).processDefinitionKey(processKey).finished().orderByProcessInstanceEndTime().desc().list();
     }
 
     @Override
-    public List<HistoricProcessInstance> queryTasksStartedBy(String userName, String key){
-        return processEngine.getHistoryService().createHistoricProcessInstanceQuery().processDefinitionKey(key).startedBy(userName).orderByProcessInstanceStartTime().desc().list();
+    public List<HistoricProcessInstance> queryTasksStartedBy(String userName, String processKey){
+        return processEngine.getHistoryService().createHistoricProcessInstanceQuery().processDefinitionKey(processKey).startedBy(userName).orderByProcessInstanceStartTime().desc().list();
     }
 
     @Override
@@ -190,10 +230,10 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
     }
 
     @Override
-    public void completeTask(String id,Map<String, String> taskVariables,String userId){
+    public void completeTask(String taskId,Map<String, String> taskVariables,String userId){
         try {
             processEngine.getIdentityService().setAuthenticatedUserId(userId);
-            processEngine.getFormService().submitTaskFormData(id, taskVariables);
+            processEngine.getFormService().submitTaskFormData(taskId, taskVariables);
         } finally {
             processEngine.getIdentityService().setAuthenticatedUserId(null);
         }
@@ -205,17 +245,17 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
     /**
      * 流程跟踪图
      *
-     * @param processInstanceId 流程实例ID
+     * @param instanceId 流程实例ID
      * @return 封装了各种节点信息
      */
-    public List<Map<String, Object>> traceProcess(String processInstanceId) throws Exception {
-        Execution execution = processEngine.getRuntimeService().createExecutionQuery().executionId(processInstanceId).singleResult();//执行实例
+    public List<Map<String, Object>> traceProcess(String instanceId) throws Exception {
+        Execution execution = processEngine.getRuntimeService().createExecutionQuery().executionId(instanceId).singleResult();//执行实例
         //Object property = PropertyUtils.getProperty(execution, "activityId");
         if(execution == null)
             return null;
         String activityId = execution.getActivityId();
 
-        ProcessInstance processInstance = processEngine.getRuntimeService().createProcessInstanceQuery().processInstanceId(processInstanceId)
+        ProcessInstance processInstance = processEngine.getRuntimeService().createProcessInstanceQuery().processInstanceId(instanceId)
                 .singleResult();
         ProcessDefinitionEntity processDefinition = (ProcessDefinitionEntity) ((RepositoryServiceImpl) processEngine.getRepositoryService())
                 .getDeployedProcessDefinition(processInstance.getProcessDefinitionId());
@@ -241,15 +281,15 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
     }
 
     @Override
-    public List<HistoricActivityInstance> traceProcessHistory(String processInstanceId){
+    public List<HistoricActivityInstance> traceProcessHistory(String instanceId){
 
-        //HistoricProcessInstance historicProcessInstance = processEngine.getHistoryService().createHistoricProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
+        //HistoricProcessInstance historicProcessInstance = processEngine.getHistoryService().createHistoricProcessInstanceQuery().processInstanceId(instanceId).singleResult();
 
-        //List<HistoricDetail> historicDetailList = processEngine.getHistoryService().createHistoricDetailQuery().processInstanceId(processInstanceId).list();
+        //List<HistoricDetail> historicDetailList = processEngine.getHistoryService().createHistoricDetailQuery().processInstanceId(instanceId).list();
 
-        //List<HistoricVariableInstance> historicVariableInstanceList = processEngine.getHistoryService().createHistoricVariableInstanceQuery().processInstanceId(processInstanceId).list();
+        //List<HistoricVariableInstance> historicVariableInstanceList = processEngine.getHistoryService().createHistoricVariableInstanceQuery().processInstanceId(instanceId).list();
 
-        return processEngine.getHistoryService().createHistoricActivityInstanceQuery().processInstanceId(processInstanceId).list();
+        return processEngine.getHistoryService().createHistoricActivityInstanceQuery().processInstanceId(instanceId).list();
     }
 
     @Override
@@ -331,21 +371,21 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
     /**
      * 获取当前节点信息
      *
-     * @param processInstance 实例
+     * @param instance 实例
      * @return 任务信息
      */
-    private Task getCurrentTaskInfo(ProcessInstance processInstance) {
+    private Task getCurrentTaskInfo(ProcessInstance instance) {
         Task currentTask = null;
         try {
-            String activitiId = processInstance.getActivityId();
+            String activitiId = instance.getActivityId();
             logger.debug("current activity id: {}", activitiId);
 
-            currentTask = processEngine.getTaskService().createTaskQuery().processInstanceId(processInstance.getId()).taskDefinitionKey(activitiId)
+            currentTask = processEngine.getTaskService().createTaskQuery().processInstanceId(instance.getId()).taskDefinitionKey(activitiId)
                     .singleResult();
             logger.debug("current task for processInstance: {}", currentTask.toString());
 
         } catch (Exception e) {
-            logger.error("can not get property activityId from processInstance: {}", processInstance);
+            logger.error("can not get property activityId from processInstance: {}", instance);
         }
         return currentTask;
     }

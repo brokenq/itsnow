@@ -47,19 +47,7 @@ angular.module('Service.Dict',[])
         query: { method: 'GET', isArray: true},
         remove: { method: 'DELETE', params: {sn: '@sn'}}
       )
-      dictdates = {}
-      $scope.service.query (dictdates) ->
-        dictdates = dictdates
-        return
-      $scope.autoComeplete(dictdates) = ->
-        for dictdate in dictdates
-          if($scope.dict.code is dictdate.code)
-            $scope.dict.name=dictdate.name
-            $scope.ngread=true
-            break
-          else
-            $scope.dict.name=""
-            $scope.ngread=false
+
   ])
 .controller('DictListCtrl',['$scope', '$location', 'ngTableParams', 'ActionService','CommonService','Feedback',\
                            ($scope,     $location,  NgTable,         ActionService,   commonService,feedback) ->
@@ -87,11 +75,6 @@ angular.module('Service.Dict',[])
 ])
 .controller('DictNewCtrl', ['$scope', '$state', 'Feedback',
                           ($scope,     $state,   feedback) ->
-      dictdates = {}
-      $scope.service.query (dictdates) ->
-        dictdates = dictdates
-        return
-
       $scope.create=() ->
         $scope.dict.state = $scope.selectState.value;
         $scope.dict.$promise = `undefined`
