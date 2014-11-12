@@ -8,7 +8,7 @@ INSERT INTO menu_items (id, parent_id, name, state, position, css) VALUES
   (4, NULL, '故障管理', 'incidents', 3, 'icon-warning-sign'),
 
   (11, 1, '角色管理', 'roles.list', 0, 'icon-group'),
-  (12, 1, '用户管理', 'user', 1, 'icon-user'),
+  (12, 1, '用户管理', 'users.list', 1, 'icon-user'),
   (13, 1, '权限管理', 'privilege', 2, 'icon-authenticate'),
   (14, 1, '部门管理', 'departments.list', 3, 'icon-th-list'),
   (15, 1, '工作时间', 'worktimes.list', 4, 'icon-time'),
