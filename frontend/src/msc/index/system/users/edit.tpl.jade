@@ -1,7 +1,7 @@
 -var readonly = false
 h2 编辑用户
-
-form.form-horizontal(name="editUserForm", novalidate="novalidate", role="form", ng-submit="update()")
+include /lib/mixins/form
++form("editUserForm")(ng-submit="update()")
   include /msc/index/system/users/_form.jade
   +action_bar
     +action_submit("更新")
