@@ -27,6 +27,15 @@ angular.module('Service.Dict', [])
     controller: 'DictsEditCtrl',
     data: {pageTitle: '编辑字典'}
   $urlRouterProvider.when '/dicts', '/dicts/list'
+.factory('DictService', ['$resource', ($resource) ->
+    $resource("/api/dictionaries/:sn", {},
+      query: { method: 'GET', params: {keyword: '@keyword'}, isArray: true},
+      get: { method: 'GET', params: {sn: '@sn'}},
+      save: { method: 'POST'},
+      update: { method: 'PUT', params: {sn: '@sn'}},
+      remove: { method: 'DELETE', params: {sn: '@sn'}}
+    )
+  ])
 .filter('stateFilter', () ->
   (input) ->
     return "有效" if input is "1"

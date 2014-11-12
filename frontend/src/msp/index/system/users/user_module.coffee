@@ -27,6 +27,15 @@ angular.module('System.User', [])
     controller: 'UserEditCtrl',
     data: {pageTitle: '编辑用户'}
   $urlRouterProvider.when '/users', '/users/list'
+.factory('GeneralUserService', ['$resource', ($resource) ->
+    $resource("/admin/api/users/:username", {},
+      query: { method: 'GET', params: {keyword: '@keyword'}, isArray: true},
+      get: { method: 'GET', params: {username: '@username'}},
+      save: { method: 'POST'},
+      update: { method: 'PUT', params: {username: '@username'}},
+      remove: { method: 'DELETE', params: {username: '@username'}}
+    )
+  ])
 .filter('formatUser', ->
   (user) ->
     return user.name if user.name == user.username
