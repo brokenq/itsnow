@@ -39,7 +39,8 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
     ProcessEngine processEngine;
 
     @Override
-    public boolean deploySingleProcess(String processKey,String processCategory) {
+    public Deployment deploySingleProcess(String processKey,String processCategory) {
+        Deployment deployment = null;
         try {
             //logger.info("process engine:" + processEngine.toString());
             String path = "bpmn/"+processKey+".bpmn20.xml";
@@ -51,7 +52,7 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
             db.name(processKey);
             db.category(processCategory);
             db.deploy();*/
-            Deployment deployment=processEngine.getRepositoryService().createDeployment()
+            deployment = processEngine.getRepositoryService().createDeployment()
                     .addInputStream(path, is)
                     .name(processKey)
                     .category(processCategory)
@@ -60,20 +61,21 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
             logger.info("Deployed id:"+deployment.getId()+" deploy time:"+deployment.getDeploymentTime()+" deploy name:"+deployment.getName());
         }catch(Exception e){
             logger.error("deploy process error:{}",e.getMessage());
-            return false;
+            return null;
         }
-        return true;
+        return deployment;
     }
 
     @Override
-    public void deploySingleProcess(InputStream inputStream,String processKey,String processCategory) throws IOException {
+    public Deployment deploySingleProcess(InputStream inputStream,String processKey,String processCategory) throws IOException {
+        Deployment deployment = null;
         if (inputStream == null) {
             logger.warn("ignore deploy workflow module: {}", processKey);
         } else {
             logger.debug("find workflow module: {}, deploy it!", processKey);
             //ZipInputStream zis = new ZipInputStream(inputStream);
             String path = "bpmn/"+processKey+".bpmn20.xml";
-            Deployment deployment = processEngine.getRepositoryService().createDeployment()
+            deployment = processEngine.getRepositoryService().createDeployment()
                     .addInputStream(path, inputStream)
                     .name(processKey)
                     .category(processCategory)
@@ -86,8 +88,13 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
             InputStream processDiagram = processEngine.getRepositoryService()
                     .getProcessDiagram(definition.getId());
             //FileUtils.copyInputStreamToFile(processDiagram, new File("/diagram.png"));
-
         }
+        return deployment;
+    }
+
+    @Override
+    public ProcessDefinition getProcessDefinitionByDeploymentId(String deploymentId){
+        return processEngine.getRepositoryService().createProcessDefinitionQuery().deploymentId(deploymentId).singleResult();
     }
 
     @Override

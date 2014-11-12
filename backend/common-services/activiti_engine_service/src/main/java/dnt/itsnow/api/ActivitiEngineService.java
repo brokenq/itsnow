@@ -24,18 +24,19 @@ public interface ActivitiEngineService {
      * 部署单个流程定义
      * @param processKey        流程名称
      * @param processCategory   流程分类
-     * @return true/false
+     * @return 流程部署对象
      */
-    boolean deploySingleProcess(String processKey,String processCategory);
+    Deployment deploySingleProcess(String processKey,String processCategory);
 
     /**
      * 部署单个流程定义
      * @param inputStream       输入流
      * @param processKey        流程名称
      * @param processCategory   流程分类
+     * @return 流程部署对象
      * @throws IOException        I/O异常
      */
-    void deploySingleProcess(InputStream inputStream,String processKey,String processCategory) throws IOException;
+    Deployment deploySingleProcess(InputStream inputStream,String processKey,String processCategory) throws IOException;
 
 
     /**
@@ -56,6 +57,13 @@ public interface ActivitiEngineService {
      * @return  已部署流程的数量
      */
     long getProcessDeployCount();
+
+    /**
+     * 根据部署ID获取流程定义
+     * @param deploymentId 流程部署ID
+     * @return 流程定义对象
+     */
+    ProcessDefinition getProcessDefinitionByDeploymentId(String deploymentId);
 
     /**
      * 获取所有流程定义列表
