@@ -27,7 +27,7 @@ angular.module('System.WorkTime',[])
     controller: 'WorkTimeEditCtrl',
     data: {pageTitle: '编辑时间'}
   $urlRouterProvider.when '/worktimes', '/worktimes/list'
-  .factory('WorkTimeService', ['$resource', ($resource) ->
+.factory('WorkTimeService', ['$resource', ($resource) ->
       $resource("/api/work-times/:sn", {},
         query: { method: 'GET', params: {keyword: '@keyword'}, isArray: true},
         get: { method: 'GET', params: {sn: '@sn'}},

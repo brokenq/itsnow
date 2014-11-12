@@ -1,0 +1,9 @@
+//- include the form mixins
+include /lib/mixins/form
+//- this form need includer provide variable:
+    readonly : true | false
++section("组基本信息")
+  +group("group","name", "组名称", "group", "组名称")
+    +input("group","name")(requried,placeholder="组名称")
+  +group("group", "description", "组描述", "edit", "组描述")
+    +area("group", "description")(ng-maxlength="100", placeholder="描述文本")

@@ -15,8 +15,8 @@ import java.util.Set;
 public interface GroupRepository {
 
     @Options(useGeneratedKeys = true, keyColumn = "id")
-    @Insert("INSERT INTO groups (group_name, description, created_at, updated_at) VALUES " +
-            "(#{name}, #{description}, #{createdAt}, #{updatedAt})")
+    @Insert("INSERT INTO groups (sn,group_name, description, created_at, updated_at) VALUES " +
+            "(#{sn},#{name}, #{description}, #{createdAt}, #{updatedAt})")
     public void create(Group group);
 
     @Delete("DELETE FROM groups WHERE group_name = #{name}")
