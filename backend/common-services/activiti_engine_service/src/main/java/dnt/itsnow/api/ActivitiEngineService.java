@@ -24,18 +24,27 @@ public interface ActivitiEngineService {
      * 部署单个流程定义
      * @param processKey        流程名称
      * @param processCategory   流程分类
-     * @return true/false
+     * @return 流程部署对象
      */
-    boolean deploySingleProcess(String processKey,String processCategory);
+    Deployment deploySingleProcess(String processKey,String processCategory);
 
     /**
      * 部署单个流程定义
      * @param inputStream       输入流
      * @param processKey        流程名称
      * @param processCategory   流程分类
+     * @return 流程部署对象
      * @throws IOException        I/O异常
      */
-    void deploySingleProcess(InputStream inputStream,String processKey,String processCategory) throws IOException;
+    Deployment deploySingleProcess(InputStream inputStream,String processKey,String processCategory) throws IOException;
+
+
+    /**
+     * 根据流程定义key输出流程图
+      * @param processKey 流程定义key
+     * @return  流程图输入流
+     */
+    InputStream getImageById(String processKey);
 
     /**
      * 获取当前流程定义的数量
@@ -48,6 +57,13 @@ public interface ActivitiEngineService {
      * @return  已部署流程的数量
      */
     long getProcessDeployCount();
+
+    /**
+     * 根据部署ID获取流程定义
+     * @param deploymentId 流程部署ID
+     * @return 流程定义对象
+     */
+    ProcessDefinition getProcessDefinitionByDeploymentId(String deploymentId);
 
     /**
      * 获取所有流程定义列表
@@ -74,6 +90,13 @@ public interface ActivitiEngineService {
     int deleteAllProcessDeploys();
 
     /**
+     * 根据流程定义key查询所有流程实例
+     * @param processKey   流程定义key
+     * @return  流程实例列表
+     */
+    List<ProcessInstance> queryAllInstancesByKey(String processKey);
+
+    /**
      * 根据流程实例ID查询流程的任务列表
      * @param instanceId    流程实例ID
      * @return  任务列表
@@ -89,11 +112,11 @@ public interface ActivitiEngineService {
 
     /**
      * 查询分配给指定用户的指定流程的任务列表
-     * @param userName  用户名称
-     * @param key       任务关键字
+     * @param userName      用户名称
+     * @param processKey    流程定义key
      * @return          任务列表
      */
-    List<Task> queryTasksAssignee(String userName,String key);
+    List<Task> queryTasksAssignee(String userName,String processKey);
 
     /**
      * 查询指定用户参与的所有流程的任务列表
@@ -105,10 +128,10 @@ public interface ActivitiEngineService {
     /**
      * 查询指定用户参与的指定流程的任务列表
      * @param userName  用户名称
-     * @param key        流程关键字
+     * @param processKey 流程定义key
      * @return           任务列表
      */
-    List<Task> queryTasksCandidateUser(String userName,String key);
+    List<Task> queryTasksCandidateUser(String userName,String processKey);
 
     /**
      * 查询指定用户组参与的所有流程的任务列表
@@ -119,12 +142,26 @@ public interface ActivitiEngineService {
 
     /**
      * 启动流程
-     * @param key           流程关键字
+     * @param processKey    流程定义key
      * @param variables     流程参数变量
      * @param assignee      启动流程的用户名称
      * @return              流程实例信息
      */
-    ProcessInstance startProcessInstanceByKey(String key,Map<String, Object> variables,String assignee);
+    ProcessInstance startProcessInstanceByKey(String processKey,Map<String, Object> variables,String assignee);
+
+    /**
+     * 停止流程实例
+     * @param instanceId    流程实例ID,非空
+     * @param deleteReason  删除原因，可空
+     */
+    void stopProcessInstanceById(String instanceId,String deleteReason);
+
+    /**
+     * 根据流程定义key停止所有实例
+     * @param key   流程定义key
+     * @param deleteReason  删除原因，可空
+     */
+    void stopProcessInstanceByKey(String key,String deleteReason);
 
     /**
      * 根据流程实例ID查询流程实例信息
@@ -136,18 +173,18 @@ public interface ActivitiEngineService {
     /**
      * 查询已完成的流程列表
      * @param userName  用户名称
-     * @param key        流程关键字
+     * @param processKey 流程定义key
      * @return           历史流程列表
      */
-    List<HistoricProcessInstance> queryTasksFinished(String userName, String key);
+    List<HistoricProcessInstance> queryTasksFinished(String userName, String processKey);
 
     /**
      * 查询指定用户启动的流程列表
      * @param userName  用户名称
-     * @param key       流程关键字
+     * @param processKey 流程定义key
      * @return          历史流程列表
      */
-    List<HistoricProcessInstance> queryTasksStartedBy(String userName, String key);
+    List<HistoricProcessInstance> queryTasksStartedBy(String userName, String processKey);
 
     /**
      * 查询任务的指派信息
@@ -173,26 +210,26 @@ public interface ActivitiEngineService {
 
     /**
      * 完成任务
-     * @param id    任务ID
+     * @param taskId    任务ID
      * @param taskVariables     参数变量
      * @param assignee           完成的用户
      */
-    void completeTask(String id,Map<String, String> taskVariables,String assignee);
+    void completeTask(String taskId,Map<String, String> taskVariables,String assignee);
 
     /**
      * 追踪流程
-     * @param processInstanceId     流程实例ID
+     * @param instanceId     流程实例ID
      * @return  流程信息
      * @throws Exception
      */
-    List<Map<String, Object>> traceProcess(String processInstanceId) throws Exception;
+    List<Map<String, Object>> traceProcess(String instanceId) throws Exception;
 
     /**
      * 追踪流程历史记录
-     * @param processInstanceId  流程实例ID
+     * @param instanceId  流程实例ID
      * @return  流程历史活动列表
      */
-    List<HistoricActivityInstance> traceProcessHistory(String processInstanceId);
+    List<HistoricActivityInstance> traceProcessHistory(String instanceId);
 
     /**
      * 添加流程事件监听器

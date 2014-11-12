@@ -1,7 +1,7 @@
 package dnt.itsnow.service;
 
 /**
- * Created by jacky on 2014/8/13.
+ * <h2>Activity Sync Service Define</h2>
  */
 public interface ActivitiSyncService {
 
