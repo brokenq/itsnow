@@ -66,16 +66,17 @@ public class ItsnowHostsTest extends AbstractTest {
         }
     }
 
-    public void waitHostCreation(final ClientItsnowHost host) throws Exception {
-        withLoginUser(new Job() {
+    public ClientItsnowHost waitHostCreation(final ClientItsnowHost host) throws Exception {
+        ClientItsnowHost created = withLoginUser(new Callback<ClientItsnowHost>() {
             @Override
-            public void perform(HttpHeaders headers) {
-                HttpEntity request = new HttpEntity(headers);
-                ResponseEntity<ClientItsnowHost> entity = getForEntity("/admin/api/hosts/{id}/wait/{invocationId}",
+            public ClientItsnowHost perform(HttpHeaders headers) {
+                HttpEntity<ClientItsnowHost> request = new HttpEntity<ClientItsnowHost>(headers);
+                return getForObject("/admin/api/hosts/{id}/wait/{invocationId}",
                         ClientItsnowHost.class, request, host.getId(), host.getConfiguration().getProperty("createInvocationId"));
-                System.out.println(entity);
             }
         });
+        System.out.println("waitHostCreation" + created.getStatus());
+        return created;
     }
 
     @Test
