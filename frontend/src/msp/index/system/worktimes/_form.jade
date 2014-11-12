@@ -28,4 +28,15 @@ include /lib/mixins/form
         textarea.form-control.limited(name="worktime_description", ng-model='worktime.description', ng-maxlength="100", placeholder="描述文本")
           i.icon-edit
     .help-block.col-xs-12.col-sm-reset.inline #{tip}
+  .form-group
+    label.col-md-2.control-label(for='dtp_input3') Time Picking
+    .input-group.date.form_time.col-md-5(data-link-format='hh:ii', data-link-field='dtp_input3', data-date-format='hh:ii', data-date='')
+      input.form-control(type='text', readonly='', value='', size='16')
+      span.input-group-addon
+        span.glyphicon.glyphicon-remove
+      span.input-group-addon
+        span.glyphicon.glyphicon-time
+    input#dtp_input3(type='hidden', value='')
+    br
+
 
