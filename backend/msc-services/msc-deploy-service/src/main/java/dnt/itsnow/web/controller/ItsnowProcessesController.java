@@ -42,7 +42,7 @@ import java.util.Map;
  * PUT    /admin/api/processes/{name}/cancel            cancel          取消最近的操作(启动/停止)
  * DELETE /admin/api/processes/{name}                   destroy         删除进程对象
  * GET    /admin/api/processes/{name}/follow/{job}      follow          获取特定进程最新的任务信息
- * PUT    /admin/api/processes/wait/{job}               waitStarted     等待进程启动完成
+ * PUT    /admin/api/processes/{name}/wait?job=job      waitStarted     等待进程启动完成
  * </pre>
  */
 @RestController
@@ -279,14 +279,17 @@ public class ItsnowProcessesController extends SessionSupportController<ItsnowPr
     /**
      * <h2>等待进程启动完成</h2>
      * <p/>
-     * PUT    /admin/api/processes/wait/{job} 等待进程启动完成
-     * @param job 进程启动invocationId
+     * PUT    /admin/api/processes/{name}/wait?job=job 等待进程启动完成
+     * @param name 进程名称
+     * @param job 进程启动job
      */
-    @RequestMapping(value = "wait/{job}", method = RequestMethod.PUT)
-    public void waitStarted( @PathVariable("job") String job){
-        logger.debug("Waiting for starting process which invocationId = {}", job);
+    @RequestMapping("{name}/wait")
+    public ItsnowProcess waitStarted(@PathVariable("name") String name, @RequestParam("job") String job){
+        logger.debug("Waiting for process start complete: name = {}, job = {}", name, job);
         try {
-            processService.waitStarted(job);
+            currentProcess = processService.waitStarted(name, job);
+            logger.debug("Process start complete: name = {}, job = {}", name, job);
+            return currentProcess;
         } catch (Exception e) {
             throw new WebServerSideException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
