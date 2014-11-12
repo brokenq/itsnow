@@ -38,7 +38,7 @@ import static org.springframework.http.HttpStatus.*;
  * GET    /admin/api/hosts/checkName?id={id}&value={value}      checkName           检查主机名是否唯一
  * GET    /admin/api/hosts/checkAddress?id={id}&value={value}   checkAddress        检查主机地址是否唯一,有效
  * GET    /admin/api/hosts/list/{field}/{value}                 listByField         列出所有匹配的主机
- * PUT    /admin/api/hosts/wait/{invocationId}                  waitHostCreation    等待主机创建完成
+ * GET    /admin/api/hosts/{id}/wait/{job}                      waitHostCreation    等待主机创建完成
  * GET    /admin/api/hosts/checkPassword?host={host}&username={username}&password={password} checkPassword 检查主机用户名密码是否有效
  * </pre>
  */
@@ -289,15 +289,15 @@ public class ItsnowHostsController extends SessionSupportController<ItsnowHost>{
     /**
      * <h2>等待主机创建完成</h2>
      * <p/>
-     * GET  /admin/api/hosts/{id}/wait/{invocationId}    wait    等待主机创建完成
-     * @param invocationId 创建主机调用ID
+     * GET  /admin/api/hosts/{id}/wait/{job}    wait    等待主机创建完成
+     * @param job 创建主机job
      */
-    @RequestMapping("{id}/wait/{invocationId}")
-    public void waitHostCreation(@PathVariable("id") Long hostId,
-                                 @PathVariable("invocationId") String invocationId) {
-        logger.debug("Waiting for host create complete which invocationId = {} ", invocationId);
+    @RequestMapping("{id}/wait/{job}")
+    public ItsnowHost waitHostCreation(@PathVariable("id") Long hostId, @PathVariable("job") String job) {
+        logger.debug("Waiting for host create complete which job = {} ", job);
         try {
-            hostService.waitHostCreation(hostId, invocationId);
+            currentHost = hostService.waitHostCreation(hostId, job);
+            return currentHost;
         } catch (ItsnowHostException e) {
             throw new WebServerSideException(INTERNAL_SERVER_ERROR, e.getMessage());
         }
