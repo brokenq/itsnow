@@ -44,6 +44,13 @@ angular.module('System.User',[])
         query: { method: 'GET', isArray: true},
         remove: { method: 'DELETE', params: {username: '@username'}}
       )
+      $scope.Destroy = (user,succCallback, errCallback) ->
+        $scope.services.remove {username: user.username}, () ->
+          feedback.success "删除#{user.name}成功"
+          succCallback() if succCallback
+        , (resp) ->
+          errCallback() if errCallback
+          feedback.error("删除#{user.name}失败", resp)
   ])
 .controller('UserListCtrl',['$scope', '$location', 'ngTableParams', 'ActionService','CommonService','Feedback',\
                            ($scope, $location,  NgTable,         ActionService,   commonService,feedback) ->
@@ -59,15 +66,12 @@ angular.module('System.User',[])
     $scope.usersTable = new NgTable(angular.extend($scope.options, $location.search()), args);
     commonService.watchSelection($scope.selection, $scope.cacheService.records, "username")
     $scope.actionService = new ActionService {watch: $scope.selection.items, mapping: $scope.cacheService.find}
-    $scope.destroy = (user) ->
-      $scope.services.remove {username: user.username}, () ->
-        feedback.success "删除用户#{user.username}成功"
-        delete $scope.selection.items[user.username]
-        $scope.usersTable.reload()
-      , (resp) ->
-        feedback.error("删除用户#{user.username}失败", resp)
     $scope.reload = ->
       $scope.usersTable.reload()
+    $scope.destroy = (user)->
+      $scope.Destroy user, ->
+        delete $scope.selection.items[user.username]
+        $scope.reload()
 
 ])
 .controller('UserNewCtrl', ['$scope', '$state', 'Feedback',\
@@ -78,7 +82,7 @@ angular.module('System.User',[])
       $scope.create=() ->
         $scope.services.save $scope.worktime, ->
           feedback.success "新建#{$scope.cuser.name}成功"
-          $state.go "cusers.list"
+          $state.go "users.list"
         , (resp) ->
           feedback.error("新建#{$scope.cuser.name}失败", resp)
   ])
@@ -86,7 +90,6 @@ angular.module('System.User',[])
     ($scope,    $state,   $stateParams,  feedback) ->
       $scope.createview=false
       $scope.updateview=true
-      $scope.ngdis=true
       username=$stateParams.username
       $scope.services.get
         username: username

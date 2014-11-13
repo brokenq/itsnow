@@ -57,4 +57,9 @@ public class GeneralUserManager extends CommonUserManager implements GeneralUser
     public void changePassword(String username, String newPassword) {
 
     }
+
+    @Override
+    public List<User> findUsersByAccount(Account mainAccount) {
+        return generalUserRespository.findUsersByAccount(mainAccount);
+    }
 }

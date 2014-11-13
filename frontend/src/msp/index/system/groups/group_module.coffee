@@ -65,9 +65,9 @@ angular.module('System.Group', [])
       $scope.selection = {checked: false, items: {}}
       $scope.groupsTable = new NgTable(angular.extend($scope.options, $location.search()), args);
       commonService.watchSelection($scope.selection, $scope.cacheService.records, "name")
+      $scope.actionService = new ActionService {watch: $scope.selection.items, mapping: $scope.cacheService.find}
       $scope.reload = ->
         $scope.groupsTable.reload()
-      $scope.actionService = new ActionService {watch: $scope.selection.items, mapping: $scope.cacheService.find}
       $scope.destroy = (group)->
         $scope.Destroy group, ->
           delete $scope.selection.items[group.name]
@@ -77,10 +77,10 @@ angular.module('System.Group', [])
     ($scope, $state, feedback) ->
       $scope.create = () ->
         $scope.services.save $scope.group, ->
-          feedback.success "新建#{$scope.group.name}成功"
+          feedback.success "新建组#{$scope.group.name}成功"
           $state.go "groups.list"
         , (resp) ->
-          feedback.error("新建#{$scope.group.name}失败", resp)
+          feedback.error("新建组#{$scope.group.name}失败", resp)
   ])
 .controller('GroupsEditCtrl', ['$scope', '$state', '$stateParams', 'Feedback',
     ($scope,   $state,    $stateParams,   feedback) ->
@@ -93,8 +93,8 @@ angular.module('System.Group', [])
         $scope.group.$promise = `undefined`
         $scope.group.$resolved = `undefined`
         $scope.services.update {name: name}, $scope.group, () ->
-          feedback.success "修改#{$scope.group.name}成功"
+          feedback.success "修改组#{$scope.group.name}成功"
           $state.go "groups.list"
         , (resp) ->
-          feedback.error("修改#{$scope.group.name}失败", resp);
+          feedback.error("修改组#{$scope.group.name}失败", resp);
   ])

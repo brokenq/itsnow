@@ -82,7 +82,7 @@ angular.module('MscIndex.Dict', [])
           feedback.success "新建#{$scope.dict.name}成功"
           $state.go "dicts.list"
         , (resp) ->
-          feedback.error("新建#{$scope.dict.name}失败", resp)
+          feedback.error("新建角色#{$scope.dict.name}失败", resp)
   ])
 .controller('DictsEditCtrl', ['$scope', '$state', '$stateParams', 'Feedback',\
                             ($scope,   $state,    $stateParams,   feedback) ->
