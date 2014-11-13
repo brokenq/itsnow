@@ -9,11 +9,11 @@
 
 2. 开发代码地址
 -----------
-git@happyonroad.net:insight/itsnow.git Dev-x.y.z 分支(branch)
+git@git.itsnow.com:insight/itsnow.git Dev-x.y.z 分支(branch)
 
 3. 发布代码地址
 -----------
-git@happyonroad.net:insight/itsnow.git Rel-x.y.z 标签(tag)
+git@git.itsnow.com:insight/itsnow.git Rel-x.y.z 标签(tag)
 
 4. 系统演示地址
 -----------
