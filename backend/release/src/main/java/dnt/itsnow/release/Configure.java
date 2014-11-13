@@ -10,10 +10,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,6 +37,8 @@ public class Configure {
         if( !outputFolder.exists() ) FileUtils.forceMkdir(outputFolder);
 
         Properties variables = loadProperties(varsFile);
+        String fwkVersion = getFwkVersion(appFolder);
+        variables.setProperty("app.fwkVersion", fwkVersion);
         File mappingFile = new File(appFolder, "resources/.mapping");
         if( !mappingFile.exists() )
             throw new IllegalArgumentException("The app folder `" +appFolder.getAbsolutePath()+ "` should contains resource/.mapping!");
@@ -126,4 +125,17 @@ public class Configure {
         return props;
     }
 
+    private static String getFwkVersion(File appFolder){
+        Collection<File> jars =
+                FileUtils.listFiles(appFolder, new String[]{"jar"}, false);
+        if( jars.isEmpty() )
+        {
+            return "0.0.1";// an minimal one for testing
+            //throw new IllegalStateException("Can't auto detect the framework version in " + mscHome.getAbsolutePath());
+        }
+        File jar = jars.iterator().next();
+        String[] parts = jar.getName().split("-");
+        String versionAndSuffix = parts[parts.length-1];
+        return versionAndSuffix.split("\\.")[0];
+    }
 }
