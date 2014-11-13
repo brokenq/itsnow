@@ -105,7 +105,7 @@ public class MsuIncidentController extends SessionSupportController<Incident> {
     /**
      * <h2>启动MSU Incident流程实例</h2>
      * <p/>
-     * POST /api/msu-incidents/start
+     * POST /api/msu-incidents
      * @param incident 故障表单
      * @return 故障信息
      */

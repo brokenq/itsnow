@@ -5,10 +5,13 @@ import dnt.itsnow.model.MspIncident;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.service.MspIncidentService;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.InputStream;
 
 /**
  * <h1>MSU Incident服务的控制器</h1>
@@ -100,11 +103,11 @@ public class MspIncidentController extends SessionSupportController<Incident> {
     /**
      * <h2>启动MSU Incident流程实例</h2>
      * <p/>
-     * POST /api/msp-incidents/start
+     * POST /api/msp-incidents
      * @param incident 故障表单
      * @return 创建之后的流程实例信息
      */
-    @RequestMapping(value = "/start",method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public MspIncident start(@RequestBody @Valid Incident incident){
         return service.startIncident(mainAccount.getName(), this.currentUser.getUsername(),incident);
@@ -123,6 +126,33 @@ public class MspIncidentController extends SessionSupportController<Incident> {
     @ResponseBody
     public MspIncident complete(@PathVariable("instanceId") String instanceId,@PathVariable("taskId") String taskId,@RequestBody @Valid Incident incident){
         return service.processIncident(instanceId,taskId,currentUser.getUsername(),incident);
+    }
+
+    /**
+     * <h2>获取流程图</h2>
+     * <p/>
+     * GET /api/msu-incidents/image
+     * @return 输入流
+     */
+    @RequestMapping("{instanceId}/image")
+    @ResponseBody
+    public void getImage(@PathVariable("instanceId") String instanceId,HttpServletResponse response){
+        logger.debug("Get msu incident workflow image");
+        try{
+            InputStream is = service.getProcessImage(instanceId);
+            IOUtils.copy(is, response.getOutputStream());
+            // 输出资源内容到相应对象
+            /*byte[] b = new byte[1024];
+            int len;
+            while ((len = is.read(b, 0, 1024)) != -1) {
+                response.getOutputStream().write(b, 0, len);
+            }
+            response.getOutputStream().close();
+            *///response.flushBuffer();
+        }catch(Exception e){
+            logger.error("error:{}",e.getMessage());
+        }
+
     }
 
 

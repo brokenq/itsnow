@@ -18,6 +18,8 @@ include /lib/mixins/list
         td(data-title="'优先级'") {{incident.priority}}
         td(data-title="'故障描述'") {{incident.requestDescription}}
         td(data-title="'状态'") {{incident.mspStatus | formatIncidentStatus}}
+            a.pull-right(href="api/msp-incidents/{{incident.mspInstanceId}}/image",target="_blank")
+                i.icon-cogs(class="green")
         td(data-title="'创建时间'") {{incident.createdAt | formatTime}}
         td(data-title="'用户'") {{incident.msuAccountName}}
         td(data-title="'用户状态'") {{incident.msuStatus | formatIncidentStatus}}
