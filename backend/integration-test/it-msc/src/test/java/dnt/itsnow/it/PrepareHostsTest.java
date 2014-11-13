@@ -11,7 +11,6 @@ import org.junit.Test;
 /**
  * Prepare Host Data
  */
-@Ignore
 public class PrepareHostsTest extends AbstractTest{
 
     private ItsnowHostsTest hostsTest;
@@ -25,6 +24,7 @@ public class PrepareHostsTest extends AbstractTest{
     public void testCreateHost() throws Exception {
         ClientItsnowHost host = hostsTest.create();
         Assert.assertNotNull(host);
+        Assert.assertTrue(host.getStatus() == ClientHostStatus.Planing);
 
         host = hostsTest.waitHostCreation(host);
         Assert.assertTrue(host.getStatus() == ClientHostStatus.Running);
