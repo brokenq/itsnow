@@ -80,9 +80,9 @@ public interface ActivitiEngineService {
 
     /**
      * 根据流程定义ID删除流程定义
-     * @param id    流程定义ID
+     * @param deployId    流程部署ID
      */
-    void deleteProcessDeploy(String id);
+    void deleteProcessDeploy(String deployId);
 
     /**
      * 删除所有已部署流程

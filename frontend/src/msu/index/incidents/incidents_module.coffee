@@ -72,6 +72,7 @@
         $scope.cacheService = new CacheService("msuInstanceId")
         $scope.submited = false
         $scope.Dictionaries = $resource("api/dictionaries/code/:code", {})
+        $scope.Staffs = $resource("api/staffs",{})
         $scope.Incidents = $resource("/api/msu-incidents/:msuInstanceId", {})
         $scope.ClosedIncidents = $resource("/api/msu-incidents/closed", {})
         $scope.CreatedIncidents = $resource("/api/msu-incidents/created", {})
@@ -91,6 +92,9 @@
         Dictionary.query({code:'inc005'},(data)->
           $scope.requestTypes = data
         )
+        Staffs = $scope.Staffs
+        Staffs.query (data)->
+          $scope.staffs = data
     ])
 
   .controller('OpenedListCtrl',
@@ -161,6 +165,14 @@
         Incidents = $scope.Incidents
         $scope.incident = {number:'INC001',createdBy:'admin'}
         $scope.buttonLabel = "创建"
+
+        $scope.changeRequesterName =(name)->
+          for staff in $scope.staffs
+            if staff.name is name
+              $scope.incident.requesterPhone = staff.mobilePhone
+              $scope.incident.requesterEmail = staff.email
+              $scope.incident.requesterLocation = staff.site.name if staff.site.name?
+
         $scope.create = ->
           $scope.submited = true
           incident = new Incidents $scope.incident
