@@ -62,7 +62,7 @@ angular.module('System.WorkTime',[])
 
       $scope.options = {page: 1, count: 10}
       $scope.cacheService = new CacheService "sn"
-      $scope.services = $resource("/api/work-times/:sn", {},
+      $scope.services = $resource("/api/work_times/:sn", {},
         get: { method: 'GET', params: {sn: '@sn'}},
         save: { method: 'POST'},
         update: { method: 'PUT', params: {sn: '@sn'}},

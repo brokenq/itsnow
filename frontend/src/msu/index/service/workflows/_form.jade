@@ -1,0 +1,16 @@
+//- include the form mixins
+include /lib/mixins/form
+
++section("基本信息")
+  +group("workflow", "name", "名称", "user", "流程名称")
+    +text("workflow", "name")(required, ng-minlength="4", ng-maxlength="20",
+    ng-pattern='/^([a-zA-Z0-9]|_|\\-|\\.)+$/', ng-check="/api/msu-workflows/{0}/check", placeholder="流程名称", ng-disabled="disabled")
+  +group("workflow", "dictionary", "类型", "", "此流程类型")
+    select#workflow_dictionary.form-control(ng-model='dictionary', required, ng-options="dict.display for dict in dictionaries")
+  +group("workflow", "service_catalog", "服务目录", "book", "流程所在的服务目录")
+    div#workflow_servicecatalog(multi-select, selection-mode="single", input-model="serviceCatalogs", button-label="title",
+    item-label="title", tick-property="ticked", group-property="multiSelectGroup", disable-property="checkboxDisabled")
+  +group("workflow", "file", "配置文件", "", "上传部署工作流文件")(ng-hide="disabled")
+    +file("workflow", "file")(ng-file-select="onFileSelect($files)", onclick="this.value=null", ng-disabled="disabled")
+  +group("workflow", "description", "描述", "edit", "说明")
+    +area("workflow", "description")

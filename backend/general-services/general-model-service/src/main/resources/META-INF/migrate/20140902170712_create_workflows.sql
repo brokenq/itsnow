@@ -3,16 +3,16 @@
 
 CREATE TABLE IF NOT EXISTS workflows
 (
-   id                         INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-   sn                         VARCHAR(10),
-   name                       VARCHAR(255),
-   description                VARCHAR(500),
-   act_re_procdef_id          INT(10) UNSIGNED,
-   service_item_id            INT(10) UNSIGNED,
-   service_item_type          VARCHAR(1),
-   process_dictionary_id      INT(10) UNSIGNED,
-   created_at                 TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-   updated_at                 TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP
+  id                    INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  sn                    VARCHAR(100),
+  name                  VARCHAR(255),
+  description           VARCHAR(500),
+  act_re_procdef_id     VARCHAR(64),
+  service_item_id       INT(10) UNSIGNED,
+  service_item_type     VARCHAR(1),
+  process_dictionary_id INT(10) UNSIGNED,
+  created_at            TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at            TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- //@UNDO

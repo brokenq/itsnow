@@ -16,7 +16,7 @@ public interface WorkflowRepository {
     @Insert("INSERT INTO workflows " +
             "(sn, name, description, act_re_procdef_id, service_item_id, service_item_type, process_dictionary_id, created_at, updated_at) " +
             "VALUES " +
-            "(#{sn}, #{name}, #{description}, #{actReProcdef.id_}, #{serviceItem.id}, #{serviceTtemType}, #{dictionary.id}, #{createdAt}, #{updatedAt})")
+            "(#{sn}, #{name}, #{description}, #{actReProcdef.id}, #{serviceItem.id}, #{serviceItemType}, #{dictionary.id}, #{createdAt}, #{updatedAt})")
     public void create(Workflow workflow);
 
     @Delete("DELETE FROM workflows WHERE sn = #{sn}")
@@ -26,23 +26,25 @@ public interface WorkflowRepository {
             " sn                    = #{sn}, " +
             " name                  = #{name}, " +
             " description           = #{description}," +
-            " act_re_procdef_id     = #{actReProcdef.id_}," +
+            " act_re_procdef_id     = #{actReProcdef.id}," +
             " service_item_id      = #{serviceItem.id}," +
-            " service_item_type    = #{serviceTtemType}," +
+            " service_item_type    = #{serviceItemType}," +
             " process_dictionary_id = #{dictionary.id}, " +
             " created_at            = #{createdAt}, " +
             " updated_at            = #{updatedAt} " +
             " WHERE id              = #{id} ")
     public void update(Workflow workflow);
 
-    public int count(@Param("serviceTtemType") String serviceTtemType,
+    public int count(@Param("serviceItemType") String serviceItemType,
                      @Param("keyword") String keyword);
 
     public List<Workflow> find(
-            @Param("serviceTtemType") String serviceTtemType,
+            @Param("serviceItemType") String serviceItemType,
             @Param("keyword") String keyword,
             @Param("pageable") Pageable pageable);
 
-    public Workflow findBySn(@Param("sn") String sn, @Param("serviceTtemType") String serviceTtemType);
+    public Workflow findBySn(@Param("sn") String sn, @Param("serviceItemType") String serviceItemType);
 
+    @Select("SELECT * FROM workflows WHERE name = #{name}")
+    Workflow findByName(@Param("name") String name);
 }

@@ -21,7 +21,7 @@ public interface DepartmentRepository {
 
     @Update("UPDATE departments SET " +
             " sn                    = #{sn}, " +
-            " name                  = #{name}, " +
+//            " name                  = #{name}, " +
             " parent_id             = #{parentId}," +
             " position              = #{position}," +
             " description           = #{description}," +
