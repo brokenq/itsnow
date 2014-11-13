@@ -77,6 +77,10 @@
       )
     ])
 
+    .filter 'formatTime', () ->
+      (time) ->
+        date = new Date(time)
+        date.toLocaleString()
     .controller('CatalogCtrl',['$scope', '$state', '$log', 'Feedback', 'CacheService',
       ($scope, $state, $log, feedback, CacheService) ->
         # frontend controller logic

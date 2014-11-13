@@ -36,6 +36,10 @@ angular.module('System.Group', [])
       remove: { method: 'DELETE', params: {name: '@name'}}
     )
   ])
+.filter 'formatTime', () ->
+  (time) ->
+    date = new Date(time)
+    date.toLocaleString()
 .controller('GroupsCtrl', ['$scope', '$resource', '$state', 'Feedback', 'CacheService',
     ($scope,  $resource,  $state,    feedback,   CacheService) ->
       $scope.options = {page: 1, count: 10}
@@ -95,4 +99,12 @@ angular.module('System.Group', [])
           $state.go "groups.list"
         , (resp) ->
           feedback.error("修改#{$scope.group.name}失败", resp);
+  ])
+.controller('GroupsViewCtrl', ['$scope', '$state', '$stateParams', 'Feedback',
+    ($scope,   $state,    $stateParams,   feedback) ->
+      name = $stateParams.name
+      $scope.services.get
+        name: name
+      , (data) ->
+        $scope.group = data
   ])

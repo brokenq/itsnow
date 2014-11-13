@@ -11,7 +11,7 @@ include /lib/mixins/list
 	+page_table("dictsTable","selection")
 		+row("dict", "sn", "selection")(class="editable deletable")
 			td(data-title="'字典代码'")
-				a(ui-sref="dict.view(dict)") {{dict.code}}
+				a(ui-sref="dicts.view(dict)") {{dict.code}}
 			td(data-title="'字典名称'") {{dict.name}}
 			td(data-title="'展示'") {{dict.display}}
 			td(data-title="'值'") {{dict.val}}

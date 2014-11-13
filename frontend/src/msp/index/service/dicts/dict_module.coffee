@@ -41,6 +41,10 @@ angular.module('Service.Dict', [])
     return "有效" if input is "1"
     return "无效"
 )
+.filter 'formatTime', () ->
+  (time) ->
+    date = new Date(time)
+    date.toLocaleString()
 .controller('DictsCtrl', ['$scope', '$resource', '$state', 'Feedback', 'CacheService',
     ($scope,  $resource,  $state,    feedback,   CacheService) ->
       $scope.statedatas = [
@@ -52,6 +56,7 @@ angular.module('Service.Dict', [])
       $scope.services = $resource("/api/dictionaries/:sn", {sn:'@sn'},
         save: { method: 'POST',params:{sn:''}},
         update: { method: 'PUT', params: {sn: 'sn'}}
+        get: { method: 'GET', params: {sn: 'sn'}}
       )
       $scope.Destroy = (dict,succCallback, errCallback) ->
         $scope.services.remove {sn: dict.sn}, () ->
@@ -113,3 +118,16 @@ angular.module('Service.Dict', [])
         , (resp) ->
           feedback.error("修改#{$scope.dict.sn}失败", resp);
   ])
+
+.controller('DictsViewCtrl', ['$scope', '$state', '$stateParams', 'Feedback',
+    ($scope,   $state,    $stateParams,   feedback) ->
+      sn = $stateParams.sn
+      $scope.services.get
+        sn: sn
+      , (data) ->
+        $scope.dict = data
+  ])
+#.controller('DictsViewCtrl', ['$scope', '$stateParams', '$log', ($scope, $stateParams, $log) ->
+#    $scope.dict = $scope.cacheService.find $stateParams.sn, true
+#    $log.log "Initialized the Dict View controller on: " + JSON.stringify($scope.dict)
+#  ])

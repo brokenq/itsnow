@@ -50,6 +50,11 @@
       $resource("/api/public_service_catalogs/accounts/items/:isn",{isn: '@isn'})
     ])
 
+    .filter 'formatTime', () ->
+      (time) ->
+        date = new Date(time)
+        date.toLocaleString()
+
     .controller('CatalogCtrl',['$scope', '$state', '$log', 'Feedback',
       ($scope, $state, $log, feedback) ->
         # frontend controller logic
