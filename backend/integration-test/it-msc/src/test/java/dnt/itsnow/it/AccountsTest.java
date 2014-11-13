@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 /**
  * 测试MSC帐户管理功能
  */
-@Ignore
 public class AccountsTest extends AbstractTest {
 
     private static AccountsTest test;
