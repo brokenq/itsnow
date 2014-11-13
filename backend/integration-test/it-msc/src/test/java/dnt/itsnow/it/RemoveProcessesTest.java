@@ -10,6 +10,7 @@ import org.junit.Test;
 /**
  * Remove Process Data
  */
+@Ignore
 public class RemoveProcessesTest extends AbstractTest{
 
     private ItsnowProcessesTest processesTest;

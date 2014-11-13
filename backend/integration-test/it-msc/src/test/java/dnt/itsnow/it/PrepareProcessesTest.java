@@ -11,6 +11,7 @@ import org.junit.Test;
 /**
  * Prepare Process Data
  */
+@Ignore
 public class PrepareProcessesTest extends AbstractTest{
 
     private ItsnowProcessesTest processesTest;
