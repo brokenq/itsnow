@@ -178,6 +178,7 @@
 
         Incident.get({mspInstanceId:$stateParams.mspInstanceId}, (data)->
           $scope.tasks = data
+          console.warn(data)
           for task in data.tasksList
             if(angular.isDefined(task.taskId))
               $scope.taskId = task.taskId
