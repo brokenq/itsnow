@@ -36,6 +36,15 @@ angular.module('System.Group', [])
       remove: { method: 'DELETE', params: {name: '@name'}}
     )
   ])
+.filter('colFilter', () ->
+  return (input) ->
+    if input?
+      names = []
+      for user in input
+        names.push user.name
+      names.join()
+    else '无'
+)
 .controller('GroupsCtrl', ['$scope', '$resource', '$state', 'Feedback', 'CacheService',
     ($scope,  $resource,  $state,    feedback,   CacheService) ->
       $scope.options = {page: 1, count: 10}
