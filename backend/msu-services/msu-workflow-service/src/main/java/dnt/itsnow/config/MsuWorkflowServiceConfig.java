@@ -1,6 +1,7 @@
 package dnt.itsnow.config;
 
 
+import dnt.itsnow.api.ActivitiEngineService;
 import dnt.itsnow.platform.config.DefaultServiceConfig;
 import dnt.itsnow.service.CommonUserService;
 import dnt.itsnow.service.WorkflowService;
@@ -12,5 +13,6 @@ public class MsuWorkflowServiceConfig extends DefaultServiceConfig {
         super.defineServices();
         importService(CommonUserService.class, "*", "plainUserService");
         importService(WorkflowService.class);
+        importService(ActivitiEngineService.class);
     }
 }

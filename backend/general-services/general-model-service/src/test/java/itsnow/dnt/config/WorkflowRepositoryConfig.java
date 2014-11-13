@@ -19,6 +19,7 @@ public class WorkflowRepositoryConfig extends RepositoryConfigWithH2 {
         return new String[]{
                 "classpath:META-INF/migrate/20140720144647_create_dictionaries.sql@up",
                 "classpath:META-INF/setup/create_act_re_procdef.sql",
+                "classpath:META-INF/setup/create_act_re_deployment.sql",
                 "classpath:META-INF/setup/create_private_service_catalogs.sql",
                 "classpath:META-INF/setup/create_private_service_items.sql",
                 "classpath:META-INF/setup/create_public_service_catalogs.sql",

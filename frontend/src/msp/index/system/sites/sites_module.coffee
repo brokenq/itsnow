@@ -40,6 +40,15 @@ angular.module('System.Sites', ['multi-select'])
     )
   ])
 
+.factory('SiteWorkTimeService', ['$resource', ($resource) ->
+    $resource("/api/work_times")
+  ])
+
+.factory("SiteDictService", ["$resource", ($resource)->
+    $resource '/api/dictionaries/code/:code', {},
+      list: {method: 'GET', params: {code: '@code'}, isArray: true}
+  ])
+
 .controller('SitesCtrl', ['$scope', '$state', '$log', 'Feedback', 'CacheService',
     ($scope, $state, $log, feedback, CacheService) ->
       # frontend controller logic
@@ -100,9 +109,11 @@ angular.module('System.Sites', ['multi-select'])
     $log.log "Initialized the Site View controller on: " + JSON.stringify($scope.site)
   ])
 
-.controller('SiteNewCtrl', ['$scope', '$state', '$log', 'Feedback', 'SiteService', 'DictService', 'WorkTimeService',
+.controller('SiteNewCtrl', ['$scope', '$state', '$log', 'Feedback', 'SiteService', 'SiteDictService', 'SiteWorkTimeService',
     ($scope, $state, $log, feedback, siteService, dictService, workTimeService) ->
+
       $log.log "Initialized the Site New controller"
+      $scope.disabled = false
 
       dictService.list {code: 'inc003'}, (data) ->
         $scope.dictionaries = data
@@ -121,10 +132,12 @@ angular.module('System.Sites', ['multi-select'])
   ])
 
 .controller('SiteEditCtrl',
-  ['$scope', '$state', '$log', '$stateParams', 'Feedback', 'SiteService', 'DictService', 'WorkTimeService',
+  ['$scope', '$state', '$log', '$stateParams', 'Feedback', 'SiteService', 'SiteDictService', 'SiteWorkTimeService',
     ($scope, $state, $log, $stateParams, feedback, siteService, dictService, workTimeService) ->
+
       $scope.site = $scope.cacheService.find $stateParams.sn, true
       $log.log "Initialized the Site Edit controller on: " + JSON.stringify($scope.site)
+      $scope.disabled = true
 
       promise = siteService.get({sn: $scope.site.sn}).$promise
       promise.then (data) ->

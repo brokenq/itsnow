@@ -4,7 +4,7 @@ include /lib/mixins/form
     disabled : true | false
 +section("基本信息")
   +group("site", "name", "地点名称", "user", "不可重复")
-    +input("site", "name")(type="text", ng-disabled=disabled, required, ng-minlength="4", ng-maxlength="20",
+    +input("site", "name")(type="text", ng-disabled="disabled", required, ng-minlength="4", ng-maxlength="20",
     ng-pattern='/^[\u4e00-\u9fa5_a-zA-Z0-9\\-\\.]+$/', ng-check="/api/sites/check/{0}", placeholder="地点名称")
   +group("site", "dictionary", "区域", "user", "部门所在区域")
     select#site_area.form-control(ng-model='dictionary', required, ng-options="dictionary.display for dictionary in dictionaries")

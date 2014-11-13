@@ -29,7 +29,7 @@ angular.module('Service.Workflows', ['multi-select','angularFileUpload'])
   $urlRouterProvider.when '/workflows', '/workflows/list'
 
 .factory('WorkflowService', ['$resource', ($resource) ->
-    $resource("/api/msp-workflows/:sn", {},
+    $resource("/api/msu-workflows/:sn", {},
       get: { method: 'GET', params: {sn: '@sn'}},
       save: { method: 'POST'},
       update: { method: 'PUT', params: {sn: '@sn'}},
@@ -152,7 +152,7 @@ angular.module('Service.Workflows', ['multi-select','angularFileUpload'])
           return
 
         upload = $upload.upload({
-          url: '/api/msp-workflows/upload'
+          url: '/api/msu-workflows/upload'
           method: "POST"
           file: $scope.selectedFiles[0]
         })

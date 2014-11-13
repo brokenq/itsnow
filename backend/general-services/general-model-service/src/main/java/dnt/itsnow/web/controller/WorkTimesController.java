@@ -17,15 +17,15 @@ import javax.validation.Valid;
  * <h1>工作时间管理控制器</h1>
  * <pre>
  * <b>HTTP     URI                        方法      含义  </b>
- * # GET      /api/work-times?keyword={}  index     列出所有工作时间，支持过滤，分页，排序等
- * # GET      /api/work-times             show      列出特定的工作时间
- * # POST     /api/work-times             create    创建工作时间，账户信息通过HTTP BODY提交
- * # PUT      /api/work-times/{sn}        update    修改工作时间，账户信息通过HTTP BODY提交
- * # DELETE   /api/work-times/{sn}        destroy   删除工作时间
+ * # GET      /api/work_times?keyword={}  index     列出所有工作时间，支持过滤，分页，排序等
+ * # GET      /api/work_times             show      列出特定的工作时间
+ * # POST     /api/work_times             create    创建工作时间，账户信息通过HTTP BODY提交
+ * # PUT      /api/work_times/{sn}        update    修改工作时间，账户信息通过HTTP BODY提交
+ * # DELETE   /api/work_times/{sn}        destroy   删除工作时间
  * </pre>
  */
 @RestController
-@RequestMapping("/api/work-times")
+@RequestMapping("/api/work_times")
 public class WorkTimesController extends SessionSupportController<WorkTime> {
 
     WorkTime workTime;
@@ -36,7 +36,7 @@ public class WorkTimesController extends SessionSupportController<WorkTime> {
     /**
      * <h2>获得所有的员工</h2>
      *
-     * GET /api/work-times
+     * GET /api/work_times
      * @param keyword 查询关键字
      * @return 员工列表
      */
@@ -55,7 +55,7 @@ public class WorkTimesController extends SessionSupportController<WorkTime> {
     /**
      * <h2>查看一个工作时间</h2>
      * <p/>
-     * GET /api/work-times/{sn}
+     * GET /api/work_times/{sn}
      *
      * @return 工作时间
      */
@@ -67,7 +67,7 @@ public class WorkTimesController extends SessionSupportController<WorkTime> {
     /**
      * <h2>创建一个工作时间</h2>
      * <p/>
-     * POST /api/work-times
+     * POST /api/work_times
      * @param workTime 待新建的工作时间
      * @return 新建的工作时间
      */
@@ -92,7 +92,7 @@ public class WorkTimesController extends SessionSupportController<WorkTime> {
     /**
      * <h2>更新一个工作时间</h2>
      * <p/>
-     * PUT /api/work-times/{sn}
+     * PUT /api/work_times/{sn}
      * @param workTime 待更新的工作时间
      * @return 被更新的工作时间
      */
@@ -118,7 +118,7 @@ public class WorkTimesController extends SessionSupportController<WorkTime> {
     /**
      * <h2>删除一个工作时间</h2>
      * <p/>
-     * DELETE /api/work-times/{sn}
+     * DELETE /api/work_times/{sn}
      *
      * @return 被删除的工作时间
      */
