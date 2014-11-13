@@ -14,6 +14,4 @@ public interface GeneralUserRespository extends CommonUserRepository{
     long count(@Param("keyword")String keyword,@Param("account")Account account);
 
     List<User> findAll(@Param("keyword")String keyword,@Param("pageable")Pageable pageable,@Param("account")Account account);
-
-    List<User> findUsersByAccount(Account mainAccount);
 }
