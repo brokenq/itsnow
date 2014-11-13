@@ -3,7 +3,7 @@
 
 1. 管理工具熟悉
 -----------
-## 1.1 项目管理工具（http://track.happyonroad.net）
+## 1.1 项目管理工具（http://youtrack.itsnow.com）
 
 * 请熊杰开通帐号
 * 熟悉项目之前的情况
@@ -18,10 +18,10 @@
 -----------
 ## 2.1 GIT学习
 
-* 请熊杰开通git帐号（http://git.happyonroad.net）
+* 请熊杰开通git帐号（http://git.itsnow.com）
 * 下载git工具，并且安装
-* 设置ssh key(http://git.happyonroad.net/profile/keys)
-* 克隆项目代码至本地 git clone git@happyonroad.net:insight/itsnow.git itsnow
+* 设置ssh key(http://git.itsnow.com/profile/keys)
+* 克隆项目代码至本地 git clone git@git.itsnow.com:insight/itsnow.git itsnow
 * 查看分支 git branch -a
 * 切换至最新分支 git checkout Dev-0.2.0
 * 熟悉git常用命令，包括commit，add，checkout，pull，push，status，diff等
@@ -87,13 +87,13 @@
 3. 文档学习
 -----------
 ## 3.1 版本发布文档
-http://git.happyonroad.net/insight/itsnow/blob/master/release-notes.md
+http://git.itsnow.com/insight/itsnow/blob/master/release-notes.md
 ## 3.2 平台模块开发指南
-http://git.happyonroad.net/insight/itsnow/blob/master/backend/README.md
+http://git.itsnow.com/insight/itsnow/blob/master/backend/README.md
 ## 3.3 平台模块测试开发指南
-http://git.happyonroad.net/insight/itsnow/blob/master/backend/Test.md
+http://git.itsnow.com/insight/itsnow/blob/master/backend/Test.md
 ## 3.4 前端开发指南
-http://git.happyonroad.net/insight/itsnow/blob/master/frontend/README.md
+http://git.itsnow.com/insight/itsnow/blob/master/frontend/README.md
 
 4. 自我练习
 -----------
