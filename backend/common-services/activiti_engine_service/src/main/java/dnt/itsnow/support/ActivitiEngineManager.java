@@ -2,6 +2,7 @@ package dnt.itsnow.support;
 
 import dnt.itsnow.api.ActivitiEngineService;
 import dnt.spring.Bean;
+import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.engine.ActivitiObjectNotFoundException;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.delegate.Expression;
@@ -11,6 +12,7 @@ import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.impl.RepositoryServiceImpl;
 import org.activiti.engine.impl.bpmn.behavior.UserTaskActivityBehavior;
+import org.activiti.engine.impl.bpmn.diagram.ProcessDiagramGenerator;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.impl.pvm.delegate.ActivityBehavior;
 import org.activiti.engine.impl.pvm.process.ActivityImpl;
@@ -84,9 +86,9 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
             logger.info("deployed id:"+deployment.getId()+" name:"+deployment.getName()+" category:"+deployment.getCategory());
             logger.info("deployed count:"+processEngine.getRepositoryService().createDeploymentQuery().count());
 
-            ProcessDefinition definition = processEngine.getRepositoryService().createProcessDefinitionQuery().deploymentId(deployment.getId()).singleResult();
-            InputStream processDiagram = processEngine.getRepositoryService()
-                    .getProcessDiagram(definition.getId());
+            //ProcessDefinition definition = processEngine.getRepositoryService().createProcessDefinitionQuery().deploymentId(deployment.getId()).singleResult();
+            //InputStream processDiagram = processEngine.getRepositoryService()
+            //        .getProcessDiagram(definition.getId());
             //FileUtils.copyInputStreamToFile(processDiagram, new File("/diagram.png"));
         }
         return deployment;
@@ -98,9 +100,14 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
     }
 
     @Override
-    public InputStream getImageById(String processKey){
-        ProcessDefinition definition = processEngine.getRepositoryService().createProcessDefinitionQuery().processDefinitionKey(processKey).singleResult();
-        return processEngine.getRepositoryService().getProcessDiagram(definition.getId());
+    public InputStream getImageById(String processKey,String instanceId){
+        ProcessInstance processInstance = processEngine.getRuntimeService().createProcessInstanceQuery().processInstanceId(instanceId).singleResult();
+        //ProcessDefinition definition = processEngine.getRepositoryService().createProcessDefinitionQuery().processDefinitionKey(processKey).latestVersion().singleResult();
+        BpmnModel bpmnModel = processEngine.getRepositoryService().getBpmnModel(processInstance.getProcessDefinitionId());
+        List<String> activeActivityIds = processEngine.getRuntimeService().getActiveActivityIds(instanceId);
+        //Context.setProcessEngineConfiguration(processEngine.getProcessEngineConfiguration());
+        return ProcessDiagramGenerator.generateDiagram(bpmnModel, "png", activeActivityIds);
+        //return processEngine.getRepositoryService().getProcessDiagram(definition.getId());
     }
 
     @Override

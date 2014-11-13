@@ -31,8 +31,7 @@ public class PrepareAccountsTest extends AbstractTest{
         Assert.assertNotNull(account);
         Assert.assertTrue(account.getStatus() == ClientAccountStatus.New);
 
-        accountsTest.approve(account);
-        account = accountsTest.show(account);
+        account = accountsTest.approve(account);
         Assert.assertTrue(account.getStatus() == ClientAccountStatus.Valid);
         ShareDatas.account = account;
     }

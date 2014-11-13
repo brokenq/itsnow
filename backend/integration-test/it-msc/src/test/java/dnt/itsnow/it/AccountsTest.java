@@ -1,10 +1,9 @@
-package dnt.itsnow.it; /**
- * Developer: Kadvin Date: 14-9-15 下午12:14
- */
+package dnt.itsnow.it;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dnt.itsnow.model.ClientAccount;
 import dnt.itsnow.model.ClientAccountRegistration;
+import dnt.itsnow.model.ClientItsnowHost;
 import dnt.itsnow.util.DeployFixture;
 import junit.framework.Assert;
 import org.junit.Ignore;
@@ -41,18 +40,19 @@ public class AccountsTest extends AbstractTest {
         return null;
     }
 
-    public void approve(final ClientAccount account) throws Exception {
+    public ClientAccount approve(final ClientAccount account) throws Exception {
         try {
-            withLoginUser(new Job() {
+            return withLoginUser(new Callback<ClientAccount>() {
                 @Override
-                public void perform(HttpHeaders headers) {
-                    HttpEntity request = new HttpEntity(headers);
-                    put("/admin/api/accounts/{sn}/approve", request, account.getSn());
+                public ClientAccount perform(HttpHeaders headers) {
+                    HttpEntity<ClientAccount> request = new HttpEntity<ClientAccount>(headers);
+                    return getForObject("/admin/api/accounts/{sn}/approve", ClientAccount.class, request, account.getSn());
                 }
             });
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     public void destroy(final ClientAccount account) throws Exception {
