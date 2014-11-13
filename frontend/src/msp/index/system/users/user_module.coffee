@@ -76,11 +76,11 @@ angular.module('System.User',[])
       $scope.updateview=false
       $scope.ngdis=false
       $scope.create=() ->
-        $scope.cuser.$promise = `undefined`
-        $scope.cuser.$resolved = `undefined`
-        $scope.services.save $scope.cuser, ->
-          $state.go "users.list"
-          return
+        $scope.services.save $scope.worktime, ->
+          feedback.success "新建#{$scope.cuser.name}成功"
+          $state.go "cusers.list"
+        , (resp) ->
+          feedback.error("新建#{$scope.cuser.name}失败", resp)
   ])
 .controller('UserEditCtrl', ['$scope', '$state', '$stateParams', 'Feedback',
     ($scope,    $state,   $stateParams,  feedback) ->

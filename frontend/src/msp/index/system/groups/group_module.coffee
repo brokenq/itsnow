@@ -77,8 +77,10 @@ angular.module('System.Group', [])
     ($scope, $state, feedback) ->
       $scope.create = () ->
         $scope.services.save $scope.group, ->
+          feedback.success "新建#{$scope.group.name}成功"
           $state.go "groups.list"
-          return
+        , (resp) ->
+          feedback.error("新建#{$scope.group.name}失败", resp)
   ])
 .controller('GroupsEditCtrl', ['$scope', '$state', '$stateParams', 'Feedback',
     ($scope,   $state,    $stateParams,   feedback) ->
