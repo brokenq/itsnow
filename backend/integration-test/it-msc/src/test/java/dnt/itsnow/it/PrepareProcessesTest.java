@@ -29,9 +29,11 @@ public class PrepareProcessesTest extends AbstractTest{
         process.setHostId(ShareDatas.host.getId());
         process = processesTest.create(process);
         Assert.assertNotNull(process);
+        Assert.assertTrue(process.getStatus() == ClientProcessStatus.Stopped);
 
         processesTest.start(process);
-        process = processesTest.waitStarted(process);
+        process = processesTest.show(process);
+        process = processesTest.waitFinished(process, ShareDatas.PROCESS_START_INVOCATION_ID);
         Assert.assertTrue(process.getStatus() == ClientProcessStatus.Running);
         ShareDatas.process = process;
     }

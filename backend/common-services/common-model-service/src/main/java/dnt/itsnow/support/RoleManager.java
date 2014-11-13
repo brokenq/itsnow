@@ -76,7 +76,6 @@ public class RoleManager extends Bean implements RoleService {
 
         role.creating();
         repository.create(role);
-
         if (role.getUsers() != null) {
             UserAuthority userAuthority;
             for (User user : role.getUsers()) {

@@ -106,7 +106,7 @@ Itsnow的项目，在平台之外，包括如下大的模块：
 
 ## 2.3 模块开发
 
-具体模块开发，请参考 [平台说明](http://git.happyonroad.net/insight/itsnow/blob/Dev-0.1.3/backend/platform/README.md)
+具体模块开发，请参考 [平台说明](http://git.itsnow.com/insight/itsnow/blob/Dev-0.1.3/backend/platform/README.md)
 
 3 数据访问层
 -------------

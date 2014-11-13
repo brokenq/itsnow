@@ -2,6 +2,7 @@ package dnt.itsnow.repository;
 
 import dnt.itsnow.model.Group;
 import dnt.itsnow.model.GroupAuthority;
+import dnt.itsnow.model.GroupUser;
 import dnt.itsnow.platform.service.Pageable;
 import org.apache.ibatis.annotations.*;
 
@@ -51,4 +52,6 @@ public interface GroupRepository {
             " GROUP BY ga.authority, g.group_name")
     Set<GroupAuthority> findUserAuthorities(@Param("username") String username);
 
+    @Insert("INSERT INTO group_members( username,group_id,group_name) VALUES (#{groupUser.user.username}, #{groupUser.group.id},#{groupUser.group.name})")
+    void createGroupAndUserRelation(@Param("groupUser")GroupUser groupUser);
 }

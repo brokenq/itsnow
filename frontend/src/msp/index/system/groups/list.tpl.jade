@@ -1,15 +1,16 @@
 include /lib/mixins/list
 .container
-	+toolbar
-		+button_group
-			+tool_button("groupsTable.reload()", "refresh", "", "*", "", "")
-		+button_group
-			+tool_button("actionService.gotoState('groups.new')", "plus", "新增", "*", "", "")
-			+tool_button("actionService.gotoState('groups.edit')", "pencil", "修改", "1", "", "editable")
-		+more_buttons
-			+drop_button("actionService.perform(destroy)", "trash", "删除", "1+", "", "deletable")
-	+page_table("groupsTable","selection")
-		+row("group", "name", "selection")(class="editable deletable")
-			td(data-title="'组名称'")
-				a(ui-sref="groups.view(group)") {{group.name}}
-			td(data-title="'组描述'") {{group.description}}
+  +toolbar
+    +button_group
+      +tool_button("groupsTable.reload()", "refresh", "", "*", "", "")
+    +button_group
+      +tool_button("actionService.gotoState('groups.new')", "plus", "新增", "*", "", "")
+      +tool_button("actionService.gotoState('groups.edit')", "pencil", "修改", "1", "", "editable")
+    +more_buttons
+      +drop_button("actionService.perform(destroy)", "trash", "删除", "1+", "", "deletable")
+  +page_table("groupsTable","selection")
+    +row("group", "name", "selection")(class="editable deletable")
+      td(data-title="'组名称'")
+        a(ui-sref="groups.view(group)") {{group.name}}
+      td(data-title="'组用户'") {{group.users | colFilter}}
+      td(data-title="'组描述'") {{group.description}}
