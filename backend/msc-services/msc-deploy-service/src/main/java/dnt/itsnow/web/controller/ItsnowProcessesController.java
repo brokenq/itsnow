@@ -279,12 +279,12 @@ public class ItsnowProcessesController extends SessionSupportController<ItsnowPr
     /**
      * <h2>等待进程Job完成</h2>
      * <p/>
-     * GET /admin/api/processes/{name}/wait_finished/job=job
+     * GET /admin/api/processes/{name}/wait_finished/{job}
      * @param name 进程名称
      * @param job 进程job
      */
-    @RequestMapping("{name}/wait")
-    public ItsnowProcess waitFinished(@PathVariable("name") String name, @RequestParam("job") String job){
+    @RequestMapping("{name}/wait/{job}")
+    public ItsnowProcess waitFinished(@PathVariable("name") String name, @PathVariable("job") String job){
         logger.debug("Waiting for process job finished: name = {}, job = {}", name, job);
         try {
             currentProcess = processService.waitFinished(name, job);
