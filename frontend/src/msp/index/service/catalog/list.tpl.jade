@@ -10,7 +10,7 @@ include /lib/mixins/list
         tbody(ng-repeat="catalog in $data")
             tr(value="{{catalog.sn}}",class="editable deletable catalog")
                 td(width="30", align="left", header="'ngTableCheckboxHeader'")
-                    input(type="checkbox",ng-model="selection.items[catalog.sn]")
+                    input(type="checkbox",ng-disabled="true",ng-model="selection.items[catalog.sn]")
                 td(data-title="'图标'")
                     img(ng-src="{{catalog.icon}}")
                 td(data-title="'编号'")

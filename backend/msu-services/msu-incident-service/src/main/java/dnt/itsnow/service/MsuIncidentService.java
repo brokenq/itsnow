@@ -5,6 +5,8 @@ import dnt.itsnow.model.MsuIncident;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 
+import java.io.InputStream;
+
 /**
  * <h1>MSU Incident Service</h1>
  */
@@ -70,4 +72,12 @@ public interface MsuIncidentService {
      * @return 故障表单数据以及任务信息
      */
     MsuIncident processIncident(String instanceId,String taskId,String username,Incident incident);
+
+
+    /**
+     * 获取流程图数据
+     * @param instanceId 流程实例ID
+     * @return  图片stream
+     */
+    InputStream getProcessImage(String instanceId);
 }
