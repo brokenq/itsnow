@@ -5,110 +5,110 @@ package dnt.itsnow.model;
  */
 public class ActReProcdef {
 
-    private String id_;
-    private int rev_;
-    private String category_;
-    private String name_;
-    private String key_;
-    private int version_;
-    private String deploymentId_;
-    private String resourceName_;
-    private int hasStartFormKey_;
-    private int suspensionState_;
+    private String id;
+    private int rev;
+    private String category;
+    private String name;
+    private String key;
+    private int version;
+    private String deploymentId;
+    private String resourceName;
+    private int hasStartFormKey;
+    private int suspensionState;
 
-    public String getId_() {
-        return id_;
+    public String getId() {
+        return id;
     }
 
-    public void setId_(String id_) {
-        this.id_ = id_;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public int getRev_() {
-        return rev_;
+    public int getRev() {
+        return rev;
     }
 
-    public void setRev_(int rev_) {
-        this.rev_ = rev_;
+    public void setRev(int rev) {
+        this.rev = rev;
     }
 
-    public String getCategory_() {
-        return category_;
+    public String getCategory() {
+        return category;
     }
 
-    public void setCategory_(String category_) {
-        this.category_ = category_;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
-    public String getName_() {
-        return name_;
+    public String getName() {
+        return name;
     }
 
-    public void setName_(String name_) {
-        this.name_ = name_;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getKey_() {
-        return key_;
+    public String getKey() {
+        return key;
     }
 
-    public void setKey_(String key_) {
-        this.key_ = key_;
+    public void setKey(String key) {
+        this.key = key;
     }
 
-    public int getVersion_() {
-        return version_;
+    public int getVersion() {
+        return version;
     }
 
-    public void setVersion_(int version_) {
-        this.version_ = version_;
+    public void setVersion(int version) {
+        this.version = version;
     }
 
-    public String getDeploymentId_() {
-        return deploymentId_;
+    public String getDeploymentId() {
+        return deploymentId;
     }
 
-    public void setDeploymentId_(String deploymentId_) {
-        this.deploymentId_ = deploymentId_;
+    public void setDeploymentId(String deploymentId) {
+        this.deploymentId = deploymentId;
     }
 
-    public String getResourceName_() {
-        return resourceName_;
+    public String getResourceName() {
+        return resourceName;
     }
 
-    public void setResourceName_(String resourceName_) {
-        this.resourceName_ = resourceName_;
+    public void setResourceName(String resourceName) {
+        this.resourceName = resourceName;
     }
 
-    public int getHasStartFormKey_() {
-        return hasStartFormKey_;
+    public int getHasStartFormKey() {
+        return hasStartFormKey;
     }
 
-    public void setHasStartFormKey_(int hasStartFormKey_) {
-        this.hasStartFormKey_ = hasStartFormKey_;
+    public void setHasStartFormKey(int hasStartFormKey) {
+        this.hasStartFormKey = hasStartFormKey;
     }
 
-    public int getSuspensionState_() {
-        return suspensionState_;
+    public int getSuspensionState() {
+        return suspensionState;
     }
 
-    public void setSuspensionState_(int suspensionState_) {
-        this.suspensionState_ = suspensionState_;
+    public void setSuspensionState(int suspensionState) {
+        this.suspensionState = suspensionState;
     }
 
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("ActReProcdef{");
-        sb.append("id_='").append(id_).append('\'');
-        sb.append(", rev_=").append(rev_);
-        sb.append(", category_='").append(category_).append('\'');
-        sb.append(", name_='").append(name_).append('\'');
-        sb.append(", key_='").append(key_).append('\'');
-        sb.append(", version_=").append(version_);
-        sb.append(", deploymentId_='").append(deploymentId_).append('\'');
-        sb.append(", resourceName_='").append(resourceName_).append('\'');
-        sb.append(", hasStartFormKey_=").append(hasStartFormKey_);
-        sb.append(", suspensionState_=").append(suspensionState_);
+        sb.append("id='").append(id).append('\'');
+        sb.append(", rev=").append(rev);
+        sb.append(", category='").append(category).append('\'');
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", key='").append(key).append('\'');
+        sb.append(", version=").append(version);
+        sb.append(", deploymentId='").append(deploymentId).append('\'');
+        sb.append(", resourceName='").append(resourceName).append('\'');
+        sb.append(", hasStartFormKey=").append(hasStartFormKey);
+        sb.append(", suspensionState=").append(suspensionState);
         sb.append('}');
         return sb.toString();
     }

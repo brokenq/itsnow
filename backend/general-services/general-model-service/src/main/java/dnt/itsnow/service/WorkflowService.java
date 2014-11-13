@@ -49,4 +49,11 @@ public interface WorkflowService {
      * @return 工作流配置信息
      */
     public Workflow findBySn(String sn, String serviceFlag);
+
+    /**
+     * 根据工作流名称查询工作流配置信息
+     * @param name 工作流名称
+     * @return 工作流配置信息
+     */
+    Workflow findByName(String name);
 }

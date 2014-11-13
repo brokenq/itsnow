@@ -148,7 +148,6 @@ angular.module('System.Roles',
 
 .controller('RoleEditCtrl', ['$scope', '$state', '$log', '$stateParams', 'Feedback', 'RoleService',
     ($scope, $state, $log, $stateParams, feedback, roleService) ->
-
       $scope.role = $scope.cacheService.find $stateParams.name, true
       $log.log "Initialized the Role Edit controller on: " + JSON.stringify($scope.role)
 

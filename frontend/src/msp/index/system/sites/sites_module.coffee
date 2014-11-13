@@ -1,12 +1,4 @@
-angular.module('System.Sites',
-  ['ngTable',
-   'ngResource',
-   'ngSanitize',
-   'dnt.action.service',
-   'Lib.Commons',
-   'Lib.Utils',
-   'Lib.Feedback',
-   'multi-select'])
+angular.module('System.Sites', ['multi-select'])
 .config ($stateProvider, $urlRouterProvider)->
   $stateProvider.state 'sites',
     url: '/sites',
@@ -48,7 +40,16 @@ angular.module('System.Sites',
     )
   ])
 
-.controller('SitesCtrl', ['$scope', '$state', '$log', 'Feedback', 'CacheService',\
+.factory('SiteWorkTimeService', ['$resource', ($resource) ->
+    $resource("/api/work_times")
+  ])
+
+.factory("SiteDictService", ["$resource", ($resource)->
+    $resource '/api/dictionaries/code/:code', {},
+      list: {method: 'GET', params: {code: '@code'}, isArray: true}
+  ])
+
+.controller('SitesCtrl', ['$scope', '$state', '$log', 'Feedback', 'CacheService',
     ($scope, $state, $log, feedback, CacheService) ->
       # frontend controller logic
       $log.log "Initialized the Sites controller"
@@ -66,7 +67,7 @@ angular.module('System.Sites',
         $state.go "sites.list"
 
       # 去除不必要的对象属性，用于HTTP提交
-      $scope.formatData = (site,dictionary,workTime) ->
+      $scope.formatData = (site, dictionary, workTime) ->
         aSite = site
         aSite.dictionary = dictionary
         aSite.workTime = workTime
@@ -76,7 +77,7 @@ angular.module('System.Sites',
   ])
 
 .controller('SiteListCtrl',
-  ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'CommonService', 'SiteService', 'Feedback',\
+  ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'CommonService', 'SiteService', 'Feedback',
     ($scope, $location, $log, NgTable, ActionService, commonService, siteService, feedback) ->
       $log.log "Initialized the Site list controller"
 
@@ -108,9 +109,11 @@ angular.module('System.Sites',
     $log.log "Initialized the Site View controller on: " + JSON.stringify($scope.site)
   ])
 
-.controller('SiteNewCtrl', ['$scope', '$state', '$log', 'Feedback', 'SiteService', 'DictService', 'WorkTimeService',\
+.controller('SiteNewCtrl', ['$scope', '$state', '$log', 'Feedback', 'SiteService', 'SiteDictService', 'SiteWorkTimeService',
     ($scope, $state, $log, feedback, siteService, dictService, workTimeService) ->
+
       $log.log "Initialized the Site New controller"
+      $scope.disabled = false
 
       dictService.list {code: 'inc003'}, (data) ->
         $scope.dictionaries = data
@@ -118,7 +121,7 @@ angular.module('System.Sites',
       workTimeService.query (data) ->
         $scope.workTimes = data;
 
-      create = () ->
+      $scope.create = () ->
         $scope.submited = true
         site = $scope.formatData($scope.site, $scope.dictionary, $scope.workTime)
         siteService.save site, () ->
@@ -126,15 +129,15 @@ angular.module('System.Sites',
           $state.go "sites.list"
         , (resp) ->
           feedback.error("新建地点#{site.name}失败", resp)
-
-      $scope.create = create
   ])
 
-.controller('SiteEditCtrl', ['$scope', '$state', '$log', '$stateParams', 'Feedback', 'SiteService', 'DictService', 'WorkTimeService',\
+.controller('SiteEditCtrl',
+  ['$scope', '$state', '$log', '$stateParams', 'Feedback', 'SiteService', 'SiteDictService', 'SiteWorkTimeService',
     ($scope, $state, $log, $stateParams, feedback, siteService, dictService, workTimeService) ->
 
       $scope.site = $scope.cacheService.find $stateParams.sn, true
       $log.log "Initialized the Site Edit controller on: " + JSON.stringify($scope.site)
+      $scope.disabled = true
 
       promise = siteService.get({sn: $scope.site.sn}).$promise
       promise.then (data) ->
@@ -152,7 +155,7 @@ angular.module('System.Sites',
               $scope.workTime = workTime
 
       # 编辑页面提交
-      update = () ->
+      $scope.update = () ->
         $scope.submited = true
         site = $scope.formatData($scope.site, $scope.dictionary, $scope.workTime)
         siteService.update {sn: site.sn}, site, () ->
@@ -160,6 +163,4 @@ angular.module('System.Sites',
           $state.go "sites.list"
         , (resp) ->
           feedback.error("修改地点#{site.name}失败", resp);
-
-      $scope.update = update
   ])

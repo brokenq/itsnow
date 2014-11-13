@@ -1,10 +1,7 @@
--var disabled = false
-//- include the form mixins
-include /lib/mixins/form
 
 h2 新增 员工
 
-+form("newStaffForm")(ng-submit="create()")
+form.form-horizontal(name="newStaffForm", novalidate="novalidate", role="form", ng-submit="create()")
   include /msu/index/system/staffs/_form.jade
 
   +action_bar

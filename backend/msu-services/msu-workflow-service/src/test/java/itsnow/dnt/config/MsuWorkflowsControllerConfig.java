@@ -1,5 +1,6 @@
 package itsnow.dnt.config;
 
+import dnt.itsnow.api.ActivitiEngineService;
 import dnt.itsnow.service.CommonUserService;
 import dnt.itsnow.service.WorkflowService;
 import dnt.itsnow.test.config.ApplicationControllerConfig;
@@ -23,6 +24,11 @@ public class MsuWorkflowsControllerConfig extends ApplicationControllerConfig {
     @Qualifier("plainUserService")
     public CommonUserService commonUserService(){
         return EasyMock.createMock(CommonUserService.class);
+    }
+
+    @Bean
+    public ActivitiEngineService activitiEngineService(){
+        return EasyMock.createMock(ActivitiEngineService.class);
     }
 
     @Bean

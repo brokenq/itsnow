@@ -46,7 +46,7 @@ public class WorkflowRepositoryTest {
         workflow.setDictionary(dictionary);
 
         ActReProcdef actReProcdef = new ActReProcdef();
-        actReProcdef.setId_("1");
+        actReProcdef.setId("1");
         workflow.setActReProcdef(actReProcdef);
 
         ServiceItem serviceItem = new ServiceItem();
@@ -60,44 +60,44 @@ public class WorkflowRepositoryTest {
     @Test
     public void testDelete() throws Exception {
         String sn = "006";
-        Workflow workflow = repository.findBySn(sn,Workflow.PRIVATE_SERVICE_ITEM);
+        Workflow workflow = repository.findBySn(sn,Workflow.PUBLIC_SERVICE_ITEM);
         Assert.assertNotNull(workflow);
         repository.delete(sn);
-        Assert.assertNull(repository.findBySn(sn,Workflow.PRIVATE_SERVICE_ITEM));
+        Assert.assertNull(repository.findBySn(sn,Workflow.PUBLIC_SERVICE_ITEM));
     }
 
     @Test
     public void testUpdate() throws Exception {
         String sn = "003";
-        Workflow workflow = repository.findBySn(sn,Workflow.PRIVATE_SERVICE_ITEM);
+        Workflow workflow = repository.findBySn(sn,Workflow.PUBLIC_SERVICE_ITEM);
         repository.update(workflow);
         Assert.assertNotNull(workflow);
     }
 
     @Test
     public void testCount() throws Exception {
-        Assert.assertNotNull(repository.count(Workflow.PRIVATE_SERVICE_ITEM, ""));
+        Assert.assertNotNull(repository.count(Workflow.PUBLIC_SERVICE_ITEM, ""));
     }
 
     @Test
     public void testFind() throws Exception {
-        Assert.assertNotNull(repository.find(Workflow.PRIVATE_SERVICE_ITEM, "", pageRequest));
+        Assert.assertNotNull(repository.find(Workflow.PUBLIC_SERVICE_ITEM, "", pageRequest));
     }
 
     @Test
     public void testCountByKeyword() throws Exception {
-        Assert.assertNotNull(repository.count(Workflow.PRIVATE_SERVICE_ITEM, "工作"));
+        Assert.assertNotNull(repository.count(Workflow.PUBLIC_SERVICE_ITEM, "工作"));
     }
 
     @Test
     public void testFindByKeyword() throws Exception {
-        Assert.assertNotNull(repository.find(Workflow.PRIVATE_SERVICE_ITEM, "工作", pageRequest));
+        Assert.assertNotNull(repository.find(Workflow.PUBLIC_SERVICE_ITEM, "工作", pageRequest));
     }
 
     @Test
     public void testFindBySn() throws Exception {
-        Assert.assertNotNull(repository.findBySn("001", Workflow.PRIVATE_SERVICE_ITEM));
-        Assert.assertNull(repository.findBySn("800", Workflow.PRIVATE_SERVICE_ITEM));
+        Assert.assertNotNull(repository.findBySn("001", Workflow.PUBLIC_SERVICE_ITEM));
+        Assert.assertNull(repository.findBySn("800", Workflow.PUBLIC_SERVICE_ITEM));
     }
 
 }
