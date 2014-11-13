@@ -41,10 +41,11 @@ public interface ActivitiEngineService {
 
     /**
      * 根据流程定义key输出流程图
-      * @param processKey 流程定义key
+     * @param processKey 流程定义key
+     * @param instanceId 流程实例ID
      * @return  流程图输入流
      */
-    InputStream getImageById(String processKey);
+    InputStream getImageById(String processKey,String instanceId);
 
     /**
      * 获取当前流程定义的数量
@@ -79,9 +80,9 @@ public interface ActivitiEngineService {
 
     /**
      * 根据流程定义ID删除流程定义
-     * @param id    流程定义ID
+     * @param deployId    流程部署ID
      */
-    void deleteProcessDeploy(String id);
+    void deleteProcessDeploy(String deployId);
 
     /**
      * 删除所有已部署流程

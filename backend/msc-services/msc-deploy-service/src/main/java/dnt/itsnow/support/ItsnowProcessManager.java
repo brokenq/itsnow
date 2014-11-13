@@ -27,6 +27,10 @@ import java.util.List;
  */
 @Service
 public class ItsnowProcessManager extends ItsnowResourceManager implements ItsnowProcessService {
+
+    public static final String START = "start";
+    public static final String STOP = "stop";
+
     public static final String START_INVOCATION_ID = "startInvocationId";
     public static final String STOP_INVOCATION_ID = "stopInvocationId";
 
@@ -238,7 +242,8 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
     }
 
     @Override
-    public void waitStarted(String job) throws ItsnowProcessException{
+    public ItsnowProcess waitFinished(String name, String job) throws ItsnowProcessException{
+        String type = job.indexOf(START) == 0 ? START : job.indexOf(STOP) == 0 ? STOP : "";
         if( !invokeService.isFinished(job) ){
             try {
                 invokeService.waitJobFinished(job);
@@ -246,11 +251,15 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
                 throw new ItsnowProcessException("Error while wait the job " + job + " finished");
             }
         }
-        ItsnowProcess process = repository.findByConfiguration(START_INVOCATION_ID, job);
-        if(process == null) throw new ItsnowProcessException("The job id " + job + " is invalid");
-        if( process.getStatus() != ProcessStatus.Running){
+        ItsnowProcess process = repository.findByName(name);
+        if(process == null) throw new ItsnowProcessException("The process name " + name + " is invalid");
+        if( type.equals(START) && process.getStatus() != ProcessStatus.Running){
             throw new ItsnowProcessException("The process is not state in Running, but: " + process.getStatus());
         }
+        if( type.equals(STOP) && process.getStatus() != ProcessStatus.Stopped){
+            throw new ItsnowProcessException("The process is not state in Stopped, but: " + process.getStatus());
+        }
+        return process;
     }
 
     @Override
@@ -358,6 +367,5 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
     private String next(String value) {
         return String.valueOf(Integer.valueOf(value) + 1);
     }
-
 
 }

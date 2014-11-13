@@ -25,6 +25,7 @@ import java.util.List;
  * # PUT      /admin/api/accounts/{sn}                  update    修改账户，账户信息通过HTTP BODY提交
  * # DELETE   /admin/api/accounts/{sn}                  destroy   删除账户
  * # GET      /admin/api/accounts/list_no_process       listForNoProcess   列出没有分配进程的账户
+ * # GET      /admin/api/accounts/{sn}/resetNew         resetNew  重置账号状态为New  由于注册功能问题，集成测试无法注册新账号，所以此处增加resetNew方法，注册功能解决后即删除
  *
  * 由于我们的系统架构是由前端angular项目直接展示页面，不是server side script生成页面，所以，传统 Rails Resources路由中的
  *
@@ -153,4 +154,19 @@ public class MutableAccountsController extends SessionSupportController<Account>
             throw new WebClientSideException(HttpStatus.NOT_FOUND, "Can't find the account with sn = " + sn);
     }
 
+    /**
+     * <h2>重置账号状态为New  由于注册功能问题，集成测试无法注册新账号，所以此处增加resetNew方法，注册功能解决后即删除</h2>
+     * <p/>
+     * GET /admin/api/accounts/{sn}/resetNew
+     * @param sn
+     */
+    @RequestMapping("{sn}/resetNew")
+    public void resetNew(@PathVariable("sn") String sn){
+        logger.info("Resetting account status to New: sn = {}", sn);
+        try {
+            accountService.resetNew(sn);
+        } catch (AccountException e) {
+            throw new WebClientSideException(HttpStatus.INTERNAL_SERVER_ERROR, "Error to Reset account status to New: sn = " + sn);
+        }
+    }
 }

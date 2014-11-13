@@ -8,13 +8,11 @@ import dnt.itsnow.service.SystemInvocationTranslator;
 import dnt.itsnow.system.Process;
 import dnt.spring.Bean;
 import dnt.util.StringUtils;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.net.InetAddress;
-import java.util.Collection;
 import java.util.Properties;
 
 /**
@@ -293,7 +291,6 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
         props.setProperty("app.type", type);
         String version = process.getHost().getProperty(type + ".version");
         props.setProperty("app.version", version);
-        props.setProperty("app.fwkVersion", process.getHost().getProperty(type + ".fwkVersion", getMscFwkVersion()));
 
         props.setProperty("app.rmi.port", process.getProperty("rmi.port"));
         props.setProperty("app.jmx.port", process.getProperty("jmx.port"));
@@ -342,21 +339,6 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
         } catch (Exception ex){
             return "msc." + getAppDomain();
         }
-    }
-
-    private String getMscFwkVersion(){
-        File mscHome = new File(System.getProperty("app.home"));
-        Collection<File> jars =
-                FileUtils.listFiles(mscHome, new String[]{"jar"}, false);
-        if( jars.isEmpty() )
-        {
-            return "0.0.1";// an minimal one for testing
-            //throw new IllegalStateException("Can't auto detect the framework version in " + mscHome.getAbsolutePath());
-        }
-        File jar = jars.iterator().next();
-        String[] parts = jar.getName().split("-");
-        String versionAndSuffix = parts[parts.length-1];
-        return versionAndSuffix.split("\\.")[0];
     }
 
 }

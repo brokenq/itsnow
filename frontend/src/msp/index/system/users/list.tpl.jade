@@ -11,9 +11,9 @@ include /lib/mixins/list
   +page_table("usersTable","selection")
     +row("user", "username", "selection")(class="editable deletable")
       td(data-title="'姓名'")
-        a(ui-sref="user_view({name: '{{user.name}}'})") {{user | formatUser}}
+        a(ui-sref="users.view({name: '{{user.name}}'})") {{user | formatUser}}
       td(data-title="'所属帐户'")
-        a(ui-sref="account_view({sn: '{{user.account.sn}}'})") {{user.account.name}}
+        a(ui-sref="accounts.view({sn: '{{user.account.sn}}'})") {{user.account.name}}
       td(data-title="'邮箱'")
         a(href="mailto:{{user.email}}") {{user.email}}
       td(data-title="'电话'", align="right") {{user.phone}}

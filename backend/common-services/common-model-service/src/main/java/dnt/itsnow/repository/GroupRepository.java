@@ -2,6 +2,7 @@ package dnt.itsnow.repository;
 
 import dnt.itsnow.model.Group;
 import dnt.itsnow.model.GroupAuthority;
+import dnt.itsnow.model.GroupUser;
 import dnt.itsnow.platform.service.Pageable;
 import org.apache.ibatis.annotations.*;
 
@@ -15,8 +16,8 @@ import java.util.Set;
 public interface GroupRepository {
 
     @Options(useGeneratedKeys = true, keyColumn = "id")
-    @Insert("INSERT INTO groups (group_name, description, created_at, updated_at) VALUES " +
-            "(#{name}, #{description}, #{createdAt}, #{updatedAt})")
+    @Insert("INSERT INTO groups (sn,group_name, description, created_at, updated_at) VALUES " +
+            "(#{sn},#{name}, #{description}, #{createdAt}, #{updatedAt})")
     public void create(Group group);
 
     @Delete("DELETE FROM groups WHERE group_name = #{name}")
@@ -51,4 +52,6 @@ public interface GroupRepository {
             " GROUP BY ga.authority, g.group_name")
     Set<GroupAuthority> findUserAuthorities(@Param("username") String username);
 
+    @Insert("INSERT INTO group_members( username,group_id,group_name) VALUES (#{groupUser.user.username}, #{groupUser.group.id},#{groupUser.group.name})")
+    void createGroupAndUserRelation(@Param("groupUser")GroupUser groupUser);
 }

@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import java.util.HashMap;
+import java.util.List;
+
 import dnt.itsnow.platform.web.exception.WebClientSideException;
 import javax.validation.Valid;
 
@@ -143,7 +145,7 @@ public class UsersController extends SessionSupportController<User> {
             return new HashMap();
         }
     }
-    @RequestMapping(value = "checkEmail/{email}", method = RequestMethod.GET)
+    @RequestMapping(value = "checkEmail/{email:.+}", method = RequestMethod.GET)
     public HashMap checkUniqueEmail(@PathVariable("email") String email){
         logger.info("find byemail:{}",email);
         User user = userService.findByEmail(email);
@@ -153,6 +155,17 @@ public class UsersController extends SessionSupportController<User> {
         }else{
             return new HashMap();
         }
+    }
+    @RequestMapping(value = "getUsersByAccount", method = RequestMethod.GET)
+    public List<User> listUsers() {
+
+        logger.info("Listing users by current account:{}", mainAccount);
+
+        List<User> users =userService.findUsersByAccount(mainAccount);
+
+        logger.info("Listed  {}", users);
+
+        return users;
     }
 
     @BeforeFilter({"show", "update", "destroy"})

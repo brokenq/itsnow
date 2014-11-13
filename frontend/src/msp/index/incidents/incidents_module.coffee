@@ -8,66 +8,37 @@
      'Lib.Feedback'])
     .config ($stateProvider,$urlRouterProvider)->
       $stateProvider.state 'incidents',
-        url: '/incidents',
-        templateUrl: 'incidents/index.tpl.jade',
-        abstract:true,
-        controller: 'IncidentCtrl',
+        url: '/incidents'
+        templateUrl: 'incidents/index.tpl.jade'
+        abstract:true
+        controller: 'IncidentCtrl'
         data: {pageTitle: '故障管理', default: 'incidents.opened'}
       $stateProvider.state 'incidents.opened',
-        url: '/opened',
-        templateUrl: 'incidents/opened.tpl.jade',
-        controller: 'OpenedListCtrl',
+        url: '/opened'
+        templateUrl: 'incidents/opened.tpl.jade'
+        controller: 'OpenedListCtrl'
         data: {pageTitle: '我的故障单'}
       $stateProvider.state 'incidents.closed',
-        url: '/closed',
-        templateUrl: 'incidents/closed.tpl.jade',
-        controller: 'ClosedListCtrl',
+        url: '/closed'
+        templateUrl: 'incidents/closed.tpl.jade'
+        controller: 'ClosedListCtrl'
         data: {pageTitle: '已关闭故障单'}
       $stateProvider.state 'incidents.create',
-        url: '/create',
-        templateUrl: 'incidents/new.tpl.jade',
-        controller: 'IncidentCreateCtrl',
+        url: '/create'
+        templateUrl: 'incidents/new.tpl.jade'
+        controller: 'IncidentCreateCtrl'
         data: {pageTitle: '新建故障单'}
       $stateProvider.state 'incidents.view',
-        url: '/{mspInstanceId}/view',
-        templateUrl: 'incidents/view.tpl.jade',
-        controller: 'IncidentViewCtrl',
+        url: '/{mspInstanceId}/view'
+        templateUrl: 'incidents/view.tpl.jade'
+        controller: 'IncidentViewCtrl'
         data: {pageTitle: '查看故障单'}
       $stateProvider.state 'incidents.action',
-        url:'/{mspInstanceId}/action',
-        templateUrl:'incidents/action.tpl.jade',
-        controller:'IncidentProcessCtrl',
+        url:'/{mspInstanceId}/action'
+        templateUrl:'incidents/action.tpl.jade'
+        controller:'IncidentProcessCtrl'
         data: {pageTitle: '处理故障单'}
       $urlRouterProvider.when '/incidents', '/incidents/opened'
-
-
-    .factory('IncidentService', ['$resource', ($resource) ->
-      $resource("/api/msp-incidents/:mspInstanceId",{},
-        get: { method: 'GET', params: {mspInstanceId:'@mspInstanceId'}},
-        query: { method: 'GET', isArray: true})
-    ])
-
-    .factory('ClosedIncidentService', ['$resource', ($resource) ->
-      $resource("/api/msp-incidents/closed")
-    ])
-
-    #新建故障工单
-    .factory('IncidentStartService', ['$resource', ($resource) ->
-      $resource("/api/msp-incidents/start",{},
-        start: {method: 'POST'})
-    ])
-
-    #签收/分析/处理/关闭故障工单
-    .factory('IncidentActionService', ['$resource',($resource) ->
-      $resource('/api/msp-incidents/:mspInstanceId/:taskId/complete', {},
-        complete: {method: 'PUT',params:{mspInstanceId:'@mspInstanceId',taskId:'@taskId'}})
-    ])
-
-    #查询字典数据
-    .factory('DictionariesService', ['$resource', ($resource) ->
-      $resource("/api/dictionaries/code/:code",{code:'@code'},
-        query: { method: 'GET', isArray: true})
-    ])
 
     .filter('formatIncidentStatus', ()->
       return (status) ->
@@ -80,12 +51,13 @@
     )
     .filter('formatTime', () ->
       return (time) ->
-        date = new Date(time)
-        return date.toLocaleString();
+        if time?
+          date = new Date(time)
+          return date.toLocaleString();
     )
 
-    .controller('IncidentCtrl',['$scope', '$state', '$log', 'Feedback','DictionariesService','CacheService',
-      ($scope, $state, $log, feedback,dictService,CacheService) ->
+    .controller('IncidentCtrl',['$scope', '$state','$resource', '$log', 'Feedback','CacheService',
+      ($scope, $state, $resource,$log, feedback,CacheService) ->
         # frontend controller logic
         $log.log "Initialized the Incident controller"
         $scope.options =
@@ -95,55 +67,41 @@
         $scope.cacheService = new CacheService("mspInstanceId")
         $scope.submited = false
 
-        dictService.query({code:'inc002'},(data)->
+        $scope.Dictionary = $resource("api/dictionaries/code/:code", {})
+        $scope.Incident = $resource("/api/msp-incidents/:mspInstanceId", {})
+        $scope.ClosedIncidents = $resource("/api/msp-incidents/closed", {})
+        $scope.IncidentAction = $resource("/api/msp-incidents/:mspInstanceId/:taskId/complete", {},
+          complete: {method: 'PUT',params:{mspInstanceId:'@mspInstanceId',taskId:'@taskId'}})
+
+        Dictionary = $scope.Dictionary
+        Dictionary.query({code:'inc002'},(data)->
           $scope.impacts = data
         )
-        dictService.query({code:'inc001'},(data)->
+        Dictionary.query({code:'inc001'},(data)->
           $scope.priorities = data
         )
-        dictService.query({code:'inc004'},(data)->
+        Dictionary.query({code:'inc004'},(data)->
           $scope.urgencies = data
         )
-        dictService.query({code:'inc005'},(data)->
+        Dictionary.query({code:'inc005'},(data)->
           $scope.requestTypes = data
         )
 
     ])
 
   .controller('OpenedListCtrl',
-    ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'CommonService', 'IncidentService', 'Feedback',
-      ($scope, $location, $log, NgTable, ActionService, commonService, incidentService, feedback) ->
+    ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'CommonService', 'Feedback',
+      ($scope, $location, $log, NgTable, ActionService, commonService, feedback) ->
         $log.log "Initialized the Incident Opened list controller"
-
+        Incident = $scope.Incident
         args =
           total: 0,
           getData: ($defer, params) ->
             $location.search(params.url()); # put params in url
-            incidentService.query params.url(), (data, headers) ->
+            Incident.query params.url(), (data, headers) ->
               params.total headers('total')
               $scope.cacheService.cache data
-              $defer.resolve $scope.roles = data
-
-        $scope.selection = { checked: false, items: {} }
-        $scope.incidentsTable = new NgTable(angular.extend($scope.options, $location.search()), args);
-        $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.cacheService.find})
-        commonService.watchSelection($scope.selection, $scope.cacheService.records, "id")
-
-    ])
-
-  .controller('ClosedListCtrl',
-    ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'CommonService', 'ClosedIncidentService', 'Feedback',
-      ($scope, $location, $log, NgTable, ActionService, commonService, closedIncidentService, feedback) ->
-        $log.log "Initialized the Incident Closed list controller"
-
-        args =
-          total: 0,
-          getData: ($defer, params) ->
-            $location.search(params.url()); # put params in url
-            closedIncidentService.query params.url(), (data, headers) ->
-              params.total headers('total')
-              $scope.cacheService.cache data
-              $defer.resolve $scope.roles = data
+              $defer.resolve $scope.incidents = data
 
         $scope.selection = { checked: false, items: {} }
         $scope.incidentsTable = new NgTable(angular.extend($scope.options, $location.search()), args);
@@ -152,19 +110,41 @@
 
     ])
 
-    .controller('IncidentCreateCtrl',['$scope', '$state', '$log','IncidentStartService', 'Feedback','CacheService',
-      ($scope, $state, $log,incidentStartService, feedback,CacheService) ->
+  .controller('ClosedListCtrl',
+    ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'CommonService',
+      ($scope, $location, $log, NgTable, ActionService, commonService) ->
+        $log.log "Initialized the Incident Closed list controller"
+        ClosedIncidents = $scope.ClosedIncidents
+        args =
+          total: 0,
+          getData: ($defer, params) ->
+            $location.search(params.url()); # put params in url
+            ClosedIncidents.query params.url(), (data, headers) ->
+              params.total headers('total')
+              $scope.cacheService.cache data
+              $defer.resolve $scope.incidents = data
+
+        $scope.selection = { checked: false, items: {} }
+        $scope.incidentsTable = new NgTable(angular.extend($scope.options, $location.search()), args);
+        $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.cacheService.find})
+        commonService.watchSelection($scope.selection, $scope.cacheService.records, "mspInstanceId")
+
+    ])
+
+    .controller('IncidentCreateCtrl',['$scope', '$state', '$log', 'Feedback',
+      ($scope, $state, $log, feedback) ->
         $log.log "Initialized the Incident Create controller"
+        Incident = $scope.Incident
         $scope.incident = {number:'INC001',createdBy:'admin'}
         $scope.buttonLabel = "创建"
         $scope.create = ->
           $scope.submited = true
-          catalog = $scope.catalog
-          incidentStartService.save($scope.incident,->
-            feedback.success('创建故障单成功')
+          incident = new Incident $scope.incident
+          incident.$save(->
+            feedback.success("创建故障单成功")
             $state.go('incidents.opened')
           ,(resp)->
-            feedback.error('创建故障单失败',resp)
+            feedback.error("创建故障单失败",resp)
           )
     ])
 
@@ -174,9 +154,11 @@
         $scope.incident = $scope.cacheService.find $stateParams.mspInstanceId,true
     ])
 
-    .controller('IncidentProcessCtrl',['$scope', '$state','$stateParams', '$log', 'Feedback','IncidentService','IncidentActionService',
-      ($scope, $state,$stateParams, $log, feedback,incidentService,incidentActionService) ->
+    .controller('IncidentProcessCtrl',['$scope', '$state','$stateParams', '$log', 'Feedback',
+      ($scope, $state,$stateParams, $log, feedback) ->
         $log.log "Initialized the Incident Process controller"
+        IncidentAction = $scope.IncidentAction
+        Incident = $scope.Incident
         $scope.incident = $scope.cacheService.find $stateParams.mspInstanceId,true
         $scope.buttonLabel = "提交"
 
@@ -194,8 +176,9 @@
           else
             return '新建'
 
-        incidentService.get({mspInstanceId:$stateParams.mspInstanceId}, (data)->
+        Incident.get({mspInstanceId:$stateParams.mspInstanceId}, (data)->
           $scope.tasks = data
+          console.warn(data)
           for task in data.tasksList
             if(angular.isDefined(task.taskId))
               $scope.taskId = task.taskId
@@ -208,7 +191,9 @@
         )
 
         $scope.action = (incident)->
-          incidentActionService.complete({mspInstanceId:$scope.incident.mspInstanceId,taskId:$scope.taskId},$scope.incident,->
+          $scope.submited = true
+          incident = new IncidentAction $scope.incident
+          incident.$complete({mspInstanceId:$scope.incident.mspInstanceId,taskId:$scope.taskId},->
             feedback.success($scope.buttonLabel+"成功")
             $state.go("incidents.view",{mspInstanceId:$scope.incident.mspInstanceId})
           ,(resp)->

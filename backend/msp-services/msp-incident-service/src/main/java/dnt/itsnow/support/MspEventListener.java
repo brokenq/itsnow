@@ -67,7 +67,6 @@ public class MspEventListener extends Bean implements ActivitiEventListener, Mes
         if (task != null) {
             logger.debug("task id:{},name:{},desc:{},assignee:{},time:{}", task.getId(), task.getName(),
                          task.getDescription(), task.getAssignee(), task.getCreateTime());
-
             if (task.getDescription().equals(IncidentStatus.Assigned.toString())) {
                 this.processAssignedOrResolvedOrClosedEvent(incident,IncidentStatus.Assigned);
             }else if(task.getDescription().equals(IncidentStatus.Accepted.toString())) {
@@ -114,13 +113,16 @@ public class MspEventListener extends Bean implements ActivitiEventListener, Mes
         incident.setMspStatus(incidentStatus);
         incident.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         incident.setResponseTime(incident.getUpdatedAt());
+        incident.setAssignedUser(incident.getUpdatedBy());
+        engineServices.getTaskService().setAssignee(task.getId(), incident.getUpdatedBy());
         List<IdentityLink> identityLinkList = engineServices.getTaskService().getIdentityLinksForTask(task.getId());
         for(IdentityLink link:identityLinkList){
             logger.debug("task assign type:{} user:{} group:{}",link.getType(),link.getUserId(),link.getGroupId());
-            incident.setAssignedGroup(link.getGroupId());
+            if(link.getGroupId() != null && link.getGroupId() != "")
+                incident.setAssignedGroup(link.getGroupId());
+            if(link.getUserId() != null && link.getUserId() != "")
+                incident.setAssignedUser(link.getUserId());
         }
-        engineServices.getTaskService().setAssignee(task.getId(), incident.getUpdatedBy());
-
         //update incident
         mspIncidentRepository.update(incident);
         logger.debug("processed {} event",incidentStatus);

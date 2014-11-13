@@ -3,11 +3,13 @@
  */
 package dnt.itsnow.repository;
 
+import dnt.itsnow.model.Account;
 import dnt.itsnow.model.User;
 import dnt.itsnow.model.UserAuthority;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -23,4 +25,6 @@ public interface CommonUserRepository {
     Set<UserAuthority> findAuthorities(@Param("username") String username);
 
     User findByAccountSnAndUsername(@Param("accountSn") String accountSn, @Param("username")String username);
+    @Select("SELECT * FROM itsnow_msc.users WHERE account_id = #{mainAccount.id}")
+    List<User> findUsersByAccount(@Param("mainAccount")Account mainAccount);
 }

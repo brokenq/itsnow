@@ -124,7 +124,8 @@ public interface ItsnowProcessService {
 
     /**
      * <h2>等待进程启动</h2>
-     * @param job     进程启动invocationId
+     * @param name 进程名称
+     * @param job  进程启动invocationId
      */
-    void waitStarted(String job) throws ItsnowProcessException;
+    ItsnowProcess waitFinished(String name, String job) throws ItsnowProcessException;
 }

@@ -61,7 +61,7 @@ public class CommonServiceCatalogsController extends SessionSupportController<Pu
      *
      * @return 服务项列表
      */
-    @RequestMapping("/accounts")
+    @RequestMapping("/accounts/items")
     public List<PublicServiceItem> indexAccount(){
         return commonServiceItemService.findByAccountId(mainAccount.getId());
     }

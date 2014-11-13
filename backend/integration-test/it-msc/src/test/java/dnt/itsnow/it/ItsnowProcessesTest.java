@@ -126,35 +126,21 @@ public class ItsnowProcessesTest extends AbstractTest {
         }
     }
 
-    public void waitStarted(final ClientItsnowProcess process) throws Exception {
+    public ClientItsnowProcess waitFinished(final ClientItsnowProcess process, final String jobType) throws Exception {
         try {
-            withLoginUser(new Job() {
+            return withLoginUser(new Callback<ClientItsnowProcess>() {
                 @Override
-                public void perform(HttpHeaders headers) {
-                    HttpEntity request = new HttpEntity(headers);
-                    put("/admin/api/processes/wait/{job}", request, host.getConfiguration().getProperty("startInvocationId"));
+                public ClientItsnowProcess perform(HttpHeaders headers) {
+                    HttpEntity<ClientItsnowProcess> request = new HttpEntity<ClientItsnowProcess>(headers);
+                    String job = process.getConfiguration().getProperty(jobType);
+                    return getForObject("/admin/api/processes/{name}/wait_finished/{job}", ClientItsnowProcess.class, request, process.getName(), job);
                 }
             });
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
-
-//    @Test
-//    public void testStart() throws Exception {
-//        ClientItsnowProcess process = ShareDatas.process;
-//        start(process);
-//        ClientItsnowProcess showing = show(process);
-//        Assert.assertTrue(showing.getStatus() == ClientProcessStatus.Running);
-//    }
-//
-//    @Test
-//    public void testStop() throws Exception {
-//        ClientItsnowProcess process = ShareDatas.process;
-//        stop(process);
-//        ClientItsnowProcess showing = show(process);
-//        Assert.assertTrue(showing.getStatus() == ClientProcessStatus.Stopped);
-//    }
 
     @Test
     public void testIndex() throws Exception {
