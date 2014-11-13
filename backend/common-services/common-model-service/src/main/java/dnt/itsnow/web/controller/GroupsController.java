@@ -29,7 +29,7 @@ import javax.validation.Valid;
 public class GroupsController extends SessionSupportController<Group> {
 
     @Autowired
-    private GroupService service;
+    private GroupService groupService;
 
     private Group group;
 
@@ -46,7 +46,7 @@ public class GroupsController extends SessionSupportController<Group> {
 
         logger.debug("Listing Groups by keyword: {}", keyword);
 
-        indexPage = service.findAll(keyword, pageRequest);
+        indexPage = groupService.findAll(keyword, pageRequest);
 
         logger.debug("Listed  {}", indexPage);
         return indexPage;
@@ -78,7 +78,7 @@ public class GroupsController extends SessionSupportController<Group> {
         logger.info("Creating {}", group);
 
         try {
-            group = service.create(group);
+            group = groupService.create(group);
         } catch (GroupException e) {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
         } catch (Exception e) {
@@ -105,7 +105,7 @@ public class GroupsController extends SessionSupportController<Group> {
 
         this.group.apply(group);
         try {
-            this.group = service.update(this.group);
+            this.group = groupService.update(this.group);
         } catch (GroupException e) {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
         } catch (Exception e) {
@@ -130,7 +130,7 @@ public class GroupsController extends SessionSupportController<Group> {
         logger.warn("Deleting {}", group);
 
         try {
-            service.destroy(group);
+            groupService.destroy(group);
         } catch (GroupException e) {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
         } catch (Exception e) {
@@ -144,7 +144,7 @@ public class GroupsController extends SessionSupportController<Group> {
 
     @BeforeFilter({"show", "update", "destroy"})
     public void initGroup(@PathVariable("name") String name) {
-        this.group = service.findByName(name);
+        this.group = groupService.findByName(name);
     }
 
 }

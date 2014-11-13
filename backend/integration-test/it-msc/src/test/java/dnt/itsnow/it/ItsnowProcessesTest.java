@@ -126,18 +126,20 @@ public class ItsnowProcessesTest extends AbstractTest {
         }
     }
 
-    public void waitStarted(final ClientItsnowProcess process) throws Exception {
+    public ClientItsnowProcess waitStarted(final ClientItsnowProcess process) throws Exception {
         try {
-            withLoginUser(new Job() {
+            return withLoginUser(new Callback<ClientItsnowProcess>() {
                 @Override
-                public void perform(HttpHeaders headers) {
-                    HttpEntity request = new HttpEntity(headers);
-                    put("/admin/api/processes/wait/{job}", request, host.getConfiguration().getProperty("startInvocationId"));
+                public ClientItsnowProcess perform(HttpHeaders headers) {
+                    HttpEntity<ClientItsnowProcess> request = new HttpEntity<ClientItsnowProcess>(headers);
+                    String job = process.getConfiguration().getProperty("startInvocationId");
+                    return getForObject("/admin/api/processes/{name}/wait?job=" + job, ClientItsnowProcess.class, request, process.getName());
                 }
             });
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
 
 //    @Test

@@ -26,8 +26,7 @@ public class PrepareHostsTest extends AbstractTest{
         ClientItsnowHost host = hostsTest.create();
         Assert.assertNotNull(host);
 
-        hostsTest.waitHostCreation(host);
-        host = hostsTest.show(host);
+        host = hostsTest.waitHostCreation(host);
         Assert.assertTrue(host.getStatus() == ClientHostStatus.Running);
         ShareDatas.host = host;
     }

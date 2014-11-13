@@ -31,7 +31,7 @@ public class PrepareProcessesTest extends AbstractTest{
         Assert.assertNotNull(process);
 
         processesTest.start(process);
-        processesTest.waitStarted(process);
+        process = processesTest.waitStarted(process);
         Assert.assertTrue(process.getStatus() == ClientProcessStatus.Running);
         ShareDatas.process = process;
     }

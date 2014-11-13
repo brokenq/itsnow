@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * <h1>组管理业务实现类</h1>
@@ -22,17 +23,17 @@ import java.util.List;
 public class GroupManager extends Bean implements GroupService {
 
     @Autowired
-    private GroupRepository repository;
+    private GroupRepository groupRespository;
 
     @Override
     public Page<Group> findAll(String keyword, Pageable pageable) {
 
         logger.debug("Finding group by keyword: {}", keyword);
 
-        int total = repository.count(keyword);
+        int total = groupRespository.count(keyword);
         List<Group> groups = new ArrayList<Group>();
         if (total > 0) {
-            groups = repository.findAll(keyword, pageable);
+            groups = groupRespository.findAll(keyword, pageable);
         }
         DefaultPage<Group> page = new DefaultPage<Group>(groups, pageable, total);
 
@@ -46,7 +47,7 @@ public class GroupManager extends Bean implements GroupService {
 
         logger.debug("Finding group by name: {}", name);
 
-        Group group = repository.findByName(name);
+        Group group = groupRespository.findByName(name);
 
         logger.debug("Found   {}", group);
 
@@ -61,8 +62,10 @@ public class GroupManager extends Bean implements GroupService {
         if (group == null) {
             throw new GroupException("Group entry can not be empty.");
         }
+        group.setSn(UUID.randomUUID().toString().substring(0,8));
+        logger.info("group.sn is {}",group.getSn());
         group.creating();
-        repository.create(group);
+        groupRespository.create(group);
 
         logger.info("Created  {}", group);
 
@@ -78,7 +81,7 @@ public class GroupManager extends Bean implements GroupService {
             throw new GroupException("Group entry can not be empty.");
         }
         group.updating();
-        repository.update(group);
+        groupRespository.update(group);
 
         logger.info("Updated  {}", group);
 
@@ -93,9 +96,9 @@ public class GroupManager extends Bean implements GroupService {
         if (group == null) {
             throw new GroupException("Group entry can not be empty.");
         }
-        repository.deleteGroupAuthority(group.getId());
-        repository.deleteGroupMember(group.getId());
-        repository.delete(group.getName());
+        groupRespository.deleteGroupAuthority(group.getId());
+        groupRespository.deleteGroupMember(group.getId());
+        groupRespository.delete(group.getName());
 
         logger.warn("Deleted  {}", group);
 

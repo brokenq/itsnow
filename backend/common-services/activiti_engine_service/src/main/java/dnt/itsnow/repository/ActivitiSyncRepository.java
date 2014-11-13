@@ -4,7 +4,7 @@ import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 
 /**
- * Created by jacky on 2014/8/13.
+ * <h2>Activity Sync Repository</h2>
  */
 public interface ActivitiSyncRepository {
 

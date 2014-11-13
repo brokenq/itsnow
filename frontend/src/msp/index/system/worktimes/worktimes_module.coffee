@@ -27,6 +27,15 @@ angular.module('System.WorkTime',[])
     controller: 'WorkTimeEditCtrl',
     data: {pageTitle: '编辑时间'}
   $urlRouterProvider.when '/worktimes', '/worktimes/list'
+.factory('WorkTimeService', ['$resource', ($resource) ->
+      $resource("/api/work-times/:sn", {},
+        query: { method: 'GET', params: {keyword: '@keyword'}, isArray: true},
+        get: { method: 'GET', params: {sn: '@sn'}},
+        save: { method: 'POST'},
+        update: { method: 'PUT', params: {sn: '@sn'}},
+        remove: { method: 'DELETE', params: {sn: '@sn'}}
+      )
+    ])
 .controller('WorkTimeCtrl', ['$scope', '$resource','$state', 'Feedback', 'CacheService',\
     ($scope,$resource, $state, feedback, CacheService) ->
       $scope.init = ()->
@@ -71,11 +80,11 @@ angular.module('System.WorkTime',[])
      $scope.actionService = new ActionService {watch: $scope.selection.items, mapping: $scope.cacheService.find}
      $scope.destroy = (worktime) ->
        $scope.services.remove {sn: worktime.sn}, () ->
-         feedback.success "删除时间#{worktime.sn}成功"
+         feedback.success "删除时间#{worktime.name}成功"
          delete $scope.selection.items[worktime.sn]
          $scope.worktimesTable.reload()
        , (resp) ->
-         feedback.error("删除时间#{worktime.sn}失败", resp)
+         feedback.error("删除时间#{worktime.name}失败", resp)
 
      $scope.reload = ->
        $scope.worktimesTable.reload()

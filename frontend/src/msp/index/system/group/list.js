@@ -1,5 +1,5 @@
 // List System
-angular.module('System.Group', ['ngTable', 'ngResource'])
+angular.module('System.Group11', ['ngTable', 'ngResource'])
 
     .config(function ($stateProvider) {
         $stateProvider.state('group', {
