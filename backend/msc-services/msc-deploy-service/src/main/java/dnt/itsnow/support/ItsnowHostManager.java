@@ -197,7 +197,7 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
         return creating;
     }
 
-    public void waitHostCreation(Long hostId, String jobId) throws ItsnowHostException {
+    public ItsnowHost waitHostCreation(Long hostId, String jobId) throws ItsnowHostException {
         if( !invokeService.isFinished(jobId) ){
             try {
                 invokeService.waitJobFinished(jobId);
@@ -210,6 +210,7 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
         if( host.getStatus() != HostStatus.Running){
             throw new ItsnowHostException("The host is not state in Running, but: " + host.getStatus());
         }
+        return host;
     }
 
     @Override

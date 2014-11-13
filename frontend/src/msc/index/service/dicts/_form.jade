@@ -12,4 +12,4 @@ include /lib/mixins/form
 	+group("dict", "val", "值", "star", "值")
 		+input("dict", "val")(required)
 	+group("selectState", "", "是否开启", "", "")
-		select.form-control(ng-model="selectState", ng-options="data.name for data in statedatas", ng-init="selectState = statedatas[0]")
+		select.form-control(ng-model="selectState", ng-options="data.name for data in statedatas", ng-init="selectState = statedatas[1]")
