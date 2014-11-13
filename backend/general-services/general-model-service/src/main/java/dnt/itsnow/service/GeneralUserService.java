@@ -7,6 +7,8 @@ import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.platform.util.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by User on 2014/11/10.
  */
@@ -24,4 +26,6 @@ public interface GeneralUserService {
     void changePassword(String username, String newPassword);
 
     User findByEmail(String email);
+
+    List<User> findUsersByAccount(Account mainAccount);
 }

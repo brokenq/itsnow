@@ -2,6 +2,9 @@ package dnt.itsnow.support;
 
 import dnt.itsnow.exception.GroupException;
 import dnt.itsnow.model.Group;
+import dnt.itsnow.model.GroupUser;
+import dnt.itsnow.model.User;
+import dnt.itsnow.model.UserAuthority;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.platform.util.DefaultPage;
@@ -66,7 +69,15 @@ public class GroupManager extends Bean implements GroupService {
         logger.info("group.sn is {}",group.getSn());
         group.creating();
         groupRespository.create(group);
-
+        if (group.getUsers() != null) {
+            GroupUser groupUser;
+            for (User user : group.getUsers()) {
+                  groupUser=new GroupUser();
+                  groupUser.setUser(user);
+                  groupUser.setGroup(group);
+                groupRespository.createGroupAndUserRelation(groupUser);
+            }
+        }
         logger.info("Created  {}", group);
 
         return group;
@@ -82,7 +93,16 @@ public class GroupManager extends Bean implements GroupService {
         }
         group.updating();
         groupRespository.update(group);
-
+        if (group.getUsers() != null) {
+            groupRespository.deleteGroupMember(group.getId());
+            GroupUser groupUser;
+            for (User user : group.getUsers()) {
+                groupUser=new GroupUser();
+                groupUser.setUser(user);
+                groupUser.setGroup(group);
+                groupRespository.createGroupAndUserRelation(groupUser);
+            }
+        }
         logger.info("Updated  {}", group);
 
         return group;
