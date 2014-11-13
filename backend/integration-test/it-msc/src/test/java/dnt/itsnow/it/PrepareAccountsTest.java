@@ -11,6 +11,7 @@ import org.junit.Test;
 /**
  * Prepare Account Data
  */
+@Ignore
 public class PrepareAccountsTest extends AbstractTest{
 
     private AccountsTest accountsTest;
