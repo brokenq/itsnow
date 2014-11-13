@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 /**
  * 测试 process 管理
  */
-@Ignore
 public class ItsnowProcessesTest extends AbstractTest {
 
     private static ItsnowProcessesTest test;
@@ -126,14 +125,14 @@ public class ItsnowProcessesTest extends AbstractTest {
         }
     }
 
-    public ClientItsnowProcess waitStarted(final ClientItsnowProcess process) throws Exception {
+    public ClientItsnowProcess waitFinished(final ClientItsnowProcess process, final String jobType) throws Exception {
         try {
             return withLoginUser(new Callback<ClientItsnowProcess>() {
                 @Override
                 public ClientItsnowProcess perform(HttpHeaders headers) {
                     HttpEntity<ClientItsnowProcess> request = new HttpEntity<ClientItsnowProcess>(headers);
-                    String job = process.getConfiguration().getProperty("startInvocationId");
-                    return getForObject("/admin/api/processes/{name}/wait?job=" + job, ClientItsnowProcess.class, request, process.getName());
+                    String job = process.getConfiguration().getProperty(jobType);
+                    return getForObject("/admin/api/processes/{name}/wait_finished/{job}", ClientItsnowProcess.class, request, process.getName(), job);
                 }
             });
         } catch (Exception e) {
@@ -141,22 +140,6 @@ public class ItsnowProcessesTest extends AbstractTest {
         }
         return null;
     }
-
-//    @Test
-//    public void testStart() throws Exception {
-//        ClientItsnowProcess process = ShareDatas.process;
-//        start(process);
-//        ClientItsnowProcess showing = show(process);
-//        Assert.assertTrue(showing.getStatus() == ClientProcessStatus.Running);
-//    }
-//
-//    @Test
-//    public void testStop() throws Exception {
-//        ClientItsnowProcess process = ShareDatas.process;
-//        stop(process);
-//        ClientItsnowProcess showing = show(process);
-//        Assert.assertTrue(showing.getStatus() == ClientProcessStatus.Stopped);
-//    }
 
     @Test
     public void testIndex() throws Exception {

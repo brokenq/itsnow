@@ -309,6 +309,12 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService,Resou
     }
 
     @Override
+    public InputStream getProcessImage(String instanceId){
+
+        return activitiEngineService.getImageById(PROCESS_KEY,instanceId);
+    }
+
+    @Override
     public void setResourceLoader(ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
     }

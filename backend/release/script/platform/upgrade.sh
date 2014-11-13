@@ -90,13 +90,13 @@ mkdir -p $folder/logs $folder/tmp
 echo "Step 3,4 Creating new-$type"
 /bin/rm -rf $upgrading
 ln -s $itsnow_dir/$folder $itsnow_dir/$upgrading
+cp $current/.itsnow $upgrading
 
 echo "Step 5 configure the new-system with current .itsnow properties"
+cd $upgrading
+java -jar lib/dnt.itsnow.release-*.jar . .itsnow
 cd $itsnow_dir
-
-java -jar lib/dnt.itsnow.release.*.jar $upgrading .itsnow
-
-chmod +x $upgrading/bin/*.sh $upgrading/bin/itsnow-$type $upgrading/db/bin/migrate  $upgrading/script/*/*.sh
+chmod +x $upgrading/bin/*.sh $upgrading/bin/itsnow_$type $upgrading/db/bin/migrate  $upgrading/script/*/*.sh
 
 echo "Step 6 stop current system"
 cd $current

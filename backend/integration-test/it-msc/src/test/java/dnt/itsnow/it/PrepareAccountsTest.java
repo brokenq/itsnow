@@ -11,7 +11,6 @@ import org.junit.Test;
 /**
  * Prepare Account Data
  */
-@Ignore
 public class PrepareAccountsTest extends AbstractTest{
 
     private AccountsTest accountsTest;
@@ -29,10 +28,13 @@ public class PrepareAccountsTest extends AbstractTest{
         account.setSn("msp_test");
         account = accountsTest.show(account);
         Assert.assertNotNull(account);
+
+        accountsTest.resetNew(account);
+        account = accountsTest.show(account);
+        Assert.assertNotNull(account);
         Assert.assertTrue(account.getStatus() == ClientAccountStatus.New);
 
-        accountsTest.approve(account);
-        account = accountsTest.show(account);
+        account = accountsTest.approve(account);
         Assert.assertTrue(account.getStatus() == ClientAccountStatus.Valid);
         ShareDatas.account = account;
     }

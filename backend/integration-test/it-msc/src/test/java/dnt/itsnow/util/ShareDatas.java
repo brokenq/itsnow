@@ -9,6 +9,9 @@ import dnt.itsnow.model.ClientItsnowProcess;
  */
 public class ShareDatas {
 
+    public static final String PROCESS_START_INVOCATION_ID = "startInvocationId";
+    public static final String PROCESS_STOP_INVOCATION_ID = "stopInvocationId";
+
     public static ClientAccount account;
     public static ClientItsnowHost host;
     public static ClientItsnowProcess process;

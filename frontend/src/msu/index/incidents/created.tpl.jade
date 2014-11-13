@@ -13,6 +13,8 @@ include /lib/mixins/list
             td(data-title="'优先级'") {{incident.priority}}
             td(data-title="'故障描述'") {{incident.requestDescription}}
             td(data-title="'状态'") {{incident.msuStatus| formatIncidentStatus}}
+                a.pull-right(ng-if="incident.msuStatus !== 'Closed'",href="api/msu-incidents/{{incident.msuInstanceId}}/image",target="_blank")
+                    i.icon-cogs(class="green")
             td(data-title="'创建时间'") {{incident.createdAt | formatTime}}
             td(data-title="'关闭时间'") {{incident.closeTime | formatTime}}
             td(data-title="'服务商'") {{incident.mspAccountName}}
