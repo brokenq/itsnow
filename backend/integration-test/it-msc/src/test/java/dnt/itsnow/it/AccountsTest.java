@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 /**
  * 测试MSC帐户管理功能
  */
-@Ignore
 public class AccountsTest extends AbstractTest {
 
     private static AccountsTest test;
@@ -82,6 +81,20 @@ public class AccountsTest extends AbstractTest {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void resetNew(final ClientAccount account) throws Exception {
+        try {
+            withLoginUser(new Job() {
+                @Override
+                public void perform(HttpHeaders headers) {
+                    HttpEntity request = new HttpEntity(headers);
+                    put("/admin/api/accounts/{sn}/resetNew", request, account.getSn());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test

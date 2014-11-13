@@ -132,4 +132,9 @@ public class MutableAccountManager extends CommonAccountManager implements Mutab
         logger.debug("Found size of all accounts that haven't been assign process: {}", accounts.size());
         return accounts;
     }
+
+    @Override
+    public void resetNew(String sn) throws AccountException {
+        mutableRepository.resetNew(sn);
+    }
 }
