@@ -99,8 +99,8 @@ angular.module('MscIndex.Accounts', [])
         $scope.tableParams.reload()
 
   ])
-  .controller('AccountListCtrl', ['$scope', '$location', '$resource', '$timeout', 'ngTableParams', 'ActionService', 'CommonService',\
-                                  ($scope,   $location,   $resource,   $timeout,   NgTable,         ActionService,   commonService) ->
+  .controller('AccountListCtrl', ['$scope', '$location', '$resource', '$timeout', 'ngTableParams', 'ActionService', 'CommonService', 'SelectionService' ,\
+                                  ($scope,   $location,   $resource,   $timeout,   NgTable,         ActionService,   commonService,   SelectionService) ->
     console.log("Initialized the Account list controller")
     Accounts = $resource("/admin/api/accounts")
     args =
@@ -119,11 +119,13 @@ angular.module('MscIndex.Accounts', [])
             $defer.resolve($scope.accounts = data)
           , 500)
         )
-
-    $scope.selection = { 'checked': false, items: {} }
-    $scope.accountsTable = new NgTable(angular.extend($scope.options, $location.search()), args);
-    $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.cacheService.find})
-    commonService.watchSelection($scope.selection, $scope.cacheService.records, "sn")
+    $scope.accountsTable = new NgTable(angular.extend($scope.options, $location.search()), args)
+    $scope.selectionService = new SelectionService($scope.cacheService.records, "sn")
+    $scope.actionService = new ActionService {watch: $scope.selectionService.items, mapping: $scope.cacheService.find}
+#    $scope.selection = { 'checked': false, items: {} }
+#    $scope.accountsTable = new NgTable(angular.extend($scope.options, $location.search()), args);
+#    $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.cacheService.find})
+#    commonService.watchSelection($scope.selection, $scope.cacheService.records, "sn")
   ])
   .controller('AccountViewCtrl', ['$scope', '$stateParams', ($scope, $stateParams) ->
     account = $scope.cacheService.find $stateParams.sn, true
