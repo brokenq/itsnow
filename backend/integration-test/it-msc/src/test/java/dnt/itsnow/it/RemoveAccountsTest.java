@@ -9,6 +9,7 @@ import org.junit.Test;
 /**
  * Remove Account Data
  */
+@Ignore
 public class RemoveAccountsTest extends AbstractTest{
 
     private AccountsTest accountsTest;

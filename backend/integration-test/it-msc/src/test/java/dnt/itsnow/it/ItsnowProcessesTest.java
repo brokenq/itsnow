@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 /**
  * 测试 process 管理
  */
+@Ignore
 public class ItsnowProcessesTest extends AbstractTest {
 
     private static ItsnowProcessesTest test;

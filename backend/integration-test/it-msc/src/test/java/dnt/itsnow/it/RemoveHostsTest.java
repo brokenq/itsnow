@@ -9,6 +9,7 @@ import org.junit.Test;
 /**
  * Remove Host Data
  */
+@Ignore
 public class RemoveHostsTest extends AbstractTest{
 
     private ItsnowHostsTest hostsTest;
