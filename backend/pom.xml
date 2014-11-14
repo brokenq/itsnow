@@ -155,6 +155,16 @@
                 <artifactId>general-incident-service</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>dnt.itsnow</groupId>
+                <artifactId>general-service_catalog-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dnt.itsnow</groupId>
+                <artifactId>general-workflow-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
 
             <!--message-bus,redis,cache-service -->

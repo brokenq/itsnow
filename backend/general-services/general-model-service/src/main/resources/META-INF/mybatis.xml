@@ -6,10 +6,6 @@
         <typeAlias type="dnt.itsnow.model.WorkTime" alias="WorkTime"/>
         <typeAlias type="dnt.itsnow.model.Department" alias="Department"/>
         <typeAlias type="dnt.itsnow.model.SiteDept" alias="SiteDept"/>
-        <typeAlias type="dnt.itsnow.model.Workflow" alias="Workflow"/>
-        <typeAlias type="dnt.itsnow.model.ActReProcdef" alias="ActReProcdef"/>
-        <typeAlias type="dnt.itsnow.model.ActReDeployment" alias="ActReDeployment"/>
-        <typeAlias type="dnt.itsnow.model.ServiceItem" alias="ServiceItem"/>
         <typeAlias type="dnt.itsnow.model.Staff" alias="Staff"/>
         <typeAlias type="dnt.itsnow.model.Group" alias="Group"/>
     </typeAliases>

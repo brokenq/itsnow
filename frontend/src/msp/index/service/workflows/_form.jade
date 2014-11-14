@@ -4,7 +4,7 @@ include /lib/mixins/form
 +section("基本信息")
   +group("workflow", "name", "名称", "user", "流程名称")
     +text("workflow", "name")(required, ng-minlength="4", ng-maxlength="20",
-    ng-pattern='/^([a-zA-Z0-9]|_|\\-|\\.)+$/', ng-check="/api/msp-workflows/{0}/check", placeholder="流程名称", ng-disabled="disabled")
+    ng-pattern='/^([a-zA-Z0-9]|_|\\-|\\.)+$/', ng-check="/api/workflows/{0}/check", placeholder="流程名称", ng-disabled="disabled")
   +group("workflow", "dictionary", "类型", "", "此流程类型")
     select#workflow_dictionary.form-control(ng-model='dictionary', required, ng-options="dict.display for dict in dictionaries")
   +group("workflow", "service_catalog", "服务目录", "book", "流程所在的服务目录")

@@ -3,36 +3,32 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <packaging>pom</packaging>
+
     <parent>
         <groupId>dnt.itsnow</groupId>
-        <artifactId>repository</artifactId>
+        <artifactId>general-services</artifactId>
         <version>0.2.3-SNAPSHOT</version>
-        <relativePath>../repository/pom.xml</relativePath>
     </parent>
 
-    <artifactId>general-services</artifactId>
-    <name>General Managed Services</name>
+    <artifactId>general-workflow-service</artifactId>
+    <name>General Workflow Service</name>
     <description>
-        The general services are services shared between MSU and MSP.
-        They are not mandatory services like common ones.
-        They are optional to MSC at least.
+        General workflow service of MSU and MSP
     </description>
-
-    <modules>
-        <module>general-model-service</module>
-        <module>general-incident-service</module>
-        <module>general-service_catalog-service</module>
-        <module>general-workflow-service</module>
-    </modules>
-
     <dependencies>
         <dependency>
             <groupId>dnt.itsnow</groupId>
-            <artifactId>common-model-service</artifactId>
+            <artifactId>general-model-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dnt.itsnow</groupId>
+            <artifactId>activiti_engine_service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dnt.itsnow</groupId>
+            <artifactId>general-service_catalog-service</artifactId>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -41,14 +37,11 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Default-Config>A,D,W</Default-Config>
-                            <Service-Config>dnt.itsnow.config.DefaultGeneralServiceConfig</Service-Config>
+                            <Service-Config>dnt.itsnow.config.GeneralModelServiceConfig</Service-Config>
                         </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
-
 </project>

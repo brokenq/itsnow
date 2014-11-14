@@ -3,6 +3,8 @@
  */
 package dnt.itsnow.config;
 
+import dnt.itsnow.service.PrivateServiceCatalogService;
+import dnt.itsnow.service.PrivateServiceItemService;
 import org.springframework.web.client.RestOperations;
 
 /**
@@ -15,7 +17,8 @@ public class GeneralServiceCatalogServiceConfig extends DefaultGeneralServiceCon
         super.defineServices();
         //importService(CommonServiceCatalogService.class);
         importService(RestOperations.class);
-
+        exportService(PrivateServiceItemService.class);
+        exportService(PrivateServiceCatalogService.class);
     }
 
 }
