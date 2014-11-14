@@ -14,7 +14,7 @@ include /lib/mixins/list
                 td(data-title="'图标'")
                     img(ng-src="{{catalog.icon}}")
                 td(data-title="'编号'")
-                    a(ui-sref="catalog.view({sn:catalog.sn})"){{catalog.sn}}
+                    a(ui-sref="catalog.view({sn:catalog.sn})") {{catalog.sn}}
                 td(data-title="'标题'") {{catalog.title}}
                 td(data-title="'描述'") {{catalog.description}}
             tr(ng-repeat="item in catalog.items",value="{{item.sn}}",class="editable deletable item")
@@ -23,6 +23,6 @@ include /lib/mixins/list
                 td(data-title="'图标'")
                     img(ng-src="{{item.icon}}")
                 td(data-title="'编号'")
-                    a(ui-sref="catalog.item({sn:catalog.sn,isn:item.sn})"){{item.sn}}
+                    a(ui-sref="catalog.item({sn:catalog.sn,isn:item.sn})") {{item.sn}}
                 td(data-title="'标题'") {{item.title}}
                 td(data-title="'描述'") {{item.description}}
