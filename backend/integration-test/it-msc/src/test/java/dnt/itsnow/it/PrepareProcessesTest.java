@@ -5,13 +5,11 @@ import dnt.itsnow.model.ClientProcessStatus;
 import dnt.itsnow.util.ShareDatas;
 import junit.framework.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * Prepare Process Data
  */
-@Ignore
 public class PrepareProcessesTest extends AbstractTest{
 
     private ItsnowProcessesTest processesTest;

@@ -7,7 +7,6 @@ import dnt.itsnow.model.ClientAccount;
 import dnt.itsnow.model.ClientItsnowHost;
 import dnt.itsnow.model.ClientItsnowProcess;
 import junit.framework.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -16,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 /**
  * 测试 process 管理
  */
-@Ignore
 public class ItsnowProcessesTest extends AbstractTest {
 
     private static ItsnowProcessesTest test;

@@ -5,13 +5,11 @@ import dnt.itsnow.model.ClientAccountStatus;
 import dnt.itsnow.util.ShareDatas;
 import junit.framework.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * Prepare Account Data
  */
-@Ignore
 public class PrepareAccountsTest extends AbstractTest{
 
     private AccountsTest accountsTest;
@@ -26,7 +24,7 @@ public class PrepareAccountsTest extends AbstractTest{
 //        目前注册账号有问题，暂时使用show方法来获取account
 //        ClientAccount account = accountsTest.signUp();
         ClientAccount account = new ClientAccount();
-        account.setSn("msp_test");
+        account.setSn("msp_it_test");
         account = accountsTest.show(account);
         Assert.assertNotNull(account);
 

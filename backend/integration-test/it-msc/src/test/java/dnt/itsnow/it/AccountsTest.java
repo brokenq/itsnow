@@ -3,10 +3,8 @@ package dnt.itsnow.it;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dnt.itsnow.model.ClientAccount;
 import dnt.itsnow.model.ClientAccountRegistration;
-import dnt.itsnow.model.ClientItsnowHost;
 import dnt.itsnow.util.DeployFixture;
 import junit.framework.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -15,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 /**
  * 测试MSC帐户管理功能
  */
-@Ignore
 public class AccountsTest extends AbstractTest {
 
     private static AccountsTest test;

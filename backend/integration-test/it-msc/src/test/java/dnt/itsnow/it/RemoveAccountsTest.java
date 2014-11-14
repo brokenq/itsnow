@@ -1,15 +1,12 @@
 package dnt.itsnow.it;
 
 import dnt.itsnow.util.ShareDatas;
-import junit.framework.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * Remove Account Data
  */
-@Ignore
 public class RemoveAccountsTest extends AbstractTest{
 
     private AccountsTest accountsTest;

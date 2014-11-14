@@ -5,13 +5,11 @@ import dnt.itsnow.model.ClientItsnowHost;
 import dnt.itsnow.util.ShareDatas;
 import junit.framework.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * Prepare Host Data
  */
-@Ignore
 public class PrepareHostsTest extends AbstractTest{
 
     private ItsnowHostsTest hostsTest;
