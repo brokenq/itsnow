@@ -32,6 +32,11 @@ angular.module('MscIndex.Dict', [])
     return "有效" if input is "1"
     return "无效"
 )
+.filter('formatTime', ->
+  (time) ->
+    date = new Date(time)
+    return date.toLocaleString()
+)
 .controller('DictsCtrl', ['$scope', '$resource', '$state', 'Feedback', 'CacheService',\
                           ($scope,  $resource,  $state,    feedback,   CacheService) ->
       $scope.statedatas = [

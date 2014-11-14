@@ -95,3 +95,41 @@ angular.module('Lib.Commons', ['ngTable'])
 
 
   ])
+
+
+  .factory('SelectionService', [ '$rootScope', \
+                                 ($rootScope)->
+
+    class SelectionService
+      constructor: (@datas, @key) ->
+        @checked = false
+        @items = {}
+        @watch()
+
+      watch: ->
+        instance = this
+        $rootScope.$watch( ->
+          return  instance.checked
+        , (value)->         # watch for check all checkbox
+          angular.forEach instance.datas, (data)->
+            instance.items[data[instance.key]] = value if data[instance.key]?
+        )
+
+        $rootScope.$watchCollection( ->        # watch for check single checkbox
+          return instance.items
+        , ->
+          return if !instance.datas? or instance.datas.length is 0
+          checked = 0
+          unchecked = 0
+          total = instance.datas.length
+          angular.forEach instance.datas, (data)->
+            checked += instance.items[data[instance.key]] || 0
+            unchecked += !instance.items[data[instance.key]] || 0
+          instance.checked = (checked == total) if unchecked is 0 or checked is 0
+          $('#select_all').prop('indeterminate', (checked isnt 0 and unchecked isnt 0))
+        , true
+        )
+
+      #getItems : ->
+        #return @items
+  ])

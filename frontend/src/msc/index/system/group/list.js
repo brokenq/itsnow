@@ -2,7 +2,7 @@
 angular.module('System.Group', ['ngTable', 'ngResource'])
 
     .config(function ($stateProvider) {
-        $stateProvider.state('group', {
+        $stateProvider.state('system.group', {
             url: '/group',
             templateUrl: 'system/group/list.tpl.jade',
             data: {pageTitle: '组管理'}
@@ -10,12 +10,12 @@ angular.module('System.Group', ['ngTable', 'ngResource'])
     })
 
     .factory('GroupService', ['$resource', function ($resource) {
-        return $resource("/api/groups");
+        return $resource("/api/msc-groups");
     }
     ])
 
     .factory('GroupDetailService', ['$resource', function ($resource) {
-        return $resource("/api/groups/:name",{name:'@name'});
+        return $resource("/api/msc-groups/:name",{name:'@name'});
     }
     ])
 
