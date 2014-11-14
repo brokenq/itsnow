@@ -17,8 +17,8 @@ include /lib/mixins/list
       +drop_button("", "time", "加载备份", "", "", "")
       +drop_button("actionService.perform(destroy)", "trash", "删除", "1+", "", "deletable stopped")
 
-  +page_table("processesTable", "selection")
-    +row("process", "name", "selection")(class="editable deletable", ng-class="process.status.toLowerCase()")
+  +page_table("processesTable", "selectionService")
+    +row("process", "name", "selectionService")(class="editable deletable", ng-class="process.status.toLowerCase()")
       td(data-title="'进程标识'")
         a(ui-sref="processes.view(process)") {{process.name}}
       td(data-title="'企业名称'")

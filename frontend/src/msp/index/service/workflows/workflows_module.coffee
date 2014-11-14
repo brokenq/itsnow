@@ -29,7 +29,7 @@ angular.module('Service.Workflows', ['multi-select','angularFileUpload'])
   $urlRouterProvider.when '/workflows', '/workflows/list'
 
 .factory('WorkflowService', ['$resource', ($resource) ->
-    $resource("/api/msp-workflows/:sn", {},
+    $resource("/api/workflows/:sn", {},
       get: { method: 'GET', params: {sn: '@sn'}},
       save: { method: 'POST'},
       update: { method: 'PUT', params: {sn: '@sn'}},
@@ -79,6 +79,7 @@ angular.module('Service.Workflows', ['multi-select','angularFileUpload'])
         aWorkflow = workflow
         aWorkflow.dictionary = dictionary
         aWorkflow.serviceItem = selectedServiceItem(serviceCatalogs)
+        aWorkflow.serviceItemType = '0'
         delete aWorkflow.$promise;
         delete aWorkflow.$resolved;
         return aWorkflow
@@ -152,7 +153,7 @@ angular.module('Service.Workflows', ['multi-select','angularFileUpload'])
           return
 
         upload = $upload.upload({
-          url: '/api/msp-workflows/upload'
+          url: '/api/workflows/upload'
           method: "POST"
           file: $scope.selectedFiles[0]
         })
