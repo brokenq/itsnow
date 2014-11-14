@@ -27,12 +27,12 @@ mixin tables(icon,name,title,level,time,description)
   .col-md-offset-1.col-md-10
     table.table.table-striped.table-bordered.table-hover
       tr
-        th #{icon}
-        th #{name}
-        th #{title}
-        th #{level}
-        th #{time}
-        th(class="conth") #{description}
+        th(class="thNo") #{icon}
+        th(class="thNo") #{name}
+        th(class="thNo") #{title}
+        th(class="thNo") #{level}
+        th(class="thNo") #{time}
+        th(class="con") #{description}
       block
 .form-horizontal
   +blocks("子目录详情")
