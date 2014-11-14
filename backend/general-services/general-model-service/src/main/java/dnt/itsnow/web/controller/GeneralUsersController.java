@@ -138,7 +138,7 @@ public class GeneralUsersController extends SessionSupportController <User>{
             return new HashMap();
         }
     }
-    @RequestMapping(value = "checkEmail/{email}", method = RequestMethod.GET)
+    @RequestMapping(value = "checkEmail/{email:.+}", method = RequestMethod.GET)
     public HashMap checkUniqueEmail(@PathVariable("email") String email){
         User user = userService.findByEmail(email);
         if( user != null ){
