@@ -10,8 +10,8 @@ include /lib/mixins/list
     +more_buttons
       +drop_button("actionService.perform(destroy)", "trash", "删除", "1+", "", "deletable")
 
-  +page_table("schemasTable", "selection")
-    +row("schema", "id", "selection")(class="editable deletable")
+  +page_table("schemasTable", "selectionService")
+    +row("schema", "id", "selectionService")(class="editable deletable")
       td(data-title="'数据库'")
         a(ui-sref="schemas.view(schema)") {{schema.name}}
       td(data-title="'主机名'")
