@@ -79,7 +79,7 @@ angular.module('System.User',[])
       $scope.createview=true
       $scope.updateview=false
       $scope.create=() ->
-        $scope.services.save $scope.worktime, ->
+        $scope.services.save $scope.cuser, ->
           feedback.success "新建#{$scope.cuser.name}成功"
           $state.go "users.list"
         , (resp) ->

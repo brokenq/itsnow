@@ -1,3 +1,4 @@
+  # List catalogs
   angular.module('MscIndex.ServiceCatalog',
     ['ngTable',
      'ngResource',
@@ -78,6 +79,7 @@
         getData: ($defer, params) ->
           ServiceCatalog.query (data, headers) ->
             $timeout(->
+              #params.total(headers('total'))
               $scope.cacheService.cache data
               $defer.resolve($scope.catalogs = data)
               angular.forEach $scope.catalogs, (catalog)->

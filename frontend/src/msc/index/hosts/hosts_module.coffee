@@ -61,8 +61,8 @@ angular.module('MscIndex.Hosts', [])
         errCallback() if errCallback
   ])
 
-  .controller('HostListCtrl',['$scope', '$location', 'ngTableParams', 'ActionService', 'CommonService', \
-                              ($scope,   $location,   NgTable,         ActionService,   commonService)->
+  .controller('HostListCtrl',['$scope', '$location', 'ngTableParams', 'ActionService', 'CommonService', 'SelectionService', \
+                              ($scope,   $location,   NgTable,         ActionService,   commonService ,  SelectionService  )->
     console.log("Initialized the Host list controller")
     Hosts = $scope.services
     args =
@@ -73,10 +73,9 @@ angular.module('MscIndex.Hosts', [])
           params.total headers 'total'
           $defer.resolve $scope.hosts = datas; $scope.cacheService.cache datas
 
-    $scope.selection = {checked: false, items: {}}
-    $scope.hostsTable = new NgTable(angular.extend($scope.options, $location.search()), args);
-    commonService.watchSelection($scope.selection, $scope.cacheService.records, "id")
-    $scope.actionService = new ActionService {watch: $scope.selection.items, mapping: $scope.cacheService.find}
+    $scope.hostsTable = new NgTable(angular.extend($scope.options, $location.search()), args)
+    $scope.selectionService = new SelectionService($scope.cacheService.records, "id")
+    $scope.actionService = new ActionService {watch: $scope.selectionService.items, mapping: $scope.cacheService.find}
 
     $scope.destroy = (host)->
       $scope.execDestroy host, ->

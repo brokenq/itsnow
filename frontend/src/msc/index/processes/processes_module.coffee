@@ -91,8 +91,8 @@ angular.module('MscIndex.Processes', [])
 
   ])
 
-  .controller('ProcessListCtrl', ['$scope', '$location', 'ngTableParams', 'ActionService', 'Feedback', 'CommonService', \
-                                  ($scope,   $location,   NgTable,         ActionService,   feedback,   commonService)->
+  .controller('ProcessListCtrl', ['$scope', '$location', 'ngTableParams', 'ActionService', 'Feedback', 'SelectionService', \
+                                  ($scope,   $location,   NgTable,         ActionService,   feedback,   SelectionService)->
     console.log("Initialized the Process list controller")
     Processes = $scope.services
     args =
@@ -103,10 +103,9 @@ angular.module('MscIndex.Processes', [])
           params.total headers 'total'
           $defer.resolve $scope.processes = datas; $scope.cacheService.cache datas
 
-    $scope.selection = {checked: false, items: {}}
     $scope.processesTable = new NgTable(angular.extend($scope.options, $location.search()), args);
-    commonService.watchSelection($scope.selection, $scope.cacheService.records, "name")
-    $scope.actionService = new ActionService {watch: $scope.selection.items, mapping: $scope.cacheService.find}
+    $scope.selectionService = new SelectionService($scope.cacheService.records, "id")
+    $scope.actionService = new ActionService {watch: $scope.selectionService.items, mapping: $scope.cacheService.find}
 
     $scope.start = (process)->
       $scope.execStart process, ->

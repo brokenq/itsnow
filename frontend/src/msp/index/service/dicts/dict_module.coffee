@@ -113,6 +113,7 @@ angular.module('Service.Dict', [])
         , (resp) ->
           feedback.error("修改#{$scope.dict.sn}失败", resp);
   ])
+
 .controller('DictsViewCtrl', ['$scope', '$state', '$stateParams', 'Feedback',
     ($scope,   $state,    $stateParams,   feedback) ->
       sn = $stateParams.sn

@@ -1,3 +1,4 @@
+  # List catalogs
   angular.module('Service.Catalog',
     ['ngTable',
      'ngResource',
