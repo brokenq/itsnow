@@ -336,3 +336,35 @@ git@git.itsnow.com:insight/itsnow.git Rel-x.y.z 标签(tag)
 1. [msc-0.2.2](http://msc.itsnow.com/)
 2. [msu-0.2.2](http://msu.itsnow.com/)
 3. [msp-0.2.2](http://msp.itsnow.com/)
+
+0.2.3 发布说明
+=================
+
+1. 新增特性
+-----------
+
+1.   Frontend MSU,MSP故障流程流转
+2.   Frontend Host、Schema、Process模块功能测试、优化
+3.   Frontend MSC中MSU,MSP注册界面产品化
+4.   Backend  提供部署/卸载工作流的接口
+5.   Backend  流程状态显示
+6.   Backend  新建工作流，文件上传
+
+2. 问题修复
+-----------
+1 页面滚动条位置修改
+2 正确展示快捷菜单位置
+
+3. 交付物地址
+--------------
+
+1. [msc-0.2.3](http://ci.itsnow.com/repository/download/Itsnow_Sprint_Build_MSC/3832:id/msc-0.2.2.zip)
+2. [msp-0.2.3](http://ci.itsnow.com/repository/download/Itsnow_Sprint_Build_MSP/3833:id/msp-0.2.2.zip)
+3. [msu-0.2.3](http://ci.itsnow.com/repository/download/Itsnow_Sprint_Build_MSU/3834:id/msu-0.2.2.zip)
+
+4. 系统演示地址
+-----------
+
+1. [msc-0.2.3](http://msc.itsnow.com/)
+2. [msu-0.2.3](http://msu.itsnow.com/)
+3. [msp-0.2.3](http://msp.itsnow.com/)
