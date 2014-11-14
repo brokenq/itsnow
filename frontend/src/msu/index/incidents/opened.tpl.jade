@@ -11,8 +11,7 @@ include /lib/mixins/list
   +page_table("incidentsTable","selection")
     +row("incident", "msuInstanceId", "selection")(class="editable deletable")
         td(data-title="'故障单号'")
-            a(ui-sref="incidents.view(incident)"){{incident.number}}
-        td(data-title="'实例ID'") {{incident.msuInstanceId}}
+            a(ui-sref="incidents.view(incident)") {{incident.number}}
         td(data-title="'请求人'") {{incident.requesterName}}
         td(data-title="'分类'") {{incident.category}}
         td(data-title="'优先级'") {{incident.priority}}
