@@ -1,10 +1,10 @@
 //- include the form mixins
 include /lib/mixins/form
 //- this form need includer provide variable:
-    readonly : true | false
+    disabled : true | false
 +section("基本信息")
   +group("staff", "no", "工号", "user", "员工编号")
-    +input("staff", "no")(type="text", ng-disabled=disabled, required, ng-minlength="2", ng-maxlength="20",
+    +input("staff", "no")(type="text", ng-disabled="disabled", required, ng-minlength="2", ng-maxlength="20",
        ng-pattern='/^([a-zA-Z0-9]|_|\\-|\\.)+$/', ng-check="/api/staffs/check/{0}", placeholder="工号")
   +group("staff", "name", "员工名称", "user", "员工姓名")
     +input("staff", "name")(type="text", required, ng-minlength="2", ng-maxlength="20",
@@ -29,10 +29,10 @@ include /lib/mixins/form
   div#register(ng-show="checked")
     +group("staff_user", "name", "用户名", "user", "登录账号")
        +input("staff_user", "name")(type="text", ng-required="checked", ng-minlength="4", ng-maxlength="20",
-         ng-pattern='/^([a-zA-Z0-9]|_|\\-|\\.)+$/', ng-check="/api/roles/check/{0}", ng-disabled=disabled, placeholder="登录名")
+         ng-pattern='/^([a-zA-Z0-9]|_|\\-|\\.)+$/', ng-check="/api/roles/check/{0}", ng-disabled="disabled", placeholder="登录名")
     +group("staff_user", "password", "密码", "lock", "登录密码")
-       +input("staff_user", "password")(type="text", ng-required="checked", ng-minlength="4", ng-maxlength="20", ng-disabled=disabled)
+       +input("staff_user", "password")(type="text", ng-required="checked", ng-minlength="4", ng-maxlength="20", ng-disabled="disabled")
     +group("staff_user", "repeatPassword", "确认密码", "lock", "重复密码")
-       +input("staff_user", "repeatPassword")(type="text", ng-required="checked", ng-minlength="4", ng-maxlength="20", ng-disabled=disabled)
+       +input("staff_user", "repeatPassword")(type="text", ng-required="checked", ng-minlength="4", ng-maxlength="20", ng-disabled="disabled")
   +group("staff", "description", "描述", "edit", "员工描述")
     +area("staff", "description")(ng-maxlength="100", placeholder="描述文本")

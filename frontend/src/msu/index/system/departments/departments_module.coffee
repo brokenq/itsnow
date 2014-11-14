@@ -39,6 +39,10 @@ angular.module('System.Departments', ['multi-select'])
     )
   ])
 
+.factory('DepartmentSiteService', ['$resource', ($resource) ->
+    $resource("/api/sites")
+  ])
+
 # 过滤拼接地点后的最后一个逗号
 .filter('deptFilter', () ->
   (input) ->
@@ -49,12 +53,12 @@ angular.module('System.Departments', ['multi-select'])
     else '无'
 )
 
-.controller('DepartmentsCtrl', ['$scope', '$state', '$log', 'Feedback', 'CacheService',\
+.controller('DepartmentsCtrl', ['$scope', '$state', '$log', 'Feedback', 'CacheService',
     ($scope, $state, $log, feedback, CacheService) ->
       # frontend controller logic
       $log.log "Initialized the Departments controller"
       $scope.options =
-        page: 1, # show first page
+        page: 1    # show first page
         count: 100 # count per page
 
       $scope.cacheService = new CacheService("sn")
@@ -69,9 +73,9 @@ angular.module('System.Departments', ['multi-select'])
       # 获取下拉复选框选中的用户
       selectedSiteFun = (sites) ->
         selectedSites = []
-        for site in sites
+        for site in sites when sites?
           if site.ticked is true
-            mySite = {};
+            mySite = {}
             mySite.sn = site.sn
             selectedSites.push mySite
         return selectedSites
@@ -94,19 +98,19 @@ angular.module('System.Departments', ['multi-select'])
   ])
 
 .controller('DepartmentListCtrl',
-  ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'CommonService', 'DepartmentService', 'Feedback',\
+  ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'CommonService', 'DepartmentService', 'Feedback',
     ($scope, $location, $log, NgTable, ActionService, commonService, departmentService, feedback) ->
       $log.log "Initialized the Department list controller"
 
       args =
-        counts: [],          # hide page counts control
+        counts: [], # hide page counts control
         total: 0,
         getData: ($defer, params) ->
           $location.search(params.url()); # put params in url
           departmentService.query params.url(), (data, headers) ->
             params.total headers('total')
             $scope.cacheService.cache data
-            $defer.resolve $scope.departments = data
+            $defer.resolve data
 
       $scope.selection = { checked: false, items: {} }
       $scope.departmentsTable = new NgTable(angular.extend($scope.options, $location.search()), args);
@@ -114,7 +118,7 @@ angular.module('System.Departments', ['multi-select'])
       commonService.watchSelection($scope.selection, $scope.cacheService.records, "sn")
 
       $scope.destroy = (department) ->
-        departmentService.remove {sn: department.sn}, () ->
+        departmentService.remove department, () ->
           feedback.success "删除部门#{department.name}成功"
           delete $scope.selection.items[department.sn]
           $scope.departmentsTable.reload()
@@ -127,9 +131,11 @@ angular.module('System.Departments', ['multi-select'])
     $log.log "Initialized the Department View controller on: " + JSON.stringify($scope.department)
   ])
 
-.controller('DepartmentNewCtrl', ['$scope', '$state', '$log', 'Feedback', 'DepartmentService', 'SiteService',\
+.controller('DepartmentNewCtrl', ['$scope', '$state', '$log', 'Feedback', 'DepartmentService', 'DepartmentSiteService',
     ($scope, $state, $log, feedback, departmentService, siteService) ->
+
       $log.log "Initialized the Department New controller"
+      $scope.disabled = false
 
       siteService.query (data) ->
         $scope.sites = data
@@ -147,37 +153,38 @@ angular.module('System.Departments', ['multi-select'])
           feedback.error("新建部门#{department.name}失败", resp)
   ])
 
-.controller('DepartmentEditCtrl', ['$scope', '$state', '$log', '$stateParams', 'Feedback', 'DepartmentService', 'SiteService', \
+.controller('DepartmentEditCtrl',
+  ['$scope', '$state', '$log', '$stateParams', 'Feedback', 'DepartmentService', 'DepartmentSiteService',
     ($scope, $state, $log, $stateParams, feedback, departmentService, siteService) ->
 
       $scope.department = $scope.cacheService.find $stateParams.sn, true
       $log.log "Initialized the Department Edit controller on: " + JSON.stringify($scope.department)
+      $scope.disabled = true
 
-      departmentService.get({sn: $scope.department.sn}).$promise.then (data) ->
-        $scope.department = data;
+      siteService.query (data) ->
+        $scope.sites = data
+        for site in $scope.sites
+          for dept_site in $scope.department.sites
+            if site.sn == dept_site.sn
+              site.ticked = true
 
-        siteService.query (data) ->
-          $scope.sites = data
-          for site in $scope.sites
-            for dept_site in $scope.department.sites
-              if site.sn == dept_site.sn
-                site.ticked = true
-
-        departmentService.query {isTree: true}, (data) ->
-          $scope.parentDepartments = data
-          for parentDept, index in $scope.parentDepartments
-            if parentDept.id == $scope.department.parentId
-              parentDept.ticked = true
-            if parentDept.id == $scope.department.id
-              $scope.parentDepartments.splice(index,1);
+      departmentService.query {isTree: true}, (data) ->
+        $scope.parentDepartments = data
+        for parentDept, index in $scope.parentDepartments
+          if parentDept.id == $scope.department.parentId
+            parentDept.ticked = true
+          if parentDept.id == $scope.department.id
+            $scope.parentDepartments.splice(index, 1)
 
       # 编辑页面提交
       $scope.update = () ->
         $scope.submited = true
         department = $scope.formatData($scope.department, $scope.sites, $scope.parentDepartments)
-        departmentService.update {sn: department.sn}, department, () ->
+
+        departmentService.update(department, department, () ->
           feedback.success "修改部门#{department.name}成功"
           $state.go "departments.list"
         , (resp) ->
-          feedback.error("修改部门#{department.name}失败", resp);
+          feedback.error("修改部门#{department.name}失败", resp)
+        )
   ])

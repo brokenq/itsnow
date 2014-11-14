@@ -1,12 +1,4 @@
-angular.module('System.Roles',
-  ['ngTable',
-   'ngResource',
-   'ngSanitize',
-   'dnt.action.service',
-   'Lib.Commons',
-   'Lib.Utils',
-   'Lib.Feedback',
-   'multi-select'])
+angular.module('System.Roles', ['multi-select'])
 .config ($stateProvider, $urlRouterProvider)->
   $stateProvider.state 'roles',
     url: '/roles',
@@ -129,9 +121,11 @@ angular.module('System.Roles',
 
 .controller('RoleNewCtrl', ['$scope', '$state', '$log', 'Feedback', 'RoleService',
     ($scope, $state, $log, feedback, roleService) ->
-      $log.log "Initialized the Role New controller"
 
-      create = () ->
+      $log.log "Initialized the Role New controller"
+      $scope.disabled = false
+
+      $scope.create = () ->
         $scope.submited = true
         role = $scope.formatData($scope.role, $scope.users)
         roleService.save role, () ->
@@ -142,8 +136,6 @@ angular.module('System.Roles',
 
       roleService.getUsers (data) ->
         $scope.users = data
-
-      $scope.create = create
   ])
 
 .controller('RoleEditCtrl', ['$scope', '$state', '$log', '$stateParams', 'Feedback', 'RoleService',
@@ -151,9 +143,10 @@ angular.module('System.Roles',
 
       $scope.role = $scope.cacheService.find $stateParams.name, true
       $log.log "Initialized the Role Edit controller on: " + JSON.stringify($scope.role)
+      $scope.disabled = true
 
       # 编辑页面提交
-      update = () ->
+      $scope.update = () ->
         $scope.submited = true
         role = $scope.formatData($scope.role, $scope.users)
         roleService.update {name: role.name}, role, () ->
@@ -170,6 +163,4 @@ angular.module('System.Roles',
             for selectedUser in $scope.role.users
               if user.name == selectedUser.name
                 user.ticked = true
-
-      $scope.update = update
   ])

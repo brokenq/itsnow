@@ -190,7 +190,7 @@
     user-select: none;      
     border: 1px solid transparent;
     position: relative;
-    min-width:278px;
+    /*min-width:278px;*//*xsl remove style*/
     width: 100%;/*xsl add style*/
 }
 

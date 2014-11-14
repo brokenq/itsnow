@@ -1,12 +1,4 @@
-angular.module('System.Staffs',
-  ['ngTable',
-   'ngResource',
-   'ngSanitize',
-   'dnt.action.service',
-   'Lib.Commons',
-   'Lib.Utils',
-   'Lib.Feedback',
-   'multi-select'])
+angular.module('System.Staffs', ['multi-select'])
 .config ($stateProvider, $urlRouterProvider)->
   $stateProvider.state 'staffs',
     url: '/staffs',
@@ -45,11 +37,14 @@ angular.module('System.Staffs',
       remove: { method: 'DELETE', params: {no: '@no'}}
     )
   ])
-#.factory('StaffService', ['$resource', ($resource) ->
-#    $resource("/api/staffs/:no", {no: '@no'},
-#      query: { method: 'GET', params: {keyword: '@keyword'}, isArray: true},
-#    )
-#  ])
+
+.factory('StaffSiteService', ['$resource', ($resource) ->
+    $resource("/api/sites")
+  ])
+
+.factory('StaffDepartmentService', ['$resource', ($resource) ->
+    $resource("/api/departments")
+  ])
 
 .filter('staffStatusFilter', () ->
   (input) ->
@@ -122,9 +117,11 @@ angular.module('System.Staffs',
     $log.log "Initialized the Staff View controller on: " + JSON.stringify($scope.staff)
   ])
 
-.controller('StaffNewCtrl', ['$scope', '$state', '$log', 'Feedback', 'StaffService', 'SiteService', 'DepartmentService',
+.controller('StaffNewCtrl', ['$scope', '$state', '$log', 'Feedback', 'StaffService', 'StaffSiteService', 'StaffDepartmentService',
     ($scope, $state, $log, feedback, staffService, siteService, departmentService) ->
+
       $log.log "Initialized the Staff New controller"
+      $scope.disabled = false
 
       siteService.query (data) ->
         $scope.sites = data
@@ -143,18 +140,17 @@ angular.module('System.Staffs',
   ])
 
 .controller('StaffEditCtrl',
-  ['$scope', '$state', '$log', '$stateParams', 'Feedback', 'StaffService', 'SiteService', 'DepartmentService',
+  ['$scope', '$state', '$log', '$stateParams', 'Feedback', 'StaffService', 'StaffSiteService', 'StaffDepartmentService',
     ($scope, $state, $log, $stateParams, feedback, staffService, siteService, departmentService) ->
+
       $scope.staff = $scope.cacheService.find $stateParams.no, true
       $log.log "Initialized the Staff Edit controller on: " + JSON.stringify($scope.staff)
+      $scope.disabled = true
 
       staffService.get({no: $scope.staff.no}).$promise.then (data) ->
         $scope.staff = data
         siteService.query (data) ->
           $scope.sites = data
-#          for site in $scope.sites
-#            if site.sn == $scope.staff.site.sn
-#              $scope.site = site
           $scope.site = site for site in $scope.sites when site.sn == $scope.staff.site.sn
         departmentService.query (data) ->
           $scope.departments = data

@@ -23,6 +23,7 @@ public class RemoveProcessesTest extends AbstractTest{
     @Test
     public void testRemoveProcess() throws Exception {
         processesTest.stop(ShareDatas.process);
+        ShareDatas.process = processesTest.show(ShareDatas.process);
         ShareDatas.process = processesTest.waitFinished(ShareDatas.process, ShareDatas.PROCESS_STOP_INVOCATION_ID);
         Assert.assertTrue(ShareDatas.process.getStatus() == ClientProcessStatus.Stopped);
         processesTest.destroy(ShareDatas.process);
