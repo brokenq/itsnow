@@ -27,9 +27,4 @@ cd $folder/$instance
 
 $launcher stop
 
-if [ $? -gt 0 ]; then
-  echo "Can't Stop the $instance, please check the status"
-  exit $?
-fi
 
-bin/check.sh logs/wrapper.log $instance
