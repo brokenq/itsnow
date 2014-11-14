@@ -49,12 +49,20 @@ angular.module('System.WorkTime',[])
             { id: "7" ,name: "星期天", checked:false}
         ]
       $scope.init()
-      $scope.toggleCheckboxes=(workdate) ->
+      $scope.toggleCheckboxesParent=(workdate) ->
         workdate.checked=!(workdate.checked)
-      console.log("Initialized the worktimes controller")
+      $scope.getWorkNames=(workdates) ->
+        ids =[]
+        names =[]
+        for workdate in workdates
+          if workdate.checked is true
+            ids.push workdate.id
+            names.push workdate.name
+        return names.join()
+
       $scope.options = {page: 1, count: 10}
       $scope.cacheService = new CacheService "sn"
-      $scope.services = $resource("/api/work-times/:sn", {},
+      $scope.services = $resource("/api/work_times/:sn", {},
         get: { method: 'GET', params: {sn: '@sn'}},
         save: { method: 'POST'},
         update: { method: 'PUT', params: {sn: '@sn'}},
@@ -62,62 +70,52 @@ angular.module('System.WorkTime',[])
         remove: { method: 'DELETE', params: {sn: '@sn'}}
       )
 
+      $scope.Destroy = (worktime,succCallback, errCallback) ->
+        $scope.services.remove {sn: worktime.sn}, () ->
+          feedback.success "删除时间#{worktime.name}成功"
+          succCallback() if succCallback
+        , (resp) ->
+          errCallback() if errCallback
+          feedback.error("删除时间#{worktime.name}失败", resp)
+
   ])
 .controller('WorkTimeListCtrl',['$scope', '$location', 'ngTableParams', 'ActionService','CommonService','Feedback',\
                                ($scope,     $location,  NgTable,         ActionService,   commonService,feedback) ->
      console.log("Initialized the worktime list controller")
-     Worktimes= $scope.services
      args =
        total: 0
        getData: ($defer, params)->
          $location.search params.url() # put params in url
-         Worktimes.query params.url(), (datas, headers) ->
+         $scope.services.query params.url(), (datas, headers) ->
           params.total headers 'total'
           $defer.resolve $scope.worktimes = datas; $scope.cacheService.cache datas
      $scope.selection = {checked: false, items: {}}
      $scope.worktimesTable = new NgTable(angular.extend($scope.options, $location.search()), args);
      commonService.watchSelection($scope.selection, $scope.cacheService.records, "sn")
      $scope.actionService = new ActionService {watch: $scope.selection.items, mapping: $scope.cacheService.find}
-     $scope.destroy = (worktime) ->
-       $scope.services.remove {sn: worktime.sn}, () ->
-         feedback.success "删除时间#{worktime.name}成功"
-         delete $scope.selection.items[worktime.sn]
-         $scope.worktimesTable.reload()
-       , (resp) ->
-         feedback.error("删除时间#{worktime.name}失败", resp)
-
      $scope.reload = ->
        $scope.worktimesTable.reload()
-
+     $scope.destroy = (worktime)->
+       $scope.Destroy worktime, ->
+         delete $scope.selection.items[worktime.sn]
+         $scope.reload()
 ])
 
 .controller('WorkTimeNewCtrl', ['$scope', '$state', 'Feedback',\
                                ($scope,     $state,   feedback) ->
-    ids =[]
-    names =[]
-    $scope.toggleCheckboxes=(workdate) ->
-      workdate.checked=!(workdate.checked)
-    for workdate in $scope.workdates
-      if workdate.checked is true
-        ids.push workdate.id
-        names.push workdate.name
+    $scope.toggleCheckboxes=(workdate)->
+      $scope.toggleCheckboxesParent(workdate)
     $scope.create=() ->
-      for workdate in $scope.workdates
-        if workdate.checked is true
-          ids.push workdate.id
-          names.push workdate.name
+      $scope.worktime.name=$scope.getWorkNames($scope.workdates)
       $scope.init()
-      $scope.worktime.name=names.join()
-      $scope.worktime.$promise = `undefined`
-      $scope.worktime.$resolved = `undefined`
       $scope.services.save $scope.worktime, ->
+        feedback.success "新建#{$scope.worktime.name}成功"
         $state.go "worktimes.list"
-        return
+      , (resp) ->
+        feedback.error("新建#{$scope.worktime.name}失败", resp)
 ])
 .controller('WorkTimeEditCtrl', ['$scope', '$state', '$stateParams', 'Feedback',\
                                 ($scope,    $state,   $stateParams,  feedback) ->
-      ids =[]
-      names =[]
       $scope.selectWorkDates=[]
       sn=$stateParams.sn
       $scope.services.get
@@ -129,13 +127,11 @@ angular.module('System.WorkTime',[])
           if($scope.selectWorkDates.indexOf(workdate.name)>-1)
            workdate.checked=true
         return
+      $scope.toggleCheckboxes=(workdate)->
+        $scope.toggleCheckboxesParent(workdate)
       $scope.update=() ->
-        for workdate in $scope.workdates
-          if workdate.checked is true
-            ids.push workdate.id
-            names.push workdate.name
+        $scope.worktime.name=$scope.getWorkNames($scope.workdates)
         $scope.init()
-        $scope.worktime.name=names.join()
         $scope.worktime.$promise = `undefined`
         $scope.worktime.$resolved = `undefined`
         $scope.services.update {sn: sn}, $scope.worktime, () ->

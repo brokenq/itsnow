@@ -14,6 +14,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * <h1>根据UserRepository加载用户的UserDetailsService</h1>
  * 有两种方式实现这个 grouped 扩展
@@ -65,5 +67,10 @@ public class GroupedUserDetailsService implements CommonUserService, UserDetails
     @Override
     public Account findAccountById(Long accountId) {
         return userService.findAccountById(accountId);
+    }
+
+    @Override
+    public List<User> findUsersByAccount(Account mainAccount) {
+        return null;
     }
 }

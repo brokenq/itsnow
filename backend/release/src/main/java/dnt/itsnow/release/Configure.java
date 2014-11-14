@@ -65,7 +65,9 @@ public class Configure {
             }
             FileUtils.forceMkdir(destFile.getParentFile());
             interpolate(template, variables, destFile);
+            System.out.println("Interpolated " + template.getName() + " => " + destFile.getAbsolutePath());
         }
+        System.out.println("Configure " + appFolder.getAbsolutePath() + " with " + varsFile.getAbsolutePath());
     }
 
     private static String interpolate(String originString, Properties variables) {
@@ -126,8 +128,7 @@ public class Configure {
     }
 
     private static String getFwkVersion(File appFolder){
-        Collection<File> jars =
-                FileUtils.listFiles(appFolder, new String[]{"jar"}, false);
+        Collection<File> jars = FileUtils.listFiles(new File(appFolder, "boot"), new String[]{"jar"}, false);
         if( jars.isEmpty() )
         {
             return "0.0.1";// an minimal one for testing
@@ -136,6 +137,6 @@ public class Configure {
         File jar = jars.iterator().next();
         String[] parts = jar.getName().split("-");
         String versionAndSuffix = parts[parts.length-1];
-        return versionAndSuffix.split("\\.")[0];
+        return versionAndSuffix.substring(0, versionAndSuffix.length() - 4);// 0.2.1-SNAPSHOT.jar
     }
 }

@@ -200,7 +200,7 @@ public class DepartmentManager extends Bean implements DepartmentService {
 
     private void loop(List<Department> treeTable, Department dept, String symbol) {
         if (dept.getChildren() != null && dept.getChildren().size() > 0) {
-            symbol += "──";
+            symbol += "--";
             for (Department child : dept.getChildren()) {
                 child.setName(symbol + child.getName());
                 treeTable.add(child);

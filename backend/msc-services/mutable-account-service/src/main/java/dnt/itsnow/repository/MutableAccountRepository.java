@@ -100,4 +100,13 @@ public interface MutableAccountRepository extends CommonAccountRepository {
      */
     @Select("SELECT a.* FROM accounts a LEFT JOIN itsnow_processes p ON a.id = p.account_id WHERE p.id IS NULL")
     List<Account> findAllForNoProcess();
+
+    /**
+     * <h2>重置账号状态为New  由于注册功能问题，集成测试无法注册新账号，所以此处增加resetNew方法，注册功能解决后即删除</h2>
+     * @param sn
+     */
+    @Update("UPDATE itsnow_msc.accounts SET " +
+            " status = 'New' " +
+            " WHERE sn = #{sn}")
+    void resetNew(@Param("sn") String sn);
 }

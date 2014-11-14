@@ -10,7 +10,7 @@ angular.module('System.WorkTime', ['ngTable', 'ngResource'])
     })
 
     .factory('WorkTimeService', ['$resource', function ($resource) {
-        return $resource(" /api/work-times/:sn",{},{
+        return $resource(" /api/work_times/:sn",{},{
             get: { method: 'GET', params: {sn: '@sn'}},
             save: { method: 'POST'},
             update: { method: 'PUT', params: {sn: '@sn'}},
