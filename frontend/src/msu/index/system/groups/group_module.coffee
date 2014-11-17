@@ -98,7 +98,7 @@ angular.module('System.Group', [])
   ])
 .controller('GroupsNewCtrl', ['$http','$scope', '$state', 'Feedback',
     ($http,$scope, $state, feedback) ->
-      $http.get("/admin/api/users/getUsersByAccount").success (users)-> $scope.users = users
+      $http.get("/api/users/getUsersByAccount").success (users)-> $scope.users = users
       $scope.create = () ->
         $scope.formatGroup($scope.group,$scope.users)
         $scope.services.save $scope.group, ->
