@@ -16,11 +16,11 @@ import javax.validation.Valid;
  * <h1>MSP/MSU用户控制器</h1>
  * <pre>
  * <b>HTTP   URI                           方法      含义  </b>
- *  GET      /admin/api/users              index     列出该账户下所有的用户，并且分页显示
- *  GET      /admin/api/users /{username}  show      列出特定的用户记录
- *  POST     /admin/api/users              create    创建一个用户
- *  PUT      /admin/api/users/{username}   update    修改一个指定的用户
- *  DELETE   /admin/api/users/{username}   delete    删除指定的用户记录
+ *  GET      /api/users              index     列出该账户下所有的用户，并且分页显示
+ *  GET      /api/users /{username}  show      列出特定的用户记录
+ *  POST     /api/users              create    创建一个用户
+ *  PUT      /api/users/{username}   update    修改一个指定的用户
+ *  DELETE   /api/users/{username}   delete    删除指定的用户记录
  * </pre>
  */
 @RestController
