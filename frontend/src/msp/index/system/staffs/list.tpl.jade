@@ -10,8 +10,8 @@ include /lib/mixins/list
     +more_buttons
       +drop_button("actionService.perform(destroy)", "trash", "删除", "1+", "", "deletable")
 
-  +page_table("staffsTable","selection")
-    +row("staff", "no", "selection")(class="editable deletable")
+  +page_table("staffsTable","selectionService")
+    +row("staff", "no", "selectionService")(class="editable deletable")
       td(data-title="'工号'") {{staff.no}}
       td(data-title="'名称'")
         a(ui-sref="staffs.view(staff)") {{staff.name}}

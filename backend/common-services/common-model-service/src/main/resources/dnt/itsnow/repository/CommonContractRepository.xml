@@ -3,6 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="dnt.itsnow.repository.CommonContractRepository">
+
     <select id="findAll" resultType="Contract">
         SELECT * FROM itsnow_msc.contracts
         <if test="pageable.sort != null">
@@ -13,6 +14,7 @@
             <if test="pageable.pageSize > 0">, #{pageable.pageSize}</if>
         </trim>
     </select>
+
     <select id="findAllByMsuAccountId" resultType="Contract">
         SELECT * FROM itsnow_msc.contracts
         WHERE (msu_account_id = #{msuId})
@@ -24,6 +26,7 @@
             <if test="pageable.pageSize > 0">, #{pageable.pageSize}</if>
         </trim>
     </select>
+
     <select id="findAllByMspAccountId" resultType="Contract">
         SELECT * FROM itsnow_msc.contracts
         <where>
@@ -41,28 +44,25 @@
         </trim>
     </select>
 
-    <select id="findBySn" resultMap="contractWithDetails">
-      SELECT c.*,
-          d.id          AS detail_id,
-          d.contract_id AS detail_contract_id,
-          d.item_id     AS detail_item_id,
-          d.title       AS detail_title,
-          d.brief       AS detail_brief,
-          d.description AS detail_description,
-          d.icon        AS detail_icon,
-          d.created_at  AS detail_created_at,
-          d.updated_at  AS detail_updated_at
-      FROM itsnow_msc.contracts c
-      LEFT OUTER JOIN itsnow_msc.contract_details d ON c.id = d.contract_id
-      WHERE c.sn = #{sn}
+    <select id="findBySn" resultMap="contractResult">
+      SELECT c.* FROM itsnow_msc.contracts c WHERE c.sn = #{sn}
     </select>
 
-    <resultMap id="contractWithDetails" type="Contract" autoMapping="true">
+    <select id="selectDetails" resultMap="detailResult">
+        SELECT d.*
+        FROM   itsnow_msc.contracts c
+        LEFT JOIN itsnow_msc.contract_details d
+        ON c.id = d.contract_id
+        WHERE c.id = #{id}
+    </select>
+
+    <resultMap id="contractResult" type="Contract" autoMapping="true">
         <id property="id" column="id"/>
-        <collection property="details"
-                    ofType="ContractDetail"
-                    columnPrefix="detail_"
-                    autoMapping="true"/>
+        <collection property="details" ofType="ContractDetail" column="id" select="selectDetails"/>
+    </resultMap>
+
+    <resultMap id="detailResult" type="ContractDetail" autoMapping="true">
+        <id property="id" column="id"/>
     </resultMap>
 
 </mapper>

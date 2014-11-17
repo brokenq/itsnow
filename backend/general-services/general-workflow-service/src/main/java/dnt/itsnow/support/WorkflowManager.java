@@ -91,12 +91,12 @@ public class WorkflowManager extends Bean implements WorkflowService {
         int total = repository.count(keyword);
         List<Workflow> workflows = new ArrayList<Workflow>();
         if (total > 0) {
-            workflows = repository.find(keyword, pageable);
+            workflows = repository.findAll(keyword, pageable);
             for (Workflow workflow : workflows) {
                 if (Workflow.PUBLIC_SERVICE_ITEM.equals(workflow.getServiceItemType())) {
-                    workflow.setServiceItem(commonServiceItemService.findBySn(workflow.getSn()));
+                    workflow.setServiceItem(commonServiceItemService.findBySn(workflow.getServiceItemSn()));
                 } else if (Workflow.PRIVATE_SERVICE_ITEM.equals(workflow.getServiceItemType())) {
-                    workflow.setServiceItem(privateServiceItemService.findPrivateBySn(workflow.getSn()));
+                    workflow.setServiceItem(privateServiceItemService.findPrivateBySn(workflow.getServiceItemSn()));
                 }
             }
         }
@@ -116,9 +116,9 @@ public class WorkflowManager extends Bean implements WorkflowService {
         Workflow workflow = repository.findBySn(sn);
 
         if (null!=workflow && Workflow.PUBLIC_SERVICE_ITEM.equals(workflow.getServiceItemType())) {
-            workflow.setServiceItem(commonServiceItemService.findBySn(workflow.getSn()));
+            workflow.setServiceItem(commonServiceItemService.findBySn(workflow.getServiceItemSn()));
         } else if (null!=workflow && Workflow.PRIVATE_SERVICE_ITEM.equals(workflow.getServiceItemType())) {
-            workflow.setServiceItem(privateServiceItemService.findPrivateBySn(workflow.getSn()));
+            workflow.setServiceItem(privateServiceItemService.findPrivateBySn(workflow.getServiceItemSn()));
         }
 
         logger.debug("Found   {}", workflow);
