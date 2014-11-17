@@ -131,9 +131,7 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
             // 1. 生成需要部署的msc/msu的目录(做好各种link/配置文件copy工作)
             @Override
             public int perform(Process process) throws Exception {
-                return process.run("./prepare_" +
-                                "" +
-                                "deploy.sh",
+                return process.run("./prepare_deploy.sh",
                                    itsnowProcess.getAccount().getType().toLowerCase(),
                                    itsnowProcess.getName());
             }
