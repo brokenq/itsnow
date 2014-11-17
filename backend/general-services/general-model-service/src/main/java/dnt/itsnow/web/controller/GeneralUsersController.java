@@ -24,7 +24,7 @@ import javax.validation.Valid;
  * </pre>
  */
 @RestController
-@RequestMapping("/admin/api/users")
+@RequestMapping("/api/users")
 public class GeneralUsersController extends SessionSupportController <User>{
     @Autowired
     GeneralUserService userService;

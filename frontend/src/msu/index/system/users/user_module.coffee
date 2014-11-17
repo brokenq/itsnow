@@ -37,7 +37,7 @@ angular.module('System.User',[])
       $scope.statedatas=[{name:"启用",state:true},{name:"停用",state:false}]
       $scope.options = {page: 1, count: 10}
       $scope.cacheService = new CacheService "username"
-      $scope.services = $resource("/admin/api/users/:username", {},
+      $scope.services = $resource("/api/users/:username", {},
         get: { method: 'GET', params: {username: '@username'}},
         save: { method: 'POST'},
         update: { method: 'PUT', params: {username: '@username'}},
