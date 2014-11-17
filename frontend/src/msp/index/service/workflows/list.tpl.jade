@@ -10,8 +10,8 @@ include /lib/mixins/list
     +more_buttons
       +drop_button("actionService.perform(destroy)", "trash", "删除", "1+", "", "deletable")
 
-  +page_table("workflowsTable","selection")
-    +row("workflow", "sn", "selection")(class="editable deletable")
+  +page_table("workflowsTable","selectionService")
+    +row("workflow", "sn", "selectionService")(class="editable deletable")
       td(data-title="'名称'")
         a(ui-sref="workflows.view(workflow)") {{workflow.name}}
       td(data-title="'类型'") {{workflow.dictionary.display}}

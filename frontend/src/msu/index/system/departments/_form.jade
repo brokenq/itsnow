@@ -7,7 +7,7 @@ include /lib/mixins/form
     div#department_parent(multi-select, selection-mode="single", input-model="parentDepartments", button-label="name",
     item-label="name", tick-property="ticked")
   +group("department", "name", "部门名称", "user", "不可重复")
-    +input("department", "name")(type="text", required, ng-minlength="4", ng-maxlength="20", ng-disabled="disabled",
+    +input("department", "name")(type="text", required, ng-minlength="2", ng-maxlength="20", ng-disabled="disabled",
     ng-pattern='/^[\u4e00-\u9fa5_a-zA-Z0-9\\-\\.]+$/',ng-check="/api/departments/check/{0}", placeholder="部门名称")
   +group("department", "site", "地点", "user", "可多选")
     div#department_site(multi-select, input-model="sites", button-label="name", item-label="name", tick-property="ticked")
