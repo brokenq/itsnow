@@ -6,7 +6,6 @@ package dnt.itsnow.platform.support;
 import dnt.itsnow.platform.web.SpringMvcConfig;
 import dnt.itsnow.platform.web.security.DelegateSecurityConfigurer;
 import dnt.itsnow.platform.web.security.SpringSecurityConfig;
-import org.fusesource.scalate.servlet.TemplateEngineFilter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
@@ -32,7 +31,6 @@ import java.util.Set;
 
 public class SpringMvcLoader extends AbstractAnnotationConfigDispatcherServletInitializer
         implements ServletContextListener{
-    public static final String SERVLET_VIEW_NAME = "ItsNow.ScalateView";
     public static final String METHOD_FILTER_NAME = "ItsNow.httpMethodFilter";
 
     ApplicationContext applicationContext;
@@ -47,7 +45,6 @@ public class SpringMvcLoader extends AbstractAnnotationConfigDispatcherServletIn
         super.onStartup(servletContext);
         registerSecurityFilter(servletContext);
         registerHttpMethodFilter(servletContext);
-        registerScalateFilter(servletContext);
     }
 
     @Override
@@ -111,11 +108,6 @@ public class SpringMvcLoader extends AbstractAnnotationConfigDispatcherServletIn
     private void registerHttpMethodFilter(ServletContext servletContext) {
         FilterRegistration.Dynamic registration = servletContext.addFilter(METHOD_FILTER_NAME, HiddenHttpMethodFilter.class);
         registration.addMappingForServletNames(getDispatcherTypes(), false, getServletName());
-    }
-
-    protected void registerScalateFilter(ServletContext servletContext) {
-        FilterRegistration.Dynamic registration = servletContext.addFilter(SERVLET_VIEW_NAME, TemplateEngineFilter.class);
-        registration.addMappingForUrlPatterns(getDispatcherTypes(), false, "/views/*");
     }
 
     EnumSet<DispatcherType> getDispatcherTypes() {
