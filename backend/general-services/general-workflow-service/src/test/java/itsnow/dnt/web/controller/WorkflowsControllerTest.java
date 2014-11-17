@@ -20,6 +20,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -105,7 +106,7 @@ public class WorkflowsControllerTest extends SessionSupportedControllerTest {
     @Test
     @Ignore
     public void testCreate() throws Exception {
-        expect(workflowService.create(anyObject(Workflow.class))).andReturn(workflow);
+        expect(workflowService.create(anyObject(Workflow.class), anyObject(InputStream.class))).andReturn(workflow);
         replay(workflowService);
 
         MockHttpServletRequestBuilder request = post("/api/workflows").content(requestJson());

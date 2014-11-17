@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -42,12 +43,10 @@ public class WorkflowsController extends SessionSupportController<Workflow> {
     @Autowired
     private WorkflowService service;
 
-    @Autowired
-    private ActivitiEngineService activitiEngineService;
-
     private Workflow workflow;
 
-    private MultipartFile file;
+    private File workflowFile;
+
 
     /**
      * <h2>获得所有的工作流配置信息列表</h2>
@@ -95,23 +94,11 @@ public class WorkflowsController extends SessionSupportController<Workflow> {
         logger.info("Creating {}", workflow);
 
         try {
-            // 部署单个流程定义
-            InputStream inputStream = file.getInputStream();
-            Deployment deployment = activitiEngineService.deploySingleProcess(inputStream, workflow.getName(), workflow.getDictionary().getVal());
-            if (deployment == null) {
-                throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, "Workflow create failed");
-            }
-            ProcessDefinition processDefinition = activitiEngineService.getProcessDefinitionByDeploymentId(deployment.getId());
-            ActReProcdef actReProcdef = new ActReProcdef();
-            actReProcdef.setId(processDefinition.getId());
-            workflow.setActReProcdef(actReProcdef);
+            InputStream in = new FileInputStream(workflowFile);
+            workflow = service.create(workflow, in);
         } catch (IOException e) {
-            throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, "Workflow create failed, " + e.getMessage());
-        }
-
-        try {
-            workflow = service.create(workflow);
-        } catch (WorkflowException e) {
+            throw new WebClientSideException(HttpStatus.BAD_REQUEST, "File read failed, "+e.getMessage());
+        }  catch (WorkflowException e) {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
         } catch (Exception e) {
             throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
@@ -133,23 +120,22 @@ public class WorkflowsController extends SessionSupportController<Workflow> {
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public void upload(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
 
-        this.file = file;
-        logger.info("Uploading {}", this.file);
-        logger.info("Get class name {}", Workflow.class);
+        logger.info("Uploading {}", file);
 
         try {
             // 判断文件是否为空
-            if (!this.file.isEmpty()) {
+            if (!file.isEmpty()) {
                 // 文件保存路径
                 String filePath = request.getSession().getServletContext().getRealPath("/") + "/data/"
-                        + this.file.getOriginalFilename();
+                        + file.getOriginalFilename();
                 File workflowFile = new File(filePath);
-                // 若路径不存在都自动创建
+                // 若路径不存在则自动创建
                 if (!workflowFile.exists()) {
                     workflowFile.mkdirs();
                 }
                 // 转存文件
-                this.file.transferTo(workflowFile);
+                file.transferTo(workflowFile);
+                this.workflowFile = workflowFile;
             }
         } catch (IOException e) {
             throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, "Upload file failed cause by network, " + e.getMessage());
@@ -159,7 +145,7 @@ public class WorkflowsController extends SessionSupportController<Workflow> {
             throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
         }
 
-        logger.info("Uploaded  {}", this.file);
+        logger.info("Uploaded  {}", this.workflowFile);
     }
 
     /**
@@ -198,12 +184,6 @@ public class WorkflowsController extends SessionSupportController<Workflow> {
     public void destroy() {
 
         logger.warn("Deleting {}", workflow);
-
-        try {
-            activitiEngineService.deleteProcessDeploy(workflow.getActReDeployment().getId());
-        } catch (Exception e) {
-            throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, "Destroy workflow failed, "+e.getMessage());
-        }
 
         try {
             service.destroy(workflow);
