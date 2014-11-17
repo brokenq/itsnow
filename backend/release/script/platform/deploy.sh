@@ -33,7 +33,7 @@ fi
 target=$folder/$instance
 cd $target
 
-java -jar lib/dnt.itsnow.release.*.jar $target .itsnow
+java -jar lib/dnt.itsnow.release-*.jar $target .itsnow
 
 echo "$folder/$instance deployed"
 

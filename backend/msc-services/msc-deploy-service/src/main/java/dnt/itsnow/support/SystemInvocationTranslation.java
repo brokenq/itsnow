@@ -131,7 +131,9 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
             // 1. 生成需要部署的msc/msu的目录(做好各种link/配置文件copy工作)
             @Override
             public int perform(Process process) throws Exception {
-                return process.run("./prepare_deploy.sh",
+                return process.run("./prepare_" +
+                                "" +
+                                "deploy.sh",
                                    itsnowProcess.getAccount().getType().toLowerCase(),
                                    itsnowProcess.getName());
             }
@@ -313,6 +315,8 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
         // http jmx redis configuration is stored in process configuration
         // 有个 redis.local.index(1-31) 必须与其他实例不一样
         //props.setProperty("http.port", process.getProperty("http.port"));
+        props.setProperty("redis.global.host", process.getHost().getName());
+        props.setProperty("redis.global.port", "6379");
         return createProperties(props, "app.vars");
     }
 
