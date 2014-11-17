@@ -26,3 +26,5 @@ fi
 cd $folder/$instance
 
 $launcher stop
+
+

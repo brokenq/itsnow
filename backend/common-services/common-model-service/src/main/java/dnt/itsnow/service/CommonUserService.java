@@ -7,7 +7,7 @@ import dnt.itsnow.model.Account;
 import dnt.itsnow.model.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
+import java.util.List;
 /** <h1>关于用户的服务</h1> */
 public interface CommonUserService extends UserDetailsService {
 
@@ -54,4 +54,6 @@ public interface CommonUserService extends UserDetailsService {
     boolean challenge(String username, String password);
 
     Account findAccountById(Long accountId);
+
+    List<User> findUsersByAccount(Account mainAccount);
 }

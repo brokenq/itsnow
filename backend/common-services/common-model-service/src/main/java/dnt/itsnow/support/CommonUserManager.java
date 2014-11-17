@@ -16,6 +16,8 @@ import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * <h1>Basic User Service</h1>
  *
@@ -24,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service("plainUserService")
 @Transactional
 public class CommonUserManager extends Bean implements CommonUserService {
+
     @Autowired
     CommonUserRepository repository;
     @Autowired
@@ -78,5 +81,10 @@ public class CommonUserManager extends Bean implements CommonUserService {
     @SuppressWarnings("UnusedDeclaration")
     protected String encode(String rawPassword){
         return passwordEncoder.encode(rawPassword);
+    }
+
+    @Override
+    public List<User> findUsersByAccount(Account mainAccount) {
+        return repository.findUsersByAccount(mainAccount);
     }
 }

@@ -40,4 +40,8 @@ public interface MutableAccountService extends CommonAccountService {
      */
     List<Account> findAllForNoProcess();
 
+    /**
+     * <h2>重置账号状态为New  由于注册功能问题，集成测试无法注册新账号，所以此处增加resetNew方法，注册功能解决后即删除</h2>
+     */
+    void resetNew(String sn) throws AccountException;
 }

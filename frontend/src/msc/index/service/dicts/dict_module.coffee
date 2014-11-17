@@ -32,6 +32,11 @@ angular.module('MscIndex.Dict', [])
     return "有效" if input is "1"
     return "无效"
 )
+.filter('formatTime', ->
+  (time) ->
+    date = new Date(time)
+    return date.toLocaleString()
+)
 .controller('DictsCtrl', ['$scope', '$resource', '$state', 'Feedback', 'CacheService',\
                           ($scope,  $resource,  $state,    feedback,   CacheService) ->
       $scope.statedatas = [
@@ -46,11 +51,11 @@ angular.module('MscIndex.Dict', [])
       )
       $scope.Destroy = (dict,succCallback, errCallback) ->
         $scope.services.remove {sn: dict.sn}, () ->
-          feedback.success "删除时间#{dict.name}成功"
+          feedback.success "删除#{dict.name}成功"
           succCallback() if succCallback
         , (resp) ->
           errCallback() if errCallback
-          feedback.error("删除时间#{dict.name}失败", resp)
+          feedback.error("删除#{dict.name}失败", resp)
   ])
 .controller('DictsListCtrl', ['$scope', '$location', 'ngTableParams', 'ActionService', 'CommonService', 'Feedback',\
                             ($scope, $location, NgTable, ActionService, commonService, feedback) ->
@@ -79,8 +84,10 @@ angular.module('MscIndex.Dict', [])
       $scope.create = () ->
         $scope.dict.state = $scope.selectState.value;
         $scope.services.save $scope.dict, ->
+          feedback.success "新建#{$scope.dict.name}成功"
           $state.go "dicts.list"
-          return
+        , (resp) ->
+          feedback.error("新建角色#{$scope.dict.name}失败", resp)
   ])
 .controller('DictsEditCtrl', ['$scope', '$state', '$stateParams', 'Feedback',\
                             ($scope,   $state,    $stateParams,   feedback) ->
@@ -103,4 +110,12 @@ angular.module('MscIndex.Dict', [])
           $state.go "dicts.list"
         , (resp) ->
           feedback.error("修改#{$scope.dict.sn}失败", resp);
+  ])
+.controller('DictsViewCtrl', ['$scope', '$state', '$stateParams', 'Feedback',
+    ($scope,   $state,    $stateParams,   feedback) ->
+      sn = $stateParams.sn
+      $scope.services.get
+        sn: sn
+      , (data) ->
+        $scope.dict = data
   ])

@@ -1,9 +1,6 @@
--var disabled = true
-//- include the form mixins
-include /lib/mixins/form
 h2 编辑 员工
 
-+form("editStaffForm")(ng-submit="update()")
+form.form-horizontal(name="editStaffForm", novalidate="novalidate", role="form", ng-submit="update()")
   include /msp/index/system/staffs/_form.jade
 
   +action_bar

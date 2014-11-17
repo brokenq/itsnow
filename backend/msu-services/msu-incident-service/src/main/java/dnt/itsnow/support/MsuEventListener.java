@@ -80,6 +80,7 @@ public class MsuEventListener extends Bean implements ActivitiEventListener, Mes
             logger.debug("task assign type:{} user:{} group:{}",link.getType(),link.getUserId(),link.getGroupId());
             incident.setAssignedGroup(link.getGroupId());
         }
+        incident.setAssignedUser(incident.getUpdatedBy());
         engineServices.getTaskService().setAssignee(task.getId(), incident.getUpdatedBy());
         //update incident
         repository.update(incident);

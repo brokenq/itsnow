@@ -126,13 +126,14 @@ public class ItsnowProcessesTest extends AbstractTest {
         }
     }
 
-    public ClientItsnowProcess waitFinished(final ClientItsnowProcess process, final String job) throws Exception {
+    public ClientItsnowProcess waitFinished(final ClientItsnowProcess process, final String jobType) throws Exception {
         try {
             return withLoginUser(new Callback<ClientItsnowProcess>() {
                 @Override
                 public ClientItsnowProcess perform(HttpHeaders headers) {
                     HttpEntity<ClientItsnowProcess> request = new HttpEntity<ClientItsnowProcess>(headers);
-                    return getForObject("/admin/api/processes/{name}/wait_finished/job", ClientItsnowProcess.class, request, process.getName(), job);
+                    String job = process.getConfiguration().getProperty(jobType);
+                    return getForObject("/admin/api/processes/{name}/wait_finished/{job}", ClientItsnowProcess.class, request, process.getName(), job);
                 }
             });
         } catch (Exception e) {

@@ -1,11 +1,4 @@
-angular.module('MscIndex.Contracts',
-  ['ngTable',
-   'ngResource',
-   'ngSanitize',
-   'dnt.action.service',
-   'Lib.Commons',
-   'Lib.Utils',
-   'Lib.Feedback'])
+angular.module('MspIndex.Contracts', [])
 .config ($stateProvider, $urlRouterProvider)->
   $stateProvider.state 'contracts',
     url: '/contracts',
@@ -57,7 +50,7 @@ angular.module('MscIndex.Contracts',
     # frontend controller logic
     $log.log "Initialized the Contracts controller"
     $scope.options =
-      page: 1, # show first page
+      page: 1   # show first page
       count: 10 # count per page
 
     $scope.cacheService = new CacheService("sn")

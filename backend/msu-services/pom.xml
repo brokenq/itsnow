@@ -20,7 +20,6 @@
     <modules>
         <module>msu-incident-service</module>
         <module>msu-gui-service</module>
-        <module>msu-workflow-service</module>
     </modules>
 
     <dependencies>

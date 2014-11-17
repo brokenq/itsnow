@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
@@ -66,6 +67,15 @@ public class SpringMvcConfig extends WebMvcConfigurationSupport implements Initi
         logger.debug("Customize Spring MVC with ExtendedRequestMappingHandlerMapping");
    		return handlerMapping;
    	}
+
+    @Bean
+    public CommonsMultipartResolver multipartResolver() {
+        CommonsMultipartResolver resolver = new CommonsMultipartResolver();
+        resolver.setDefaultEncoding("utf-8");
+        resolver.setMaxUploadSize(1048576L);
+        resolver.setMaxInMemorySize(10240);
+        return resolver;
+    }
 
     @Override
     public void afterPropertiesSet() throws Exception {

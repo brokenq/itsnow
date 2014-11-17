@@ -131,8 +131,10 @@ public class ActivitiEngineManager extends Bean implements ActivitiEngineService
     }
 
     @Override
-    public void deleteProcessDeploy(String id){
-        processEngine.getRepositoryService().deleteDeployment(id);
+    public void deleteProcessDeploy(String deployId){
+        ProcessDefinition definition = processEngine.getRepositoryService().createProcessDefinitionQuery().deploymentId(deployId).singleResult();
+        this.stopProcessInstanceByKey(definition.getKey(),null);
+        processEngine.getRepositoryService().deleteDeployment(deployId);
     }
 
     @Override

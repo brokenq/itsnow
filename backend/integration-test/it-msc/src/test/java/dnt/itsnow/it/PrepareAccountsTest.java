@@ -26,7 +26,11 @@ public class PrepareAccountsTest extends AbstractTest{
 //        目前注册账号有问题，暂时使用show方法来获取account
 //        ClientAccount account = accountsTest.signUp();
         ClientAccount account = new ClientAccount();
-        account.setSn("msp_test");
+        account.setSn("msp_it_test");
+        account = accountsTest.show(account);
+        Assert.assertNotNull(account);
+
+        accountsTest.resetNew(account);
         account = accountsTest.show(account);
         Assert.assertNotNull(account);
         Assert.assertTrue(account.getStatus() == ClientAccountStatus.New);

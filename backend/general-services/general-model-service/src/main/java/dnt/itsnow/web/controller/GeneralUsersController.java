@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import java.util.HashMap;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
 import javax.validation.Valid;
@@ -40,8 +42,6 @@ public class GeneralUsersController extends SessionSupportController <User>{
         logger.debug("Listing Users by keyword: {}", keyword);
         indexPage = userService.findAll(keyword, pageRequest,mainAccount);
         logger.debug("Listed  {}", indexPage);
-        //把分页的整体信息放在http头中
-        //把数据放在http的body中
         return indexPage;
     }
     /**
@@ -138,7 +138,7 @@ public class GeneralUsersController extends SessionSupportController <User>{
             return new HashMap();
         }
     }
-    @RequestMapping(value = "checkEmail/{email}", method = RequestMethod.GET)
+    @RequestMapping(value = "checkEmail/{email:.+}", method = RequestMethod.GET)
     public HashMap checkUniqueEmail(@PathVariable("email") String email){
         User user = userService.findByEmail(email);
         if( user != null ){
@@ -147,6 +147,18 @@ public class GeneralUsersController extends SessionSupportController <User>{
             return new HashMap();
         }
     }
+    @RequestMapping(value = "getUsersByAccount", method = RequestMethod.GET)
+    public List<User> listUsers() {
+
+        logger.info("Listing users by current account:{}", mainAccount);
+
+        List<User> users =userService.findUsersByAccount(mainAccount);
+
+        logger.info("Listed  {}", users);
+
+        return users;
+    }
+
     @BeforeFilter({"show", "update", "destroy"})
     public void initCurrentUser(@PathVariable("username") String username) {
         this.user=userService.findByUsername(username);

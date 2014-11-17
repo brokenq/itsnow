@@ -55,8 +55,8 @@ angular.module('MscIndex.Schemas', [])
         errCallback() if errCallback
   ])
 
-  .controller('SchemaListCtrl',['$scope', '$location', 'ngTableParams', 'ActionService', 'Feedback', 'CommonService', \
-                                ($scope,   $location,   NgTable,         ActionService,   feedback,   commonService)->
+  .controller('SchemaListCtrl',['$scope', '$location', 'ngTableParams', 'ActionService', 'Feedback', 'SelectionService', \
+                                ($scope,   $location,   NgTable,         ActionService,   feedback,   SelectionService)->
     console.log("Initialized the Schema list controller")
     Schemas = $scope.services
     args =
@@ -67,10 +67,9 @@ angular.module('MscIndex.Schemas', [])
           params.total headers 'total'
           $defer.resolve $scope.schemas = datas; $scope.cacheService.cache datas
 
-    $scope.selection = {checked: false, items: {}}
     $scope.schemasTable = new NgTable(angular.extend($scope.options, $location.search()), args);
-    commonService.watchSelection($scope.selection, $scope.cacheService.records, "id")
-    $scope.actionService = new ActionService {watch: $scope.selection.items, mapping: $scope.cacheService.find}
+    $scope.selectionService = new SelectionService($scope.cacheService.records, "id")
+    $scope.actionService = new ActionService {watch: $scope.selectionService.items, mapping: $scope.cacheService.find}
 
     $scope.destroy = (host)->
       $scope.execDestroy host, ->

@@ -65,7 +65,7 @@ public class WorkTimesControllerTest extends SessionSupportedControllerTest {
                 .andReturn(new DefaultPage<WorkTime>(workTimes));
 
         // 准备 Mock Request
-        MockHttpServletRequestBuilder request = get("/api/work-times");
+        MockHttpServletRequestBuilder request = get("/api/work_times");
         request = decorate(request);
 
         replay(workTimeSerivce);
@@ -84,7 +84,7 @@ public class WorkTimesControllerTest extends SessionSupportedControllerTest {
         expect(workTimeSerivce.findBySn("plan11")).andReturn(workTime);
 
         // 准备 Mock Request
-        MockHttpServletRequestBuilder request = get("/api/work-times/plan11");
+        MockHttpServletRequestBuilder request = get("/api/work_times/plan11");
         request = decorate(request);
 
         replay(workTimeSerivce);
@@ -103,7 +103,7 @@ public class WorkTimesControllerTest extends SessionSupportedControllerTest {
         expect(workTimeSerivce.update(anyObject(WorkTime.class))).andReturn(workTime);
         replay(workTimeSerivce);
 
-        MockHttpServletRequestBuilder request = put("/api/work-times/plan11").content(accountJson());
+        MockHttpServletRequestBuilder request = put("/api/work_times/plan11").content(accountJson());
         decorate(request);
 
         ResultActions result = this.browser.perform(request);
@@ -119,7 +119,7 @@ public class WorkTimesControllerTest extends SessionSupportedControllerTest {
 
         replay(workTimeSerivce);
 
-        URI uri = new URI("/api/work-times/plan11");
+        URI uri = new URI("/api/work_times/plan11");
 
         MockHttpServletRequestBuilder request = delete(uri);
         decorate(request);

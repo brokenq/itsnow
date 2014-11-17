@@ -7,13 +7,11 @@ import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.repository.GeneralUserRespository;
 import dnt.itsnow.service.GeneralUserService;
-import dnt.support.JsonSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestOperations;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -56,5 +54,10 @@ public class GeneralUserManager extends CommonUserManager implements GeneralUser
     @Override
     public void changePassword(String username, String newPassword) {
 
+    }
+
+    @Override
+    public List<User> findUsersByAccount(Account mainAccount) {
+        return generalUserRespository.findUsersByAccount(mainAccount);
     }
 }

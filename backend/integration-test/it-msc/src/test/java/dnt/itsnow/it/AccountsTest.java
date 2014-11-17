@@ -3,7 +3,6 @@ package dnt.itsnow.it;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dnt.itsnow.model.ClientAccount;
 import dnt.itsnow.model.ClientAccountRegistration;
-import dnt.itsnow.model.ClientItsnowHost;
 import dnt.itsnow.util.DeployFixture;
 import junit.framework.Assert;
 import org.junit.Ignore;
@@ -82,6 +81,20 @@ public class AccountsTest extends AbstractTest {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void resetNew(final ClientAccount account) throws Exception {
+        try {
+            withLoginUser(new Job() {
+                @Override
+                public void perform(HttpHeaders headers) {
+                    HttpEntity request = new HttpEntity(headers);
+                    put("/admin/api/accounts/{sn}/resetNew", request, account.getSn());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
