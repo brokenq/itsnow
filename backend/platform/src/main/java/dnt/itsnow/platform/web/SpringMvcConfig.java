@@ -10,7 +10,6 @@ import dnt.itsnow.platform.web.support.PageRequestResponseBodyMethodProcessor;
 import org.apache.commons.lang.reflect.FieldUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.fusesource.scalate.spring.view.ScalateViewResolver;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -39,15 +38,6 @@ public class SpringMvcConfig extends WebMvcConfigurationSupport implements Initi
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
         super.configureContentNegotiation(configurer);
         configurer.defaultContentType(MediaType.APPLICATION_JSON);
-    }
-
-    @Bean
-    public ScalateViewResolver scalateViewResolver() {
-        ScalateViewResolver resolver = new ScalateViewResolver();
-        resolver.setPrefix("/views/");
-        resolver.setSuffix(".jade");
-        resolver.setOrder(1);
-        return resolver;
     }
 
     @Bean
