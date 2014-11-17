@@ -121,7 +121,6 @@ angular.module('System.Roles', ['multi-select'])
 
 .controller('RoleNewCtrl', ['$scope', '$state', '$log', 'Feedback', 'RoleService',
     ($scope, $state, $log, feedback, roleService) ->
-
       $log.log "Initialized the Role New controller"
       $scope.disabled = false
 
@@ -140,7 +139,6 @@ angular.module('System.Roles', ['multi-select'])
 
 .controller('RoleEditCtrl', ['$scope', '$state', '$log', '$stateParams', 'Feedback', 'RoleService',
     ($scope, $state, $log, $stateParams, feedback, roleService) ->
-
       $scope.role = $scope.cacheService.find $stateParams.name, true
       $log.log "Initialized the Role Edit controller on: " + JSON.stringify($scope.role)
       $scope.disabled = true
