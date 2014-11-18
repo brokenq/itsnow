@@ -10,8 +10,8 @@ include /lib/mixins/list
     +more_buttons
       +drop_button("actionService.perform(destroy)", "trash", "删除", "1+", "", "deletable")
 
-  +common_table("departmentsTable","selection")
-    +row("department", "sn", "selection")(class="editable deletable")
+  +common_table("departmentsTable","selectionService")
+    +row("department", "sn", "selectionService")(class="editable deletable")
       td(data-title="'部门名称'")
         a(ui-sref="departments.view(department)") {{department.name}}
       td(data-title="'地点'") {{department.sites | deptFilter}}

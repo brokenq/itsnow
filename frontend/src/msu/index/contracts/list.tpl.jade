@@ -9,8 +9,8 @@ include /lib/mixins/list
       +tool_button("actionService.perform(approve)", "approve", "批准", "1+", "", "")
       +tool_button("actionService.perform(reject)", "reject", "拒绝", "1+", "", "")
 
-  +page_table("contractsTable","selection")
-    +row("contract", "sn", "selection")
+  +page_table("contractsTable","selectionService")
+    +row("contract", "sn", "selectionService")
       td(data-title="'名称'")
         a(ui-sref="contracts.view(contract)") {{contract.sn}}
       td(data-title="'状态'") {{contract.msuStatus | formatContractStatus}}

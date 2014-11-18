@@ -85,8 +85,8 @@ angular.module('System.Staffs', ['multi-select'])
   ])
 
 .controller('StaffListCtrl',
-  ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'CommonService', 'StaffService', 'Feedback',
-    ($scope, $location, $log, NgTable, ActionService, commonService, staffService, feedback) ->
+  ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'SelectionService', 'StaffService', 'Feedback',
+    ($scope, $location, $log, NgTable, ActionService, SelectionService, staffService, feedback) ->
       $log.log "Initialized the Staff list controller"
 
       args =
@@ -98,10 +98,9 @@ angular.module('System.Staffs', ['multi-select'])
             $scope.cacheService.cache data
             $defer.resolve data
 
-      $scope.selection = { checked: false, items: {} }
       $scope.staffsTable = new NgTable(angular.extend($scope.options, $location.search()), args)
-      $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.cacheService.find})
-      commonService.watchSelection($scope.selection, $scope.cacheService.records, "no")
+      $scope.selectionService = new SelectionService($scope.cacheService.records, "no")
+      $scope.actionService = new ActionService({watch: $scope.selectionService.items, mapping: $scope.cacheService.find})
 
       $scope.destroy = (staff) ->
         staffService.remove {no: staff.no}, () ->
