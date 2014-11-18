@@ -2,7 +2,7 @@
 h2 编辑用户
 include /lib/mixins/form
 +form("editUserForm")(ng-submit="update()")
-  include /msp/index/system/users/_form.jade
+  include /general/index/system/users/_form.jade
   +action_bar
     +action_submit("更新")
     +action_cancel("取消")(ui-sref="users.list")

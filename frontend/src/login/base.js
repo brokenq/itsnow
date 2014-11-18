@@ -15,6 +15,7 @@ angular.module("Itsnow.Login", [
     'Lib.Directives',
     'Lib.JcsEnhance',
     'Login.Templates',
+    'General.Templates',
     'Itsnow.Security',
     'Login.Authenticate',
     'Login.Forgot'

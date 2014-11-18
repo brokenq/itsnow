@@ -3,7 +3,7 @@
 h2 新增用户
 include /lib/mixins/form
 +form("createUserForm")(ng-submit="create()")
-  include /msp/index/system/users/_form.jade
+  include /general/index/system/users/_form.jade
   +action_bar
     +action_submit("创建")
     +action_cancel("取消")(ui-sref="users.list")
