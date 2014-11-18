@@ -4,7 +4,7 @@ include /lib/mixins/form
     readonly : true | false
 +section("组基本信息")
   +group("group","name", "组名称", "group", "组名称")
-    +input("group","name")(requried,placeholder="组名称")
+    +input("group","name")(requried,placeholder="组名称",ng-disabled="disable",ng-check="/api/groups/check/{0}")
   +group("group", "users", "用户", "user", "此组所包含的用户")
     div#group_users(multi-select, input-model="users", button-label="username", item-label="username", tick-property="ticked")
   +group("group", "description", "组描述", "edit", "组描述")

@@ -21,7 +21,6 @@ public class ChangePasswordRequest implements PasswordContainer{
     @NotBlank
     private String repeatPassword;
 
-
     public String getOldPassword() {
         return oldPassword;
     }

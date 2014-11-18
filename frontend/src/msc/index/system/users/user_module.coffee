@@ -1,4 +1,4 @@
-angular.module('MscIndex.User',[])
+angular.module('MscIndex.User', [])
 .config ($stateProvider, $urlRouterProvider)->
   $stateProvider.state 'users',
     url: '/users',
@@ -26,17 +26,24 @@ angular.module('MscIndex.User',[])
     templateUrl: 'system/users/edit.tpl.jade'
     controller: 'UserEditCtrl',
     data: {pageTitle: '编辑用户'}
+  $stateProvider.state 'users.editPwd',
+    url: '/pwd/editPwd',
+    templateUrl: 'system/users/editPwd.tpl.jade'
+    controller: 'UserEditPwdCtrl',
+    data: {pageTitle: '修改密码'}
   $urlRouterProvider.when '/users', '/users/list'
 .filter('formatUser', ->
   (user) ->
     return user.name if user.name == user.username
     user.name + "(" + user.username + ")"
 )
-.controller('UsersCtrl', ['$scope', '$resource','$state', 'Feedback', 'CacheService',
-    ($scope,    $resource, $state,     feedback, CacheService) ->
-      $scope.statedatas=[{name:"启用",state:true},{name:"停用",state:false}]
+.controller('UsersCtrl', ['$scope', '$resource', '$state', 'Feedback', 'CacheService',
+    ($scope, $resource, $state, feedback, CacheService) ->
+      $scope.statedatas = [
+        {name: "启用", state: true},
+        {name: "停用", state: false}
+      ]
       $scope.options = {page: 1, count: 10}
-      $scope.cacheService = new CacheService "username"
       $scope.services = $resource("/admin/api/users/:username", {},
         save: { method: 'POST'},
         update: { method: 'PUT', params: {username: '@username'}}
@@ -44,13 +51,13 @@ angular.module('MscIndex.User',[])
       $scope.cacheService = new CacheService "username", (value)->
         data = {}
         $.ajax
-          url:    "/admin/api/schemas/#{value}"
-          async:  false
-          type:   "GET"
+          url: "/admin/api/users/#{value}"
+          async: false
+          type: "GET"
           success: (response)->
             data = response
         return data
-      $scope.Destroy = (user,succCallback, errCallback) ->
+      $scope.Destroy = (user, succCallback, errCallback) ->
         $scope.services.remove {username: user.username}, () ->
           feedback.success "删除#{user.name}成功"
           succCallback() if succCallback
@@ -58,9 +65,9 @@ angular.module('MscIndex.User',[])
           errCallback() if errCallback
           feedback.error("删除#{user.name}失败", resp)
   ])
-.controller('UserListCtrl',['$scope', '$location', 'ngTableParams', 'ActionService','SelectionService',
-    ($scope, $location,  NgTable,         ActionService,   SelectionService) ->
-      Users= $scope.services
+.controller('UserListCtrl', ['$scope', '$location', 'ngTableParams', 'ActionService', 'SelectionService',
+    ($scope, $location, NgTable, ActionService, SelectionService) ->
+      Users = $scope.services
       args =
         total: 0
         getData: ($defer, params)->
@@ -80,10 +87,10 @@ angular.module('MscIndex.User',[])
           $scope.reload()
 
   ])
-.controller('UserNewCtrl', ['$scope', '$state', 'Feedback',\
-    ($scope,     $state,   feedback) ->
-      $scope.createview=true
-      $scope.updateview=false
+.controller('UserNewCtrl', ['$scope', '$state', 'Feedback',
+    ($scope, $state, feedback) ->
+      $scope.createview = true
+      $scope.updateview = false
       $scope.create = () ->
         $scope.services.save $scope.cuser, ->
           feedback.success "新建#{$scope.cuser.username}成功"
@@ -92,17 +99,17 @@ angular.module('MscIndex.User',[])
           feedback.error("新建#{$scope.cuser.username}失败", resp)
   ])
 .controller('UserEditCtrl', ['$scope', '$state', '$stateParams', 'Feedback',
-    ($scope,    $state,   $stateParams,  feedback) ->
-      $scope.createview=false
-      $scope.updateview=true
-      username=$stateParams.username
+    ($scope, $state, $stateParams, feedback) ->
+      $scope.createview = false
+      $scope.updateview = true
+      username = $stateParams.username
       $scope.cuser = $scope.cacheService.find username, true
       if $scope.cuser.enabled
         $scope.selectState = $scope.statedatas[0]
       else
         $scope.selectState = $scope.statedatas[1]
-      $scope.update=() ->
-        $scope.cuser.enabled= $scope.selectState.state;
+      $scope.update = () ->
+        $scope.cuser.enabled = $scope.selectState.state;
         $scope.cuser.$promise = `undefined`
         $scope.cuser.$resolved = `undefined`
         $scope.services.update {username: username}, $scope.cuser, () ->
@@ -112,8 +119,8 @@ angular.module('MscIndex.User',[])
           feedback.error("修改#{$scope.cuser.username}失败", resp);
   ])
 .controller('UserViewCtrl', ['$scope', '$state', '$stateParams',
-    ($scope,    $state,   $stateParams) ->
-      username=$stateParams.username
+    ($scope, $state, $stateParams) ->
+      username = $stateParams.username
       $scope.cuser = $scope.cacheService.find username, true
       if $scope.cuser.enabled
         $scope.selectState = $scope.statedatas[0]
@@ -121,3 +128,13 @@ angular.module('MscIndex.User',[])
         $scope.selectState = $scope.statedatas[1]
 
   ])
+.controller('UserEditPwdCtrl', ['$http','$scope', '$state', '$stateParams', 'SessionService', '$window','Feedback',\
+    ($http,$scope, $state, $stateParams,sessionService, $window,feedback) ->
+     $scope.updatePwd = () ->
+       $http.put('/api/password/change', $scope.changePasswordRequest)
+       .success ->
+         feedback.success("修改密码成功请重新登录！");
+         sessionService.logout ->
+           $window.location.href = "/login.html"
+  ])
+

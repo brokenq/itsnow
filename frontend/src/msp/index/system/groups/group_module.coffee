@@ -52,12 +52,19 @@ angular.module('System.Group', [])
 .controller('GroupsCtrl', ['$scope', '$resource', '$state', 'Feedback', 'CacheService',
     ($scope,  $resource,  $state,    feedback,   CacheService) ->
       $scope.options = {page: 1, count: 10}
-      $scope.cacheService = new CacheService "name"
+      $scope.cacheService = new CacheService "name", (value)->
+        data = {}
+        $.ajax
+          url: "api/groups/#{value}"
+          async: false
+          type: "GET"
+          success: (response)->
+            data = response
+        return data
       $scope.services = $resource("/api/groups/:name", {name:'@name'},
         save: { method: 'POST',params:{name:''}},
         update: { method: 'PUT', params: {name: 'name'}}
       )
-
       selectedUsersFun = (users) ->
         selectedUsers = []
         for user in users
@@ -89,13 +96,12 @@ angular.module('System.Group', [])
             params.total headers 'total'
             $defer.resolve $scope.groups = datas;
             $scope.cacheService.cache datas
-      $scope.selection = {checked: false, items: {}}
       $scope.groupsTable = new NgTable(angular.extend($scope.options, $location.search()), args);
-      commonService.watchSelection($scope.selection, $scope.cacheService.records, "name")
-      $scope.actionService = new ActionService {watch: $scope.selection.items, mapping: $scope.cacheService.find}
+      $scope.selectionService = new SelectionService($scope.cacheService.records, "name")
+      $scope.actionService = new ActionService {watch: $scope.selectionService.items, mapping: $scope.cacheService.find}
       $scope.reload = ->
         $scope.groupsTable.reload()
-      #$scope.actionService = new ActionService {watch: $scope.selection.items, mapping: $scope.cacheService.find}
+
       $scope.destroy = (group)->
         $scope.Destroy group, ->
           delete $scope.selection.items[group.name]
@@ -104,6 +110,7 @@ angular.module('System.Group', [])
 .controller('GroupsNewCtrl', ['$http','$scope', '$state', 'Feedback',
     ($http,$scope, $state, feedback) ->
       $http.get("/api/users/getUsersByAccount").success (users)-> $scope.users = users
+      $scope.disable=false;
       $scope.create = () ->
         $scope.formatGroup($scope.group,$scope.users)
         $scope.services.save $scope.group, ->
@@ -114,18 +121,15 @@ angular.module('System.Group', [])
   ])
 .controller('GroupsEditCtrl', ['$http','$scope', '$state', '$stateParams', 'Feedback',\
     ($http,$scope,   $state,    $stateParams,   feedback) ->
-
+      $scope.disable=true;
       name = $stateParams.name
-      $scope.services.get
-        name: name
-      , (data) ->
-        $scope.group = data
-        $http.get("/admin/api/users/getUsersByAccount").success (users)->
-          $scope.users = users
-          for user in $scope.users
-            for selectedUser in $scope.group.users
-              if user.name == selectedUser.name
-                user.ticked = true
+      $scope.group = $scope.cacheService.find name, true
+      $http.get("/api/users/getUsersByAccount").success (users)->
+        $scope.users = users
+        for user in $scope.users
+          for selectedUser in $scope.group.users
+            if user.name == selectedUser.name
+              user.ticked = true
       $scope.update = () ->
         $scope.group.$promise = `undefined`
         $scope.group.$resolved = `undefined`
@@ -138,8 +142,5 @@ angular.module('System.Group', [])
 .controller('GroupsViewCtrl', ['$scope', '$state', '$stateParams', 'Feedback',
     ($scope,   $state,    $stateParams,   feedback) ->
       name = $stateParams.name
-      $scope.services.get
-        name: name
-      , (data) ->
-        $scope.group = data
+      $scope.cuser = $scope.cacheService.find name, true
   ])

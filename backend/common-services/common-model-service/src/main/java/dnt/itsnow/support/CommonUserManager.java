@@ -65,6 +65,7 @@ public class CommonUserManager extends Bean implements CommonUserService {
         String appId = System.getProperty("app.id");
         User user = repository.findByAccountSnAndUsername(appId, username);
         if (user == null) throw new UsernameNotFoundException("Can't find user " + username);
+
         return passwordEncoder.matches(password, user.getPassword());
     }
 
