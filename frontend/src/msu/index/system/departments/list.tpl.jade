@@ -5,10 +5,10 @@ include /lib/mixins/list
     +button_group
       +tool_button("departmentsTable.reload()", "refresh", "", "*", "", "")
     +button_group
-      +tool_button("actionService.gotoState('departments.new')", "plus", "新增", "*", "", "")
-      +tool_button("actionService.gotoState('departments.edit')", "pencil", "修改", "1", "", "editable")
+      +tool_button("actionService.gotoState('departments.new', $event)", "plus", "新增", "*", "", "")
+      +tool_button("actionService.gotoState('departments.edit', $event)", "pencil", "修改", "1", "", "editable")
     +more_buttons
-      +drop_button("actionService.perform(destroy)", "trash", "删除", "1+", "", "deletable")
+      +drop_button("actionService.perform(destroy, $event)", "trash", "删除", "1+", "", "deletable")
 
   +common_table("departmentsTable","selection")
     +row("department", "sn", "selection")(class="editable deletable")

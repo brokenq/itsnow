@@ -5,10 +5,10 @@ include /lib/mixins/list
     +button_group
       +tool_button("worktimesTable.reload()", "refresh", "", "*", "", "")
     +button_group
-      +tool_button("actionService.gotoState('worktimes.new')", "plus", "新增", "*", "", "")
-      +tool_button("actionService.gotoState('worktimes.edit')", "pencil", "修改", "1", "", "editable")
+      +tool_button("actionService.gotoState('worktimes.new', $event)", "plus", "新增", "*", "", "")
+      +tool_button("actionService.gotoState('worktimes.edit', $event)", "pencil", "修改", "1", "", "editable")
     +more_buttons
-      +drop_button("actionService.perform(destroy)", "trash", "删除", "1+", "", "deletable")
+      +drop_button("actionService.perform(destroy, $event)", "trash", "删除", "1+", "", "deletable")
 
   +page_table("worktimesTable","selection")
     +row("worktime", "sn", "selection")(class="editable deletable")

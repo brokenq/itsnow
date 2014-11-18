@@ -5,10 +5,10 @@ include /lib/mixins/list
     +button_group
       +tool_button("sitesTable.reload()", "refresh", "", "*", "", "")
     +button_group
-      +tool_button("actionService.gotoState('sites.new')", "plus", "新增", "*", "", "")
-      +tool_button("actionService.gotoState('sites.edit')", "pencil", "修改", "1", "", "editable")
+      +tool_button("actionService.gotoState('sites.new', $event)", "plus", "新增", "*", "", "")
+      +tool_button("actionService.gotoState('sites.edit', $event)", "pencil", "修改", "1", "", "editable")
     +more_buttons
-      +drop_button("actionService.perform(destroy)", "trash", "删除", "1+", "", "deletable")
+      +drop_button("actionService.perform(destroy, $event)", "trash", "删除", "1+", "", "deletable")
 
   +page_table("sitesTable","selection")
     +row("site", "sn", "selection")(class="editable deletable")
