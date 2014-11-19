@@ -20,7 +20,8 @@ public class ChangePasswordRequest implements PasswordContainer{
     private String password;
     @NotBlank
     private String repeatPassword;
-
+    @NotBlank
+    private String username;
     public String getOldPassword() {
         return oldPassword;
     }
@@ -43,5 +44,13 @@ public class ChangePasswordRequest implements PasswordContainer{
 
     public void setRepeatPassword(String repeatPassword) {
         this.repeatPassword = repeatPassword;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

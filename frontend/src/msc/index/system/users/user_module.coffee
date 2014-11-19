@@ -131,6 +131,7 @@ angular.module('MscIndex.User', [])
 .controller('UserEditPwdCtrl', ['$http','$scope', '$state', '$stateParams', 'SessionService', '$window','Feedback',\
     ($http,$scope, $state, $stateParams,sessionService, $window,feedback) ->
      $scope.updatePwd = () ->
+       $scope.changePasswordRequest.username=$scope.user.username
        $http.put('/api/password/change', $scope.changePasswordRequest)
        .success ->
          feedback.success("修改密码成功请重新登录！");

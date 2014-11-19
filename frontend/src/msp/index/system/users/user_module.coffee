@@ -131,7 +131,8 @@ angular.module('System.User',[])
 .controller('UserEditPwdCtrl', ['$http','$scope', '$state', '$stateParams', 'SessionService', '$window','Feedback',
     ($http,$scope, $state, $stateParams,sessionService, $window,feedback) ->
       $scope.updatePwd = () ->
-        $http.put('/api/password/change', $scope.changePasswordRequest)
+        $scope.changePasswordRequest.username=$scope.user.username
+        $http.put('/api/users/change/password', $scope.changePasswordRequest)
         .success ->
           feedback.success("修改密码成功请重新登录！");
           sessionService.logout ->
