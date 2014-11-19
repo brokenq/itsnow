@@ -25,6 +25,10 @@
             <groupId>dnt.itsnow</groupId>
             <artifactId>general-incident-service</artifactId>
         </dependency>
+        <dependency>
+            <groupId>dnt.itsnow</groupId>
+            <artifactId>general-workflow-service</artifactId>
+        </dependency>
         <!-- message-bus,redis,cache-service -->
         <dependency>
             <groupId>dnt.components</groupId>

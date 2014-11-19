@@ -1,14 +1,15 @@
 package dnt.itsnow.support;
 
 import dnt.itsnow.api.ActivitiEngineService;
-import dnt.itsnow.model.Incident;
-import dnt.itsnow.model.IncidentStatus;
-import dnt.itsnow.model.MspIncident;
+import dnt.itsnow.model.*;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.repository.MspIncidentRepository;
+import dnt.itsnow.service.CommonServiceItemService;
+import dnt.itsnow.service.DictionaryService;
 import dnt.itsnow.service.MspIncidentService;
+import dnt.itsnow.service.WorkflowService;
 import dnt.messaging.MessageBus;
 import dnt.spring.Bean;
 import org.activiti.engine.delegate.event.ActivitiEventType;
@@ -37,9 +38,9 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
 
     public static final  String PROCESS_KEY = "msp_incident";
     private static final String LISTENER    = "listener";
-    //private static String appSn = System.getProperty("app.id");
-    private static       String appSn       = "msp_001";
-    private static       String msuSn       = "msu_001";
+    private static String appSn = System.getProperty("app.id");
+    //private static       String appSn       = "msp_001";
+    //private static       String msuSn       = "msu_001";
 
     public static final String ROLE_LINE_ONE = "ROLE_LINE_ONE";
     public static final String ROLE_LINE_TWO = "ROLE_LINE_TWO";
@@ -58,13 +59,26 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
     @Qualifier("globalMessageBus")
     MessageBus messageBus;
 
+    @Autowired
+    WorkflowService workflowService;
+
+    @Autowired
+    CommonServiceItemService serviceItemService;
+
+    @Autowired
+    DictionaryService dictionaryService;
+
     private ResourceLoader resourceLoader;
 
-    public static String getSendChannel() {
+    /*public static String getSendChannel() {
         if (msuSn == null) {
             //Todo find msuSn from Contract
         }
         return msuSn + "-LISTENER";
+    }*/
+
+    public static String getAppSn() {
+        return appSn;
     }
 
     public static String getListenChannel() {
@@ -99,19 +113,27 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
      * <h2>自动部署流程</h2>
      */
     private void autoDeployment() throws IOException {
-        String path = "bpmn/" + PROCESS_KEY + ".bpmn20.xml";
-        InputStream is = null;
-        try {
-            URL url = this.resourceLoader.getResource(path).getURL();
-            assert url != null;
-            is = url.openStream();
-            activitiEngineService.deploySingleProcess(is, PROCESS_KEY, PROCESS_KEY);
-            is.close();
-        }catch(Exception e){
-            logger.warn("Error deploy :{}",e);
-        }finally{
-            if(is != null)
-                is.close();
+        if(workflowService.checkByName("故障流程") == null){
+            String path = "bpmn/"+PROCESS_KEY+".bpmn20.xml";
+            InputStream is = null;
+            Workflow workflow = new Workflow();
+            workflow.setName("故障流程");
+            workflow.setDescription("初始化故障流程");
+            ServiceItem item = serviceItemService.findBySn("SI_3001");
+            workflow.setServiceItem(item);
+            dnt.itsnow.model.Dictionary dict = dictionaryService.findBySn("120");
+            workflow.setDictionary(dict);
+            try {
+                URL url = this.resourceLoader.getResource(path).getURL();
+                assert url != null;
+                is = url.openStream();
+                workflow = workflowService.create(workflow,is);
+            }catch(Exception e){
+                logger.warn("Error deploy process:{} {}",PROCESS_KEY,e.getMessage());
+            }finally{
+                if(is != null)
+                    is.close();
+            }
         }
     }
 
