@@ -120,7 +120,7 @@ angular.module('MscIndex.Hosts', [])
 
     # get Host Creation Logs
     if invokeId = host.configuration.createInvocationId
-      url = "/admin/api/hosts/" + host.id + "/follow/" + invokeId + "?offset=0"
+      url = "/admin/api/hosts/#{host.id}/follow?invocationId=#{invokeId}&offset=0"
       $http.get(url).success (log) ->
         host.creationLog = log
 
@@ -130,7 +130,7 @@ angular.module('MscIndex.Hosts', [])
      createOffset = 0
      createIntervalId = $interval(->
        if invokeId?
-         url = "/admin/api/hosts/#{host.name}/follow/#{invokeId}?offset=#{createOffset}"
+         url = "/admin/api/hosts/#{host.id}/follow?invocationId#{invokeId}&offset=#{createOffset}"
          $http.get(url).success (log, status, headers) ->
            host.creationLog += log
            createOffset = parseInt headers "offset"
