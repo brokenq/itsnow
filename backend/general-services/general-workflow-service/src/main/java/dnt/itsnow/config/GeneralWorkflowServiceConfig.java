@@ -13,7 +13,7 @@ import dnt.messaging.MessageBus;
 /**
  * <h1>The general model service config</h1>
  */
-public class GeneralModelServiceConfig extends DefaultGeneralServiceConfig {
+public class GeneralWorkflowServiceConfig extends DefaultGeneralServiceConfig {
 
     @Override
     public void defineServices() {
@@ -24,8 +24,6 @@ public class GeneralModelServiceConfig extends DefaultGeneralServiceConfig {
         importService(CommonServiceItemService.class);
         importService(PrivateServiceItemService.class);
         importService(PrivateServiceCatalogService.class);
-
-        exportService(WorkflowService.class);
     }
 
 }
