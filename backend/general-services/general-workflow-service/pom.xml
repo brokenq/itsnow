@@ -37,7 +37,8 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Service-Config>dnt.itsnow.config.GeneralModelServiceConfig</Service-Config>
+                            <Default-Config>A,D,W</Default-Config>
+                            <Service-Config>dnt.itsnow.config.GeneralWorkflowServiceConfig</Service-Config>
                         </manifestEntries>
                     </archive>
                 </configuration>
