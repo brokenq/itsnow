@@ -78,8 +78,8 @@ angular.module('System.WorkTime',[])
           feedback.error("删除时间#{worktime.name}失败", resp)
 
   ])
-.controller('WorkTimeListCtrl',['$scope', '$location', 'ngTableParams', 'ActionService','CommonService','Feedback',\
-                               ($scope,     $location,  NgTable,         ActionService,   commonService,feedback) ->
+.controller('WorkTimeListCtrl',['$scope', '$location', 'ngTableParams', 'ActionService','SelectionService','Feedback',\
+                               ($scope,     $location,  NgTable,         ActionService,   SelectionService,feedback) ->
      console.log("Initialized the worktime list controller")
      args =
        total: 0
@@ -121,7 +121,6 @@ angular.module('System.WorkTime',[])
       for workdate in $scope.workdates
         if($scope.selectWorkDates.indexOf(workdate.name)>-1)
           workdate.checked=true
-      return
       $scope.toggleCheckboxes=(workdate)->
         $scope.toggleCheckboxesParent(workdate)
       $scope.update=() ->

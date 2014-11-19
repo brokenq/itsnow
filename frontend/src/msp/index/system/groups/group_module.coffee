@@ -86,8 +86,8 @@ angular.module('System.Group', [])
           errCallback() if errCallback
           feedback.error("删除#{group.name}失败", resp)
   ])
-.controller('GroupsListCtrl', ['$scope', '$location', 'ngTableParams', 'ActionService', 'CommonService', 'Feedback',
-    ($scope, $location, NgTable, ActionService, commonService, feedback) ->
+.controller('GroupsListCtrl', ['$scope', '$location', 'ngTableParams', 'ActionService', 'SelectionService', 'Feedback',
+    ($scope, $location, NgTable, ActionService, SelectionService, feedback) ->
       args =
         total: 0
         getData: ($defer, params)->
@@ -131,8 +131,7 @@ angular.module('System.Group', [])
             if user.name == selectedUser.name
               user.ticked = true
       $scope.update = () ->
-        $scope.group.$promise = `undefined`
-        $scope.group.$resolved = `undefined`
+        $scope.formatGroup($scope.group,$scope.users)
         $scope.services.update {name: name}, $scope.group, () ->
           feedback.success "修改组#{$scope.group.name}成功"
           $state.go "groups.list"
@@ -142,5 +141,5 @@ angular.module('System.Group', [])
 .controller('GroupsViewCtrl', ['$scope', '$state', '$stateParams', 'Feedback',
     ($scope,   $state,    $stateParams,   feedback) ->
       name = $stateParams.name
-      $scope.cuser = $scope.cacheService.find name, true
+      $scope.group = $scope.cacheService.find name, true
   ])
