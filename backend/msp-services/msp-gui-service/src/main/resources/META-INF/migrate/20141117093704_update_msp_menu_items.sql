@@ -8,9 +8,6 @@ update menu_items set state = 'staffs.list' where state = 'staff';
 update menu_items set state = 'contracts.list' where state = 'contracts.contract';
 update menu_items set state = 'workflows.list' where state = 'workflow';
 
-INSERT INTO menu_items (id, parent_id, name, state, position, css) VALUES
-  (22, 2, '我的合约', 'contracts.my-list', 1, 'icon-tag');
-
 -- //@UNDO
 -- SQL to undo the change goes here.
 
