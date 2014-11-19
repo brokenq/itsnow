@@ -95,7 +95,7 @@ angular.module('System.WorkTime',[])
        $scope.worktimesTable.reload()
      $scope.destroy = (worktime)->
        $scope.Destroy worktime, ->
-         delete $scope.selection.items[worktime.sn]
+         delete $scope.selectionService.items[worktime.sn]
          $scope.reload()
 ])
 

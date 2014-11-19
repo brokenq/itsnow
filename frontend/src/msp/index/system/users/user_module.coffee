@@ -83,7 +83,7 @@ angular.module('System.User',[])
         $scope.usersTable.reload()
       $scope.destroy = (user)->
         $scope.Destroy user, ->
-          delete $scope.selection.items[user.username]
+          delete $scope.selectionService.items[user.username]
           $scope.reload()
 
   ])

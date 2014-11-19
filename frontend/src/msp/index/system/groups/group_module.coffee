@@ -104,7 +104,7 @@ angular.module('System.Group', [])
 
       $scope.destroy = (group)->
         $scope.Destroy group, ->
-          delete $scope.selection.items[group.name]
+          delete $scope.selectionService.items[group.name]
           $scope.reload()
   ])
 .controller('GroupsNewCtrl', ['$http','$scope', '$state', 'Feedback',
