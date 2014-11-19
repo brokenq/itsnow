@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 /**
  * 测试 hosts 管理
  */
-@Ignore
 public class ItsnowHostsTest extends AbstractTest {
 
     private static ItsnowHostsTest test;

@@ -11,7 +11,6 @@ import org.junit.Test;
 /**
  * Prepare Host Data
  */
-@Ignore
 public class PrepareHostsTest extends AbstractTest{
 
     private ItsnowHostsTest hostsTest;
