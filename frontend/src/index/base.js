@@ -10,6 +10,7 @@ angular.module('Itsnow.Index', [
     'Lib.Directives',
     'Lib.Templates',
     'Index.Templates',
+    'General.Templates',
     'Index.Menu',
     'Index.Dialog',
     'Lib.JcsEnhance',

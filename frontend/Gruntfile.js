@@ -156,6 +156,18 @@ module.exports = function ( grunt ) {
         dest: '<%= build_dir %>/templates/lib.js'
       },
       /**
+       * These are the templates from `src/general`.
+       */
+      general: {
+        options: {
+          base: 'general',
+          module: 'General.Templates',
+          jade: {basedir: '.'}
+        },
+        src: [ '<%= index_files.general_tpl %>' ],
+        dest: '<%= build_dir %>/templates/general.js'
+      },
+      /**
        * These are the templates from `src/index`.
        */
       index: {
@@ -711,9 +723,11 @@ module.exports = function ( grunt ) {
           '<%= index_files.lib_tpl %>',
           '<%= index_files.index_tpl %>',
           '<%= index_files.ms_tpl %>',
+          '<%= index_files.general_tpl %>',
           '<%= login_files.lib_tpl %>',
           '<%= login_files.login_tpl %>',
-          '<%= login_files.ms_tpl %>'
+          '<%= login_files.ms_tpl %>',
+          '<%= login_files.general_tpl %>'
         ],
         tasks: [ 'html2js' ]
       },

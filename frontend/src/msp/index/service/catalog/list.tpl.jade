@@ -4,7 +4,7 @@ include /lib/mixins/list
         +button_group
             +tool_button("tableParams.reload()", "refresh", "", "*", "", "")
         +button_group
-            +tool_button("actionService.perform(update)", "pencil", "设置", "*", "", "")
+            +tool_button("actionService.perform(update, $event)", "pencil", "设置", "*", "", "")
         +more_buttons
     +common_table("tableParams","selection")
         tbody(ng-repeat="catalog in $data")

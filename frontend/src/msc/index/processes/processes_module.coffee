@@ -131,11 +131,7 @@ angular.module('MscIndex.Processes', [])
 
     $http.get("/admin/api/accounts/list_no_process").success (accounts)-> $scope.accounts = accounts
     $http.get("/admin/api/schemas").success (schemas)-> $scope.schemas = schemas
-    $scope.hosts = []
-    $http.get("/admin/api/hosts/list/type/APP").success (hosts)->
-      $scope.hosts = $scope.hosts.concat hosts if hosts? and hosts.length > 0
-    $http.get("/admin/api/hosts/list/type/COM").success (hosts)->
-      $scope.hosts = $scope.hosts.concat hosts if hosts? and hosts.length > 0
+    $http.get("/admin/api/hosts/list_available/APP,COM").success (hosts)-> $scope.hosts = hosts
 
     getHostById = (id)->
       return host for host in $scope.hosts when host.id is parseInt id
@@ -173,11 +169,7 @@ angular.module('MscIndex.Processes', [])
 
       $http.get("/admin/api/accounts/list_no_process").success (accounts)-> $scope.accounts = accounts
       $http.get("/admin/api/schemas").success (schemas)-> $scope.schemas = schemas
-      $scope.hosts = []
-      $http.get("/admin/api/hosts/list/type/APP").success (hosts)->
-        $scope.hosts = $scope.hosts.concat hosts if hosts? and hosts.length > 0
-      $http.get("/admin/api/hosts/list/type/COM").success (hosts)->
-        $scope.hosts = $scope.hosts.concat hosts if hosts? and hosts.length > 0
+      $http.get("/admin/api/hosts/list_available/APP,COM").success (hosts)-> $scope.hosts = hosts
 
       toggleButton = (status)->
         $("#startBtn").removeClass("show").addClass("hidden")
