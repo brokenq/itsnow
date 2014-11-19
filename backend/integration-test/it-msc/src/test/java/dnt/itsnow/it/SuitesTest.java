@@ -7,6 +7,7 @@ import org.junit.runners.Suite;
 /**
  * Suites 测试
  */
+@Ignore
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         PrepareAccountsTest.class,
