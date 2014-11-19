@@ -1,4 +1,4 @@
-angular.module('MscIndex.User', [])
+angular.module('System.User', [])
 .config ($stateProvider, $urlRouterProvider)->
   $stateProvider.state 'users',
     url: '/users',
