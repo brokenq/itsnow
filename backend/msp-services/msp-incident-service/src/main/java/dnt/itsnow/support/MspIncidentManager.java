@@ -5,6 +5,7 @@ import dnt.itsnow.model.*;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.platform.util.DefaultPage;
+import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.repository.MspIncidentRepository;
 import dnt.itsnow.service.CommonServiceItemService;
 import dnt.itsnow.service.DictionaryService;
@@ -320,6 +321,22 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
     @Override
     public InputStream getProcessImage(String instanceId){
         return activitiEngineService.getImageById(PROCESS_KEY,instanceId);
+    }
+
+    @Override
+    public Page<Incident> findMonitoredByKey(String keyword, PageRequest pageRequest) {
+        long total = repository.countMonitoredByKey(keyword);
+        if(total > 0){
+            if(keyword == null)
+                keyword = "";
+            List<Incident> incidents = repository.findAllMonitoredByKey(keyword,pageRequest);
+            logger.debug("found monitored incidents:{}",total);
+            return new DefaultPage<Incident>(incidents,pageRequest,total);
+        }else {
+            List<Incident> incidents = new ArrayList<Incident>();
+            logger.debug("found no monitored incidents");
+            return new DefaultPage<Incident>(incidents, pageRequest, total);
+        }
     }
 
     @Override

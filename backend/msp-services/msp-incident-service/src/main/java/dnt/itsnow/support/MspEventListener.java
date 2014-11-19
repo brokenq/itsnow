@@ -204,7 +204,7 @@ public class MspEventListener extends Bean implements ActivitiEventListener, Mes
         if(count > 0){
             //update incident
             mspIncidentRepository.updateByMsuAccountAndMsuInstanceId(incident);
-            logger.info("update incident:{}",incident.getMspInstanceId());
+            logger.info("update incident:{}",incident.getMsuInstanceId());
         }else{
             try {
                 if(type == TransferType.Action){
@@ -226,7 +226,7 @@ public class MspEventListener extends Bean implements ActivitiEventListener, Mes
                     logger.info("save action incident : {}", incident.getMspInstanceId());
                 }else{
                     mspIncidentRepository.create(incident);
-                    logger.info("save view incident :{}",incident.getMsuInstanceId());
+                    logger.info("save view msu incident :{}",incident.getMsuInstanceId());
                 }
 
             }catch(Exception e){
