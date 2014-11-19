@@ -70,8 +70,8 @@ angular.module('MsuIndex.Contracts', ['multi-select'])
   ])
 
 .controller('ContractListCtrl',
-  ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'CommonService', 'ContractService', 'Feedback',
-    ($scope, $location, $log, NgTable, ActionService, commonService, contractService, feedback) ->
+  ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'SelectionService', 'ContractService', 'Feedback',
+    ($scope, $location, $log, NgTable, ActionService, SelectionService, contractService, feedback) ->
       $log.log "Initialized the Contract list controller"
 
       args =
@@ -83,10 +83,9 @@ angular.module('MsuIndex.Contracts', ['multi-select'])
             $scope.cacheService.cache data
             $defer.resolve $scope.contracts = data
 
-      $scope.selection = { checked: false, items: {} }
-      $scope.contractsTable = new NgTable(angular.extend($scope.options, $location.search()), args);
-      $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.cacheService.find})
-      commonService.watchSelection($scope.selection, $scope.cacheService.records, "sn")
+      $scope.contractsTable = new NgTable(angular.extend($scope.options, $location.search()), args)
+      $scope.selectionService = new SelectionService($scope.cacheService.records, "sn")
+      $scope.actionService = new ActionService({watch: $scope.selectionService.items, mapping: $scope.cacheService.find})
 
       $scope.approve = (contract) ->
         contractService.approve({sn:contract.sn}

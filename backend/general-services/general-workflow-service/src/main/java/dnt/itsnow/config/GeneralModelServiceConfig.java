@@ -24,6 +24,8 @@ public class GeneralModelServiceConfig extends DefaultGeneralServiceConfig {
         importService(CommonServiceItemService.class);
         importService(PrivateServiceItemService.class);
         importService(PrivateServiceCatalogService.class);
+
+        exportService(WorkflowService.class);
     }
 
 }

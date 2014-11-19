@@ -14,9 +14,9 @@ public interface WorkflowRepository {
 
     @Options(useGeneratedKeys = true, keyColumn = "id")
     @Insert("INSERT INTO workflows " +
-            "(sn, name, description, act_re_procdef_id, service_item_id, service_item_type, process_dictionary_id, created_at, updated_at) " +
+            "(sn, name, description, act_re_procdef_id, service_item_id, service_item_sn, service_item_type, process_dictionary_id, created_at, updated_at) " +
             "VALUES " +
-            "(#{sn}, #{name}, #{description}, #{actReProcdef.id}, #{serviceItem.id}, #{serviceItemType}, #{dictionary.id}, #{createdAt}, #{updatedAt})")
+            "(#{sn}, #{name}, #{description}, #{actReProcdef.id}, #{serviceItem.id}, #{serviceItem.sn}, #{serviceItemType}, #{dictionary.id}, #{createdAt}, #{updatedAt})")
     public void create(Workflow workflow);
 
     @Delete("DELETE FROM workflows WHERE sn = #{sn}")
@@ -28,6 +28,7 @@ public interface WorkflowRepository {
             " description           = #{description}," +
             " act_re_procdef_id     = #{actReProcdef.id}," +
             " service_item_id      = #{serviceItem.id}," +
+            " service_item_sn      = #{serviceItem.sn}," +
             " service_item_type    = #{serviceItemType}," +
             " process_dictionary_id = #{dictionary.id}, " +
             " created_at            = #{createdAt}, " +
@@ -37,7 +38,7 @@ public interface WorkflowRepository {
 
     public int count(@Param("keyword") String keyword);
 
-    public List<Workflow> find(
+    public List<Workflow> findAll(
             @Param("keyword") String keyword,
             @Param("pageable") Pageable pageable);
 

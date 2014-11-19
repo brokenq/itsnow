@@ -13,8 +13,17 @@ public class Workflow extends ConfigItem {
     private ActReProcdef actReProcdef;
     private ActReDeployment actReDeployment;
     private ServiceItem serviceItem;
+    private String serviceItemSn;
     private String serviceItemType;
     private Dictionary dictionary;
+
+    public String getServiceItemSn() {
+        return serviceItemSn;
+    }
+
+    public void setServiceItemSn(String serviceItemSn) {
+        this.serviceItemSn = serviceItemSn;
+    }
 
     /** 公共服务目录标记 */
     public static final String PUBLIC_SERVICE_ITEM = "0";
@@ -78,6 +87,7 @@ public class Workflow extends ConfigItem {
         sb.append(", actReProcdef=").append(actReProcdef);
         sb.append(", actReDeployment=").append(actReDeployment);
         sb.append(", serviceItem=").append(serviceItem);
+        sb.append(", serviceItemSn='").append(serviceItemSn).append('\'');
         sb.append(", serviceItemType='").append(serviceItemType).append('\'');
         sb.append(", dictionary=").append(dictionary);
         sb.append('}');

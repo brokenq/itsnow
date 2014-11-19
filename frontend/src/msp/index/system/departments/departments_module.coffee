@@ -98,8 +98,8 @@ angular.module('System.Departments', ['multi-select'])
   ])
 
 .controller('DepartmentListCtrl',
-  ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'CommonService', 'DepartmentService', 'Feedback',
-    ($scope, $location, $log, NgTable, ActionService, commonService, departmentService, feedback) ->
+  ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'SelectionService', 'DepartmentService', 'Feedback',
+    ($scope, $location, $log, NgTable, ActionService, SelectionService, departmentService, feedback) ->
       $log.log "Initialized the Department list controller"
 
       args =
@@ -112,10 +112,9 @@ angular.module('System.Departments', ['multi-select'])
             $scope.cacheService.cache data
             $defer.resolve data
 
-      $scope.selection = { checked: false, items: {} }
-      $scope.departmentsTable = new NgTable(angular.extend($scope.options, $location.search()), args);
-      $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.cacheService.find})
-      commonService.watchSelection($scope.selection, $scope.cacheService.records, "sn")
+      $scope.departmentsTable = new NgTable(angular.extend($scope.options, $location.search()), args)
+      $scope.selectionService = new SelectionService($scope.cacheService.records, "sn")
+      $scope.actionService = new ActionService({watch: $scope.selectionService.items, mapping: $scope.cacheService.find})
 
       $scope.destroy = (department) ->
         departmentService.remove department, () ->

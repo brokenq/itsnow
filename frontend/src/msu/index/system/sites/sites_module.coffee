@@ -77,8 +77,8 @@ angular.module('System.Sites', ['multi-select'])
   ])
 
 .controller('SiteListCtrl',
-  ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'CommonService', 'SiteService', 'Feedback',
-    ($scope, $location, $log, NgTable, ActionService, commonService, siteService, feedback) ->
+  ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'SelectionService', 'SiteService', 'Feedback',
+    ($scope, $location, $log, NgTable, ActionService, SelectionService, siteService, feedback) ->
       $log.log "Initialized the Site list controller"
 
       args =
@@ -90,10 +90,9 @@ angular.module('System.Sites', ['multi-select'])
             $scope.cacheService.cache data
             $defer.resolve data
 
-      $scope.selection = { checked: false, items: {} }
       $scope.sitesTable = new NgTable(angular.extend($scope.options, $location.search()), args)
-      $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.cacheService.find})
-      commonService.watchSelection($scope.selection, $scope.cacheService.records, "sn")
+      $scope.selectionService = new SelectionService($scope.cacheService.records, "sn")
+      $scope.actionService = new ActionService({watch: $scope.selectionService.items, mapping: $scope.cacheService.find})
 
       $scope.destroy = (site) ->
         siteService.remove {sn: site.sn}, () ->

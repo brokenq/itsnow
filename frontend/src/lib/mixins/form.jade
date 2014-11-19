@@ -4,13 +4,12 @@ mixin form(name)
     block
 //- A section contains several form groups
 mixin section(title)
-  .col-md-offset-2.col-md-8
-    .widget-box
-      .widget-header
-        h4 #{title}
-      .widget-body
-        .widget-main
-          block
+  .widget-box
+    .widget-header
+      h4 #{title}
+    .widget-body
+      .widget-main
+        block
 //- A group contains a input label and field
 mixin group(object, field, label, icon, tip)
   .form-group.has-info&attributes(attributes)
@@ -46,7 +45,7 @@ mixin select(object, field)
 //- the action bar in form bottom(or top)
 mixin action_bar
   .clearfix.form-actions
-    .col-md-offset-3.col-md-9
+    .col-md-offset-4.col-md-12
       block
 //- the action button in action bar
 mixin action_button(title,type,icon,level)

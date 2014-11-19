@@ -34,6 +34,7 @@
         SELECT flow.id,
         flow.sn,
         flow.name,
+        flow.service_item_sn,
         flow.service_item_type,
         flow.description,
         flow.created_at,
@@ -69,7 +70,7 @@
         </where>
     </select>
 
-    <select id="find" resultMap="workflowResult">
+    <select id="findAll" resultMap="workflowResult">
         <include refid="select"/>
         <where>
             <if test="keyword != null and keyword != ''">
