@@ -1,14 +1,13 @@
 package dnt.itsnow.support;
 
 import dnt.itsnow.api.ActivitiEngineService;
-import dnt.itsnow.model.Incident;
-import dnt.itsnow.model.IncidentStatus;
-import dnt.itsnow.model.MsuIncident;
+import dnt.itsnow.model.Dictionary;
+import dnt.itsnow.model.*;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.repository.MsuIncidentRepository;
-import dnt.itsnow.service.MsuIncidentService;
+import dnt.itsnow.service.*;
 import dnt.messaging.MessageBus;
 import dnt.spring.Bean;
 import org.activiti.engine.delegate.event.ActivitiEventType;
@@ -36,9 +35,10 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService,Resou
 
     public static final String PROCESS_KEY = "msu_incident";
     private static final String LISTENER = "listener";
-    //private static String appSn = System.getProperty("app.id");
-    private static String appSn = "msu_001";
-    private static String mspSn = "msp_001";
+    private static String appSn = System.getProperty("app.id");
+    //private static String appSn = "msu_001";
+    //find mspSn by contract and type
+    private static String mspSn = null;
 
     public static final String ROLE_LINE_ONE = "ROLE_LINE_ONE";
     public static final String ROLE_LINE_TWO = "ROLE_LINE_TWO";
@@ -61,11 +61,35 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService,Resou
     @Autowired
     MessageBus messageBus;
 
+    @Autowired
+    WorkflowService workflowService;
+
+    @Autowired
+    CommonServiceItemService serviceItemService;
+
+    @Autowired
+    DictionaryService dictionaryService;
+
+    @Autowired
+    CommonContractService contractService;
+
+    @Autowired
+    CommonAccountService accountService;
+
     private ResourceLoader resourceLoader;
 
-    public static String getSendChannel() {
+    public String getSendChannel() {
         if(mspSn == null){
-            //Todo find mspSn from Contract
+            //find by contract
+            try {
+                Contract contract = contractService.findBySn("P001");
+                Account account = accountService.findById(contract.getMspAccountId());
+                mspSn = account.getSn();
+                return mspSn + "-LISTENER";
+            }catch(Exception e){
+                logger.warn(e.getMessage());
+                return null;
+            }
         }
         return mspSn + "-LISTENER";
     }
@@ -106,20 +130,31 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService,Resou
      * <h2>自动部署流程</h2>
      */
     private void autoDeployment() throws IOException {
-        String path = "bpmn/"+PROCESS_KEY+".bpmn20.xml";
-        InputStream is = null;
-        try {
-            URL url = this.resourceLoader.getResource(path).getURL();
-            assert url != null;
-            is = url.openStream();
-            activitiEngineService.deploySingleProcess(is,PROCESS_KEY,PROCESS_KEY);
 
-        }catch(Exception e){
-            logger.warn("Error deploy process:{} {}",PROCESS_KEY,e.getMessage());
-        }finally{
-            if(is != null)
-                is.close();
+
+        if(workflowService.checkByName("故障流程") == null){
+            String path = "bpmn/"+PROCESS_KEY+".bpmn20.xml";
+            InputStream is = null;
+            Workflow workflow = new Workflow();
+            workflow.setName("故障流程");
+            workflow.setDescription("初始化故障流程");
+            ServiceItem item = serviceItemService.findBySn("SI_3001");
+            workflow.setServiceItem(item);
+            Dictionary dict = dictionaryService.findBySn("11111120");
+            workflow.setDictionary(dict);
+            try {
+                URL url = this.resourceLoader.getResource(path).getURL();
+                assert url != null;
+                is = url.openStream();
+                workflow = workflowService.create(workflow,is);
+            }catch(Exception e){
+                logger.warn("Error deploy process:{} {}",PROCESS_KEY,e.getMessage());
+            }finally{
+                if(is != null)
+                    is.close();
+            }
         }
+
     }
 
     /**

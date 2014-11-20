@@ -85,4 +85,8 @@ public interface MspIncidentRepository {
             " WHERE msu_account_name = #{msuAccountName} AND msu_instance_id = #{msuInstanceId};")
     void updateByMsuAccountAndMsuInstanceId(Incident incident);
 
+    @Select("SELECT count(0) FROM msp_incidents WHERE msp_instance_id is null")
+    long countMonitoredByKey(@Param("keyword")String keyword);
+
+    List<Incident> findAllMonitoredByKey(@Param("keyword")String keyword,@Param("pageable")Pageable pageable);
 }

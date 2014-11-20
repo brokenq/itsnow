@@ -6,7 +6,6 @@ package dnt.itsnow.platform.services;
 import dnt.itsnow.platform.config.DefaultAppConfig;
 import dnt.itsnow.platform.config.DefaultServiceConfig;
 import dnt.spring.ApplicationSupportBean;
-import net.happyonroad.component.classworld.PomClassRealm;
 import net.happyonroad.component.container.ComponentLoader;
 import net.happyonroad.component.container.ComponentRepository;
 import net.happyonroad.component.container.event.ContainerEvent;
@@ -108,8 +107,6 @@ public class ServicePackageManager extends ApplicationSupportBean
             loadedServicePackages.add(component);
             DefaultComponent comp = (DefaultComponent) component;
             registerMbean(comp, comp.getObjectName());
-            PomClassRealm cl = (PomClassRealm) comp.getClassLoader();
-            if (cl != null) registerMbean(cl, cl.getObjectName());
             publish(new ServicePackageEvent.LoadedEvent(component));
             logger.info("Loaded  service package: {}", component);
         } catch (Exception e) {

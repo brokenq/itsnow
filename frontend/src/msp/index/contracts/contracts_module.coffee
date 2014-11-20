@@ -1,4 +1,5 @@
 angular.module('MspIndex.Contracts', [])
+
 .config ($stateProvider, $urlRouterProvider)->
   $stateProvider.state 'contracts',
     url: '/contracts',
@@ -55,9 +56,10 @@ angular.module('MspIndex.Contracts', [])
 
     $scope.cacheService = new CacheService("sn")
   ])
+
 .controller('ContractListCtrl',
-  ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'CommonService', 'ContractService', 'Feedback',
-    ($scope, $location, $log, NgTable, ActionService, commonService, contractService, feedback) ->
+  ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'SelectionService', 'ContractService', 'Feedback',\
+    ($scope, $location, $log, NgTable, ActionService, SelectionService, contractService, feedback) ->
       $log.log "Initialized the Contracts list controller"
 
       args =
@@ -69,20 +71,19 @@ angular.module('MspIndex.Contracts', [])
             $scope.cacheService.cache data
             $defer.resolve data
 
-      $scope.selection = { checked: false, items: {} }
       $scope.contractsTable = new NgTable(angular.extend($scope.options, $location.search()), args)
-      $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.cacheService.find})
-      commonService.watchSelection($scope.selection, $scope.cacheService.records, "sn")
+      $scope.selectionService = new SelectionService($scope.cacheService.records, "sn")
+      $scope.actionService = new ActionService({watch: $scope.selectionService.items, mapping: $scope.cacheService.find})
 
       $scope.accept = (contract)->
         contractService.bid {sn: contract.sn}, ()->
           feedback.success "应约成功，合同号： #{contract.sn}"
           $scope.contractsTable.reload()
-
   ])
+
 .controller('ContractMyListCtrl',
-  ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'CommonService', 'ContractService',
-    ($scope, $location, $log, NgTable, ActionService, commonService, contractService) ->
+  ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'SelectionService', 'ContractService',\
+    ($scope, $location, $log, NgTable, ActionService, SelectionService, contractService) ->
       $log.log "Initialized the Contracts list controller"
 
       args =
@@ -94,11 +95,11 @@ angular.module('MspIndex.Contracts', [])
             $scope.cacheService.cache data
             $defer.resolve data
 
-      $scope.selection = { checked: false, items: {} }
       $scope.contractsTable = new NgTable(angular.extend($scope.options, $location.search()), args)
-      $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.cacheService.find})
-      commonService.watchSelection($scope.selection, $scope.cacheService.records, "sn")
+      $scope.selectionService = new SelectionService($scope.cacheService.records, "sn")
+      $scope.actionService = new ActionService({watch: $scope.selectionService.items, mapping: $scope.cacheService.find})
   ])
+
 .controller('ContractViewCtrl', ['$scope', '$stateParams', '$log', ($scope, $stateParams, $log) ->
     $scope.contract = $scope.cacheService.find $stateParams.sn, true
     $log.log "Initialized the Contract View controller on: " + JSON.stringify($scope.contract)

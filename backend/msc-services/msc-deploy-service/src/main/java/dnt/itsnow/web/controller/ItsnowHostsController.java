@@ -34,12 +34,12 @@ import static org.springframework.http.HttpStatus.*;
  * POST   /admin/api/hosts                                      create              创建主机资源
  * PUT    /admin/api/hosts/{id}                                 update              修改主机信息
  * DELETE /admin/api/hosts/{id}                                 destroy             删除特定的主机信息
- * GET    /admin/api/hosts/{id}/follow/{invocationId}           follow              获取目标主机最新的任务信息
  * GET    /admin/api/hosts/checkName?id={id}&value={value}      checkName           检查主机名是否唯一
  * GET    /admin/api/hosts/checkAddress?id={id}&value={value}   checkAddress        检查主机地址是否唯一,有效
  * GET    /admin/api/hosts/list/{field}/{value}                 listByField         列出所有匹配的主机
  * GET    /admin/api/hosts/{id}/wait?job=job                    waitHostCreation    等待主机创建完成
- * GET    /admin/api/hosts/checkPassword?host={host}&username={username}&password={password} checkPassword 检查主机用户名密码是否有效
+ * GET    /admin/api/hosts/{id}/follow?invocationId=invocationId&offset=offset               follow                 获取目标主机最新的任务信息
+ * GET    /admin/api/hosts/checkPassword?host={host}&username={username}&password={password} checkPassword          检查主机用户名密码是否有效
  * </pre>
  */
 @RestController
@@ -159,7 +159,7 @@ public class ItsnowHostsController extends SessionSupportController<ItsnowHost>{
     /**
      * <h2>查看特定任务的最新信息</h2>
      * <p/>
-     * PUT /admin/api/hosts/{id}/follow/{invocationId}
+     * PUT /admin/api/hosts/{id}/follow?invocationId=invocationId&offset=offset
      * <pre>
      * Response body:
      *   返回从offset行开始的任务的输出信息，如果offset值不正确，则以错误响应
@@ -167,8 +167,8 @@ public class ItsnowHostsController extends SessionSupportController<ItsnowHost>{
      *   offset: 下一次来获取信息应该传入的offset值
      * </pre>
      */
-    @RequestMapping("{id}/follow/{invocationId}")
-    public String follow( @PathVariable("invocationId") String invocationId,
+    @RequestMapping("{id}/follow")
+    public String follow( @RequestParam("invocationId") String invocationId,
                           @RequestParam( value = "offset", defaultValue = "0") long offset,
                           HttpServletResponse response){
         logger.debug("Follow {} invocation {} from {}", currentHost, invocationId, offset);

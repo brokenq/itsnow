@@ -5,6 +5,8 @@ import dnt.itsnow.model.Workflow;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 
+import java.io.InputStream;
+
 /**
  * <h1>流程管理业务接口层</h1>
  */
@@ -13,10 +15,11 @@ public interface WorkflowService {
     /**
      * 创建一个工作流配置信息
      * @param workflow 工作流配置信息实体类
+     * @param inputStream 工作流配置文件流
      * @return 工作流配置信息
      * @throws WorkflowException
      */
-    public Workflow create(Workflow workflow) throws WorkflowException;
+    public Workflow create(Workflow workflow, InputStream inputStream) throws WorkflowException;
 
     /**
      * 修改一个工作流配置信息

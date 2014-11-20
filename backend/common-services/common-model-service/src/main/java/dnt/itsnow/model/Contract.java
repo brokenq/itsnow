@@ -38,7 +38,6 @@ public class Contract extends Record {
     // @NotNull
     private ContractStatus mspStatus;
     //合同明细
-    @JsonIgnore
     private List<ContractDetail> details;
 
     public String getSn() {

@@ -42,7 +42,7 @@ import java.util.Map;
  * PUT    /admin/api/processes/{name}/cancel                    cancel          取消最近的操作(启动/停止)
  * DELETE /admin/api/processes/{name}                           destroy         删除进程对象
  * GET    /admin/api/processes/{name}/follow/{job}              follow          获取特定进程最新的任务信息
- * GET    /admin/api/processes/{name}/wait_finished/job=job     waitFinished    等待进程Job完成
+ * GET    /admin/api/processes/{name}/wait_finished?job=job     waitFinished    等待进程Job完成
  * </pre>
  */
 @RestController

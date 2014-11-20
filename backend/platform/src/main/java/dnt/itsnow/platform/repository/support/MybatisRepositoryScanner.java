@@ -59,9 +59,7 @@ public class MybatisRepositoryScanner extends Bean implements RepositoryScanner 
         logger.info("Found extra mybatis config in {}", resource);
 
         InputStream stream = resource.getInputStream();
-        ClassLoader legacyClassLoader = Resources.getDefaultClassLoader();
         try {
-            Resources.setDefaultClassLoader(applicationContext.getClassLoader());
             Configuration configuration = applicationContext.getBean(Configuration.class);
             XMLConfigBuilder builder = new XMLConfigBuilder(stream,
                     configuration.getEnvironment().toString(),
@@ -104,7 +102,6 @@ public class MybatisRepositoryScanner extends Bean implements RepositoryScanner 
             //   databaseIdProvider
             // 等暂时均不可以额外配置
         } finally {
-            Resources.setDefaultClassLoader(legacyClassLoader);
             stream.close();
         }
     }

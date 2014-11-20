@@ -74,29 +74,7 @@ public class CommonServiceCatalogManager extends Bean implements CommonServiceCa
         for(int i=0;i<level;i++)
             str = str +"--";
         catalog.setTitle(str+catalog.getTitle());
-        /*switch(catalog.getLevel()){
-            case 1:
-                for(ServiceItem item:catalog.getItems()){
-                    item.setTitle("--"+item.getTitle());
-                }
-                break;
-            case 2:
-                //catalog.setParentId(1L);
-                catalog.setTitle("--"+catalog.getTitle());
-                for(ServiceItem item:catalog.getItems()){
-                    item.setTitle("----"+item.getTitle());
-                }
-                break;
-            case 3:
-                //catalog.setParentId();
-                catalog.setTitle("----"+catalog.getTitle());
-                for(ServiceItem item:catalog.getItems()){
-                    item.setTitle("------"+item.getTitle());
-                }
-                break;
-            default:
-                break;
-        }*/
+
     }
 
     @Override
