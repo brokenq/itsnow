@@ -1,11 +1,5 @@
   # List catalogs
-  angular.module('MsuIndex.Incidents',
-    ['ngTable',
-     'ngResource',
-     'Lib.Commons',
-     'Lib.Utils',
-     'dnt.action.service',
-     'Lib.Feedback'])
+  angular.module('MsuIndex.Incidents',[])
     .config ($stateProvider,$urlRouterProvider)->
       $stateProvider.state 'incidents',
         url: '/incidents'
@@ -178,7 +172,7 @@
           incident = new Incidents $scope.incident
           incident.$save(->
             feedback.success("创建故障单成功")
-            $state.go('incidents.opened')
+            $state.go('incidents.created')
           ,(resp)->
             feedback.error("创建故障单失败",resp)
           )

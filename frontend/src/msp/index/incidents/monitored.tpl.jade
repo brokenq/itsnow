@@ -3,6 +3,7 @@ include /lib/mixins/list
     +toolbar
         +button_group
             +tool_button("incidentsTable.reload()", "refresh", "", "*", "", "")
+            +tool_button("actionService.perform(grab)", "pencil", "抢单", "1", "", "editable")
 
     +page_table("incidentsTable","selection")
         +row("incident", "msuInstanceId", "selection")(class="editable deletable")
@@ -14,7 +15,7 @@ include /lib/mixins/list
             td(data-title="'优先级'") {{incident.priority}}
             td(data-title="'故障描述'") {{incident.requestDescription}}
             td(data-title="'创建时间'") {{incident.createdAt | formatTime}}
-            td(data-title="'关闭时间'") {{incident.closeTime | formatTime}}
+            td(data-title="'处理人'") {{incident.assignedUser}}
             td(data-title="'用户'") {{incident.msuAccountName}}
             td(data-title="'用户状态'") {{incident.msuStatus | formatIncidentStatus}}
                                                 
