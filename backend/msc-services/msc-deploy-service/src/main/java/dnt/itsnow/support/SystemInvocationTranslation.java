@@ -205,7 +205,7 @@ public class SystemInvocationTranslation extends Bean implements SystemInvocatio
         return new RemoteInvocation(itsnowProcess.getHostAddress()) {
             @Override
             public int perform(Process process) throws Exception {
-                return process.run("./stop_ms.sh", itsnowProcess.getName());
+                return process.run("./stop_ms.sh", itsnowProcess.getName(), itsnowProcess.getProperty("http.port"));
             }
         };
     }

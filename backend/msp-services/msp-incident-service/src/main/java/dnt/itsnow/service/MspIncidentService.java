@@ -2,8 +2,10 @@ package dnt.itsnow.service;
 
 import dnt.itsnow.model.Incident;
 import dnt.itsnow.model.MspIncident;
+import dnt.itsnow.model.User;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
+import dnt.itsnow.platform.util.PageRequest;
 
 import java.io.InputStream;
 
@@ -79,4 +81,20 @@ public interface MspIncidentService {
      * @return  图片stream
      */
     InputStream getProcessImage(String instanceId);
+
+    /**
+     * 获取所有监控的故障单
+     * @param key 关键字
+     * @param pageRequest 分页信息
+     * @return 故障单列表
+     */
+    Page<Incident> findMonitoredByKey(String key, PageRequest pageRequest);
+
+    /**
+     * 抢单，根据msuInstanceId生成msp Incident
+     * @param id msp_incident id
+     * @param currentUser 当前用户
+     * @return MspIncident
+     */
+    MspIncident grabIncident(String id, User currentUser);
 }

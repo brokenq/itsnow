@@ -56,7 +56,7 @@ public class WorkflowManager extends Bean implements WorkflowService {
 
         try {
             // 部署单个流程定义
-            Deployment deployment = activitiEngineService.deploySingleProcess(inputStream, workflow.getName(), workflow.getDictionary().getVal());
+            Deployment deployment = activitiEngineService.deploySingleProcess(inputStream, workflow.getName(), workflow.getDictionary().getCode());
             if (deployment == null) {
                 throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, "Workflow create failed");
             }

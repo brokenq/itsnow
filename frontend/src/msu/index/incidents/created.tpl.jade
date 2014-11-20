@@ -15,8 +15,10 @@ include /lib/mixins/list
             td(data-title="'状态'") {{incident.msuStatus| formatIncidentStatus}}
                 a.pull-right(ng-if="incident.msuStatus !== 'Closed'",href="api/msu-incidents/{{incident.msuInstanceId}}/image",target="_blank")
                     i.icon-cogs(class="green")
-            td(data-title="'处理人'") {{incident.assignedUser}}
-            td(data-title="'处理组'") {{incident.assignedGroup}}
+            td(data-title="'处理人'")
+                a(ui-sref="users.view({username:incident.assignedUser})") {{incident.assignedUser}}
+            td(data-title="'处理组'")
+                a(ui-sref="roles.view({name:incident.assignedGroup})") {{incident.assignedGroup}}
             td(data-title="'创建时间'") {{incident.createdAt | formatTime}}
             td(data-title="'关闭时间'") {{incident.closeTime | formatTime}}
             td(data-title="'服务商'") {{incident.mspAccountName}}

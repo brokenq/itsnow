@@ -35,6 +35,7 @@ cd $target
 
 java -jar lib/dnt.itsnow.release-*.jar $target .itsnow
 cp resources/check.sh bin/
+cp resources/check_stop.sh bin/
 chmod +x bin/*
 
 echo "$folder/$instance deployed"

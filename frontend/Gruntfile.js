@@ -156,6 +156,18 @@ module.exports = function ( grunt ) {
         dest: '<%= build_dir %>/templates/lib.js'
       },
       /**
+       * These are the templates from `src/general`.
+       */
+      general: {
+        options: {
+          base: 'general/index',
+          module: 'General.Templates',
+          jade: {basedir: '.'}
+        },
+        src: [ '<%= index_files.general_tpl %>' ],
+        dest: '<%= build_dir %>/templates/general.js'
+      },
+      /**
        * These are the templates from `src/index`.
        */
       index: {
@@ -421,9 +433,11 @@ module.exports = function ( grunt ) {
           'module.prefix',
           'window.VERSION = "<%=target.version%>"' ,
           '<%= build_dir %>/lib/**/*.js',
+          '<%= build_dir %>/general/**/*.js',
           '<%= build_dir %>/index/**/*.js',
           '<%= build_dir %>/<%= target.name %>/index/**/*.js',
           '<%= html2js.lib.dest %>',
+          '<%= html2js.general.dest %>',
           '<%= html2js.index.dest %>',
           '<%= html2js.ms_index.dest %>',
           'module.suffix'
@@ -436,9 +450,11 @@ module.exports = function ( grunt ) {
           'module.prefix',
           'window.VERSION = "<%=target.version%>"' ,
           '<%= build_dir %>/lib/**/*.js',
+          '<%= build_dir %>/general/**/*.js',
           '<%= build_dir %>/login/**/*.js',
           '<%= build_dir %>/<%= target.name %>/login/**/*.js',
           '<%= html2js.lib.dest %>',
+          '<%= html2js.general.dest %>',
           '<%= html2js.login.dest %>',
           '<%= html2js.ms_login.dest %>',
           'module.suffix'
@@ -553,6 +569,7 @@ module.exports = function ( grunt ) {
         scripts: [
           '<%= vendor_files.js %>',
           '<%= html2js.lib.dest %>',
+          '<%= html2js.general.dest %>',
           '<%= html2js.index.dest %>',
           '<%= html2js.ms_index.dest %>',
           '<%= index_files.js %>'
@@ -591,6 +608,7 @@ module.exports = function ( grunt ) {
         scripts: [
           '<%= vendor_files.js %>',
           '<%= html2js.lib.dest %>',
+          '<%= html2js.general.dest %>',
           '<%= html2js.login.dest %>',
           '<%= html2js.ms_login.dest %>',
           '<%= login_files.js %>'
@@ -688,13 +706,13 @@ module.exports = function ( grunt ) {
        */
       index_skeletons: {
         files: [
-            '../index.jade', 'lib/**/*.jade', 'index/**/*.jade', '!**/*.tpl.jade'
+            '../index.jade', 'lib/**/*.jade', 'index/**/*.jade', '!**/*.tpl.jade', 'general/**/*.jade'
         ],
         tasks: ['copy:build_jade', 'index:build', 'jade:index']
       },
       login_skeletons: {
         files: [
-            '../login.jade', 'lib/**/*.jade', 'login/**/*.jade', '!**/*.tpl.jade'
+            '../login.jade', 'lib/**/*.jade', 'login/**/*.jade', '!**/*.tpl.jade', 'general/**/*.jade'
         ],
         tasks: ['copy:build_jade', 'login:build', 'jade:login']
       },
@@ -711,9 +729,11 @@ module.exports = function ( grunt ) {
           '<%= index_files.lib_tpl %>',
           '<%= index_files.index_tpl %>',
           '<%= index_files.ms_tpl %>',
+          '<%= index_files.general_tpl %>',
           '<%= login_files.lib_tpl %>',
           '<%= login_files.login_tpl %>',
-          '<%= login_files.ms_tpl %>'
+          '<%= login_files.ms_tpl %>',
+          '<%= login_files.general_tpl %>'
         ],
         tasks: [ 'html2js' ]
       },

@@ -14,7 +14,6 @@ import dnt.itsnow.service.SystemInvokeService;
 import dnt.itsnow.util.DeployFixture;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -204,5 +203,21 @@ public class ItsnowHostManagerTest {
 
         host = hostManager.findByIdAndAddress(1L, "172.16.3.4");
         Assert.notNull(host);
+    }
+
+    @Test
+    public void testFindAllAvailableByType() throws Exception {
+        List<String> types = new ArrayList<String>();
+        types.add(HostType.APP.toString());
+        types.add(HostType.COM.toString());
+        types.add(HostType.DB.toString());
+        List<ItsnowHost> hosts = new ArrayList<ItsnowHost>();
+        expect(repository.findAllAvailableByTypes(types)).andReturn(hosts);
+
+        replay(systemInvokeService);
+        replay(repository);
+
+        hosts = hostManager.findAllAvailableByType(types);
+        Assert.isTrue(hosts.size() >= 0);
     }
 }

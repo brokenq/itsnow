@@ -56,18 +56,13 @@ public class ItsnowProcessesTest extends AbstractTest {
     }
 
     public ClientItsnowProcess show(final ClientItsnowProcess process) throws Exception {
-        try {
-            return withLoginUser(new Callback<ClientItsnowProcess>() {
-                @Override
-                public ClientItsnowProcess perform(HttpHeaders headers) {
-                    HttpEntity entity = new HttpEntity(headers);
-                    return getForObject("/admin/api/processes/{name}", ClientItsnowProcess.class , entity, process.getName());
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        return withLoginUser(new Callback<ClientItsnowProcess>() {
+            @Override
+            public ClientItsnowProcess perform(HttpHeaders headers) {
+                HttpEntity entity = new HttpEntity(headers);
+                return getForObject("/admin/api/processes/{name}", ClientItsnowProcess.class , entity, process.getName());
+            }
+        });
     }
 
     public void start(final ClientItsnowProcess process) throws Exception {
