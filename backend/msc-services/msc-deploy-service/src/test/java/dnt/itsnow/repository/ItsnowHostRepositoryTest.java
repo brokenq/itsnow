@@ -18,6 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -150,4 +151,13 @@ public class ItsnowHostRepositoryTest {
         Assert.assertEquals(2, hosts.size());
     }
 
+    @Test
+    public void testFindAllAvailableByType() throws Exception {
+        List<String> types = new ArrayList<String>();
+        types.add(HostType.APP.toString());
+        types.add(HostType.COM.toString());
+        types.add(HostType.DB.toString());
+        List<ItsnowHost> hosts = hostRepository.findAllAvailableByTypes(types);
+        Assert.assertEquals(2, hosts.size());
+    }
 }

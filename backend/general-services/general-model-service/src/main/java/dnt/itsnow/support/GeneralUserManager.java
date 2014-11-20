@@ -7,6 +7,7 @@ import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.repository.GeneralUserRespository;
 import dnt.itsnow.service.GeneralUserService;
+import dnt.itsnow.web.model.ChangePasswordRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,12 @@ public class GeneralUserManager extends CommonUserManager implements GeneralUser
     }
 
     @Override
+    public void changePassword(ChangePasswordRequest changeRequest) {
+         logger.info("Updating {}",changeRequest);
+        facade.put("/api/password/change",changeRequest);
+    }
+
+    @Override
     public void update(User user) {
         logger.info("Updating {}", user);
         facade.put("/admin/api/users/{username}",
@@ -51,10 +58,6 @@ public class GeneralUserManager extends CommonUserManager implements GeneralUser
        logger.info("delete{}",user);
     }
 
-    @Override
-    public void changePassword(String username, String newPassword) {
-
-    }
 
     @Override
     public List<User> findUsersByAccount(Account mainAccount) {

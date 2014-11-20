@@ -58,4 +58,6 @@ public interface ItsnowHostRepository {
     List<ItsnowHost> findAllByConfiguration(@Param("name")String name, @Param("value") String value);
 
     List<ItsnowHost> findAll();
+
+    List<ItsnowHost> findAllAvailableByTypes(@Param("types") List<String> types);
 }

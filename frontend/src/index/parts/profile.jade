@@ -1,7 +1,7 @@
 //   Index.jade parts: Profile
 mixin profile_link(text, icon, action)
   li
-    a(href="javascript:void(0)", ng-click!=attributes.ngClick)
+    a(ui-sref="#{action}", ng-click!=attributes.ngClick)
       i(class="icon-#{icon}")
       | #{text}
 
@@ -15,5 +15,6 @@ li.light-blue
   ul.user-menu.pull-right.dropdown-menu.dropdown-yellow.dropdown-caret.dropdown-close
     +profile_link("设置", "cog")
     +profile_link("个人资料", "user")
+    +profile_link("修改密码", "cog","users.editPwd")
     li.divider
     +profile_link("注销", "off")(ngClick="logout()")

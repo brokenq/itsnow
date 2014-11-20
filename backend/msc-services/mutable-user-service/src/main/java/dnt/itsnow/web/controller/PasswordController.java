@@ -49,10 +49,10 @@ public class PasswordController extends ApplicationController {
      * @param changeRequest  修改密码的请求作为http body提交
      */
     @RequestMapping(value = "change", method = RequestMethod.PUT)
-    public void changePassword(HttpServletRequest request,
-                               @RequestBody @Valid ChangePasswordRequest changeRequest) {
-        Principal principal = request.getUserPrincipal(); // 等价方法： request.getRemoteUser()
-        String username = principal.getName();
+    public void changePassword(@RequestBody @Valid ChangePasswordRequest changeRequest) {
+    //    Principal principal = request.getUserPrincipal(); // 等价方法： request.getRemoteUser()
+    //    String username = principal.getName();
+        String username=changeRequest.getUsername();
         logger.info("Changing password for {}", username);
 
 /*

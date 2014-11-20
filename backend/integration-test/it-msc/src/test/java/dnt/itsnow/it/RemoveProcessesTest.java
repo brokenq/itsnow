@@ -1,5 +1,6 @@
 package dnt.itsnow.it;
 
+import dnt.itsnow.model.ClientItsnowProcess;
 import dnt.itsnow.util.ShareDatas;
 import junit.framework.Assert;
 import org.junit.Before;
@@ -25,7 +26,12 @@ public class RemoveProcessesTest extends AbstractTest{
         ShareDatas.process = processesTest.show(ShareDatas.process);
         processesTest.waitFinished(ShareDatas.process, ShareDatas.PROCESS_STOP_INVOCATION_ID);
         processesTest.destroy(ShareDatas.process);
-        Assert.assertTrue(null == processesTest.show(ShareDatas.process));
+        ClientItsnowProcess showing = null;
+        try {
+            showing = processesTest.show(ShareDatas.process);
+        } catch (Exception e) {
+        }
+        Assert.assertNull(showing);
         ShareDatas.process = null;
     }
 }
