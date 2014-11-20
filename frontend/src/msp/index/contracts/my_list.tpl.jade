@@ -5,8 +5,8 @@ include /lib/mixins/list
     +button_group
       +tool_button("contractsTable.reload()", "refresh", "", "*", "", "")
 
-  +page_table("contractsTable","selection")
-    +row("contract", "sn", "selection")
+  +page_table("contractsTable","selectionService")
+    +row("contract", "sn", "selectionService")
       td(data-title="'合同名称'")
         a(ui-sref="contracts.view(contract)") {{contract.sn}}
       td(data-title="'企业帐户'") {{contract.msuAccount.name}}

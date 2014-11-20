@@ -4,6 +4,7 @@
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.config.DeployControllerConfig;
+import dnt.itsnow.model.HostType;
 import dnt.itsnow.model.ItsnowHost;
 import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.util.PageRequest;
@@ -19,6 +20,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -209,9 +211,13 @@ public class ItsnowHostsControllerTest extends SessionSupportedControllerTest {
     }
 
     @Test
-    public void testListByField() throws Exception {
-        expect(mockedService.findAllByType("DB")).andReturn(hosts);
-        MockHttpServletRequestBuilder request = get("/admin/api/hosts/list/type/DB");
+    public void testListAvailableByType() throws Exception {
+        List<String> types = new ArrayList<String>();
+        types.add(HostType.APP.toString());
+        types.add(HostType.COM.toString());
+        types.add(HostType.DB.toString());
+        expect(mockedService.findAllAvailableByType(types)).andReturn(hosts);
+        MockHttpServletRequestBuilder request = get("/admin/api/hosts/list_available/APP,COM,DB");
         decorate(request);
 
         replay(mockedService);
@@ -220,7 +226,7 @@ public class ItsnowHostsControllerTest extends SessionSupportedControllerTest {
 
         // 对业务结果的验证
         decorate(result);
-        status().isConflict();
+        status().isOk();
     }
 
 }

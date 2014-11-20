@@ -82,7 +82,7 @@ public class WorkflowRepositoryTest {
 
     @Test
     public void testFind() throws Exception {
-        Assert.assertNotNull(repository.find("", pageRequest));
+        Assert.assertNotNull(repository.findAll("", pageRequest));
     }
 
     @Test
@@ -92,7 +92,7 @@ public class WorkflowRepositoryTest {
 
     @Test
     public void testFindByKeyword() throws Exception {
-        Assert.assertNotNull(repository.find("工作", pageRequest));
+        Assert.assertNotNull(repository.findAll("工作", pageRequest));
     }
 
     @Test

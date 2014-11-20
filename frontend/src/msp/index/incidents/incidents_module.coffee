@@ -1,11 +1,5 @@
   # List catalogs
-  angular.module('MspIndex.Incidents',
-    ['ngTable',
-     'ngResource',
-     'Lib.Commons',
-     'Lib.Utils',
-     'dnt.action.service',
-     'Lib.Feedback'])
+  angular.module('MspIndex.Incidents',[])
     .config ($stateProvider,$urlRouterProvider)->
       $stateProvider.state 'incidents',
         url: '/incidents'
@@ -23,6 +17,11 @@
         templateUrl: 'incidents/closed.tpl.jade'
         controller: 'ClosedListCtrl'
         data: {pageTitle: '已关闭故障单'}
+      $stateProvider.state 'incidents.monitored',
+        url: '/monitored'
+        templateUrl: 'incidents/monitored.tpl.jade'
+        controller: 'MonitoredListCtrl'
+        data: {pageTitle: '监控的故障单'}
       $stateProvider.state 'incidents.create',
         url: '/create'
         templateUrl: 'incidents/new.tpl.jade'
@@ -32,6 +31,11 @@
         url: '/{mspInstanceId}/view'
         templateUrl: 'incidents/view.tpl.jade'
         controller: 'IncidentViewCtrl'
+        data: {pageTitle: '查看故障单'}
+      $stateProvider.state 'incidents.viewMsu',
+        url: '/{msuInstanceId}/viewMsu'
+        templateUrl: 'incidents/view.tpl.jade'
+        controller: 'IncidentViewMsuCtrl'
         data: {pageTitle: '查看故障单'}
       $stateProvider.state 'incidents.action',
         url:'/{mspInstanceId}/action'
@@ -65,11 +69,13 @@
           count: 10 # count per page
         # 提交按钮是否已经执行了提交操作，false为未执行，则按钮可用
         $scope.cacheService = new CacheService("mspInstanceId")
+        $scope.cacheServiceMsu = new CacheService("msuInstanceId")
         $scope.submited = false
 
         $scope.Dictionary = $resource("api/dictionaries/code/:code", {})
         $scope.Incident = $resource("/api/msp-incidents/:mspInstanceId", {})
         $scope.ClosedIncidents = $resource("/api/msp-incidents/closed", {})
+        $scope.MonitoredIncidents = $resource("/api/msp-incidents/monitored", {})
         $scope.IncidentAction = $resource("/api/msp-incidents/:mspInstanceId/:taskId/complete", {},
           complete: {method: 'PUT',params:{mspInstanceId:'@mspInstanceId',taskId:'@taskId'}})
 
@@ -131,27 +137,55 @@
 
     ])
 
-    .controller('IncidentCreateCtrl',['$scope', '$state', '$log', 'Feedback',
-      ($scope, $state, $log, feedback) ->
-        $log.log "Initialized the Incident Create controller"
-        Incident = $scope.Incident
-        $scope.incident = {number:'INC001',createdBy:'admin'}
-        $scope.buttonLabel = "创建"
-        $scope.create = ->
-          $scope.submited = true
-          incident = new Incident $scope.incident
-          incident.$save(->
-            feedback.success("创建故障单成功")
-            $state.go('incidents.opened')
-          ,(resp)->
-            feedback.error("创建故障单失败",resp)
-          )
+  .controller('MonitoredListCtrl',
+    ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'CommonService',
+      ($scope, $location, $log, NgTable, ActionService, commonService) ->
+        $log.log "Initialized the Incident Monitored list controller"
+
+        MonitoredIncidents = $scope.MonitoredIncidents
+        args =
+          total: 0,
+          getData: ($defer, params) ->
+            $location.search(params.url()); # put params in url
+            MonitoredIncidents.query params.url(), (data, headers) ->
+              params.total headers('total')
+              $scope.cacheServiceMsu.cache data
+              $defer.resolve $scope.incidents = data
+
+        $scope.selection = { checked: false, items: {} }
+        $scope.incidentsTable = new NgTable(angular.extend($scope.options, $location.search()), args);
+        $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.cacheServiceMsu.find})
+        commonService.watchSelection($scope.selection, $scope.cacheServiceMsu.records, "msuInstanceId")
+
+    ])
+
+  .controller('IncidentCreateCtrl',['$scope', '$state', '$log', 'Feedback',
+    ($scope, $state, $log, feedback) ->
+      $log.log "Initialized the Incident Create controller"
+      Incident = $scope.Incident
+      $scope.incident = {number:'INC001',createdBy:'admin'}
+      $scope.buttonLabel = "创建"
+      $scope.create = ->
+        $scope.submited = true
+        incident = new Incident $scope.incident
+        incident.$save(->
+          feedback.success("创建故障单成功")
+          $state.go('incidents.opened')
+        ,(resp)->
+          feedback.error("创建故障单失败",resp)
+        )
     ])
 
     .controller('IncidentViewCtrl',['$scope', '$state','$stateParams', '$log', 'Feedback','CacheService',
       ($scope, $state,$stateParams, $log, feedback,CacheService) ->
         $log.log "Initialized the Incident View controller"
         $scope.incident = $scope.cacheService.find $stateParams.mspInstanceId,true
+    ])
+
+    .controller('IncidentViewMsuCtrl',['$scope', '$state','$stateParams', '$log', 'Feedback','CacheService',
+      ($scope, $state,$stateParams, $log, feedback,CacheService) ->
+        $log.log "Initialized the Incident View Msu controller"
+        $scope.incident = $scope.cacheServiceMsu.find $stateParams.msuInstanceId,true
     ])
 
     .controller('IncidentProcessCtrl',['$scope', '$state','$stateParams', '$log', 'Feedback',

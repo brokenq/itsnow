@@ -80,7 +80,7 @@ public class DictionaryRepositoryTest {
 //
     @Test
     public void testDelete() throws Exception {
-        String code = "001";
+        String code = "003";
         Assert.notNull(repository.findByCode(code));
         repository.delete(code);
         Assert.isNull(repository.findByCode(code));

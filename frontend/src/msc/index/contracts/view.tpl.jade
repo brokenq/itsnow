@@ -13,7 +13,7 @@ mixin label(title)
 mixin formField(label, value)
   label.control-label.col-md-2 #{label}:
   div(class!=attributes["class"])
-    input.form-control(type="text", ng-model="#{value}", readonly)
+    input.form-control(type="text", value="#{value}", readonly)
 mixin tableForm(id,title,brief,itemId,createTime,description)
   tr
     td #{id}
@@ -26,29 +26,27 @@ mixin tableForm(id,title,brief,itemId,createTime,description)
 .form-horizontal
   +blocks("合同详情")
     +formGroup()
-      +formField("MSU账户", "contract.msuAccount.name")(class="col-md-3")
-      +formField("MSP账户", "contract.mspAccount")(class="col-md-3")
+      +formField("MSU账户", "{{contract.msuAccount.name}}")(class="col-md-3")
+      +formField("MSP账户", "{{contract.mspAccount.name}}")(class="col-md-3")
     +formGroup()
-      +formField("SN", "contract.sn")(class="col-md-3")
-      +formField("注册时间", "contract.createdAt | formatTime")(class="col-md-3")
+      +formField("SN", "{{contract.sn}}")(class="col-md-3")
+      +formField("注册时间", "{{contract.createdAt | formatTime}}")(class="col-md-3")
     +formGroup()
-      +formField("MSU状态", "contract.msuStatus")(class="col-md-3")
-      +formField("MSP状态", "contract.mspStatus")(class="col-md-3")
+      +formField("MSU状态", "{{contract.msuStatus}}")(class="col-md-3")
+      +formField("MSP状态", "{{contract.mspStatus}}")(class="col-md-3")
     hr
     .col-md-offset-1.col-md-10
       table.table.table-striped.table-bordered.table-hover
         tr
-          th(class="thNo") 账户编号
           th(class="thNo") 合同名称
           th(class="thNo") 合同简介
-          th(class="thNo") item_id
           th(class="thNo") 注册时间
           th(class="con") 合同描述
-        //+tableForm('{{user.name}}', '{{user.nickName}}', '{{user.email}}', '{{user.phone}}','xxxx','2014/12/23','最好在他既有机制上 进行改动,不要打破他的设计理念,我觉得是最好不过的了最好在他既有机制上 进行改动,不要打破他的设计理念,我觉得是最好不过的了')
-        +tableForm('xxxxx', 'xxxxx', 'xxxx', 'xxxx','2014/12/23','最好在他既有机制上 进行改动,不要打破他的设计理念,我觉得是最好不过的了最好在他既有机制上 进行改动,不要打破他的设计理念,我觉得是最好不过的了,我觉得是最好不过的了最好在他既有机制上 进行改动,不要打破他的设计理念,我觉得是最好不过的了')
-        //+tableForm('xxxxx', 'xxxxx', 'xxxx', 'xxxx','2014/12/23','最好在他既有机制上 进行改动,不要打破他的设计理念,我觉得是最好不过的了最好在他既有机制上 进行改动,不要打破他的设计理念,我觉得是最好不过的了')
-        //+tableForm('xxxxx', 'xxxxx', 'xxxx', 'xxxx','2014/12/23','最好在他既有机制上 进行改动,不要打破他的设计理念,我觉得是最好不过的了最好在他既有机制上 进行改动,不要打破他的设计理念,我觉得是最好不过的了')
-        //+tableForm('xxxxx', 'xxxxx', 'xxxx', 'xxxx','2014/12/23','最好在他既有机制上 进行改动,不要打破他的设计理念,我觉得是最好不过的了最好在他既有机制上 进行改动,不要打破他的设计理念,我觉得是最好不过的了')
+        tr(ng-repeat="detail in contract.details")
+          td {{detail.title}}
+          td {{detail.brief}}
+          td {{detail.createdAt | formatTime}}
+          td {{detail.description}}
 
 
 

@@ -30,6 +30,7 @@ module.exports = {
     lib_tpl: [ '/lib/**/*.tpl.html', '/lib/**/*.tpl.jade' ],
     index_tpl: [ 'index/**/*.tpl.html', 'index/**/*.tpl.jade' ],
     ms_tpl: [ 'msc/index/**/*.tpl.html', 'msc/index/**/*.tpl.jade', 'msc/index/**/*.jade' ],
+    general_tpl: [], // general_tpl is used in msp and msu, but here must identify an empty variable to run grunt successful
 
     less: 'less/index.less'
   },
@@ -45,6 +46,7 @@ module.exports = {
     lib_tpl: [ 'lib/**/*.tpl.html', 'lib/**/*.tpl.jade' ],
     login_tpl: [ 'login/**/*.tpl.html', 'login/**/*.tpl.jade' ],
     ms_tpl: [ 'msc/login/**/*.tpl.html', 'msc/login/**/*.tpl.jade' ],
+    general_tpl: [], // general_tpl is used in msp and msu, but here must identify an empty variable to run grunt successful
 
     less: 'less/login.less'
   },

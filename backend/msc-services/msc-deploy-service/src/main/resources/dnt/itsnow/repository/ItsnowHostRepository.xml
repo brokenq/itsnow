@@ -52,6 +52,23 @@
         </if>
     </select>
 
+    <select id="findAllAvailableByTypes" resultMap="hostResult">
+        SELECT t.* FROM (
+            <include refid="selectHost"/>
+            <if test="types != null">
+                <where>
+                    type IN
+                    <foreach collection="types" index="index" item="item" open="(" separator="," close =")">
+                        #{item}
+                    </foreach>
+                </where>
+            </if>
+        ) t
+        <where>
+            t.capacity > t.schemas_count + t.processes_count
+        </where>
+    </select>
+
     <select id="findByAddress" resultMap="hostResult">
         <include refid="selectHost"/>
         <where>

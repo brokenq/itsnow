@@ -233,9 +233,9 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
     @Override
     public long follow(ItsnowProcess process, String jobId, long offset, List<String> result) {
         logger.trace("Follow {}'s job: {}", process, jobId);
-        if(jobId.equals(process.getProperty(START_INVOCATION_ID)) && process.getStatus() == ProcessStatus.Starting){
+        if(jobId.equals(process.getProperty(START_INVOCATION_ID))){
             return invokeService.read(jobId, offset, result);
-        }else if (jobId.equals(process.getProperty(STOP_INVOCATION_ID)) && process.getStatus() == ProcessStatus.Stopping){
+        }else if (jobId.equals(process.getProperty(STOP_INVOCATION_ID))){
             return invokeService.read(jobId, offset, result);
         }
         return -1;

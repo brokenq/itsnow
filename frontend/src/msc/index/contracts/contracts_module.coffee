@@ -1,34 +1,26 @@
-angular.module('MscIndex.Contracts',
-  ['ngTable',
-   'ngResource',
-   'ngSanitize',
-   'dnt.action.service',
-   'Lib.Commons',
-   'Lib.Utils',
-   'Lib.Feedback'])
+angular.module('MscIndex.Contracts', [])
+
 .config ($stateProvider, $urlRouterProvider)->
   $stateProvider.state 'contracts',
-    url: '/contracts',
-    abstract: true,
-    templateUrl: 'contracts/index.tpl.jade',
-    controller: 'ContractsCtrl',
+    url: '/contracts'
+    abstract: true
+    templateUrl: 'contracts/index.tpl.jade'
+    controller: 'ContractsCtrl'
     data: {pageTitle: '合同管理', default: 'contracts.list'}
   $stateProvider.state 'contracts.list',
-    url: '/list',
+    url: '/list'
     templateUrl: 'contracts/list.tpl.jade'
-    controller: 'ContractListCtrl',
+    controller: 'ContractListCtrl'
     data: {pageTitle: '合同列表'}
   $stateProvider.state 'contracts.view',
-    url: '/{sn}',
+    url: '/{sn}'
     templateUrl: 'contracts/view.tpl.jade'
-    controller: 'ContractViewCtrl',
+    controller: 'ContractViewCtrl'
     data: {pageTitle: '查看合同'}
   $urlRouterProvider.when '/contracts', '/contracts/list'
 
 .factory('ContractService', ['$resource', ($resource) ->
-    $resource("/admin/api/contracts", {}, {
-      query: { method: 'GET', params: {keyword: '@keyword'}, isArray: true}
-    });
+    $resource "/admin/api/contracts/:sn", {sn: '@sn'}
   ])
 
 .filter('formatContractStatus', ->
@@ -45,34 +37,37 @@ angular.module('MscIndex.Contracts',
     return date.toLocaleString()
 )
 
-.controller('ContractsCtrl', ['$scope', '$state', '$log', 'Feedback', 'CacheService',
-    ($scope, $state, $log, feedback, CacheService) ->
+.controller('ContractsCtrl', ['$scope', '$state', '$log', 'Feedback', 'CacheService', 'ContractService',\
+    ($scope, $state, $log, feedback, CacheService, contractService) ->
+
       $log.log "Initialized the Contracts controller"
+
       $scope.options =
-        page: 1, # show first page
+        page: 1   # show first page
         count: 10 # count per page
 
-      $scope.cacheService = new CacheService("sn")
+      $scope.cacheService = new CacheService "sn", (value)->
+        contractService.get {sn:value}
   ])
 
 .controller('ContractListCtrl',
-  ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'CommonService', 'ContractService', 'Feedback',
-    ($scope, $location, $log, NgTable, ActionService, commonService, contractService, feedback) ->
+  ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'SelectionService', 'ContractService', \
+    ($scope, $location, $log, NgTable, ActionService, SelectionService, contractService) ->
+
       $log.log "Initialized the Contract list controller"
 
       args =
         total: 0,
         getData: ($defer, params) ->
-          $location.search(params.url()); # put params in url
+          $location.search(params.url()) # put params in url
           contractService.query params.url(), (data, headers) ->
             params.total headers('total')
             $scope.cacheService.cache data
             $defer.resolve data
 
-      $scope.selection = { checked: false, items: {} }
-      $scope.contractsTable = new NgTable(angular.extend($scope.options, $location.search()), args);
-      $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.cacheService.find})
-      commonService.watchSelection($scope.selection, $scope.cacheService.records, "sn")
+      $scope.contractsTable = new NgTable(angular.extend($scope.options, $location.search()), args)
+      $scope.selectionService = new SelectionService($scope.cacheService.records, "sn")
+      $scope.actionService = new ActionService({watch: $scope.selectionService.items, mapping: $scope.cacheService.find})
   ])
 
 .controller('ContractViewCtrl', ['$scope', '$stateParams', '$log', ($scope, $stateParams, $log) ->

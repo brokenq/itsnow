@@ -1,17 +1,12 @@
 -- // alter_dictionaries
 -- Migration SQL that makes the change goes here.
 
-DROP TABLE IF EXISTS dictionaries;
-CREATE TABLE IF NOT EXISTS dictionaries (
-  id          INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  code        VARCHAR(255) NOT NULL,
-  name        VARCHAR(255) NOT NULL,
-  label       VARCHAR(255) NOT NULL,
-  description VARCHAR(500),
-  detail      TEXT         NOT NULL,
-  created_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+ALTER TABLE dictionaries DROP sn;
+ALTER TABLE dictionaries DROP val;
+ALTER TABLE dictionaries DROP state;
+ALTER TABLE dictionaries DROP type;
+ALTER TABLE dictionaries CHANGE display label VARCHAR(255) NOT NULL;
+ALTER TABLE dictionaries ADD detail TEXT NOT NULL;
 
 -- //@UNDO
 -- SQL to undo the change goes here.

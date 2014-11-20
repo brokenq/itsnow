@@ -7,6 +7,7 @@ import dnt.itsnow.platform.repository.support.MybatisRepositoryScanner;
 import dnt.util.StringUtils;
 import net.happyonroad.component.container.feature.AbstractFeatureResolver;
 import net.happyonroad.component.core.Component;
+import org.apache.ibatis.io.Resources;
 
 import static org.springframework.context.ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS;
 
@@ -27,9 +28,10 @@ import static org.springframework.context.ConfigurableApplicationContext.CONFIG_
  * </pre>
  */
 public class MybatisFeatureResolver extends AbstractFeatureResolver {
-    public static final String FEATURE       = "mybatis";
-    public static final String DB_CONFIG     = "DB-Config";
+    public static final String FEATURE   = "mybatis";
+    public static final String DB_CONFIG = "DB-Config";
     public static final String DB_REPOSITORY = "DB-Repository";
+    private ClassLoader legacyClassLoader;
 
     public MybatisFeatureResolver() {
         //28： 在Spring Service Context之后(25)， Spring Application Context之前(30)，加载
@@ -49,6 +51,17 @@ public class MybatisFeatureResolver extends AbstractFeatureResolver {
     public boolean hasFeature(Component component) {
         //暂时仅根据组件的artifact id判断，也不根据内容判断
         return StringUtils.isNotBlank(component.getManifestAttribute(DB_REPOSITORY));
+    }
+
+    @Override
+    public void beforeResolve(Component component) {
+        legacyClassLoader = Resources.getDefaultClassLoader();
+        Resources.setDefaultClassLoader(component.getClassLoader());
+    }
+
+    @Override
+    public void afterResolve(Component component) {
+        Resources.setDefaultClassLoader(legacyClassLoader);
     }
 
     @Override

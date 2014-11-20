@@ -101,7 +101,7 @@ public class DictionaryManagerTest {
 
     @Test
     public void testDestroy() throws Exception {
-        String code = "001";
+        String code = "003";
         Dictionary dictionary = service.findByCode(code);
         Assert.assertNotNull(dictionary);
         service.destroy(dictionary);

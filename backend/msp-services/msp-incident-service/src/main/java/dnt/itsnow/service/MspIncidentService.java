@@ -4,6 +4,7 @@ import dnt.itsnow.model.Incident;
 import dnt.itsnow.model.MspIncident;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
+import dnt.itsnow.platform.util.PageRequest;
 
 import java.io.InputStream;
 
@@ -79,4 +80,12 @@ public interface MspIncidentService {
      * @return  图片stream
      */
     InputStream getProcessImage(String instanceId);
+
+    /**
+     * 获取所有监控的故障单
+     * @param key 关键字
+     * @param pageRequest 分页信息
+     * @return 故障单列表
+     */
+    Page<Incident> findMonitoredByKey(String key, PageRequest pageRequest);
 }

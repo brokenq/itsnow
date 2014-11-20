@@ -27,4 +27,21 @@
         </trim>
     </select>
 
+    <select id="findAllMonitoredByKey" resultType="Incident">
+        <bind name="pattern" value="'%' + keyword + '%' "/>
+        SELECT * FROM msp_incidents WHERE msp_instance_id is null
+        <if test="keyword != ''">
+            WHERE ((requester_name LIKE #{pattern})
+            OR (request_description LIKE #{pattern})
+            OR (msp_status LIKE #{pattern}))
+        </if>
+        <if test="pageable.sort != null">
+            ORDER BY #{pageable.sort}
+        </if>
+        <trim prefix="LIMIT" prefixOverrides=",">
+            <if test="pageable.offset > 0">#{pageable.offset}</if>
+            <if test="pageable.pageSize > 0">, #{pageable.pageSize}</if>
+        </trim>
+    </select>
+
 </mapper>

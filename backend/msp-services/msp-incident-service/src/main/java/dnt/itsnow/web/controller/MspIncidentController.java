@@ -67,6 +67,23 @@ public class MspIncidentController extends SessionSupportController<Incident> {
     }
 
     /**
+     * <h2>查询监控的故障单列表</h2>
+     * <p/>
+     * GET /api/msp-incidents/monitored
+     * @param key 查询关键字
+     * @return  Incident列表
+     */
+    @RequestMapping(value = "/monitored")
+    @ResponseBody
+    public Page<Incident> indexMonitored(@RequestParam(value = "key", required = false) String key) {
+        logger.debug("finding all monitored incidents key:{}",key);
+        //根据实例查询对应表单数据
+        indexPage = service.findMonitoredByKey(key, pageRequest);
+        logger.debug("found monitored incidents:{}",indexPage.getTotalElements());
+        return indexPage;
+    }
+
+    /**
      * <h2>查询当前用户的创建的故障单列表</h2>
      * <p/>
      * GET /api/msu-incidents/created

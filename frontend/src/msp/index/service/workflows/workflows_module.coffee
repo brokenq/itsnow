@@ -71,7 +71,7 @@ angular.module('Service.Workflows', ['multi-select','angularFileUpload'])
           if serviceCatalog.items?
             for item in serviceCatalog.items
               if item.ticked is true
-                serviceItem.id = item.id
+                serviceItem.sn = item.sn
                 return serviceItem
 
       # 去除不必要的对象属性，用于HTTP提交
@@ -86,8 +86,8 @@ angular.module('Service.Workflows', ['multi-select','angularFileUpload'])
   ])
 
 .controller('WorkflowListCtrl',
-  ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'CommonService', 'WorkflowService', 'Feedback',
-    ($scope, $location, $log, NgTable, ActionService, commonService, workflowService, feedback) ->
+  ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'SelectionService', 'WorkflowService', 'Feedback',
+    ($scope, $location, $log, NgTable, ActionService, SelectionService, workflowService, feedback) ->
       $log.log "Initialized the Workflow list controller"
 
       args =
@@ -99,10 +99,9 @@ angular.module('Service.Workflows', ['multi-select','angularFileUpload'])
             $scope.cacheService.cache data
             $defer.resolve $scope.workflows = data
 
-      $scope.selection = { checked: false, items: {} }
-      $scope.workflowsTable = new NgTable(angular.extend($scope.options, $location.search()), args);
-      $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.cacheService.find})
-      commonService.watchSelection($scope.selection, $scope.cacheService.records, "sn")
+      $scope.workflowsTable = new NgTable(angular.extend($scope.options, $location.search()), args)
+      $scope.selectionService = new SelectionService($scope.cacheService.records, "sn")
+      $scope.actionService = new ActionService({watch: $scope.selectionService.items, mapping: $scope.cacheService.find})
 
       $scope.destroy = (workflow) ->
         workflowService.remove workflow, () ->
@@ -193,7 +192,7 @@ angular.module('Service.Workflows', ['multi-select','angularFileUpload'])
             serviceCatalogs.push serviceCatalog
             if serviceCatalog.items?
               for item in serviceCatalog.items
-                if item.id == $scope.workflow.serviceItem.id
+                if item.sn == $scope.workflow.serviceItem.sn
                   item.ticked = true
                 serviceCatalogs.push item
           $scope.serviceCatalogs = serviceCatalogs

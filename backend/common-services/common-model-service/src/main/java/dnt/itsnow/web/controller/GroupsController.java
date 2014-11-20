@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 
 /**
  * <h1>用户组的控制器</h1>
@@ -141,7 +142,15 @@ public class GroupsController extends SessionSupportController<Group> {
 
         return group;
     }
-
+    @RequestMapping(value = "check/{name}", method = RequestMethod.GET)
+    public HashMap checkUnique(@PathVariable("name") String name){
+         group = groupService.findByName(name);
+        if( group != null ){
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate role name: " + group.getName());
+        }else{
+            return new HashMap();
+        }
+    }
     @BeforeFilter({"show", "update", "destroy"})
     public void initGroup(@PathVariable("name") String name) {
         this.group = groupService.findByName(name);

@@ -62,9 +62,11 @@ public class CommonUserManager extends Bean implements CommonUserService {
     @Override
     public boolean challenge(String username, String password) {
         // AppId 就是 Account的sn，忽略大小写
-        String appId = System.getProperty("app.id");
-        User user = repository.findByAccountSnAndUsername(appId, username);
+       /* String appId = System.getProperty("app.id");
+        User user = repository.findByAccountSnAndUsername(appId, username);*/
+        User user=repository.findByFieldAndValue("username",username);
         if (user == null) throw new UsernameNotFoundException("Can't find user " + username);
+
         return passwordEncoder.matches(password, user.getPassword());
     }
 

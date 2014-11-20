@@ -5,17 +5,17 @@ include /lib/mixins/list
     +button_group
       +tool_button("processesTable.reload()", "refresh", "", "*", "", "")
     +button_group
-      +tool_button("actionService.gotoState('processes.new')", "plus", "新增", "*", "", "")
-      +tool_button("actionService.gotoState('processes.edit')", "pencil", "修改", "1", "", "editable")
-      +tool_button("actionService.perform(start)", "play", "启动", "1+", "", "stopped")
-      +tool_button("actionService.perform(stop)", "stop", "停止", "1", "", "running")
+      +tool_button("actionService.gotoState('processes.new', $event)", "plus", "新增", "*", "", "")
+      +tool_button("actionService.gotoState('processes.edit', $event)", "pencil", "修改", "1", "", "editable")
+      +tool_button("actionService.perform(start, $event)", "play", "启动", "1+", "", "stopped")
+      +tool_button("actionService.perform(stop, $event)", "stop", "停止", "1", "", "running")
     +more_buttons
       +drop_button("", "repeat", "重启", "", "", "")
       +drop_button("", "adjust", "切换主机", "", "", "")
       +drop_button("", "tint", "更改配置", "", "", "")
       +drop_button("", "screenshot", "创建备份", "", "", "")
       +drop_button("", "time", "加载备份", "", "", "")
-      +drop_button("actionService.perform(destroy)", "trash", "删除", "1+", "", "deletable stopped")
+      +drop_button("actionService.perform(destroy, $event)", "trash", "删除", "1+", "", "deletable stopped")
 
   +page_table("processesTable", "selectionService")
     +row("process", "name", "selectionService")(class="editable deletable", ng-class="process.status.toLowerCase()")

@@ -1,20 +1,28 @@
 package dnt.itsnow.support;
 
+import dnt.itsnow.api.ActivitiEngineService;
 import dnt.itsnow.exception.WorkflowException;
+import dnt.itsnow.model.ActReProcdef;
 import dnt.itsnow.model.PublicServiceItem;
 import dnt.itsnow.model.Workflow;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.platform.util.DefaultPage;
+import dnt.itsnow.platform.web.exception.WebServerSideException;
 import dnt.itsnow.repository.WorkflowRepository;
 import dnt.itsnow.service.CommonServiceItemService;
 import dnt.itsnow.service.PrivateServiceItemService;
 import dnt.itsnow.service.PublicServiceItemService;
 import dnt.itsnow.service.WorkflowService;
 import dnt.spring.Bean;
+import org.activiti.engine.repository.Deployment;
+import org.activiti.engine.repository.ProcessDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -29,18 +37,35 @@ public class WorkflowManager extends Bean implements WorkflowService {
     private WorkflowRepository repository;
 
     @Autowired
+    private ActivitiEngineService activitiEngineService;
+
+    @Autowired
     private CommonServiceItemService commonServiceItemService;
 
     @Autowired
     private PrivateServiceItemService privateServiceItemService;
 
     @Override
-    public Workflow create(Workflow workflow) throws WorkflowException {
+    public Workflow create(Workflow workflow, InputStream inputStream) throws WorkflowException {
 
         logger.info("Creating {}", workflow);
 
         if (workflow == null) {
             throw new WorkflowException("Workflow entry can not be empty.");
+        }
+
+        try {
+            // 部署单个流程定义
+            Deployment deployment = activitiEngineService.deploySingleProcess(inputStream, workflow.getName(), workflow.getDictionary().getCode());
+            if (deployment == null) {
+                throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, "Workflow create failed");
+            }
+            ProcessDefinition processDefinition = activitiEngineService.getProcessDefinitionByDeploymentId(deployment.getId());
+            ActReProcdef actReProcdef = new ActReProcdef();
+            actReProcdef.setId(processDefinition.getId());
+            workflow.setActReProcdef(actReProcdef);
+        } catch (IOException e) {
+            throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, "Workflow create failed, " + e.getMessage());
         }
 
         workflow.setSn(UUID.randomUUID().toString());
@@ -77,6 +102,13 @@ public class WorkflowManager extends Bean implements WorkflowService {
         if (workflow == null) {
             throw new WorkflowException("Workflow entry can not be empty.");
         }
+
+        try {
+            activitiEngineService.deleteProcessDeploy(workflow.getActReDeployment().getId());
+        } catch (Exception e) {
+            throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, "Destroy workflow failed, "+e.getMessage());
+        }
+
         repository.delete(workflow.getSn());
 
         logger.warn("Deleted  {}", workflow);
@@ -91,12 +123,12 @@ public class WorkflowManager extends Bean implements WorkflowService {
         int total = repository.count(keyword);
         List<Workflow> workflows = new ArrayList<Workflow>();
         if (total > 0) {
-            workflows = repository.find(keyword, pageable);
+            workflows = repository.findAll(keyword, pageable);
             for (Workflow workflow : workflows) {
                 if (Workflow.PUBLIC_SERVICE_ITEM.equals(workflow.getServiceItemType())) {
-                    workflow.setServiceItem(commonServiceItemService.findBySn(workflow.getSn()));
+                    workflow.setServiceItem(commonServiceItemService.findBySn(workflow.getServiceItemSn()));
                 } else if (Workflow.PRIVATE_SERVICE_ITEM.equals(workflow.getServiceItemType())) {
-                    workflow.setServiceItem(privateServiceItemService.findPrivateBySn(workflow.getSn()));
+                    workflow.setServiceItem(privateServiceItemService.findPrivateBySn(workflow.getServiceItemSn()));
                 }
             }
         }
@@ -116,9 +148,9 @@ public class WorkflowManager extends Bean implements WorkflowService {
         Workflow workflow = repository.findBySn(sn);
 
         if (null!=workflow && Workflow.PUBLIC_SERVICE_ITEM.equals(workflow.getServiceItemType())) {
-            workflow.setServiceItem(commonServiceItemService.findBySn(workflow.getSn()));
+            workflow.setServiceItem(commonServiceItemService.findBySn(workflow.getServiceItemSn()));
         } else if (null!=workflow && Workflow.PRIVATE_SERVICE_ITEM.equals(workflow.getServiceItemType())) {
-            workflow.setServiceItem(privateServiceItemService.findPrivateBySn(workflow.getSn()));
+            workflow.setServiceItem(privateServiceItemService.findPrivateBySn(workflow.getServiceItemSn()));
         }
 
         logger.debug("Found   {}", workflow);
