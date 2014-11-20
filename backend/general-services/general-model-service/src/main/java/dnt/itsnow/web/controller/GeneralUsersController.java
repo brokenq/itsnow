@@ -3,6 +3,7 @@ package dnt.itsnow.web.controller;
 import dnt.itsnow.model.User;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.service.GeneralUserService;
+import dnt.itsnow.web.model.ChangePasswordRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
@@ -16,15 +17,15 @@ import javax.validation.Valid;
  * <h1>MSP/MSU用户控制器</h1>
  * <pre>
  * <b>HTTP   URI                           方法      含义  </b>
- *  GET      /admin/api/users              index     列出该账户下所有的用户，并且分页显示
- *  GET      /admin/api/users /{username}  show      列出特定的用户记录
- *  POST     /admin/api/users              create    创建一个用户
- *  PUT      /admin/api/users/{username}   update    修改一个指定的用户
- *  DELETE   /admin/api/users/{username}   delete    删除指定的用户记录
+ *  GET      /api/users              index     列出该账户下所有的用户，并且分页显示
+ *  GET      /api/users /{username}  show      列出特定的用户记录
+ *  POST     /api/users              create    创建一个用户
+ *  PUT      /api/users/{username}   update    修改一个指定的用户
+ *  DELETE   /api/users/{username}   delete    删除指定的用户记录
  * </pre>
  */
 @RestController
-@RequestMapping("/admin/api/users")
+@RequestMapping("/api/users")
 public class GeneralUsersController extends SessionSupportController <User>{
     @Autowired
     GeneralUserService userService;
@@ -114,21 +115,6 @@ public class GeneralUsersController extends SessionSupportController <User>{
         logger.warn("Deleted  {}");
     }
 
-    /**
-     * <h2>管理员更新一个用户的密码</h2>
-     * <p/>
-     * PUT /admin/api/users/#{username}/reset_password
-     * @param username    需要更新的用户原始用户名
-     * @param newPassword 需要更新的用户密码，通过HTTP BODY POST上来
-     */
-    @RequestMapping(value = "{username}/reset_password", method = RequestMethod.PUT)
-    public void resetPassword(@PathVariable("username") String username,
-                              @RequestBody String newPassword) {
-        logger.info("Reset password for {}", username);
-        userService.changePassword(username, newPassword);
-        logger.info("Reset password for {} (done!)", username);
-
-    }
     @RequestMapping(value = "check/{username}", method = RequestMethod.GET)
     public HashMap checkUnique(@PathVariable("username") String username){
         User user = userService.findByUsername(username);
@@ -158,7 +144,11 @@ public class GeneralUsersController extends SessionSupportController <User>{
 
         return users;
     }
-
+    @RequestMapping(value = "change/password", method = RequestMethod.PUT)
+    public void changePassword(@RequestBody @Valid ChangePasswordRequest changeRequest) {
+         logger.info("change password:{}");
+        userService.changePassword(changeRequest);
+    }
     @BeforeFilter({"show", "update", "destroy"})
     public void initCurrentUser(@PathVariable("username") String username) {
         this.user=userService.findByUsername(username);

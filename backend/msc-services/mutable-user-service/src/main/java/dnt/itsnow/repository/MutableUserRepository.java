@@ -55,8 +55,7 @@ public interface MutableUserRepository extends CommonUserRepository {
      * @param newPassword 密码
      */
     @Update("UPDATE itsnow_msc.users SET " +
-            " password = #{password}, " +
-            " updated_at = #{updatedAt}" +
+            " password = #{password}" +
             " WHERE username = #{username} ")
     void changePassword(@Param("username") String username,
                         @Param("password") String newPassword);

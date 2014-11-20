@@ -8,8 +8,8 @@ include /lib/mixins/list
       +tool_button("actionService.gotoState('groups.edit', $event)", "pencil", "修改", "1", "", "editable")
     +more_buttons
       +drop_button("actionService.perform(destroy, $event)", "trash", "删除", "1+", "", "deletable")
-  +page_table("groupsTable","selection")
-    +row("group", "name", "selection")(class="editable deletable")
+  +page_table("groupsTable","selectionService")
+    +row("group", "name", "selectionService")(class="editable deletable")
       td(data-title="'组名称'")
         a(ui-sref="groups.view(group)") {{group.name}}
       td(data-title="'组用户'") {{group.users | colFilter}}
