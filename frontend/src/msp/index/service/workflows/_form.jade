@@ -11,6 +11,6 @@ include /lib/mixins/form
     div#workflow_servicecatalog(multi-select, selection-mode="single", input-model="serviceCatalogs", button-label="title",
     item-label="title", tick-property="ticked", group-property="multiSelectGroup", disable-property="checkboxDisabled")
   +group("workflow", "file", "配置文件", "", "上传部署工作流文件")(ng-hide="disabled")
-    +file("workflow", "file")(ng-file-select="onFileSelect($files)", onclick="this.value=null", ng-disabled="disabled")
+    +file("workflow", "file")(ng-file-select="onFileSelect($files)", onclick="this.value=null", ng-disabled="disabled", itsnow-file-check)
   +group("workflow", "description", "描述", "edit", "说明")
     +area("workflow", "description")

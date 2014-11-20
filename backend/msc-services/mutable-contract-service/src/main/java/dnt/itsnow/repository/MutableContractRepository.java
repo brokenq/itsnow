@@ -1,6 +1,8 @@
 package dnt.itsnow.repository;
 
 import dnt.itsnow.model.Contract;
+import dnt.itsnow.model.ContractUser;
+import dnt.itsnow.model.User;
 import org.apache.ibatis.annotations.*;
 
 /**
@@ -82,4 +84,16 @@ public interface MutableContractRepository extends CommonContractRepository{
      */
     @Delete("DELETE FROM itsnow_msc.contracts WHERE sn = #{sn}")
     void deleteBySn(@Param("sn") String sn);
+
+    /**
+     * 建立合同与MSP用户的关联关系
+     * @param contractUser 合同与MSP用户关系实体类
+     */
+    void buildRelation(ContractUser contractUser);
+
+    /**
+     * 修改MSP用户根据合同的关联关系，访问MSU系统的权限
+     * @param contractUser 合同与MSP用户关系实体类
+     */
+    void updateRelation(ContractUser contractUser);
 }

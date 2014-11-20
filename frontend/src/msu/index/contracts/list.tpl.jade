@@ -8,6 +8,7 @@ include /lib/mixins/list
       +tool_button("actionService.gotoState('contracts.new')", "plus", "新增", "*", "", "")
       +tool_button("actionService.perform(approve)", "approve", "批准", "1+", "", "")
       +tool_button("actionService.perform(reject)", "reject", "拒绝", "1+", "", "")
+      +tool_button("actionService.gotoState('contracts.edit')", "edit", "操作", "1", "", "")
 
   +page_table("contractsTable","selectionService")
     +row("contract", "sn", "selectionService")

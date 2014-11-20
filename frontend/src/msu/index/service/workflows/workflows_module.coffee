@@ -47,15 +47,16 @@ angular.module('Service.Workflows', ['multi-select','angularFileUpload'])
       list: {method: 'GET', params: {code: '@code'}, isArray: true}
   ])
 
-.controller('WorkflowsCtrl', ['$scope', '$state', '$log', 'Feedback', 'CacheService',\
-    ($scope, $state, $log, feedback, CacheService) ->
+.controller('WorkflowsCtrl', ['$scope', '$state', '$log', 'Feedback', 'CacheService', 'WorkflowService',\
+    ($scope, $state, $log, feedback, CacheService, workflowService) ->
       # frontend controller logic
       $log.log "Initialized the Workflows controller"
       $scope.options =
         page: 1   # show first page
         count: 10 # count per page
 
-      $scope.cacheService = new CacheService("sn")
+      $scope.cacheService = new CacheService "sn", (value)->
+        workflowService.get {sn: value}
 
       # 提交按钮是否已经执行了提交操作，false为未执行，则按钮可用
       $scope.submited = false

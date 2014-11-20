@@ -25,6 +25,7 @@ public interface CommonUserRepository {
     Set<UserAuthority> findAuthorities(@Param("username") String username);
 
     User findByAccountSnAndUsername(@Param("accountSn") String accountSn, @Param("username")String username);
+
     @Select("SELECT * FROM itsnow_msc.users WHERE account_id = #{mainAccount.id}")
     List<User> findUsersByAccount(@Param("mainAccount")Account mainAccount);
 }

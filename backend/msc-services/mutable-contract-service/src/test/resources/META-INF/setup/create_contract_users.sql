@@ -1,7 +1,3 @@
--- // create_contract_users
--- Msp users with the contracts relationship
--- Migration SQL that makes the change goes here.
-
 CREATE TABLE contract_users (
   contract_id INT(10) UNSIGNED NOT NULL,
   msp_user_id INT(10) UNSIGNED NOT NULL,
@@ -11,7 +7,5 @@ CREATE TABLE contract_users (
   FOREIGN KEY (msp_user_id) REFERENCES users (id)
 );
 
--- //@UNDO
--- SQL to undo the change goes here.
 
-DROP TABLE contract_users;
+

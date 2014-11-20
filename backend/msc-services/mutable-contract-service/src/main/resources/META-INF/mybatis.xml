@@ -2,11 +2,6 @@
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <typeAliases>
-        <typeAlias type="dnt.itsnow.model.Site" alias="Site"/>
-        <typeAlias type="dnt.itsnow.model.WorkTime" alias="WorkTime"/>
-        <typeAlias type="dnt.itsnow.model.Department" alias="Department"/>
-        <typeAlias type="dnt.itsnow.model.SiteDept" alias="SiteDept"/>
-        <typeAlias type="dnt.itsnow.model.Staff" alias="Staff"/>
-        <typeAlias type="dnt.itsnow.model.Group" alias="Group"/>
+        <typeAlias type="dnt.itsnow.model.ContractUser" alias="ContractUser"/>
     </typeAliases>
 </configuration>

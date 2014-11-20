@@ -47,14 +47,16 @@ angular.module('MspIndex.Contracts', [])
     date = new Date(time)
     date.toLocaleString()
 
-.controller('ContractsCtrl', ['$scope', '$log', 'CacheService', ($scope, $log, CacheService) ->
-    # frontend controller logic
-    $log.log "Initialized the Contracts controller"
-    $scope.options =
-      page: 1   # show first page
-      count: 10 # count per page
+.controller('ContractsCtrl', ['$scope', '$log', 'CacheService', 'ContractService',\
+    ($scope, $log, CacheService, contractService) ->
+      # frontend controller logic
+      $log.log "Initialized the Contracts controller"
+      $scope.options =
+        page: 1   # show first page
+        count: 10 # count per page
 
-    $scope.cacheService = new CacheService("sn")
+      $scope.cacheService = new CacheService "sn", (value)->
+        contractService.get {sn: value}
   ])
 
 .controller('ContractListCtrl',
@@ -76,9 +78,12 @@ angular.module('MspIndex.Contracts', [])
       $scope.actionService = new ActionService({watch: $scope.selectionService.items, mapping: $scope.cacheService.find})
 
       $scope.accept = (contract)->
-        contractService.bid {sn: contract.sn}, ()->
+        contractService.bid {sn: contract.sn}
+        , ()->
           feedback.success "应约成功，合同号： #{contract.sn}"
           $scope.contractsTable.reload()
+        , (resp)->
+          feedback.error "应约失败", resp
   ])
 
 .controller('ContractMyListCtrl',

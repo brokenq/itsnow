@@ -2,6 +2,7 @@ package dnt.itsnow.support;
 
 import dnt.itsnow.model.Contract;
 import dnt.itsnow.model.ContractStatus;
+import dnt.itsnow.model.ContractUser;
 import dnt.itsnow.repository.MutableContractRepository;
 import dnt.itsnow.service.MutableContractService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,6 +91,16 @@ public class MutableContractManager extends CommonContractManager implements Mut
     public void delete(Contract contract) {
         //delete contract
         mutableContractRepository.deleteBySn(contract.getSn());
+    }
+
+    @Override
+    public void buildRelation(ContractUser contractUser) {
+        mutableContractRepository.buildRelation(contractUser);
+    }
+
+    @Override
+    public void updateRelation(ContractUser contractUser) {
+        mutableContractRepository.updateRelation(contractUser);
     }
 
 }

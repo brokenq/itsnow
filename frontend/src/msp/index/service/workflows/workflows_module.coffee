@@ -1,4 +1,5 @@
-angular.module('Service.Workflows', ['multi-select','angularFileUpload'])
+angular.module('Service.Workflows', ['multi-select','angularFileUpload','jcs-autoValidate'])
+
 .config ($stateProvider, $urlRouterProvider)->
   $stateProvider.state 'workflows',
     url: '/workflows',
@@ -47,15 +48,16 @@ angular.module('Service.Workflows', ['multi-select','angularFileUpload'])
       list: {method: 'GET', params: {code: '@code'}, isArray: true}
   ])
 
-.controller('WorkflowsCtrl', ['$scope', '$state', '$log', 'Feedback', 'CacheService',\
-    ($scope, $state, $log, feedback, CacheService) ->
+.controller('WorkflowsCtrl', ['$scope', '$state', '$log', 'Feedback', 'CacheService', 'WorkflowService',\
+    ($scope, $state, $log, feedback, CacheService,workflowService) ->
       # frontend controller logic
       $log.log "Initialized the Workflows controller"
       $scope.options =
         page: 1   # show first page
         count: 10 # count per page
 
-      $scope.cacheService = new CacheService("sn")
+      $scope.cacheService = new CacheService "sn", (value)->
+        workflowService.get {sn: value}
 
       # 提交按钮是否已经执行了提交操作，false为未执行，则按钮可用
       $scope.submited = false
@@ -106,7 +108,7 @@ angular.module('Service.Workflows', ['multi-select','angularFileUpload'])
       $scope.destroy = (workflow) ->
         workflowService.remove workflow, () ->
           feedback.success "删除流程#{workflow.sn}成功"
-          delete $scope.selection.items[workflow.sn]
+          delete $scope.selectionService.items[workflow.sn]
           $scope.workflowsTable.reload()
         , (resp) ->
           feedback.error("删除流程#{workflow.sn}失败", resp)
@@ -140,16 +142,6 @@ angular.module('Service.Workflows', ['multi-select','angularFileUpload'])
         $scope.selectedFiles = $files
 
       $scope.create = ()->
-
-        if $scope.selectedFiles.length<=0
-          feedback.warn("未选择文件！")
-          return
-        if $scope.selectedFiles[0].name.indexOf('.bpmn20.xml') < 0
-          feedback.warn("上传文件格式错误！")
-          return
-        if $scope.selectedFiles[0].size>1048576
-          feedback.warn("上传文件大小超过最大限制(1M)！")
-          return
 
         upload = $upload.upload({
           url: '/api/workflows/upload'

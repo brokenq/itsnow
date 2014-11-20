@@ -3,6 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="dnt.itsnow.repository.CommonUserRepository">
+
     <sql id="selectUser">
         SELECT u.*,
                a.id         AS account_id,
@@ -17,20 +18,33 @@
         FROM itsnow_msc.users u
         LEFT JOIN itsnow_msc.accounts a ON u.account_id = a.id
     </sql>
+
+    <sql id="subSelect">
+        SELECT DISTINCT(con_a.sn)
+        FROM   itsnow_msc.contract_users con_cu
+            LEFT JOIN itsnow_msc.users con_u
+                ON con_u.id = con_cu.msp_user_id
+            LEFT JOIN itsnow_msc.accounts con_a
+                ON con_u.account_id = con_a.id
+        WHERE  con_cu.account_sn = #{accountSn}
+    </sql>
+
     <select id="findByFieldAndValue" resultMap="userWithAccount">
         <include refid="selectUser"/>
         WHERE UPPER(u.${field}) = UPPER(#{value}) LIMIT 1
     </select>
+
     <select id="findByAccountSnAndUsername" resultMap="userWithAccount">
         <include refid="selectUser"/>
         WHERE UPPER(u.username) = UPPER(#{username})
-          AND UPPER(a.sn) = UPPER(#{accountSn})
+          AND ( UPPER(a.sn) = UPPER(#{accountSn}) OR a.sn = (<include refid="subSelect"/>) )
     </select>
 
     <resultMap id="userResult" type="User" autoMapping="true">
         <id  property="id" column="id"/>
         <result column="account_id" property="accountId"/>
     </resultMap>
+
     <resultMap id="userWithAccount" type="User" autoMapping="true">
         <id  property="id" column="id"/>
         <association property="account" resultMap="dnt.itsnow.repository.CommonAccountRepository.accountWithUserResult" columnPrefix="account_"/>

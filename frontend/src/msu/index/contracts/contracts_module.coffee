@@ -16,6 +16,11 @@ angular.module('MsuIndex.Contracts', ['multi-select'])
     templateUrl: 'contracts/new.tpl.jade'
     controller: 'ContractNewCtrl',
     data: {pageTitle: '新增合同'}
+  $stateProvider.state 'contracts.edit',
+    url: '/edit',
+    templateUrl: 'contracts/edit.tpl.jade'
+    controller: 'ContractEditCtrl',
+    data: {pageTitle: '批准MSP用户'}
   $stateProvider.state 'contracts.view',
     url: '/{sn}',
     templateUrl: 'contracts/view.tpl.jade'
@@ -55,15 +60,16 @@ angular.module('MsuIndex.Contracts', ['multi-select'])
     date = new Date(time)
     date.toLocaleString()
 
-.controller('ContractsCtrl', ['$scope', '$state', '$log', 'Feedback', 'CacheService',\
-    ($scope, $state, $log, feedback, CacheService) ->
+.controller('ContractsCtrl', ['$scope', '$state', '$log', 'Feedback', 'CacheService', 'ContractService',\
+    ($scope, $state, $log, feedback, CacheService, contractService) ->
       # frontend controller logic
       $log.log "Initialized the Contracts controller"
       $scope.options =
         page: 1, # show first page
         count: 10 # count per page
 
-      $scope.cacheService = new CacheService("sn")
+      $scope.cacheService = new CacheService "sn", (value)->
+        contractService.get {sn: value}
 
       # 提交按钮是否已经执行了提交操作，false为未执行，则按钮可用
       $scope.submited = false

@@ -5,4 +5,21 @@
 <!--不要用 type != '*' 这种， mybatis 会根据 '*' 认为 type 为 long类型，而后无法解析-->
 <mapper namespace="dnt.itsnow.repository.MutableContractRepository">
 
+    <insert id="buildRelation" parameterType="ContractUser">
+        INSERT INTO contract_users(contract_id, msp_user_id, account_sn) VALUES
+        <foreach collection="users" item="user" separator=",">
+           (#{contract.id}, #{user.id}, #{accountSn})
+        </foreach>
+    </insert>
+
+    <update id="updateRelation" parameterType="ContractUser">
+        <foreach collection="users" item="user" separator=";">
+            UPDATE contract_users
+            <set>
+                access = #{access}
+            </set>
+            WHERE contract_id = #{contract.id} AND msp_user_id = #{user.id}
+        </foreach>
+    </update>
+
 </mapper>

@@ -4,6 +4,8 @@
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.Contract;
+import dnt.itsnow.model.ContractUser;
+import dnt.itsnow.model.User;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.ServiceException;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
@@ -18,13 +20,14 @@ import javax.validation.Valid;
 /**
  * <h1>Contracts Controller</h1>
  * * <pre>
- * <b>HTTP     URI                                      方法       含义  </b>
- * # GET      /admin/api/contracts         index     列出所有合同，支持过滤，分页，排序等
- * # GET      /admin/api/contracts/{sn}    show      查看一个合同
- * # POST     /admin/api/contracts         create    创建合同
- * # PUT      /admin/api/contracts/{sn}/details/{id}    update    修改合同详情，账户信息通过HTTP BODY提交
- * # DELETE   /admin/api/contracts/{sn}/details/{id}    destroy   删除合同详情
- *
+ * <b>HTTP    URI                                      方法            含义   </b>
+ * # GET      /admin/api/contracts                     index           列出所有合同，支持过滤，分页，排序等
+ * # GET      /admin/api/contracts/{sn}                show            查看一个合同
+ * # POST     /admin/api/contracts                     create          创建合同
+ * # PUT      /admin/api/contracts/{sn}/details/{id}   update          修改合同详情，账户信息通过HTTP BODY提交
+ * # DELETE   /admin/api/contracts/{sn}/details/{id}   destroy         删除合同详情
+ * # POST     /admin/api/contracts/{sn}/user/relation  buildRelation   删除合同详情
+ * # PUT      /admin/api/contracts/{sn}/user/relation  updateRelation  删除合同详情
  */
 @RestController
 @RequestMapping("/admin/api/contracts")
@@ -138,12 +141,52 @@ public class MutableContractsController extends SessionSupportController<Contrac
      * @return 被删除的合同
      */
     @RequestMapping(value = "{sn}", method = RequestMethod.DELETE)
-    public Contract destroy(@PathVariable("sn")String sn){
+    public Contract destroy(){
         mutableContractService.delete(contract);
         return contract;
     }
 
-    @BeforeFilter({"show", "update","bid","approve","reject", "destroy"})
+    /**
+     * <h2>MSP进行其用户与MSU合同进行关联</h2>
+     * <p/>
+     * POST /admin/api/contracts/{sn}/user/relation
+     *
+     * @param sn 合同号
+     * @param contractUser 合同与MSP用户关联实体类
+     */
+    @RequestMapping(value = "{sn}/user/relation", method = RequestMethod.POST)
+    public void buildRelation(@PathVariable("sn") String sn, @Valid @RequestBody ContractUser contractUser){
+        Contract contract;
+        try {
+            contract = mutableContractService.findBySn(sn);
+        } catch (ServiceException e) {
+            throw new WebClientSideException(HttpStatus.NOT_FOUND, "Can't find the contract with sn:" + sn);
+        }
+        contractUser.setContract(contract);
+        mutableContractService.buildRelation(contractUser);
+    }
+
+    /**
+     * <h2>MSP进行其用户与MSU合同进行关联</h2>
+     * <p/>
+     * PUT /admin/api/contracts/{sn}/user/relation
+     *
+     * @param sn 合同号
+     * @param contractUser 合同与MSP用户关联实体类
+     */
+    @RequestMapping(value = "{sn}/user/relation", method = RequestMethod.PUT)
+    public void updateRelation(@PathVariable("sn") String sn, @Valid @RequestBody ContractUser contractUser){
+        Contract contract;
+        try {
+            contract = mutableContractService.findBySn(sn);
+        } catch (ServiceException e) {
+            throw new WebClientSideException(HttpStatus.NOT_FOUND, "Can't find the contract with sn:" + sn);
+        }
+        contractUser.setContract(contract);
+        mutableContractService.updateRelation(contractUser);
+    }
+
+    @BeforeFilter({"show", "update", "bid", "approve", "reject", "destroy"})
     public void initContract(@PathVariable("sn")String sn){
         try {
             contract = mutableContractService.findByAccountAndSn(mainAccount, sn, true);//findByAccountId it by sn
