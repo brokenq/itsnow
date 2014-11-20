@@ -160,7 +160,7 @@ module.exports = function ( grunt ) {
        */
       general: {
         options: {
-          base: 'general',
+          base: 'general/index',
           module: 'General.Templates',
           jade: {basedir: '.'}
         },
@@ -433,9 +433,11 @@ module.exports = function ( grunt ) {
           'module.prefix',
           'window.VERSION = "<%=target.version%>"' ,
           '<%= build_dir %>/lib/**/*.js',
+          '<%= build_dir %>/general/**/*.js',
           '<%= build_dir %>/index/**/*.js',
           '<%= build_dir %>/<%= target.name %>/index/**/*.js',
           '<%= html2js.lib.dest %>',
+          '<%= html2js.general.dest %>',
           '<%= html2js.index.dest %>',
           '<%= html2js.ms_index.dest %>',
           'module.suffix'
@@ -448,9 +450,11 @@ module.exports = function ( grunt ) {
           'module.prefix',
           'window.VERSION = "<%=target.version%>"' ,
           '<%= build_dir %>/lib/**/*.js',
+          '<%= build_dir %>/general/**/*.js',
           '<%= build_dir %>/login/**/*.js',
           '<%= build_dir %>/<%= target.name %>/login/**/*.js',
           '<%= html2js.lib.dest %>',
+          '<%= html2js.general.dest %>',
           '<%= html2js.login.dest %>',
           '<%= html2js.ms_login.dest %>',
           'module.suffix'
@@ -565,6 +569,7 @@ module.exports = function ( grunt ) {
         scripts: [
           '<%= vendor_files.js %>',
           '<%= html2js.lib.dest %>',
+          '<%= html2js.general.dest %>',
           '<%= html2js.index.dest %>',
           '<%= html2js.ms_index.dest %>',
           '<%= index_files.js %>'
@@ -603,6 +608,7 @@ module.exports = function ( grunt ) {
         scripts: [
           '<%= vendor_files.js %>',
           '<%= html2js.lib.dest %>',
+          '<%= html2js.general.dest %>',
           '<%= html2js.login.dest %>',
           '<%= html2js.ms_login.dest %>',
           '<%= login_files.js %>'
@@ -700,13 +706,13 @@ module.exports = function ( grunt ) {
        */
       index_skeletons: {
         files: [
-            '../index.jade', 'lib/**/*.jade', 'index/**/*.jade', '!**/*.tpl.jade'
+            '../index.jade', 'lib/**/*.jade', 'index/**/*.jade', '!**/*.tpl.jade', 'general/**/*.jade'
         ],
         tasks: ['copy:build_jade', 'index:build', 'jade:index']
       },
       login_skeletons: {
         files: [
-            '../login.jade', 'lib/**/*.jade', 'login/**/*.jade', '!**/*.tpl.jade'
+            '../login.jade', 'lib/**/*.jade', 'login/**/*.jade', '!**/*.tpl.jade', 'general/**/*.jade'
         ],
         tasks: ['copy:build_jade', 'login:build', 'jade:login']
       },

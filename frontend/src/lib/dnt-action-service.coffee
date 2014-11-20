@@ -33,39 +33,41 @@ angular.module('dnt.action.service', [
       toggleButtons: ->
         selections = @getSelections()
         for button in @options.buttons
-          conditions = @getConditions button
           try
-            @checkCondition conditions, selections
+            @beforeExec button, selections
             $(button).removeAttr "disabled"
           catch error
             $(button).attr "disabled", "disabled"
 
       ### @function: beforeExec | check conditions before execute the action
-          @param: event | the event of element###
-      beforeExec: (event)->
-        element = event.srcElement || event.target
-        selections = @getSelections()
+          @param: element | the event of element
+          @param: selections | selection datas###
+      beforeExec: (element, selections)->
         conditions = @getConditions element
         @checkCondition conditions, selections
 
       ### @function: gotoState | redirect to another page
           @param: state | state of the page you want to redirect###
       gotoState: (state, event)->
+        element = event.srcElement || event.target
+        selections = @getSelections()
         try
-          @beforeAction event
+          @beforeExec element, selections
           $state.go state, selections.datas[0]
         catch error
-          feedback.error "#{error}"
+          feedback.warn "#{error}"
 
       ### @function: perform | perform the callback function
           @param: callback | the function you want to perform###
       perform: (callback, event)->
+        element = event.srcElement || event.target
+        selections = @getSelections()
         try
-          @beforeAction event
+          @beforeExec element, selections
           return callback item for item in selections.datas if callback.length is 1
           return callback.apply this, selections.datas
         catch error
-          feedback.error "#{error}"
+          feedback.warn "#{error}"
 
       ### @function: checkCondition | you can perform the action if the conditon is passed
           @param: conditions | button attributes: weight, reject-css, require-css
@@ -74,18 +76,18 @@ angular.module('dnt.action.service', [
         if /^\d+$/.test conditions.weight
           if parseInt(conditions.weight) is selections.datas.length
               return @checkStatus(conditions, selections)
-          throw exception "#{@INFO.REJECT}".interpolate(conditions.weight)
+          throw "#{@INFO.REJECT}".interpolate(conditions.weight)
 
         if /^\d+\+$/.test conditions.weight
           if selections.datas.length >= parseInt(conditions.weight.split(/\+/)[0])
             return @checkStatus(conditions, selections)
-          throw exception "#{@INFO.REJECT_AT_LEAST}".interpolate(conditions.weight)
+          throw "#{@INFO.REJECT_AT_LEAST}".interpolate(conditions.weight)
 
       ### @function: checkStatus | used in isConditionPass function
           @param: conditions | button attributes: weight, reject-css, require-css
           @param: selections | contains the selected datas and elements of tr ###
       checkStatus: (conditions, selections)->
-        throw exception "#{@INFO.CHECK_STATUS}" if !@isCssPass conditions, selections
+        throw "#{@INFO.CHECK_STATUS}" if !@isCssPass conditions, selections
 
       ### @function: isCssPass | were css passed
           @param: conditions | button attributes: weight, reject-css, require-css

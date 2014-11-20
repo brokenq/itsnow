@@ -8,5 +8,6 @@ angular.module('Itsnow.MsuIndex', [
   'MsuIndex.Contracts',
   'MsuIndex.Incidents',
   'MsuIndex.System',
-  'MsuIndex.Service'
+  'MsuIndex.Service',
+  'General.Templates'
 ]);

@@ -8,5 +8,6 @@ angular.module('Itsnow.MspIndex', [
   'MspIndex.Contracts',
   'MspIndex.Incidents',
   'MspIndex.System',
-  'MspIndex.Service'
+  'MspIndex.Service',
+  'General.Templates'
 ]);
