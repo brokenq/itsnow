@@ -156,7 +156,7 @@ public class UsersController extends SessionSupportController<User> {
             return new HashMap();
         }
     }
-    @RequestMapping(value = "getUsersByAccount", method = RequestMethod.GET)
+    @RequestMapping(value = "account/belongs", method = RequestMethod.GET)
     public List<User> listUsers() {
 
         logger.info("Listing users by current account:{}", mainAccount);
