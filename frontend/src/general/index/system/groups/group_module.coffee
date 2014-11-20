@@ -109,7 +109,7 @@ angular.module('System.Group', [])
   ])
 .controller('GroupsNewCtrl', ['$http','$scope', '$state', 'Feedback',
     ($http,$scope, $state, feedback) ->
-      $http.get("/api/users/getUsersByAccount").success (users)-> $scope.users = users
+      $http.get("/api/users/account/belongs").success (users)-> $scope.users = users
       $scope.disable=false;
       $scope.create = () ->
         $scope.formatGroup($scope.group,$scope.users)
@@ -124,7 +124,7 @@ angular.module('System.Group', [])
       $scope.disable=true;
       name = $stateParams.name
       $scope.group = $scope.cacheService.find name, true
-      $http.get("/api/users/getUsersByAccount").success (users)->
+      $http.get("/api/users/account/belongs").success (users)->
         $scope.users = users
         for user in $scope.users
           for selectedUser in $scope.group.users
