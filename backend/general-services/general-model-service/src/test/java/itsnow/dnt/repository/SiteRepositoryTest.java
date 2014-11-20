@@ -54,7 +54,7 @@ public class SiteRepositoryTest {
         site.setSn("100");
         site.setName("大众四厂");
 
-        Dictionary dictionary = dictionaryRepository.findBySn("001");
+        Dictionary dictionary = dictionaryRepository.findByCode("001");
         site.setDictionary(dictionary);
 
         WorkTime workTime = workTimeRepository.findBySn("plan1");

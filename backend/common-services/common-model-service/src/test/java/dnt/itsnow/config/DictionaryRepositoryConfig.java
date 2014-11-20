@@ -17,7 +17,7 @@ public class DictionaryRepositoryConfig extends RepositoryConfigWithH2 {
 
     protected String[] sqlScripts() {
         return new String[]{
-                "classpath:META-INF/migrate/20140720144647_create_dictionaries.sql@up",
+                "classpath:META-INF/setup/create_dictionaries.sql@up",
                 "classpath:META-INF/setup/initialization.sql",
                 "classpath:META-INF/setup/insert_dictionaries.sql"
         };

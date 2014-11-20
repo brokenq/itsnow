@@ -74,7 +74,7 @@ public class SiteManagerTest {
         site.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         site.setUpdatedAt(site.getCreatedAt());
 
-        Dictionary dictionary = dictionaryService.findBySn("001");
+        Dictionary dictionary = dictionaryService.findByCode("001");
         site.setDictionary(dictionary);
 
         WorkTime workTime = workTimeService.findBySn("plan1");

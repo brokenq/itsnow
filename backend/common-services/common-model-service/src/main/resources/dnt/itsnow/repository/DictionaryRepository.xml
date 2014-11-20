@@ -18,7 +18,44 @@
         SELECT * FROM dictionaries
     </sql>
 
-    <select id="findAll" resultType="Dictionary">
+    <resultMap id="dictResult" type="Dictionary" autoMapping="true">
+        <id column="id" property="id"></id>
+        <result column="detail" property="details" typeHandler="dnt.itsnow.util.DictDetailHandler"/>
+    </resultMap>
+
+    <insert id="create" parameterType="Dictionary" keyColumn="id" useGeneratedKeys="true">
+        insert into dictionaries (
+          code,
+          name,
+          label,
+          description,
+          detail,
+          created_at,
+          updated_at )
+        values (
+          #{code},
+          #{name},
+          #{label},
+          #{description},
+          #{details, jdbcType=LONGVARCHAR, typeHandler=dnt.itsnow.util.DictDetailHandler},
+          #{createdAt},
+          #{updatedAt}
+        )
+    </insert>
+
+    <update id="update" parameterType="Dictionary">
+        update dictionaries set
+        name = #{name},
+        label = #{label},
+        description = #{description},
+        detail = #{details, jdbcType=LONGVARCHAR, typeHandler=dnt.itsnow.util.DictDetailHandler},
+        created_at = #{createdAt},
+        updated_at = #{updatedAt}
+        where id = #{id}
+    </update>
+
+
+    <select id="findAll" resultMap="dictResult">
         <include refid="select"></include>
         <where>
             <if test="keyword != null and keyword != ''">

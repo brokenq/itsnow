@@ -95,8 +95,8 @@ angular.module('System.Roles',
   ])
 
 .controller('RoleListCtrl',
-  ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'CommonService', 'RoleService', 'Feedback',
-    ($scope, $location, $log, NgTable, ActionService, commonService, roleService, feedback) ->
+  ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'CommonService', 'RoleService', 'Feedback','SelectionService',\
+  ( $scope,   $location,   $log,   NgTable,         ActionService,   commonService,   roleService,   feedback,  SelectionService ) ->
       $log.log "Initialized the Role list controller"
 
       args =
@@ -108,10 +108,16 @@ angular.module('System.Roles',
             $scope.cacheService.cache data
             $defer.resolve $scope.roles = data
 
-      $scope.selection = { checked: false, items: {} }
+#      $scope.selection = { checked: false, items: {} }
+#      $scope.rolesTable = new NgTable(angular.extend($scope.options, $location.search()), args);
+#      $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.cacheService.find})
+#      commonService.watchSelection($scope.selection, $scope.cacheService.records, "name")
       $scope.rolesTable = new NgTable(angular.extend($scope.options, $location.search()), args);
-      $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.cacheService.find})
-      commonService.watchSelection($scope.selection, $scope.cacheService.records, "name")
+      $scope.selectionService = new SelectionService($scope.cacheService.records, "name");
+      $scope.actionService = new ActionService({watch: $scope.selectionService.items, mapping: $scope.cacheService.find})
+
+
+
 
       $scope.destroy = (role) ->
         roleService.remove {name: role.name}, () ->

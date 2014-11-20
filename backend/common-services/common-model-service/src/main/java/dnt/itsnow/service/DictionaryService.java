@@ -43,18 +43,12 @@ public interface DictionaryService {
      */
     public void destroy(Dictionary dictionary) throws DictionaryException;
 
-    /**
-     * 根据CODE查询一类字典
-     * @param code 字典代码
-     * @return 流程字典列表
-     */
-    public List<Dictionary> findByCode(String code);
 
     /**
-     * 根据SN查询字典
-     * @param sn 序列号
+     * 根据CODE查询字典
+     * @param code 字典代码
      * @return 流程字典实体类
      */
-    public Dictionary findBySn(String sn);
+    public Dictionary findByCode(String code);
 
 }

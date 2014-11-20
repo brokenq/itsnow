@@ -4,6 +4,7 @@
 package dnt.itsnow.repository;
 
 import dnt.itsnow.config.DictionaryRepositoryConfig;
+import dnt.itsnow.model.DictDetail;
 import dnt.itsnow.model.Dictionary;
 import dnt.itsnow.platform.util.PageRequest;
 import org.junit.Before;
@@ -14,6 +15,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <h1>测试DictionaryRepository的Mybatis的Mapping配置是否正确</h1>
@@ -36,31 +40,50 @@ public class DictionaryRepositoryTest {
     @Test
     public void testCreate() throws Exception {
         Dictionary dictionary = new Dictionary();
+
+        DictDetail detail = new DictDetail();
+        detail.setKey("key");
+        detail.setValue("value");
+        DictDetail[] detailList = new DictDetail[]{detail};
+
         dictionary.setCode("004");
         dictionary.setName("影响范围");
-        dictionary.setDisplay("高");
-        dictionary.setVal("high");
-        dictionary.setState("1");
+        dictionary.setDetails(detailList);
         repository.create(dictionary);
-        Assert.notNull(dictionary.getId());
+        Assert.notNull(dictionary.getDetails());
     }
 
-    @Test
-    public void testDelete() throws Exception {
-        String sn = "001";
-        Assert.notNull(repository.findBySn(sn));
-        repository.delete(sn);
-        Assert.isNull(repository.findBySn(sn));
-    }
 
     @Test
     public void testUpdate() throws Exception {
-        String sn = "002";
-        Dictionary dictionary = repository.findBySn(sn);
-        dictionary.setState("0");
+
+        String code = "001";
+        Dictionary dictionary = repository.findByCode(code);
+        DictDetail detail = new DictDetail();
+        detail.setKey("key");
+        detail.setValue("value");
+        DictDetail[] detailList = new DictDetail[]{detail};
+        dictionary.setLabel("深圳");
+        dictionary.setDetails(detailList);
+
         repository.update(dictionary);
-        dictionary = repository.findBySn(sn);
-        Assert.isTrue(dictionary.getState() == "0");
+        dictionary = repository.findByCode(code);
+        Assert.isTrue(dictionary.getLabel() == "深圳");
+
+//        String sn = "002";
+//        Dictionary dictionary = repository.findBySn(sn);
+//        dictionary.setState("0");
+//        repository.update(dictionary);
+//        dictionary = repository.findBySn(sn);
+//        Assert.isTrue(dictionary.getState() == "0");
+    }
+//
+    @Test
+    public void testDelete() throws Exception {
+        String code = "001";
+        Assert.notNull(repository.findByCode(code));
+        repository.delete(code);
+        Assert.isNull(repository.findByCode(code));
     }
 
     @Test
@@ -70,13 +93,14 @@ public class DictionaryRepositoryTest {
 
     @Test
     public void testFindAll() throws Exception {
-        Assert.notNull(repository.findAll("", pageRequest));
+        List<Dictionary> dicts = repository.findAll("", pageRequest);
+        Assert.notNull(dicts);
     }
-
+//
     @Test
-    public void testFindBySn() throws Exception {
-        Assert.notNull(repository.findBySn("002"));
-        Assert.isNull(repository.findBySn("0002"));
+    public void testFindByCode() throws Exception {
+        Assert.notNull(repository.findByCode("002"));
+        Assert.isNull(repository.findByCode("0002"));
     }
 
 }

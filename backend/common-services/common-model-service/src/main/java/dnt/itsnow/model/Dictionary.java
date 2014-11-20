@@ -3,7 +3,11 @@
  */
 package dnt.itsnow.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.NotBlank;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * <h1>流程字典对象</h1>
@@ -11,25 +15,12 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 public class Dictionary extends ConfigItem {
 
-
     @NotBlank
     private String code;
     @NotBlank
-    private String display;
-    @NotBlank
-    private String val;
-    @NotBlank
-    private String state;
-    private String type;
-    private String sn;
+    private String label;
 
-    public String getSn() {
-        return sn;
-    }
-
-    public void setSn(String sn) {
-        this.sn = sn;
-    }
+    private DictDetail[] details;
 
     public String getCode() {
         return code;
@@ -39,47 +30,29 @@ public class Dictionary extends ConfigItem {
         this.code = code;
     }
 
-    public String getState() {
-        return state;
+    public String getLabel() {
+        return label;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setLabel(String label) {
+        this.label = label;
     }
 
-    public String getType() {
-        return type;
+
+    public DictDetail[] getDetails() {
+        return details;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getVal() {
-        return val;
-    }
-
-    public void setVal(String val) {
-        this.val = val;
-    }
-
-    public String getDisplay() {
-        return display;
-    }
-
-    public void setDisplay(String display) {
-        this.display = display;
+    public void setDetails(DictDetail[] details) {
+        this.details = details;
     }
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("Dictionary{");
-        sb.append("sn='").append(sn).append('\'');
-        sb.append(", code='").append(code).append('\'');
-        sb.append(", display='").append(display).append('\'');
-        sb.append(", val='").append(val).append('\'');
-        sb.append(", state='").append(state).append('\'');
-        sb.append(", type='").append(type).append('\'');
+        final StringBuilder sb = new StringBuilder("Dictionary{");
+        sb.append("code='").append(code).append('\'');
+        sb.append(", label='").append(label).append('\'');
+        sb.append(", details=").append(Arrays.toString(details));
         sb.append('}');
         return sb.toString();
     }
