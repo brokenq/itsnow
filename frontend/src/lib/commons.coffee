@@ -130,6 +130,6 @@ angular.module('Lib.Commons', ['ngTable'])
         , true
         )
 
-      #getItems : ->
-        #return @items
+
+
   ])

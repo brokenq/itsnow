@@ -141,7 +141,7 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService,Resou
             workflow.setDescription("初始化故障流程");
             ServiceItem item = serviceItemService.findBySn("SI_3001");
             workflow.setServiceItem(item);
-            Dictionary dict = dictionaryService.findBySn("120");
+            Dictionary dict = dictionaryService.findByCode("inc003");
             workflow.setDictionary(dict);
             try {
                 URL url = this.resourceLoader.getResource(path).getURL();
