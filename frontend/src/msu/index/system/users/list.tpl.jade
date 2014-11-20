@@ -8,12 +8,10 @@ include /lib/mixins/list
       +tool_button("actionService.gotoState('users.edit')", "pencil", "修改", "1", "", "editable")
     +more_buttons
       +drop_button("actionService.perform(destroy)", "trash", "删除", "1+", "", "deletable")
-  +page_table("usersTable","selection")
-    +row("user", "username", "selection")(class="editable deletable")
+  +page_table("usersTable","selectionService")
+    +row("user", "username", "selectionService")(class="editable deletable")
       td(data-title="'姓名'")
-        a(ui-sref="users.view({name: '{{user.name}}'})") {{user | formatUser}}
-      td(data-title="'所属帐户'")
-        a(ui-sref="accounts.view({sn: '{{user.account.sn}}'})") {{user.account.name}}
+        a(ui-sref="users.view({username: '{{user.username}}'})") {{user | formatUser}}
       td(data-title="'邮箱'")
         a(href="mailto:{{user.email}}") {{user.email}}
       td(data-title="'电话'", align="right") {{user.phone}}
