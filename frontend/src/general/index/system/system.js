@@ -2,7 +2,7 @@
  * The MSP Application
  */
 
-angular.module('MspIndex.System', [
+angular.module('GeneralIndex.System', [
   'System.Roles',
   'System.Sites',
   'System.WorkTime',
