@@ -2,8 +2,7 @@
 -var editReadonly = true
 h2 查看 服务目录
 
-+form("viewCatalogForm")
-  include /msu/index/service/catalog/_form_catalog.jade
-  +action_bar
-    +action_submit("返回")(ui-sref="catalog.public.list")
+include /msu/index/service/catalog/_form_catalog.jade
++action_bar
+  +action_submit("返回")(ui-sref="catalog.public.list")
                     
