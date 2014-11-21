@@ -25,7 +25,7 @@ import java.util.List;
  *  POST     /api/roles                                                      create    创建一个角色
  *  PUT      /api/roles/{name}                                               update    修改一个指定的角色
  *  DELETE   /api/roles/{name}                                               delete    删除指定的角色记录
- *  GET      /api/roles/users                                                listUsers 列出当前用户所属账户中，所有用户的信息记录
+ *  GET      /api/roles/users/by_account                                     listUsers 列出当前用户所属账户中，所有用户的信息记录
  * </pre>
  */
 @RestController
@@ -143,7 +143,7 @@ public class RolesController extends SessionSupportController<Role> {
 
     }
 
-    @RequestMapping(value = "users", method = RequestMethod.GET)
+    @RequestMapping(value = "users/by_account", method = RequestMethod.GET)
     public List<User> listUsers() {
 
         logger.info("Listing users by current account:{}", mainAccount);

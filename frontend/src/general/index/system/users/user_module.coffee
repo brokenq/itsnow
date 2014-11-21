@@ -76,8 +76,8 @@ angular.module('System.User',[])
             params.total headers 'total'
             $defer.resolve $scope.users = datas;
             $scope.cacheService.cache datas
-      $scope.usersTable = new NgTable(angular.extend($scope.options, $location.search()), args);
-      $scope.selectionService = new SelectionService($scope.cacheService.records, "username")
+      $scope.usersTable = new NgTable(angular.extend($scope.options, $location.search()), args)
+      $scope.selectionService = new SelectionService($scope.cacheService.records, "username")      commonservice =new CommonService()
       $scope.actionService = new ActionService {watch: $scope.selectionService.items, mapping: $scope.cacheService.find}
       $scope.reload = ->
         $scope.usersTable.reload()
@@ -110,8 +110,6 @@ angular.module('System.User',[])
         $scope.selectState = $scope.statedatas[1]
       $scope.update = () ->
         $scope.cuser.enabled = $scope.selectState.state;
-        $scope.cuser.$promise = `undefined`
-        $scope.cuser.$resolved = `undefined`
         $scope.services.update {username: username}, $scope.cuser, () ->
           feedback.success "修改#{$scope.cuser.username}成功"
           $state.go "users.list"

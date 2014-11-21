@@ -35,7 +35,7 @@ angular.module('System.Roles', ['multi-select'])
       update: { method: 'PUT', params: {name: '@name'}},
       query: { method: 'GET', params: {keyword: '@keyword'}, isArray: true},
       remove: { method: 'DELETE', params: {name: '@name'}},
-      getUsers: { method: 'GET', params: {name: 'users'}, isArray: true}
+      getUsers: { method: 'GET', params: {name: 'users/by_account'}, isArray: true}
     )
   ])
 

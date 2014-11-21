@@ -22,7 +22,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/api/profile")
-public class ProfileController extends ApplicationController {
+public class MscProfileController extends ApplicationController {
     @Autowired
     MutableUserService userService;
 

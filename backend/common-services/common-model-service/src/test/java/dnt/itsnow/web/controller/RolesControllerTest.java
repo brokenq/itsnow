@@ -147,7 +147,7 @@ public class RolesControllerTest extends SessionSupportedControllerTest {
         expect(roleService.findUsersByAccount(anyObject(Account.class))).andReturn(users);
 
         // 准备 Mock Request
-        MockHttpServletRequestBuilder request = get("/api/roles/users");
+        MockHttpServletRequestBuilder request = get("/api/roles/users/by_account");
         request = decorate(request);
 
         replay(roleService);
