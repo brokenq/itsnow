@@ -115,29 +115,28 @@ angular.module('MscIndex.Hosts', [])
     host = $scope.cacheService.find $stateParams.id, true
     host.configuration.msp_version = host.configuration['msp.version'] if host.configuration['msp.version']?
     host.configuration.msu_version = host.configuration['msu.version'] if host.configuration['msu.version']?
+    host.creationLog = ""
     $scope.host = host
     console.log "Initialized the Host View controller on: #{JSON.stringify host}"
 
-    # get Host Creation Logs
-    if invokeId = host.configuration.createInvocationId
-      url = "/admin/api/hosts/#{host.id}/follow?invocationId=#{invokeId}&offset=0"
-      $http.get(url).success (log) ->
-        host.creationLog = log
-
-    host.creationLog = ""
     # 获取日志信息
     getCreateLog = (invokeId)->
-     createOffset = 0
-     createIntervalId = $interval(->
-       if invokeId?
-         url = "/admin/api/hosts/#{host.id}/follow?invocationId#{invokeId}&offset=#{createOffset}"
-         $http.get(url).success (log, status, headers) ->
-           host.creationLog += log
-           createOffset = parseInt headers "offset"
-           $interval.cancel(createIntervalId) if createOffset is -1
-     , 1000)
+      createOffset = 0
+      preScrollTop = 0
+      $creationLog = $("#host_creationLog")
+      createIntervalId = $interval(->
+        if invokeId?
+          url = "/admin/api/hosts/#{host.id}/follow?invocationId=#{invokeId}&offset=#{createOffset}"
+          $http.get(url).success (data, status, headers) ->
+            host.creationLog += data.logs
+            if preScrollTop is $creationLog.scrollTop() or $creationLog[0].scrollHeight <= $creationLog.scrollTop() + $creationLog.outerHeight()
+              $creationLog.scrollTop($creationLog[0].scrollHeight)
+              preScrollTop = $creationLog.scrollTop()
+            createOffset = parseInt headers "offset"
+            $interval.cancel(createIntervalId) if createOffset is -1
+      , 1000)
 
-    getCreateLog()
+    getCreateLog(invokeId) if invokeId = host.configuration.createInvocationId
 
     $scope.toView = ->
       $state.go 'hosts.list'

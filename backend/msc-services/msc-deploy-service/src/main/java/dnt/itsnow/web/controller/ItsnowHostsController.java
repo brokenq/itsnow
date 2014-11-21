@@ -168,14 +168,16 @@ public class ItsnowHostsController extends SessionSupportController<ItsnowHost>{
      * </pre>
      */
     @RequestMapping("{id}/follow")
-    public String follow( @RequestParam("invocationId") String invocationId,
-                          @RequestParam( value = "offset", defaultValue = "0") long offset,
-                          HttpServletResponse response){
+    public Map<String, String> follow(@RequestParam("invocationId") String invocationId,
+                                      @RequestParam(value = "offset", defaultValue = "0") long offset,
+                                      HttpServletResponse response){
         logger.debug("Follow {} invocation {} from {}", currentHost, invocationId, offset);
         List<String> body = new LinkedList<String>();
         offset = hostService.follow(currentHost, invocationId, offset, body);
         response.setHeader("offset", String.valueOf(offset));
-        return StringUtils.join(body, "\n");
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("logs", StringUtils.join(body, "\n"));
+        return map;
     }
 
     /**
