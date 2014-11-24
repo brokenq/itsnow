@@ -77,7 +77,7 @@
         $scope.cacheServiceMsu = new CacheService("msuInstanceId")
         $scope.submited = false
 
-        $scope.Dictionary = $resource("api/dictionaries/code/:code", {})
+        $scope.Dictionary = $resource("api/dictionaries/:code", {})
         $scope.Incident = $resource("/api/msp-incidents/:mspInstanceId", {})
         $scope.GrabIncident = $resource("/api/msp-incidents/:id/grab", {id:'@id'})
         $scope.ClosedIncidents = $resource("/api/msp-incidents/closed", {})
@@ -87,17 +87,21 @@
           complete: {method: 'PUT',params:{mspInstanceId:'@mspInstanceId',taskId:'@taskId'}})
 
         Dictionary = $scope.Dictionary
-        Dictionary.query({code:'inc002'},(data)->
+        Dictionary.get({code:'impact'},(data)->
           $scope.impacts = data
         )
-        Dictionary.query({code:'inc001'},(data)->
+        Dictionary.get({code:'priority'},(data)->
           $scope.priorities = data
         )
-        Dictionary.query({code:'inc004'},(data)->
+        Dictionary.get({code:'urgency'},(data)->
           $scope.urgencies = data
         )
-        Dictionary.query({code:'inc005'},(data)->
+        Dictionary.get({code:'request_type'},(data)->
           $scope.requestTypes = data
+        )
+
+        Dictionary.get({code:'category'},(data)->
+          $scope.categories = data
         )
 
     ])

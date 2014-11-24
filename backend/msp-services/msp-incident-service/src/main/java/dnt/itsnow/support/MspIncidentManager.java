@@ -113,7 +113,7 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
             workflow.setDescription("初始化故障流程");
             ServiceItem item = serviceItemService.findBySn("SI_3001");
             workflow.setServiceItem(item);
-            dnt.itsnow.model.Dictionary dict = dictionaryService.findByCode("120");
+            dnt.itsnow.model.Dictionary dict = dictionaryService.findByCode("workflow");
             workflow.setDictionary(dict);
             try {
                 URL url = this.resourceLoader.getResource(path).getURL();
