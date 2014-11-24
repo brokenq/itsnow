@@ -64,6 +64,11 @@
           date = new Date(time)
           return date.toLocaleString();
     )
+    .filter('formatDict', ()->
+      return (status,dicts) ->
+        for dict in dicts.details
+          return dict.key if dict.value is status
+    )
 
     .controller('IncidentCtrl',['$scope', '$state','$resource', '$log', 'Feedback','CacheService',
       ($scope, $state, $resource,$log, feedback,CacheService) ->

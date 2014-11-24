@@ -50,9 +50,15 @@
     )
     .filter('formatTime', () ->
       return (time) ->
-        if time?
+        console.warn(time)
+        if time? and time > 0
           date = new Date(time)
           return date.toLocaleString()
+    )
+    .filter('formatDict', ()->
+      return (status,dicts) ->
+        for dict in dicts.details
+            return dict.key if dict.value is status
     )
 
     .controller('IncidentCtrl',['$scope', '$state', '$log', '$resource','Feedback','CacheService',

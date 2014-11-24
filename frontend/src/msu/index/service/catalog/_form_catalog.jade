@@ -13,7 +13,6 @@ include /lib/mixins/form
     +input("catalog","level")(readonly=true)
   +group("catalog", "description", "描述",   "th", "简单描述服务目录的功能或者作用")
     +area("catalog", "description")(readonly=readonly)
-+section("")
   +group("catalog", "icon", "图标",   "th", "")
     +input("catalog", "icon")(readonly=readonly)
     img(ng-src="{{catalog.icon}}",class="img-responsive")

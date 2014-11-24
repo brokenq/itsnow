@@ -5,6 +5,7 @@ include /lib/mixins/form
 h2 查看 故障单
 
 +form("viewIncidentForm")
-    include /msu/index/incidents/_form.jade
-    +action_bar
-        +action_submit("返回")(ui-sref="incidents.opened")
+  include /msu/index/incidents/_form.jade
+
+  +action_bar
+    +action_submit("返回")(ui-sref="incidents.opened")
