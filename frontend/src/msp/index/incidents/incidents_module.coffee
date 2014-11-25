@@ -199,7 +199,8 @@
           console.warn(inc)
           incident.$save({id:inc.id},->
             feedback.success("抢单成功")
-            $state.go('incidents.monitored')
+            delete $scope.selection.items[inc.msuInstanceId]
+            $scope.incidentsTable.reload()
           ,(resp)->
             feedback.error("抢单失败",resp)
           )
