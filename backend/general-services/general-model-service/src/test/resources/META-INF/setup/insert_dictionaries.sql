@@ -1,7 +1,7 @@
 -- // insert_dictionaries
 -- Migration SQL that makes the change goes here.
 
-<<<<<<< HEAD
+
 --
 -- INSERT INTO dictionaries(code, name, label, description, detail ) VALUES
 -- ('001', '字典名称一', '北京', '描述一', '[{"key":"k11","value":"v11"},{"key":"k11","value":"v11"},{"key":"k11","value":"v11"}]'),
@@ -28,7 +28,7 @@
 INSERT INTO dictionaries (code, name, label, detail) VALUES
   ('001', 'area', '区域',
    '[{"key":"11","value":"北京"},{"key":"12","value":"天津"},{"key":"31","value":"上海"},{"key":"50","value":"重庆"}]');
->>>>>>> 7ffad6e2c9a50a384c1720fdc24c39bf0ed3ab18
+
 
 -- //@UNDO
 -- SQL to undo the change goes here.
