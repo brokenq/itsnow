@@ -37,6 +37,7 @@ angular.module('System.User',[])
     return user.name if user.name == user.username
     user.name + "(" + user.username + ")"
 )
+
 .controller('UsersCtrl', ['$scope', '$resource', '$state', 'Feedback', 'CacheService',
     ($scope, $resource, $state, feedback, CacheService) ->
       $scope.statedatas = [
@@ -64,9 +65,11 @@ angular.module('System.User',[])
         , (resp) ->
           errCallback() if errCallback
           feedback.error("删除#{user.name}失败", resp)
+
+
   ])
-.controller('UserListCtrl', ['$scope', '$location', 'ngTableParams', 'ActionService', 'SelectionService',
-    ($scope, $location, NgTable, ActionService, SelectionService) ->
+.controller('UserListCtrl', ['$scope', '$location', 'ngTableParams', 'ActionService', 'SelectionService','CommonService',
+    ($scope, $location, NgTable, ActionService, SelectionService,CommonService) ->
       Users = $scope.services
       args =
         total: 0
@@ -77,7 +80,11 @@ angular.module('System.User',[])
             $defer.resolve $scope.users = datas;
             $scope.cacheService.cache datas
       $scope.usersTable = new NgTable(angular.extend($scope.options, $location.search()), args)
-      $scope.selectionService = new SelectionService($scope.cacheService.records, "username")      commonservice =new CommonService()
+      $scope.selectionService = new SelectionService($scope.cacheService.records, "username")
+      $scope.actionService = new ActionService {watch: $scope.selectionService.items, mapping: $scope.cacheService.find}
+      $scope.getItems=(items) ->
+        $scope.selectionService.items=items
+
       $scope.actionService = new ActionService {watch: $scope.selectionService.items, mapping: $scope.cacheService.find}
       $scope.reload = ->
         $scope.usersTable.reload()

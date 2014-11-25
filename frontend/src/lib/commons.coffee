@@ -1,54 +1,40 @@
+$(document).ready ->
+  $("body").click (e) ->
+    tr = $(e.target).closest("tr.line")
+    return if tr.length == 0
+    input = tr.find("input.selection")
+    return if input.length == 0
+    return if input[0] == e.target
+    input.click();
 angular.module('Lib.Commons', ['ngTable'])
 
-  .factory('CommonService', ['$rootScope', '$location', 'ngTableParams', \
-                             ($rootScope,   $location,   ngTableParams)->
-    {
-      ### @function selectionWatch: | watch checkbox
-          @param selection | json object that have two keys: checked, items
-          @param datas | datas of table
-          @param key | key of selection items ###
-      watchSelection: (selection, datas, key)->
-        $rootScope.$watch( ->
-          return selection.checked
-        , (value)->         # watch for check all checkbox
-          angular.forEach datas, (data)->
-              selection.items[data[key]] = value if data[key]?
-          )
+.factory('CommonService', ['$rootScope', '$location', 'ngTableParams',
+    ($rootScope,   $location,   ngTableParams)->
 
-        $rootScope.$watchCollection( ->        # watch for check single checkbox
-          return selection.items
-        , ->
-          return if !datas? or datas.length is 0
-          checked = 0
-          unchecked = 0
-          total = datas.length
-          angular.forEach datas, (data)->
-            checked += selection.items[data[key]] || 0
-            unchecked += !selection.items[data[key]] || 0
-          selection.checked = (checked == total) if unchecked is 0 or checked is 0
-          $('#select_all').prop('indeterminate', (checked isnt 0 and unchecked isnt 0))
-        , true
-        )
+      class CommonService
 
-      ### @function instanceTable: | instantiate ngTableParams
-          @param service | the service function to get datas
-          @param datas | datas of table
-      ###
-      instanceTable: (service, datas)->
-        options =
-          page:  1,           # show first page
-          count: 10           # count per page
-        args =
-          total: 0,
-          getData: ($defer, params) ->
-            $location.search params.url() # put params in url
-            service.query params.url(), (response, headers) ->
-              params.total headers 'total'
-              $defer.resolve angular.forEach response, (data)->
+        ### @function instanceTable: | instantiate ngTableParams
+            @param service | the service function to get datas
+            @param datas | datas of table
+        ###
+
+        instanceTable: (service, datas)->
+          options =
+            page:  1,           # show first page
+            count: 10           # count per page
+          args =
+            total: 0,
+            getData: ($defer, params) ->
+              $location.search params.url() # put params in url
+              service.query params.url(), (response, headers) ->
+                params.total headers 'total'
+                $defer.resolve angular.forEach response, (data)->
                   datas.push data
-        return new ngTableParams angular.extend(options, $location.search()), args
+          return new ngTableParams angular.extend(options, $location.search()), args
+        enableRowSelect: (tables)->
+          $(tables).find("tr").click ->
+            alert("你点我呀！！")
 
-    }
   ])
 
   .factory('CacheService', [->
@@ -105,7 +91,6 @@ angular.module('Lib.Commons', ['ngTable'])
         @checked = false
         @items = {}
         @watch()
-
       watch: ->
         instance = this
         $rootScope.$watch( ->
@@ -130,6 +115,6 @@ angular.module('Lib.Commons', ['ngTable'])
         , true
         )
 
-      #getItems : ->
-        #return @items
+      setItems : (key, value)->
+        @items["#{key}"] = value
   ])

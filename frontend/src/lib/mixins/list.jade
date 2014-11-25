@@ -31,8 +31,6 @@ mixin drop_button(action, icon, text, weight, rejectCss, requireCss)
 
 
 //- *********** Main Table *****************
-
-//- the table with pagination
 mixin page_table(name, selection)
   table.table.table-hover(template-pagination="customPager", ng-table=name)
     block
@@ -74,7 +72,7 @@ mixin page_size_button(count)
   button.btn.btn-primary.no-border(type="button", ng-class="{'active':params.count() == #{count}}", ng-click="params.count(#{count})")= count
 
 mixin row(name, key, selection)
-  tr(ng-repeat="#{name} in $data", value="{{#{name}.#{key}}}")&attributes(attributes)
+  tr.line(ng-repeat="#{name} in $data", value="{{#{name}.#{key}}}")&attributes(attributes)
     td(width="30", align="left", header="'ngTableCheckboxHeader'")
-      input(type="checkbox", ng-model="#{selection}.items[#{name}.#{key}]")
+      input.selection(type="checkbox", ng-model="#{selection}.items[#{name}.#{key}]")
     block
