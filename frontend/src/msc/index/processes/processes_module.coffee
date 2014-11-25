@@ -182,6 +182,7 @@ angular.module('MscIndex.Processes', [])
           when "running", "abnormal" then $("#stopBtn").removeClass("hidden").addClass("show")
           when "stopping" then $("#cancelStoppingBtn").removeClass("hidden").addClass("show")
 
+      currentUrl = $location.url();
       $scope.path = $location.path()
       # 获取日志信息
       $scope.getLog = (invokeId, type)->
@@ -197,13 +198,18 @@ angular.module('MscIndex.Processes', [])
                 when "creation" then $scope.process.creationLog += data.logs
                 when "start" then $scope.process.startLog += data.logs
                 when "stop" then $scope.process.stopLog += data.logs
-              if preScrollTop is $logs.scrollTop() or $logs[0].scrollHeight <= $logs.scrollTop() + $logs.outerHeight()
-                $logs.scrollTop($logs[0].scrollHeight)
-                preScrollTop = $logs.scrollTop()
+              preScrollTop = resolveScroll preScrollTop, $logs
               offset = parseInt(headers("offset"))
               toggleButton($filter("lowercase")(headers("status")))
-              $interval.cancel(intervalId) if offset is -1
+              $interval.cancel(intervalId) if offset is -1 or currentUrl isnt $location.url()
         , 1000)
+
+      # 日志滚动条效果
+      resolveScroll = (preScrollTop, element)->
+        if preScrollTop is element.scrollTop() or element[0].scrollHeight <= element.scrollTop() + element.outerHeight()
+          element.scrollTop(element[0].scrollHeight)
+          return element.scrollTop()
+        return preScrollTop
 
       # 触发获取日志事件
       toggleButton($filter("lowercase")(process.status))
