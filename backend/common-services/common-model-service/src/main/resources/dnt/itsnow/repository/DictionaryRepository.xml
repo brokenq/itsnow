@@ -74,9 +74,17 @@
 
     <select id="findByCode" resultMap="dictResult">
         <include refid="select"></include>
-        <where>
-            code = #{code}
-        </where>
+        where code = #{code}
+    </select>
+
+    <select id="findByName" resultMap="dictResult">
+        <include refid="select"></include>
+        where name = #{name}
+    </select>
+
+    <select id="findByLabel" resultMap="dictResult">
+        <include refid="select"></include>
+        where label = #{label}
     </select>
 
 </mapper>

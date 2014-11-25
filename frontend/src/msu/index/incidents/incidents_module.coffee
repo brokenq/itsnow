@@ -50,9 +50,15 @@
     )
     .filter('formatTime', () ->
       return (time) ->
-        if time?
+        console.warn(time)
+        if time? and time > 0
           date = new Date(time)
           return date.toLocaleString()
+    )
+    .filter('formatDict', ()->
+      return (status,dicts) ->
+        for dict in dicts.details
+            return dict.key if dict.value is status
     )
 
     .controller('IncidentCtrl',['$scope', '$state', '$log', '$resource','Feedback','CacheService',
@@ -65,7 +71,7 @@
         # 提交按钮是否已经执行了提交操作，false为未执行，则按钮可用
         $scope.cacheService = new CacheService("msuInstanceId")
         $scope.submited = false
-        $scope.Dictionaries = $resource("api/dictionaries/code/:code", {})
+        $scope.Dictionaries = $resource("api/dictionaries/:code", {})
         $scope.Staffs = $resource("api/staffs",{})
         $scope.Incidents = $resource("/api/msu-incidents/:msuInstanceId", {})
         $scope.ClosedIncidents = $resource("/api/msu-incidents/closed", {})
@@ -74,17 +80,20 @@
           complete: {method: 'PUT',params:{msuInstanceId:'@msuInstanceId',taskId:'@taskId'}})
 
         Dictionary = $scope.Dictionaries
-        Dictionary.query({code:'inc002'},(data)->
+        Dictionary.get({code:'impact'},(data)->
           $scope.impacts = data
         )
-        Dictionary.query({code:'inc001'},(data)->
+        Dictionary.get({code:'priority'},(data)->
           $scope.priorities = data
         )
-        Dictionary.query({code:'inc004'},(data)->
+        Dictionary.get({code:'urgency'},(data)->
           $scope.urgencies = data
         )
-        Dictionary.query({code:'inc005'},(data)->
+        Dictionary.get({code:'request_type'},(data)->
           $scope.requestTypes = data
+        )
+        Dictionary.get({code:'category'},(data)->
+          $scope.categories = data
         )
         Staffs = $scope.Staffs
         Staffs.query (data)->

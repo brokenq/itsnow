@@ -1,3 +1,11 @@
+$(document).ready ->
+  $("body").click (e) ->
+    tr = $(e.target).closest("tr.line")
+    return if tr.length == 0
+    input = tr.find("input.selection")
+    return if input.length == 0
+    return if input[0] == e.target
+    input.click();
 angular.module('Lib.Commons', ['ngTable'])
 
   .factory('CommonService', ['$rootScope', '$location', 'ngTableParams', \
@@ -130,6 +138,6 @@ angular.module('Lib.Commons', ['ngTable'])
         , true
         )
 
-
-
+      #getItems : ->
+        #return @items
   ])

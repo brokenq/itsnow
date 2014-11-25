@@ -17,6 +17,10 @@ public interface DictionaryRepository {
 
     public Dictionary findByCode(@Param("code") String code);
 
+    public Dictionary findByName(@Param("name") String name);
+
+    public Dictionary findByLabel(@Param("label") String label);
+
     public void create(Dictionary dictionary);
 
     public void update(Dictionary dictionary);
