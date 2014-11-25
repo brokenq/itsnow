@@ -1,6 +1,6 @@
 -- // insert_dictionaries
 -- Migration SQL that makes the change goes here.
-
+--
 INSERT INTO dictionaries(code, name, label, description, detail ) VALUES
 ('001', '字典名称一', '北京', '描述一', '[{"key":"k11","value":"v11"},{"key":"k11","value":"v11"},{"key":"k11","value":"v11"}]'),
 ('002', '字典名称二', '上海', '描述二', '[{"key":"k22","value":"v22"},{"key":"k22","value":"v22"},{"key":"k22","value":"v22"}]'),
@@ -8,8 +8,7 @@ INSERT INTO dictionaries(code, name, label, description, detail ) VALUES
 
 
 
-
-
+--
 -- INSERT INTO dictionaries(sn, code, name, display, val, state, type) VALUES
 --   ('001', 'inc003', '区域', '北京', '11', '1', '1'),
 --   ('002', 'inc003', '区域', '天津', '12', '1', '1'),

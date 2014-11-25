@@ -8,8 +8,6 @@ INSERT INTO dictionaries(code, name, label, description, detail ) VALUES
 
 
 
-
-
 -- INSERT INTO dictionaries(sn, code, name, display, val, state, type) VALUES
 --   ('001', 'inc003', '区域', '北京', '11', '1', '1'),
 --   ('002', 'inc003', '区域', '天津', '12', '1', '1'),

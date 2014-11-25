@@ -119,6 +119,27 @@ public class DictionariesControllerTest extends SessionSupportedControllerTest {
 
     }
 
+    @Test
+    public void testCheckCode() throws Exception {
+
+        expect(dictionaryService.findByCode("003")).andReturn(dictionary);
+
+        // 准备 Mock Request
+        MockHttpServletRequestBuilder request = get("/api/dictionaries/checkCode/003");
+        request = decorate(request);
+
+        replay(dictionaryService);
+
+        // 执行
+        ResultActions result = this.browser.perform(request);
+
+        // 对业务结果的验证
+        decorate(result).andExpect(status().isConflict());
+
+
+
+    }
+
 //    @Test
 //    public void testList() throws Exception {
 //

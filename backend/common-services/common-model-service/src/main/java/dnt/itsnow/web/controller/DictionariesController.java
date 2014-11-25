@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -26,6 +27,7 @@ import java.util.List;
  *  POST     /api/dictionaries           create  创建一个字典
  *  PUT      /api/dictionaries/{code}    update  修改一个指定的字典
  *  DELETE   /api/dictionaries/{code}    delete  删除指定的字典记录
+ *  GET      /api/dictionaries/checkCode/{code}    get  检查字典代码是否唯一
  * </pre>
  */
 @RestController
@@ -56,6 +58,59 @@ public class DictionariesController extends SessionSupportController<Dictionary>
 
         return indexPage;
     }
+//------------------------------------
+
+    /**
+     * 检验字典代码是否唯一
+     * @param code
+     * @return
+     */
+    @RequestMapping("checkCode/{code}")
+    public HashMap checkCode(@PathVariable("code") String code){
+
+        dictionary = service.findByCode(code);
+        if(dictionary != null){
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate dict code: " + code);
+        }
+
+        return new HashMap();
+    }
+
+
+    /**
+     * 检验字典名称是否唯一
+     * @param name
+     * @return
+     */
+    @RequestMapping("checkname/{name}")
+    public HashMap checkName(@PathVariable("name") String name){
+
+        dictionary = service.findByName(name);
+        if(dictionary != null){
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate dict name: " + name);
+        }
+
+        return new HashMap();
+    }
+
+    /**
+     * 检查展示名是否唯一
+     * @param label
+     * @return
+     */
+    @RequestMapping("checklabel/{label}")
+    public HashMap checkLabel(@PathVariable("label") String label){
+
+        dictionary = service.findByLabel(label);
+        if(dictionary != null){
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate dict label: " + label);
+        }
+
+        return new HashMap();
+    }
+
+
+
 
     /**
      * <h2>查看一个字典</h2>

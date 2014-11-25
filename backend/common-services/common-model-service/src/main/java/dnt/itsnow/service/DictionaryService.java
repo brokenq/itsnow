@@ -51,4 +51,13 @@ public interface DictionaryService {
      */
     public Dictionary findByCode(String code);
 
+    /**
+     * 根据NAME查询字典
+     */
+    public Dictionary findByName(String name);
+
+    /**
+     * 根据显示名查询字典
+     */
+    public Dictionary findByLabel(String label);
 }

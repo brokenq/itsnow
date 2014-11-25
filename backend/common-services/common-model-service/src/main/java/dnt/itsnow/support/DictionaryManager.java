@@ -96,4 +96,26 @@ public class DictionaryManager extends Bean implements DictionaryService {
 
     }
 
+    @Override
+    public Dictionary findByName(String name) {
+        logger.debug("Finding dictionary by name: {}", name);
+
+        Dictionary dictionary = repository.findByName(name);
+
+        logger.debug("Found   {}", dictionary);
+
+        return dictionary;
+    }
+
+    @Override
+    public Dictionary findByLabel(String label) {
+        logger.debug("Finding dictionary by label: {}", label);
+
+        Dictionary dictionary = repository.findByLabel(label);
+
+        logger.debug("Found   {}", dictionary);
+
+        return dictionary;
+    }
+
 }
