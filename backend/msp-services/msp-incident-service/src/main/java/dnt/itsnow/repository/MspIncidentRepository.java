@@ -80,15 +80,41 @@ public interface MspIncidentRepository {
             "ci_type                = #{ciType}," +
             "ci                     = #{ci}," +
             "updated_at             = #{updatedAt}," +
-            "assigned_user          = #{assignedUser}," +
-            "assigned_group         = #{assignedGroup}," +
+            "updated_by             = #{updatedBy}," +
+            "msu_status             = #{msuStatus} "+
+            "WHERE msu_account_name = #{msuAccountName} AND msu_instance_id = #{msuInstanceId};")
+    void updateMsuStatusByMsuAccountAndMsuInstanceId(Incident incident);
+
+    @Update("UPDATE msp_incidents SET " +
+            "requester_location     = #{requesterLocation}," +
+            "requester_name         = #{requesterName},"+
+            "requester_email        = #{requesterEmail}," +
+            "requester_phone        = #{requesterPhone},"+
+            "request_type           = #{requestType},"+
+            "service_catalog        = #{serviceCatalog}," +
+            "category               = #{category}," +
+            "impact                 = #{impact}," +
+            "urgency                = #{urgency}," +
+            "priority               = #{priority}," +
+            "ci_type                = #{ciType}," +
+            "ci                     = #{ci}," +
+            "updated_at             = #{updatedAt}," +
+            "updated_by             = #{updatedBy}," +
+            "created_at             = #{createdAt}," +
+            "created_by             = #{createdBy}," +
             "solution               = #{solution},"+
             "close_code             = #{closeCode}, "+
+            "assigned_user          = #{assignedUser}," +
+            "assigned_group         = #{assignedGroup}," +
+            "response_time          = #{responseTime},"+
+            "resolve_time           = #{resolveTime},"+
+            "close_time             = #{closeTime},"+
             "msu_status             = #{msuStatus}, "+
+            "msp_account_name       = #{mspAccountName}, "+
             "msp_instance_id        = #{mspInstanceId}, "+
             "msp_status             = #{mspStatus} "+
-            " WHERE msu_account_name = #{msuAccountName} AND msu_instance_id = #{msuInstanceId};")
-    void updateByMsuAccountAndMsuInstanceId(Incident incident);
+            "WHERE msu_account_name = #{msuAccountName} AND msu_instance_id = #{msuInstanceId};")
+    void updateMspStatusByMsuAccountAndMsuInstanceId(Incident incident);
 
     @Select("SELECT count(0) FROM msp_incidents WHERE msp_instance_id is null")
     long countMonitoredByKey(@Param("keyword")String keyword);

@@ -372,7 +372,7 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
         incident.setUpdatedBy(currentUser.getUsername());
         incident.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         incident.setUpdatedAt(incident.getCreatedAt());
-        repository.updateByMsuAccountAndMsuInstanceId(incident);
+        repository.updateMspStatusByMsuAccountAndMsuInstanceId(incident);
         MspIncident mspIncident = new MspIncident();
         mspIncident.setResult("success");
         mspIncident.setIncident(incident);

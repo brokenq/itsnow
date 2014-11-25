@@ -13,7 +13,6 @@ import org.activiti.engine.delegate.event.ActivitiEvent;
 import org.activiti.engine.delegate.event.ActivitiEventListener;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,7 +23,6 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -197,47 +195,60 @@ public class MspEventListener extends Bean implements ActivitiEventListener, Mes
      * @param incident
      */
     private void saveOrUpdateIncident(Incident incident, TransferType type) {
-        logger.info("TransferType:{} save or update incident:{}", type, incident.getId());
+        logger.info("TransferType:{} incident:{}", type, incident.getMsuInstanceId());
 
         try {
-            if (type == TransferType.Action) {
-                String mspInstanceId = mspIncidentRepository.findMspInstanceIdByMsuAccountNameAndInstanceId(incident.getMsuAccountName(), incident.getMsuInstanceId());
-                if (mspInstanceId == null || mspInstanceId == "") {
-                    //start msp process
-                    //start incident process
-                    ProcessInstance processInstance = activitiEngineService.startProcessInstanceByKey(MspIncidentManager.PROCESS_KEY, null, username);
-                    logger.info("started msp incident workflow,instance:{}", processInstance.getProcessInstanceId());
-                    //save incident object and persist it
-                    incident.setCreatedBy(username);
-                    incident.setMspInstanceId(processInstance.getProcessInstanceId());
-                    Account account = accountService.findBySn(MspIncidentManager.getAppSn());
-                    incident.setMspAccountName(account.getName());
-                    incident.setNumber("INC" + df.format(new Date()));
-                    incident.setMspStatus(IncidentStatus.New);
-                    incident.setUpdatedBy(username);
-                    incident.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-                    incident.setUpdatedAt(incident.getCreatedAt());
-                    mspIncidentRepository.create(incident);
-                    logger.info("save action incident : {}", incident.getMspInstanceId());
+            long count = mspIncidentRepository.countByMsuAccountNameAndInstanceId(incident.getMsuAccountName(), incident.getMsuInstanceId());
+            if (count > 0) {
+                //update incident
+                if( type == TransferType.View)
+                    mspIncidentRepository.updateMsuStatusByMsuAccountAndMsuInstanceId(incident);
+                else if(type == TransferType.Action){
+                    String mspInstanceId = mspIncidentRepository.findMspInstanceIdByMsuAccountNameAndInstanceId(incident.getMsuAccountName(),incident.getMsuInstanceId());
+                    if(mspInstanceId == null || mspInstanceId == "")
+                        startMspInstance(incident);
+                    mspIncidentRepository.updateMspStatusByMsuAccountAndMsuInstanceId(incident);
                 }
+                logger.info("update incident:{}", incident.getMsuInstanceId());
             } else {
-                long count = mspIncidentRepository.countByMsuAccountNameAndInstanceId(incident.getMsuAccountName(), incident.getMsuInstanceId());
-                if (count > 0) {
-                    //update incident
-                    mspIncidentRepository.updateByMsuAccountAndMsuInstanceId(incident);
-                    logger.info("update incident:{}", incident.getMsuInstanceId());
-                } else {
-                    mspIncidentRepository.create(incident);
-                    logger.info("save view msu incident :{}", incident.getMsuInstanceId());
+                if (type == TransferType.Action) {
+                    startMspInstance(incident);
                 }
-
+                mspIncidentRepository.create(incident);
+                logger.info("save {} msu incident :{}", type, incident.getMsuInstanceId());
             }
+
 
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
 
 
+    }
+
+    private void startMspInstance(Incident incident){
+        //start msp process
+        //start incident process
+        ProcessInstance processInstance = activitiEngineService.startProcessInstanceByKey(MspIncidentManager.PROCESS_KEY, null, username);
+        logger.info("started msp incident workflow,instance:{}", processInstance.getProcessInstanceId());
+        //save incident object and persist it
+        incident.setCreatedBy(username);
+        incident.setMspInstanceId(processInstance.getProcessInstanceId());
+        Account account = accountService.findBySn(MspIncidentManager.getAppSn());
+        incident.setMspAccountName(account.getName());
+        incident.setNumber("INC" + df.format(new Date()));
+        incident.setMspStatus(IncidentStatus.New);
+        incident.setUpdatedBy(username);
+        incident.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        incident.setUpdatedAt(incident.getCreatedAt());
+        incident.setAssignedUser(null);
+        incident.setAssignedGroup(null);
+        incident.setCloseTime(null);
+        incident.setResolveTime(null);
+        incident.setResponseTime(null);
+        incident.setCanProcess(null);
+        incident.setHardwareError(null);
+        incident.setResolved(null);
     }
 
     @Override

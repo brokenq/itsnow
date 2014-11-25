@@ -13,14 +13,12 @@ import org.activiti.engine.delegate.event.ActivitiEvent;
 import org.activiti.engine.delegate.event.ActivitiEventListener;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -68,10 +66,10 @@ public class MsuEventListener extends Bean implements ActivitiEventListener, Mes
                 this.processClosedEvent(incident);
             }
             User user =   userService.findByUsername(incident.getUpdatedBy());
-            if(user.getAccount().isMsu()){
+            //if(user.getAccount().isMsu()){
                 //send view message to msp
                 this.sendMessageToMsp(incident.getMsuInstanceId(),TransferType.View);
-            }
+            //}
         }
         logger.debug("received msu incident event");
     }
