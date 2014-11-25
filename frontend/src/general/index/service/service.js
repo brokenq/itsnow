@@ -3,6 +3,6 @@
  */
 
 angular.module('GeneralIndex.Service', [
-//  'Service.Dict',
+  'Service.Dicts',
   'Service.Workflows'
 ]);
