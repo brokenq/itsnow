@@ -45,8 +45,7 @@ angular.module('System.Sites', ['multi-select'])
   ])
 
 .factory("SiteDictService", ["$resource", ($resource)->
-    $resource '/api/dictionaries/code/:code', {},
-      list: {method: 'GET', params: {code: '@code'}, isArray: true}
+    $resource '/api/dictionaries/:code', {code: '@code'}
   ])
 
 .controller('SitesCtrl', ['$scope', '$state', '$log', 'Feedback', 'CacheService', 'SiteService',\
@@ -98,7 +97,7 @@ angular.module('System.Sites', ['multi-select'])
       $scope.destroy = (site) ->
         siteService.remove {sn: site.sn}, () ->
           feedback.success "删除地点#{site.name}成功"
-          delete $scope.selection.items[site.sn]
+          delete $scope.selectionService.items[site.sn]
           $scope.sitesTable.reload()
         , (resp) ->
           feedback.error("删除地点#{site.name}失败", resp)
@@ -115,8 +114,8 @@ angular.module('System.Sites', ['multi-select'])
       $log.log "Initialized the Site New controller"
       $scope.disabled = false
 
-      dictService.list {code: 'inc003'}, (data) ->
-        $scope.dictionaries = data
+      dictService.get {code: '001'}, (data) ->
+        $scope.dictionaries = data.details
 
       workTimeService.query (data) ->
         $scope.workTimes = data;
@@ -142,8 +141,8 @@ angular.module('System.Sites', ['multi-select'])
       promise = siteService.get({sn: $scope.site.sn}).$promise
       promise.then (data) ->
         $scope.site = data
-        dictService.list {code: 'inc003'}, (data) ->
-          $scope.dictionaries = data
+        dictService.get {code: '001'}, (data) ->
+          $scope.dictionaries = data.details
           for dictionary in $scope.dictionaries
             if dictionary.sn == $scope.site.dictionary.sn
               $scope.dictionary = dictionary

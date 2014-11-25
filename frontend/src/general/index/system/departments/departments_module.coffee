@@ -120,7 +120,7 @@ angular.module('System.Departments', ['multi-select'])
       $scope.destroy = (department) ->
         departmentService.remove department, () ->
           feedback.success "删除部门#{department.name}成功"
-          delete $scope.selection.items[department.sn]
+          delete $scope.selectionService.items[department.sn]
           $scope.departmentsTable.reload()
         , (resp) ->
           feedback.error("删除部门#{department.name}失败", resp)

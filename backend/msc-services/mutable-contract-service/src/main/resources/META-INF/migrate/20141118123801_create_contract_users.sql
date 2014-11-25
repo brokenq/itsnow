@@ -1,14 +1,12 @@
 -- // create_contract_users
--- Msp users with the contracts relationship
+-- MSP users can login to the MSU through this relationship
 -- Migration SQL that makes the change goes here.
 
 CREATE TABLE contract_users (
-  contract_id INT(10) UNSIGNED NOT NULL,
   msp_user_id INT(10) UNSIGNED NOT NULL,
-  account_sn  VARCHAR(64),
-  access      VARCHAR(1),
-  FOREIGN KEY (contract_id) REFERENCES contracts (id),
-  FOREIGN KEY (msp_user_id) REFERENCES users (id)
+  msu_account_id  INT(10) UNSIGNED NOT NULL,
+  FOREIGN KEY (msp_user_id) REFERENCES users (id),
+  FOREIGN KEY (msu_account_id) REFERENCES accounts (id)
 );
 
 -- //@UNDO

@@ -72,4 +72,11 @@
         </trim>
     </select>
 
+    <select id="findByCode" resultMap="dictResult">
+        <include refid="select"></include>
+        <where>
+            code = #{code}
+        </where>
+    </select>
+
 </mapper>

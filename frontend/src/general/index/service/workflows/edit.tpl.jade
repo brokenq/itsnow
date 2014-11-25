@@ -4,7 +4,7 @@ include /lib/mixins/form
 h2 编辑 流程
 
 +form("editWorkflowForm")(ng-submit="update()", enctype="multipart/form-data")
-  include /msu/index/service/workflows/_form.jade
+  include /general/index/service/workflows/_form.jade
 
   +action_bar
     +action_submit("更新")

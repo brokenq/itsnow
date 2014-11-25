@@ -11,11 +11,7 @@
         <collection property="users" column="name" ofType="User" select="selectUser" />
     </resultMap>
 
-    <resultMap id="userResult" type="User" autoMapping="true">
-        <id property="id" column="id"/>
-    </resultMap>
-
-    <select id="selectUser" resultMap="userResult">
+    <select id="selectUser" resultType="User">
         SELECT u.*
         FROM   authorities a
                LEFT JOIN itsnow_msc.users u

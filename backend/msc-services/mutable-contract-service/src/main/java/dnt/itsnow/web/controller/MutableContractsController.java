@@ -4,8 +4,6 @@
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.Contract;
-import dnt.itsnow.model.ContractUser;
-import dnt.itsnow.model.User;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.ServiceException;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
@@ -26,8 +24,8 @@ import javax.validation.Valid;
  * # POST     /admin/api/contracts                     create          创建合同
  * # PUT      /admin/api/contracts/{sn}/details/{id}   update          修改合同详情，账户信息通过HTTP BODY提交
  * # DELETE   /admin/api/contracts/{sn}/details/{id}   destroy         删除合同详情
- * # POST     /admin/api/contracts/{sn}/user/relation  buildRelation   删除合同详情
- * # PUT      /admin/api/contracts/{sn}/user/relation  updateRelation  删除合同详情
+ * # POST     /admin/api/contracts/user/relation       buildRelation   为可以依合同登录MSU系统的USP用户做准备
+ * # PUT      /admin/api/contracts/user/relation       updateRelation  MSU批准哪些MSP的用户可以登录本系统
  */
 @RestController
 @RequestMapping("/admin/api/contracts")
@@ -149,41 +147,33 @@ public class MutableContractsController extends SessionSupportController<Contrac
     /**
      * <h2>MSP进行其用户与MSU合同进行关联</h2>
      * <p/>
-     * POST /admin/api/contracts/{sn}/user/relation
+     * POST /admin/api/contracts/user/relation
      *
-     * @param sn 合同号
-     * @param contractUser 合同与MSP用户关联实体类
+     * @param contract 合同
      */
-    @RequestMapping(value = "{sn}/user/relation", method = RequestMethod.POST)
-    public void buildRelation(@PathVariable("sn") String sn, @Valid @RequestBody ContractUser contractUser){
-        Contract contract;
+    @RequestMapping(value = "user/relation", method = RequestMethod.POST)
+    public void buildRelation(@Valid @RequestBody Contract contract){
         try {
-            contract = mutableContractService.findBySn(sn);
+            mutableContractService.buildRelation(contract);
         } catch (ServiceException e) {
-            throw new WebClientSideException(HttpStatus.NOT_FOUND, "Can't find the contract with sn:" + sn);
+            throw new WebClientSideException(HttpStatus.SERVICE_UNAVAILABLE, "Can't build relationship contract with msp users" + e.getMessage() );
         }
-        contractUser.setContract(contract);
-        mutableContractService.buildRelation(contractUser);
     }
 
     /**
      * <h2>MSP进行其用户与MSU合同进行关联</h2>
      * <p/>
-     * PUT /admin/api/contracts/{sn}/user/relation
+     * PUT /admin/api/contracts/user/relation
      *
-     * @param sn 合同号
-     * @param contractUser 合同与MSP用户关联实体类
+     * @param contract 合同
      */
-    @RequestMapping(value = "{sn}/user/relation", method = RequestMethod.PUT)
-    public void updateRelation(@PathVariable("sn") String sn, @Valid @RequestBody ContractUser contractUser){
-        Contract contract;
+    @RequestMapping(value = "user/relation", method = RequestMethod.PUT)
+    public void updateRelation(@Valid @RequestBody Contract contract){
         try {
-            contract = mutableContractService.findBySn(sn);
+            mutableContractService.updateRelation(contract);
         } catch (ServiceException e) {
-            throw new WebClientSideException(HttpStatus.NOT_FOUND, "Can't find the contract with sn:" + sn);
+            throw new WebClientSideException(HttpStatus.SERVICE_UNAVAILABLE, "Can't update relationship contract with msp users" + e.getMessage() );
         }
-        contractUser.setContract(contract);
-        mutableContractService.updateRelation(contractUser);
     }
 
     @BeforeFilter({"show", "update", "bid", "approve", "reject", "destroy"})

@@ -12,6 +12,11 @@ angular.module('MspIndex.Contracts', [])
     templateUrl: 'contracts/list.tpl.jade'
     controller: 'ContractListCtrl',
     data: {pageTitle: '邀约管理'}
+  $stateProvider.state 'contracts.edit',
+    url: '/{sn}/edit',
+    templateUrl: 'contracts/edit.tpl.jade'
+    controller: 'ContractEditCtrl',
+    data: {pageTitle: '批准用户登录MSU'}
   $stateProvider.state 'contracts.my-list',
     url: '/my_list',
     templateUrl: 'contracts/my_list.tpl.jade'
@@ -25,11 +30,20 @@ angular.module('MspIndex.Contracts', [])
   $urlRouterProvider.when '/contracts', '/contracts/list'
 
 .factory('ContractService', ['$resource', ($resource) ->
-    $resource "/api/contracts/:sn/:bid", {},
+    $resource '/api/contracts/:sn/:bid/:result/:do', {},
       query: {method: 'GET', params: {keyword: '@keyword'}, isArray: true}
       get: {method: 'GET', params: {sn: '@sn'}}
       bid: {method: 'PUT', params: {sn: '@sn', bid: 'bid'}}
       ownQuery: {method: 'GET', params: {keyword: '@keyword', own: true}, isArray: true}
+      list: {method: 'GET', params: {result: 'users', do:'belongs_to_account'}, isArray: true}
+      getLoginUser: {method: 'GET', params: {sn: '@sn', result: 'users', do:'login'}, isArray: true}
+      update: {method: 'PUT', params: {result:'user', do: 'relation'}}
+  ])
+
+.factory('ContractRoleService', ['$resource', ($resource) ->
+    $resource("/api/roles/:name/:do", {},
+      getUsers: { method: 'GET', params: {name: 'users', do:"belongs_to_account"}, isArray: true}
+    )
   ])
 
 .filter 'formatContractStatus', () ->
@@ -110,3 +124,36 @@ angular.module('MspIndex.Contracts', [])
     $log.log "Initialized the Contract View controller on: " + JSON.stringify($scope.contract)
   ])
 
+.controller('ContractEditCtrl', ['$scope', '$state', '$stateParams', '$log', 'Feedback', 'ContractService', 'ContractRoleService',\
+    ($scope, $state, $stateParams, $log, feedback, contractService, roleService) ->
+      $log.log "Initialized the Contract edit controller"
+
+      $scope.contract = $scope.cacheService.find $stateParams.sn, true
+      $scope.contract.users=[]
+
+      #查询与本系统签订合同的MSP用户
+      roleService.getUsers (data)->
+        $scope.mspContractUsers = data
+        contractService.getLoginUser $scope.contract, (data)->
+          for mspContractUser in $scope.mspContractUsers
+            for loginUser in data
+              mspContractUser.ticked =true if mspContractUser.id is loginUser.id
+
+      $scope.cancel = () ->
+        $state.go 'contracts.list'
+
+      $scope.allowLogin = () ->
+
+        for mspContractUser in $scope.mspContractUsers
+          user ={}
+          user.id = mspContractUser.id
+          if mspContractUser.ticked is true
+            $scope.contract.users.push user
+
+        contractService.update($scope.contract, () ->
+          feedback.success "批准MSP用户登录操作成功"
+          $state.go 'contracts.list'
+        ,(resp)->
+          feedback.error("批准MSP用户登录操作失败", resp)
+        )
+  ])

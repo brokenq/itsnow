@@ -2,7 +2,6 @@ package dnt.itsnow.repository;
 
 import dnt.itsnow.config.MutableContractRepositoryConfig;
 import dnt.itsnow.model.Contract;
-import dnt.itsnow.model.ContractUser;
 import dnt.itsnow.model.User;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,31 +25,34 @@ public class MutableContractRepositoryTest {
     @Autowired
     MutableContractRepository repository;
 
-    ContractUser contractUser;
+    Contract contract;
 
     @Before
     public void setup() {
-        Contract contract = new Contract();
+        contract = new Contract();
         contract.setId(1L);
+
         User user = new User();
         user.setId(1L);
         List<User> users = new ArrayList<User>();
         users.add(user);
-        contractUser = new ContractUser();
-        contractUser.setContract(contract);
-        contractUser.setUsers(users);
+
+        contract.setUsers(users);
+    }
+
+    @Test
+    public void testFindRelation() throws Exception {
+        repository.findRelation(3L, 2L);
     }
 
     @Test
     public void testBuildRelation() throws Exception {
-        repository.buildRelation(contractUser);
+        repository.buildRelation(8L,2L);
     }
 
     @Test
-    public void testUpdateRelation() throws Exception {
-        repository.buildRelation(contractUser);
-        contractUser.setAccess("0");
-        repository.updateRelation(contractUser);
+    public void testDeleteRelation() throws Exception {
+        repository.deleteRelation(2L);
     }
 
 }

@@ -16,25 +16,28 @@ angular.module('MsuIndex.Contracts', ['multi-select'])
     templateUrl: 'contracts/new.tpl.jade'
     controller: 'ContractNewCtrl',
     data: {pageTitle: '新增合同'}
-  $stateProvider.state 'contracts.edit',
-    url: '/edit',
-    templateUrl: 'contracts/edit.tpl.jade'
-    controller: 'ContractEditCtrl',
-    data: {pageTitle: '批准MSP用户'}
   $stateProvider.state 'contracts.view',
     url: '/{sn}',
     templateUrl: 'contracts/view.tpl.jade'
     controller: 'ContractViewCtrl',
     data: {pageTitle: '查看合同'}
+  $stateProvider.state 'contracts.accounts_view',
+    url: '/{sn}',
+    templateUrl: 'contracts/account_view.tpl.jade',
+    controller: 'ContractAccountViewCtrl',
+    data: {pageTitle: '查看帐户'}
   $urlRouterProvider.when '/contracts', '/contracts/list'
 
 .factory('ContractService', ['$resource', ($resource) ->
-    $resource '/api/contracts/:sn/:do', {},
+    $resource '/api/contracts/:sn/:result/:do', {},
       save: {method: 'POST'}
+      update: {method: 'PUT', params: {result:'user', do: 'relation'}}
       get: {method: 'GET', params: {sn: '@sn'}}
       query: {method: 'GET', params: {keyword: '@keyword'}, isArray: true}
       reject: {method: 'PUT', params: {sn: '@sn', do: 'reject'}}
       approve: {method: 'PUT', params: {sn: '@sn', do: 'approve'}}
+      list: {method: 'GET', params: {result: 'users', do:'belongs_to_account'}, isArray: true}
+      getLoginUser: {method: 'GET', params: {result: 'users', do:'login'}, isArray: true}
   ])
 
 .factory('ContractDetailService', ['$resource', ($resource) ->
@@ -44,6 +47,10 @@ angular.module('MsuIndex.Contracts', ['multi-select'])
 .factory("ContractServiceCatalogService", ["$resource", ($resource)->
     $resource '/api/public_service_catalogs/:sn', {sn: '@sn'},
       query: {method: 'GET', params: {keyword: '@keyword'}, isArray: true}
+  ])
+
+.factory("ContractAccountService", ["$resource", ($resource)->
+    $resource '/api/accounts/:sn', {sn: '@sn'}
   ])
 
 .filter 'formatContractStatus', () ->
@@ -112,12 +119,19 @@ angular.module('MsuIndex.Contracts', ['multi-select'])
 
 .controller('ContractViewCtrl', ['$scope', '$stateParams', '$log', ($scope, $stateParams, $log) ->
     $scope.contract = $scope.cacheService.find $stateParams.sn, true
-    $log.log "Initialized the Role View controller on: " + JSON.stringify($scope.contract)
+    $log.log "Initialized the Contract View controller on: " + JSON.stringify($scope.contract)
+  ])
+
+.controller('ContractAccountViewCtrl', ['$scope', '$stateParams', '$log', 'CacheService', 'ContractAccountService',\
+    ($scope, $stateParams, $log, CacheService, contractAccountService) ->
+      contractAccountService.get {sn: value}, (data)->
+        $scope.account = data
+      $log.log "Initialized the Contract Account View controller on: " + JSON.stringify($scope.account)
   ])
 
 .controller('ContractNewCtrl', ['$scope', '$state', '$log', 'Feedback', 'ContractService', 'ContractDetailService', 'ContractServiceCatalogService',\
     ($scope, $state, $log, feedback, contractService, contractDetailService, serviceCatalogService) ->
-      $log.log "Initialized the Role New controller"
+      $log.log "Initialized the Contract New controller"
 
       #查询服务目录
       serviceCatalogService.query (data)->
@@ -150,4 +164,6 @@ angular.module('MsuIndex.Contracts', ['multi-select'])
           feedback.error("保存合同失败", resp)
         )
   ])
+
+
 

@@ -48,7 +48,7 @@
       SELECT c.* FROM itsnow_msc.contracts c WHERE c.sn = #{sn}
     </select>
 
-    <select id="selectDetails" resultMap="detailResult">
+    <select id="selectDetails" resultType="ContractDetail">
         SELECT d.*
         FROM   itsnow_msc.contracts c
         LEFT JOIN itsnow_msc.contract_details d
@@ -59,10 +59,6 @@
     <resultMap id="contractResult" type="Contract" autoMapping="true">
         <id property="id" column="id"/>
         <collection property="details" ofType="ContractDetail" column="id" select="selectDetails"/>
-    </resultMap>
-
-    <resultMap id="detailResult" type="ContractDetail" autoMapping="true">
-        <id property="id" column="id"/>
     </resultMap>
 
 </mapper>

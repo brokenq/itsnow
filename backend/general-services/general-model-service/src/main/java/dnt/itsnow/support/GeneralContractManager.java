@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestOperations;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,6 +56,10 @@ public class GeneralContractManager extends CommonContractManager implements Gen
         contract = findByAccountAndSn(account, sn, true);
 
         logger.info("Approved  {} {}", account, sn);
+
+        List<User> users = commonUserService.findUsersByAccount(account);
+        contract.setUsers(users);
+        buildRelation(contract);
 
         return contract;
     }
@@ -103,14 +108,7 @@ public class GeneralContractManager extends CommonContractManager implements Gen
         facade.put("/admin/api/contracts/{sn}/bid", contract, contract.getSn());
         logger.info("Msp bid contract {}", contract);
 
-        List<User> users = commonUserService.findUsersByAccount(account);
-        Account msuAccount = commonUserService.findAccountById(contract.getMsuAccountId());
 
-        ContractUser contractUser = new ContractUser();
-        contractUser.setUsers(users);
-        contractUser.setAccountSn(msuAccount.getSn());
-
-        buildRelation(contract.getSn(),contractUser);
 
         return contract;
     }
@@ -133,7 +131,7 @@ public class GeneralContractManager extends CommonContractManager implements Gen
     }
 
     @Override
-    public ContractDetail updateDetail(ContractDetail detail, String sn) {
+    public ContractDetail updateDetail(ContractDetail detail, String sn) throws ServiceException {
         logger.info("Updating {}", detail);
         facade.put("/admin/api/contracts/{sn}/details/{id}",
                 detail, detail.getContract().getSn(), detail.getId());
@@ -142,20 +140,20 @@ public class GeneralContractManager extends CommonContractManager implements Gen
     }
 
     @Override
-    public ContractUser buildRelation(String sn, ContractUser contractUser) {
-        logger.info("Building {}", contractUser);
-        facade.postForEntity("/admin/api/contracts/{sn}/user/relation",
-                contractUser, ContractUser.class, sn);
-        logger.info("Built    {}", contractUser);
-        return contractUser;
+    public Contract buildRelation(Contract contract) throws ServiceException {
+        logger.info("Building {}", contract.getUsers());
+        facade.postForEntity("/admin/api/contracts/user/relation",
+                contract, Contract.class);
+        logger.info("Built    {}", contract.getUsers());
+        return contract;
     }
 
     @Override
-    public ContractUser updateRelation(String sn, ContractUser contractUser) {
-        logger.info("Updating {}", contractUser);
-        facade.put("/admin/api/contracts/{sn}/user/relation", contractUser, sn);
-        logger.info("Updated  {}", contractUser);
-        return contractUser;
+    public Contract updateRelation(Contract contract) throws ServiceException {
+        logger.info("Updating {}", contract.getUsers());
+        facade.put("/admin/api/contracts/user/relation", contract);
+        logger.info("Updated  {}", contract.getUsers());
+        return contract;
     }
 
 }

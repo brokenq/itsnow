@@ -89,4 +89,20 @@ public class CommonUserManager extends Bean implements CommonUserService {
     public List<User> findUsersByAccount(Account mainAccount) {
         return repository.findUsersByAccount(mainAccount);
     }
+
+    @Override
+    public List<User> findAllByContract(Account mainAccount) {
+        return repository.findAllByContract(mainAccount);
+    }
+
+    @Override
+    public List<User> findAllByAccountAndContract(Account mainAccount) {
+        return repository.findAllByAccountAndContract(mainAccount);
+    }
+
+    @Override
+    public List<User> findAllByLogOnContract(Long accountId) {
+        return repository.findAllByLogOnContract(accountId);
+    }
+
 }

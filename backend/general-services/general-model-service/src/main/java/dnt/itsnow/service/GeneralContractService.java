@@ -6,7 +6,6 @@ package dnt.itsnow.service;
 import dnt.itsnow.model.Account;
 import dnt.itsnow.model.Contract;
 import dnt.itsnow.model.ContractDetail;
-import dnt.itsnow.model.ContractUser;
 import dnt.itsnow.platform.service.ServiceException;
 
 /**
@@ -82,17 +81,15 @@ public interface GeneralContractService extends CommonContractService {
 
     /**
      * <h2>建立合同与MSP用户的关联关系</h2>
-     * @param sn 合同号
-     * @param contractUser 关联实体类
-     * @return ContractUser
+     * @param contract 合同
+     * @return Contract
      */
-    public ContractUser buildRelation(String sn, ContractUser contractUser);
+    public Contract buildRelation(Contract contract) throws ServiceException;
 
     /**
      * <h2>修改合同与MSP用户的关联关系</h2>
-     * @param sn 合同号
-     * @param contractUser 关联实体类
-     * @return ContractUser
+     * @param contract 合同
+     * @return Contract
      */
-    public ContractUser updateRelation(String sn, ContractUser contractUser);
+    public Contract updateRelation(Contract contract) throws ServiceException;
 }

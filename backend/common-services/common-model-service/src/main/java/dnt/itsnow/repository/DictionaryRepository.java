@@ -15,7 +15,6 @@ public interface DictionaryRepository {
 
     public int count(@Param("keyword") String keyword);
 
-    @Select("SELECT * FROM dictionaries WHERE code = #{code}")
     public Dictionary findByCode(@Param("code") String code);
 
     public void create(Dictionary dictionary);

@@ -1,8 +1,6 @@
 package dnt.itsnow.repository;
 
 import dnt.itsnow.model.Contract;
-import dnt.itsnow.model.ContractUser;
-import dnt.itsnow.model.User;
 import org.apache.ibatis.annotations.*;
 
 /**
@@ -86,14 +84,26 @@ public interface MutableContractRepository extends CommonContractRepository{
     void deleteBySn(@Param("sn") String sn);
 
     /**
-     * 建立合同与MSP用户的关联关系
-     * @param contractUser 合同与MSP用户关系实体类
+     * 查询是否有特定的MSP用户已经可以登录特定的MSU系统
+     * @param accountId MSU账户
+     * @param userId MSP用户
+     * @return int
      */
-    void buildRelation(ContractUser contractUser);
+    @Select("SELECT count(*) FROM contract_users WHERE msu_account_id = #{accountId} AND msp_user_id = #{userId}")
+    int findRelation(@Param("userId")Long userId, @Param("accountId")Long accountId);
 
     /**
-     * 修改MSP用户根据合同的关联关系，访问MSU系统的权限
-     * @param contractUser 合同与MSP用户关系实体类
+     * 建立MSP用户可以登录MSU系统的关系
+     * @param accountId MSU账户
+     * @param userId MSP用户
      */
-    void updateRelation(ContractUser contractUser);
+    @Insert("INSERT INTO contract_users(msp_user_id, msu_account_id) VALUES (#{userId}, #{accountId})")
+    void buildRelation(@Param("userId")Long userId, @Param("accountId")Long accountId);
+
+    /**
+     * 建立MSP用户可以登录MSU系统的关系
+     * @param accountId MSU账户
+     */
+    @Delete("DELETE FROM contract_users WHERE msu_account_id = #{accountId}")
+    void deleteRelation(@Param("accountId")Long accountId);
 }

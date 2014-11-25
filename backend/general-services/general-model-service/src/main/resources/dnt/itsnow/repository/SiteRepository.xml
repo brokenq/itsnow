@@ -22,16 +22,7 @@
             <result property="endAt" column="workTimeEndAt"/>
         </association>
         <!-- 多对一关系 -->
-        <association property="dictionary" column="process_dictionary_id" javaType="Dictionary">
-            <id property="id" column="dictionaryId"/>
-            <result property="sn" column="dictionarySn"/>
-            <result property="code" column="dictionaryCode"/>
-            <result property="name" column="dictionaryName"/>
-            <result property="display" column="dictionaryDisplay"/>
-            <result property="val" column="dictionaryVal"/>
-            <result property="state" column="dictionaryState"/>
-            <result property="type" column="dictionaryType"/>
-        </association>
+        <association property="dictionary" column="process_dictionary_id" resultMap="dnt.itsnow.repository.DictionaryRepository.dictResult" columnPrefix="dict_"/>
         <!-- 多对多关系 -->
         <collection property="departments" column="id" ofType="Department" select="selectDept" />
     </resultMap>
@@ -70,14 +61,12 @@
             w.work_days   AS workTimeWorkDays,
             w.start_at    AS workTimeStartAt,
             w.end_at      AS workTimeEndAt,
-            p.id          AS dictionaryId,
-            p.sn          AS dictionarySn,
-            p.code        AS dictionaryCode,
-            p.name        AS dictionaryName,
-            p.display     AS dictionaryDisplay,
-            p.val         AS dictionaryVal,
-            p.state       AS dictionaryState,
-            p.type        AS dictionaryType
+            p.id          AS dict_id,
+            p.code        AS dict_code,
+            p.name        AS dict_name,
+            p.label       AS dict_label,
+            p.description AS dict_description,
+            p.detail      AS dict_detail
         FROM   sites s
             LEFT JOIN work_times w
                 ON s.work_time_id = w.id

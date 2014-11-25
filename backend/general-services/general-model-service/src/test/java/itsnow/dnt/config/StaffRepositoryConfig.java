@@ -19,11 +19,11 @@ public class StaffRepositoryConfig extends RepositoryConfigWithH2 {
         return new String[]{
                 "classpath:META-INF/setup/create_accounts.sql",
                 "classpath:META-INF/setup/create_users.sql",
-                "classpath:META-INF/migrate/20140720144647_create_dictionaries.sql@up",
-                "classpath:META-INF/migrate/20140721113250_create_work_times.sql@up",
-                "classpath:META-INF/migrate/20140722130944_create_sites.sql@up",
-                "classpath:META-INF/migrate/20140722130950_create_departments.sql@up",
-                "classpath:META-INF/migrate/20140902160038_create_site_depts.sql@up",
+                "classpath:META-INF/setup/create_dictionaries.sql@up",
+                "classpath:META-INF/setup/create_work_times.sql@up",
+                "classpath:META-INF/setup/create_sites.sql@up",
+                "classpath:META-INF/setup/create_departments.sql@up",
+                "classpath:META-INF/setup/create_site_depts.sql@up",
                 "classpath:META-INF/setup/create_staffs.sql",
 
                 "classpath:META-INF/setup/initialization_staffs.sql",

@@ -4,7 +4,6 @@
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.Contract;
-import dnt.itsnow.model.ContractUser;
 import dnt.itsnow.platform.service.ServiceException;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.platform.web.exception.WebServerSideException;
@@ -164,13 +163,13 @@ public class GeneralContractsController extends SessionSupportController {
      * POST /api/contracts/user/relation
      *
      */
-    @RequestMapping(value="{sn}/user/relation",method = RequestMethod.POST)
-    public void buildRelation(@PathVariable("sn") String sn, @Valid @RequestBody ContractUser contractUser) {
+    @RequestMapping(value="user/relation",method = RequestMethod.PUT)
+    public void updateRelation(@Valid @RequestBody Contract contract) {
 
-        logger.info("Building contract by sn:{} with msp users relationship", sn);
+        logger.info("Updating contract with msp users relationship", contract.getUsers());
 
         try {
-            contractService.findBySn(sn);
+            contractService.updateRelation(contract);
         } catch (ServiceException e) {
             throw new WebClientSideException(HttpStatus.NOT_ACCEPTABLE,
                     "the contract can't be found, " + e.getMessage());
@@ -178,7 +177,7 @@ public class GeneralContractsController extends SessionSupportController {
             throw new WebServerSideException(HttpStatus.BAD_GATEWAY, e.getMessage());
         }
 
-        logger.info("Built contract by sn:{} with msp users relationship", sn);
+        logger.info("Updated contract with msp users relationship", contract.getUsers());
     }
 
 }

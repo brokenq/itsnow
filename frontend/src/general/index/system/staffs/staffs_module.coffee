@@ -106,7 +106,7 @@ angular.module('System.Staffs', ['multi-select'])
       $scope.destroy = (staff) ->
         staffService.remove {no: staff.no}, () ->
           feedback.success "删除员工#{staff.name}成功"
-          delete $scope.selection.items[staff.no]
+          delete $scope.selectionService.items[staff.no]
           $scope.staffsTable.reload()
         , (resp) ->
           feedback.error("删除员工#{staff.name}失败", resp)

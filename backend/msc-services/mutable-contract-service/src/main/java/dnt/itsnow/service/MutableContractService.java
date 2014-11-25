@@ -1,7 +1,7 @@
 package dnt.itsnow.service;
 
 import dnt.itsnow.model.Contract;
-import dnt.itsnow.model.ContractUser;
+import dnt.itsnow.platform.service.ServiceException;
 
 /**
  * <h1>Contract Service</h1>
@@ -51,13 +51,13 @@ public interface MutableContractService extends CommonContractService{
 
     /**
      * 建立合同与MSP用户的关联关系
-     * @param contractUser 合同与MSP用户关系实体类
+     * @param contract 合同
      */
-    void buildRelation(ContractUser contractUser);
+    void buildRelation(Contract contract) throws ServiceException;;
 
     /**
      * 修改MSP用户根据合同的关联关系，访问MSU系统的权限
-     * @param contractUser 合同与MSP用户关系实体类
+     * @param contract 合同
      */
-    void updateRelation(ContractUser contractUser);
+    void updateRelation(Contract contract) throws ServiceException;;
 }
