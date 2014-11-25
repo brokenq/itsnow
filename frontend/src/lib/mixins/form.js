@@ -6,9 +6,9 @@ function add() {
     var count= 0 ;
     count++;
     //自增id不同的HTML对象，并附加到容器最后
-
-     var elementDiv = document.createElement("div");
-        elementDiv.setAttribute("id","create"+count);
+    //
+    var elementDiv = document.createElement("div");
+    elementDiv.setAttribute("id","create"+count);
     elementDiv.setAttribute("class","form-group has-info");
     document.getElementById("newcontent").appendChild(elementDiv);
 
@@ -62,8 +62,8 @@ function add() {
 function del(count){
 //   alert("wwww");
     var elementA = document.getElementById(count);
-  console.log(elementA);
-    console.log(elementA.parentNode.parentNode);
+    //console.log(elementA);
+    //console.log(elementA.parentNode.parentNode);
    document.getElementById('newcontent').removeChild(elementA.parentNode.parentNode);
 
 }

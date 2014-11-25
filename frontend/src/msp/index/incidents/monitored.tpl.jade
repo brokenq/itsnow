@@ -3,7 +3,7 @@ include /lib/mixins/list
   +toolbar
     +button_group
       +tool_button("incidentsTable.reload()", "refresh", "", "*", "", "")
-      +tool_button("actionService.perform(grab)", "pencil", "抢单", "1", "", "editable")
+      +tool_button("actionService.perform(grab,$event)", "pencil", "抢单", "1", "", "editable")
 
   +page_table("incidentsTable","selection")
     +row("incident", "msuInstanceId", "selection")(class="editable deletable")
