@@ -4,9 +4,11 @@
 
 angular.module('Itsnow.MspIndex', [
   'Itsnow.Index',
+  'General.Templates',
   'MspIndex.Templates',
   'MspIndex.Contracts',
   'MspIndex.Incidents',
-  'MspIndex.System',
+  'GeneralIndex.System',
+  'GeneralIndex.Service',
   'MspIndex.Service'
 ]);

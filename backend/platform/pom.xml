@@ -7,7 +7,7 @@
     <parent>
         <groupId>dnt.itsnow</groupId>
         <artifactId>backend</artifactId>
-        <version>0.2.3</version>
+        <version>0.2.4-SNAPSHOT</version>
     </parent>
     <artifactId>platform</artifactId>
     <name>Itsnow Platform</name>
@@ -55,22 +55,6 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-annotations</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.scala-lang</groupId>
-            <artifactId>scala-library</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.scala-lang</groupId>
-            <artifactId>scala-compiler</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.fusesource.scalate</groupId>
-            <artifactId>scalate-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.fusesource.scalate</groupId>
-            <artifactId>scalate-spring-mvc</artifactId>
         </dependency>
 
         <!--ORM Related-->
@@ -148,19 +132,6 @@
 
     <build>
         <plugins>
-<!--
-            <plugin>
-                <groupId>net.happyonroad</groupId>
-                <artifactId>spring-component-builder</artifactId>
-                <version>${version.component-framework}</version>
-                <executions>
-                    <execution>
-                        <id>index-detail</id>
-                        <goals><goal>detail</goal></goals>
-                    </execution>
-                </executions>
-            </plugin>
--->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>

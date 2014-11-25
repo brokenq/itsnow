@@ -1,15 +1,9 @@
 package dnt.itsnow.service;
 
 import dnt.itsnow.exception.RoleException;
-import dnt.itsnow.model.Account;
 import dnt.itsnow.model.Role;
-import dnt.itsnow.model.User;
-import dnt.itsnow.model.UserAuthority;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
-import dnt.itsnow.platform.util.PageRequest;
-
-import java.util.List;
 
 /**
  * <h1>MSP/MSU角色Service</h1>
@@ -56,10 +50,4 @@ public interface RoleService {
      */
     public void destroy(Role role) throws RoleException;
 
-    /**
-     * 根据账户名列出所对应的所有用户信息
-     * @param mainAccount 账户
-     * @return 用户列表
-     */
-    List<User> findUsersByAccount(Account mainAccount);
 }

@@ -1,12 +1,4 @@
-angular.module('System.Roles',
-  ['ngTable',
-   'ngResource',
-   'ngSanitize',
-   'dnt.action.service',
-   'Lib.Commons',
-   'Lib.Utils',
-   'Lib.Feedback',
-   'multi-select'])
+angular.module('System.Roles', ['multi-select'])
 .config ($stateProvider, $urlRouterProvider)->
   $stateProvider.state 'roles',
     url: '/roles',
@@ -37,13 +29,13 @@ angular.module('System.Roles',
   $urlRouterProvider.when '/roles', '/roles/list'
 
 .factory('RoleService', ['$resource', ($resource) ->
-    $resource("/api/roles/:name", {},
+    $resource("/api/roles/:name/:do", {},
       get: { method: 'GET', params: {name: '@name'}},
       save: { method: 'POST'},
       update: { method: 'PUT', params: {name: '@name'}},
       query: { method: 'GET', params: {keyword: '@keyword'}, isArray: true},
       remove: { method: 'DELETE', params: {name: '@name'}},
-      getUsers: { method: 'GET', params: {name: 'users'}, isArray: true}
+      getUsers: { method: 'GET', params: {name: 'users', do:"belongs_to_account"}, isArray: true}#/api/roles/users/belongs_to_account
     )
   ])
 
@@ -58,15 +50,16 @@ angular.module('System.Roles',
     else '无'
 )
 
-.controller('RolesCtrl', ['$scope', '$state', '$log', 'Feedback', 'CacheService',
-    ($scope, $state, $log, feedback, CacheService) ->
+.controller('RolesCtrl', ['$scope', '$state', '$log', 'Feedback', 'CacheService', 'RoleService', \
+    ($scope, $state, $log, feedback, CacheService, roleService) ->
       # frontend controller logic
       $log.log "Initialized the Roles controller"
       $scope.options =
-        page: 1, # show first page
+        page: 1   # show first page
         count: 10 # count per page
 
-      $scope.cacheService = new CacheService("name")
+      $scope.cacheService = new CacheService "name", (value)->
+        roleService.get {name:value}
 
       # 提交按钮是否已经执行了提交操作，false为未执行，则按钮可用
       $scope.submited = false
@@ -89,14 +82,14 @@ angular.module('System.Roles',
       $scope.formatData = (role, users) ->
         aRole = role
         aRole.users = selectedUsersFun(users)
-        delete aRole.$promise;
-        delete aRole.$resolved;
+        delete aRole.$promise
+        delete aRole.$resolved
         return aRole
   ])
 
 .controller('RoleListCtrl',
-  ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'CommonService', 'RoleService', 'Feedback',
-    ($scope, $location, $log, NgTable, ActionService, commonService, roleService, feedback) ->
+  ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'SelectionService', 'RoleService', 'Feedback',\
+    ($scope, $location, $log, NgTable, ActionService, SelectionService, roleService, feedback) ->
       $log.log "Initialized the Role list controller"
 
       args =
@@ -108,15 +101,14 @@ angular.module('System.Roles',
             $scope.cacheService.cache data
             $defer.resolve $scope.roles = data
 
-      $scope.selection = { checked: false, items: {} }
-      $scope.rolesTable = new NgTable(angular.extend($scope.options, $location.search()), args);
-      $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.cacheService.find})
-      commonService.watchSelection($scope.selection, $scope.cacheService.records, "name")
+      $scope.rolesTable = new NgTable(angular.extend($scope.options, $location.search()), args)
+      $scope.selectionService = new SelectionService($scope.cacheService.records, "name")
+      $scope.actionService = new ActionService({watch: $scope.selectionService.items, mapping: $scope.cacheService.find})
 
       $scope.destroy = (role) ->
         roleService.remove {name: role.name}, () ->
           feedback.success "删除角色#{role.name}成功"
-          delete $scope.selection.items[role.name]
+          delete $scope.selectionService.items[role.name]
           $scope.rolesTable.reload()
         , (resp) ->
           feedback.error("删除角色#{role.name}失败", resp)
@@ -127,11 +119,14 @@ angular.module('System.Roles',
     $log.log "Initialized the Role View controller on: " + JSON.stringify($scope.role)
   ])
 
-.controller('RoleNewCtrl', ['$scope', '$state', '$log', 'Feedback', 'RoleService',
+.controller('RoleNewCtrl', ['$scope', '$state', '$log', 'Feedback', 'RoleService',\
     ($scope, $state, $log, feedback, roleService) ->
       $log.log "Initialized the Role New controller"
 
-      create = () ->
+      roleService.getUsers (data) ->
+        $scope.users = data
+
+      $scope.create = () ->
         $scope.submited = true
         role = $scope.formatData($scope.role, $scope.users)
         roleService.save role, () ->
@@ -139,20 +134,22 @@ angular.module('System.Roles',
           $state.go "roles.list"
         , (resp) ->
           feedback.error("新建角色#{role.name}失败", resp)
-
-      roleService.getUsers (data) ->
-        $scope.users = data
-
-      $scope.create = create
   ])
 
-.controller('RoleEditCtrl', ['$scope', '$state', '$log', '$stateParams', 'Feedback', 'RoleService',
+.controller('RoleEditCtrl', ['$scope', '$state', '$log', '$stateParams', 'Feedback', 'RoleService',\
     ($scope, $state, $log, $stateParams, feedback, roleService) ->
       $scope.role = $scope.cacheService.find $stateParams.name, true
       $log.log "Initialized the Role Edit controller on: " + JSON.stringify($scope.role)
 
+      roleService.get {name: $stateParams.name}, (data) ->
+        $scope.role = data;
+        roleService.getUsers (data) ->
+          $scope.users = data
+          for user in $scope.users
+            user.ticked = true for selectedUser in $scope.role.users when user.name == selectedUser.name
+
       # 编辑页面提交
-      update = () ->
+      $scope.update = () ->
         $scope.submited = true
         role = $scope.formatData($scope.role, $scope.users)
         roleService.update {name: role.name}, role, () ->
@@ -160,15 +157,4 @@ angular.module('System.Roles',
           $state.go "roles.list"
         , (resp) ->
           feedback.error("修改角色#{role.name}失败", resp);
-
-      roleService.get {name: $scope.role.name}, (data) ->
-        $scope.role = data;
-        roleService.getUsers (data) ->
-          $scope.users = data
-          for user in $scope.users
-            for selectedUser in $scope.role.users
-              if user.name == selectedUser.name
-                user.ticked = true
-
-      $scope.update = update
   ])

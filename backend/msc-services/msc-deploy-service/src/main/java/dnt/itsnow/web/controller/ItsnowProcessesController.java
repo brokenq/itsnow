@@ -42,7 +42,7 @@ import java.util.Map;
  * PUT    /admin/api/processes/{name}/cancel                    cancel          取消最近的操作(启动/停止)
  * DELETE /admin/api/processes/{name}                           destroy         删除进程对象
  * GET    /admin/api/processes/{name}/follow/{job}              follow          获取特定进程最新的任务信息
- * GET    /admin/api/processes/{name}/wait_finished/job=job     waitFinished    等待进程Job完成
+ * GET    /admin/api/processes/{name}/wait_finished?job=job     waitFinished    等待进程Job完成
  * </pre>
  */
 @RestController
@@ -265,15 +265,17 @@ public class ItsnowProcessesController extends SessionSupportController<ItsnowPr
      * </pre>
      */
     @RequestMapping("{name}/follow/{job}")
-    public String follow( @PathVariable("job") String job,
-                          @RequestParam("offset") long offset,
-                          HttpServletResponse response){
+    public Map<String, String> follow(@PathVariable("job") String job,
+                                      @RequestParam("offset") long offset,
+                                      HttpServletResponse response){
         logger.debug("Follow {} job {} from {}", currentProcess.getName(), job, offset);
         List<String> body = new LinkedList<String>();
         offset = processService.follow(currentProcess, job, offset, body);
         response.setHeader("offset", String.valueOf(offset));
         response.setHeader("status", currentProcess.getStatus().toString());
-        return StringUtils.join(body, "\n");
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("logs", StringUtils.join(body, "\n"));
+        return map;
     }
 
     /**

@@ -78,4 +78,18 @@ public interface GeneralContractService extends CommonContractService {
      * @return 合同明细
      */
     ContractDetail updateDetail(ContractDetail detail, String sn) throws ServiceException;
+
+    /**
+     * <h2>建立合同与MSP用户的关联关系</h2>
+     * @param contract 合同
+     * @return Contract
+     */
+    public Contract buildRelation(Contract contract) throws ServiceException;
+
+    /**
+     * <h2>修改合同与MSP用户的关联关系</h2>
+     * @param contract 合同
+     * @return Contract
+     */
+    public Contract updateRelation(Contract contract) throws ServiceException;
 }

@@ -1,9 +1,9 @@
 package dnt.itsnow.support;
 
 import dnt.itsnow.api.ActivitiEngineService;
-import dnt.itsnow.model.Incident;
-import dnt.itsnow.model.IncidentStatus;
+import dnt.itsnow.model.*;
 import dnt.itsnow.repository.MsuIncidentRepository;
+import dnt.itsnow.service.CommonUserService;
 import dnt.messaging.MessageBus;
 import dnt.messaging.MessageListener;
 import dnt.spring.Bean;
@@ -13,14 +13,12 @@ import org.activiti.engine.delegate.event.ActivitiEvent;
 import org.activiti.engine.delegate.event.ActivitiEventListener;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -34,6 +32,14 @@ public class MsuEventListener extends Bean implements ActivitiEventListener, Mes
 
     @Autowired
     ActivitiEngineService activitiEngineService;
+
+    @Autowired
+    CommonUserService userService;
+
+    @Autowired
+    MsuIncidentManager msuIncidentManager;
+
+    static Long count = 1L;
 
     /**
      * <h2>接收Activiti流程事件，根据故障流程中不同的状态执行不同的操作</h2>
@@ -59,6 +65,11 @@ public class MsuEventListener extends Bean implements ActivitiEventListener, Mes
             }else if(task.getDescription().equals(IncidentStatus.Closed.toString())) {
                 this.processClosedEvent(incident);
             }
+            User user =   userService.findByUsername(incident.getUpdatedBy());
+            //if(user.getAccount().isMsu()){
+                //send view message to msp
+                this.sendMessageToMsp(incident.getMsuInstanceId(),TransferType.View);
+            //}
         }
         logger.debug("received msu incident event");
     }
@@ -75,11 +86,6 @@ public class MsuEventListener extends Bean implements ActivitiEventListener, Mes
         incident.setMsuStatus(IncidentStatus.Accepted);
         incident.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         incident.setResponseTime(incident.getUpdatedAt());
-        List<IdentityLink> identityLinkList = engineServices.getTaskService().getIdentityLinksForTask(task.getId());
-        for(IdentityLink link:identityLinkList){
-            logger.debug("task assign type:{} user:{} group:{}",link.getType(),link.getUserId(),link.getGroupId());
-            incident.setAssignedGroup(link.getGroupId());
-        }
         incident.setAssignedUser(incident.getUpdatedBy());
         engineServices.getTaskService().setAssignee(task.getId(), incident.getUpdatedBy());
         //update incident
@@ -96,26 +102,31 @@ public class MsuEventListener extends Bean implements ActivitiEventListener, Mes
      */
     private void processResolvingEvent(EngineServices engineServices,Task task,Incident incident){
         logger.debug("process resolving event,instance:{}",incident.getMsuInstanceId());
+        incident.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        incident.setResponseTime(incident.getUpdatedAt());
         if(incident.getAssignedGroup()!=null && incident.getAssignedGroup().equals(MsuIncidentManager.ROLE_LINE_ONE)){
             if(incident.getCanProcess() != null && incident.getCanProcess()){
                 incident.setMsuStatus(IncidentStatus.Resolving);
                 engineServices.getTaskService().setAssignee(task.getId(), incident.getUpdatedBy());
             }
-            else
+            else {
                 incident.setMsuStatus(IncidentStatus.Assigned);
+                incident.setAssignedUser(null);
+                incident.setAssignedGroup(MsuIncidentManager.ROLE_LINE_TWO);
+            }
+            //update incident
+            repository.update(incident);
         }
         else if(incident.getAssignedGroup()!=null && incident.getAssignedGroup().equals(MsuIncidentManager.ROLE_LINE_TWO)){
             incident.setMsuStatus(IncidentStatus.Resolving);
+            //update incident
+            repository.update(incident);
             if(incident.getHardwareError() != null && incident.getHardwareError()){
                 //send message to msp
-                this.sendMessageToMsp(task.getProcessInstanceId());
+                this.sendMessageToMsp(task.getProcessInstanceId(),TransferType.Action);
             }
         }
-        incident.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-        incident.setResponseTime(incident.getUpdatedAt());
 
-        //update incident
-        repository.update(incident);
         logger.debug("processed resolving event");
     }
 
@@ -127,12 +138,14 @@ public class MsuEventListener extends Bean implements ActivitiEventListener, Mes
     private void processResolvedEvent(Incident incident ){
         logger.debug("processing resolved event,instance:{}",incident.getMsuInstanceId());
         incident.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        incident.setAssignedUser(null);
         if(incident.getResolved()!=null && incident.getResolved()){
             incident.setMsuStatus(IncidentStatus.Resolved);
             incident.setResolveTime(incident.getUpdatedAt());
         }
         else{
             incident.setMsuStatus(IncidentStatus.Assigned);
+            incident.setAssignedGroup(MsuIncidentManager.ROLE_LINE_TWO);
         }
         repository.update(incident);
         logger.debug("processed resolved event");
@@ -156,11 +169,25 @@ public class MsuEventListener extends Bean implements ActivitiEventListener, Mes
      * <h2>发送消息至MSP</h2>
      * @param instanceId 流程实例ID
      */
-    private void sendMessageToMsp(String instanceId){
+    private void sendMessageToMsp(String instanceId,TransferType type){
         logger.debug("sending message to msp,instance:{}",instanceId);
-        Incident incident = repository.findByInstanceId(instanceId);
-        messageBus.publish(MsuIncidentManager.getSendChannel(), JsonSupport.toJSONString(incident));
-        logger.debug("sent message to msp channel:{}",MsuIncidentManager.getSendChannel());
+        String sendChannel = msuIncidentManager.getSendChannel();
+        if(sendChannel != null) {
+            Incident incident = repository.findByInstanceId(instanceId);
+            TransferObject obj = new TransferObject();
+            obj.setId(count++);
+            obj.setCreated(new Timestamp(System.currentTimeMillis()));
+            obj.setContentType(ContentType.Incident);
+            obj.setFrom(incident.getMsuAccountName());
+            obj.setTo(incident.getMspAccountName());
+            obj.setType(type);
+            obj.setChannel(MsuIncidentManager.getListenChannel());
+            obj.setContent(JsonSupport.toJSONString(incident));
+            messageBus.publish(sendChannel, JsonSupport.toJSONString(obj));
+            logger.debug("sent message to msp channel:{}",sendChannel);
+        }else
+            logger.warn("can't find send channel!");
+
     }
 
     @Override
@@ -181,11 +208,14 @@ public class MsuEventListener extends Bean implements ActivitiEventListener, Mes
     @Override
     public void onMessage(String channel, String message) {
         logger.debug("receiving channel:{}, string message:{}",channel,message);
-        Incident incident = JsonSupport.parseJson(message,Incident.class);
-        logger.debug("incident:"+incident.toString());
-        this.updateIncident(incident);
-        if(incident.getMspStatus()==IncidentStatus.Closed){
-            this.finishMspTask(incident);
+        TransferObject obj = JsonSupport.parseJson(message,TransferObject.class);
+        logger.debug("incident:"+obj.toString());
+        if(obj.getContentType() == ContentType.Incident){
+            Incident incident = JsonSupport.parseJson(obj.getContent(),Incident.class);
+            this.updateIncident(incident);
+            if(incident.getMspStatus()==IncidentStatus.Closed){
+                this.finishMspTask(incident);
+            }
         }
         logger.debug("received message and finished");
     }

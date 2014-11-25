@@ -7,7 +7,7 @@
     <parent>
         <groupId>dnt.itsnow</groupId>
         <artifactId>general-services</artifactId>
-        <version>0.2.3</version>
+        <version>0.2.4-SNAPSHOT</version>
     </parent>
 
     <artifactId>general-workflow-service</artifactId>
@@ -37,7 +37,8 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Service-Config>dnt.itsnow.config.GeneralModelServiceConfig</Service-Config>
+                            <Default-Config>A,D,W</Default-Config>
+                            <Service-Config>dnt.itsnow.config.GeneralWorkflowServiceConfig</Service-Config>
                         </manifestEntries>
                     </archive>
                 </configuration>

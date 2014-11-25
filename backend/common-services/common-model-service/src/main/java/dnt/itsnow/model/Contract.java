@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import dnt.itsnow.platform.model.Record;
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -22,24 +21,29 @@ public class Contract extends Record {
     @NotBlank
     private String sn;
     // 合同甲方，服务采购方
-    // @NotNull
     private Long msuAccountId;
     // @JsonIgnore
     private MsuAccount msuAccount;
     //合同乙方，服务供应方
-    // @NotNull
     private Long mspAccountId;
     // @JsonIgnore
     private MspAccount mspAccount;
     // MSU 是否批准
-    // @NotNull
     private ContractStatus msuStatus;
     // MSP 是否批准
-    // @NotNull
     private ContractStatus mspStatus;
     //合同明细
-    @JsonIgnore
     private List<ContractDetail> details;
+    // 与MSU签订合同的MSP用户列表，其中包含是否允许登录MSU信息
+    private List<User> users;
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
 
     public String getSn() {
         return sn;
@@ -125,7 +129,7 @@ public class Contract extends Record {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("Contract{");
+        final StringBuilder sb = new StringBuilder("Contract{");
         sb.append("sn='").append(sn).append('\'');
         sb.append(", msuAccountId=").append(msuAccountId);
         sb.append(", msuAccount=").append(msuAccount);
@@ -134,6 +138,7 @@ public class Contract extends Record {
         sb.append(", msuStatus=").append(msuStatus);
         sb.append(", mspStatus=").append(mspStatus);
         sb.append(", details=").append(details);
+        sb.append(", users=").append(users);
         sb.append('}');
         return sb.toString();
     }

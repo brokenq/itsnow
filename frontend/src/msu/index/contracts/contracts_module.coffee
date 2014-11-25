@@ -17,19 +17,27 @@ angular.module('MsuIndex.Contracts', ['multi-select'])
     controller: 'ContractNewCtrl',
     data: {pageTitle: '新增合同'}
   $stateProvider.state 'contracts.view',
-    url: '/{sn}',
+    url: '/{sn}/view',
     templateUrl: 'contracts/view.tpl.jade'
     controller: 'ContractViewCtrl',
     data: {pageTitle: '查看合同'}
+  $stateProvider.state 'contracts.accounts_view',
+    url: '/{sn}/account_view',
+    templateUrl: 'contracts/account_view.tpl.jade',
+    controller: 'ContractAccountViewCtrl',
+    data: {pageTitle: '查看帐户'}
   $urlRouterProvider.when '/contracts', '/contracts/list'
 
 .factory('ContractService', ['$resource', ($resource) ->
-    $resource '/api/contracts/:sn/:do', {},
+    $resource '/api/contracts/:sn/:result/:do', {},
       save: {method: 'POST'}
+      update: {method: 'PUT', params: {result:'user', do: 'relation'}}
       get: {method: 'GET', params: {sn: '@sn'}}
       query: {method: 'GET', params: {keyword: '@keyword'}, isArray: true}
       reject: {method: 'PUT', params: {sn: '@sn', do: 'reject'}}
       approve: {method: 'PUT', params: {sn: '@sn', do: 'approve'}}
+      list: {method: 'GET', params: {result: 'users', do:'belongs_to_account'}, isArray: true}
+      getLoginUser: {method: 'GET', params: {result: 'users', do:'login'}, isArray: true}
   ])
 
 .factory('ContractDetailService', ['$resource', ($resource) ->
@@ -55,23 +63,24 @@ angular.module('MsuIndex.Contracts', ['multi-select'])
     date = new Date(time)
     date.toLocaleString()
 
-.controller('ContractsCtrl', ['$scope', '$state', '$log', 'Feedback', 'CacheService',\
-    ($scope, $state, $log, feedback, CacheService) ->
+.controller('ContractsCtrl', ['$scope', '$state', '$log', 'Feedback', 'CacheService', 'ContractService',\
+    ($scope, $state, $log, feedback, CacheService, contractService) ->
       # frontend controller logic
       $log.log "Initialized the Contracts controller"
       $scope.options =
         page: 1, # show first page
         count: 10 # count per page
 
-      $scope.cacheService = new CacheService("sn")
+      $scope.cacheService = new CacheService "sn", (value)->
+        contractService.get {sn: value}
 
       # 提交按钮是否已经执行了提交操作，false为未执行，则按钮可用
       $scope.submited = false
   ])
 
 .controller('ContractListCtrl',
-  ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'CommonService', 'ContractService', 'Feedback',
-    ($scope, $location, $log, NgTable, ActionService, commonService, contractService, feedback) ->
+  ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'SelectionService', 'ContractService', 'Feedback',
+    ($scope, $location, $log, NgTable, ActionService, SelectionService, contractService, feedback) ->
       $log.log "Initialized the Contract list controller"
 
       args =
@@ -83,10 +92,9 @@ angular.module('MsuIndex.Contracts', ['multi-select'])
             $scope.cacheService.cache data
             $defer.resolve $scope.contracts = data
 
-      $scope.selection = { checked: false, items: {} }
-      $scope.contractsTable = new NgTable(angular.extend($scope.options, $location.search()), args);
-      $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.cacheService.find})
-      commonService.watchSelection($scope.selection, $scope.cacheService.records, "sn")
+      $scope.contractsTable = new NgTable(angular.extend($scope.options, $location.search()), args)
+      $scope.selectionService = new SelectionService($scope.cacheService.records, "sn")
+      $scope.actionService = new ActionService({watch: $scope.selectionService.items, mapping: $scope.cacheService.find})
 
       $scope.approve = (contract) ->
         contractService.approve({sn:contract.sn}
@@ -107,12 +115,19 @@ angular.module('MsuIndex.Contracts', ['multi-select'])
 
 .controller('ContractViewCtrl', ['$scope', '$stateParams', '$log', ($scope, $stateParams, $log) ->
     $scope.contract = $scope.cacheService.find $stateParams.sn, true
-    $log.log "Initialized the Role View controller on: " + JSON.stringify($scope.contract)
+    $log.log "Initialized the Contract View controller on: " + JSON.stringify($scope.contract)
+  ])
+
+.controller('ContractAccountViewCtrl', ['$scope', '$stateParams', '$log', \
+    ($scope, $stateParams, $log) ->
+      $scope.contract = $scope.cacheService.find $stateParams.sn, true
+      $scope.account = $scope.contract.mspAccount
+      $log.log "Initialized the Contract Account View controller on: " + JSON.stringify($scope.account)
   ])
 
 .controller('ContractNewCtrl', ['$scope', '$state', '$log', 'Feedback', 'ContractService', 'ContractDetailService', 'ContractServiceCatalogService',\
     ($scope, $state, $log, feedback, contractService, contractDetailService, serviceCatalogService) ->
-      $log.log "Initialized the Role New controller"
+      $log.log "Initialized the Contract New controller"
 
       #查询服务目录
       serviceCatalogService.query (data)->
@@ -145,4 +160,6 @@ angular.module('MsuIndex.Contracts', ['multi-select'])
           feedback.error("保存合同失败", resp)
         )
   ])
+
+
 

@@ -4,16 +4,17 @@
 package dnt.itsnow.support;
 
 import dnt.itsnow.exception.ContractException;
-import dnt.itsnow.model.Account;
-import dnt.itsnow.model.Contract;
-import dnt.itsnow.model.ContractDetail;
-import dnt.itsnow.model.ContractStatus;
+import dnt.itsnow.model.*;
 import dnt.itsnow.platform.service.ServiceException;
+import dnt.itsnow.service.CommonUserService;
 import dnt.itsnow.service.GeneralContractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestOperations;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <h1> The general contract manager</h1>
@@ -26,6 +27,10 @@ public class GeneralContractManager extends CommonContractManager implements Gen
     @Autowired
     @Qualifier("mscRestTemplate")
     RestOperations facade;
+
+    @Autowired
+    @Qualifier("plainUserService")
+    CommonUserService commonUserService;
 
     @Override
     public Contract approve(Account account, String sn) throws ServiceException {
@@ -51,6 +56,10 @@ public class GeneralContractManager extends CommonContractManager implements Gen
         contract = findByAccountAndSn(account, sn, true);
 
         logger.info("Approved  {} {}", account, sn);
+
+        List<User> users = commonUserService.findUsersByAccount(account);
+        contract.setUsers(users);
+        buildRelation(contract);
 
         return contract;
     }
@@ -81,30 +90,26 @@ public class GeneralContractManager extends CommonContractManager implements Gen
     }
 
     @Override
-    public ContractDetail createDetail(ContractDetail detail, String contractSn) throws ServiceException {
-        logger.info("Creating {}", detail);
-        facade.postForEntity("/admin/api/contracts/{sn}/details", detail, ContractDetail.class, contractSn);
-        logger.info("Created  {}", detail);
-        return detail;
-    }
-
-    @Override
-    public ContractDetail updateDetail(ContractDetail detail, String sn) {
-        logger.info("Updating {}", detail);
-        facade.put("/admin/api/contracts/{sn}/details/{}",
-                detail, detail.getContract().getSn(), detail.getId());
-        logger.info("Updated  {}", detail);
-        return detail;
-    }
-
-    @Override
     public Contract bid(Account account, String sn) throws ServiceException {
+
+        if (!account.isMsp()) {
+            throw new ServiceException("The contract bid ,only MSP users are allowed to do this.");
+        }
+
         logger.info("Msp bid contract:{} {}", account, sn);
         Contract contract = findByAccountAndSn(account, sn, true);
+
+        if (ContractStatus.Purposed.equals(contract.getMspStatus())) {
+            throw new ServiceException("The contract has been purposed");
+        }
+
         contract.setMspStatus(ContractStatus.Purposed);
         contract.setMspAccountId(account.getId());
         facade.put("/admin/api/contracts/{sn}/bid", contract, contract.getSn());
         logger.info("Msp bid contract {}", contract);
+
+
+
         return contract;
     }
 
@@ -114,6 +119,40 @@ public class GeneralContractManager extends CommonContractManager implements Gen
         contract.setMsuAccountId(account.getId());
         facade.postForEntity("/admin/api/contracts", contract, Contract.class);
         logger.info("Created  {}", contract);
+        return contract;
+    }
+
+    @Override
+    public ContractDetail createDetail(ContractDetail detail, String contractSn) throws ServiceException {
+        logger.info("Creating {}", detail);
+        facade.postForEntity("/admin/api/contracts/{sn}/details", detail, ContractDetail.class, contractSn);
+        logger.info("Created  {}", detail);
+        return detail;
+    }
+
+    @Override
+    public ContractDetail updateDetail(ContractDetail detail, String sn) throws ServiceException {
+        logger.info("Updating {}", detail);
+        facade.put("/admin/api/contracts/{sn}/details/{id}",
+                detail, detail.getContract().getSn(), detail.getId());
+        logger.info("Updated  {}", detail);
+        return detail;
+    }
+
+    @Override
+    public Contract buildRelation(Contract contract) throws ServiceException {
+        logger.info("Building {}", contract.getUsers());
+        facade.postForEntity("/admin/api/contracts/user/relation",
+                contract, Contract.class);
+        logger.info("Built    {}", contract.getUsers());
+        return contract;
+    }
+
+    @Override
+    public Contract updateRelation(Contract contract) throws ServiceException {
+        logger.info("Updating {}", contract.getUsers());
+        facade.put("/admin/api/contracts/user/relation", contract);
+        logger.info("Updated  {}", contract.getUsers());
         return contract;
     }
 

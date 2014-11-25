@@ -1,16 +1,15 @@
 package dnt.itsnow.web.controller;
 
- import dnt.itsnow.model.Account;
- import dnt.itsnow.model.Role;
- import dnt.itsnow.model.User;
- import dnt.itsnow.model.UserAuthority;
- import dnt.itsnow.platform.util.DefaultPage;
+import dnt.itsnow.config.RolesControllerConfig;
+import dnt.itsnow.model.Account;
+import dnt.itsnow.model.Role;
+import dnt.itsnow.model.User;
+import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.service.CommonUserService;
 import dnt.itsnow.service.RoleService;
 import dnt.itsnow.test.controller.SessionSupportedControllerTest;
 import dnt.support.JsonSupport;
-import dnt.itsnow.config.RolesControllerConfig;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -144,10 +143,10 @@ public class RolesControllerTest extends SessionSupportedControllerTest {
     @Test
     public void testListUsers() throws Exception {
 
-        expect(roleService.findUsersByAccount(anyObject(Account.class))).andReturn(users);
+        expect(userService.findAllByAccountAndContract(anyObject(Account.class))).andReturn(users);
 
         // 准备 Mock Request
-        MockHttpServletRequestBuilder request = get("/api/roles/users");
+        MockHttpServletRequestBuilder request = get("/api/roles/users/belongs_to_account");
         request = decorate(request);
 
         replay(roleService);
@@ -156,7 +155,7 @@ public class RolesControllerTest extends SessionSupportedControllerTest {
         ResultActions result = this.browser.perform(request);
 
         // 对业务结果的验证
-        decorate(result).andExpect(status().isOk());
+        result.andExpect(status().isOk());
 
     }
 

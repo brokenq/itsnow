@@ -8,15 +8,12 @@ import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.repository.DictionaryRepository;
 import dnt.itsnow.service.DictionaryService;
 import dnt.spring.Bean;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * <h1>数据字典业务实现类</h1>
@@ -24,47 +21,42 @@ import java.util.UUID;
 @Service
 @Transactional
 public class DictionaryManager extends Bean implements DictionaryService {
-
     @Autowired
     private DictionaryRepository repository;
 
     @Override
     public Page<Dictionary> findAll(String keyword, Pageable pageable) {
-
         logger.debug("Finding dictionaries by keyword: {}", keyword);
 
-        int total = repository.count(keyword);
-        List<Dictionary> dictionaries = new ArrayList<Dictionary>();
+       int total = repository.count(keyword);
+       List<Dictionary> dictionaries = new ArrayList<Dictionary>();
         if (total > 0) {
             dictionaries = repository.findAll(keyword, pageable);
-        }
+       }
         DefaultPage page = new DefaultPage<Dictionary>(dictionaries, pageable, total);
 
         logger.debug("Found   {}", page.getContent());
 
-        return page;
+       return page;
+
     }
 
     @Override
     public Dictionary create(Dictionary dictionary) throws DictionaryException {
-
         logger.info("Creating {}", dictionary);
 
         if (dictionary == null) {
             throw new DictionaryException("Dictionary entry can not be empty");
         }
-        dictionary.setSn(UUID.randomUUID().toString().substring(0,8));
         dictionary.creating();
         repository.create(dictionary);
 
         logger.info("Created  {}", dictionary);
-
         return dictionary;
     }
 
     @Override
     public Dictionary update(Dictionary dictionary) throws DictionaryException {
-
         logger.info("Updating {}", dictionary);
 
         if (dictionary == null) {
@@ -76,28 +68,39 @@ public class DictionaryManager extends Bean implements DictionaryService {
         logger.info("Updated  {}", dictionary);
 
         return dictionary;
+
     }
 
     @Override
     public void destroy(Dictionary dictionary) throws DictionaryException {
-
         logger.warn("Deleting {}", dictionary);
 
         if (dictionary == null) {
-            throw new DictionaryException("SN of Dictionary can not be empty");
+            throw new DictionaryException("Code of Dictionary can not be empty");
         }
 
-        repository.delete(dictionary.getSn());
+        repository.delete(dictionary.getCode());
 
         logger.warn("Deleted  {}", dictionary);
     }
 
     @Override
-    public Dictionary findBySn(String sn) {
+    public Dictionary findByCode(String code) {
+        logger.debug("Finding dictionary by code: {}", code);
 
-        logger.debug("Finding dictionary by sn: {}", sn);
+       Dictionary dictionary = repository.findByCode(code);
 
-        Dictionary dictionary = repository.findBySn(sn);
+        logger.debug("Found   {}", dictionary);
+
+        return dictionary;
+
+    }
+
+    @Override
+    public Dictionary findByName(String name) {
+        logger.debug("Finding dictionary by name: {}", name);
+
+        Dictionary dictionary = repository.findByName(name);
 
         logger.debug("Found   {}", dictionary);
 
@@ -105,15 +108,14 @@ public class DictionaryManager extends Bean implements DictionaryService {
     }
 
     @Override
-    public List<Dictionary> findByCode(String code) {
+    public Dictionary findByLabel(String label) {
+        logger.debug("Finding dictionary by label: {}", label);
 
-        logger.debug("Finding dictionaries by code: {}", code);
+        Dictionary dictionary = repository.findByLabel(label);
 
-        List<Dictionary> dictionaries = repository.findByCode(code);
+        logger.debug("Found   {}", dictionary);
 
-        logger.debug("Found   {}", dictionaries);
-
-        return dictionaries;
+        return dictionary;
     }
 
 }

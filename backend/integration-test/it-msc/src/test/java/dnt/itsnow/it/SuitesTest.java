@@ -11,17 +11,17 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         PrepareAccountsTest.class,
-        PrepareHostsTest.class,
-        PrepareProcessesTest.class,
+            PrepareHostsTest.class,
+                PrepareProcessesTest.class,
 
-        AccountsTest.class,
-        ItsnowHostsTest.class,
-        ItsnowProcessesTest.class,
+                AccountsTest.class,
+                ItsnowHostsTest.class,
+                ItsnowProcessesTest.class,
 
-        RemoveProcessesTest.class,
-        RemoveHostsTest.class,
+                RemoveProcessesTest.class,
+            RemoveHostsTest.class,
         RemoveAccountsTest.class
 })
 public class SuitesTest extends AbstractTest {
-
+//    hierarchicalcontextrunner
 }

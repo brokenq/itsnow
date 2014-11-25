@@ -214,6 +214,14 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     }
 
     @Override
+    public List<ItsnowHost> findAllAvailableByType(List<String> types) throws ItsnowHostException {
+        logger.debug("Finding all available itsnow hosts by types: {}", types);
+        List<ItsnowHost> hosts = repository.findAllAvailableByTypes(types);
+        logger.debug("Found size of all available itsnow hosts is: {}", hosts.size());
+        return hosts;
+    }
+
+    @Override
     public void delete(ItsnowHost host) throws ItsnowHostException {
         logger.warn("Deleting {}", host);
         SystemInvocation delistJob = translator.delist(host);
@@ -251,9 +259,9 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     @Override
     public long follow(ItsnowHost host, String jobId, long offset, List<String> result) {
         logger.trace("Follow {}'s job: {}", host, jobId);
-        if(jobId.equals(host.getProperty(CREATE_INVOCATION_ID)) && host.getStatus() == HostStatus.Planing){
+        if(jobId.equals(host.getProperty(CREATE_INVOCATION_ID))){
             return invokeService.read(jobId, offset, result);
-        }else if (jobId.equals(host.getProperty(DELETE_INVOCATION_ID)) && host.getStatus() == HostStatus.Delisting){
+        }else if (jobId.equals(host.getProperty(DELETE_INVOCATION_ID))){
             return invokeService.read(jobId, offset, result);
         }
         return -1;

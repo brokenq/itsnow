@@ -110,34 +110,40 @@ angular.module('MscIndex.Hosts', [])
         feedback.error "创建 #{host.name} 主机失败", resp
   ])
 
-  .controller('HostViewCtrl', ['$scope', '$stateParams', '$http', '$interval', '$state', \
-                               ($scope,   $stateParams,   $http,   $interval,   $state)->
+  .controller('HostViewCtrl', ['$scope', '$stateParams', '$http', '$interval', '$state', '$location', \
+                               ($scope,   $stateParams,   $http,   $interval,   $state,   $location)->
     host = $scope.cacheService.find $stateParams.id, true
     host.configuration.msp_version = host.configuration['msp.version'] if host.configuration['msp.version']?
     host.configuration.msu_version = host.configuration['msu.version'] if host.configuration['msu.version']?
+    host.creationLog = ""
     $scope.host = host
     console.log "Initialized the Host View controller on: #{JSON.stringify host}"
 
-    # get Host Creation Logs
-    if invokeId = host.configuration.createInvocationId
-      url = "/admin/api/hosts/" + host.id + "/follow/" + invokeId + "?offset=0"
-      $http.get(url).success (log) ->
-        host.creationLog = log
+    currentUrl = $location.url();
 
-    host.creationLog = ""
     # 获取日志信息
     getCreateLog = (invokeId)->
-     createOffset = 0
-     createIntervalId = $interval(->
-       if invokeId?
-         url = "/admin/api/hosts/#{host.name}/follow/#{invokeId}?offset=#{createOffset}"
-         $http.get(url).success (log, status, headers) ->
-           host.creationLog += log
-           createOffset = parseInt headers "offset"
-           $interval.cancel(createIntervalId) if createOffset is -1
-     , 1000)
+      createOffset = 0
+      preScrollTop = 0
+      $creationLog = $("#host_creationLog")
+      createIntervalId = $interval(->
+        if invokeId?
+          url = "/admin/api/hosts/#{host.id}/follow?invocationId=#{invokeId}&offset=#{createOffset}"
+          $http.get(url).success (data, status, headers) ->
+            host.creationLog += data.logs
+            preScrollTop = resolveScroll preScrollTop, $creationLog # 日志滚动条效果
+            createOffset = parseInt headers "offset"
+            $interval.cancel(createIntervalId) if createOffset is -1 or currentUrl isnt $location.url()
+      , 1000)
 
-    getCreateLog()
+    # 日志滚动条效果
+    resolveScroll = (preScrollTop, element)->
+      if preScrollTop is element.scrollTop() or element[0].scrollHeight <= element.scrollTop() + element.outerHeight()
+        element.scrollTop(element[0].scrollHeight)
+        return element.scrollTop()
+      return preScrollTop
+
+    getCreateLog(invokeId) if invokeId = host.configuration.createInvocationId
 
     $scope.toView = ->
       $state.go 'hosts.list'

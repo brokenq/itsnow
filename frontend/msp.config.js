@@ -20,31 +20,33 @@ module.exports = {
    * app's unit tests.
    */
   index_files: {
-    js: [ 'lib/**/*.js', 'index/**/*.js', 'msp/index/**/*.js', '!**/*.spec.js' ],
-    jade: [ 'lib/**/*.jade', 'index/**/*.jade', 'msp/index/**/*.jade', '!**/*.tpl.jade' ],
-    js_unit: [ 'lib/**/*.spec.js', 'index/**/*.spec.js', 'msp/index/**/*.spec.js'],
+    js: [ 'lib/**/*.js', 'index/**/*.js', 'msp/index/**/*.js', '!**/*.spec.js', 'general/**/*.js' ],
+    jade: [ 'lib/**/*.jade', 'index/**/*.jade', 'msp/index/**/*.jade', '!**/*.tpl.jade', 'general/**/*.jade' ],
+    js_unit: [ 'lib/**/*.spec.js', 'index/**/*.spec.js', 'msp/index/**/*.spec.js', 'general/**/*.spec.js'],
 
-    coffee: [ 'lib/**/*.coffee', 'index/**/*.coffee', 'msp/index/**/*.coffee', '!**/*.spec.coffee' ],
-    coffee_unit: [ 'lib/**/*.spec.coffee', 'index/**/*.spec.coffee', 'msp/index/**/*.spec.coffee'],
+    coffee: [ 'lib/**/*.coffee', 'index/**/*.coffee', 'msp/index/**/*.coffee', '!**/*.spec.coffee', 'general/**/*.coffee' ],
+    coffee_unit: [ 'lib/**/*.spec.coffee', 'index/**/*.spec.coffee', 'msp/index/**/*.spec.coffee', 'general/**/*.spec.coffee'],
 
     lib_tpl: [ '/lib/**/*.tpl.html', '/lib/**/*.tpl.jade' ],
     index_tpl: [ 'index/**/*.tpl.html', 'index/**/*.tpl.jade' ],
     ms_tpl: [ 'msp/index/**/*.tpl.html', 'msp/index/**/*.tpl.jade', 'msp/index/**/*.jade' ],
+    general_tpl: [ 'general/index/**/*.tpl.html', 'general/index/**/*.tpl.jade', 'general/index/**/*.jade' ],
 
     less: 'less/index.less'
   },
 
   login_files: {
-    js: [ 'lib/**/*.js', 'login/**/*.js', 'msp/login/**/*.js', '!**/*.spec.js'],
-    jade: [ 'lib/**/*.jade', 'login/**/*.jade', 'msp/login/**/*.jade', '!**/*.tpl.jade'],
-    js_unit: [ 'lib/**/*.spec.js', 'login/**/*.spec.js', 'msp/login/**/*.spec.js'],
+    js: [ 'lib/**/*.js', 'login/**/*.js', 'msp/login/**/*.js', '!**/*.spec.js', 'general/**/*.js'],
+    jade: [ 'lib/**/*.jade', 'login/**/*.jade', 'msp/login/**/*.jade', '!**/*.tpl.jade', 'general/**/*.jade'],
+    js_unit: [ 'lib/**/*.spec.js', 'login/**/*.spec.js', 'msp/login/**/*.spec.js', 'general/**/*.spec.js'],
 
-    coffee: [ 'lib/**/*.coffee', 'login/**/*.coffee', 'msp/login/**/*.coffee', '!**/*.spec.coffee' ],
-    coffee_unit: [ 'lib/**/*.spec.coffee', 'login/**/*.spec.coffee', 'msp/login/**/*.spec.coffee'],
+    coffee: [ 'lib/**/*.coffee', 'login/**/*.coffee', 'msp/login/**/*.coffee', '!**/*.spec.coffee', 'general/**/*.coffee' ],
+    coffee_unit: [ 'lib/**/*.spec.coffee', 'login/**/*.spec.coffee', 'msp/login/**/*.spec.coffee', 'general/**/*.spec.coffee'],
 
     lib_tpl: [ 'lib/**/*.tpl.html', 'lib/**/*.tpl.jade' ],
     login_tpl: [ 'login/**/*.tpl.html', 'login/**/*.tpl.jade' ],
     ms_tpl: [ 'msp/login/**/*.tpl.html', 'msp/login/**/*.tpl.jade' ],
+    general_tpl: [ 'general/login/**/*.tpl.html', 'general/login/**/*.tpl.jade' ],
 
     less: 'less/login.less'
   },

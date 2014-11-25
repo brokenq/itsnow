@@ -5,13 +5,15 @@ include /lib/mixins/list
     +button_group
       +tool_button("contractsTable.reload()", "refresh", "", "*", "", "")
     +button_group
-      +tool_button("actionService.perform(accept)", "plus", "签约", "*", "", "")
+      +tool_button("actionService.perform(accept, $event)", "plus", "签约", "*", "", "")
 
-  +page_table("contractsTable","selection")
-    +row("contract", "sn", "selection")
+
+  +page_table("contractsTable","selectionService")
+    +row("contract", "sn", "selectionService")
       td(data-title="'合同名称'")
         a(ui-sref="contracts.view(contract)") {{contract.sn}}
-      td(data-title="'企业帐户'") {{contract.msuAccount.name}}
+      td(data-title="'企业帐户'")
+        a(ui-sref="contracts.accounts_view(contract)") {{contract.msuAccount.name || '无'}}
       td(data-title="'状态'") {{contract.msuStatus | formatContractStatus}}
       td(data-title="'服务商状态'") {{contract.mspStatus | formatContractStatus}}
       td(data-title="'创建时间'") {{contract.createdAt | formatTime}}

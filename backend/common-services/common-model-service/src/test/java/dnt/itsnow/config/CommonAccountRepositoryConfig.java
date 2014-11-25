@@ -27,6 +27,8 @@ public class CommonAccountRepositoryConfig extends RepositoryConfigWithH2 {
                 "classpath:META-INF/setup/create_roles.sql@up",
                 "classpath:META-INF/setup/create_authorities.sql@up",
                 "classpath:META-INF/setup/create_group_authorities.sql@up",
+                "classpath:META-INF/setup/create_contracts.sql",
+                "classpath:META-INF/setup/create_contract_users.sql",
 
                 "classpath:META-INF/setup/initialization_roles.sql@up",
 

@@ -8,6 +8,6 @@ h2 查看 主机
 include /msc/index/hosts/_form.jade
 
 +section("日志信息")
-  +area("host", "creationLog")(readonly=readonly)
+  +area("host", "creationLog")(readonly=readonly, rows="20", style="overflow-y:visible")
 +action_bar
   +action_submit("返回")(ui-sref="hosts.list")

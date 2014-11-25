@@ -6,5 +6,3 @@ WHERE state = 'services.catalog';
 
 -- //@UNDO
 -- SQL to undo the change goes here.
-
-

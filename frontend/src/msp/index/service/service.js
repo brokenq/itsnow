@@ -3,7 +3,5 @@
  */
 
 angular.module('MspIndex.Service', [
-  'Service.Dict',
-  'Service.Workflows',
   'Service.Catalog'
 ]);

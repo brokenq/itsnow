@@ -15,17 +15,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
 
 /**
  * <h1>字典控制器</h1>
  * <pre>
  * <b>HTTP   URI                         方法      含义  </b>
- *  GET      /api/dictionaries           index     列出所有的字典，并且分页显示
- *  GET      /api/dictionaries/{sn}      show      列出特定的字典记录
- *  POST     /api/dictionaries           create    创建一个字典
- *  PUT      /api/dictionaries/{sn}      update    修改一个指定的字典
- *  DELETE   /api/dictionaries/{sn}      delete    删除指定的字典记录
+ *  GET      /api/dictionaries           index   列出所有的字典，并且分页显示
+ *  GET      /api/dictionaries/{code}    show    列出特定的字典记录
+ *  POST     /api/dictionaries           create  创建一个字典
+ *  PUT      /api/dictionaries/{code}    update  修改一个指定的字典
+ *  DELETE   /api/dictionaries/{code}    delete  删除指定的字典记录
+ *  GET      /api/dictionaries/checkCode/{code}    get  检查字典代码是否唯一
  * </pre>
  */
 @RestController
@@ -56,37 +58,73 @@ public class DictionariesController extends SessionSupportController<Dictionary>
 
         return indexPage;
     }
+//------------------------------------
+
+    /**
+     * 检验字典代码是否唯一
+     * @param code
+     * @return
+     */
+    @RequestMapping("checkCode/{code}")
+    public HashMap checkCode(@PathVariable("code") String code){
+
+        dictionary = service.findByCode(code);
+        if(dictionary != null){
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate dict code: " + code);
+        }
+
+        return new HashMap();
+    }
+
+
+    /**
+     * 检验字典名称是否唯一
+     * @param name
+     * @return
+     */
+    @RequestMapping("checkname/{name}")
+    public HashMap checkName(@PathVariable("name") String name){
+
+        dictionary = service.findByName(name);
+        if(dictionary != null){
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate dict name: " + name);
+        }
+
+        return new HashMap();
+    }
+
+    /**
+     * 检查展示名是否唯一
+     * @param label
+     * @return
+     */
+    @RequestMapping("checklabel/{label}")
+    public HashMap checkLabel(@PathVariable("label") String label){
+
+        dictionary = service.findByLabel(label);
+        if(dictionary != null){
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate dict label: " + label);
+        }
+
+        return new HashMap();
+    }
+
+
+
 
     /**
      * <h2>查看一个字典</h2>
      * <p/>
-     * GET /api/dictionaries/{sn}
+     * GET /api/dictionaries/{code}
      *
      * @return 字典
      */
-    @RequestMapping("{sn}")
+    @RequestMapping("{code}")
     public Dictionary show() {
         return dictionary;
     }
 
-    /**
-     * 根据CODE展示一组字典
-     *
-     * @param code 字典代码
-     * @return 字典列表
-     */
-    @RequestMapping("code/{code}")
-    public List<Dictionary> list(@PathVariable(value = "code") String code) {
-
-        logger.debug("Listing dictionary by code:{}", code);
-
-        List<Dictionary> dictionaries = service.findByCode(code);
-
-        logger.debug("Listed  {}", dictionaries);
-
-        return dictionaries;
-    }
-
+//-----------------------------------------------------------------------------
     /**
      * <h2>创建一个字典</h2>
      * <p/>
@@ -112,16 +150,16 @@ public class DictionariesController extends SessionSupportController<Dictionary>
 
         return dictionary;
     }
-
+//-----------------------------------------------------------------------------------
     /**
      * <h2>更新一个字典</h2>
      * <p/>
-     * PUT /api/dictionaries/{sn}
+     * PUT /api/dictionaries/{code}
      *
      * @param dictionary 字典
      * @return 被更新的字典
      */
-    @RequestMapping(value = "{sn}", method = RequestMethod.PUT)
+    @RequestMapping(value = "{code}", method = RequestMethod.PUT)
     public Dictionary update(@Valid @RequestBody Dictionary dictionary) {
 
         logger.info("Updating {}", dictionary);
@@ -139,15 +177,15 @@ public class DictionariesController extends SessionSupportController<Dictionary>
 
         return this.dictionary;
     }
-
+//-------------------------------------------------------------------------------------
     /**
      * <h2>删除一个字典</h2>
      * <p/>
-     * DELETE /api/dictionaries/{sn}
+     * DELETE /api/dictionaries/{code}
      *
      * @return 被删除的字典
      */
-    @RequestMapping(value = "{sn}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "{code}", method = RequestMethod.DELETE)
     public Dictionary destroy() {
 
         logger.warn("Deleting {}", dictionary);
@@ -166,7 +204,7 @@ public class DictionariesController extends SessionSupportController<Dictionary>
     }
 
     @BeforeFilter({"show", "update", "destroy"})
-    public void initProcessDictionary(@PathVariable("sn") String sn) {
-        this.dictionary = service.findBySn(sn);//find it by sn
+    public void initProcessDictionary(@PathVariable("code") String code) {
+        this.dictionary = service.findByCode(code);//find it by code
     }
 }

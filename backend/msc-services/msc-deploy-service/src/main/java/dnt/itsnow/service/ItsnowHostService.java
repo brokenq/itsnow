@@ -175,4 +175,11 @@ public interface ItsnowHostService {
      * @param jobId 调用ID
      */
     ItsnowHost waitHostCreation(Long hostId, String jobId) throws ItsnowHostException;
+
+    /**
+     * <h2>根据类型查找所有可用主机</h2>
+     * @param types 主机类型
+     * throws ItsnowHostException
+     */
+    List<ItsnowHost> findAllAvailableByType(List<String> types) throws ItsnowHostException;
 }

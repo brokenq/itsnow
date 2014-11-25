@@ -38,18 +38,13 @@ public class ItsnowHostsTest extends AbstractTest {
     }
 
     public ClientItsnowHost show(final ClientItsnowHost host) throws Exception {
-        try {
-            return withLoginUser(new Callback<ClientItsnowHost>() {
-                @Override
-                public ClientItsnowHost perform(HttpHeaders headers) {
-                    HttpEntity request = new HttpEntity(headers);
-                    return getForObject("/admin/api/hosts/{id}", ClientItsnowHost.class, request, host.getId());
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        return withLoginUser(new Callback<ClientItsnowHost>() {
+            @Override
+            public ClientItsnowHost perform(HttpHeaders headers) {
+                HttpEntity request = new HttpEntity(headers);
+                return getForObject("/admin/api/hosts/{id}", ClientItsnowHost.class, request, host.getId());
+            }
+        });
     }
 
     public void destroy(final ClientItsnowHost host) throws Exception {

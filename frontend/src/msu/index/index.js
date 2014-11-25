@@ -4,9 +4,11 @@
 
 angular.module('Itsnow.MsuIndex', [
   'Itsnow.Index',
+  'General.Templates',
   'MsuIndex.Templates',
   'MsuIndex.Contracts',
   'MsuIndex.Incidents',
-  'MsuIndex.System',
-  'MsuIndex.Service'
+  'GeneralIndex.System',
+  'MsuIndex.Service',
+  'GeneralIndex.Service'
 ]);

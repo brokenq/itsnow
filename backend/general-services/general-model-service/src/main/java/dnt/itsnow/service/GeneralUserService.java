@@ -5,6 +5,7 @@ import dnt.itsnow.model.User;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.platform.util.PageRequest;
+import dnt.itsnow.web.model.ChangePasswordRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,9 +24,9 @@ public interface GeneralUserService {
 
     void delete(User user);
 
-    void changePassword(String username, String newPassword);
-
     User findByEmail(String email);
 
     List<User> findUsersByAccount(Account mainAccount);
+
+    void changePassword(ChangePasswordRequest changeRequest);
 }

@@ -51,7 +51,7 @@ angular.module('MscIndex.Processes', [])
       acc = new Process process
       acc.$start (data)->
         feedback.success "正在启动 #{process.name} 进程"
-        succCallback(data["job"]) if succCallback
+        succCallback(data["job"], "start") if succCallback
       , (resp)->
         feedback.error "启动 #{process.name} 进程失败", resp
         errCallback() if errCallback
@@ -60,7 +60,7 @@ angular.module('MscIndex.Processes', [])
       acc = new Process process
       acc.$stop (data)->
         feedback.success "已停止 #{process.name} 进程"
-        succCallback(data["job"]) if succCallback
+        succCallback(data["job"], "stop") if succCallback
       , (resp)->
         feedback.error "停止 #{process.name} 进程失败", resp
         errCallback() if errCallback
@@ -131,11 +131,7 @@ angular.module('MscIndex.Processes', [])
 
     $http.get("/admin/api/accounts/list_no_process").success (accounts)-> $scope.accounts = accounts
     $http.get("/admin/api/schemas").success (schemas)-> $scope.schemas = schemas
-    $scope.hosts = []
-    $http.get("/admin/api/hosts/list/type/APP").success (hosts)->
-      $scope.hosts = $scope.hosts.concat hosts if hosts? and hosts.length > 0
-    $http.get("/admin/api/hosts/list/type/COM").success (hosts)->
-      $scope.hosts = $scope.hosts.concat hosts if hosts? and hosts.length > 0
+    $http.get("/admin/api/hosts/list_available/APP,COM").success (hosts)-> $scope.hosts = hosts
 
     getHostById = (id)->
       return host for host in $scope.hosts when host.id is parseInt id
@@ -156,8 +152,8 @@ angular.module('MscIndex.Processes', [])
         feedback.error "创建 #{process.name} 进程失败", resp
   ])
 
-  .controller('ProcessViewCtrl', ['$scope', '$interval', '$stateParams', '$filter', '$http', \
-                                  ($scope,   $interval,   $stateParams,   $filter,   $http)->
+  .controller('ProcessViewCtrl', ['$scope', '$interval', '$stateParams', '$filter', '$http', '$location', \
+                                  ($scope,   $interval,   $stateParams,   $filter,   $http,   $location)->
       process = $scope.cacheService.find $stateParams.name, true
       $scope.process = process
       console.log "Initialized the Process View controller on: #{JSON.stringify process}"
@@ -173,11 +169,7 @@ angular.module('MscIndex.Processes', [])
 
       $http.get("/admin/api/accounts/list_no_process").success (accounts)-> $scope.accounts = accounts
       $http.get("/admin/api/schemas").success (schemas)-> $scope.schemas = schemas
-      $scope.hosts = []
-      $http.get("/admin/api/hosts/list/type/APP").success (hosts)->
-        $scope.hosts = $scope.hosts.concat hosts if hosts? and hosts.length > 0
-      $http.get("/admin/api/hosts/list/type/COM").success (hosts)->
-        $scope.hosts = $scope.hosts.concat hosts if hosts? and hosts.length > 0
+      $http.get("/admin/api/hosts/list_available/APP,COM").success (hosts)-> $scope.hosts = hosts
 
       toggleButton = (status)->
         $("#startBtn").removeClass("show").addClass("hidden")
@@ -190,56 +182,45 @@ angular.module('MscIndex.Processes', [])
           when "running", "abnormal" then $("#stopBtn").removeClass("hidden").addClass("show")
           when "stopping" then $("#cancelStoppingBtn").removeClass("hidden").addClass("show")
 
+      currentUrl = $location.url();
+      $scope.path = $location.path()
       # 获取日志信息
-      $scope.getCreateLog = (invokeId)->
+      $scope.getLog = (invokeId, type)->
         process = $scope.process
-        createOffset = 0
-        createIntervalId = $interval(->
+        offset = 0
+        preScrollTop = 0
+        $logs = $("#process_" + type + "Log")
+        intervalId = $interval(->
           if invokeId?
-            url = "/admin/api/processes/#{process.name}/follow/#{invokeId}?offset=#{createOffset}"
-            $http.get(url).success (log, status, headers) ->
-              $scope.process.creationLog += log
-              createOffset = parseInt(headers("offset"))
+            url = "/admin/api/processes/#{process.name}/follow/#{invokeId}?offset=#{offset}"
+            $http.get(url).success (data, status, headers) ->
+              switch type
+                when "creation" then $scope.process.creationLog += data.logs
+                when "start" then $scope.process.startLog += data.logs
+                when "stop" then $scope.process.stopLog += data.logs
+              preScrollTop = resolveScroll preScrollTop, $logs
+              offset = parseInt(headers("offset"))
               toggleButton($filter("lowercase")(headers("status")))
-              $interval.cancel(createIntervalId) if createOffset is -1
+              $interval.cancel(intervalId) if offset is -1 or currentUrl isnt $location.url()
         , 1000)
 
-      $scope.getStartLog = (invokeId)->
-        process = $scope.process
-        startOffset = 0
-        startIntervalId = $interval(->
-          if invokeId?
-            url = "/admin/api/processes/#{process.name}/follow/#{invokeId}?offset=#{startOffset}"
-            $http.get(url).success (log, status, headers) ->
-              $scope.process.startLog += log
-              startOffset = parseInt(headers("offset"))
-              toggleButton($filter("lowercase")(headers("status")))
-              $interval.cancel(startIntervalId) if startOffset is -1
-        , 1000)
-
-      $scope.getStopLog = (invokeId)->
-        process = $scope.process
-        stopOffset = 0
-        stopIntervalId = $interval(->
-          if invokeId?
-            url = "/admin/api/processes/#{process.name}/follow/#{invokeId}?offset=#{stopOffset}"
-            $http.get(url).success (log, status, headers) ->
-              $scope.process.stopLog += log
-              stopOffset = parseInt(headers("offset"))
-              toggleButton($filter("lowercase")(headers("status")))
-              $interval.cancel(stopIntervalId) if stopOffset is -1
-        , 1000)
+      # 日志滚动条效果
+      resolveScroll = (preScrollTop, element)->
+        if preScrollTop is element.scrollTop() or element[0].scrollHeight <= element.scrollTop() + element.outerHeight()
+          element.scrollTop(element[0].scrollHeight)
+          return element.scrollTop()
+        return preScrollTop
 
       # 触发获取日志事件
       toggleButton($filter("lowercase")(process.status))
-      $scope.getCreateLog(process.configuration.createInvocationId)
-      $scope.getStartLog(process.configuration.startInvocationId)
-      $scope.getStopLog(process.configuration.stopInvocationId)
+      $scope.getLog(process.configuration.createInvocationId, "creation")
+      $scope.getLog(process.configuration.startInvocationId, "start")
+      $scope.getLog(process.configuration.stopInvocationId, "stop")
 
       $scope.start = ->
-        $scope.execStart process, $scope.getStartLog
+        $scope.execStart process, $scope.getLog
       $scope.stop = ->
-        $scope.execStop process, $scope.getStopLog
+        $scope.execStop process, $scope.getLog
       $scope.cancel = ->
         $scope.execCancel process
 
