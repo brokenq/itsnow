@@ -17,12 +17,12 @@ angular.module('MsuIndex.Contracts', ['multi-select'])
     controller: 'ContractNewCtrl',
     data: {pageTitle: '新增合同'}
   $stateProvider.state 'contracts.view',
-    url: '/{sn}',
+    url: '/{sn}/view',
     templateUrl: 'contracts/view.tpl.jade'
     controller: 'ContractViewCtrl',
     data: {pageTitle: '查看合同'}
   $stateProvider.state 'contracts.accounts_view',
-    url: '/{sn}',
+    url: '/{sn}/account_view',
     templateUrl: 'contracts/account_view.tpl.jade',
     controller: 'ContractAccountViewCtrl',
     data: {pageTitle: '查看帐户'}
@@ -47,10 +47,6 @@ angular.module('MsuIndex.Contracts', ['multi-select'])
 .factory("ContractServiceCatalogService", ["$resource", ($resource)->
     $resource '/api/public_service_catalogs/:sn', {sn: '@sn'},
       query: {method: 'GET', params: {keyword: '@keyword'}, isArray: true}
-  ])
-
-.factory("ContractAccountService", ["$resource", ($resource)->
-    $resource '/api/accounts/:sn', {sn: '@sn'}
   ])
 
 .filter 'formatContractStatus', () ->
@@ -122,10 +118,10 @@ angular.module('MsuIndex.Contracts', ['multi-select'])
     $log.log "Initialized the Contract View controller on: " + JSON.stringify($scope.contract)
   ])
 
-.controller('ContractAccountViewCtrl', ['$scope', '$stateParams', '$log', 'CacheService', 'ContractAccountService',\
-    ($scope, $stateParams, $log, CacheService, contractAccountService) ->
-      contractAccountService.get {sn: value}, (data)->
-        $scope.account = data
+.controller('ContractAccountViewCtrl', ['$scope', '$stateParams', '$log', \
+    ($scope, $stateParams, $log) ->
+      $scope.contract = $scope.cacheService.find $stateParams.sn, true
+      $scope.account = $scope.contract.mspAccount
       $log.log "Initialized the Contract Account View controller on: " + JSON.stringify($scope.account)
   ])
 

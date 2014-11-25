@@ -23,10 +23,15 @@ angular.module('MspIndex.Contracts', [])
     controller: 'ContractMyListCtrl',
     data: {pageTitle: '我的合约'}
   $stateProvider.state 'contracts.view',
-    url: '/{sn}',
+    url: '/{sn}/view',
     templateUrl: 'contracts/view.tpl.jade'
     controller: 'ContractViewCtrl',
     data: {pageTitle: '查看合约'}
+  $stateProvider.state 'contracts.accounts_view',
+    url: '/{sn}/account_view',
+    templateUrl: 'contracts/account_view.tpl.jade',
+    controller: 'ContractAccountViewCtrl',
+    data: {pageTitle: '查看帐户'}
   $urlRouterProvider.when '/contracts', '/contracts/list'
 
 .factory('ContractService', ['$resource', ($resource) ->
@@ -122,6 +127,13 @@ angular.module('MspIndex.Contracts', [])
 .controller('ContractViewCtrl', ['$scope', '$stateParams', '$log', ($scope, $stateParams, $log) ->
     $scope.contract = $scope.cacheService.find $stateParams.sn, true
     $log.log "Initialized the Contract View controller on: " + JSON.stringify($scope.contract)
+  ])
+
+.controller('ContractAccountViewCtrl', ['$scope', '$stateParams', '$log',
+    ($scope, $stateParams, $log) ->
+      $scope.contract = $scope.cacheService.find $stateParams.sn, true
+      $scope.account = $scope.contract.msuAccount
+      $log.log "Initialized the Contract Account View controller on: " + JSON.stringify($scope.account)
   ])
 
 .controller('ContractEditCtrl', ['$scope', '$state', '$stateParams', '$log', 'Feedback', 'ContractService', 'ContractRoleService',\
