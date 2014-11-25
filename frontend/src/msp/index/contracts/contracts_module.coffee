@@ -140,7 +140,7 @@ angular.module('MspIndex.Contracts', [])
               mspContractUser.ticked =true if mspContractUser.id is loginUser.id
 
       $scope.cancel = () ->
-        $state.go 'contracts.list'
+        $state.go 'contracts.my-list'
 
       $scope.allowLogin = () ->
 
@@ -152,7 +152,7 @@ angular.module('MspIndex.Contracts', [])
 
         contractService.update($scope.contract, () ->
           feedback.success "批准MSP用户登录操作成功"
-          $state.go 'contracts.list'
+          $state.go 'contracts.my-list'
         ,(resp)->
           feedback.error("批准MSP用户登录操作失败", resp)
         )
