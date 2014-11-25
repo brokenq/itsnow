@@ -205,9 +205,10 @@ public class MspEventListener extends Bean implements ActivitiEventListener, Mes
                     mspIncidentRepository.updateMsuStatusByMsuAccountAndMsuInstanceId(incident);
                 else if(type == TransferType.Action){
                     String mspInstanceId = mspIncidentRepository.findMspInstanceIdByMsuAccountNameAndInstanceId(incident.getMsuAccountName(),incident.getMsuInstanceId());
-                    if(mspInstanceId == null || mspInstanceId == "")
+                    if(mspInstanceId == null || mspInstanceId == "") {
                         startMspInstance(incident);
-                    mspIncidentRepository.updateMspStatusByMsuAccountAndMsuInstanceId(incident);
+                        mspIncidentRepository.updateMspStatusByMsuAccountAndMsuInstanceId(incident);
+                    }
                 }
                 logger.info("update incident:{}", incident.getMsuInstanceId());
             } else {

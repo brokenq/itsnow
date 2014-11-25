@@ -80,7 +80,6 @@ public interface MspIncidentRepository {
             "ci_type                = #{ciType}," +
             "ci                     = #{ci}," +
             "updated_at             = #{updatedAt}," +
-            "updated_by             = #{updatedBy}," +
             "msu_status             = #{msuStatus} "+
             "WHERE msu_account_name = #{msuAccountName} AND msu_instance_id = #{msuInstanceId};")
     void updateMsuStatusByMsuAccountAndMsuInstanceId(Incident incident);
