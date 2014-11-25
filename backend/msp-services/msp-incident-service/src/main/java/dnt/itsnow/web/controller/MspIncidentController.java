@@ -172,8 +172,14 @@ public class MspIncidentController extends SessionSupportController<Incident> {
 
     }
 
+    @RequestMapping(value = "/{id}/grab",method = RequestMethod.POST)
+    @ResponseBody
+    public MspIncident grab(@PathVariable("id") String id) {
+        return service.grabIncident(id,this.currentUser);
+    }
 
-    @BeforeFilter(method = RequestMethod.GET, value = {"index","indexClosed","indexCreated"})
+
+    @BeforeFilter(method = RequestMethod.GET, value = {"index","indexClosed","indexCreated","indexMonitored"})
     public void initDefaultPageRequest( @RequestParam(required = false, value = "page", defaultValue = "1") int page,
                                         @RequestParam(required = false, value = "size", defaultValue = "40") int size,
                                         @RequestParam(required = false, value = "sort", defaultValue = "") String sort){

@@ -2,6 +2,7 @@ package dnt.itsnow.service;
 
 import dnt.itsnow.model.Incident;
 import dnt.itsnow.model.MspIncident;
+import dnt.itsnow.model.User;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.platform.util.PageRequest;
@@ -88,4 +89,12 @@ public interface MspIncidentService {
      * @return 故障单列表
      */
     Page<Incident> findMonitoredByKey(String key, PageRequest pageRequest);
+
+    /**
+     * 抢单，根据msuInstanceId生成msp Incident
+     * @param id msp_incident id
+     * @param currentUser 当前用户
+     * @return MspIncident
+     */
+    MspIncident grabIncident(String id, User currentUser);
 }
