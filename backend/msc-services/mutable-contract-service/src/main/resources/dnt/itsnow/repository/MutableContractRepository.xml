@@ -5,4 +5,5 @@
 <!--不要用 type != '*' 这种， mybatis 会根据 '*' 认为 type 为 long类型，而后无法解析-->
 <mapper namespace="dnt.itsnow.repository.MutableContractRepository">
 
+
 </mapper>

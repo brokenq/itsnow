@@ -7,8 +7,10 @@ import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.platform.web.exception.WebServerSideException;
+import dnt.itsnow.service.CommonUserService;
 import dnt.itsnow.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +36,10 @@ public class RolesController extends SessionSupportController<Role> {
 
     @Autowired
     private RoleService service;
+
+    @Autowired
+    @Qualifier("plainUserService")
+    CommonUserService commonUserService;
 
     private Role role;
 
@@ -143,12 +149,19 @@ public class RolesController extends SessionSupportController<Role> {
 
     }
 
-    @RequestMapping(value = "users", method = RequestMethod.GET)
+    /**
+     * <h2>列出当前用户所属账户中，所有用户的信息记录</h2>
+     * <p></p>
+     *
+     * GET     /api/roles/users/belongs_to_account
+     * @return 用户列表
+     */
+    @RequestMapping(value = "users/belongs_to_account", method = RequestMethod.GET)
     public List<User> listUsers() {
 
         logger.info("Listing users by current account:{}", mainAccount);
 
-        List<User> users = service.findUsersByAccount(mainAccount);
+        List<User> users = commonUserService.findAllByAccountAndContract(mainAccount);
 
         logger.info("Listed  {}", users);
 

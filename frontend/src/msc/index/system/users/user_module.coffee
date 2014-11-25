@@ -65,8 +65,8 @@ angular.module('System.User', [])
           errCallback() if errCallback
           feedback.error("删除#{user.name}失败", resp)
   ])
-.controller('UserListCtrl', ['$scope', '$location', 'ngTableParams', 'ActionService', 'SelectionService',
-    ($scope, $location, NgTable, ActionService, SelectionService) ->
+.controller('UserListCtrl', ['$scope', '$location', 'ngTableParams', 'ActionService', 'SelectionService','CommonService',
+    ($scope, $location, NgTable, ActionService, SelectionService,CommonService) ->
       Users = $scope.services
       args =
         total: 0

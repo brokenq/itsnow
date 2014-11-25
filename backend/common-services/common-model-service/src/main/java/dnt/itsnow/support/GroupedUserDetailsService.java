@@ -73,4 +73,19 @@ public class GroupedUserDetailsService implements CommonUserService, UserDetails
     public List<User> findUsersByAccount(Account mainAccount) {
         return null;
     }
+
+    @Override
+    public List<User> findAllByContract(Account mainAccount) {
+        return userService.findAllByContract(mainAccount);
+    }
+
+    @Override
+    public List<User> findAllByAccountAndContract(Account mainAccount) {
+        return userService.findAllByAccountAndContract(mainAccount);
+    }
+
+    @Override
+    public List<User> findAllByLogOnContract(Long accountId) {
+        return userService.findAllByLogOnContract(accountId);
+    }
 }

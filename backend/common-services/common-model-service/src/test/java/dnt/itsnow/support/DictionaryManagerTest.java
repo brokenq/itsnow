@@ -57,7 +57,7 @@ public class DictionaryManagerTest {
 
     @Test
     public void testFindAll() throws Exception {
-        Page<Dictionary> dictionaries = service.findAll("003", pageRequest);
+        Page<Dictionary> dictionaries = service.findAll("", pageRequest);
         Assert.assertNotNull(dictionaries.getTotalElements());
         Assert.assertNotNull(dictionaries.getNumberOfElements());
     }

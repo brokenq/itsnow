@@ -29,13 +29,13 @@ angular.module('System.Roles', ['multi-select'])
   $urlRouterProvider.when '/roles', '/roles/list'
 
 .factory('RoleService', ['$resource', ($resource) ->
-    $resource("/api/roles/:name", {},
+    $resource("/api/roles/:name/:do", {},
       get: { method: 'GET', params: {name: '@name'}},
       save: { method: 'POST'},
       update: { method: 'PUT', params: {name: '@name'}},
       query: { method: 'GET', params: {keyword: '@keyword'}, isArray: true},
       remove: { method: 'DELETE', params: {name: '@name'}},
-      getUsers: { method: 'GET', params: {name: 'users'}, isArray: true}
+      getUsers: { method: 'GET', params: {name: 'users', do:"belongs_to_account"}, isArray: true}#/api/roles/users/belongs_to_account
     )
   ])
 
@@ -50,15 +50,16 @@ angular.module('System.Roles', ['multi-select'])
     else '无'
 )
 
-.controller('RolesCtrl', ['$scope', '$state', '$log', 'Feedback', 'CacheService',
-    ($scope, $state, $log, feedback, CacheService) ->
+.controller('RolesCtrl', ['$scope', '$state', '$log', 'Feedback', 'CacheService', 'RoleService',\
+    ($scope, $state, $log, feedback, CacheService, roleService) ->
       # frontend controller logic
       $log.log "Initialized the Roles controller"
       $scope.options =
         page: 1, # show first page
         count: 10 # count per page
 
-      $scope.cacheService = new CacheService("name")
+      $scope.cacheService = new CacheService "name", (value)->
+        roleService.get {name: value}
 
       # 提交按钮是否已经执行了提交操作，false为未执行，则按钮可用
       $scope.submited = false
@@ -107,7 +108,7 @@ angular.module('System.Roles', ['multi-select'])
       $scope.destroy = (role) ->
         roleService.remove {name: role.name}, () ->
           feedback.success "删除角色#{role.name}成功"
-          delete $scope.selection.items[role.name]
+          delete $scope.selectionService.items[role.name]
           $scope.rolesTable.reload()
         , (resp) ->
           feedback.error("删除角色#{role.name}失败", resp)

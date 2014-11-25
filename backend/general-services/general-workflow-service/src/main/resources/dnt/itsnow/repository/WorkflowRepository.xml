@@ -18,16 +18,7 @@
             <id property="tenantId" column="act_re_deployment_tenant_id"/>
             <id property="deployTime" column="act_re_deployment_deploy_time"/>
         </association>
-        <association property="dictionary" column="process_dictionary_id" javaType="Dictionary">
-            <id property="id" column="dictionary_id"/>
-            <result property="sn" column="dictionary_sn"/>
-            <result property="code" column="dictionary_code"/>
-            <result property="name" column="dictionary_name"/>
-            <result property="display" column="dictionary_display"/>
-            <result property="val" column="dictionary_val"/>
-            <result property="state" column="dictionary_state"/>
-            <result property="type" column="dictionary_type"/>
-        </association>
+        <association property="dictionary" column="process_dictionary_id" resultMap="dnt.itsnow.repository.DictionaryRepository.dictResult" columnPrefix="dict_"/>
     </resultMap>
 
     <sql id="select">
@@ -39,18 +30,16 @@
         flow.description,
         flow.created_at,
         flow.updated_at,
-        a.ID_                   AS act_re_procdef_id,
-        a.RESOURCE_NAME_        AS act_re_procdef_resourceName,
-        a.VERSION_              AS act_re_procdef_version,
-        deployment.DEPLOY_TIME_ AS act_re_deployment_deploy_time,
-        p.id                    AS dictionary_id,
-        p.sn                    AS dictionary_sn,
-        p.code                  AS dictionary_code,
-        p.name                  AS dictionary_name,
-        p.display               AS dictionary_display,
-        p.val                   AS dictionary_val,
-        p.state                 AS dictionary_state,
-        p.type                  AS dictionary_type
+        a.ID_                    AS act_re_procdef_id,
+        a.RESOURCE_NAME_         AS act_re_procdef_resourceName,
+        a.VERSION_               AS act_re_procdef_version,
+        deployment.DEPLOY_TIME_  AS act_re_deployment_deploy_time,
+        p.id                     AS dict_id,
+        p.code                   AS dict_code,
+        p.name                   AS dict_name,
+        p.label                  AS dict_label,
+        p.description            AS dict_description,
+        p.detail                 AS dict_detail
         FROM   workflows flow
         LEFT JOIN ACT_RE_PROCDEF a
         ON flow.act_re_procdef_id = a.ID_
