@@ -368,3 +368,36 @@ git@git.itsnow.com:insight/itsnow.git Rel-x.y.z 标签(tag)
 1. [msc-0.2.3](http://msc.itsnow.com/)
 2. [msu-0.2.3](http://msu.itsnow.com/)
 3. [msp-0.2.3](http://msp.itsnow.com/)
+
+
+0.2.4 发布说明
+=================
+
+1. 新增特性
+-----------
+
+1.   Frontend table表上点击复选框联动效果
+2.   Frontend 前端general模块开发
+3.   Frontend 工作流模块管理
+4.   Backend  优化组件框架的启动速度
+5.   Backend  集成测试功能实现
+6.   Backend  合同管理模块，MSU与MSP合同关联
+
+2. 问题修复
+-----------
+1 流程管理BUG修改
+
+
+3. 交付物地址
+--------------
+
+1. [msc-0.2.3](http://ci.itsnow.com/repository/download/Itsnow_Sprint_Build_MSC/4451:id/msc-0.2.3.zip)
+2. [msp-0.2.3](http://ci.itsnow.com/repository/download/Itsnow_Sprint_Build_MSP/4449:id/msp-0.2.3.zip)
+3. [msu-0.2.3](http://ci.itsnow.com/repository/download/Itsnow_Sprint_Build_MSU/4450:id/msu-0.2.3.zip)
+
+4. 系统演示地址
+-----------
+
+1. [msc-0.2.3](http://msc.itsnow.com/)
+2. [msu-0.2.3](http://msu.itsnow.com/)
+3. [msp-0.2.3](http://msp.itsnow.com/)
