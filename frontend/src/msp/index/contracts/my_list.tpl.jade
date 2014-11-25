@@ -4,9 +4,10 @@ include /lib/mixins/list
   +toolbar
     +button_group
       +tool_button("contractsTable.reload()", "refresh", "", "*", "", "")
+      +tool_button("actionService.gotoState('contracts.edit', $event)", "cog", "操作", "1", "", "enable")
 
   +page_table("contractsTable","selectionService")
-    +row("contract", "sn", "selectionService")
+    +row("contract", "sn", "selectionService")(ng-class="{'enable':contract.msuStatus=='Approved'}")
       td(data-title="'合同名称'")
         a(ui-sref="contracts.view(contract)") {{contract.sn}}
       td(data-title="'企业帐户'") {{contract.msuAccount.name}}

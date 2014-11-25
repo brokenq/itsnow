@@ -7,6 +7,7 @@ import dnt.itsnow.model.Account;
 import dnt.itsnow.model.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 import java.util.List;
 /** <h1>关于用户的服务</h1> */
 public interface CommonUserService extends UserDetailsService {
@@ -56,4 +57,25 @@ public interface CommonUserService extends UserDetailsService {
     Account findAccountById(Long accountId);
 
     List<User> findUsersByAccount(Account mainAccount);
+
+    /**
+     * 根据合同查询相关的MSP用户
+     * @param mainAccount MSU账户
+     * @return MSP用户列表
+     */
+    List<User> findAllByContract(Account mainAccount);
+
+    /**
+     * 查询指定账户下所有用户和MSU系统中与MSP签订合同的MSP用户
+     * @param mainAccount 账户
+     * @return 用户列表
+     */
+    List<User> findAllByAccountAndContract(Account mainAccount);
+
+    /**
+     * 查询所有可登录MSU系统的MSP用户
+     * @param accountId MSU账户
+     * @return MSP用户
+     */
+    List<User> findAllByLogOnContract(Long accountId);
 }

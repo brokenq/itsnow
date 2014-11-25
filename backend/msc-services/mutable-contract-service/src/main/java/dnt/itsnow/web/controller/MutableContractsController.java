@@ -18,13 +18,14 @@ import javax.validation.Valid;
 /**
  * <h1>Contracts Controller</h1>
  * * <pre>
- * <b>HTTP     URI                                      方法       含义  </b>
- * # GET      /admin/api/contracts         index     列出所有合同，支持过滤，分页，排序等
- * # GET      /admin/api/contracts/{sn}    show      查看一个合同
- * # POST     /admin/api/contracts         create    创建合同
- * # PUT      /admin/api/contracts/{sn}/details/{id}    update    修改合同详情，账户信息通过HTTP BODY提交
- * # DELETE   /admin/api/contracts/{sn}/details/{id}    destroy   删除合同详情
- *
+ * <b>HTTP    URI                                      方法            含义   </b>
+ * # GET      /admin/api/contracts                     index           列出所有合同，支持过滤，分页，排序等
+ * # GET      /admin/api/contracts/{sn}                show            查看一个合同
+ * # POST     /admin/api/contracts                     create          创建合同
+ * # PUT      /admin/api/contracts/{sn}/details/{id}   update          修改合同详情，账户信息通过HTTP BODY提交
+ * # DELETE   /admin/api/contracts/{sn}/details/{id}   destroy         删除合同详情
+ * # POST     /admin/api/contracts/user/relation       buildRelation   为可以依合同登录MSU系统的USP用户做准备
+ * # PUT      /admin/api/contracts/user/relation       updateRelation  MSU批准哪些MSP的用户可以登录本系统
  */
 @RestController
 @RequestMapping("/admin/api/contracts")
@@ -138,12 +139,44 @@ public class MutableContractsController extends SessionSupportController<Contrac
      * @return 被删除的合同
      */
     @RequestMapping(value = "{sn}", method = RequestMethod.DELETE)
-    public Contract destroy(@PathVariable("sn")String sn){
+    public Contract destroy(){
         mutableContractService.delete(contract);
         return contract;
     }
 
-    @BeforeFilter({"show", "update","bid","approve","reject", "destroy"})
+    /**
+     * <h2>MSP进行其用户与MSU合同进行关联</h2>
+     * <p/>
+     * POST /admin/api/contracts/user/relation
+     *
+     * @param contract 合同
+     */
+    @RequestMapping(value = "user/relation", method = RequestMethod.POST)
+    public void buildRelation(@Valid @RequestBody Contract contract){
+        try {
+            mutableContractService.buildRelation(contract);
+        } catch (ServiceException e) {
+            throw new WebClientSideException(HttpStatus.SERVICE_UNAVAILABLE, "Can't build relationship contract with msp users" + e.getMessage() );
+        }
+    }
+
+    /**
+     * <h2>MSP进行其用户与MSU合同进行关联</h2>
+     * <p/>
+     * PUT /admin/api/contracts/user/relation
+     *
+     * @param contract 合同
+     */
+    @RequestMapping(value = "user/relation", method = RequestMethod.PUT)
+    public void updateRelation(@Valid @RequestBody Contract contract){
+        try {
+            mutableContractService.updateRelation(contract);
+        } catch (ServiceException e) {
+            throw new WebClientSideException(HttpStatus.SERVICE_UNAVAILABLE, "Can't update relationship contract with msp users" + e.getMessage() );
+        }
+    }
+
+    @BeforeFilter({"show", "update", "bid", "approve", "reject", "destroy"})
     public void initContract(@PathVariable("sn")String sn){
         try {
             contract = mutableContractService.findByAccountAndSn(mainAccount, sn, true);//findByAccountId it by sn

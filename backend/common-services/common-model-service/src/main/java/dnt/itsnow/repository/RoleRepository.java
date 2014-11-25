@@ -84,11 +84,4 @@ public interface RoleRepository {
     @Delete("DELETE FROM group_authorities WHERE authority = #{authority}")
     public void deleteRoleAndGroupRelationByRoleName(@Param("authority") String authority);
 
-    /**
-     * 根据账户序列号查询所属用户列表
-     * @param id 账户ID
-     * @return 用户列表
-     */
-    @Select("SELECT * FROM itsnow_msc.users WHERE account_id = #{id}")
-    List<User> findUsersByAccountId(@Param("id") Long id);
 }

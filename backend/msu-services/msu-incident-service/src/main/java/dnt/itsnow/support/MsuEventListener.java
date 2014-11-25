@@ -88,11 +88,6 @@ public class MsuEventListener extends Bean implements ActivitiEventListener, Mes
         incident.setMsuStatus(IncidentStatus.Accepted);
         incident.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         incident.setResponseTime(incident.getUpdatedAt());
-        List<IdentityLink> identityLinkList = engineServices.getTaskService().getIdentityLinksForTask(task.getId());
-        for(IdentityLink link:identityLinkList){
-            logger.debug("task assign type:{} user:{} group:{}",link.getType(),link.getUserId(),link.getGroupId());
-            incident.setAssignedGroup(link.getGroupId());
-        }
         incident.setAssignedUser(incident.getUpdatedBy());
         engineServices.getTaskService().setAssignee(task.getId(), incident.getUpdatedBy());
         //update incident
@@ -116,8 +111,11 @@ public class MsuEventListener extends Bean implements ActivitiEventListener, Mes
                 incident.setMsuStatus(IncidentStatus.Resolving);
                 engineServices.getTaskService().setAssignee(task.getId(), incident.getUpdatedBy());
             }
-            else
+            else {
                 incident.setMsuStatus(IncidentStatus.Assigned);
+                incident.setAssignedUser(null);
+                incident.setAssignedGroup(MsuIncidentManager.ROLE_LINE_TWO);
+            }
             //update incident
             repository.update(incident);
         }
@@ -142,12 +140,14 @@ public class MsuEventListener extends Bean implements ActivitiEventListener, Mes
     private void processResolvedEvent(Incident incident ){
         logger.debug("processing resolved event,instance:{}",incident.getMsuInstanceId());
         incident.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        incident.setAssignedUser(null);
         if(incident.getResolved()!=null && incident.getResolved()){
             incident.setMsuStatus(IncidentStatus.Resolved);
             incident.setResolveTime(incident.getUpdatedAt());
         }
         else{
             incident.setMsuStatus(IncidentStatus.Assigned);
+            incident.setAssignedGroup(MsuIncidentManager.ROLE_LINE_TWO);
         }
         repository.update(incident);
         logger.debug("processed resolved event");

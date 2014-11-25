@@ -1,7 +1,6 @@
 package dnt.itsnow.support;
 
 import dnt.itsnow.exception.RoleException;
-import dnt.itsnow.model.Account;
 import dnt.itsnow.model.Role;
 import dnt.itsnow.model.User;
 import dnt.itsnow.model.UserAuthority;
@@ -13,7 +12,6 @@ import dnt.itsnow.service.RoleService;
 import dnt.messaging.MessageBus;
 import dnt.spring.Bean;
 import dnt.support.JsonSupport;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -141,18 +139,6 @@ public class RoleManager extends Bean implements RoleService {
         globalMessageBus.publish("Role", "-" + JsonSupport.toJSONString(role));
 
         logger.warn("Deleted  {}", role);
-    }
-
-    @Override
-    public List<User> findUsersByAccount(Account mainAccount) {
-
-        logger.debug("Finding users by account:{}", mainAccount);
-
-        List<User> users = repository.findUsersByAccountId(mainAccount.getId());
-
-        logger.debug("Found   {}", users);
-
-        return users;
     }
 
 }

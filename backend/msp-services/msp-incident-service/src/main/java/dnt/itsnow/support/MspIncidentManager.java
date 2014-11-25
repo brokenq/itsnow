@@ -17,6 +17,7 @@ import org.activiti.engine.delegate.event.ActivitiEventType;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -40,11 +41,8 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
     public static final  String PROCESS_KEY = "msp_incident";
     private static final String LISTENER    = "listener";
     private static String appSn = System.getProperty("app.id");
-    //private static       String appSn       = "msp_001";
-    //private static       String msuSn       = "msu_001";
 
     public static final String ROLE_LINE_ONE = "ROLE_LINE_ONE";
-    public static final String ROLE_LINE_TWO = "ROLE_LINE_TWO";
     @Autowired
     MspIncidentRepository repository;
 
@@ -70,13 +68,6 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
     DictionaryService dictionaryService;
 
     private ResourceLoader resourceLoader;
-
-    /*public static String getSendChannel() {
-        if (msuSn == null) {
-            //Todo find msuSn from Contract
-        }
-        return msuSn + "-LISTENER";
-    }*/
 
     public static String getAppSn() {
         return appSn;
@@ -122,13 +113,13 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
             workflow.setDescription("初始化故障流程");
             ServiceItem item = serviceItemService.findBySn("SI_3001");
             workflow.setServiceItem(item);
-            dnt.itsnow.model.Dictionary dict = dictionaryService.findByCode("120");
+            dnt.itsnow.model.Dictionary dict = dictionaryService.findByCode("workflow");
             workflow.setDictionary(dict);
             try {
                 URL url = this.resourceLoader.getResource(path).getURL();
                 assert url != null;
                 is = url.openStream();
-                workflow = workflowService.create(workflow,is);
+                workflowService.create(workflow,is);
             }catch(Exception e){
                 logger.warn("Error deploy process:{} {}",PROCESS_KEY,e.getMessage());
             }finally{
@@ -276,6 +267,7 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
         //start incident process
         ProcessInstance processInstance = activitiEngineService.startProcessInstanceByKey(PROCESS_KEY, null, username);
         logger.info("msp incident incident started,instance:{}",processInstance.getProcessInstanceId());
+        this.setAssignee(processInstance.getProcessInstanceId(),incident);
         //activitiEngineService.addEventListener( mspEventListener);
         //create incident object and persist it
         incident.setNumber("INC"+df.format(new Date()));
@@ -291,6 +283,24 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
         mspIncident.setIncident(incident);
         logger.info("started msp incident");
         return mspIncident;
+    }
+
+    /**
+     * 设置处理人/处理组
+     * @param instanceId 实例id
+     * @param incident 故障对象
+     */
+    private void setAssignee(String instanceId,Incident incident){
+        List<Task> tasks = activitiEngineService.queryTasksByInstanceId(instanceId);
+        for(Task task:tasks){
+            List<IdentityLink> links = activitiEngineService.queryTaskIdentity(task.getId());
+            for(IdentityLink link:links){
+                if(link.getGroupId() != null)
+                    incident.setAssignedGroup(link.getGroupId());
+                if(link.getUserId() != null)
+                    incident.setAssignedUser(link.getUserId());
+            }
+        }
     }
 
     /**
@@ -312,7 +322,10 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
         repository.update(incident);
         Map<String, String> taskVariables = new HashMap<String, String>();
         activitiEngineService.completeTask(taskId,taskVariables,username);
-        mspIncident.setIncident(incident);
+        Incident incident1 = repository.findByInstanceId(instanceId);
+        this.setAssignee(instanceId,incident1);
+        repository.update(incident1);
+        mspIncident.setIncident(incident1);
         mspIncident.setResult("success");
         logger.info("processed msp incident:{} task:{} by user:{}",instanceId,taskId,username);
         return mspIncident;
@@ -337,6 +350,33 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
             logger.debug("found no monitored incidents");
             return new DefaultPage<Incident>(incidents, pageRequest, total);
         }
+    }
+
+    @Override
+    public MspIncident grabIncident(String id, User currentUser) {
+        Incident incident = repository.findById(id);
+        ProcessInstance processInstance = activitiEngineService.startProcessInstanceByKey(MspIncidentManager.PROCESS_KEY, null, currentUser.getUsername());
+        logger.info("started msp incident workflow,instance:{}", processInstance.getProcessInstanceId());
+        //save incident object and persist it
+        incident.setCreatedBy(currentUser.getUsername());
+        incident.setMspInstanceId(processInstance.getProcessInstanceId());
+        Account account = currentUser.getAccount();
+        incident.setMspAccountName(account.getName());
+        incident.setNumber("INC" + df.format(new Date()));
+        incident.setMspStatus(IncidentStatus.New);
+        incident.setAssignedUser(null);
+        incident.setAssignedGroup(null);
+        incident.setResponseTime(null);
+        incident.setResolveTime(null);
+        incident.setCloseTime(null);
+        incident.setUpdatedBy(currentUser.getUsername());
+        incident.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        incident.setUpdatedAt(incident.getCreatedAt());
+        repository.updateByMsuAccountAndMsuInstanceId(incident);
+        MspIncident mspIncident = new MspIncident();
+        mspIncident.setResult("success");
+        mspIncident.setIncident(incident);
+        return mspIncident;
     }
 
     @Override

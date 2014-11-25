@@ -3,6 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="dnt.itsnow.repository.CommonUserRepository">
+
     <sql id="selectUser">
         SELECT u.*,
                a.id         AS account_id,
@@ -17,20 +18,54 @@
         FROM itsnow_msc.users u
         LEFT JOIN itsnow_msc.accounts a ON u.account_id = a.id
     </sql>
+
+    <sql id="subSelect">
+        SELECT cu.msp_user_id
+        FROM   itsnow_msc.contract_users cu
+            LEFT JOIN itsnow_msc.accounts a
+                ON cu.msu_account_id = a.id
+    </sql>
+
     <select id="findByFieldAndValue" resultMap="userWithAccount">
         <include refid="selectUser"/>
         WHERE UPPER(u.${field}) = UPPER(#{value}) LIMIT 1
     </select>
+
     <select id="findByAccountSnAndUsername" resultMap="userWithAccount">
         <include refid="selectUser"/>
         WHERE UPPER(u.username) = UPPER(#{username})
-          AND UPPER(a.sn) = UPPER(#{accountSn})
+          AND ( UPPER(a.sn) = UPPER(#{accountSn}) OR u.id in (<include refid="subSelect"/> WHERE  a.sn = #{accountSn}) )
+    </select>
+
+    <select id="findAllByContract" resultType="User">
+        SELECT DISTINCT u.*
+        FROM   itsnow_msc.contracts c
+            LEFT JOIN itsnow_msc.users u
+                ON c.msp_account_id = u.account_id
+        WHERE c.msu_account_id = #{id}
+    </select>
+
+    <select id="findAllByAccountAndContract" resultType="User">
+        SELECT u.*
+        FROM   itsnow_msc.users u
+            LEFT JOIN itsnow_msc.accounts a
+                ON u.account_id = a.id
+        WHERE  a.id = #{id} OR u.id in (<include refid="subSelect"/> WHERE a.id = #{id})
+    </select>
+
+    <select id="findAllByLogOnContract" resultType="User">
+        SELECT u.*
+        FROM   itsnow_msc.contract_users cu
+            LEFT JOIN itsnow_msc.users u
+                ON cu.msp_user_id = u.id
+        WHERE  cu.msu_account_id = #{accountId}
     </select>
 
     <resultMap id="userResult" type="User" autoMapping="true">
         <id  property="id" column="id"/>
         <result column="account_id" property="accountId"/>
     </resultMap>
+
     <resultMap id="userWithAccount" type="User" autoMapping="true">
         <id  property="id" column="id"/>
         <association property="account" resultMap="dnt.itsnow.repository.CommonAccountRepository.accountWithUserResult" columnPrefix="account_"/>

@@ -6,6 +6,7 @@ package dnt.itsnow.config;
 import dnt.cache.MutableCacheService;
 import dnt.itsnow.platform.service.AutoNumberService;
 import dnt.itsnow.service.CommonAccountService;
+import dnt.itsnow.service.CommonUserService;
 import dnt.messaging.MessageBus;
 import org.springframework.web.client.RestOperations;
 
@@ -18,6 +19,7 @@ public class GeneralModelServiceConfig extends DefaultGeneralServiceConfig {
     public void defineServices() {
         super.defineServices();
         importService(CommonAccountService.class);
+        importService(CommonUserService.class);
         exportService(RestOperations.class);
 
         importService(AutoNumberService.class);
