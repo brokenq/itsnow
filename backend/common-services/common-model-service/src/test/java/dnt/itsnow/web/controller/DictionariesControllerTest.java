@@ -1,6 +1,7 @@
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.config.DictionariesControllerConfig;
+import dnt.itsnow.model.DictDetail;
 import dnt.itsnow.model.Dictionary;
 import dnt.itsnow.platform.util.DefaultPage;
 import dnt.itsnow.platform.util.PageRequest;
@@ -45,16 +46,20 @@ public class DictionariesControllerTest extends SessionSupportedControllerTest {
     public void setup() {
 
         dictionary = new Dictionary();
+
+        DictDetail detail = new DictDetail();
+        detail.setKey("key");
+        detail.setValue("value");
+        DictDetail[] detailList = new DictDetail[]{detail};
+
         dictionary.setId(3L);
-        dictionary.setSn("003");
         dictionary.setCode("inc003");
         dictionary.setName("影响范围");
-        dictionary.setDisplay("高");
-        dictionary.setVal("high");
-        dictionary.setState("1");
+        dictionary.setLabel("北京");
         dictionary.setDescription("This is a test.");
         dictionary.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         dictionary.setUpdatedAt(dictionary.getCreatedAt());
+        dictionary.setDetails(detailList);
 
         dictionaries = new ArrayList<Dictionary>();
         dictionaries.add(dictionary);
@@ -98,7 +103,7 @@ public class DictionariesControllerTest extends SessionSupportedControllerTest {
     @Test
     public void testShow() throws Exception {
 
-        expect(dictionaryService.findBySn("003")).andReturn(dictionary);
+        expect(dictionaryService.findByCode("003")).andReturn(dictionary);
 
         // 准备 Mock Request
         MockHttpServletRequestBuilder request = get("/api/dictionaries/003");
@@ -114,32 +119,32 @@ public class DictionariesControllerTest extends SessionSupportedControllerTest {
 
     }
 
-    @Test
-    public void testList() throws Exception {
-
-        expect(dictionaryService.findByCode("inc003")).andReturn(dictionaries);
-
-        // 准备 Mock Request
-        MockHttpServletRequestBuilder request = get("/api/dictionaries/code/inc003");
-        request = decorate(request);
-
-        replay(dictionaryService);
-
-        // 执行
-        ResultActions result = this.browser.perform(request);
-
-        // 对业务结果的验证
-        decorate(result).andExpect(status().isOk());
-
-    }
+//    @Test
+//    public void testList() throws Exception {
+//
+//        expect(dictionaryService.findByCode("inc003")).andReturn(dictionaries);
+//
+//        // 准备 Mock Request
+//        MockHttpServletRequestBuilder request = get("/api/dictionaries/code/inc003");
+//        request = decorate(request);
+//
+//        replay(dictionaryService);
+//
+//        // 执行
+//        ResultActions result = this.browser.perform(request);
+//
+//        // 对业务结果的验证
+//        decorate(result).andExpect(status().isOk());
+//
+//    }
 
     @Test
     public void testUpdate() throws Exception {
-        expect(dictionaryService.findBySn("003")).andReturn(dictionary);
+        expect(dictionaryService.findByCode("001")).andReturn(dictionary);
         expect(dictionaryService.update(anyObject(Dictionary.class))).andReturn(dictionary);
         replay(dictionaryService);
 
-        MockHttpServletRequestBuilder request = put("/api/dictionaries/003").content(accountJson());
+        MockHttpServletRequestBuilder request = put("/api/dictionaries/001").content(accountJson());
         decorate(request);
 
         ResultActions result = this.browser.perform(request);
@@ -149,7 +154,7 @@ public class DictionariesControllerTest extends SessionSupportedControllerTest {
 
     @Test
     public void testDestroy() throws Exception {
-        expect(dictionaryService.findBySn("003")).andReturn(dictionary);
+        expect(dictionaryService.findByCode("003")).andReturn(dictionary);
         dictionaryService.destroy(anyObject(Dictionary.class));
         expectLastCall().once();
 

@@ -265,15 +265,17 @@ public class ItsnowProcessesController extends SessionSupportController<ItsnowPr
      * </pre>
      */
     @RequestMapping("{name}/follow/{job}")
-    public String follow( @PathVariable("job") String job,
-                          @RequestParam("offset") long offset,
-                          HttpServletResponse response){
+    public Map<String, String> follow(@PathVariable("job") String job,
+                                      @RequestParam("offset") long offset,
+                                      HttpServletResponse response){
         logger.debug("Follow {} job {} from {}", currentProcess.getName(), job, offset);
         List<String> body = new LinkedList<String>();
         offset = processService.follow(currentProcess, job, offset, body);
         response.setHeader("offset", String.valueOf(offset));
         response.setHeader("status", currentProcess.getStatus().toString());
-        return StringUtils.join(body, "\n");
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("logs", StringUtils.join(body, "\n"));
+        return map;
     }
 
     /**

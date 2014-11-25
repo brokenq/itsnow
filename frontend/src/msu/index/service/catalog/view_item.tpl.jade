@@ -1,9 +1,10 @@
 -var readonly = true
 -var editReadonly = true
-
+include /lib/mixins/form
 h2 查看 服务项
 
-include /msu/index/service/catalog/_form_item.jade
-+action_bar
-  +action_submit("返回")(ui-sref="catalog.public.list")
++form("viewItemForm")
+  include /msu/index/service/catalog/_form_item.jade
+  +action_bar
+    +action_submit("返回")(ui-sref="catalog.public.list")
                     

@@ -62,6 +62,10 @@ public interface MspIncidentRepository {
     long countByMsuAccountNameAndInstanceId(@Param("msuAccountName") String msuAccountName,
                                             @Param("msuInstanceId") String msuInstanceId);
 
+    @Select("SELECT msp_instance_id FROM msp_incidents WHERE msu_account_name = #{msuAccountName} and msu_instance_id = #{msuInstanceId}")
+    String findMspInstanceIdByMsuAccountNameAndInstanceId(@Param("msuAccountName") String msuAccountName,
+                                            @Param("msuInstanceId") String msuInstanceId);
+
     @Update("UPDATE msp_incidents SET " +
             "requester_location     = #{requesterLocation}," +
             "requester_name         = #{requesterName},"+
@@ -81,6 +85,7 @@ public interface MspIncidentRepository {
             "solution               = #{solution},"+
             "close_code             = #{closeCode}, "+
             "msu_status             = #{msuStatus}, "+
+            "msp_instance_id        = #{mspInstanceId}, "+
             "msp_status             = #{mspStatus} "+
             " WHERE msu_account_name = #{msuAccountName} AND msu_instance_id = #{msuInstanceId};")
     void updateByMsuAccountAndMsuInstanceId(Incident incident);
@@ -89,4 +94,7 @@ public interface MspIncidentRepository {
     long countMonitoredByKey(@Param("keyword")String keyword);
 
     List<Incident> findAllMonitoredByKey(@Param("keyword")String keyword,@Param("pageable")Pageable pageable);
+
+    @Select("SELECT * FROM msp_incidents WHERE id = #{id}")
+    Incident findById(@Param("id") String id);
 }

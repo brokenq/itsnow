@@ -11,6 +11,8 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -26,23 +28,26 @@ public class DictionaryTest {
     @Before
     public void setUp() throws Exception {
         dictionary = new Dictionary();
+        List<DictDetail> list = new ArrayList<DictDetail>();
+
+        DictDetail detail = new DictDetail();
+        detail.setKey("key");
+        detail.setValue("value");
+        DictDetail[] detailList = new DictDetail[]{detail};
+
         dictionary.setId(10L);
-        dictionary.setSn("010");
         dictionary.setCode("inc010");
         dictionary.setName("优先级");
-        dictionary.setDisplay("高");
-        dictionary.setVal("high");
-        dictionary.setState("1");
-        dictionary.setType("1");
+        dictionary.setLabel("高");
         dictionary.setDescription("This is a test.");
         dictionary.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         dictionary.setUpdatedAt(dictionary.getCreatedAt());
+        dictionary.setDetails(detailList);
     }
 
     @Test
-    @Ignore
     public void testDictionaryIsNotValid() throws Exception {
-        dictionary.setSn(null);
+        dictionary.setCode(null);
         Set<ConstraintViolation<Dictionary>> violations = validator.validate(dictionary);
         Assert.assertFalse(violations == null || violations.isEmpty());
     }
