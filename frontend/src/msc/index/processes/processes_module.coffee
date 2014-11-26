@@ -101,10 +101,11 @@ angular.module('MscIndex.Processes', [])
         $location.search params.url() # put params in url
         Processes.query params.url(), (datas, headers) ->
           params.total headers 'total'
-          $defer.resolve $scope.processes = datas; $scope.cacheService.cache datas
+          $defer.resolve $scope.processes = datas
+          $scope.cacheService.cache datas
 
     $scope.processesTable = new NgTable(angular.extend($scope.options, $location.search()), args);
-    $scope.selectionService = new SelectionService($scope.cacheService.records, "id")
+    $scope.selectionService = new SelectionService($scope.cacheService.records, "name")
     $scope.actionService = new ActionService {watch: $scope.selectionService.items, mapping: $scope.cacheService.find}
 
     $scope.start = (process)->
@@ -118,6 +119,7 @@ angular.module('MscIndex.Processes', [])
         $scope.processesTable.reload()
     $scope.destroy = (process)->
       $scope.execDestroy process, ->
+        delete $scope.selectionService.items[process.name]
         $scope.processesTable.reload()
 
   ])
@@ -158,11 +160,26 @@ angular.module('MscIndex.Processes', [])
       $scope.process = process
       console.log "Initialized the Process View controller on: #{JSON.stringify process}"
 
+      if process.status is "Starting" or process.status is "Running"
+        $('#start_log_li').addClass('active')
+        $('#start_log').addClass('active in')
+      else if process.status is "Stopping" or process.status is "Stopped"
+        $('#stop_log_li').addClass('active')
+        $('#stop_log').addClass('active in')
+      else
+        $('#creation_log_li').addClass('active')
+        $('#creation_log').addClass('active in')
+
+      processConfig = process.configuration
+      schemaConfig = process.schema.configuration if process.schema?
+
+      process.configuration['debug.port'] +
       process.display =
         status: $filter("formatProcessStatus")(process.status)
-        configuration: JSON.stringify process.configuration
+        configuration: "http.port: {0}\njmx.port: {1}\nrmi.port: {2}\ndebug.port: {3}".interpolate(
+                        processConfig['http.port'], processConfig['jmx.port'], processConfig['rmi.port'], processConfig['debug.port'])
         schema:
-          configuration: JSON.stringify process.schema.configuration if process.schema?
+          configuration: "用户名：{0}\n密码：{1}\n".interpolate(schemaConfig['user'], schemaConfig['password']) if schemaConfig?
       process.creationLog = ""
       process.startLog = ""
       process.stopLog = ""
@@ -183,7 +200,6 @@ angular.module('MscIndex.Processes', [])
           when "stopping" then $("#cancelStoppingBtn").removeClass("hidden").addClass("show")
 
       currentUrl = $location.url();
-      $scope.path = $location.path()
       # 获取日志信息
       $scope.getLog = (invokeId, type)->
         process = $scope.process
