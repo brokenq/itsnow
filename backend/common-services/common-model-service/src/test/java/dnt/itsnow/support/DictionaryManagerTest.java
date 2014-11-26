@@ -3,9 +3,9 @@
  */
 package dnt.itsnow.support;
 
+import dnt.itsnow.annotation.Dictionary;
 import dnt.itsnow.config.DictionaryManagerConfig;
 import dnt.itsnow.model.DictDetail;
-import dnt.itsnow.model.Dictionary;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.util.PageRequest;
 import dnt.itsnow.service.DictionaryService;
@@ -18,9 +18,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * <h1>Class Usage</h1>
  */
@@ -31,7 +28,7 @@ public class DictionaryManagerTest {
 
     PageRequest pageRequest;
 
-    Dictionary dictionary;
+    dnt.itsnow.model.Dictionary dictionary;
 
     @Autowired
     DictionaryService service;
@@ -39,7 +36,7 @@ public class DictionaryManagerTest {
     @Before
     public void setUp() throws Exception {
         pageRequest = new PageRequest(0, 1);
-        dictionary = new Dictionary();
+        dictionary = new dnt.itsnow.model.Dictionary();
         DictDetail detail11 = new DictDetail();
         detail11.setKey("key");
         detail11.setValue("value");
@@ -48,7 +45,7 @@ public class DictionaryManagerTest {
         detail22.setKey("key2");
         detail22.setValue("value2");
 
-        DictDetail[] detailList = new DictDetail[]{detail11,detail22};
+        DictDetail[] detailList = new DictDetail[]{detail11, detail22};
         dictionary.setCode("inc007");
         dictionary.setName("Test Account");
         dictionary.setLabel("北京");
@@ -57,7 +54,7 @@ public class DictionaryManagerTest {
 
     @Test
     public void testFindAll() throws Exception {
-        Page<Dictionary> dictionaries = service.findAll("", pageRequest);
+        Page<dnt.itsnow.model.Dictionary> dictionaries = service.findAll("", pageRequest);
         Assert.assertNotNull(dictionaries.getTotalElements());
         Assert.assertNotNull(dictionaries.getNumberOfElements());
     }
@@ -67,12 +64,11 @@ public class DictionaryManagerTest {
         Assert.assertNotNull(service.findByCode("002"));
         Assert.assertNull(service.findByCode("0003"));
     }
-//
-//    @Test
-//    public void testFindByCode() throws Exception {
-//        Assert.assertNotNull(service.findByCode("001"));
-//        //Assert.assertTrue(service.findByCode("asdf").size()==0 );//这段代码应该做什么？
-//    }
+
+    @Test
+    public void testFind() throws Exception {
+        Assert.assertNotNull(service.find(DictAnnotation.class));
+    }
 
     @Test
     public void testCreate() throws Exception {
@@ -80,12 +76,10 @@ public class DictionaryManagerTest {
         Assert.assertNotNull(dictionary.getDetails());
     }
 
-
-
     @Test
     public void testUpdate() throws Exception {
         String code = "001";
-        Dictionary dictionary = service.findByCode(code);
+        dnt.itsnow.model.Dictionary dictionary = service.findByCode(code);
         dictionary.setLabel("深圳");
 
         DictDetail detail = new DictDetail();
@@ -102,10 +96,22 @@ public class DictionaryManagerTest {
     @Test
     public void testDestroy() throws Exception {
         String code = "003";
-        Dictionary dictionary = service.findByCode(code);
+        dnt.itsnow.model.Dictionary dictionary = service.findByCode(code);
         Assert.assertNotNull(dictionary);
         service.destroy(dictionary);
         Assert.assertNull(service.findByCode(code));
     }
 
+    class DictAnnotation {
+        @Dictionary(code = "001")
+        private String key;
+
+        public String getKey() {
+            return key;
+        }
+
+        public void setKey(String key) {
+            this.key = key;
+        }
+    }
 }
