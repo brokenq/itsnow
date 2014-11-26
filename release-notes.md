@@ -391,13 +391,13 @@ git@git.itsnow.com:insight/itsnow.git Rel-x.y.z 标签(tag)
 3. 交付物地址
 --------------
 
-1. [msc-0.2.3](http://ci.itsnow.com/repository/download/Itsnow_Sprint_Build_MSC/4451:id/msc-0.2.3.zip)
-2. [msp-0.2.3](http://ci.itsnow.com/repository/download/Itsnow_Sprint_Build_MSP/4449:id/msp-0.2.3.zip)
-3. [msu-0.2.3](http://ci.itsnow.com/repository/download/Itsnow_Sprint_Build_MSU/4450:id/msu-0.2.3.zip)
+1. [msc-0.2.4](http://ci.itsnow.com/repository/download/Itsnow_Sprint_Build_MSC/4580:id/msc-0.2.4.zip)
+2. [msp-0.2.4](http://ci.itsnow.com/repository/download/Itsnow_Sprint_Build_MSP/4581:id/msp-0.2.4.zip)
+3. [msu-0.2.4](http://ci.itsnow.com/repository/download/Itsnow_Sprint_Build_MSU/4582:id/msu-0.2.4.zip)
 
 4. 系统演示地址
 -----------
 
-1. [msc-0.2.3](http://msc.itsnow.com/)
-2. [msu-0.2.3](http://msu.itsnow.com/)
-3. [msp-0.2.3](http://msp.itsnow.com/)
+1. [msc-0.2.4](http://msc.itsnow.com/)
+2. [msu-0.2.4](http://msu.itsnow.com/)
+3. [msp-0.2.4](http://msp.itsnow.com/)
