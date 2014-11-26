@@ -21,8 +21,8 @@ public class Site extends ConfigItem {
     //工作时间
     @NotNull
     private WorkTime workTime;
-    // 字典
-    private Dictionary dictionary;
+    // 区域从字典中取的value
+    private String area;
     // 部门
     private List<Department> departments;
 
@@ -50,14 +50,6 @@ public class Site extends ConfigItem {
         this.sn = sn;
     }
 
-    public Dictionary getDictionary() {
-        return dictionary;
-    }
-
-    public void setDictionary(Dictionary dictionary) {
-        this.dictionary = dictionary;
-    }
-
     public List<Department> getDepartments() {
         return departments;
     }
@@ -66,13 +58,21 @@ public class Site extends ConfigItem {
         this.departments = departments;
     }
 
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Site{");
         sb.append("sn='").append(sn).append('\'');
         sb.append(", address='").append(address).append('\'');
         sb.append(", workTime=").append(workTime);
-        sb.append(", dictionary=").append(dictionary);
+        sb.append(", area=").append(area);
         sb.append(", departments=").append(departments);
         sb.append('}');
         return sb.toString();

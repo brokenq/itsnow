@@ -12,8 +12,8 @@ import java.util.List;
 public interface SiteRepository {
 
     @Options(useGeneratedKeys = true, keyColumn = "id")
-    @Insert("INSERT INTO sites (sn, name, address, description, work_time_id, process_dictionary_id, created_at, updated_at) VALUES " +
-            "(#{sn}, #{name}, #{address}, #{description}, #{workTime.id}, #{dictionary.id} ,#{createdAt}, #{updatedAt})")
+    @Insert("INSERT INTO sites (sn, name, address, description, work_time_id, area, created_at, updated_at) VALUES " +
+            "(#{sn}, #{name}, #{address}, #{description}, #{workTime.id}, #{area} ,#{createdAt}, #{updatedAt})")
     public void create(Site site);
 
     @Delete("DELETE FROM sites WHERE sn = #{sn}")
@@ -25,7 +25,7 @@ public interface SiteRepository {
             " address               = #{address}," +
             " description           = #{description}," +
             " work_time_id          = #{workTime.id}," +
-            " process_dictionary_id = #{dictionary.id}, " +
+            " area                  = #{area}, " +
             " created_at            = #{createdAt}, " +
             " updated_at            = #{updatedAt} " +
             " WHERE id              = #{id} ")

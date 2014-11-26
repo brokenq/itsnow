@@ -50,10 +50,7 @@ public class WorkflowsControllerTest extends SessionSupportedControllerTest {
         workflow.setDescription("It's test.");
         workflow.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         workflow.setUpdatedAt(workflow.getCreatedAt());
-
-        Dictionary dictionary = new Dictionary();
-        dictionary.setId(1L);
-        workflow.setDictionary(dictionary);
+        workflow.setType("1");
 
         ActReProcdef actReProcdef = new ActReProcdef();
         actReProcdef.setId("1");

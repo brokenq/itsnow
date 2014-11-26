@@ -33,9 +33,6 @@ public class SiteRepositoryTest {
     SiteRepository repository;
 
     @Autowired
-    DictionaryRepository dictionaryRepository;
-
-    @Autowired
     WorkTimeRepository workTimeRepository;
 
     @Autowired
@@ -54,12 +51,10 @@ public class SiteRepositoryTest {
         site.setSn("100");
         site.setName("大众四厂");
 
-        Dictionary dictionary = dictionaryRepository.findByCode("001");
-        site.setDictionary(dictionary);
-
         WorkTime workTime = workTimeRepository.findBySn("plan1");
         site.setWorkTime(workTime);
 
+        site.setArea("sh");
         site.setDescription("It's test.");
         site.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         site.setUpdatedAt(site.getCreatedAt());

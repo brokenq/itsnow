@@ -28,10 +28,8 @@ public class Contract extends Record {
     private Long mspAccountId;
     // @JsonIgnore
     private MspAccount mspAccount;
-    // MSU 是否批准
-    private ContractStatus msuStatus;
-    // MSP 是否批准
-    private ContractStatus mspStatus;
+    // 合同状态
+    private ContractStatus status;
     //合同明细
     private List<ContractDetail> details;
     // 与MSU签订合同的MSP用户列表，其中包含是否允许登录MSU信息
@@ -51,22 +49,6 @@ public class Contract extends Record {
 
     public void setSn(String sn) {
         this.sn = sn;
-    }
-
-    public ContractStatus getMsuStatus() {
-        return msuStatus;
-    }
-
-    public void setMsuStatus(ContractStatus msuStatus) {
-        this.msuStatus = msuStatus;
-    }
-
-    public ContractStatus getMspStatus() {
-        return mspStatus;
-    }
-
-    public void setMspStatus(ContractStatus mspStatus) {
-        this.mspStatus = mspStatus;
     }
 
     public Long getMsuAccountId() {
@@ -117,14 +99,17 @@ public class Contract extends Record {
         return null;
     }
 
-    @JsonIgnore
-    public boolean isApprovedByMsu() {
-        return msuStatus.isApproved();
+    public ContractStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ContractStatus status) {
+        this.status = status;
     }
 
     @JsonIgnore
-    public boolean isApprovedByMsp() {
-        return mspStatus.isApproved();
+    public boolean isApproved() {
+        return status.isApproved();
     }
 
     @Override
@@ -135,8 +120,7 @@ public class Contract extends Record {
         sb.append(", msuAccount=").append(msuAccount);
         sb.append(", mspAccountId=").append(mspAccountId);
         sb.append(", mspAccount=").append(mspAccount);
-        sb.append(", msuStatus=").append(msuStatus);
-        sb.append(", mspStatus=").append(mspStatus);
+        sb.append(", status=").append(status);
         sb.append(", details=").append(details);
         sb.append(", users=").append(users);
         sb.append('}');

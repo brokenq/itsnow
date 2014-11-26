@@ -15,7 +15,7 @@ public class Workflow extends ConfigItem {
     private ServiceItem serviceItem;
     private String serviceItemSn;
     private String serviceItemType;
-    private Dictionary dictionary;
+    private String type;
 
     public String getServiceItemSn() {
         return serviceItemSn;
@@ -37,14 +37,6 @@ public class Workflow extends ConfigItem {
 
     public void setActReProcdef(ActReProcdef actReProcdef) {
         this.actReProcdef = actReProcdef;
-    }
-
-    public Dictionary getDictionary() {
-        return dictionary;
-    }
-
-    public void setDictionary(Dictionary dictionary) {
-        this.dictionary = dictionary;
     }
 
     public ServiceItem getServiceItem() {
@@ -80,6 +72,14 @@ public class Workflow extends ConfigItem {
         this.actReDeployment = actReDeployment;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Workflow{");
@@ -89,7 +89,7 @@ public class Workflow extends ConfigItem {
         sb.append(", serviceItem=").append(serviceItem);
         sb.append(", serviceItemSn='").append(serviceItemSn).append('\'');
         sb.append(", serviceItemType='").append(serviceItemType).append('\'');
-        sb.append(", dictionary=").append(dictionary);
+        sb.append(", type=").append(type);
         sb.append('}');
         return sb.toString();
     }
