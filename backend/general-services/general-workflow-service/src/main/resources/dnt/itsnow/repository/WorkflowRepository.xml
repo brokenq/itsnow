@@ -3,6 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="dnt.itsnow.repository.WorkflowRepository">
+
     <resultMap id="workflowResult" type="Workflow" autoMapping="true">
         <id property="id" column="id"/>
         <!-- 一对一关系 -->
@@ -11,6 +12,7 @@
             <id property="resourceName" column="act_re_procdef_resourceName"/>
             <id property="version" column="act_re_procdef_version"/>
         </association>
+        <!-- 一对一关系 -->
         <association property="actReDeployment" javaType="ActReDeployment" autoMapping="true">
             <id property="id" column="act_re_deployment_id" javaType="java.lang.String" jdbcType="VARCHAR"/>
             <id property="name" column="act_re_deployment_name"/>
@@ -18,35 +20,19 @@
             <id property="tenantId" column="act_re_deployment_tenant_id"/>
             <id property="deployTime" column="act_re_deployment_deploy_time"/>
         </association>
-        <association property="dictionary" column="process_dictionary_id" resultMap="dnt.itsnow.repository.DictionaryRepository.dictResult" columnPrefix="dict_"/>
     </resultMap>
 
     <sql id="select">
-        SELECT flow.id,
-        flow.sn,
-        flow.name,
-        flow.service_item_sn,
-        flow.service_item_type,
-        flow.description,
-        flow.created_at,
-        flow.updated_at,
+        SELECT flow.*,
         a.ID_                    AS act_re_procdef_id,
         a.RESOURCE_NAME_         AS act_re_procdef_resourceName,
         a.VERSION_               AS act_re_procdef_version,
-        deployment.DEPLOY_TIME_  AS act_re_deployment_deploy_time,
-        p.id                     AS dict_id,
-        p.code                   AS dict_code,
-        p.name                   AS dict_name,
-        p.label                  AS dict_label,
-        p.description            AS dict_description,
-        p.detail                 AS dict_detail
+        deployment.DEPLOY_TIME_  AS act_re_deployment_deploy_time
         FROM   workflows flow
         LEFT JOIN ACT_RE_PROCDEF a
         ON flow.act_re_procdef_id = a.ID_
         LEFT JOIN ACT_RE_DEPLOYMENT deployment
         ON a.DEPLOYMENT_ID_ = deployment.ID_
-        LEFT JOIN dictionaries p
-        ON flow.process_dictionary_id = p.id
     </sql>
 
     <select id="count" resultType="java.lang.Integer">

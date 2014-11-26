@@ -41,10 +41,7 @@ public class WorkflowRepositoryTest {
         workflow.setDescription("It's test.");
         workflow.creating();
         workflow.updating();
-
-        Dictionary dictionary = new Dictionary();
-        dictionary.setId(1L);
-        workflow.setDictionary(dictionary);
+        workflow.setType("1");
 
         ActReProcdef actReProcdef = new ActReProcdef();
         actReProcdef.setId("1");
