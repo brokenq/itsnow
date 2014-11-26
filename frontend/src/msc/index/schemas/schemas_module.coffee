@@ -71,8 +71,9 @@ angular.module('MscIndex.Schemas', [])
     $scope.selectionService = new SelectionService($scope.cacheService.records, "id")
     $scope.actionService = new ActionService {watch: $scope.selectionService.items, mapping: $scope.cacheService.find}
 
-    $scope.destroy = (host)->
-      $scope.execDestroy host, ->
+    $scope.destroy = (schema)->
+      $scope.execDestroy schema, ->
+        delete $scope.selectionService.items[schema.id]
         $scope.schemasTable.reload()
   ])
 

@@ -79,6 +79,7 @@ angular.module('MscIndex.Hosts', [])
 
     $scope.destroy = (host)->
       $scope.execDestroy host, ->
+        delete $scope.selectionService.items[host.id]
         $scope.hostsTable.reload()
 
   ])
@@ -108,6 +109,8 @@ angular.module('MscIndex.Hosts', [])
         $state.go "hosts.view", resp
       , (resp)->
         feedback.error "创建 #{host.name} 主机失败", resp
+        host.configuration.msu_version = host.configuration['msu.version']
+        host.configuration.msp_version = host.configuration['msp.version']
   ])
 
   .controller('HostViewCtrl', ['$scope', '$stateParams', '$http', '$interval', '$state', '$location', \
