@@ -43,6 +43,12 @@ public interface DictionaryService {
      */
     public void destroy(Dictionary dictionary) throws DictionaryException;
 
+    /**
+     * 获取@Dict(code=$code)中的code值
+     * @param clazz 有@Dict的实体类
+     * @return 字典对象
+     */
+    public Dictionary find(Class clazz);
 
     /**
      * 根据CODE查询字典
