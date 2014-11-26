@@ -1,4 +1,4 @@
-angular.module('System.User',[])
+angular.module('System.User', [])
 .config ($stateProvider, $urlRouterProvider)->
   $stateProvider.state 'users',
     url: '/users',
@@ -37,7 +37,6 @@ angular.module('System.User',[])
     return user.name if user.name == user.username
     user.name + "(" + user.username + ")"
 )
-
 .controller('UsersCtrl', ['$scope', '$resource', '$state', 'Feedback', 'CacheService',
     ($scope, $resource, $state, feedback, CacheService) ->
       $scope.statedatas = [
@@ -52,7 +51,7 @@ angular.module('System.User',[])
       $scope.cacheService = new CacheService "username", (value)->
         data = {}
         $.ajax
-          url: "/api/users/#{value}"
+          url: "/admin/api/users/#{value}"
           async: false
           type: "GET"
           success: (response)->
@@ -65,8 +64,6 @@ angular.module('System.User',[])
         , (resp) ->
           errCallback() if errCallback
           feedback.error("删除#{user.name}失败", resp)
-
-
   ])
 .controller('UserListCtrl', ['$scope', '$location', 'ngTableParams', 'ActionService', 'SelectionService','CommonService',
     ($scope, $location, NgTable, ActionService, SelectionService,CommonService) ->
@@ -79,12 +76,8 @@ angular.module('System.User',[])
             params.total headers 'total'
             $defer.resolve $scope.users = datas;
             $scope.cacheService.cache datas
-      $scope.usersTable = new NgTable(angular.extend($scope.options, $location.search()), args)
+      $scope.usersTable = new NgTable(angular.extend($scope.options, $location.search()), args);
       $scope.selectionService = new SelectionService($scope.cacheService.records, "username")
-      $scope.actionService = new ActionService {watch: $scope.selectionService.items, mapping: $scope.cacheService.find}
-      $scope.getItems=(items) ->
-        $scope.selectionService.items=items
-
       $scope.actionService = new ActionService {watch: $scope.selectionService.items, mapping: $scope.cacheService.find}
       $scope.reload = ->
         $scope.usersTable.reload()
@@ -111,12 +104,10 @@ angular.module('System.User',[])
       $scope.updateview = true
       username = $stateParams.username
       $scope.cuser = $scope.cacheService.find username, true
-      if $scope.cuser.enabled
-        $scope.selectState = $scope.statedatas[0]
-      else
-        $scope.selectState = $scope.statedatas[1]
+
       $scope.update = () ->
-        $scope.cuser.enabled = $scope.selectState.state;
+        $scope.cuser.$promise = `undefined`
+        $scope.cuser.$resolved = `undefined`
         $scope.services.update {username: username}, $scope.cuser, () ->
           feedback.success "修改#{$scope.cuser.username}成功"
           $state.go "users.list"
@@ -127,20 +118,27 @@ angular.module('System.User',[])
     ($scope, $state, $stateParams) ->
       username = $stateParams.username
       $scope.cuser = $scope.cacheService.find username, true
-      if $scope.cuser.enabled
-        $scope.selectState = $scope.statedatas[0]
-      else
-        $scope.selectState = $scope.statedatas[1]
-
   ])
 .controller('UserEditPwdCtrl', ['$http','$scope', '$state', '$stateParams', 'SessionService', '$window','Feedback',
     ($http,$scope, $state, $stateParams,sessionService, $window,feedback) ->
       $scope.updatePwd = () ->
         $scope.changePasswordRequest.username=$scope.user.username
-        $http.put('/api/users/change/password', $scope.changePasswordRequest)
-        .success ->
-          feedback.success("修改密码成功请重新登录！");
-          sessionService.logout ->
-            $window.location.href = "/login.html"
-  ])
 
+        #       $http.put('/api/password/change', $scope.changePasswordRequest)
+        #       .success ->
+        #         feedback.success("修改密码成功请重新登录！");
+        #         sessionService.logout ->
+        #           $window.location.href = "/login.html"
+        #       .error ->
+        #         alert("修改密码失败，请检查初始密码！！")
+        #         feedback.error("修改密码失败，请检查初始密码！！")
+        $http.put("/api/password/change", $scope.changePasswordRequest)
+        .then ((resp) ->
+            feedback.success("修改密码成功请重新登录！");
+            sessionService.logout ->
+              $window.location.href = "/login.html")
+        , (resp) ->
+          feedback.error("修改密码失败", resp);
+
+
+  ])

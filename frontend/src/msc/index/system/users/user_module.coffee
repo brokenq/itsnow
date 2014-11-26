@@ -104,12 +104,8 @@ angular.module('System.User', [])
       $scope.updateview = true
       username = $stateParams.username
       $scope.cuser = $scope.cacheService.find username, true
-      if $scope.cuser.enabled
-        $scope.selectState = $scope.statedatas[0]
-      else
-        $scope.selectState = $scope.statedatas[1]
+
       $scope.update = () ->
-        $scope.cuser.enabled = $scope.selectState.state;
         $scope.cuser.$promise = `undefined`
         $scope.cuser.$resolved = `undefined`
         $scope.services.update {username: username}, $scope.cuser, () ->
@@ -122,20 +118,28 @@ angular.module('System.User', [])
     ($scope, $state, $stateParams) ->
       username = $stateParams.username
       $scope.cuser = $scope.cacheService.find username, true
-      if $scope.cuser.enabled
-        $scope.selectState = $scope.statedatas[0]
-      else
-        $scope.selectState = $scope.statedatas[1]
-
   ])
 .controller('UserEditPwdCtrl', ['$http','$scope', '$state', '$stateParams', 'SessionService', '$window','Feedback',\
     ($http,$scope, $state, $stateParams,sessionService, $window,feedback) ->
      $scope.updatePwd = () ->
        $scope.changePasswordRequest.username=$scope.user.username
-       $http.put('/api/password/change', $scope.changePasswordRequest)
-       .success ->
+
+#       $http.put('/api/password/change', $scope.changePasswordRequest)
+#       .success ->
+#         feedback.success("修改密码成功请重新登录！");
+#         sessionService.logout ->
+#           $window.location.href = "/login.html"
+#       .error ->
+#         alert("修改密码失败，请检查初始密码！！")
+#         feedback.error("修改密码失败，请检查初始密码！！")
+       $http.put("/api/password/change", $scope.changePasswordRequest)
+       .then ((resp) ->
          feedback.success("修改密码成功请重新登录！");
          sessionService.logout ->
-           $window.location.href = "/login.html"
-  ])
+           $window.location.href = "/login.html")
+       , (resp) ->
+         feedback.error("修改密码失败", resp);
+
+
+    ])
 
