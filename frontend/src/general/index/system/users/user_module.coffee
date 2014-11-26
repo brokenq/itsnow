@@ -132,7 +132,7 @@ angular.module('System.User', [])
         #       .error ->
         #         alert("修改密码失败，请检查初始密码！！")
         #         feedback.error("修改密码失败，请检查初始密码！！")
-        $http.put("/api/password/change", $scope.changePasswordRequest)
+        $http.put("/api/users/change/password", $scope.changePasswordRequest)
         .then ((resp) ->
             feedback.success("修改密码成功请重新登录！");
             sessionService.logout ->

@@ -29,4 +29,5 @@ public interface GeneralUserService {
     List<User> findUsersByAccount(Account mainAccount);
 
     void changePassword(ChangePasswordRequest changeRequest);
+    boolean challenge(String username,String password);
 }
