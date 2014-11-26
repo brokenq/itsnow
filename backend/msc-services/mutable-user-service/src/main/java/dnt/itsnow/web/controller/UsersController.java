@@ -171,7 +171,7 @@ public class UsersController extends SessionSupportController<User> {
         User user = userService.findByEmail(email);
         logger.info("return user{}", user);
         if (user != null && user.getUsername() != username) {
-            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate user emain: " + user.getEmail());
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate user emil: " + user.getEmail());
         } else {
             return new HashMap();
         }

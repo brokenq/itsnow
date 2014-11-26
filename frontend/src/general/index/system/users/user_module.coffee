@@ -51,7 +51,7 @@ angular.module('System.User', [])
       $scope.cacheService = new CacheService "username", (value)->
         data = {}
         $.ajax
-          url: "/admin/api/users/#{value}"
+          url: "/api/users/#{value}"
           async: false
           type: "GET"
           success: (response)->
