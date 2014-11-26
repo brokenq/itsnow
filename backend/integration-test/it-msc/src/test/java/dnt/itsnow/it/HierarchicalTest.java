@@ -2,6 +2,7 @@ package dnt.itsnow.it;
 
 import de.bechte.junit.runners.context.HierarchicalContextRunner;
 import dnt.itsnow.model.*;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -10,7 +11,8 @@ import static org.junit.Assert.*;
 /**
  * Created by User on 2014/11/25.
  */
-@RunWith(HierarchicalContextRunner.class)
+//@RunWith(HierarchicalContextRunner.class)
+@Ignore
 public class HierarchicalTest {
 
     /**
