@@ -15,6 +15,7 @@ import dnt.itsnow.repository.ItsnowProcessRepository;
 import dnt.itsnow.service.ItsnowHostService;
 import dnt.itsnow.service.ItsnowProcessService;
 import dnt.itsnow.service.ItsnowSchemaService;
+import dnt.itsnow.service.SystemInvocationTranslator;
 import dnt.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,6 +53,8 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
     ItsnowHostService          hostService;
     @Autowired
     ItsnowSchemaService        schemaService;
+    @Autowired
+    SystemInvocationTranslator translator;
 
     @Override
     public Page<ItsnowProcess> findAll(String keyword, PageRequest request) {
@@ -354,6 +357,7 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
         process.setProperty("debug.port", host.getProperty("next.debug.port", "8201"));
         process.setProperty("jmx.port", host.getProperty("next.jmx.port", "8301"));
         process.setProperty("http.port", host.getProperty("next.http.port", "8401"));
+        process.setProperty("app.domain", translator.getAppDomain());
         return process;
     }
 

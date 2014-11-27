@@ -19,7 +19,7 @@ include /lib/mixins/list
       td(data-title="'状态'") {{incident.msuStatus | formatIncidentStatus}}
         a.pull-right(href="api/msu-incidents/{{incident.msuInstanceId}}/image",target="_blank")
           i.icon-cogs(class="green")
-      td(data-title="'创建时间'") {{incident.createdAt | formatTime}}
+      td(data-title="'创建时间'") {{incident.createdAt | date:"yyyy-MM-dd HH:mm:ss"}}
       td(data-title="'服务商'") {{incident.mspAccountName}}
       td(data-title="'服务商状态'") {{incident.mspStatus | formatIncidentStatus}}
                 
