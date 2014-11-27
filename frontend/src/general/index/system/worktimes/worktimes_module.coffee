@@ -135,3 +135,14 @@ angular.module('System.WorkTime',[])
           feedback.error("修改#{$scope.worktime.name}失败", resp);
 
 ])
+.controller('WorkTimeViewCtrl', ['$scope', '$state', '$stateParams', 'Feedback',
+    ($scope,    $state,   $stateParams,  feedback) ->
+      $scope.selectWorkDates=[]
+      sn=$stateParams.sn
+      $scope.worktime = $scope.cacheService.find sn, true
+      $scope.selectWorkDates=$scope.worktime.name.split(",")
+      for workdate in $scope.workdates
+        if($scope.selectWorkDates.indexOf(workdate.name)>-1)
+          workdate.checked=true
+  ])
+
