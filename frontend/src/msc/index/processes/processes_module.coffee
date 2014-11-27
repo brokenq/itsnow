@@ -60,7 +60,7 @@ angular.module('MscIndex.Processes', [])
     $scope.execStop = (process, succCallback, errCallback)->
       acc = new Process process
       acc.$stop (data)->
-        feedback.success "已停止 #{process.name} 进程"
+        feedback.success "正在停止 #{process.name} 进程"
         succCallback(data["job"], "stop") if succCallback
       , (resp)->
         feedback.error "停止 #{process.name} 进程失败", resp
@@ -115,8 +115,8 @@ angular.module('MscIndex.Processes', [])
     $scope.stop = (process)->
       $scope.execStop process, ->
         $scope.processesTable.reload()
-    $scope.cancel = (process)->
-      $scope.execCancel process, ->
+    $scope.cancel = (process, type)->
+      $scope.execCancel process, type ->
         $scope.processesTable.reload()
     $scope.destroy = (process)->
       $scope.execDestroy process, ->

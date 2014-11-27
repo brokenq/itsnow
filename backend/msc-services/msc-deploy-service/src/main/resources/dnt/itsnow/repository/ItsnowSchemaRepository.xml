@@ -15,6 +15,8 @@
             h.description   AS host_description ,
             h.created_at    AS host_created_at,
             h.updated_at    AS host_updated_at,
+            (SELECT COUNT(0) FROM itsnow_schemas s where s.host_id = h.id) AS host_schemas_count,
+            (SELECT COUNT(0) FROM itsnow_processes p where p.host_id = h.id) AS host_processes_count,
             p.id            AS process_id,
             p.account_id    AS process_account_id   ,
             p.host_id       AS process_host_id      ,
