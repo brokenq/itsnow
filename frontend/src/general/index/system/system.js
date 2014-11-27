@@ -3,7 +3,6 @@
  */
 
 angular.module('GeneralIndex.System', [
-  'System.Roles',
   'System.Sites',
   'System.WorkTime',
   'System.Departments',

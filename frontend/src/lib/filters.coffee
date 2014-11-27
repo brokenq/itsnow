@@ -25,3 +25,7 @@ angular.module('Lib.Filters', [])
       return "停止中"    if status == 'Stopping'
       return "有故障"    if status == 'Abnormal'
       return "未知故障"  if status == 'Unknown'
+  .filter 'formatTime', ->
+    (time) ->
+      date = new Date(time)
+      return date.toLocaleString()

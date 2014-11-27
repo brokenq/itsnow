@@ -27,13 +27,13 @@ mixin button(href,num)
 .form-horizontal
   +blocks("角色详情")
     +formGroup()
-      +formField("角色名称", "role.name")
-      +formField("角色权限", "xxxx") //这个暂无，备用
+      +formField("名称", "role.name")
+      +formField("权限", "xxxx") //这个暂无，备用
     +formGroup()
-      +label('角色描述')
+      +label('描述')
         textarea.form-control(rows='4',ng-model="role.description",readonly)
     +formGroup()
-      +label('显示用户')
+      +label('用户列表')
         table.table.table-striped.table-bordered.table-condensed
           tr
             th 用户名

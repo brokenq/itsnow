@@ -4,7 +4,7 @@ include /lib/mixins/form
     readonly : true | false
 +section("基本信息")
   +group("contract", "sn", "合同号", "user", "必填")
-    +input("contract", "sn")(type="text", required, ng-minlength="4", ng-maxlength="20",
+    +input("contract", "sn")(type="text", required, ng-minlength="2", ng-maxlength="20",
       ng-pattern='/^[a-zA-Z0-9_\\-\\.]+$/', ng-check="/api/contracts/{0}/check", placeholder="合同编号")
   +group("detail", "title", "详情名称", "user", "必填")
     +input("detail", "title")(type="text", required, ng-minlength="2", ng-maxlength="20",

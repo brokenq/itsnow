@@ -120,7 +120,7 @@ angular.module('Service.Workflows', ['multi-select','angularFileUpload'])
       $scope.actionService = new ActionService({watch: $scope.selectionService.items, mapping: $scope.cacheService.find})
 
       $scope.destroy = (workflow) ->
-        workflowService.remove workflow, () ->
+        workflowService.remove {sn:workflow.sn}, () ->
           feedback.success "删除流程#{workflow.sn}成功"
           delete $scope.selectionService.items[workflow.sn]
           $scope.workflowsTable.reload()

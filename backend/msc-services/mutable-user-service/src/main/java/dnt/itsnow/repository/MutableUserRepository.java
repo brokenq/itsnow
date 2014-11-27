@@ -62,15 +62,6 @@ public interface MutableUserRepository extends CommonUserRepository {
 
     @Delete("DELETE FROM itsnow_msc.users WHERE account_id = #{accountId}")
     void deleteAllByAccountId(@Param("accountId") Long accountId);
-    @Select("SELECT users.expired," +
-            "users.username," +
-            "users.nick_name," +
-            "users.email," +
-            "users.enabled," +
-            "users.phone FROM itsnow_msc.users WHERE username=#{username}")
-    User findByUsername(@Param("username") String username);
-    @Select("SELECT * FROM itsnow_msc.users WHERE email=#{email}")
-    User findByEmail(@Param("email") String email);
     @Delete("DELETE FROM itsnow_msc.users WHERE username = #{username}")
     void delete(User user);
 }
