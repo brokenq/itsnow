@@ -1,9 +1,6 @@
 package itsnow.dnt.model;
 
-import dnt.itsnow.model.Department;
-import dnt.itsnow.model.Site;
-import dnt.itsnow.model.Staff;
-import dnt.itsnow.model.User;
+import dnt.itsnow.model.*;
 import dnt.support.JsonSupport;
 import junit.framework.Assert;
 import org.junit.Before;
@@ -37,7 +34,7 @@ public class StaffTest {
         staff.setEmail("stone5751@126.com");
         staff.setTitle("攻城尸");
         staff.setType("合同工");
-        staff.setStatus("1");
+        staff.setStatus(StaffStatus.Normal);
         staff.setDescription("This is a test.");
         staff.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         staff.setUpdatedAt(staff.getCreatedAt());

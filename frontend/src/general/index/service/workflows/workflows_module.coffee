@@ -128,9 +128,10 @@ angular.module('Service.Workflows', ['multi-select','angularFileUpload'])
           feedback.error("删除流程#{workflow.sn}失败", resp)
   ])
 
-.controller('WorkflowViewCtrl', ['$scope', '$stateParams', '$log', ($scope, $stateParams, $log) ->
+.controller('WorkflowViewCtrl', ['$scope', '$stateParams', '$log', '$filter', ($scope, $stateParams, $log, $filter) ->
     $scope.workflow = $scope.cacheService.find $stateParams.sn, true
-    $scope.workflow.typename = $filter('areaFilter')($scope.workflow.type, $scope)
+    $scope.workflow.typename = $filter('typeFilter')($scope.workflow.type, $scope)
+    $scope.workflow.actReDeployment.deployTimeFMT = $filter('date')($scope.workflow.actReDeployment.deployTime, 'yyyy-MM-dd HH:mm:ss')
     $log.log "Initialized the Workflow View controller on: " + JSON.stringify($scope.workflow)
   ])
 

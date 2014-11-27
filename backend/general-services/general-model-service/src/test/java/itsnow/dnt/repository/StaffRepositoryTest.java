@@ -44,7 +44,7 @@ public class StaffRepositoryTest {
         staff.setEmail("stone5751@126.com");
         staff.setTitle("攻城尸");
         staff.setType("合同工");
-        staff.setStatus("1");
+        staff.setStatus(StaffStatus.Normal);
         staff.setDescription("This is a test.");
         staff.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         staff.setUpdatedAt(staff.getCreatedAt());

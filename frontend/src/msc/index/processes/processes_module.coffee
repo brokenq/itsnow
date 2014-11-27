@@ -73,8 +73,9 @@ angular.module('MscIndex.Processes', [])
       else
         invokeId = process.configuration.stopInvocationId
         status = "停止中"
+      process.job = invokeId
       acc = new CancelAction process
-      acc.$cancel {job: invokeId}, ->
+      acc.$cancel ->
         feedback.success("正在取消#{status}的进程 #{process.name}")
         succCallback() if succCallback
       , (resp)->
@@ -115,8 +116,8 @@ angular.module('MscIndex.Processes', [])
     $scope.stop = (process)->
       $scope.execStop process, ->
         $scope.processesTable.reload()
-    $scope.cancel = (process, type)->
-      $scope.execCancel process, type ->
+    $scope.cancel = (process)->
+      $scope.execCancel process ->
         $scope.processesTable.reload()
     $scope.destroy = (process)->
       $scope.execDestroy process, ->
@@ -285,7 +286,7 @@ angular.module('MscIndex.Processes', [])
       $scope.stop = ->
         $scope.execStop process, $scope.getLog
         activeTab(TYPES.STOP)
-      $scope.cancel = ->
-        $scope.execCancel process
+      $scope.cancel = (type)->
+        $scope.execCancel process, type
 
   ])

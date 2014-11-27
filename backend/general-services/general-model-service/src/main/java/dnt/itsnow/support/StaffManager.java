@@ -2,6 +2,7 @@ package dnt.itsnow.support;
 
 import dnt.itsnow.exception.StaffException;
 import dnt.itsnow.model.Staff;
+import dnt.itsnow.model.StaffStatus;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.platform.util.DefaultPage;
@@ -59,7 +60,7 @@ public class StaffManager extends Bean implements StaffService {
         }
         staff.creating();
         // TODO 暂时性硬编码这两个属性值
-        staff.setStatus("1");
+        staff.setStatus(StaffStatus.Normal);
         staff.setType("employee");
         staffRepository.create(staff);
 
