@@ -45,8 +45,8 @@ angular.module('MscIndex.Accounts', [])
         when 'Abnormal' then 'red'
         else #Unknown
   )
-  .controller('AccountsCtrl', ['$scope', '$state', '$resource', 'Feedback', 'CacheService', \
-                              ( $scope,   $state,   $resource,   feedback,   CacheService) ->
+  .controller('AccountsCtrl', ['$scope', '$state', '$resource', '$http', 'Feedback', 'CacheService', \
+                              ( $scope,   $state,   $resource,   $http,   feedback,   CacheService) ->
     # frontend controller logic
     console.log("Initialized the Accounts controller")
     $scope.options =
