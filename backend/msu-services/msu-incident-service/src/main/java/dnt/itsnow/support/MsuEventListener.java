@@ -66,7 +66,7 @@ public class MsuEventListener extends Bean implements ActivitiEventListener, Mes
                 this.processClosedEvent(incident);
             }
             User user =   userService.findByUsername(incident.getUpdatedBy());
-            if(user.getAccount().isMsu()){
+            if(user.getAccount().isMsp()){
                 //send view message to msp
                 this.sendMessageToMsp(incident.getMsuInstanceId(),TransferType.View);
             }

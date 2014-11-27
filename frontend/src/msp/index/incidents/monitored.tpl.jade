@@ -10,11 +10,10 @@ include /lib/mixins/list
       td(data-title="'故障单号'")
           a(ui-sref="incidents.viewMsu(incident)") {{incident.number}}
       td(data-title="'请求人'") {{incident.requesterName}}
-      td(data-title="'MSU实例'") {{incident.msuInstanceId}}
       td(data-title="'分类'") {{incident.category | formatDict:categories}}
       td(data-title="'优先级'") {{incident.priority | formatDict:priorities}}
       td(data-title="'故障描述'") {{incident.requestDescription}}
-      td(data-title="'创建时间'") {{incident.createdAt | formatTime}}
+      td(data-title="'创建时间'") {{incident.createdAt | date:"yyyy-MM-dd HH:mm:ss"}}
       td(data-title="'处理人'") {{incident.assignedUser}}
       td(data-title="'用户'") {{incident.msuAccountName}}
       td(data-title="'用户状态'") {{incident.msuStatus | formatIncidentStatus}}

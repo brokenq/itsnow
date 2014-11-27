@@ -19,8 +19,8 @@ include /lib/mixins/list
         a(ui-sref="users.view({username:incident.assignedUser})") {{incident.assignedUser}}
       td(data-title="'处理组'")
         a(ui-sref="roles.view({name:incident.assignedGroup})") {{incident.assignedGroup}}
-      td(data-title="'创建时间'") {{incident.createdAt | formatTime}}
-      td(data-title="'关闭时间'") {{incident.closeTime | formatTime}}
+      td(data-title="'创建时间'") {{incident.createdAt | date:"yyyy-MM-dd HH:mm:ss"}}
+      td(data-title="'关闭时间'") {{incident.closeTime | date:"yyyy-MM-dd HH:mm:ss"}}
       td(data-title="'用户'") {{incident.msuAccountName}}
       td(data-title="'用户状态'") {{incident.msuStatus | formatIncidentStatus}}
                                                 
