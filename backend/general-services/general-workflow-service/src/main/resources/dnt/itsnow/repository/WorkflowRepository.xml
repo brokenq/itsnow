@@ -7,9 +7,9 @@
     <resultMap id="workflowResult" type="Workflow" autoMapping="true">
         <id property="id" column="id"/>
         <!-- 一对一关系 -->
-        <association property="actReProcdef" column="act_re_procdef_id" javaType="ActReProcdef" autoMapping="true">
+        <association property="actReProcdef" column="ACT_RE_PROCDEF_ID" javaType="ActReProcdef" autoMapping="true">
             <id property="id" column="act_re_procdef_id" javaType="java.lang.String" jdbcType="VARCHAR"/>
-            <id property="resourceName" column="act_re_procdef_resourceName"/>
+            <id property="resourceName" column="act_re_procdef_resourcename"/>
             <id property="version" column="act_re_procdef_version"/>
         </association>
         <!-- 一对一关系 -->
@@ -23,16 +23,21 @@
     </resultMap>
 
     <sql id="select">
-        SELECT flow.*,
-        a.ID_                    AS act_re_procdef_id,
-        a.RESOURCE_NAME_         AS act_re_procdef_resourceName,
-        a.VERSION_               AS act_re_procdef_version,
-        deployment.DEPLOY_TIME_  AS act_re_deployment_deploy_time
-        FROM   workflows flow
-        LEFT JOIN ACT_RE_PROCDEF a
-        ON flow.act_re_procdef_id = a.ID_
-        LEFT JOIN ACT_RE_DEPLOYMENT deployment
-        ON a.DEPLOYMENT_ID_ = deployment.ID_
+        SELECT
+            flow.*,
+            a.ID_                   AS act_re_procdef_id,
+            a.RESOURCE_NAME_        AS act_re_procdef_resourceName,
+            a.VERSION_              AS act_re_procdef_version,
+            deployment.ID_          AS act_re_deployment_id,
+            deployment.NAME_        AS act_re_deployment_name,
+            deployment.CATEGORY_    AS act_re_deployment_category,
+            deployment.TENANT_ID_   AS act_re_deployment_tenant_id,
+            deployment.DEPLOY_TIME_ AS act_re_deployment_deploy_time
+        FROM workflows flow
+            LEFT JOIN ACT_RE_PROCDEF a
+                ON flow.act_re_procdef_id = a.ID_
+            LEFT JOIN ACT_RE_DEPLOYMENT deployment
+                ON a.DEPLOYMENT_ID_ = deployment.ID_
     </sql>
 
     <select id="count" resultType="java.lang.Integer">

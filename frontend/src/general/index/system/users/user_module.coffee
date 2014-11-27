@@ -119,10 +119,13 @@ angular.module('System.User', [])
         , (resp) ->
           feedback.error("修改#{$scope.cuser.username}失败", resp);
   ])
-.controller('UserViewCtrl', ['$scope', '$state', '$stateParams',
-    ($scope, $state, $stateParams) ->
+.controller('UserViewCtrl', ['$scope', '$state', '$stateParams','$filter',
+    ($scope, $state, $stateParams,$filter) ->
       username = $stateParams.username
       $scope.cuser = $scope.cacheService.find username, true
+      $scope.cuser.createdAtStr=$filter('formatTime')($scope.cuser.createdAt)
+      $scope.cuser.updatedAtStr=$filter('formatTime')($scope.cuser.updatedAt)
+      $scope.cuser.enabledStr = $filter('enableFilter')($scope.cuser.enabled)
   ])
 .controller('UserEditPwdCtrl', ['$http','$scope', '$state', '$stateParams', 'SessionService', '$window','Feedback',
     ($http,$scope, $state, $stateParams,sessionService, $window,feedback) ->

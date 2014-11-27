@@ -17,6 +17,7 @@ import java.util.List;
  * TODO 编写测试用例
  */
 public interface CommonContractRepository {
+
     @Select("SELECT count(0) FROM itsnow_msc.contracts WHERE msu_account_id = #{msuId}")
     long countByMsuAccountId(@Param("msuId") long msuId);
 
@@ -31,7 +32,21 @@ public interface CommonContractRepository {
 
     List<Contract> findAllByMsuAccountId(@Param("msuId") long msuId, @Param("pageable")Pageable pageable);
 
-    List<Contract> findAllByMspAccountId(@Param("mspId") Long mspId, @Param("own") Boolean own, @Param("pageable")Pageable pageable);
+    /**
+     * MSP模块邀约管理
+     * @param mspId MSP账户ID
+     * @param pageable 分页
+     * @return 合同列表
+     */
+    List<Contract> findAllByMspDraft(@Param("mspId") Long mspId, @Param("pageable")Pageable pageable);
+
+    /**
+     * MSP模块我的合约
+     * @param mspId MSP账户ID
+     * @param pageable 分页
+     * @return 合同列表
+     */
+    List<Contract> findAllByMspAccountId(@Param("mspId") Long mspId, @Param("pageable")Pageable pageable);
 
     // 需要加载details
     Contract findBySn(String sn);

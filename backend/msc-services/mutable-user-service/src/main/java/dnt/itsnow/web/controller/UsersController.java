@@ -203,7 +203,9 @@ public class UsersController extends SessionSupportController<User> {
 
     @BeforeFilter({"show", "update", "destroy"})
     public void initCurrentUser(@PathVariable("username") String username) {
+
         this.user = userService.findByUsername(username);
+        this.cleanSensitive(this.user);
     }
 
     private void cleanSensitive(User user) {
