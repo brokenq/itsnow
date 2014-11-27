@@ -163,19 +163,27 @@ angular.module('MscIndex.Processes', [])
       $scope.process = process
       console.log "Initialized the Process View controller on: #{JSON.stringify process}"
 
-      if process.status is "Starting" or process.status is "Running"
-        $('#start_log_li').addClass('active')
-        $('#start_log').addClass('active in')
-      else if process.status is "Stopping" or process.status is "Stopped"
-        $('#stop_log_li').addClass('active')
-        $('#stop_log').addClass('active in')
-      else
-        $('#creation_log_li').addClass('active')
-        $('#creation_log').addClass('active in')
+      # active tab
+      activeTab = ->
+        addClass = (id)->
+          $("#{id}_li").addClass('active')
+          $(id).addClass('active in')
+        return addClass("#start_log") if process.status is "Starting" or process.status is "Running"
+        return addClass("#stop_log") if process.status is "Stopping" or process.status is "Stopped"
+        return addClass("#creation_log")
+      activeTab()
 
+      # toggle access url button
+      toggleAccessButton = ->
+        return $("#accessButton").attr("disabled", "disabled") if $scope.process.status isnt "Running"
+        return $("#accessButton").removeAttr("disabled") if $scope.process.status is "Running"
+      toggleAccessButton()
+
+      $scope.path = $location.path(); # tab 切换
+
+      # display configration
       processConfig = process.configuration
       schemaConfig = process.schema.configuration if process.schema?
-
       process.configuration['debug.port'] +
       process.display =
         status: $filter("formatProcessStatus")(process.status)
@@ -183,29 +191,41 @@ angular.module('MscIndex.Processes', [])
                         processConfig['http.port'], processConfig['jmx.port'], processConfig['rmi.port'], processConfig['debug.port'])
         schema:
           configuration: "用户名：{0}\n密码：{1}\n".interpolate(schemaConfig['user'], schemaConfig['password']) if schemaConfig?
+
+      # access url
+      $scope.ipUrl = "http://#{process.host.address}:#{processConfig['http.port']}"
+      regx = new RegExp "itsnow_|itsnow-"
+      $scope.domainUrl = "http://#{process.name.replace(regx, '')}.itsnow.com"
+
+      # toggle action buttons
+      toggleButton = (status)->
+        show = (element)->
+          $(element).removeClass("hidden").addClass("show")
+        hide = (element)->
+          $(element).removeClass("show").addClass("hidden")
+        hide $("#startBtn")
+        hide $("#cancelStartingBtn")
+        hide $("#stopBtn")
+        hide $("#cancelStoppingBtn")
+        switch status
+          when "stopped"              then show $("#startBtn")
+          when "starting"             then show $("#cancelStartingBtn")
+          when "running", "abnormal"  then show $("#stopBtn")
+          when "stopping"             then show $("#cancelStoppingBtn")
+
+      currentUrl = $location.url(); # judge current url change
+
       process.creationLog = ""
       process.startLog = ""
       process.stopLog = ""
-
-      $http.get("/admin/api/accounts/list_no_process").success (accounts)-> $scope.accounts = accounts
-      $http.get("/admin/api/schemas").success (schemas)-> $scope.schemas = schemas
-      $http.get("/admin/api/hosts/list_available/APP,COM").success (hosts)-> $scope.hosts = hosts
-
-      toggleButton = (status)->
-        $("#startBtn").removeClass("show").addClass("hidden")
-        $("#cancelStartingBtn").removeClass("show").addClass("hidden")
-        $("#stopBtn").removeClass("show").addClass("hidden")
-        $("#cancelStoppingBtn").removeClass("show").addClass("hidden")
-        switch status
-          when "stopped" then  $("#startBtn").removeClass("hidden").addClass("show")
-          when "starting" then $("#cancelStartingBtn").removeClass("hidden").addClass("show")
-          when "running", "abnormal" then $("#stopBtn").removeClass("hidden").addClass("show")
-          when "stopping" then $("#cancelStoppingBtn").removeClass("hidden").addClass("show")
-
-      currentUrl = $location.url();
-      $scope.path = $location.path(); # tab显示
       # 获取日志信息
       $scope.getLog = (invokeId, type)->
+          # 日志滚动条效果
+        resolveScroll = (preScrollTop, element)->
+          if preScrollTop is element.scrollTop() or element[0].scrollHeight <= element.scrollTop() + element.outerHeight()
+            element.scrollTop(element[0].scrollHeight)
+            return element.scrollTop()
+          return preScrollTop
         process = $scope.process
         offset = 0
         preScrollTop = 0
@@ -221,15 +241,12 @@ angular.module('MscIndex.Processes', [])
               preScrollTop = resolveScroll preScrollTop, $logs
               offset = parseInt(headers("offset"))
               toggleButton($filter("lowercase")(headers("status")))
+              $scope.process.display.status = $filter("formatProcessStatus")(headers("status"))
+              $scope.process.status = headers("status")
+              activeTab()
+              toggleAccessButton()
               $interval.cancel(intervalId) if offset is -1 or currentUrl isnt $location.url()
         , 1000)
-
-      # 日志滚动条效果
-      resolveScroll = (preScrollTop, element)->
-        if preScrollTop is element.scrollTop() or element[0].scrollHeight <= element.scrollTop() + element.outerHeight()
-          element.scrollTop(element[0].scrollHeight)
-          return element.scrollTop()
-        return preScrollTop
 
       # 触发获取日志事件
       toggleButton($filter("lowercase")(process.status))
