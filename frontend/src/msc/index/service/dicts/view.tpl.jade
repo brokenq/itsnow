@@ -1,5 +1,4 @@
-//include /lib/mixins/form.jade
-
+include /lib/mixins/form
 mixin blocks(title)
   h2 #{title}
   hr
@@ -27,7 +26,10 @@ mixin formField(label, value)
     +formGroup()
       +label('字典描述')
         textarea.form-control(rows='4',ng-model="dict.description",readonly)
+  +section("字典项信息")
     #editcontent
-      .form-group
-script(src='/lib/mixins/dictView.js')
+      #create1.form-group.has-info
+        +dictName("名称")(ng-model="dict.details[0].key",readonly)
+        +dictValue("值")(ng-model="dict.details[0].value",readonly)
+      script(src='/lib/mixins/dictView.js')
 
