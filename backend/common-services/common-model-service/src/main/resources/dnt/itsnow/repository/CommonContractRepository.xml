@@ -4,8 +4,11 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="dnt.itsnow.repository.CommonContractRepository">
 
-    <select id="findAll" resultType="Contract">
+    <sql id="select">
         SELECT * FROM itsnow_msc.contracts
+    </sql>
+
+    <sql id="page">
         <if test="pageable.sort != null">
             ORDER BY #{pageable.sort}
         </if>
@@ -13,39 +16,40 @@
             <if test="pageable.offset > 0">#{pageable.offset}</if>
             <if test="pageable.pageSize > 0">, #{pageable.pageSize}</if>
         </trim>
+    </sql>
+
+    <select id="findAll" resultType="Contract">
+        <include refid="select"/>
+        <include refid="page"/>
     </select>
 
     <select id="findAllByMsuAccountId" resultType="Contract">
-        SELECT * FROM itsnow_msc.contracts
-        WHERE (msu_account_id = #{msuId})
-        <if test="pageable.sort != null">
-            ORDER BY #{pageable.sort}
-        </if>
-        <trim prefix="LIMIT" prefixOverrides=",">
-            <if test="pageable.offset > 0">#{pageable.offset}</if>
-            <if test="pageable.pageSize > 0">, #{pageable.pageSize}</if>
-        </trim>
+        <include refid="select"/>
+        WHERE msu_account_id = #{msuId}
+        <include refid="page"/>
     </select>
 
-    <select id="findAllByMspAccountId" resultType="Contract">
-        SELECT * FROM itsnow_msc.contracts
+    <!--MSP模块邀约管理-->
+    <select id="findAllByMspDraft" resultType="Contract">
+        <include refid="select"/>
         <where>
-            msp_account_id = #{mspId}
-            <if test="own == false">
-                OR msp_account_id is null
-            </if>
+          (msp_account_id = #{mspId} OR msp_account_id is null) AND status in ('Draft','Purposed')
         </where>
-        <if test="pageable.sort != null">
-            ORDER BY #{pageable.sort}
-        </if>
-        <trim prefix="LIMIT" prefixOverrides=",">
-            <if test="pageable.offset > 0">#{pageable.offset}</if>
-            <if test="pageable.pageSize > 0">, #{pageable.pageSize}</if>
-        </trim>
+        <include refid="page"/>
+    </select>
+
+    <!--MSP模块我的合约-->
+    <select id="findAllByMspAccountId" resultType="Contract">
+        <include refid="select"/>
+        <where>
+          msp_account_id = #{mspId} AND status in ('Approved','Rejected')
+        </where>
+        <include refid="page"/>
     </select>
 
     <select id="findBySn" resultMap="contractResult">
-      SELECT c.* FROM itsnow_msc.contracts c WHERE c.sn = #{sn}
+        <include refid="select"/>
+        WHERE sn = #{sn}
     </select>
 
     <select id="selectDetails" resultType="ContractDetail">

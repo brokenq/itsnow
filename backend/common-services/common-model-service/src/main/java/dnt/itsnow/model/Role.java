@@ -8,8 +8,6 @@ import java.util.List;
  */
 public class Role extends ConfigItem {
 
-    public final static String ROLE_ = "ROLE_";
-
     private List<User> users;
 
     public List<User> getUsers() {
@@ -22,10 +20,9 @@ public class Role extends ConfigItem {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("Role{");
+        final StringBuilder sb = new StringBuilder("Role{");
         sb.append("users=").append(users);
         sb.append('}');
         return sb.toString();
     }
-
 }
