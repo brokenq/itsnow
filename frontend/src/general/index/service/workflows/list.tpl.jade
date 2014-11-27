@@ -14,7 +14,7 @@ include /lib/mixins/list
     +row("workflow", "sn", "selectionService")(class="editable deletable")
       td(data-title="'名称'")
         a(ui-sref="workflows.view(workflow)") {{workflow.name}}
-      td(data-title="'类型'") {{workflow.dictionary.display}}
+      td(data-title="'类型'") {{workflow.type | typeFilter:this}}
       td(data-title="'文件名'") {{workflow.actReProcdef.resourceName}}
       td(data-title="'部署版本'") {{workflow.actReProcdef.version}}
       td(data-title="'服务目录'") {{workflow.serviceItem.title}}

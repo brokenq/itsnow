@@ -13,8 +13,8 @@ mixin section(title)
 //- A group contains a input label and field
 mixin group(object, field, label, icon, tip)
   .form-group.has-info&attributes(attributes)
-    label.col-xs-12.col-sm-3.control-label.no-padding-right(for="#{object}_#{field.replace('.','_')}") #{label}
-    .col-xs-12.col-sm-5
+    label.col-xs-12.col-sm-2.control-label.no-padding-right(for="#{object}_#{field.replace('.','_')}") #{label}
+    .col-xs-12.col-sm-7
       span.block.input-icon.input-icon-right
         block
         if icon 

@@ -1,16 +1,12 @@
 package dnt.itsnow.web.controller;
 
-import dnt.itsnow.api.ActivitiEngineService;
 import dnt.itsnow.exception.WorkflowException;
-import dnt.itsnow.model.ActReProcdef;
 import dnt.itsnow.model.Workflow;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.platform.web.exception.WebClientSideException;
 import dnt.itsnow.platform.web.exception.WebServerSideException;
 import dnt.itsnow.service.WorkflowService;
-import org.activiti.engine.repository.Deployment;
-import org.activiti.engine.repository.ProcessDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -93,8 +89,9 @@ public class WorkflowsController extends SessionSupportController<Workflow> {
 
         logger.info("Creating {}", workflow);
 
+        InputStream in = null;
         try {
-            InputStream in = new FileInputStream(workflowFile);
+            in = new FileInputStream(workflowFile);
             workflow = service.create(workflow, in);
         } catch (IOException e) {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, "File read failed, "+e.getMessage());
@@ -102,6 +99,14 @@ public class WorkflowsController extends SessionSupportController<Workflow> {
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, e.getMessage());
         } catch (Exception e) {
             throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
+                }
+            }
         }
 
         logger.info("Created  {}", workflow);

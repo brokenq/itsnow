@@ -1,5 +1,39 @@
--var readonly = true
-h2 查看用户
-include /general/index/system/users/_form.jade
-+action_bar
-  +action_submit("返回")(ui-sref="users.list")
+mixin blocks(title)
+  h2 #{title}
+  hr
+  block
+mixin formGroup()
+  .form-group
+    .col-md-12
+      block
+mixin label(title)
+  label.control-label.col-md-2 #{title}:
+  div(class!=attributes["class"])
+    block
+mixin formField(label, value)
+  label.control-label.col-md-2 #{label}:
+  div(class!=attributes["class"])
+    input.form-control(type="text", ng-model="#{value}", readonly)
+.form-horizontal
+  +blocks("用户详情")
+    +formGroup()
+      +formField("用户名", "cuser.username")(class="col-md-3")
+      +formField("用户昵称", "cuser.nickName")(class="col-md-3")
+    +formGroup()
+      +formField("电子邮箱", "cuser.email")(class="col-md-3")
+      +formField("电话号码", "cuser.phone")(class="col-md-3")
+    +formGroup()
+      +formField("所属账户", "cuser.account.name")(class="col-md-3")
+      +formField("是否启用", "cuser.enabledStr")(class="col-md-3")
+
+    +formGroup()
+      +formField("创建时间", "cuser.createdAtStr")(class="col-md-3")
+      +formField("更新时间", "cuser.updatedAtStr")(class="col-md-3")
+    //+formGroup()
+    //  +label('所属账户')
+    //    +table()
+    //      +tableForm('msp', ', so on Windows you may want to invoke it from a Git Bash window.')
+    //+formGroup()
+    //  +label('所属组')
+    //    +table()
+    //      +tableForm('数据库组', ', so on Windows you may want to invoke it from a Git Bash window.')

@@ -14,9 +14,9 @@ public interface WorkflowRepository {
 
     @Options(useGeneratedKeys = true, keyColumn = "id")
     @Insert("INSERT INTO workflows " +
-            "(sn, name, description, act_re_procdef_id, service_item_id, service_item_sn, service_item_type, process_dictionary_id, created_at, updated_at) " +
+            "(sn, name, description, act_re_procdef_id, service_item_id, service_item_sn, service_item_type, type, created_at, updated_at) " +
             "VALUES " +
-            "(#{sn}, #{name}, #{description}, #{actReProcdef.id}, #{serviceItem.id}, #{serviceItem.sn}, #{serviceItemType}, #{dictionary.id}, #{createdAt}, #{updatedAt})")
+            "(#{sn}, #{name}, #{description}, #{actReProcdef.id}, #{serviceItem.id}, #{serviceItem.sn}, #{serviceItemType}, #{type}, #{createdAt}, #{updatedAt})")
     public void create(Workflow workflow);
 
     @Delete("DELETE FROM workflows WHERE sn = #{sn}")
@@ -27,10 +27,10 @@ public interface WorkflowRepository {
             " name                  = #{name}, " +
             " description           = #{description}," +
             " act_re_procdef_id     = #{actReProcdef.id}," +
-            " service_item_id      = #{serviceItem.id}," +
-            " service_item_sn      = #{serviceItem.sn}," +
-            " service_item_type    = #{serviceItemType}," +
-            " process_dictionary_id = #{dictionary.id}, " +
+            " service_item_id       = #{serviceItem.id}," +
+            " service_item_sn       = #{serviceItem.sn}," +
+            " service_item_type     = #{serviceItemType}," +
+            " type                  = #{type}, " +
             " created_at            = #{createdAt}, " +
             " updated_at            = #{updatedAt} " +
             " WHERE id              = #{id} ")

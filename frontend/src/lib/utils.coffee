@@ -1,8 +1,8 @@
 String::interpolate = ()->
   return this if arguments.length is 0
+  string = this
   for val, i in arguments when i >= 0
-    string = this
-    regx = new RegExp "\\{#{i - 1}\\}", "gm"
+    regx = new RegExp "\\{#{i}\\}", "gm"
     string = string.replace regx, val
   return string
 Array::remove = (callback) ->

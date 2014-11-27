@@ -14,26 +14,24 @@ mixin formField(label, value)
   label.control-label.col-md-2 #{label}:
   div(class!=attributes["class"])
     input.form-control(type="text", ng-model="#{value}", readonly)
-mixin tableForm(id,title,brief,itemId,createTime,description)
+mixin tableForm(id,title,brief,createTime,description)
   tr
     td
       img(ng-src="#{id}")
     td #{title}
     td #{brief}
-    td #{itemId}
     td #{createTime}
     td #{description}
-mixin tableForms(id,title,brief,itemId,createTime,description)
+mixin tableForms(id,title,brief,createTime,description)
   tr(ng-repeat="item in catalog.items")
     td
       img(ng-src="#{id}")
     td #{title}
     td #{brief}
-    td #{itemId}
     td #{createTime}
     td #{description}
-mixin tables(tip,icon,name,title,level,time,description)
-  .col-md-offset-1.col-md-10
+mixin tables(tip,icon,name,title,time,description)
+  .col-md-12
     h3 #{tip}
     hr
     table.table.table-striped.table-bordered.table-hover
@@ -41,14 +39,13 @@ mixin tables(tip,icon,name,title,level,time,description)
         th(class="thNo") #{icon}
         th(class="thNo") #{name}
         th(class="thNo") #{title}
-        th(class="thNo") #{level}
         th(class="thNo") #{time}
         th(class="con") #{description}
       block
 .form-horizontal
   +blocks("服务目录详情")
-    +tables('服务目录', '图标', '名称', '标题', 'level' , '创建时间', '描述')
-      +tableForm('{{catalog.icon}}', '{{catalog.sn}}', '{{catalog.title}}', '{{catalog.level}}', '{{catalog.createAt | formatTime }}', '{{catalog.description}}')
-    +tables('服务项', '图标', '名称', '标题', 'brief' , '创建时间', '描述')
-      +tableForms('{{item.icon}}', '{{item.sn}}', '{{item.title}}', '{{item.brief}}', '{{item.createdAt}}', '{{item.description}}')
+    +tables('服务目录', '图标', '名称', '标题' , '创建时间', '描述')
+      +tableForm('{{catalog.icon}}', '{{catalog.sn}}', '{{catalog.title}}',  '{{catalog.createAt | formatTime}}', '{{catalog.description}}')
+    +tables('服务项', '图标', '名称', '标题',  '创建时间', '描述')
+      +tableForms('{{item.icon}}', '{{item.sn}}', '{{item.title}}', '{{item.createdAt | formatTime}}', '{{item.description}}')
 

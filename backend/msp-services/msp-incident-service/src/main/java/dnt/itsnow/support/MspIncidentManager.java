@@ -114,7 +114,7 @@ public class MspIncidentManager extends Bean implements MspIncidentService,Resou
             ServiceItem item = serviceItemService.findBySn("SI_3001");
             workflow.setServiceItem(item);
             dnt.itsnow.model.Dictionary dict = dictionaryService.findByCode("workflow");
-            workflow.setDictionary(dict);
+            workflow.setType(dict.getDetails()[0].getValue());
             try {
                 URL url = this.resourceLoader.getResource(path).getURL();
                 assert url != null;

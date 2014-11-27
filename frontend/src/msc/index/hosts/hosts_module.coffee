@@ -51,6 +51,7 @@ angular.module('MscIndex.Hosts', [])
           data = response
       return data
 
+    $scope.submited = false
     $scope.execDestroy = (host, succCallback, errCallback)->
       acc = new Hosts host
       acc.$remove ->
@@ -71,7 +72,8 @@ angular.module('MscIndex.Hosts', [])
         $location.search params.url() # put params in url
         Hosts.query params.url(), (datas, headers) ->
           params.total headers 'total'
-          $defer.resolve $scope.hosts = datas; $scope.cacheService.cache datas
+          $defer.resolve $scope.hosts = datas
+          $scope.cacheService.cache datas
 
     $scope.hostsTable = new NgTable(angular.extend($scope.options, $location.search()), args)
     $scope.selectionService = new SelectionService($scope.cacheService.records, "id")
@@ -79,6 +81,7 @@ angular.module('MscIndex.Hosts', [])
 
     $scope.destroy = (host)->
       $scope.execDestroy host, ->
+        delete $scope.selectionService.items[host.id]
         $scope.hostsTable.reload()
 
   ])
@@ -97,6 +100,7 @@ angular.module('MscIndex.Hosts', [])
     Hosts = $scope.services
 
     $scope.create = ->
+      $scope.submited = true
       host.configuration['msu.version'] = host.configuration.msu_version
       host.configuration['msp.version'] = host.configuration.msp_version
       delete host.configuration.msu_version
@@ -108,6 +112,9 @@ angular.module('MscIndex.Hosts', [])
         $state.go "hosts.view", resp
       , (resp)->
         feedback.error "创建 #{host.name} 主机失败", resp
+        host.configuration.msu_version = host.configuration['msu.version']
+        host.configuration.msp_version = host.configuration['msp.version']
+        $scope.submited = false
   ])
 
   .controller('HostViewCtrl', ['$scope', '$stateParams', '$http', '$interval', '$state', '$location', \

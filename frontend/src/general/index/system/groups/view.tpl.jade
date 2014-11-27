@@ -4,11 +4,11 @@ mixin blocks(title)
   block
 mixin formGroup()
   .form-group
-    .col-md-offset-2.col-md-8
+    .col-md-12
       block
 mixin label(title)
   label.control-label.col-md-2 #{title}:
-  .col-md-8
+  div(class!=attributes["class"])
     block
 mixin formField(label, value)
   label.control-label.col-md-2 #{label}:
@@ -29,18 +29,10 @@ mixin tableForms(auth)
       +formField("创建时间", "group.createdAt | formatTime")(class="col-md-3")
       +formField("更新时间", "group.updatedAt | formatTime")(class="col-md-3")
     +formGroup()
-      +label('组描述')
+      +label('组描述')(class="col-md-8")
         textarea.form-control(rows='4',ng-model="group.description",readonly)
     +formGroup()
-      +label('权限')
-        table.table.table-striped.table-bordered.table-condensed
-          tr
-            th 名称
-          +tableForms('xxxx')
-          +tableForms('xxxx')
-          +tableForms('xxxx')
-    +formGroup()
-      +label('用户')
+      +label('用户')(class="col-md-8")
         table.table.table-striped.table-bordered.table-condensed
           tr
             th 用户名

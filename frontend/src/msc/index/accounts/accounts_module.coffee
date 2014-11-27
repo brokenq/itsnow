@@ -53,7 +53,15 @@ angular.module('MscIndex.Accounts', [])
       page:  1,           # show first page
       count: 10           # count per page
 
-    $scope.cacheService = new CacheService("sn")
+    $scope.cacheService = new CacheService "sn", (value)->
+      data = {}
+      $.ajax
+        url:    "/admin/api/accounts/#{value}"
+        async:  false
+        type:   "GET"
+        success: (response)->
+          data = response
+      return data
 
     actions =
       approve:
@@ -117,6 +125,7 @@ angular.module('MscIndex.Accounts', [])
           $timeout(->
             params.total(headers('total'))
             $defer.resolve($scope.accounts = data)
+            $scope.cacheService.cache data
           , 500)
         )
     $scope.accountsTable = new NgTable(angular.extend($scope.options, $location.search()), args)

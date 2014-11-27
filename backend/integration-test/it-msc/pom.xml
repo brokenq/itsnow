@@ -18,6 +18,10 @@
             <groupId>dnt.itsnow</groupId>
             <artifactId>it-platform</artifactId>
         </dependency>
+        <dependency>
+            <groupId>de.bechte.junit</groupId>
+            <artifactId>junit-hierarchicalcontextrunner</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

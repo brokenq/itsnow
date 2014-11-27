@@ -13,8 +13,8 @@ public interface MutableContractRepository extends CommonContractRepository{
      *
      * @param contract 新建的合同
      */
-    @Insert("INSERT INTO itsnow_msc.contracts(sn,msu_account_id,msp_account_id, msu_status,created_at,updated_at) " +
-            "VALUES(#{sn}, #{msuAccountId}, #{mspAccountId}, #{msuStatus},#{createdAt},#{updatedAt})")
+    @Insert("INSERT INTO itsnow_msc.contracts(sn, msu_account_id, msp_account_id, status, created_at, updated_at) " +
+            "VALUES(#{sn}, #{msuAccountId}, #{mspAccountId}, #{status}, #{createdAt}, #{updatedAt})")
     @Options(useGeneratedKeys = true,keyColumn = "id")
     void create(Contract contract);
 
@@ -28,8 +28,7 @@ public interface MutableContractRepository extends CommonContractRepository{
     @Update("UPDATE itsnow_msc.contracts " +
             "SET msu_account_id = #{msuAccountId}," +
             " msp_account_id = #{mspAccountId}," +
-            " msu_status = #{msuStatus},"+
-            " msp_status = #{mspStatus},"+
+            " status = #{status},"+
             " sn = #{sn},"+
             " updated_at = #{updatedAt}"+
             " WHERE id = #{id}")
@@ -43,7 +42,7 @@ public interface MutableContractRepository extends CommonContractRepository{
      * @param contract 被修改的合同对象
      */
     @Update("UPDATE itsnow_msc.contracts" +
-            " SET msp_status = #{mspStatus}," +
+            " SET status = #{status}," +
             " msp_account_id = #{mspAccountId},"+
             " updated_at = #{updatedAt}"+
             " WHERE id = #{id}")
@@ -57,7 +56,7 @@ public interface MutableContractRepository extends CommonContractRepository{
      * @param contract 被修改的合同对象
      */
     @Update("UPDATE itsnow_msc.contracts" +
-            " SET msu_status = #{msuStatus}, " +
+            " SET status = #{status}, " +
             " updated_at = #{updatedAt}"+
             " WHERE id = #{id}")
     void approve(Contract contract);
@@ -70,7 +69,7 @@ public interface MutableContractRepository extends CommonContractRepository{
      * @param contract 被修改的合同对象
      */
     @Update("UPDATE itsnow_msc.contracts" +
-            " SET msu_status = #{msuStatus}," +
+            " SET status = #{status}," +
             " updated_at = #{updatedAt}"+
             " WHERE id = #{id}")
     void reject(Contract contract);

@@ -72,7 +72,6 @@ public class RoleManager extends Bean implements RoleService {
             throw new RoleException("Role entry can not be empty.");
         }
 
-        role.setName(Role.ROLE_+role.getName());
         role.creating();
         repository.create(role);
         if (role.getUsers() != null) {

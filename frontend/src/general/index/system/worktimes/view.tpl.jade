@@ -1,8 +1,29 @@
--var readonly = true
-
-h2 查看 工作时间
-
-include /general/index/system/worktimes/_form.jade
-
-+action_bar
-  +action_submit("返回")(ui-sref="worktimes.list")
+mixin blocks(title)
+  h2 #{title}
+  hr
+  block
+mixin formGroup()
+  .form-group
+    .col-md-12
+      block
+mixin label(title)
+  label.control-label.col-md-2 #{title}:
+  div(class!=attributes["class"])
+    block
+mixin formField(label, value)
+  label.control-label.col-md-2 #{label}:
+  div(class!=attributes["class"])
+    input.form-control(type="text", ng-model="#{value}", readonly)
+.form-horizontal
+  +blocks("工作时间详情")
+    +formGroup()
+      +formField("开始时间", "worktime.startAt")(class="col-md-3")
+      +formField("结束时间", "worktime.endAt")(class="col-md-3")
+    +formGroup()
+      +formField("创建时间", "worktime.createdAtStr")(class="col-md-3")
+      +formField("更新时间", "worktime.updatedAtStr")(class="col-md-3")
+    +formGroup()
+      +formField("工作日", "worktime.name")(class="col-md-8")
+    +formGroup()
+      +label('时间描述')(class="col-md-8")
+        textarea.form-control(rows='4',ng-model="worktime.description",readonly)

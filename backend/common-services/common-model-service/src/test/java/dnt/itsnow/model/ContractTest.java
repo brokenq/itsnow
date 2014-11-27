@@ -23,13 +23,12 @@ public class ContractTest extends ValidatorSupport{
     public void setUp() throws Exception {
         contract = new Contract();
         contract.setMspAccountId(2L);
-        contract.setMspStatus(ContractStatus.Approved);
+        contract.setStatus(ContractStatus.Approved);
         contract.setMsuAccountId(4L);
-        contract.setMsuStatus(ContractStatus.Purposed);
         contract.setSn("CONTRACT-001");
         contract.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         contract.setId(1L);
-        contract.isApprovedByMsp();
+        contract.isApproved();
     }
 
     @Test

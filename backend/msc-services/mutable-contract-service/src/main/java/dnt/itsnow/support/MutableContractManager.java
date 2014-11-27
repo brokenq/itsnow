@@ -55,7 +55,7 @@ public class MutableContractManager extends CommonContractManager implements Mut
      */
     @Override
     public Contract bid(Contract contract) {
-        contract.setMspStatus(ContractStatus.Purposed);
+        contract.setStatus(ContractStatus.Purposed);
         contract.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         mutableContractRepository.bid(contract);
         return contract;
@@ -70,7 +70,7 @@ public class MutableContractManager extends CommonContractManager implements Mut
     @Override
     public Contract approve(Contract contract) {
         contract.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-        contract.setMsuStatus(ContractStatus.Approved);
+        contract.setStatus(ContractStatus.Approved);
         mutableContractRepository.approve(contract);
         return contract;
     }
@@ -84,7 +84,7 @@ public class MutableContractManager extends CommonContractManager implements Mut
     @Override
     public Contract reject(Contract contract) {
         contract.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-        contract.setMsuStatus(ContractStatus.Rejected);
+        contract.setStatus(ContractStatus.Rejected);
         mutableContractRepository.reject(contract);
         return contract;
     }
