@@ -4,7 +4,7 @@ mixin blocks(title)
   block
 mixin formGroup()
   .form-group
-    .col-md-offset-1.col-md-9
+    .col-md-12
       block
 mixin formField(label, value)
   label.control-label.col-md-2 #{label}:
@@ -31,7 +31,7 @@ mixin button(href,num)
   +blocks("地点详情")
     +formGroup()
       +formField("地点名称", "site.name")(class="col-md-4")
-      +formField("所在区域", "site.dictionary.display")(class="col-md-4")
+      +formField("所在区域", "site.areaname")(class="col-md-4")
     +formGroup()
       +formField("工作时间","site.workTime.name")(class="col-md-10")
     +formGroup()

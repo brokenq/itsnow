@@ -7,12 +7,11 @@ include /lib/mixins/list
       +tool_button("actionService.gotoState('contracts.edit', $event)", "cog", "操作", "1", "", "enable")
 
   +page_table("contractsTable","selectionService")
-    +row("contract", "sn", "selectionService")(ng-class="{'enable':contract.msuStatus=='Approved'}")
+    +row("contract", "sn", "selectionService")(ng-class="{'enable':contract.status=='Approved'}")
       td(data-title="'合同名称'")
         a(ui-sref="contracts.view(contract)") {{contract.sn}}
       td(data-title="'企业帐户'")
         a(ui-sref="contracts.accounts_view(contract)") {{contract.msuAccount.name}}
-      td(data-title="'状态'") {{contract.msuStatus | formatContractStatus}}
-      td(data-title="'服务商状态'") {{contract.mspStatus | formatContractStatus}}
+      td(data-title="'状态'") {{contract.status | formatContractStatus}}
       td(data-title="'创建时间'") {{contract.createdAt | formatTime}}
       td(data-title="'更新时间'") {{contract.updatedAt | formatTime}}

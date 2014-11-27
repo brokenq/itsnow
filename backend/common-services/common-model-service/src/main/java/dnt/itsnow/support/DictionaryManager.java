@@ -1,7 +1,7 @@
 package dnt.itsnow.support;
 
+import dnt.itsnow.annotation.Dictionary;
 import dnt.itsnow.exception.DictionaryException;
-import dnt.itsnow.model.Dictionary;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 import dnt.itsnow.platform.util.DefaultPage;
@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,15 +26,15 @@ public class DictionaryManager extends Bean implements DictionaryService {
     private DictionaryRepository repository;
 
     @Override
-    public Page<Dictionary> findAll(String keyword, Pageable pageable) {
+    public Page<dnt.itsnow.model.Dictionary> findAll(String keyword, Pageable pageable) {
         logger.debug("Finding dictionaries by keyword: {}", keyword);
 
        int total = repository.count(keyword);
-       List<Dictionary> dictionaries = new ArrayList<Dictionary>();
+       List<dnt.itsnow.model.Dictionary> dictionaries = new ArrayList<dnt.itsnow.model.Dictionary>();
         if (total > 0) {
             dictionaries = repository.findAll(keyword, pageable);
        }
-        DefaultPage page = new DefaultPage<Dictionary>(dictionaries, pageable, total);
+        DefaultPage page = new DefaultPage<dnt.itsnow.model.Dictionary>(dictionaries, pageable, total);
 
         logger.debug("Found   {}", page.getContent());
 
@@ -42,7 +43,7 @@ public class DictionaryManager extends Bean implements DictionaryService {
     }
 
     @Override
-    public Dictionary create(Dictionary dictionary) throws DictionaryException {
+    public dnt.itsnow.model.Dictionary create(dnt.itsnow.model.Dictionary dictionary) throws DictionaryException {
         logger.info("Creating {}", dictionary);
 
         if (dictionary == null) {
@@ -56,7 +57,7 @@ public class DictionaryManager extends Bean implements DictionaryService {
     }
 
     @Override
-    public Dictionary update(Dictionary dictionary) throws DictionaryException {
+    public dnt.itsnow.model.Dictionary update(dnt.itsnow.model.Dictionary dictionary) throws DictionaryException {
         logger.info("Updating {}", dictionary);
 
         if (dictionary == null) {
@@ -72,7 +73,7 @@ public class DictionaryManager extends Bean implements DictionaryService {
     }
 
     @Override
-    public void destroy(Dictionary dictionary) throws DictionaryException {
+    public void destroy(dnt.itsnow.model.Dictionary dictionary) throws DictionaryException {
         logger.warn("Deleting {}", dictionary);
 
         if (dictionary == null) {
@@ -85,22 +86,44 @@ public class DictionaryManager extends Bean implements DictionaryService {
     }
 
     @Override
-    public Dictionary findByCode(String code) {
+    public dnt.itsnow.model.Dictionary findByCode(String code) {
         logger.debug("Finding dictionary by code: {}", code);
 
-       Dictionary dictionary = repository.findByCode(code);
+       dnt.itsnow.model.Dictionary dictionary = repository.findByCode(code);
 
         logger.debug("Found   {}", dictionary);
 
         return dictionary;
-
     }
 
     @Override
-    public Dictionary findByName(String name) {
+    public dnt.itsnow.model.Dictionary find(Class clazz) {
+
+        String code = "";
+
+        Field[] fields = clazz.getDeclaredFields();
+
+        for (Field field : fields) {
+            Dictionary dict = field.getAnnotation(Dictionary.class);
+            if (dict != null) {
+                code = dict.code();
+            }
+        }
+
+        logger.debug("Finding dictionary by code: {}", code);
+
+        dnt.itsnow.model.Dictionary dictionary = repository.findByCode(code);
+
+        logger.debug("Found   {}", dictionary);
+
+        return dictionary;
+    }
+
+    @Override
+    public dnt.itsnow.model.Dictionary findByName(String name) {
         logger.debug("Finding dictionary by name: {}", name);
 
-        Dictionary dictionary = repository.findByName(name);
+        dnt.itsnow.model.Dictionary dictionary = repository.findByName(name);
 
         logger.debug("Found   {}", dictionary);
 
@@ -108,10 +131,10 @@ public class DictionaryManager extends Bean implements DictionaryService {
     }
 
     @Override
-    public Dictionary findByLabel(String label) {
+    public dnt.itsnow.model.Dictionary findByLabel(String label) {
         logger.debug("Finding dictionary by label: {}", label);
 
-        Dictionary dictionary = repository.findByLabel(label);
+        dnt.itsnow.model.Dictionary dictionary = repository.findByLabel(label);
 
         logger.debug("Found   {}", dictionary);
 

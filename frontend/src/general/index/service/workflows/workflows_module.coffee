@@ -1,27 +1,32 @@
-angular.module('Service.Workflows', ['multi-select','angularFileUpload','jcs-autoValidate'])
+angular.module('Service.Workflows', ['multi-select','angularFileUpload'])
 
 .config ($stateProvider, $urlRouterProvider)->
+
   $stateProvider.state 'workflows',
     url: '/workflows',
     abstract: true,
     templateUrl: 'service/workflows/index.tpl.jade',
     controller: 'WorkflowsCtrl',
     data: {pageTitle: '流程管理', default: 'workflows.list'}
+
   $stateProvider.state 'workflows.list',
     url: '/list',
     templateUrl: 'service/workflows/list.tpl.jade'
     controller: 'WorkflowListCtrl',
     data: {pageTitle: '流程列表'}
+
   $stateProvider.state 'workflows.new',
     url: '/new',
     templateUrl: 'service/workflows/new.tpl.jade'
     controller: 'WorkflowNewCtrl',
     data: {pageTitle: '新增流程'}
+
   $stateProvider.state 'workflows.view',
     url: '/{sn}',
     templateUrl: 'service/workflows/view.tpl.jade'
     controller: 'WorkflowViewCtrl',
     data: {pageTitle: '查看流程'}
+
   $stateProvider.state 'workflows.edit',
     url: '/{sn}/edit',
     templateUrl: 'service/workflows/edit.tpl.jade'
@@ -47,16 +52,25 @@ angular.module('Service.Workflows', ['multi-select','angularFileUpload','jcs-aut
     $resource '/api/dictionaries/:code', {code: '@code'}
   ])
 
-.controller('WorkflowsCtrl', ['$scope', '$state', '$log', 'Feedback', 'CacheService', 'WorkflowService',\
-    ($scope, $state, $log, feedback, CacheService,workflowService) ->
+.filter("typeFilter", ()->
+  return (input, scope)->
+    return detail.key for detail in scope.dictDetails when input is detail.value
+)
+
+.controller('WorkflowsCtrl', ['$scope', '$state', '$log', 'Feedback', 'CacheService', 'WorkflowService', 'WorkflowDictService',\
+    ($scope, $state, $log, feedback, CacheService, workflowService, dictService) ->
       # frontend controller logic
       $log.log "Initialized the Workflows controller"
+
       $scope.options =
         page: 1   # show first page
         count: 10 # count per page
 
       $scope.cacheService = new CacheService "sn", (value)->
         workflowService.get {sn: value}
+
+      dictService.get {code: 'workflow'}, (data) ->
+        $scope.dictDetails = data.details
 
       # 提交按钮是否已经执行了提交操作，false为未执行，则按钮可用
       $scope.submited = false
@@ -76,9 +90,9 @@ angular.module('Service.Workflows', ['multi-select','angularFileUpload','jcs-aut
                 return serviceItem
 
       # 去除不必要的对象属性，用于HTTP提交
-      $scope.formatData = (workflow, dictionary, serviceCatalogs) ->
+      $scope.formatData = (workflow, dictDetail, serviceCatalogs) ->
         aWorkflow = workflow
-        aWorkflow.dictionary = dictionary
+        aWorkflow.type = dictDetail.value
         aWorkflow.serviceItem = selectedServiceItem(serviceCatalogs)
         aWorkflow.serviceItemType = '0'
         delete aWorkflow.$promise;
@@ -87,8 +101,9 @@ angular.module('Service.Workflows', ['multi-select','angularFileUpload','jcs-aut
   ])
 
 .controller('WorkflowListCtrl',
-  ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'SelectionService', 'WorkflowService', 'Feedback',
+  ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'SelectionService', 'WorkflowService', 'Feedback',\
     ($scope, $location, $log, NgTable, ActionService, SelectionService, workflowService, feedback) ->
+
       $log.log "Initialized the Workflow list controller"
 
       args =
@@ -115,17 +130,14 @@ angular.module('Service.Workflows', ['multi-select','angularFileUpload','jcs-aut
 
 .controller('WorkflowViewCtrl', ['$scope', '$stateParams', '$log', ($scope, $stateParams, $log) ->
     $scope.workflow = $scope.cacheService.find $stateParams.sn, true
+    $scope.workflow.typename = $filter('areaFilter')($scope.workflow.type, $scope)
     $log.log "Initialized the Workflow View controller on: " + JSON.stringify($scope.workflow)
   ])
 
-.controller('WorkflowNewCtrl', ['$scope', '$state', '$log', 'Feedback', 'WorkflowService', 'WorkflowDictService', 'WorkflowServiceCatalogService', '$upload',\
-    ($scope, $state, $log, feedback, workflowService, dictService, serviceCatalogService, $upload) ->
+.controller('WorkflowNewCtrl', ['$scope', '$state', '$log', 'Feedback', 'WorkflowService', 'WorkflowServiceCatalogService', '$upload',\
+    ($scope, $state, $log, feedback, workflowService, serviceCatalogService, $upload) ->
 
-      $log.log "Initialized the Workflow New controller"
-      $scope.disabled = false
-
-      dictService.get {code: '002'}, (data) ->
-        $scope.dictionaries = data.details
+      $scope.checked = false
 
       #查询服务目录
       serviceCatalogService.query (data)->
@@ -142,49 +154,51 @@ angular.module('Service.Workflows', ['multi-select','angularFileUpload','jcs-aut
 
       $scope.create = ()->
 
-        upload = $upload.upload({
+        if $scope.selectedFiles.length<=0
+          feedback.warn("未选择文件！")
+          return
+        if $scope.selectedFiles[0].name.indexOf('.bpmn20.xml') < 0
+          feedback.warn("上传文件格式错误！")
+          return
+        if $scope.selectedFiles[0].size>1048576
+          feedback.warn("上传文件大小超过最大限制(1M)！")
+          return
+
+        upload = $upload.upload(
           url: '/api/workflows/upload'
           method: "POST"
           file: $scope.selectedFiles[0]
-        })
-
-        upload.then () ->
+        ).then () ->
           $scope.submited = true
           workflow = $scope.formatData($scope.workflow, $scope.dictionary, $scope.serviceCatalogs)
-          workflowService.save workflow, () ->
-            feedback.success "新建流程#{workflow.name}成功"
-            $state.go "workflows.list"
-          , (resp) ->
-            feedback.error("新建流程#{workflow.name}失败", resp)
+          return workflowService.save(workflow).$promise
         , (resp) ->
-          feedback.error("文件上传失败，请重新创建", resp)
+           feedback.error("文件上传失败", resp)
+        .then () ->
+          feedback.success "新建流程成功"
+          $state.go "workflows.list"
+        , (resp) ->
+          feedback.error("新建流程失败", resp)
   ])
 
 .controller('WorkflowEditCtrl', ['$scope', '$state', '$log', '$stateParams', 'Feedback', 'WorkflowService', 'WorkflowDictService', 'WorkflowServiceCatalogService',\
     ($scope, $state, $log, $stateParams, feedback, workflowService, dictService, serviceCatalogService) ->
 
-      $scope.workflow = $scope.cacheService.find $stateParams.sn, true
-      $log.log "Initialized the Workflow Edit controller on: " + JSON.stringify($scope.workflow)
-      $scope.disabled = true
+      $scope.checked = true
 
-      workflowService.get $scope.workflow, (data) ->
-        $scope.workflow = data;
-
-        #加载数据字典
-        dictService.get {code: '002'}, (data) ->
-          $scope.dictionaries = data.details
-          return $scope.dictionary = dict for dict in $scope.dictionaries when dict.sn == $scope.workflow.dictionary.sn
-
-        #加载服务目录
-        serviceCatalogService.query (data)->
+      workflowService.get({sn:$stateParams.sn}).$promise
+      .then (data)->
+        $scope.workflow = data
+        $scope.dictionary = detail for detail in $scope.dictDetails when detail.value is $scope.workflow.type
+        return serviceCatalogService.query().$promise
+      .then (data)->
           serviceCatalogs = []
           for serviceCatalog in data
             serviceCatalog.checkboxDisabled = true
             serviceCatalogs.push serviceCatalog
             if serviceCatalog.items?
               for item in serviceCatalog.items
-                if item.sn == $scope.workflow.serviceItem.sn
-                  item.ticked = true
+                item.ticked = true if item.sn is $scope.workflow.serviceItem.sn
                 serviceCatalogs.push item
           $scope.serviceCatalogs = serviceCatalogs
 
@@ -192,7 +206,8 @@ angular.module('Service.Workflows', ['multi-select','angularFileUpload','jcs-aut
       $scope.update = () ->
         $scope.submited = true
         workflow = $scope.formatData($scope.workflow, $scope.dictionary, $scope.serviceCatalogs)
-        workflowService.update workflow, workflow, () ->
+        workflowService.update(workflow, workflow).$promise
+        .then ->
           feedback.success "修改流程#{workflow.name}成功"
           $state.go "workflows.list"
         , (resp) ->

@@ -12,7 +12,8 @@ include /lib/mixins/list
 
   +page_table("worktimesTable","selectionService")
     +row("worktime", "sn", "selectionService")(class="editable deletable")
-      td(data-title="'工作日'")  {{worktime.name}}
+      td(data-title="'工作日'")
+        a(ui-sref="worktimes.view(worktime)") {{worktime.name}}
       td(data-title="'起始时间'") {{worktime.startAt}}
       td(data-title="'结束时间'")  {{worktime.endAt}}
       td(data-title="'描述'")   {{worktime.description}}

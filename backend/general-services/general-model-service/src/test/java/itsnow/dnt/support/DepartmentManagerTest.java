@@ -61,7 +61,7 @@ public class DepartmentManagerTest {
         site.setName("大众五厂");
         Dictionary dictionary = new Dictionary();
         dictionary.setId(1L);
-        site.setDictionary(dictionary);
+        site.setArea("sh");
         WorkTime workTime = new WorkTime();
         workTime.setId(1L);
         site.setWorkTime(workTime);
@@ -96,7 +96,7 @@ public class DepartmentManagerTest {
         site.setName("大众五厂");
         Dictionary dictionary = new Dictionary();
         dictionary.setId(1L);
-        site.setDictionary(dictionary);
+        site.setArea("sh");
         WorkTime workTime = new WorkTime();
         workTime.setId(1L);
         site.setWorkTime(workTime);

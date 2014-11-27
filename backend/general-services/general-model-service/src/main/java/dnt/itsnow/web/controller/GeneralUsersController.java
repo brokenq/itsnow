@@ -149,6 +149,26 @@ public class GeneralUsersController extends SessionSupportController <User>{
          logger.info("change password:{}");
         userService.changePassword(changeRequest);
     }
+    @RequestMapping(value = "/{email:.+}/{username}/checkEmail", method = RequestMethod.GET)
+    public HashMap checkUniqueUpdateEmail(@PathVariable("email") String email, @PathVariable("username") String username) {
+        logger.info("find byemail:{}", email);
+        User user = userService.findByEmail(email);
+        logger.info("return user{}", user);
+        if (user != null && user.getUsername() != username) {
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate user mail: " + user.getEmail());
+        } else {
+            return new HashMap();
+        }
+    }
+    @RequestMapping(value = "/{password}/{username}/checkPwd", method = RequestMethod.GET)
+    public HashMap checkPwd(@PathVariable("password") String password, @PathVariable("username") String username) {
+        if (userService.challenge(username, password)) {
+            return new HashMap();
+        }else{
+
+            throw new WebClientSideException(HttpStatus.CONFLICT, "bad user or password");
+        }
+    }
     @BeforeFilter({"show", "update", "destroy"})
     public void initCurrentUser(@PathVariable("username") String username) {
         this.user=userService.findByUsername(username);

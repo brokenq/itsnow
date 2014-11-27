@@ -1,7 +1,7 @@
 
--- DELETE FROM ACT_ID_MEMBERSHIP
--- WHERE  Concat(user_id_, group_id_) NOT IN (SELECT Concat(username, authority)
---                                            FROM   authorities);
+DELETE FROM ACT_ID_MEMBERSHIP
+WHERE  Concat(user_id_, group_id_) NOT IN (SELECT Concat(username, authority)
+                                           FROM   authorities);
 
 DELETE FROM ACT_ID_USER
 WHERE  id_ NOT IN (SELECT username
