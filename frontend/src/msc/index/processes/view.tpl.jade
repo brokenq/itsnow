@@ -24,7 +24,7 @@ mixin tab_li(path, label, expand)
   li()&attributes(attributes)
     a(data-toggle="tab", href="#{path}", aria-expanded="#{expand}") #{label}
 mixin tab_pane(linkId, model, log)
-  .tab-pane.fade(id="#{linkId}")()&attributes(attributes)
+  .tab-pane.fade(id="#{linkId}")&attributes(attributes)
     pre(id="process_#{model}", class="log") #{log}
 
 .form-horizontal

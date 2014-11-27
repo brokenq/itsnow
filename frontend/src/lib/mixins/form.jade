@@ -58,3 +58,13 @@ mixin action_submit(label)
 //- the default cancel/reset action
 mixin action_cancel(label)
   +action_button(label,"reset","undo","default")&attributes(attributes)
+//dict
+mixin dictName(title)
+  label.col-xs-12.col-sm-3.control-label.no-padding-right #{title}
+  .col-xs-12.col-sm-2
+    input(type="text",name="keyInput",required)&attributes(attributes)
+mixin dictValue(val,tip)
+  label.col-xs-12.col-sm-1.control-label.no-padding-right #{val}
+  .col-xs-12.col-sm-2
+    input(type="text",name="valueInput",required)&attributes(attributes)
+  .help-block.col-xs-12.col-sm-reset.inline #{tip}
