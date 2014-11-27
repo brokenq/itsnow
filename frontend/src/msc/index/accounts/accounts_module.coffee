@@ -117,6 +117,7 @@ angular.module('MscIndex.Accounts', [])
           $timeout(->
             params.total(headers('total'))
             $defer.resolve($scope.accounts = data)
+            $scope.cacheService.cache data
           , 500)
         )
     $scope.accountsTable = new NgTable(angular.extend($scope.options, $location.search()), args)
