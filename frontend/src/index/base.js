@@ -17,7 +17,8 @@ angular.module('Itsnow.Index', [
     'Lib.Feedback',
     'Lib.Utils',
     'Lib.Commons',
-    'System.Roles'
+    'System.Roles',
+    'Service.Dict'
 ])
   .config(function ($httpProvider, $stateProvider, $urlRouterProvider) {
         $urlRouterProvider.otherwise('dashboard');
