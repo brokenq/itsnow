@@ -170,10 +170,12 @@ public class UsersController extends SessionSupportController<User> {
         logger.info("find byemail:{}", email);
         User user = userService.findByEmail(email);
         logger.info("return user{}", user);
-        if (user != null && user.getUsername() != username) {
-            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate user emil: " + user.getEmail());
-        } else {
+        if(user==null||user.getUsername().equals(username)){
+            logger.info("into no confilct user{}", user);
             return new HashMap();
+        }else{
+            logger.info("in to conflict user {}", user);
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate user emil: " + user.getEmail());
         }
     }
 
@@ -203,7 +205,9 @@ public class UsersController extends SessionSupportController<User> {
 
     @BeforeFilter({"show", "update", "destroy"})
     public void initCurrentUser(@PathVariable("username") String username) {
+
         this.user = userService.findByUsername(username);
+        this.cleanSensitive(this.user);
     }
 
     private void cleanSensitive(User user) {

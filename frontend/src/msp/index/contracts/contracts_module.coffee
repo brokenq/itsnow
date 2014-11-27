@@ -16,7 +16,7 @@ angular.module('MspIndex.Contracts', [])
     url: '/{sn}/edit',
     templateUrl: 'contracts/edit.tpl.jade'
     controller: 'ContractEditCtrl',
-    data: {pageTitle: '批准用户登录MSU'}
+    data: {pageTitle: '绑定合约用户'}
   $stateProvider.state 'contracts.my-list',
     url: '/my_list',
     templateUrl: 'contracts/my_list.tpl.jade'

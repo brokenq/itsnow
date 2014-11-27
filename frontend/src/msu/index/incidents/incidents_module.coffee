@@ -48,13 +48,6 @@
         return "已解决" if status is 'Resolved'
         return "已关闭" if status is 'Closed'
     )
-    .filter('formatTime', () ->
-      return (time) ->
-        console.warn(time)
-        if time? and time > 0
-          date = new Date(time)
-          return date.toLocaleString()
-    )
     .filter('formatDict', ()->
       return (status,dicts) ->
         for dict in dicts.details
