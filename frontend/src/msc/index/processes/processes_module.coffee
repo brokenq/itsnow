@@ -73,8 +73,9 @@ angular.module('MscIndex.Processes', [])
       else
         invokeId = process.configuration.stopInvocationId
         status = "停止中"
+      process.job = invokeId
       acc = new CancelAction process
-      acc.$cancel {job: invokeId}, ->
+      acc.$cancel ->
         feedback.success("正在取消#{status}的进程 #{process.name}")
         succCallback() if succCallback
       , (resp)->
