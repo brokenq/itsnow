@@ -84,13 +84,13 @@ public class MutableUserManager extends CommonUserManager
     @Override
     public User findByUsername(String username) {
         logger.info("find User by {}", username);
-       return mutableRepository.findByUsername(username);
+        return super.findByUsername(username);
     }
 
     @Override
     public User findByEmail(String email) {
         logger.info("find User by {}", email);
-        return  mutableRepository.findByEmail(email);
+        return  super.findByEmail(email);
     }
     @Override
     public void delete(User user) {

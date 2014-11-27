@@ -17,4 +17,4 @@ include /lib/mixins/list
       td(data-title="'电子邮箱'")
         a(href="mailto:{{user.email}}") {{user.email}}
       td(data-title="'电话号码'", align="right") {{user.phone}}
-      td(data-title="'是否启用'") {{user.enabled == '1' ? '启用' : '停用'}}
+      td(data-title="'是否启用'") {{user.enabled | enableFilter}}
