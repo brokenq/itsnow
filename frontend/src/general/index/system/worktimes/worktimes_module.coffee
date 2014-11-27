@@ -37,7 +37,7 @@ angular.module('System.WorkTime',[])
             { id: "4" ,name: "星期四", checked:false}
             { id: "5" ,name: "星期五", checked:false}
             { id: "6" ,name: "星期六", checked:false}
-            { id: "7" ,name: "星期天", checked:false}
+            { id: "7" ,name: "星期日", checked:false}
         ]
       $scope.init()
       $scope.toggleCheckboxesParent=(workdate) ->
@@ -101,16 +101,17 @@ angular.module('System.WorkTime',[])
 
 .controller('WorkTimeNewCtrl', ['$scope', '$state', 'Feedback',\
                                ($scope,     $state,   feedback) ->
+    $scope.init()
     $scope.toggleCheckboxes=(workdate)->
       $scope.toggleCheckboxesParent(workdate)
     $scope.create=() ->
       $scope.worktime.name=$scope.getWorkNames($scope.workdates)
       $scope.init()
       $scope.services.save $scope.worktime, ->
-        feedback.success "新建#{$scope.worktime.name}成功"
+        feedback.success "新建工作日成功"
         $state.go "worktimes.list"
       , (resp) ->
-        feedback.error("新建#{$scope.worktime.name}失败", resp)
+        feedback.error("新建工作日失败", resp)
 ])
 .controller('WorkTimeEditCtrl', ['$scope', '$state', '$stateParams', 'Feedback',\
                                 ($scope,    $state,   $stateParams,  feedback) ->
@@ -129,10 +130,10 @@ angular.module('System.WorkTime',[])
         $scope.worktime.$promise = `undefined`
         $scope.worktime.$resolved = `undefined`
         $scope.services.update {sn: sn}, $scope.worktime, () ->
-          feedback.success "修改#{$scope.worktime.name}成功"
+          feedback.success "修改工作日成功"
           $state.go "worktimes.list"
         , (resp) ->
-          feedback.error("修改#{$scope.worktime.name}失败", resp);
+          feedback.error("修改工作日失败", resp);
 
 ])
 .controller('WorkTimeViewCtrl', ['$scope', '$state', '$stateParams', 'Feedback',
