@@ -1,9 +1,10 @@
 include /lib/mixins/list
 
-.container
+.datalist
   +toolbar
     +button_group
       +tool_button("contractsTable.reload()", "refresh", "", "*", "", "")
+    +button_group
       +tool_button("actionService.gotoState('contracts.edit', $event)", "cog", "操作", "1", "", "enable")
 
   +page_table("contractsTable","selectionService")

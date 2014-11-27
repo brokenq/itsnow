@@ -113,9 +113,14 @@ angular.module('MsuIndex.Contracts', ['multi-select'])
           feedback.error "拒绝失败", resp )
   ])
 
-.controller('ContractViewCtrl', ['$scope', '$stateParams', '$log', ($scope, $stateParams, $log) ->
-    $scope.contract = $scope.cacheService.find $stateParams.sn, true
-    $log.log "Initialized the Contract View controller on: " + JSON.stringify($scope.contract)
+.controller('ContractViewCtrl', ['$scope', '$stateParams', '$log', '$filter', 'ContractService',\
+    ($scope, $stateParams, $log, $filter, contractService) ->
+      contractService.get({sn: $stateParams.sn}).$promise
+      .then (data)->
+        $scope.contract = data
+        $scope.contract.createdAtFMT = $filter('date')($scope.contract.createdAt, 'yyyy-MM-dd HH:mm:ss')
+        $scope.contract.statusname = $filter('formatContractStatus')($scope.contract.status)
+      $log.log "Initialized the Contract View controller on: " + JSON.stringify($scope.contract)
   ])
 
 .controller('ContractAccountViewCtrl', ['$scope', '$stateParams', '$log', \

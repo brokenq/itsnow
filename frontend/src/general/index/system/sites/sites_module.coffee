@@ -62,7 +62,15 @@ angular.module('System.Sites', ['multi-select'])
         count: 10 # count per page
 
       $scope.cacheService = new CacheService "sn", (value)->
-        siteService.get {sn: value}
+#        siteService.get {sn: value}
+        data = {}
+        $.ajax
+          url:    "/api/sites/#{value}"
+          async:  false
+          type:   "GET"
+          success: (response)->
+            data = response
+        return data
 
       dictService.get {code: 'location'}, (data) ->
         $scope.dictDetails = data.details
@@ -111,10 +119,12 @@ angular.module('System.Sites', ['multi-select'])
           feedback.error("删除地点#{site.name}失败", resp)
   ])
 
-.controller('SiteViewCtrl', ['$scope', '$stateParams', '$log', '$filter',\
-    ($scope, $stateParams, $log, $filter) ->
+.controller('SiteViewCtrl', ['$scope', '$stateParams', '$log', '$filter', 'SiteDictService',\
+    ($scope, $stateParams, $log, $filter, dictService) ->
       $scope.site = $scope.cacheService.find $stateParams.sn, true
-      $scope.site.areaname = $filter('areaFilter')($scope.site.area, $scope)
+      dictService.get {code: 'location'}, (data) ->
+        $scope.dictDetails = data.details
+        $scope.site.areaname = $filter('areaFilter')($scope.site.area, $scope)
       $log.log "Initialized the Site View controller on: " + JSON.stringify($scope.site)
   ])
 
