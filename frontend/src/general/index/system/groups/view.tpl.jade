@@ -27,7 +27,7 @@ mixin tableForms(auth)
       +formField("创建时间", "group.createdAtStr")(class="col-md-3")
     +formGroup()
       +label('组描述')(class="col-md-8")
-        textarea.form-control(rows='4',ng-model="group.description",readonly)
+        textarea.form-control(rows='1',ng-model="group.description",readonly)
     +formGroup()
       +label('用户')(class="col-md-8")
         table.table.table-striped.table-bordered.table-condensed

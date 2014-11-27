@@ -48,9 +48,9 @@ angular.module('System.Staffs', ['multi-select'])
 
 .filter('staffStatusFilter', () ->
   (input) ->
-    if input is '1'
+    if input is 'Normal'
       "在职"
-    else if input is '0'
+    else if input is 'Quit'
       "离职"
     else
       "无"
@@ -77,6 +77,7 @@ angular.module('System.Staffs', ['multi-select'])
       # 去除不必要的对象属性，用于HTTP提交
       $scope.formatData = (staff, site, department, staff_user) ->
         aStaff = staff
+        aStaff.status = staff.status.id
         aStaff.site = site
         aStaff.department = department
         staff.user = staff_user
@@ -147,20 +148,25 @@ angular.module('System.Staffs', ['multi-select'])
       $log.log "Initialized the Staff Edit controller on: " + JSON.stringify($scope.staff)
       $scope.disabled = true
 
-      staffService.get({no: $scope.staff.no}).$promise.then (data) ->
+      $scope.statusList = [{id:"Normal",name:"在职"},{id:"Quit",name:"离职"}]
+
+      staffService.get({no: $scope.staff.no}).$promise
+      .then (data) ->
         $scope.staff = data
-        siteService.query (data) ->
-          $scope.sites = data
-          $scope.site = site for site in $scope.sites when site.sn == $scope.staff.site.sn
-        departmentService.query (data) ->
-          $scope.departments = data
-          for department in $scope.departments
-            if department.sn == $scope.staff.department.sn
-              $scope.department = department
+        return siteService.query().$promise
+      .then (data) ->
+        $scope.sites = data
+        $scope.site = site for site in $scope.sites when site.sn is $scope.staff.site.sn
+        return departmentService.query().$promise
+      .then (data) ->
+        $scope.departments = data
+        $scope.department = department for department in $scope.departments when department.sn is $scope.staff.department.sn
+        $scope.staff.status = status for status in $scope.statusList when status.id is $scope.staff.status
 
       # 编辑页面提交
       $scope.update = () ->
         $scope.submited = true
+
         staff = $scope.formatData($scope.staff, $scope.site, $scope.department, $scope.staff_user)
         staffService.update {no: staff.no}, staff, () ->
           feedback.success "修改员工#{staff.name}成功"

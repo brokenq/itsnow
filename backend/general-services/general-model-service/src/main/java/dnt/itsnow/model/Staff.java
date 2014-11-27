@@ -23,7 +23,7 @@ public class Staff extends ConfigItem {
     // 合同工，正式工
     private String type;
     // 在职，离职
-    private String status;
+    private StaffStatus status;
     //所属部门
     private Department department;
     //所属地点
@@ -63,11 +63,11 @@ public class Staff extends ConfigItem {
         this.type = type;
     }
 
-    public String getStatus() {
+    public StaffStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(StaffStatus status) {
         this.status = status;
     }
 
