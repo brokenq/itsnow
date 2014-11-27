@@ -43,6 +43,7 @@ angular.module('MscIndex.Processes', [])
           data = response
       return data
 
+    $scope.submited = false
     Processes = $scope.services
     Process = $scope.service
     CancelAction = $resource("/admin/api/processes/:name/cancel/:job", {name: "@name", job: "@job"}, {cancel: {method: "PUT"}})
@@ -146,12 +147,14 @@ angular.module('MscIndex.Processes', [])
           $scope.process.host = getHostById process.host.id
 
     $scope.create = ->
+      $scope.submited = true
       acc = new Processes process
       acc.$save (response)->
         feedback.success "正在创建 #{process.name} 进程"
         $state.go "processes.view", response
       , (resp)->
         feedback.error "创建 #{process.name} 进程失败", resp
+        $scope.submited = false
   ])
 
   .controller('ProcessViewCtrl', ['$scope', '$interval', '$stateParams', '$filter', '$http', '$location', \
@@ -200,6 +203,7 @@ angular.module('MscIndex.Processes', [])
           when "stopping" then $("#cancelStoppingBtn").removeClass("hidden").addClass("show")
 
       currentUrl = $location.url();
+      $scope.path = $location.path(); # tab显示
       # 获取日志信息
       $scope.getLog = (invokeId, type)->
         process = $scope.process

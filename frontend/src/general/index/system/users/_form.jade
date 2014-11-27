@@ -21,5 +21,5 @@ include /lib/mixins/form
     +group("cuser","repeatPassword","重复密码","retweet","")
       +input("cuser","repeatPassword")(type="password",pw-check="cuser_password",ng-required="{{createview}}",ng-maxlength="20",ng-minlength="6")
   div(ng-if="updateview")
-    +group("cuser", "enabled", "是否开启", "", "")
+    +group("cuser", "enabled", "是否启用", "", "")
       +select("cuser","enabled")(ng-options="data.state as data.name for data in statedatas")

@@ -37,6 +37,11 @@ angular.module('System.User', [])
     return user.name if user.name == user.username
     user.name + "(" + user.username + ")"
 )
+.filter('enableFilter', () ->
+  (input) ->
+    return "启用" if input is true
+    return "停用"
+)
 .controller('UsersCtrl', ['$scope', '$resource', '$state', 'Feedback', 'CacheService',
     ($scope, $resource, $state, feedback, CacheService) ->
       $scope.statedatas = [
