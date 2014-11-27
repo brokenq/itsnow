@@ -163,14 +163,40 @@ angular.module('MscIndex.Processes', [])
       $scope.process = process
       console.log "Initialized the Process View controller on: #{JSON.stringify process}"
 
+      TYPES =
+        DEPLOY: "deploy"
+        START:  "start"
+        STOP:   "stop"
+      LOG_ANCHORS =
+        DEPLOY: "creation_log"
+        START:  "start_log"
+        STOP:   "stop_log"
+      STATUS =
+        STARTING: "Starting"
+        RUNNING:  "Running"
+        STOPPING: "Stopping"
+        STOPPED:  "Stopped"
+
       # active tab
-      activeTab = ->
+      activeTab = (type)->
         addClass = (id)->
           $("#{id}_li").addClass('active')
           $(id).addClass('active in')
-        return addClass("#start_log") if process.status is "Starting" or process.status is "Running"
-        return addClass("#stop_log") if process.status is "Stopping" or process.status is "Stopped"
-        return addClass("#creation_log")
+        removeClass = (id)->
+          $("#{id}_li").removeClass('active')
+          $(id).removeClass('active in')
+        if type?
+          removeClass("##{LOG_ANCHORS.DEPLOY}")
+          removeClass("##{LOG_ANCHORS.START}")
+          removeClass("##{LOG_ANCHORS.STOP}")
+          switch type
+            when TYPES.DEPLOY then addClass("##{LOG_ANCHORS.DEPLOY}")
+            when TYPES.START then addClass("##{LOG_ANCHORS.START}")
+            when TYPES.STOP then addClass("##{LOG_ANCHORS.STOP}")
+          return
+        return addClass("##{LOG_ANCHORS.START}") if process.status is STATUS.STARTING or process.status is STATUS.RUNNING
+        return addClass("##{LOG_ANCHORS.STOP}") if process.status is STATUS.STOPPING or process.status is STATUS.STOPPED
+        return addClass("##{LOG_ANCHORS.DEPLOY}")
       activeTab()
 
       # toggle access url button
@@ -195,7 +221,7 @@ angular.module('MscIndex.Processes', [])
       # access url
       $scope.ipUrl = "http://#{process.host.address}:#{processConfig['http.port']}"
       regx = new RegExp "itsnow_|itsnow-"
-      $scope.domainUrl = "http://#{process.name.replace(regx, '')}.itsnow.com"
+      $scope.domainUrl = "http://#{process.name.replace(regx, '')}.#{processConfig['app.domain']}"
 
       # toggle action buttons
       toggleButton = (status)->
@@ -243,7 +269,6 @@ angular.module('MscIndex.Processes', [])
               toggleButton($filter("lowercase")(headers("status")))
               $scope.process.display.status = $filter("formatProcessStatus")(headers("status"))
               $scope.process.status = headers("status")
-              activeTab()
               toggleAccessButton()
               $interval.cancel(intervalId) if offset is -1 or currentUrl isnt $location.url()
         , 1000)
@@ -256,8 +281,10 @@ angular.module('MscIndex.Processes', [])
 
       $scope.start = ->
         $scope.execStart process, $scope.getLog
+        activeTab(TYPES.START)
       $scope.stop = ->
         $scope.execStop process, $scope.getLog
+        activeTab(TYPES.STOP)
       $scope.cancel = ->
         $scope.execCancel process
 
