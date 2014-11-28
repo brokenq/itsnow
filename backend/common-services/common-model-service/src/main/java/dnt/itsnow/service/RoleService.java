@@ -5,6 +5,8 @@ import dnt.itsnow.model.Role;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
 
+import java.util.List;
+
 /**
  * <h1>MSP/MSU角色Service</h1>
  */
@@ -18,6 +20,13 @@ public interface RoleService {
      * @return 角色列表
      */
     public Page<Role> findAll(String keyword, Pageable pageable);
+
+    /**
+     * 根据用户名查询所有角色信息
+     * @param username 用户名称
+     * @return 角色列表
+     */
+    public List<Role> findAllByUsername(String username);
 
     /**
      * <h2>根据角色名称进行查找</h2>
