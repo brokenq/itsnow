@@ -1,4 +1,4 @@
-angular.module('Service.Dicts', [])
+angular.module('Service.Dict', [])
 .config ($stateProvider, $urlRouterProvider)->
   $stateProvider.state 'dicts',
     url: '/dicts',
@@ -37,6 +37,12 @@ angular.module('Service.Dicts', [])
   (time) ->
     date = new Date(time)
     return date.toLocaleString()
+)
+.filter('detailFilter', ->
+  (input) ->
+    names=[]
+    names.push detail.key for detail in input if input?
+    names.join()
 )
 
 .factory('DictService', ['$resource', ($resource) ->
@@ -152,17 +158,33 @@ angular.module('Service.Dicts', [])
       $scope.createview = false
       $scope.updateview = true
       $scope.update = () ->
+
+        details = []
+        keyArray = $("input[name='keyInput']")
+        valueArray = $("input[name='valueInput']")
+        for input,index in keyArray
+         detail = {}
+         detail.key = input.value
+         detail.value = valueArray[index].value
+         details.push detail
+
+        $scope.dict.details=details
+        delete $scope.dict.$promise
+        delete $scope.dict.$resolved
+
         dictService.update {code: code}, $scope.dict, () ->
-          feedback.success "修改#{$scope.dict.code}成功"
+          feedback.success "修改#{$scope.dict.name}成功"
           $state.go "dicts.list"
         , (resp) ->
           feedback.error("修改#{$scope.dict.code}失败", resp);
   ])
-.controller('DictsViewCtrl', ['$scope', '$state', '$stateParams', 'Feedback','DictService',\
-                             ($scope,    $state,   $stateParams,   feedback,  dictService) ->
+.controller('DictsViewCtrl', ['$scope', '$state', '$stateParams', '$filter', 'Feedback','DictService',\
+                             ($scope,    $state,   $stateParams, $filter,  feedback,  dictService) ->
       code = $stateParams.code
       dictService.get
         code: code
       , (data) ->
         $scope.dict = data
+        $scope.dict.createdAtFMT = $filter('formatTime')($scope.dict.createdAt)
+        showAdd(data)
   ])
