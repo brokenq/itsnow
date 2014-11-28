@@ -3,5 +3,5 @@ include /lib/mixins/form
 //- this form need includer provide variable:
     readonly : true | false
 +section("绑定用户")
-  +group("contract", "users", "用户", "user", "绑定MSP用户与合同，从而这些用户可以登录至MSU系统")
+  +group("contract", "users", "用户", "user", "绑定合约用户")
     div#role_users(multi-select, input-model="mspContractUsers", button-label="username", item-label="username", tick-property="ticked")

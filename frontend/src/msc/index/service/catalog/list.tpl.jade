@@ -25,5 +25,5 @@ include /lib/mixins/list
                 td(data-title="'图标'")
                     img(ng-src="{{item.icon}}")
                 td(data-title="'标题'")
-                    a(ui-sref="catalog.item.view({sn:catalog.sn,isn:item.sn})") {{item.title}}
+                    a(ui-sref="catalog.item.view({sn:catalog.sn,isn:item.sn})") {{item.title}}*
                 td(data-title="'描述'") {{item.description}}
