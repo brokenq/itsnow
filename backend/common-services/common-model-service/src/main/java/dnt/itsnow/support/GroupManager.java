@@ -58,6 +58,11 @@ public class GroupManager extends Bean implements GroupService {
     }
 
     @Override
+    public List<Group> findAllByUserName(String username) {
+        return groupRespository.findAllByUserName(username);
+    }
+
+    @Override
     public Group create(Group group) throws GroupException {
 
         logger.info("Creating {}", group);

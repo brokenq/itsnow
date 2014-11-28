@@ -40,7 +40,13 @@
         <include refid="select"></include>
         WHERE group_name = #{name}
     </select>
-
+    <select id="findAllByUserName" resultMap="groupResult">
+        SELECT g.*
+        FROM   group_members gu
+        LEFT JOIN groups g
+        ON gu.group_name = g.group_name
+        WHERE #{username} = gu.username
+    </select>
     <select id="findAll" resultMap="groupResult">
         <include refid="select"></include>
         <where>

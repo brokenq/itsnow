@@ -141,8 +141,6 @@ angular.module('System.WorkTime',[])
       $scope.selectWorkDates=[]
       sn=$stateParams.sn
       $scope.worktime = $scope.cacheService.find sn, true
-      $scope.worktime.createdAtStr=$filter('formatTime')($scope.worktime.createdAt)
-      $scope.worktime.updatedAtStr=$filter('formatTime')($scope.worktime.updatedAt)
 
   ])
 
