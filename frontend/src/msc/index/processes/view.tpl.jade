@@ -4,8 +4,7 @@ mixin blocks(title)
   block
 mixin formGroup()
   .form-group
-    .col-md-offset-2.col-md-8
-      block
+    block
 mixin formField(label, value)
   label.control-label.col-md-2 #{label}:
   div()&attributes(attributes)
@@ -15,16 +14,16 @@ mixin textarea(label, value)
   div()&attributes(attributes)
     textarea.form-control(id="process_#{value}", ng-model="process.#{value}", rows='4', readonly)
 mixin button(label, action)
-  button.btn.btn-primary(type='button', ng-click="#{action}")&attributes(attributes) #{label}
+  button.btn.btn-primary.no-border(type='button', ng-click="#{action}")&attributes(attributes) #{label}
     block
-mixin buttonGroup(label, action)
+mixin buttonGroup(label, href)
   li(role="presentation")
-    a(role="menuitem", tabindex="-1", href="javascript:void(0)", ng-click="#{action}") #{label}
-mixin tab_li(path, label, expand)
-  li()&attributes(attributes)
-    a(data-toggle="tab", href="#{path}", aria-expanded="#{expand}") #{label}
+    a(role="menuitem", tabindex="-1", href="#{href}", target="_blank") #{label}
+mixin tab_li(id, path, label)
+  li(id="#{id}")&attributes(attributes)
+    a(data-toggle="tab", href="#{path}") #{label}
 mixin tab_pane(linkId, model, log)
-  .tab-pane.fade(id="#{linkId}")()&attributes(attributes)
+  .tab-pane.fade(id="#{linkId}")&attributes(attributes)
     pre(id="process_#{model}", class="log") #{log}
 
 .form-horizontal
@@ -48,11 +47,11 @@ mixin tab_pane(linkId, model, log)
     +formGroup()
       .tabbable
         ul.nav.nav-tabs
-          +tab_li("{{path}}#creation_log", "创建日志", "true")(class="active")
-          +tab_li("{{path}}#start_log", "启动日志", "false")
-          +tab_li("{{path}}#stop_log", "停止日志", "false")
+          +tab_li("creation_log_li", "{{path}}#creation_log", "部署记录")
+          +tab_li("start_log_li", "{{path}}#start_log", "启动记录")
+          +tab_li("stop_log_li", "{{path}}#stop_log", "停止记录")
         .tab-content
-          +tab_pane("creation_log", "creationLog", "{{process.creationLog}}")(class="active in")
+          +tab_pane("creation_log", "creationLog", "{{process.creationLog}}")
           +tab_pane("start_log", "startLog", "{{process.startLog}}")
           +tab_pane("stop_log", "stopLog", "{{process.stopLog}}")
     +formGroup()
@@ -62,8 +61,8 @@ mixin tab_pane(linkId, model, log)
         +button("停止", "stop()")(id="stopBtn", class="hidden")
         +button("取消停止", "cancel('stopping')")(id="cancelStoppingBtn", class="hidden")
       .col-md-1.col-md-offset-2
-        +button('访问', "")(class="dropdown-toggle", data-toggle="dropdown")
+        +button('访问', "")(id="accessButton", class="dropdown-toggle", data-toggle="dropdown")
           span.caret
         ul.dropdown-menu(role="menu", aria-labelledby="dropdownMenu3")
-          +buttonGroup('直接访问','')
-          +buttonGroup('通过域名访问访问','')
+          +buttonGroup('直接访问','{{ipUrl}}')
+          +buttonGroup('通过域名访问','{{domainUrl}}')

@@ -14,7 +14,7 @@
     </parent>
 
     <artifactId>itsnow</artifactId>
-    <version>0.2.4</version>
+    <version>0.3.0-SNAPSHOT</version>
 
     <name>ItsNow</name>
     <description>
@@ -31,6 +31,7 @@
         <version.components>0.2.0</version.components>
 
         <version.commons-fileupload>1.2</version.commons-fileupload>
+        <version.de.bechte.junit>4.11.3</version.de.bechte.junit>
 
         <release.root>/opt/releases/itsnow</release.root>
         <release.dir>${release.root}/itsnow-${project.version}</release.dir>
@@ -193,7 +194,11 @@
                 <artifactId>commons-fileupload</artifactId>
                 <version>${version.commons-fileupload}</version>
             </dependency>
-
+            <dependency>
+                <groupId>de.bechte.junit</groupId>
+                <artifactId>junit-hierarchicalcontextrunner</artifactId>
+                <version>${version.de.bechte.junit}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>

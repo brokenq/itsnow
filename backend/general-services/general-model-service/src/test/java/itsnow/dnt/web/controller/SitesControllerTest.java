@@ -60,10 +60,7 @@ public class SitesControllerTest extends SessionSupportedControllerTest {
         List<Department> departments = new ArrayList<Department>();
         departments.add(department);
         site.setDepartments(departments);
-
-        Dictionary dictionary = new Dictionary();
-        dictionary.setId(1L);
-        site.setDictionary(dictionary);
+        site.setArea("sh");
 
         WorkTime workTime = new WorkTime();
         workTime.setId(1L);

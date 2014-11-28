@@ -4,7 +4,7 @@ mixin blocks(title)
   block
 mixin formGroup()
   .form-group
-    .col-md-offset-1.col-md-9
+    .col-md-12
       block
 mixin formField(label, value)
   label.control-label.col-md-2 #{label}:
@@ -30,27 +30,18 @@ mixin button(href,num)
 .form-horizontal(ui-view ng-controller='SiteViewCtrl')
   +blocks("地点详情")
     +formGroup()
-      +formField("地点名称", "site.name")(class="col-md-4")
-      +formField("所在区域", "site.dictionary.display")(class="col-md-4")
+      +formField("名称", "site.name")(class="col-md-4")
+      +formField("所在区域", "site.areaname")(class="col-md-4")
     +formGroup()
       +formField("工作时间","site.workTime.name")(class="col-md-10")
     +formGroup()
-      +label('地点描述','site.description')
+      +label('描述','site.description')
     +formGroup()
       +label('详细地址','site.address')
     +formGroup()
-      +labelSingle('所属部门')
+      +labelSingle('部门列表')
         table.table.table-striped.table-bordered
           tr
             th 部门名称
             th 部门描述
           +tableForm('{{dept.name}}', '{{dept.description}}')
-
-      .col-md-4.col-md-offset-4
-        ul.pagination
-          +button("#", "《")
-          +button("#","2")
-          +button("#","3")
-          +button("#","4")
-          +button("#","5")
-          +button("#","》")

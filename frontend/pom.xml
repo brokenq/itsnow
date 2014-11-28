@@ -7,7 +7,7 @@
     <parent>
         <groupId>dnt</groupId>
         <artifactId>itsnow</artifactId>
-        <version>0.2.4</version>
+        <version>0.3.0-SNAPSHOT</version>
     </parent>
     <groupId>dnt.itsnow</groupId>
     <artifactId>frontend</artifactId>

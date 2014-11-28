@@ -6,7 +6,7 @@ include /lib/mixins/form
     +group("user","username","用户姓名", "user", "")
       +input("user","username")(type="text",required,ng-disabled="true", ng-maxlength="20",ng-minlength="4")
     +group("changePasswordRequest","oldPassword","原用户密码","lock","")
-      +input("changePasswordRequest","oldPassword")(type="password",ng-maxlength="20",ng-minlength="6")
+      +input("changePasswordRequest","oldPassword")(type="password",ng-maxlength="20",ng-minlength="6",ng-check="/api/users/{0}/{{user.username}}/checkPwd",err-type="pwError",utocomplete="off")
     +group("changePasswordRequest","password","用户新密码","lock","")
       +input("changePasswordRequest","password")(type="password",ng-maxlength="20",ng-minlength="6")
     +group("changePasswordRequest","repeatPassword","确认新密码","retweet","")

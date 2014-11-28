@@ -44,6 +44,7 @@ angular.module('MscIndex.Schemas', [])
           data = response
       return data
 
+    $scope.submited = false
     Schemas = $scope.services
     $scope.execDestroy = (schema, succCallback, errCallback)->
       acc = new Schemas schema
@@ -71,8 +72,9 @@ angular.module('MscIndex.Schemas', [])
     $scope.selectionService = new SelectionService($scope.cacheService.records, "id")
     $scope.actionService = new ActionService {watch: $scope.selectionService.items, mapping: $scope.cacheService.find}
 
-    $scope.destroy = (host)->
-      $scope.execDestroy host, ->
+    $scope.destroy = (schema)->
+      $scope.execDestroy schema, ->
+        delete $scope.selectionService.items[schema.id]
         $scope.schemasTable.reload()
   ])
 
@@ -87,12 +89,14 @@ angular.module('MscIndex.Schemas', [])
 
     Schemas = $scope.services
     $scope.create = ->
+      $scope.submited = true
       acc = new Schemas schema
       acc.$save (data)->
         feedback.success "已创建 #{schema.name} 数据库"
         $state.go "schemas.view", data
       , (resp)->
         feedback.error "创建 #{schema.name} 数据库失败", resp
+        $scope.submited = false
 
   ])
 

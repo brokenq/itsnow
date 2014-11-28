@@ -45,15 +45,23 @@ angular.module('MscIndex.Accounts', [])
         when 'Abnormal' then 'red'
         else #Unknown
   )
-  .controller('AccountsCtrl', ['$scope', '$state', '$resource', 'Feedback', 'CacheService', \
-                              ( $scope,   $state,   $resource,   feedback,   CacheService) ->
+  .controller('AccountsCtrl', ['$scope', '$state', '$resource', '$http', 'Feedback', 'CacheService', \
+                              ( $scope,   $state,   $resource,   $http,   feedback,   CacheService) ->
     # frontend controller logic
     console.log("Initialized the Accounts controller")
     $scope.options =
       page:  1,           # show first page
       count: 10           # count per page
 
-    $scope.cacheService = new CacheService("sn")
+    $scope.cacheService = new CacheService "sn", (value)->
+      data = {}
+      $.ajax
+        url:    "/admin/api/accounts/#{value}"
+        async:  false
+        type:   "GET"
+        success: (response)->
+          data = response
+      return data
 
     actions =
       approve:
@@ -117,6 +125,7 @@ angular.module('MscIndex.Accounts', [])
           $timeout(->
             params.total(headers('total'))
             $defer.resolve($scope.accounts = data)
+            $scope.cacheService.cache data
           , 500)
         )
     $scope.accountsTable = new NgTable(angular.extend($scope.options, $location.search()), args)

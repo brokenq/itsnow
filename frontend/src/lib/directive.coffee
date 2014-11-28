@@ -34,18 +34,15 @@ angular.module('Lib.Directives', ['Lib.Utils'])
     }
   ])
 
-.directive('itsnowFileCheck', () ->
-  {
-  require: 'ngModel',
+.directive('itsnowFileCheck', ->
+  require: 'ngModel'
   link: (scope, elem, attrs, ctrl)->
-    scope.$watch ->
-      if(scope.selectedFiles.length<=0)
-        ctrl.$setValidity("emptyFile", false)
-      else if(scope.selectedFiles[0].name.indexOf('.bpmn20.xml') < 0)
-        ctrl.$setValidity("fileType", false)
-      else if(scope.selectedFiles[0].size>1048576)
-        ctrl.$setValidity("fileSize", false)
-      else
-        ctrl.$setValidity(true)
-  }
+    scope.$watch "workflow", ->
+      if(scope.selectedFiles.length <= 0)
+        return ctrl.$setValidity("emptyFile", false)
+      if(scope.selectedFiles[0].name.indexOf('.bpmn20.xml') < 0)
+        return ctrl.$setValidity("fileType", false)
+      if(scope.selectedFiles[0].size > 1048576)
+        return ctrl.$setValidity("fileSize", false)
+      return ctrl.$setValidity("emptyFile", true)
 )

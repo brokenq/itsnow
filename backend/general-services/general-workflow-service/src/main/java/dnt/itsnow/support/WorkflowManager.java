@@ -3,7 +3,6 @@ package dnt.itsnow.support;
 import dnt.itsnow.api.ActivitiEngineService;
 import dnt.itsnow.exception.WorkflowException;
 import dnt.itsnow.model.ActReProcdef;
-import dnt.itsnow.model.PublicServiceItem;
 import dnt.itsnow.model.Workflow;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.platform.service.Pageable;
@@ -12,7 +11,6 @@ import dnt.itsnow.platform.web.exception.WebServerSideException;
 import dnt.itsnow.repository.WorkflowRepository;
 import dnt.itsnow.service.CommonServiceItemService;
 import dnt.itsnow.service.PrivateServiceItemService;
-import dnt.itsnow.service.PublicServiceItemService;
 import dnt.itsnow.service.WorkflowService;
 import dnt.spring.Bean;
 import org.activiti.engine.repository.Deployment;
@@ -56,7 +54,7 @@ public class WorkflowManager extends Bean implements WorkflowService {
 
         try {
             // 部署单个流程定义
-            Deployment deployment = activitiEngineService.deploySingleProcess(inputStream, workflow.getName(), workflow.getDictionary().getCode());
+            Deployment deployment = activitiEngineService.deploySingleProcess(inputStream, workflow.getName(), workflow.getType());
             if (deployment == null) {
                 throw new WebServerSideException(HttpStatus.SERVICE_UNAVAILABLE, "Workflow create failed");
             }

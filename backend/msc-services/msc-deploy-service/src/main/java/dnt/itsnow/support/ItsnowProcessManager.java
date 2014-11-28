@@ -15,6 +15,7 @@ import dnt.itsnow.repository.ItsnowProcessRepository;
 import dnt.itsnow.service.ItsnowHostService;
 import dnt.itsnow.service.ItsnowProcessService;
 import dnt.itsnow.service.ItsnowSchemaService;
+import dnt.itsnow.service.SystemInvocationTranslator;
 import dnt.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,9 +29,11 @@ import java.util.List;
 @Service
 public class ItsnowProcessManager extends ItsnowResourceManager implements ItsnowProcessService {
 
+    public static final String DEPLOY = "deploy";
     public static final String START = "start";
     public static final String STOP = "stop";
 
+    public static final String DEPLOY_INVOCATION_ID = "createInvocationId";
     public static final String START_INVOCATION_ID = "startInvocationId";
     public static final String STOP_INVOCATION_ID = "stopInvocationId";
 
@@ -50,6 +53,8 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
     ItsnowHostService          hostService;
     @Autowired
     ItsnowSchemaService        schemaService;
+    @Autowired
+    SystemInvocationTranslator translator;
 
     @Override
     public Page<ItsnowProcess> findAll(String keyword, PageRequest request) {
@@ -233,7 +238,10 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
     @Override
     public long follow(ItsnowProcess process, String jobId, long offset, List<String> result) {
         logger.trace("Follow {}'s job: {}", process, jobId);
-        if(jobId.equals(process.getProperty(START_INVOCATION_ID))){
+
+        if(jobId.equals(process.getProperty(DEPLOY_INVOCATION_ID))) {
+            return invokeService.read(jobId, offset, result);
+        }else if(jobId.equals(process.getProperty(START_INVOCATION_ID))){
             return invokeService.read(jobId, offset, result);
         }else if (jobId.equals(process.getProperty(STOP_INVOCATION_ID))){
             return invokeService.read(jobId, offset, result);
@@ -349,6 +357,7 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
         process.setProperty("debug.port", host.getProperty("next.debug.port", "8201"));
         process.setProperty("jmx.port", host.getProperty("next.jmx.port", "8301"));
         process.setProperty("http.port", host.getProperty("next.http.port", "8401"));
+        process.setProperty("app.domain", translator.getAppDomain());
         return process;
     }
 

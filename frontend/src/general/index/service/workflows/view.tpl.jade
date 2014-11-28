@@ -4,7 +4,7 @@ mixin blocks(title)
   block
 mixin formGroup()
   .form-group
-    .col-md-offset-2.col-md-8
+    .col-md-12
       block
 mixin label(title)
   label.control-label.col-md-2 #{title}:
@@ -19,11 +19,13 @@ mixin formField(label, value)
 .form-horizontal
   +blocks("工作流详情")
     +formGroup()
-      +formField("SN", "workflow.sn")(class="col-md-3")
       +formField("名称", "workflow.name")(class="col-md-3")
+      +formField("类型", "workflow.typename")(class="col-md-3")
     +formGroup()
-      +formField("服务目录", "workflow.catalog")(class="col-md-3")
-      +formField("创建时间", "workflow.createdAt")(class="col-md-3")
+      +formField("部署版本", "workflow.actReProcdef.version")(class="col-md-3")
+      +formField("部署时间", "workflow.actReDeployment.deployTimeFMT")(class="col-md-3")
+    +formGroup()
+      +formField("服务目录", "workflow.serviceItem.title")(class="col-md-3")
     +formGroup()
       +label('工作流描述')
         textarea.form-control(rows='4',ng-model="workflow.description",readonly)

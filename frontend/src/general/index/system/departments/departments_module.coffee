@@ -126,9 +126,14 @@ angular.module('System.Departments', ['multi-select'])
           feedback.error("删除部门#{department.name}失败", resp)
   ])
 
-.controller('DepartmentViewCtrl', ['$scope', '$stateParams', '$log', ($scope, $stateParams, $log) ->
-    $scope.department = $scope.cacheService.find $stateParams.sn, true
-    $log.log "Initialized the Department View controller on: " + JSON.stringify($scope.department)
+.controller('DepartmentViewCtrl', ['$scope', '$stateParams', '$log', '$filter', 'DepartmentService',
+    ($scope, $stateParams, $log, $filter, departmentService) ->
+#      $scope.department = $scope.cacheService.find $stateParams.sn, true
+      departmentService.get({sn:$stateParams.sn}).$promise
+      .then (data)->
+        $scope.department = data
+        $scope.department.sitesname = $filter('deptFilter')($scope.department.sites)
+      $log.log "Initialized the Department View controller on: " + JSON.stringify($scope.department)
   ])
 
 .controller('DepartmentNewCtrl', ['$scope', '$state', '$log', 'Feedback', 'DepartmentService', 'DepartmentSiteService',

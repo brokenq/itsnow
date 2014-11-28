@@ -138,8 +138,8 @@ angular.module('System.Group', [])
         , (resp) ->
           feedback.error("修改组#{$scope.group.name}失败", resp);
   ])
-.controller('GroupsViewCtrl', ['$scope', '$state', '$stateParams', 'Feedback',
-    ($scope,   $state,    $stateParams,   feedback) ->
+.controller('GroupsViewCtrl', ['$scope', '$state', '$stateParams', '$filter',
+    ($scope,   $state,    $stateParams,  $filter) ->
       name = $stateParams.name
       $scope.group = $scope.cacheService.find name, true
   ])

@@ -37,6 +37,11 @@ angular.module('System.User', [])
     return user.name if user.name == user.username
     user.name + "(" + user.username + ")"
 )
+.filter('enableFilter',->
+  (input) ->
+    return "启用" if input is true
+    return "停用"
+)
 .controller('UsersCtrl', ['$scope', '$resource', '$state', 'Feedback', 'CacheService',
     ($scope, $resource, $state, feedback, CacheService) ->
       $scope.statedatas = [
@@ -104,12 +109,8 @@ angular.module('System.User', [])
       $scope.updateview = true
       username = $stateParams.username
       $scope.cuser = $scope.cacheService.find username, true
-      if $scope.cuser.enabled
-        $scope.selectState = $scope.statedatas[0]
-      else
-        $scope.selectState = $scope.statedatas[1]
+
       $scope.update = () ->
-        $scope.cuser.enabled = $scope.selectState.state;
         $scope.cuser.$promise = `undefined`
         $scope.cuser.$resolved = `undefined`
         $scope.services.update {username: username}, $scope.cuser, () ->
@@ -118,24 +119,24 @@ angular.module('System.User', [])
         , (resp) ->
           feedback.error("修改#{$scope.cuser.username}失败", resp);
   ])
-.controller('UserViewCtrl', ['$scope', '$state', '$stateParams',
-    ($scope, $state, $stateParams) ->
+.controller('UserViewCtrl', ['$scope', '$state', '$stateParams','$filter',
+    ($scope, $state, $stateParams,$filter) ->
       username = $stateParams.username
       $scope.cuser = $scope.cacheService.find username, true
-      if $scope.cuser.enabled
-        $scope.selectState = $scope.statedatas[0]
-      else
-        $scope.selectState = $scope.statedatas[1]
-
+      $scope.cuser.enabledStr = $filter('enableFilter')($scope.cuser.enabled)
   ])
 .controller('UserEditPwdCtrl', ['$http','$scope', '$state', '$stateParams', 'SessionService', '$window','Feedback',\
     ($http,$scope, $state, $stateParams,sessionService, $window,feedback) ->
      $scope.updatePwd = () ->
        $scope.changePasswordRequest.username=$scope.user.username
-       $http.put('/api/password/change', $scope.changePasswordRequest)
-       .success ->
+       $http.put("/api/password/change", $scope.changePasswordRequest)
+       .then ((resp) ->
          feedback.success("修改密码成功请重新登录！");
          sessionService.logout ->
-           $window.location.href = "/login.html"
-  ])
+           $window.location.href = "/login.html")
+       , (resp) ->
+         feedback.error("修改密码失败", resp);
+
+
+    ])
 

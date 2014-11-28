@@ -1,11 +1,5 @@
   # List catalogs
-  angular.module('Service.Catalog',
-    ['ngTable',
-     'ngResource',
-     'Lib.Commons',
-     'Lib.Utils',
-     'dnt.action.service',
-     'Lib.Feedback'])
+  angular.module('Service.Catalog',[])
     .config ($stateProvider,$urlRouterProvider)->
       $stateProvider.state 'catalog',
         url: '/services/catalog'

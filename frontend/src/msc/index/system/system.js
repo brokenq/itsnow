@@ -3,6 +3,5 @@
  */
 
 angular.module('MscIndex.System', [
-  'System.Roles',
   'System.User'
 ]);

@@ -52,6 +52,18 @@ public class RoleManager extends Bean implements RoleService {
     }
 
     @Override
+    public List<Role> findAllByUsername(String username) {
+
+        logger.debug("Finding roles by username:{}", username);
+
+        List<Role> roles = repository.findAllByUsername(username);
+
+        logger.debug("Found   {}", roles);
+
+        return roles;
+    }
+
+    @Override
     public Role findByName(String name) {
 
         logger.debug("Finding role by name:{}", name);
@@ -72,7 +84,6 @@ public class RoleManager extends Bean implements RoleService {
             throw new RoleException("Role entry can not be empty.");
         }
 
-        role.setName(Role.ROLE_+role.getName());
         role.creating();
         repository.create(role);
         if (role.getUsers() != null) {

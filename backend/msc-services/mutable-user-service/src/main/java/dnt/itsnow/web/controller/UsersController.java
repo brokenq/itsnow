@@ -2,6 +2,7 @@
  * @author XiongJie, Date: 14-7-28
  */
 package dnt.itsnow.web.controller;
+
 import dnt.itsnow.model.User;
 import dnt.itsnow.platform.service.Page;
 import dnt.itsnow.service.MutableUserService;
@@ -9,10 +10,12 @@ import dnt.itsnow.platform.web.annotation.BeforeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
+
 import java.util.HashMap;
 import java.util.List;
 
 import dnt.itsnow.platform.web.exception.WebClientSideException;
+
 import javax.validation.Valid;
 
 /**
@@ -29,6 +32,7 @@ public class UsersController extends SessionSupportController<User> {
     @Autowired
     MutableUserService userService;
     private User user;
+
     /**
      * <h2>查询用户列表</h2>
      * <p/>
@@ -39,7 +43,7 @@ public class UsersController extends SessionSupportController<User> {
      * 提供给前端的分页信息放在response头中
      */
     @RequestMapping
-    public Page<User> index( @RequestParam(required = false, value="keyword", defaultValue = "") String keyword ) {
+    public Page<User> index(@RequestParam(required = false, value = "keyword", defaultValue = "") String keyword) {
         logger.debug("Listing Users by keyword: {}", keyword);
         indexPage = userService.findAll(keyword, pageRequest);
         logger.debug("Listed  {}", indexPage);
@@ -47,18 +51,20 @@ public class UsersController extends SessionSupportController<User> {
         //把数据放在http的body中
         return indexPage;
     }
+
     /**
      * <h2>查看一个用户</h2>
      * <p/>
      * GET /admin/api/users/{username}
+     *
      * @param username 用户名称
      * @return 用户实体类
      */
-    @RequestMapping(value="{username}", method = RequestMethod.GET)
+    @RequestMapping(value = "{username}", method = RequestMethod.GET)
     public User show(@PathVariable("username") String username) {
 
         logger.debug("find user by {}", username);
-      return this.user;
+        return this.user;
     }
 
     /**
@@ -70,10 +76,10 @@ public class UsersController extends SessionSupportController<User> {
      * @return 创建之后的用户信息，不包括密码等敏感信息
      */
     @RequestMapping(method = RequestMethod.POST)
-    public User create(@Valid  @RequestBody User user) {
+    public User create(@Valid @RequestBody User user) {
         logger.info("Creating {}", user);
-        logger.info("userAccountId:{}",user.getAccountId());
-        if(user.getAccountId()==null){
+        logger.info("userAccountId:{}", user.getAccountId());
+        if (user.getAccountId() == null) {
             user.setAccountId(mainAccount.getId());
         }
         User created = userService.create(user);
@@ -95,7 +101,7 @@ public class UsersController extends SessionSupportController<User> {
     public User update(@PathVariable("username") String username,
                        @RequestBody User user) {
         logger.info("Updating {}", username);
-       // User exist = userService.findByUsername(username);
+        // User exist = userService.findByUsername(username);
         this.user.apply(user);
         userService.update(this.user);
         User updated = userService.findByUsername(this.user.getUsername());
@@ -107,8 +113,9 @@ public class UsersController extends SessionSupportController<User> {
         }
         return updated;
     }
+
     @RequestMapping(value = "{username}", method = RequestMethod.DELETE)
-    public void destroy(@PathVariable("username") String username){
+    public void destroy(@PathVariable("username") String username) {
         logger.warn("Deleting {}");
         try {
             userService.delete(this.user);
@@ -137,31 +144,59 @@ public class UsersController extends SessionSupportController<User> {
     }
 
     @RequestMapping(value = "check/{username}", method = RequestMethod.GET)
-    public HashMap checkUnique(@PathVariable("username") String username){
+    public HashMap checkUnique(@PathVariable("username") String username) {
         User user = userService.findByUsername(username);
-        if( user != null ){
+        if (user != null) {
             throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate role name: " + user.getUsername());
-        }else{
+        } else {
             return new HashMap();
         }
     }
+
     @RequestMapping(value = "checkEmail/{email:.+}", method = RequestMethod.GET)
-    public HashMap checkUniqueEmail(@PathVariable("email") String email){
-        logger.info("find byemail:{}",email);
+    public HashMap checkUniqueEmail(@PathVariable("email") String email) {
+        logger.info("find byemail:{}", email);
         User user = userService.findByEmail(email);
-        logger.info("return user{}",user);
-        if( user != null ){
-            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate role name: " + user.getEmail());
-        }else{
+        logger.info("return user{}", user);
+        if (user != null) {
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate user emial: " + user.getEmail());
+        } else {
             return new HashMap();
         }
     }
+
+    @RequestMapping(value = "/{email:.+}/{username}/checkEmail", method = RequestMethod.GET)
+    public HashMap checkUniqueUpdateEmail(@PathVariable("email") String email, @PathVariable("username") String username) {
+        logger.info("find byemail:{}", email);
+        User user = userService.findByEmail(email);
+        logger.info("return user{}", user);
+        if(user==null||user.getUsername().equals(username)){
+            logger.info("into no confilct user{}", user);
+            return new HashMap();
+        }else{
+            logger.info("in to conflict user {}", user);
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate user emil: " + user.getEmail());
+        }
+    }
+
+
+    @RequestMapping(value = "/{password}/{username}/checkPwd", method = RequestMethod.GET)
+    public HashMap checkPwd(@PathVariable("password") String password, @PathVariable("username") String username) {
+        if (userService.challenge(username, password)) {
+            return new HashMap();
+        }else{
+
+            throw new WebClientSideException(HttpStatus.CONFLICT, "bad user or password");
+        }
+    }
+
+
     @RequestMapping(value = "account/belongs", method = RequestMethod.GET)
     public List<User> listUsers() {
 
         logger.info("Listing users by current account:{}", mainAccount);
 
-        List<User> users =userService.findUsersByAccount(mainAccount);
+        List<User> users = userService.findUsersByAccount(mainAccount);
 
         logger.info("Listed  {}", users);
 
@@ -170,7 +205,9 @@ public class UsersController extends SessionSupportController<User> {
 
     @BeforeFilter({"show", "update", "destroy"})
     public void initCurrentUser(@PathVariable("username") String username) {
-           this.user=userService.findByUsername(username);
+
+        this.user = userService.findByUsername(username);
+        this.cleanSensitive(this.user);
     }
 
     private void cleanSensitive(User user) {

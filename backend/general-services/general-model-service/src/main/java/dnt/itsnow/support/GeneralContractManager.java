@@ -44,11 +44,11 @@ public class GeneralContractManager extends CommonContractManager implements Gen
         if (account.isMsu()) {
             if (contract.getMspAccountId() == null) {
                 throw new ContractException("The contract has not yet been accept by MSP");
-            } else if (contract.isApprovedByMsu()) {
+            } else if (contract.isApproved()) {
                 throw new ContractException("The contract has been approved by msu");
             }
         } else if (account.isMsp()) {
-            if (contract.isApprovedByMsp()) {
+            if (contract.isApproved()) {
                 throw new ContractException("The contract has been approved by msp");
             }
         }
@@ -79,7 +79,7 @@ public class GeneralContractManager extends CommonContractManager implements Gen
             //    throw new ServiceException("The contract has been rejected by msu");
             //}
         } else if (account.isMsp()) {
-            if (!contract.isApprovedByMsp()) {
+            if (!contract.isApproved()) {
                 throw new ServiceException("The contract has been rejected by msu");
             }
         }
@@ -99,11 +99,11 @@ public class GeneralContractManager extends CommonContractManager implements Gen
         logger.info("Msp bid contract:{} {}", account, sn);
         Contract contract = findByAccountAndSn(account, sn, true);
 
-        if (ContractStatus.Purposed.equals(contract.getMspStatus())) {
+        if (ContractStatus.Purposed.equals(contract.getStatus())) {
             throw new ServiceException("The contract has been purposed");
         }
 
-        contract.setMspStatus(ContractStatus.Purposed);
+        contract.setStatus(ContractStatus.Purposed);
         contract.setMspAccountId(account.getId());
         facade.put("/admin/api/contracts/{sn}/bid", contract, contract.getSn());
         logger.info("Msp bid contract {}", contract);
@@ -115,7 +115,7 @@ public class GeneralContractManager extends CommonContractManager implements Gen
 
     @Override
     public Contract create(Account account, Contract contract) throws ServiceException {
-        contract.setMsuStatus(ContractStatus.Draft);
+        contract.setStatus(ContractStatus.Draft);
         contract.setMsuAccountId(account.getId());
         facade.postForEntity("/admin/api/contracts", contract, Contract.class);
         logger.info("Created  {}", contract);

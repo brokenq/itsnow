@@ -48,8 +48,13 @@ angular.module('System.Sites', ['multi-select'])
     $resource '/api/dictionaries/:code', {code: '@code'}
   ])
 
-.controller('SitesCtrl', ['$scope', '$state', '$log', 'Feedback', 'CacheService', 'SiteService',\
-    ($scope, $state, $log, feedback, CacheService, siteService) ->
+.filter("areaFilter", ()->
+  return (input, scope)->
+    return detail.key for detail in scope.dictDetails when input is detail.value
+)
+
+.controller('SitesCtrl', ['$scope', '$state', '$log', 'Feedback', 'CacheService', 'SiteService', 'SiteDictService',\
+    ($scope, $state, $log, feedback, CacheService, siteService, dictService) ->
       # frontend controller logic
       $log.log "Initialized the Sites controller"
       $scope.options =
@@ -57,7 +62,18 @@ angular.module('System.Sites', ['multi-select'])
         count: 10 # count per page
 
       $scope.cacheService = new CacheService "sn", (value)->
-        siteService.get {sn: value}
+#        siteService.get {sn: value}
+        data = {}
+        $.ajax
+          url:    "/api/sites/#{value}"
+          async:  false
+          type:   "GET"
+          success: (response)->
+            data = response
+        return data
+
+      dictService.get {code: 'location'}, (data) ->
+        $scope.dictDetails = data.details
 
       # 提交按钮是否已经执行了提交操作，false为未执行，则按钮可用
       $scope.submited = false
@@ -69,7 +85,7 @@ angular.module('System.Sites', ['multi-select'])
       # 去除不必要的对象属性，用于HTTP提交
       $scope.formatData = (site, dictionary, workTime) ->
         aSite = site
-        aSite.dictionary = dictionary
+        aSite.area = dictionary.value
         aSite.workTime = workTime
         delete aSite.$promise
         delete aSite.$resolved
@@ -95,7 +111,7 @@ angular.module('System.Sites', ['multi-select'])
       $scope.actionService = new ActionService({watch: $scope.selectionService.items, mapping: $scope.cacheService.find})
 
       $scope.destroy = (site) ->
-        siteService.remove {sn: site.sn}, () ->
+        siteService.remove site, ->
           feedback.success "删除地点#{site.name}成功"
           delete $scope.selectionService.items[site.sn]
           $scope.sitesTable.reload()
@@ -103,19 +119,20 @@ angular.module('System.Sites', ['multi-select'])
           feedback.error("删除地点#{site.name}失败", resp)
   ])
 
-.controller('SiteViewCtrl', ['$scope', '$stateParams', '$log', ($scope, $stateParams, $log) ->
-    $scope.site = $scope.cacheService.find $stateParams.sn, true
-    $log.log "Initialized the Site View controller on: " + JSON.stringify($scope.site)
+.controller('SiteViewCtrl', ['$scope', '$stateParams', '$log', '$filter', 'SiteDictService',\
+    ($scope, $stateParams, $log, $filter, dictService) ->
+      $scope.site = $scope.cacheService.find $stateParams.sn, true
+      dictService.get {code: 'location'}, (data) ->
+        $scope.dictDetails = data.details
+        $scope.site.areaname = $filter('areaFilter')($scope.site.area, $scope)
+      $log.log "Initialized the Site View controller on: " + JSON.stringify($scope.site)
   ])
 
-.controller('SiteNewCtrl', ['$scope', '$state', '$log', 'Feedback', 'SiteService', 'SiteDictService', 'SiteWorkTimeService',
+.controller('SiteNewCtrl', ['$scope', '$state', '$log', 'Feedback', 'SiteService', 'SiteDictService', 'SiteWorkTimeService',\
     ($scope, $state, $log, feedback, siteService, dictService, workTimeService) ->
 
       $log.log "Initialized the Site New controller"
       $scope.disabled = false
-
-      dictService.get {code: '001'}, (data) ->
-        $scope.dictionaries = data.details
 
       workTimeService.query (data) ->
         $scope.workTimes = data;
@@ -134,24 +151,19 @@ angular.module('System.Sites', ['multi-select'])
   ['$scope', '$state', '$log', '$stateParams', 'Feedback', 'SiteService', 'SiteDictService', 'SiteWorkTimeService',
     ($scope, $state, $log, $stateParams, feedback, siteService, dictService, workTimeService) ->
 
-      $scope.site = $scope.cacheService.find $stateParams.sn, true
-      $log.log "Initialized the Site Edit controller on: " + JSON.stringify($scope.site)
+#      $scope.site = $scope.cacheService.find $stateParams.sn, true
+#      $log.log "Initialized the Site Edit controller on: " + JSON.stringify($scope.site)
       $scope.disabled = true
 
-      promise = siteService.get({sn: $scope.site.sn}).$promise
-      promise.then (data) ->
+      siteService.get({sn:$stateParams.sn}).$promise
+      .then (data)->
         $scope.site = data
-        dictService.get {code: '001'}, (data) ->
-          $scope.dictionaries = data.details
-          for dictionary in $scope.dictionaries
-            if dictionary.sn == $scope.site.dictionary.sn
-              $scope.dictionary = dictionary
-        workTimeService.query (data) ->
-          $scope.workTimes = data
-          $scope.workTime = $scope.site.workTime
-          for workTime in $scope.workTimes
-            if workTime.sn == $scope.site.workTime.sn
-              $scope.workTime = workTime
+        $scope.dictionary = detail for detail in $scope.dictDetails when detail.value is $scope.site.area
+        return workTimeService.query().$promise
+      .then (data)->
+        $scope.workTimes = data
+        $scope.workTime = $scope.site.workTime
+        $scope.workTime = workTime for workTime in $scope.workTimes when workTime.sn is $scope.site.workTime.sn
 
       # 编辑页面提交
       $scope.update = () ->

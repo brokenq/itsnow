@@ -15,6 +15,7 @@ include /lib/mixins/list
       td(data-title="'地点名称'")
         a(ui-sref="sites.view(site)") {{site.name}}
       td(data-title="'地址'") {{site.address}}
-      td(data-title="'区域'") {{site.dictionary.display}}
-      td(data-title="'工作时间'") {{ site.workTime.startAt}} - {{ site.workTime.endAt}}
+      td(data-title="'区域'") {{site.area | areaFilter:this}}
+      td(data-title="'工作时间'")
+        a(ui-sref="worktimes.view(site.workTime)") {{ site.workTime.startAt}} - {{ site.workTime.endAt}}
       td(data-title="'描述'") {{site.description}}
