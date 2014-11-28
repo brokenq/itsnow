@@ -178,12 +178,13 @@ angular.module('Service.Dict', [])
         , (resp) ->
           feedback.error("修改#{$scope.dict.code}失败", resp);
   ])
-.controller('DictsViewCtrl', ['$scope', '$state', '$stateParams', 'Feedback','DictService',\
-                             ($scope,    $state,   $stateParams,   feedback,  dictService) ->
+.controller('DictsViewCtrl', ['$scope', '$state', '$stateParams', '$filter', 'Feedback','DictService',\
+                             ($scope,    $state,   $stateParams, $filter,  feedback,  dictService) ->
       code = $stateParams.code
       dictService.get
         code: code
       , (data) ->
         $scope.dict = data
+        $scope.dict.createdAtFMT = $filter('formatTime')($scope.dict.createdAt)
         showAdd(data)
   ])
