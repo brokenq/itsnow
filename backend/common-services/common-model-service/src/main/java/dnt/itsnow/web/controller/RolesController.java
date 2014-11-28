@@ -28,7 +28,7 @@ import java.util.List;
  *  PUT      /api/roles/{name}                                               update         修改一个指定的角色
  *  DELETE   /api/roles/{name}                                               delete         删除指定的角色记录
  *  GET      /api/roles/users                                                listUsers      列出当前用户所属账户中，所有用户的信息记录
- *  GET      /api/roles/{username}/user                                      listByUsername 列出包含该用户名的所有角色信息
+ *  GET      /api/roles/user/{username}                                      listByUsername 列出包含该用户名的所有角色信息
  * </pre>
  */
 @RestController
@@ -179,7 +179,7 @@ public class RolesController extends SessionSupportController<Role> {
         }
     }
 
-    @RequestMapping(value = "{username}/user", method = RequestMethod.GET)
+    @RequestMapping(value = "user/{username}", method = RequestMethod.GET)
     public List<Role> listByUsername(@PathVariable("username") String username){
 
         logger.info("Finding roles by username:{}", username);
