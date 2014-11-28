@@ -21,13 +21,14 @@ import java.util.List;
 /**
  * <h1>MSC角色的控制器</h1>
  * <pre>
- * <b>HTTP    URI                                                            方法      含义  </b>
- *  GET      /api/roles?sort={string}&page={int}&keyword={String}&size={int} index     列出所有的角色，支持过滤、分页、排序
- *  GET      /api/roles/{name}                                               show      列出特定的角色记录
- *  POST     /api/roles                                                      create    创建一个角色
- *  PUT      /api/roles/{name}                                               update    修改一个指定的角色
- *  DELETE   /api/roles/{name}                                               delete    删除指定的角色记录
- *  GET      /api/roles/users                                                listUsers 列出当前用户所属账户中，所有用户的信息记录
+ * <b>HTTP    URI                                                            方法             含义       </b>
+ *  GET      /api/roles?sort={string}&page={int}&keyword={String}&size={int} index          列出所有的角色，支持过滤、分页、排序
+ *  GET      /api/roles/{name}                                               show           列出特定的角色记录
+ *  POST     /api/roles                                                      create         创建一个角色
+ *  PUT      /api/roles/{name}                                               update         修改一个指定的角色
+ *  DELETE   /api/roles/{name}                                               delete         删除指定的角色记录
+ *  GET      /api/roles/users                                                listUsers      列出当前用户所属账户中，所有用户的信息记录
+ *  GET      /api/roles/{username}/user                                      listByUsername 列出包含该用户名的所有角色信息
  * </pre>
  */
 @RestController
@@ -176,6 +177,18 @@ public class RolesController extends SessionSupportController<Role> {
         }else{
             return new HashMap();
         }
+    }
+
+    @RequestMapping(value = "{username}/user", method = RequestMethod.GET)
+    public List<Role> listByUsername(@PathVariable("username") String username){
+
+        logger.info("Finding roles by username:{}", username);
+
+        List<Role> roles = service.findAllByUsername(username);
+
+        logger.info("Found   :{}", roles);
+
+        return roles;
     }
 
     @BeforeFilter({"show", "update", "destroy"})
