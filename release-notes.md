@@ -401,3 +401,37 @@ git@git.itsnow.com:insight/itsnow.git Rel-x.y.z 标签(tag)
 1. [msc-0.2.4](http://msc.itsnow.com/)
 2. [msu-0.2.4](http://msu.itsnow.com/)
 3. [msp-0.2.4](http://msp.itsnow.com/)
+
+
+0.3.0 发布说明
+=================
+
+1. 新增特性
+-----------
+
+1.   Frontend  详情页面修改布局格式，列表添加表格
+2.   Frontend  完善系统功能，解决日志follow问题，优化日志
+3.   Frontend  用户，工作时间， 组细节优化
+4.   Frontend  完善字典模块动态加载功能
+5.   Backend   用户修改密码的前端校验和后端异常捕获
+6.   Backend   msc.dev.itsnow.com创建主机，部署进程
+7.   Backend   msc.dev.itsnow.com测试
+
+2. 问题修复
+-----------
+1. 服务目录BUG修改
+
+
+3. 交付物地址
+--------------
+
+1. [msc-0.3.0]()
+2. [msp-0.3.0]()
+3. [msu-0.3.0]()
+
+4. 系统演示地址
+-----------
+
+1. [msc-0.3.0](http://msc.itsnow.com/)
+2. [msu-0.3.0](http://msu.itsnow.com/)
+3. [msp-0.3.0](http://msp.itsnow.com/)
