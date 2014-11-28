@@ -17,6 +17,7 @@ include /lib/mixins/list
       td(data-title="'类型'") {{workflow.type | typeFilter:this}}
       td(data-title="'文件名'") {{workflow.actReProcdef.resourceName}}
       td(data-title="'部署版本'") {{workflow.actReProcdef.version}}
-      td(data-title="'服务目录'") {{workflow.serviceItem.title}}
+      td(data-title="'服务目录'")
+        a(ui-sref="workflows.view(workflow)") {{workflow.serviceItem.title}}
       td(data-title="'部署时间'") {{workflow.actReDeployment.deployTime | date : 'yyyy-MM-dd HH:mm:ss'}}
       td(data-title="'描述'") {{workflow.description}}

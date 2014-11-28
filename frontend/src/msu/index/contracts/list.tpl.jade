@@ -12,7 +12,7 @@ include /lib/mixins/list
 
   +page_table("contractsTable","selectionService")
     +row("contract", "sn", "selectionService")(ng-class="{'enable':contract.status=='Approved','executeEnable':contract.status=='Purposed'}")
-      td(data-title="'名称'")
+      td(data-title="'合同号'")
         a(ui-sref="contracts.view(contract)") {{contract.sn}}
       td(data-title="'状态'") {{contract.status | formatContractStatus}}
       td(data-title="'服务商'")
