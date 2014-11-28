@@ -123,8 +123,6 @@ angular.module('System.User', [])
     ($scope, $state, $stateParams,$filter) ->
       username = $stateParams.username
       $scope.cuser = $scope.cacheService.find username, true
-      $scope.cuser.createdAtStr=$filter('formatTime')($scope.cuser.createdAt)
-      $scope.cuser.updatedAtStr=$filter('formatTime')($scope.cuser.updatedAt)
       $scope.cuser.enabledStr = $filter('enableFilter')($scope.cuser.enabled)
   ])
 .controller('UserEditPwdCtrl', ['$http','$scope', '$state', '$stateParams', 'SessionService', '$window','Feedback',\

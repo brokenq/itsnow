@@ -22,4 +22,5 @@ public interface GroupService {
 
     public Group findByName(String name);
 
+    List<Group> findAllByUserName(String username);
 }
