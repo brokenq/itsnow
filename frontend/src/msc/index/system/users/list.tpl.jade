@@ -13,7 +13,7 @@ include /lib/mixins/list
       td(data-title="'用户名'")
         a(ui-sref="users.view({username: '{{user.username}}'})") {{user | formatUser}}
       td(data-title="'所属帐户'")
-        a(ui-sref="accounts.view({sn: '{{user.account.sn}}'})") {{user.account.name}}
+        a(ui-sref="accounts.view(user.account)") {{user.account.name}}
       td(data-title="'电子邮箱'")
         a(href="mailto:{{user.email}}") {{user.email}}
       td(data-title="'电话号码'", align="right") {{user.phone}}
