@@ -19,7 +19,7 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
  */
 @Configuration
 @Import({DefaultAppConfig.class})
-public class MsuGuiServiceAppConfig implements InitializingBean {
+public class MsuGuiAppConfig implements InitializingBean {
     @Autowired
     DelegateSecurityConfigurer configurer;
     @Autowired

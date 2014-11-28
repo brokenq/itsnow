@@ -24,7 +24,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <App-Config>dnt.itsnow.config.MsuModelAppConfig</App-Config>
+                            <App-Config>dnt.itsnow.config.MsuGuiAppConfig</App-Config>
                         </manifestEntries>
                     </archive>
                 </configuration>
