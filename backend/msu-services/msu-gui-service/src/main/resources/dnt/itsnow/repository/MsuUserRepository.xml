@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dnt.itsnow.repository.MsuUserRepository">
+
+    <sql id="subSelect">
+        SELECT cu.msp_user_id
+        FROM   itsnow_msc.contract_users cu
+            LEFT JOIN itsnow_msc.accounts a
+                ON cu.msu_account_id = a.id
+    </sql>
+
+    <select id="findByMsuAndMspAccountSnAndUsername" resultMap="dnt.itsnow.repository.CommonUserRepository.userWithAccount">
+        <include refid="dnt.itsnow.repository.CommonUserRepository.selectUser"/>
+        WHERE UPPER(u.username) = UPPER(#{username})
+          AND ( UPPER(a.sn) = UPPER(#{accountSn}) OR u.id in (<include refid="subSelect"/> WHERE  a.sn = #{accountSn}) )
+    </select>
+
+</mapper>

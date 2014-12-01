@@ -15,4 +15,22 @@
     <description>
         The GUI Service of MSU subsystem.
     </description>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <App-Config>dnt.itsnow.config.MsuGuiAppConfig</App-Config>
+                            <Service-Config>dnt.itsnow.config.MsuGuiServiceConfig</Service-Config>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>

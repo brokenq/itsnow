@@ -34,6 +34,12 @@
     <select id="findByAccountSnAndUsername" resultMap="userWithAccount">
         <include refid="selectUser"/>
         WHERE UPPER(u.username) = UPPER(#{username})
+          AND UPPER(a.sn) = UPPER(#{accountSn})
+    </select>
+
+    <select id="findByMsuAndMspAccountSnAndUsername" resultMap="userWithAccount">
+        <include refid="selectUser"/>
+        WHERE UPPER(u.username) = UPPER(#{username})
           AND ( UPPER(a.sn) = UPPER(#{accountSn}) OR u.id in (<include refid="subSelect"/> WHERE  a.sn = #{accountSn}) )
     </select>
 
