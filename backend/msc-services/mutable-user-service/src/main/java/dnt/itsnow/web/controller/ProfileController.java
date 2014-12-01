@@ -22,7 +22,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/api/profile")
-public class MscProfileController extends ApplicationController {
+public class ProfileController extends ApplicationController {
     @Autowired
     MutableUserService userService;
 
@@ -49,5 +49,21 @@ public class MscProfileController extends ApplicationController {
             logger.info("Updated  {} -> {}", username, updated.getUsername());
         }
         return updated;
+    }
+
+    /**
+     * <h2>查看当前的用户个人信息</h2>
+     *
+     * GET /api/profile
+     *
+     * @return 当前用户对象
+     */
+    @RequestMapping
+    public User show(HttpServletRequest request) {
+        String username = request.getRemoteUser();
+        logger.info("Viewing profile of {}", username);
+        User user = userService.loadUserByUsername(username);
+        logger.info("Viewed  profile of {}", username);
+        return user;
     }
 }

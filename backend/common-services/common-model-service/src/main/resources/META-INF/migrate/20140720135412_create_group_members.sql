@@ -8,7 +8,7 @@ CREATE TABLE group_members (
   group_name  VARCHAR(50) NOT NULL,
   FOREIGN KEY (group_id) REFERENCES groups (id),
   FOREIGN KEY (username) REFERENCES itsnow_msc.users (username)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+);
 
 
 -- //@UNDO

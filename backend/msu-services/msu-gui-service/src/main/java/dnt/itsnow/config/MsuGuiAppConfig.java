@@ -1,17 +1,19 @@
-/**
- * @author XiongJie, Date: 14-7-25
- */
 package dnt.itsnow.config;
 
 import dnt.itsnow.platform.config.DefaultAppConfig;
 import dnt.itsnow.platform.web.security.DelegateSecurityConfigurer;
+import dnt.itsnow.support.MsuRepositoryAuthenticationProvider;
+import dnt.itsnow.support.MsuUserManager;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 /**
@@ -20,20 +22,20 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 @Configuration
 @Import({DefaultAppConfig.class})
 public class MsuGuiAppConfig implements InitializingBean {
+
     @Autowired
     DelegateSecurityConfigurer configurer;
+
     @Autowired
-    PersistentTokenRepository  tokenRepository;
+    MsuRepositoryAuthenticationProvider authenticationProvider;
+
     @Autowired
-    AuthenticationProvider     authenticationProvider;
-    @Autowired
-    @Qualifier("groupedUserService")
-    UserDetailsService userService;
+    @Qualifier("msuUserService")
+    MsuUserManager userService;
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        configurer.delegate(tokenRepository)
-                  .delegate(authenticationProvider)
+        configurer.delegate(authenticationProvider)
                   .delegate(userService);
     }
 }

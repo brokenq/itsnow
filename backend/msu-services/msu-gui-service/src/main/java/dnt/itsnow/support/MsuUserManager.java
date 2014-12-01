@@ -6,6 +6,8 @@ package dnt.itsnow.support;
 import dnt.itsnow.model.Account;
 import dnt.itsnow.model.User;
 import dnt.itsnow.repository.GroupRepository;
+import dnt.itsnow.repository.MsuGroupRepository;
+import dnt.itsnow.repository.MsuUserRepository;
 import dnt.itsnow.service.CommonUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -35,7 +37,10 @@ public class MsuUserManager implements CommonUserService, UserDetailsService {
     CommonUserService userService;
 
     @Autowired
-    GroupRepository groupRepository;
+    MsuGroupRepository groupRepository;
+
+    @Autowired
+    MsuUserRepository msuUserRepository;
 
     @Override
     public User findByUsername(String username) {
@@ -59,7 +64,10 @@ public class MsuUserManager implements CommonUserService, UserDetailsService {
 
     @Override
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userService.loadUserByUsername(username);
+        String appId = System.getProperty("app.id");
+        User user = msuUserRepository.findByMsuAndMspAccountSnAndUsername(appId, username);
+        if (user == null) throw new UsernameNotFoundException("Can't find user " + username);
+        user.setAuthorities(msuUserRepository.findAuthorities(username));
         user.addAuthorities(groupRepository.findUserAuthorities(username));
         return user;
     }

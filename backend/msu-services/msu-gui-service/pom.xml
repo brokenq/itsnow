@@ -25,6 +25,7 @@
                     <archive>
                         <manifestEntries>
                             <App-Config>dnt.itsnow.config.MsuGuiAppConfig</App-Config>
+                            <Service-Config>dnt.itsnow.config.MsuGuiServiceConfig</Service-Config>
                         </manifestEntries>
                     </archive>
                 </configuration>

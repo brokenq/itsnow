@@ -78,4 +78,5 @@ public interface CommonUserService extends UserDetailsService {
      * @return MSP用户
      */
     List<User> findAllByLogOnContract(Long accountId);
+
 }
