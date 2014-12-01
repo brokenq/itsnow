@@ -357,7 +357,6 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
         process.setProperty("debug.port", host.getProperty("next.debug.port", "8201"));
         process.setProperty("jmx.port", host.getProperty("next.jmx.port", "8301"));
         process.setProperty("http.port", host.getProperty("next.http.port", "8401"));
-        process.setProperty("app.domain", translator.getAppDomain());
         return process;
     }
 

@@ -4,7 +4,7 @@ include /lib/mixins/form
     readonly : true | false
 +section("分配服务进程")
   +group("process", "accountId", "所属企业", "star", "所属企业名称")
-    +select("account", "id")(readonly=readonly, required="true", ng-options="account.sn for account in accounts")
+    +select("account", "sn")(readonly=readonly, required="true", ng-options="account.sn as account.name for account in accounts")
   +group("process", "hostId", "应用主机", "font", "请选择可用容量较高的主机")
     +select("process", "host")(readonly=readonly, required="true", ng-options="host.name for host in hosts")
   +group("process", "schemaId", "数据库主机", "font", "数据库主机地址")

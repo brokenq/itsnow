@@ -11,6 +11,8 @@ include /lib/mixins/form
     +select("host", "type")(ng-disabled=disabled_type, required="true", ng-options="type.key as type.value for type in types")
   +group("host", "capacity", "容量", "th", "主机上可以部署多少个MSU/MSP实例")
     +input("host", "capacity")(readonly=readonly, type="number", required="true", min="0", max="9999")
+  +group("host", "status", "状态", "th", "")(class=display)
+    +input("host", "display.status")(readonly=readonly)
 
 +section("配置信息")
   +group("host", "configuration.user", "用户名", "user", "用户名，默认为root")

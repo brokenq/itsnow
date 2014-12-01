@@ -117,12 +117,13 @@ angular.module('MscIndex.Hosts', [])
         $scope.submited = false
   ])
 
-  .controller('HostViewCtrl', ['$scope', '$stateParams', '$http', '$interval', '$state', '$location', \
-                               ($scope,   $stateParams,   $http,   $interval,   $state,   $location)->
+  .controller('HostViewCtrl', ['$scope', '$stateParams', '$http', '$interval', '$state', '$location', '$filter', \
+                               ($scope,   $stateParams,   $http,   $interval,   $state,   $location,   $filter)->
     host = $scope.cacheService.find $stateParams.id, true
     host.configuration.msp_version = host.configuration['msp.version'] if host.configuration['msp.version']?
     host.configuration.msu_version = host.configuration['msu.version'] if host.configuration['msu.version']?
     host.creationLog = ""
+    host.display = {status: $filter('formatHostStatus')(host.status)}
     $scope.host = host
     console.log "Initialized the Host View controller on: #{JSON.stringify host}"
 

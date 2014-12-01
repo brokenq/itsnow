@@ -224,6 +224,9 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     @Override
     public void delete(ItsnowHost host) throws ItsnowHostException {
         logger.warn("Deleting {}", host);
+        if (host.getProcessesCount() + host.getSchemasCount() != 0)
+            throw new ItsnowHostException("Can't delete host for being used");
+
         SystemInvocation delistJob = translator.delist(host);
         delistJob.setId(DELIST_HOST + host.getAddress());
         delistJob.setUserFlag(-1);
@@ -260,7 +263,7 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     public long follow(ItsnowHost host, String jobId, long offset, List<String> result) {
         logger.trace("Follow {}'s job: {}", host, jobId);
         if(jobId.equals(host.getProperty(CREATE_INVOCATION_ID))){
-            return invokeService.read(jobId, offset, result);
+            return host.getStatus() == HostStatus.Running ? -1 : invokeService.read(jobId, offset, result);
         }else if (jobId.equals(host.getProperty(DELETE_INVOCATION_ID))){
             return invokeService.read(jobId, offset, result);
         }

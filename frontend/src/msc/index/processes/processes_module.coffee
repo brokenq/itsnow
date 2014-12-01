@@ -13,7 +13,7 @@ angular.module('MscIndex.Processes', [])
       controller: 'ProcessListCtrl',
       data: {pageTitle: '进程列表'}
     $stateProvider.state 'processes.new',
-      url: '/new',
+      url: '/new/{accountSn}',
       templateUrl: 'processes/new.tpl.jade'
       controller: 'ProcessNewCtrl',
       data: {pageTitle: '新增进程'}
@@ -126,8 +126,8 @@ angular.module('MscIndex.Processes', [])
 
   ])
 
-  .controller('ProcessNewCtrl', ['$scope', '$state', '$http', '$resource', 'Feedback', \
-                                 ($scope,   $state,   $http,   $resource,   feedback)->
+  .controller('ProcessNewCtrl', ['$scope', '$state', '$http', '$resource', '$stateParams', 'Feedback', \
+                                 ($scope,   $state,   $http,   $resource,   $stateParams,   feedback)->
     console.log("Initialized the Process New controller")
     process = {}
     $scope.process = process
@@ -139,13 +139,16 @@ angular.module('MscIndex.Processes', [])
 
     getHostById = (id)->
       return host for host in $scope.hosts when host.id is parseInt id
-    $scope.$watch 'account.id', (account)->
-      if account?
-        $http.get("/admin/api/processes/auto_new/#{account.sn}").success (data)->
+
+    $scope.$watch 'account.sn', (sn)->
+      if sn?
+        $http.get("/admin/api/processes/auto_new/#{sn}").success (data)->
           process = data
           $scope.schemas.push process.schema
           $scope.process.schema = process.schema
           $scope.process.host = getHostById process.host.id
+
+    $http.get("/admin/api/accounts/#{$stateParams.accountSn}").success (account)-> $scope.account = account
 
     $scope.create = ->
       $scope.submited = true
@@ -220,9 +223,8 @@ angular.module('MscIndex.Processes', [])
           configuration: "用户名：{0}\n密码：{1}\n".interpolate(schemaConfig['user'], schemaConfig['password']) if schemaConfig?
 
       # access url
-      $scope.ipUrl = "http://#{process.host.address}:#{processConfig['http.port']}"
-      regx = new RegExp "itsnow_|itsnow-"
-      $scope.domainUrl = "http://#{process.name.replace(regx, '')}.#{processConfig['app.domain']}"
+      $scope.ipUrl = "#{window.location.protocol}//#{process.host.address}:#{processConfig['http.port']}"
+      $scope.domainUrl = "#{window.location.protocol}//#{account.domain}#{window.location.host.replace(/^msc\./,'.')}"
 
       # toggle action buttons
       toggleButton = (status)->
