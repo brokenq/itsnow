@@ -14,6 +14,9 @@ angular.module('Lib.Directives', ['Lib.Utils'])
   .directive('ngCheck', ['$http', 'Utils', (async, Utils) ->
     {
       require: 'ngModel',
+      scope: {
+        callback : "=callback"
+      }
       link: (scope, elem, attrs, ctrl)->
         elem.on 'blur', () ->
           scope.$apply ->

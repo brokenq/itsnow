@@ -99,6 +99,10 @@ angular.module('MscIndex.Hosts', [])
     $scope.host = host
     Hosts = $scope.services
 
+    $scope.linkNameWithAddress = (resp)->
+      $scope.host.address = resp.address if resp.address? and !$scope.host.address?
+      $scope.host.name = resp.name if resp.name? and !$scope.host.name?
+
     $scope.create = ->
       $scope.submited = true
       host.configuration['msu.version'] = host.configuration.msu_version
