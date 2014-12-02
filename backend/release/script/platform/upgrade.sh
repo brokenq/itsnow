@@ -80,7 +80,7 @@ wget $target -O downloads/$file
 
 if [ $? -gt 0 ]; then
   echo "Failed to download $target, check you version or CI site status/configuration please!"
-  echo 4
+  exit 4
 fi
 
 echo "Step 2 extract to $folder"
