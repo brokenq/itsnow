@@ -41,6 +41,13 @@ public interface RoleRepository {
      */
     public List<Role> findAll(@Param("keyword") String keyword, @Param("pageable") Pageable pageable);
 
+    /**
+     * 根据用户名查询所有角色信息
+     * @param username 用户名称
+     * @return 角色列表
+     */
+    public List<Role> findAllByUsername(@Param("username") String username);
+
     public Role findByName(@Param("name") String name);
 
     /**

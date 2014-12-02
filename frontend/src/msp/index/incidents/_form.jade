@@ -14,7 +14,7 @@ include /lib/mixins/form
   +group("incident", "requesterLocation", "所处地区", "star", "所处地区")
     +input("incident", "requesterLocation")(readonly=readonly)
 +section("故障信息")
-  +group("incident", "requestType", "请求类型", "star", "请求类型")
+  +group("incident", "requestType", "请求来源", "star", "请求来源")
     +select("incident", "requestType")(ng-options="requestType.value as requestType.key for requestType in requestTypes.details")
   +group("incident", "impact", "影响程度", "star", "影响程度")
     +select("incident", "impact")(ng-options="impact.value as impact.key for impact in impacts.details")

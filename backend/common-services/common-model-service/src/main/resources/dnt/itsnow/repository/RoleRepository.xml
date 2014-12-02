@@ -14,24 +14,36 @@
     <select id="selectUser" resultType="User">
         SELECT u.*
         FROM   authorities a
-               LEFT JOIN itsnow_msc.users u
-                      ON a.username = u.username
+        LEFT JOIN itsnow_msc.users u
+        ON a.username = u.username
         WHERE #{name} = a.authority
     </select>
 
-    <select id="count" resultType="java.lang.Integer">
-        SELECT COUNT(0) FROM roles
+    <sql id="select">
+        SELECT * FROM roles
+    </sql>
+
+    <sql id="keyword">
         <where>
             <if test="keyword != null and keyword != ''">
                 <bind name="pattern" value="'%' + keyword + '%' "/>
                 name LIKE #{pattern}
             </if>
         </where>
+    </sql>
+
+    <select id="findAllByUsername" resultType="Role">
+        SELECT r.*
+        FROM   authorities a
+               LEFT JOIN roles r
+                      ON a.authority = r.name
+        WHERE #{username} = a.username
     </select>
 
-    <sql id="select">
-        SELECT * FROM roles
-    </sql>
+    <select id="count" resultType="java.lang.Integer">
+        SELECT COUNT(0) FROM roles
+        <include refid="keyword"></include>
+    </select>
 
     <select id="findByName" resultMap="roleResult">
         <include refid="select"></include>
@@ -40,12 +52,7 @@
 
     <select id="findAll" resultMap="roleResult">
         <include refid="select"></include>
-        <where>
-            <if test="keyword != null and keyword != ''">
-                <bind name="pattern" value="'%' + keyword + '%' "/>
-                name LIKE #{pattern}
-            </if>
-        </where>
+        <include refid="keyword"></include>
         <if test="pageable.sort != null">
             ORDER BY #{pageable.sort}
         </if>

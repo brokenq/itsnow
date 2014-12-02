@@ -142,6 +142,4 @@ angular.module('System.Group', [])
     ($scope,   $state,    $stateParams,  $filter) ->
       name = $stateParams.name
       $scope.group = $scope.cacheService.find name, true
-      $scope.group.createdAtStr=$filter('formatTime')($scope.group.createdAt)
-      $scope.group.updatedAtStr=$filter('formatTime')($scope.group.updatedAt)
   ])

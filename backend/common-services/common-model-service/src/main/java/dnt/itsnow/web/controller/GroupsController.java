@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * <h1>用户组的控制器</h1>
@@ -142,6 +143,17 @@ public class GroupsController extends SessionSupportController<Group> {
 
         return group;
     }
+    @RequestMapping(value = "belongs_to_user/{username}", method = RequestMethod.GET)
+    public List<Group> listGroups(@PathVariable("username") String username) {
+
+        logger.info("get username {}",username);
+        List<Group> groups = groupService.findAllByUserName(username);
+        logger.info("get groups",groups);
+
+
+        return groups;
+    }
+
     @RequestMapping(value = "check/{name}", method = RequestMethod.GET)
     public HashMap checkUnique(@PathVariable("name") String name){
          group = groupService.findByName(name);

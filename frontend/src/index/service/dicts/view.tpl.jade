@@ -1,11 +1,11 @@
-include /lib/mixins/form.jade
+include /lib/mixins/form
 mixin blocks(title)
   h2 #{title}
   hr
   block
 mixin formGroup()
   .form-group
-    .col-md-offset-2.col-md-8
+    .col-md-12
       block
 mixin label(title)
   label.control-label.col-md-2 #{title}:
@@ -22,35 +22,14 @@ mixin formField(label, value)
       +formField("名称", "dict.name")(class="col-md-3")
     +formGroup()
       +formField("显示名", "dict.label")(class="col-md-3")
-      +formField("创建时间", "dict.createdAt | formatTime")(class="col-md-3")
+      +formField("创建时间", "dict.createdAtFMT")(class="col-md-3")
     +formGroup()
       +label('字典描述')
         textarea.form-control(rows='4',ng-model="dict.description",readonly)
-+action_bar
-  +action_submit("返回")(ui-sref="dicts.list")
+  +section("字典项信息")
+    #editcontent
+      #create1.form-group.has-info
+        +dictName("名称")(ng-model="dict.details[0].key",readonly)
+        +dictValue("值")(ng-model="dict.details[0].value",readonly)
+      script(src='/lib/mixins/dictView.js')
 
-//-var readonly = true
-//
-//h2 查看 字典
-//
-//include /msp/index/service/dicts/_form.jade
-//
-//+action_bar
-//  +action_submit("返回")(ui-sref="dicts.list")
-
-
-
-
-
-
-
-
-
-//-var readonly = true
-//
-//h2 查看 字典
-//
-//include /msc/index/service/dicts/_form.jade
-//
-//+action_bar
-//  +action_submit("返回")(ui-sref="dicts.list")
