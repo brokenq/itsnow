@@ -131,6 +131,7 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     public boolean checkPassword(String host, String username, String password) throws ItsnowHostException {
         logger.debug("Checking {}@{} password availability", username, host);
         SystemInvocation checkJob = translator.checkHostUser(host, username, password);
+        checkJob.setId("check-" + username + "-password-of-" + host);
         String jobId = invokeService.addJob(checkJob);
         try {
             int code = invokeService.waitJobFinished(jobId);

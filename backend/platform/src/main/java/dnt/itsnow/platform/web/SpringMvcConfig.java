@@ -112,9 +112,16 @@ public class SpringMvcConfig extends WebMvcConfigurationSupport implements Initi
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         //前端的静态资源映射
-        registry.addResourceHandler("/**").addResourceLocations("/build/", "/deploy/", "/public/");
+        ResourceHandlerRegistration registration = registry.addResourceHandler("/**") ;
+        registration.addResourceLocations("/build/", "/deploy/", "/public/");
+        int oneYear = 60 * 60 * 24 * 30 * 365;
+        registration.setCachePeriod(oneYear);
         //favicon映射
-        registry.addResourceHandler("/favicon.ico").addResourceLocations("/build/assets/favicon.ico","/deploy/images/favicon.ico","/public/images/favicon.ico");
+        registration = registry.addResourceHandler("/favicon.ico");
+        registration.addResourceLocations("/build/assets/favicon.ico",
+                                          "/deploy/images/favicon.ico",
+                                          "/public/images/favicon.ico");
+        registration.setCachePeriod(oneYear);
     }
 
 
