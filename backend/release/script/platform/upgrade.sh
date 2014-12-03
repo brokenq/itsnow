@@ -113,7 +113,7 @@ cd $current
 java -jar lib/dnt.itsnow.release-*.jar `pwd` .itsnow
 
 echo "Step 8 migrate db"
-cd $current/db
+cd db
 bin/migrate up
 if [ $? -gt 0 ]; then
   echo "Failed to migrate new version, but try to start also"
