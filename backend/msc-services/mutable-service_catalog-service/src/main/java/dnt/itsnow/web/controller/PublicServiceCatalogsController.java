@@ -88,8 +88,34 @@ public class PublicServiceCatalogsController extends SessionSupportController<Pu
         return serviceCatalog;
     }
 
+    /**
+     * <h2>删除帐户的一个服务目录</h2>
+     *
+     * PUT /admin/api/public_service_catalogs/{sn}/account/{account}/remove
+     *
+     */
+    @RequestMapping(value = "{sn}/account/{accountId}/remove", method = RequestMethod.PUT)
+    public void destroyByAccount(@PathVariable("sn") String sn,@PathVariable("accountId") Long accountId){
+        logger.info("Remove service catalog {} of Account:{}",sn,accountId);
+        publicServiceCatalogService.deleteByAccount(serviceCatalog,accountId);
+        logger.info("Removed service catalog {} of Account:{}",sn,accountId);
+    }
 
-    @BeforeFilter({"show", "update", "destroy"})
+    /**
+     * <h2>增加帐户的一个服务目录</h2>
+     *
+     * PUT /admin/api/public_service_catalogs/{sn}/account/{accountId}/create
+     *
+     */
+    @RequestMapping(value = "{sn}/account/{accountId}/create", method = RequestMethod.PUT)
+    public void addByAccount(@PathVariable("sn") String sn,@PathVariable("accountId") Long accountId){
+        logger.info("Add service catalog {} of Account:{}",sn,accountId);
+        publicServiceCatalogService.saveByAccount(serviceCatalog,accountId);
+        logger.info("Added service catalog {} of Account:{}",sn,accountId);
+    }
+
+
+    @BeforeFilter({"show", "update", "destroy","addByAccount","destroyByAccount"})
     public void initServiceCatalog(@PathVariable("sn") String sn){
         serviceCatalog = publicServiceCatalogService.findBySn(sn);
         if(serviceCatalog == null)

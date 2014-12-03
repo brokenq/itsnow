@@ -33,4 +33,20 @@ public interface PublicServiceCatalogService extends CommonServiceCatalogService
      */
     void delete(PublicServiceCatalog publicServiceCatalog);
 
+    /**
+     * <h2>新增帐户的公共服务目录</h2>
+     *
+     * @param catalog 服务目录
+     * @param accountId 帐户ID
+     */
+    void saveByAccount(PublicServiceCatalog catalog,Long accountId);
+
+    /**
+     * <h2>删除帐户的公共服务目录</h2>
+     *
+     * @param catalog 服务目录
+     * @param accountId 帐户ID
+     */
+    void deleteByAccount(PublicServiceCatalog catalog,Long accountId);
+
 }
