@@ -94,7 +94,7 @@ cp $current/.itsnow $upgrading
 
 echo "Step 5 configure the new-system with current .itsnow properties"
 cd $upgrading
-java -jar lib/dnt.itsnow.release-*.jar . .itsnow
+java -jar lib/dnt.itsnow.release-*.jar `pwd` .itsnow
 cd $itsnow_dir
 chmod +x $upgrading/bin/*.sh $upgrading/bin/itsnow_$type $upgrading/db/bin/migrate  $upgrading/script/*/*.sh
 
@@ -121,7 +121,7 @@ fi
 echo "Step 9 start new system"
 cd $itsnow_dir/$current
 bin/itsnow_$type start
-bin/check.sh logs/wrapper.log Itsnow_$type
+bin/check.sh logs/wrapper.log itsnow_$type
 
 cd $itsnow_dir
 
