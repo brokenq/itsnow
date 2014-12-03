@@ -34,9 +34,9 @@ angular.module('MscIndex.Hosts', [])
     console.log("Initialized the Hosts controller")
     $scope.options = {page: 1, count: 10}
     $scope.types = [
-      {key: "DB",   value: "数据库主机"},
-      {key: "APP",  value: "应用主机"},
-      {key: "COM",  value: "综合主机"}
+      {label: "数据库主机", value: "DB"},
+      {label: "应用主机",   value: "APP"},
+      {label: "综合主机",   value: "COM"}
     ]
 
     $scope.services = $resource("/admin/api/hosts/:id", {id: "@id"}, {update: {method: "PUT"}})
@@ -119,6 +119,7 @@ angular.module('MscIndex.Hosts', [])
         host.configuration.msu_version = host.configuration['msu.version']
         host.configuration.msp_version = host.configuration['msp.version']
         $scope.submited = false
+
   ])
 
   .controller('HostViewCtrl', ['$scope', '$stateParams', '$http', '$interval', '$state', '$location', '$filter', \

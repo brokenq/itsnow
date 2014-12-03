@@ -126,27 +126,42 @@ angular.module('MscIndex.Processes', [])
 
   ])
 
-  .controller('ProcessNewCtrl', ['$scope', '$state', '$http', '$resource', '$stateParams', 'Feedback', \
-                                 ($scope,   $state,   $http,   $resource,   $stateParams,   feedback)->
+  .controller('ProcessNewCtrl', ['$scope', '$state', '$http', '$resource', '$stateParams', '$interval', 'Feedback', \
+                                 ($scope,   $state,   $http,   $resource,   $stateParams,   $interval,   feedback)->
     console.log("Initialized the Process New controller")
     process = {}
     $scope.process = process
     Processes = $resource("/admin/api/processes")
 
-    $http.get("/admin/api/accounts/list_no_process").success (accounts)-> $scope.accounts = accounts
-    $http.get("/admin/api/schemas").success (schemas)-> $scope.schemas = schemas
-    $http.get("/admin/api/hosts/list_available/APP,COM").success (hosts)-> $scope.hosts = hosts
+
+    formatDatas = (srcDatas, key, customId)->
+      datas = []
+      for data in srcDatas
+        id = if customId? then data[customId] else JSON.stringify(data)
+        datas.push {id: id, text: "#{data[key]}"}
+      return datas
+
+    $http.get("/admin/api/accounts/list_no_process").success (accounts)->
+      $scope.accounts = accounts
+      $("#account_sn").select2({data: {results: formatDatas accounts, 'name', 'sn'}}).on("change", (e)-> autoNew e.val)
+    $http.get("/admin/api/schemas").success (schemas)->
+      $scope.schemas = schemas
+      $("#process_schema").select2({data: {results: formatDatas schemas, 'name', null}})
+    $http.get("/admin/api/hosts/list_available/APP,COM").success (hosts)->
+      $scope.hosts = hosts
+      $("#process_host").select2({data: {results: formatDatas hosts, 'name', null}})
 
     getHostById = (id)->
       return host for host in $scope.hosts when host.id is parseInt id
 
-    $scope.$watch 'account.sn', (sn)->
+    autoNew = (sn)->
       if sn?
         $http.get("/admin/api/processes/auto_new/#{sn}").success (data)->
           process = data
           $scope.schemas.push process.schema
-          $scope.process.schema = process.schema
-          $scope.process.host = getHostById process.host.id
+          $("#process_schema").select2({data: {results: formatDatas $scope.schemas, 'name', null}})
+          $("#process_host").val(JSON.stringify(getHostById process.host.id)).trigger("change")
+          $("#process_schema").val(JSON.stringify(process.schema)).trigger("change")
 
     $http.get("/admin/api/accounts/#{$stateParams.accountSn}").success (account)-> $scope.account = account
 
@@ -159,6 +174,7 @@ angular.module('MscIndex.Processes', [])
       , (resp)->
         feedback.error "创建 #{process.name} 进程失败", resp
         $scope.submited = false
+
   ])
 
   .controller('ProcessViewCtrl', ['$scope', '$interval', '$stateParams', '$filter', '$http', '$location', \
