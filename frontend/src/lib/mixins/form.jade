@@ -52,6 +52,8 @@ mixin area(object, field)
 mixin select(object, field)
   select.form-control(id="#{object}_#{field}", name="#{object}.#{field}", ng-model="#{object}.#{field}")&attributes(attributes)
 
+mixin select2(object, field)
+  +input(object, field)(class="remove-form-control", ng-model-options="{ updateOn: 'change' }")&attributes(attributes)
 //- the action bar in form bottom(or top)
 mixin action_bar
   .clearfix.form-actions

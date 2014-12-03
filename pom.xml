@@ -33,7 +33,7 @@
         <version.commons-fileupload>1.2</version.commons-fileupload>
         <version.de.bechte.junit>4.11.3</version.de.bechte.junit>
 
-        <release.root>/opt/releases/itsnow</release.root>
+        <release.root>/Users/brokenq/opt/releases/itsnow</release.root>
         <release.dir>${release.root}/itsnow-${project.version}</release.dir>
     </properties>
 
