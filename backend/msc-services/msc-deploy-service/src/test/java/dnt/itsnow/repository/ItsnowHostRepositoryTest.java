@@ -7,7 +7,7 @@ import dnt.itsnow.config.DeployRepositoryConfig;
 import dnt.itsnow.model.HostStatus;
 import dnt.itsnow.model.HostType;
 import dnt.itsnow.model.ItsnowHost;
-import dnt.itsnow.platform.util.PageRequest;
+import net.happyonroad.platform.util.PageRequest;
 import dnt.itsnow.util.DeployFixture;
 import junit.framework.Assert;
 import org.junit.Before;

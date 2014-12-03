@@ -14,7 +14,7 @@ import dnt.itsnow.service.SystemInvoker;
 import dnt.itsnow.system.LocalProcess;
 import dnt.itsnow.system.Process;
 import dnt.itsnow.system.RemoteProcess;
-import dnt.spring.Bean;
+import net.happyonroad.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;

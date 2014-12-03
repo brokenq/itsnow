@@ -27,7 +27,6 @@
     </properties>
 
     <modules>
-        <module>platform</module>
         <module>release</module>
         <module>repository</module>
         <module>common-services</module>
@@ -107,12 +106,6 @@
                 <version>${project.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>dnt.itsnow</groupId>
-                <artifactId>platform</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
 
             <!--Demo-->
             <dependency>
@@ -165,23 +158,6 @@
                 <version>${project.version}</version>
             </dependency>
 
-
-            <!--message-bus,redis,cache-service -->
-            <dependency>
-                <groupId>dnt.components</groupId>
-                <artifactId>message_bus</artifactId>
-                <version>${version.components}</version>
-            </dependency>
-            <dependency>
-                <groupId>dnt.components</groupId>
-                <artifactId>cache_service</artifactId>
-                <version>${version.components}</version>
-            </dependency>
-            <dependency>
-                <groupId>dnt.components</groupId>
-                <artifactId>redis</artifactId>
-                <version>${version.components}</version>
-            </dependency>
 
             <!--由于msc,msu,msp的服务都是独立部署在各自对应的单元中，
             一般不会被另外的单元直接通过API依赖，所以他们的依赖被定义在相应的模块内部-->

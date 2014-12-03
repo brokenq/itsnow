@@ -2,8 +2,8 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.Incident;
 import dnt.itsnow.model.MspIncident;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.web.annotation.BeforeFilter;
+import net.happyonroad.platform.service.Page;
+import net.happyonroad.platform.web.annotation.BeforeFilter;
 import dnt.itsnow.service.MspIncidentService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;

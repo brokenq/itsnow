@@ -2,8 +2,8 @@ package dnt.itsnow.service;
 
 import dnt.itsnow.exception.RoleException;
 import dnt.itsnow.model.Role;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.service.Pageable;
+import net.happyonroad.platform.service.Page;
+import net.happyonroad.platform.service.Pageable;
 
 import java.util.List;
 

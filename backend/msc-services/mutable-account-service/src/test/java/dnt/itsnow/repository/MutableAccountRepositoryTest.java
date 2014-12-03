@@ -7,7 +7,7 @@ import dnt.itsnow.config.MutableAccountRepositoryConfig;
 import dnt.itsnow.model.Account;
 import dnt.itsnow.model.AccountStatus;
 import dnt.itsnow.model.MsuAccount;
-import dnt.itsnow.platform.util.PageRequest;
+import net.happyonroad.platform.util.PageRequest;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;

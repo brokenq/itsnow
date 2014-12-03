@@ -3,8 +3,8 @@
  */
 package dnt.itsnow.config;
 
-import dnt.itsnow.platform.service.AutoNumberService;
-import dnt.itsnow.platform.support.AutoNumberInMemory;
+import net.happyonroad.platform.service.AutoNumberService;
+import net.happyonroad.platform.support.AutoNumberInMemory;
 import dnt.itsnow.repository.MutableAccountRepository;
 import dnt.itsnow.service.MutableAccountService;
 import dnt.itsnow.service.MutableUserService;

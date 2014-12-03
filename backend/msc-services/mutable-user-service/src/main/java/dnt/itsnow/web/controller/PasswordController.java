@@ -3,8 +3,8 @@
  */
 package dnt.itsnow.web.controller;
 
-import dnt.itsnow.platform.web.controller.ApplicationController;
-import dnt.itsnow.platform.web.exception.WebClientSideException;
+import net.happyonroad.platform.web.controller.ApplicationController;
+import net.happyonroad.platform.web.exception.WebClientSideException;
 import dnt.itsnow.service.MutableUserService;
 import dnt.itsnow.web.model.ChangePasswordRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.security.Principal;
 
 /**
  * <h1>用户个人的密码</h1>

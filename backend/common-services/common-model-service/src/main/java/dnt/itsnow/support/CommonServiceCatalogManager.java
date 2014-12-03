@@ -5,7 +5,7 @@ import dnt.itsnow.model.ServiceCatalog;
 import dnt.itsnow.model.ServiceItem;
 import dnt.itsnow.repository.CommonServiceCatalogRepository;
 import dnt.itsnow.service.CommonServiceCatalogService;
-import dnt.spring.Bean;
+import net.happyonroad.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

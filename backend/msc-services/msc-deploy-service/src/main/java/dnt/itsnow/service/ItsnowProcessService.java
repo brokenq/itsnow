@@ -6,8 +6,8 @@ package dnt.itsnow.service;
 import dnt.itsnow.exception.ItsnowProcessException;
 import dnt.itsnow.model.Account;
 import dnt.itsnow.model.ItsnowProcess;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.util.PageRequest;
+import net.happyonroad.platform.service.Page;
+import net.happyonroad.platform.util.PageRequest;
 
 import java.util.List;
 

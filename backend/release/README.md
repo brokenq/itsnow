@@ -193,8 +193,8 @@ Default Config 中的值，S = Service, A = App, D = DB, W = Web，也可以写�
 <configuration>
   <archive>
     <manifestEntries>
-     <Service-Config>dnt.itsnow.platform.config.DefaultServiceConfig</Service-Config>
-     <App-Config>dnt.itsnow.platform.config.DefaultAppConfig</App-Config>
+     <Service-Config>DefaultServiceConfig</Service-Config>
+     <App-Config>DefaultAppConfig</App-Config>
      <DB-Repository>dnt.itsnow.repository</DB-Repository>
      <Web-Repository>dnt.itsnow.web.controller</Web-Repository>
     </manifestEntries>
@@ -220,7 +220,7 @@ Default Config 中的值，S = Service, A = App, D = DB, W = Web，也可以写�
 
 ```java
 @Configuration
-@Import({dnt.spring.DefaultAppConfig.class})
+@Import({DefaultAppConfig.class})
 @ComponentScan("dnt.itsnow.support")
 ```
 

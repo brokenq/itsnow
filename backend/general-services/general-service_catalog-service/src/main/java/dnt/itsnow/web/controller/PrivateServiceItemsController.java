@@ -5,8 +5,8 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.PrivateServiceCatalog;
 import dnt.itsnow.model.PrivateServiceItem;
-import dnt.itsnow.platform.web.annotation.BeforeFilter;
-import dnt.itsnow.platform.web.exception.WebClientSideException;
+import net.happyonroad.platform.web.annotation.BeforeFilter;
+import net.happyonroad.platform.web.exception.WebClientSideException;
 import dnt.itsnow.service.PrivateServiceCatalogService;
 import dnt.itsnow.service.PrivateServiceItemService;
 import org.springframework.beans.factory.annotation.Autowired;

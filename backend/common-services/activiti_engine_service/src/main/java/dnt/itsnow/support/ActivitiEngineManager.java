@@ -1,7 +1,7 @@
 package dnt.itsnow.support;
 
 import dnt.itsnow.api.ActivitiEngineService;
-import dnt.spring.Bean;
+import net.happyonroad.spring.Bean;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.engine.ActivitiObjectNotFoundException;
 import org.activiti.engine.ProcessEngine;

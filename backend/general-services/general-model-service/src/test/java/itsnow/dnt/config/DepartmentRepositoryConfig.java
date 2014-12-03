@@ -3,7 +3,7 @@
  */
 package itsnow.dnt.config;
 
-import dnt.itsnow.platform.repository.DatabaseConfig;
+import net.happyonroad.platform.repository.DatabaseConfig;
 import dnt.itsnow.test.config.RepositoryConfigWithH2;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;

@@ -2,9 +2,9 @@ package dnt.itsnow.support;
 
 import dnt.itsnow.model.Account;
 import dnt.itsnow.model.User;
-import dnt.itsnow.platform.service.Pageable;
-import dnt.itsnow.platform.util.DefaultPage;
-import dnt.itsnow.platform.service.Page;
+import net.happyonroad.platform.service.Pageable;
+import net.happyonroad.platform.util.DefaultPage;
+import net.happyonroad.platform.service.Page;
 import dnt.itsnow.repository.GeneralUserRespository;
 import dnt.itsnow.service.GeneralUserService;
 import dnt.itsnow.web.model.ChangePasswordRequest;

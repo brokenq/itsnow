@@ -4,13 +4,13 @@
 package dnt.itsnow.support;
 
 import dnt.itsnow.model.User;
-import dnt.itsnow.platform.util.DefaultPage;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.service.Pageable;
+import net.happyonroad.platform.util.DefaultPage;
+import net.happyonroad.platform.service.Page;
+import net.happyonroad.platform.service.Pageable;
 import dnt.itsnow.repository.MutableUserRepository;
 import dnt.itsnow.service.MutableUserService;
-import dnt.messaging.MessageBus;
-import dnt.support.JsonSupport;
+import net.happyonroad.messaging.MessageBus;
+import net.happyonroad.support.JsonSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;

@@ -3,7 +3,7 @@
  */
 package dnt.itsnow.config;
 
-import dnt.itsnow.platform.config.DefaultAppConfig;
+import net.happyonroad.platform.config.DefaultAppConfig;
 import dnt.messaging.MessageBus;
 import dnt.redis.RedisCache;
 import dnt.redis.RedisConfig;

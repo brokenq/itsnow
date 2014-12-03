@@ -3,7 +3,7 @@ package itsnow.dnt.repository;
 import dnt.itsnow.model.Dictionary;
 import dnt.itsnow.model.Site;
 import dnt.itsnow.model.WorkTime;
-import dnt.itsnow.platform.util.PageRequest;
+import net.happyonroad.platform.util.PageRequest;
 import dnt.itsnow.repository.DictionaryRepository;
 import dnt.itsnow.repository.SiteDeptRepository;
 import dnt.itsnow.repository.SiteRepository;

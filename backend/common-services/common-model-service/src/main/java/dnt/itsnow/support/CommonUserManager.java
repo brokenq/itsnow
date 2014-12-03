@@ -8,7 +8,7 @@ import dnt.itsnow.model.User;
 import dnt.itsnow.repository.CommonUserRepository;
 import dnt.itsnow.service.CommonAccountService;
 import dnt.itsnow.service.CommonUserService;
-import dnt.spring.Bean;
+import net.happyonroad.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;

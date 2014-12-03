@@ -4,7 +4,7 @@
 package itsnow.dnt.repository;
 
 import dnt.itsnow.model.WorkTime;
-import dnt.itsnow.platform.util.PageRequest;
+import net.happyonroad.platform.util.PageRequest;
 import dnt.itsnow.repository.WorkTimeRepository;
 import itsnow.dnt.config.WorkTimeRepositoryConfig;
 import org.junit.Before;

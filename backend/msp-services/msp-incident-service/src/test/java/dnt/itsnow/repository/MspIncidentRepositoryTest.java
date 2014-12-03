@@ -5,7 +5,7 @@ package dnt.itsnow.repository;
 
 import dnt.itsnow.config.MspIncidentRepositoryConfig;
 import dnt.itsnow.model.Incident;
-import dnt.itsnow.platform.util.PageRequest;
+import net.happyonroad.platform.util.PageRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

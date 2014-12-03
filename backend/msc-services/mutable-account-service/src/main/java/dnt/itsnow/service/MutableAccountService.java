@@ -6,8 +6,8 @@ package dnt.itsnow.service;
 import dnt.itsnow.exception.AccountException;
 import dnt.itsnow.model.Account;
 import dnt.itsnow.model.User;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.service.Pageable;
+import net.happyonroad.platform.service.Page;
+import net.happyonroad.platform.service.Pageable;
 
 import java.util.List;
 

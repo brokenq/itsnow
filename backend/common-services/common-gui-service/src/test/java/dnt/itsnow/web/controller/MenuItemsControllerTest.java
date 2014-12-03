@@ -4,7 +4,7 @@ import dnt.itsnow.config.MenuItemsControllerConfig;
 import dnt.itsnow.model.MenuItem;
 import dnt.itsnow.service.MenuItemService;
 import dnt.itsnow.test.controller.ApplicationControllerTest;
-import dnt.support.JsonSupport;
+import net.happyonroad.support.JsonSupport;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

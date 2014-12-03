@@ -4,7 +4,7 @@
 package dnt.itsnow.repository;
 
 import dnt.itsnow.model.ItsnowProcess;
-import dnt.itsnow.platform.util.PageRequest;
+import net.happyonroad.platform.util.PageRequest;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -40,7 +40,7 @@ public interface ItsnowProcessRepository {
             "    #{name}, " +
             "    #{pid}, " +
             "    #{wd}, " +
-            "    #{configuration, typeHandler=dnt.itsnow.util.PropertiesHandler}, " +
+            "    #{configuration, typeHandler=PropertiesHandler}, " +
             "    #{description}, " +
             "    #{status}, " +
             "    #{createdAt}, " +
@@ -56,7 +56,7 @@ public interface ItsnowProcessRepository {
             "  name          = #{name}, " +
             "  pid           = #{pid}, " +
             "  wd            = #{wd}, " +
-            "  configuration = #{configuration,typeHandler=dnt.itsnow.util.PropertiesHandler}, " +
+            "  configuration = #{configuration,typeHandler=PropertiesHandler}, " +
             "  description   = #{description}, " +
             "  status        = #{status}, " +
             "  updated_at    = #{updatedAt} " +

@@ -4,7 +4,7 @@
 package dnt.itsnow.config;
 
 import dnt.cache.MutableCacheService;
-import dnt.itsnow.platform.service.AutoNumberService;
+import net.happyonroad.platform.service.AutoNumberService;
 import dnt.itsnow.service.CommonAccountService;
 import dnt.itsnow.service.CommonUserService;
 import dnt.messaging.MessageBus;

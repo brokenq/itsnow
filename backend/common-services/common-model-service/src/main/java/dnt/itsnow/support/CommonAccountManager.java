@@ -6,7 +6,7 @@ package dnt.itsnow.support;
 import dnt.itsnow.model.Account;
 import dnt.itsnow.repository.CommonAccountRepository;
 import dnt.itsnow.service.CommonAccountService;
-import dnt.spring.Bean;
+import net.happyonroad.spring.Bean;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

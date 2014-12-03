@@ -3,7 +3,7 @@
  */
 package dnt.itsnow.model;
 
-import dnt.itsnow.platform.model.Record;
+import net.happyonroad.platform.model.Record;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;

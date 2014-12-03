@@ -3,7 +3,7 @@ package dnt.itsnow.support;
 import dnt.itsnow.model.Contract;
 import dnt.itsnow.model.ContractStatus;
 import dnt.itsnow.model.User;
-import dnt.itsnow.platform.service.ServiceException;
+import net.happyonroad.platform.service.ServiceException;
 import dnt.itsnow.repository.MutableContractRepository;
 import dnt.itsnow.service.MutableContractService;
 import org.springframework.beans.factory.annotation.Autowired;

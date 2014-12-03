@@ -3,13 +3,10 @@
  */
 package dnt.itsnow.config;
 
-import dnt.itsnow.platform.config.DefaultServiceConfig;
-import dnt.itsnow.platform.service.AutoNumberService;
-import dnt.itsnow.platform.web.security.DelegateSecurityConfigurer;
+import net.happyonroad.platform.config.DefaultServiceConfig;
+import net.happyonroad.platform.service.AutoNumberService;
+import net.happyonroad.platform.web.security.DelegateSecurityConfigurer;
 import dnt.itsnow.service.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 /**
  * Common Model 模块的服务配置

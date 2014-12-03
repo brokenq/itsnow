@@ -5,7 +5,7 @@ package dnt.itsnow.support;
 
 import dnt.itsnow.exception.ContractException;
 import dnt.itsnow.model.*;
-import dnt.itsnow.platform.service.ServiceException;
+import net.happyonroad.platform.service.ServiceException;
 import dnt.itsnow.service.CommonUserService;
 import dnt.itsnow.service.GeneralContractService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestOperations;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

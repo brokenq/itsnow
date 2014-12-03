@@ -4,8 +4,8 @@
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.PublicServiceCatalog;
-import dnt.itsnow.platform.web.annotation.BeforeFilter;
-import dnt.itsnow.platform.web.exception.WebClientSideException;
+import net.happyonroad.platform.web.annotation.BeforeFilter;
+import net.happyonroad.platform.web.exception.WebClientSideException;
 import dnt.itsnow.service.PublicServiceCatalogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

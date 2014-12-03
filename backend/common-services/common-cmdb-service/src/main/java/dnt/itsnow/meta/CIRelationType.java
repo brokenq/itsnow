@@ -3,7 +3,7 @@
  */
 package dnt.itsnow.meta;
 
-import dnt.itsnow.platform.model.Record;
+import net.happyonroad.platform.model.Record;
 
 /**
  * CI(Configuration Item) Relation Type

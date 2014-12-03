@@ -1,7 +1,7 @@
 package itsnow.dnt.repository;
 
 import dnt.itsnow.model.*;
-import dnt.itsnow.platform.util.PageRequest;
+import net.happyonroad.platform.util.PageRequest;
 import dnt.itsnow.repository.StaffRepository;
 import itsnow.dnt.config.StaffRepositoryConfig;
 import org.junit.Assert;

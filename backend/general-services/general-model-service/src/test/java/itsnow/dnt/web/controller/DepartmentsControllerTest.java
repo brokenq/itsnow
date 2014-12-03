@@ -1,8 +1,8 @@
 package itsnow.dnt.web.controller;
 
 import dnt.itsnow.model.Department;
-import dnt.itsnow.platform.util.DefaultPage;
-import dnt.itsnow.platform.util.PageRequest;
+import net.happyonroad.platform.util.DefaultPage;
+import net.happyonroad.platform.util.PageRequest;
 import dnt.itsnow.service.CommonUserService;
 import dnt.itsnow.service.DepartmentService;
 import dnt.itsnow.test.controller.SessionSupportedControllerTest;
@@ -17,7 +17,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import java.net.URI;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 

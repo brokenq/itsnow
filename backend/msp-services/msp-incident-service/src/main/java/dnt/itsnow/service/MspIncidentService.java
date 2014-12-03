@@ -3,9 +3,9 @@ package dnt.itsnow.service;
 import dnt.itsnow.model.Incident;
 import dnt.itsnow.model.MspIncident;
 import dnt.itsnow.model.User;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.service.Pageable;
-import dnt.itsnow.platform.util.PageRequest;
+import net.happyonroad.platform.service.Page;
+import net.happyonroad.platform.service.Pageable;
+import net.happyonroad.platform.util.PageRequest;
 
 import java.io.InputStream;
 

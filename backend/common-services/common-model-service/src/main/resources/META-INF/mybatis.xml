@@ -30,7 +30,7 @@
     </typeAliases>
 
     <typeHandlers>
-        <typeHandler handler="dnt.itsnow.util.PropertiesHandler" javaType="java.util.Properties" jdbcType="VARCHAR"/>
+        <typeHandler handler="net.happyonroad.util.PropertiesHandler" javaType="java.util.Properties" jdbcType="VARCHAR"/>
         <typeHandler handler="dnt.itsnow.util.DictDetailHandler" javaType="dnt.itsnow.model.DictDetail" jdbcType="VARCHAR"/>
     </typeHandlers>
 </configuration>

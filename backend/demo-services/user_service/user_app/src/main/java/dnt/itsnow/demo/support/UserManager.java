@@ -3,9 +3,9 @@
  */
 package dnt.itsnow.demo.support;
 
-import dnt.itsnow.platform.util.DefaultPage;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.service.Pageable;
+import net.happyonroad.platform.util.DefaultPage;
+import net.happyonroad.platform.service.Page;
+import net.happyonroad.platform.service.Pageable;
 import dnt.itsnow.demo.api.UserService;
 import dnt.itsnow.demo.model.User;
 import dnt.itsnow.demo.repository.UserRepository;

@@ -1,6 +1,6 @@
 package dnt.itsnow.model;
 
-import dnt.support.JsonSupport;
+import net.happyonroad.support.JsonSupport;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
