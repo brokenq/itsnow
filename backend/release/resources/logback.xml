@@ -6,7 +6,7 @@
     <include resource="logback-basic.xml"/>
 
     <appender name="Rolling" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/itsnow.log</file>
+        <file>logs/#{log.file}.log</file>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
             <fileNamePattern>logs/#{log.file}.%i.log</fileNamePattern>

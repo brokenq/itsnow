@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClientException;
 
 /**
- * <h1>私有服务项管理控制器</h1>
+ * <h1>公共服务项管理控制器</h1>
  */
 
 @RestController

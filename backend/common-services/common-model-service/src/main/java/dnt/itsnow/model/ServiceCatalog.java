@@ -27,7 +27,6 @@ public class ServiceCatalog extends Record{
     @NotNull
     private Integer level;
 
-    //private List<ServiceItem> items;
 
     public List<ServiceCatalog> getChildren() {
         return children;

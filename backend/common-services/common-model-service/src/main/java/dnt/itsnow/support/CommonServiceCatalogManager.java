@@ -2,6 +2,7 @@ package dnt.itsnow.support;
 
 import dnt.itsnow.model.PublicServiceCatalog;
 import dnt.itsnow.model.PublicServiceItem;
+import dnt.itsnow.model.ServiceCatalog;
 import dnt.itsnow.model.ServiceItem;
 import dnt.itsnow.repository.CommonServiceCatalogRepository;
 import dnt.itsnow.repository.CommonServiceItemRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -131,5 +133,28 @@ public class CommonServiceCatalogManager extends Bean implements CommonServiceCa
     @Override
     public void setCommonServiceCatalogList(List<PublicServiceCatalog> commonServiceCatalogList) {
         this.commonServiceCatalogList = commonServiceCatalogList;
+    }
+    private List<ServiceCatalog> buildTreeTable(List<ServiceCatalog> serviceCatalogs) {
+        List<ServiceCatalog> treeTable = new LinkedList<ServiceCatalog>();
+        for (ServiceCatalog psi : serviceCatalogs) {
+            treeTable.add(psi);
+            loop(treeTable, psi);
+        }
+        return treeTable;
+    }
+
+    private void loop(List<ServiceCatalog> treeTable, ServiceCatalog psi) {
+        if (psi.getChildren() != null && psi.getChildren().size() > 0) {
+            for (ServiceCatalog child : psi.getChildren()) {
+                treeTable.add(child);
+                loop(treeTable, child);
+            }
+            psi.setChildren(null);
+        }
+    }
+    @Override
+    public List<ServiceCatalog> findCatalogsBySn(String sn) {
+        PublicServiceCatalog publicServiceCatalog=commonServiceCatalogRepository.findBySn(sn);
+        return buildTreeTable(publicServiceCatalog.getChildren());
     }
 }
