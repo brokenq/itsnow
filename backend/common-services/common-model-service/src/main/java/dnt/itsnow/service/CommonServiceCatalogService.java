@@ -31,4 +31,11 @@ public interface CommonServiceCatalogService {
 
     void setFormattedServiceCatalogList(List<PublicServiceCatalog> formattedServiceCatalogList);
 
+    /**
+     * <h2>根据帐户ID查找该帐户的公共服务目录</h2>
+     *
+     * @param accountId 帐户编号
+     * @return 找到的该帐户的所有公共服务目录列表，找不到则返回null
+     */
+    List<PublicServiceCatalog> findByAccountId(Long accountId);
 }

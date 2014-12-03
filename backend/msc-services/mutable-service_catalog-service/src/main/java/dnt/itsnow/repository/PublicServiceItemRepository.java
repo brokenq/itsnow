@@ -3,6 +3,8 @@ package dnt.itsnow.repository;
 import dnt.itsnow.model.PublicServiceItem;
 import org.apache.ibatis.annotations.*;
 
+import java.util.Set;
+
 /**
  * Created by jacky on 2014/9/2.
  */
@@ -28,6 +30,5 @@ public interface PublicServiceItemRepository extends CommonServiceItemRepository
             "VALUES (#{accountId},#{itemId})")
     void addByAccount(@Param("itemId")Long itemId,@Param("accountId")Long accountId);
 
-    @Delete("DELETE FROM itsnow_msc.account_service_items WHERE account_id = #{accountId} and item_id = #{itemId}")
-    void deleteByAccount(@Param("itemId")Long itemId,@Param("accountId")Long accountId);
+    void deleteByAccount(@Param("ids")Set<Long> ids,@Param("accountId")Long accountId);
 }

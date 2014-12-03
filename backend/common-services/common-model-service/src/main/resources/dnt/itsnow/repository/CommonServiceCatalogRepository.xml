@@ -19,6 +19,12 @@
         ORDER BY c.level,c.parent_id
     </select>
 
+    <select id="findByAccountId" resultMap="catalog">
+        SELECT pc.* FROM itsnow_msc.account_service_catalogs ac JOIN itsnow_msc.public_service_catalogs pc
+        ON ac.catalog_id = pc.id
+        WHERE ac.account_id = #{accountId}
+    </select>
+
     <select id="findBySn" resultMap="catalogWithItems">
         SELECT c.*,
         i.id AS item_id,
@@ -35,12 +41,27 @@
         WHERE c.sn = #{sn}
     </select>
 
+    <select id="findIdsByParentIds" resultType="Long">
+        SELECT DISTINCT id FROM itsnow_msc.public_service_catalogs
+        <if test="!ids.isEmpty()">
+            WHERE parent_id IN
+            <foreach item="item" index="index" collection="ids"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
     <resultMap id="catalogWithItems" type="PublicServiceCatalog" autoMapping="true">
         <id property="id" column="id"/>
         <collection property="items"
                     ofType="PublicServiceItem"
                     columnPrefix="item_"
                     autoMapping="true"/>
+    </resultMap>
+
+    <resultMap id="catalog" type="PublicServiceCatalog" autoMapping="true">
+        <id property="id" column="id"/>
     </resultMap>
 
 </mapper>

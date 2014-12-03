@@ -1,8 +1,10 @@
 package dnt.itsnow.support;
 
 import dnt.itsnow.model.PublicServiceCatalog;
+import dnt.itsnow.model.PublicServiceItem;
 import dnt.itsnow.model.ServiceItem;
 import dnt.itsnow.repository.CommonServiceCatalogRepository;
+import dnt.itsnow.repository.CommonServiceItemRepository;
 import dnt.itsnow.service.CommonServiceCatalogService;
 import dnt.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ public class CommonServiceCatalogManager extends Bean implements CommonServiceCa
 
     @Autowired
     CommonServiceCatalogRepository commonServiceCatalogRepository;
+
+    @Autowired
+    CommonServiceItemRepository commonServiceItemRepository;
 
     private  List<PublicServiceCatalog> commonServiceCatalogList;
 
@@ -64,17 +69,18 @@ public class CommonServiceCatalogManager extends Bean implements CommonServiceCa
     private void formatServiceCatalog(PublicServiceCatalog catalog){
         int level = catalog.getLevel()-1;
         String str = "";
-        for(ServiceItem item:catalog.getItems()){
-            str = "";
-            for(int i=0;i<=level;i++)
-                str = str +"--";
-            item.setTitle(str+item.getTitle());
+        if(catalog.getItems() != null){
+            for(ServiceItem item:catalog.getItems()){
+                str = "";
+                for(int i=0;i<=level;i++)
+                    str = str +"--";
+                item.setTitle(str+item.getTitle());
+            }
         }
         str = "";
         for(int i=0;i<level;i++)
             str = str +"--";
         catalog.setTitle(str+catalog.getTitle());
-
     }
 
     @Override
@@ -92,6 +98,27 @@ public class CommonServiceCatalogManager extends Bean implements CommonServiceCa
     @Override
     public void setFormattedServiceCatalogList(List<PublicServiceCatalog> formattedServiceCatalogList) {
         this.formattedServiceCatalogList = formattedServiceCatalogList;
+    }
+
+    @Override
+    public List<PublicServiceCatalog> findByAccountId(Long accountId) {
+        List<PublicServiceItem> items = commonServiceItemRepository.findByAccountId(accountId);
+        List<PublicServiceCatalog> catalogs = commonServiceCatalogRepository.findByAccountId(accountId);
+        formatServiceCatalogs(catalogs);
+        List<PublicServiceCatalog> treeCatalogs = this.getTreeList(catalogs);
+        for(PublicServiceItem item:items){
+            for(PublicServiceCatalog catalog:treeCatalogs){
+                if(item.getCatalog().getId() == catalog.getId()) {
+                    if(catalog.getItems() == null){
+                        List<PublicServiceItem> is = new ArrayList<PublicServiceItem>();
+                        catalog.setItems(is);
+                    }
+                    catalog.getItems().add(item);
+                    break;
+                }
+            }
+        }
+        return treeCatalogs;
     }
 
     public List<PublicServiceCatalog> getFormattedServiceCatalogList() {
