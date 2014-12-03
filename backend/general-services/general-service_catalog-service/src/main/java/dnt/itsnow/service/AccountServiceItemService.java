@@ -9,7 +9,7 @@ import dnt.itsnow.model.PublicServiceItem;
 /**
  * <h1>公共服务项服务</h1>
  */
-public interface PublicServiceItemService {
+public interface AccountServiceItemService {
 
 
     /**

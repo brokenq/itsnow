@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * PublicServiceItemManager
@@ -57,17 +59,21 @@ public class PublicServiceItemManager extends CommonServiceItemManager implement
 
     @Override
     public void saveByAccount(PublicServiceItem item,Long accountId) {
-        items = publicServiceItemRepository.findByAccountId(accountId);
+        /*items = publicServiceItemRepository.findByAccountId(accountId);
         for(PublicServiceItem si:items){
             if(si.getId() == item.getId())
                 return;
-        }
-        publicServiceItemRepository.addByAccount(item.getId(),accountId);
+        }*/
+        long count = publicServiceItemRepository.countByAccountAndItem(accountId,item.getId());
+        if(count == 0)
+            publicServiceItemRepository.addByAccount(item.getId(),accountId);
     }
 
     @Override
     public void deleteByAccount(PublicServiceItem item,Long accountId) {
-        publicServiceItemRepository.deleteByAccount(item.getId(),accountId);
+        Set<Long> ids = new HashSet<Long>();
+        ids.add(item.getId());
+        publicServiceItemRepository.deleteByAccount(ids,accountId);
     }
 
 }

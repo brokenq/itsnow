@@ -2,7 +2,7 @@ package dnt.itsnow.support;
 
 import dnt.itsnow.model.Account;
 import dnt.itsnow.model.PublicServiceItem;
-import dnt.itsnow.service.PublicServiceItemService;
+import dnt.itsnow.service.AccountServiceItemService;
 import dnt.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import java.util.Map;
  * PublicServiceItemManager for remote invoke msc service
  */
 @Service
-public class PublicServiceItemManager extends Bean implements PublicServiceItemService {
+public class AccountServiceItemManager extends Bean implements AccountServiceItemService {
 
     @Autowired
     RestOperations facade;

@@ -98,7 +98,7 @@ public class PublicServiceItemsController extends SessionSupportController<Publi
     /**
      * <h2>删除帐户的一个服务项目</h2>
      *
-     * PUT /admin/api/public_service_catalogs/{sn}/items/{isn}/remove?accountId=''
+     * PUT /admin/api/public_service_catalogs/{sn}/items/{isn}/account/{accountId}/remove
      *
      */
     @RequestMapping(value = "{isn}/account/{accountId}/remove", method = RequestMethod.PUT)
@@ -111,7 +111,7 @@ public class PublicServiceItemsController extends SessionSupportController<Publi
     /**
      * <h2>增加帐户的一个服务项目</h2>
      *
-     * PUT /admin/api/public_service_catalogs/{sn}/items/{isn}/create?accountId=''
+     * PUT /admin/api/public_service_catalogs/{sn}/items/{isn}/account/{accountId}/create
      *
      */
     @RequestMapping(value = "{isn}/account/{accountId}/create", method = RequestMethod.PUT)

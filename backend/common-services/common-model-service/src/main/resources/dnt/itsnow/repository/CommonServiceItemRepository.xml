@@ -27,6 +27,17 @@
         WHERE p.account_id = #{accountId}
     </select>
 
+    <select id="findIdsByCatalogIds" resultType="Long">
+        SELECT DISTINCT id FROM itsnow_msc.public_service_items
+        <if test="!ids.isEmpty()">
+            WHERE catalog_id IN
+            <foreach item="item" index="index" collection="ids"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
     <resultMap id="items" type="PublicServiceItem" autoMapping="true">
         <id property="id" column="id"/>
         <association property="catalog" javaType="PublicServiceCatalog" columnPrefix="catalog_" autoMapping="true">
