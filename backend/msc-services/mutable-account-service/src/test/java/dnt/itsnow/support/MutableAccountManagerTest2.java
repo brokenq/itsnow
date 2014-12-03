@@ -11,7 +11,7 @@ import dnt.itsnow.model.User;
 import net.happyonroad.platform.service.Page;
 import net.happyonroad.platform.util.PageRequest;
 import dnt.itsnow.service.MutableAccountService;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

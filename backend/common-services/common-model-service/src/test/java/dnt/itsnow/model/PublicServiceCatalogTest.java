@@ -5,7 +5,7 @@ package dnt.itsnow.model;
 
 import dnt.itsnow.test.model.ValidatorSupport;
 import net.happyonroad.support.JsonSupport;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 

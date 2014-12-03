@@ -107,8 +107,7 @@
                                     <appPort>${rmi.port}</appPort>
                                     <jmx>${jmx.port}</jmx>
                                     <debug>${debug.port}</debug>
-                                    <jvmOptions>-Dcomponent.feature.resolvers=net.happyonroad.platform.services.MybatisFeatureResolver,net.happyonroad.platform.services.SpringMvcFeatureResolver
-                                        -Xms128m -Xmx256m -XX:MaxPermSize=256m -Djava.awt.headless=true</jvmOptions>
+                                    <jvmOptions>-Dcomponent.feature.resolvers=net.happyonroad.platform.services.MybatisFeatureResolver,net.happyonroad.platform.services.SpringMvcFeatureResolver -Xms128m -Xmx256m -XX:MaxPermSize=256m -Djava.awt.headless=true</jvmOptions>
                                     <folders>${project.basedir}/resources,${project.basedir}/webapp,${project.basedir}/db,${project.basedir}/script</folders>
                                     <propertyFiles>${project.basedir}/config/now.properties,${project.basedir}/db/migrate/environments/development.properties</propertyFiles>
                                     <logbackFile>${project.basedir}/config/logback.xml</logbackFile>

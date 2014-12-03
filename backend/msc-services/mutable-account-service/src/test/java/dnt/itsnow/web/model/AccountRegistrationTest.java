@@ -6,7 +6,7 @@ package dnt.itsnow.web.model;
 import dnt.itsnow.model.Account;
 import dnt.itsnow.model.User;
 import net.happyonroad.support.JsonSupport;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 

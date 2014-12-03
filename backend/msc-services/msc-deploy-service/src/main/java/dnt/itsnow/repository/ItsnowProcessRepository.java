@@ -40,7 +40,7 @@ public interface ItsnowProcessRepository {
             "    #{name}, " +
             "    #{pid}, " +
             "    #{wd}, " +
-            "    #{configuration, typeHandler=PropertiesHandler}, " +
+            "    #{configuration, typeHandler=net.happyonroad.util.PropertiesHandler}, " +
             "    #{description}, " +
             "    #{status}, " +
             "    #{createdAt}, " +
@@ -56,7 +56,7 @@ public interface ItsnowProcessRepository {
             "  name          = #{name}, " +
             "  pid           = #{pid}, " +
             "  wd            = #{wd}, " +
-            "  configuration = #{configuration,typeHandler=PropertiesHandler}, " +
+            "  configuration = #{configuration,typeHandler=net.happyonroad.util.PropertiesHandler}, " +
             "  description   = #{description}, " +
             "  status        = #{status}, " +
             "  updated_at    = #{updatedAt} " +

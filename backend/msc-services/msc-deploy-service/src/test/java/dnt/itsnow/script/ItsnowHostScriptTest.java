@@ -9,7 +9,7 @@ import dnt.itsnow.repository.ItsnowHostRepository;
 import dnt.itsnow.service.SystemInvokeService;
 import dnt.itsnow.support.ItsnowHostManager;
 import dnt.itsnow.util.DeployFixture;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;

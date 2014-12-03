@@ -19,7 +19,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>dnt.components</groupId>
+            <groupId>net.happyonroad</groupId>
             <artifactId>config</artifactId>
         </dependency>
     </dependencies>

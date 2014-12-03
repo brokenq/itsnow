@@ -8,7 +8,7 @@ import dnt.itsnow.model.Account;
 import dnt.itsnow.model.AccountStatus;
 import dnt.itsnow.model.MsuAccount;
 import net.happyonroad.platform.util.PageRequest;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -26,9 +26,6 @@ import static org.easymock.EasyMock.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/**
- * Created by Sin on 2014/8/26.
- */
 @ContextConfiguration(classes = DictionariesControllerConfig.class)
 public class DictionariesControllerTest extends SessionSupportedControllerTest {
 

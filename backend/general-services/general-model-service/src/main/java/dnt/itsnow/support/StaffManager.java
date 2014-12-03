@@ -8,7 +8,7 @@ import net.happyonroad.platform.service.Pageable;
 import net.happyonroad.platform.util.DefaultPage;
 import dnt.itsnow.repository.StaffRepository;
 import dnt.itsnow.service.StaffService;
-import dnt.spring.Bean;
+import net.happyonroad.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

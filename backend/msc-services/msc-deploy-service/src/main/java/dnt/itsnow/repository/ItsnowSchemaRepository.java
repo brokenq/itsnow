@@ -21,7 +21,7 @@ public interface ItsnowSchemaRepository {
     ItsnowSchema findById(@Param("id") long id);
 
     @Insert("INSERT INTO itsnow_schemas(host_id, name, configuration, description, created_at, updated_at)" +
-            " VALUES(#{hostId}, #{name}, #{configuration, typeHandler=PropertiesHandler}, #{description}, #{createdAt}, #{updatedAt})")
+            " VALUES(#{hostId}, #{name}, #{configuration, typeHandler=net.happyonroad.util.PropertiesHandler}, #{description}, #{createdAt}, #{updatedAt})")
     @Options(useGeneratedKeys = true)
     void create(ItsnowSchema schema);
 

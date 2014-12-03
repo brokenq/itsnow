@@ -7,7 +7,7 @@ import net.happyonroad.platform.service.Pageable;
 import net.happyonroad.platform.util.DefaultPage;
 import dnt.itsnow.repository.WorkTimeRepository;
 import dnt.itsnow.service.WorkTimeService;
-import dnt.spring.Bean;
+import net.happyonroad.spring.Bean;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

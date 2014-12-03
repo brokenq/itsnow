@@ -12,7 +12,7 @@ import net.happyonroad.platform.service.Pageable;
 import net.happyonroad.platform.util.PageRequest;
 import dnt.itsnow.repository.MutableAccountRepository;
 import dnt.itsnow.service.MutableAccountService;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.Before;

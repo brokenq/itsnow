@@ -31,15 +31,15 @@
         </dependency>
         <!-- message-bus,redis,cache-service -->
         <dependency>
-            <groupId>dnt.components</groupId>
+            <groupId>net.happyonroad</groupId>
             <artifactId>message_bus</artifactId>
         </dependency>
         <dependency>
-            <groupId>dnt.components</groupId>
+            <groupId>net.happyonroad</groupId>
             <artifactId>cache_service</artifactId>
         </dependency>
         <dependency>
-            <groupId>dnt.components</groupId>
+            <groupId>net.happyonroad</groupId>
             <artifactId>redis</artifactId>
         </dependency>
     </dependencies>

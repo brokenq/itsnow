@@ -9,7 +9,7 @@
     <parent>
         <groupId>dnt</groupId>
         <artifactId>parent</artifactId>
-        <version>1.0.6</version>
+        <version>1.0.7</version>
         <relativePath>../parent/pom.xml</relativePath>
     </parent>
 
@@ -27,7 +27,7 @@
 
         <version.activiti.engine>5.15.1</version.activiti.engine>
 
-        <version.component-framework>1.0.2</version.component-framework>
+        <version.component-framework>1.0.3</version.component-framework>
         <version.components>1.0.0</version.components>
 
         <release.root>/opt/releases/itsnow</release.root>
@@ -129,6 +129,21 @@
             <dependency>
                 <groupId>net.happyonroad</groupId>
                 <artifactId>platform</artifactId>
+                <version>${version.components}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.happyonroad</groupId>
+                <artifactId>cache_service</artifactId>
+                <version>${version.components}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.happyonroad</groupId>
+                <artifactId>message_bus</artifactId>
+                <version>${version.components}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.happyonroad</groupId>
+                <artifactId>redis</artifactId>
                 <version>${version.components}</version>
             </dependency>
 

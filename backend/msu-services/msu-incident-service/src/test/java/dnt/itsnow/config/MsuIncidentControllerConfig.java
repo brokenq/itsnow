@@ -2,7 +2,7 @@ package dnt.itsnow.config;
 
 import dnt.itsnow.service.CommonUserService;
 import dnt.itsnow.service.MsuIncidentService;
-import dnt.itsnow.test.config.ApplicationControllerConfig;
+import net.happyonroad.test.config.ApplicationControllerConfig;
 import dnt.itsnow.web.controller.MsuIncidentController;
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Qualifier;

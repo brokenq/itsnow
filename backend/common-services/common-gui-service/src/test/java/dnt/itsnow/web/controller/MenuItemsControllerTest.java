@@ -3,7 +3,7 @@ package dnt.itsnow.web.controller;
 import dnt.itsnow.config.MenuItemsControllerConfig;
 import dnt.itsnow.model.MenuItem;
 import dnt.itsnow.service.MenuItemService;
-import dnt.itsnow.test.controller.ApplicationControllerTest;
+import net.happyonroad.test.controller.ApplicationControllerTest;
 import net.happyonroad.support.JsonSupport;
 import org.junit.After;
 import org.junit.Before;
@@ -19,12 +19,8 @@ import java.util.List;
 
 import static org.easymock.EasyMock.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/**
- * Created by Sin on 2014/8/26.
- */
 @ContextConfiguration(classes = MenuItemsControllerConfig.class)
 public class MenuItemsControllerTest extends ApplicationControllerTest {
 

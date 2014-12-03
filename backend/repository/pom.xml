@@ -15,11 +15,11 @@
 
     <dependencies>
         <dependency>
-            <groupId>dnt.components</groupId>
+            <groupId>net.happyonroad</groupId>
             <artifactId>infrastructure</artifactId>
         </dependency>
         <dependency>
-            <groupId>dnt.itsnow</groupId>
+            <groupId>net.happyonroad</groupId>
             <artifactId>platform</artifactId>
         </dependency>
         <dependency>

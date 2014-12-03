@@ -9,7 +9,7 @@ import net.happyonroad.platform.util.PageRequest;
 import dnt.itsnow.service.CommonUserService;
 import dnt.itsnow.service.WorkflowService;
 import dnt.itsnow.test.controller.SessionSupportedControllerTest;
-import dnt.support.JsonSupport;
+import net.happyonroad.support.JsonSupport;
 import itsnow.dnt.config.WorkflowsControllerConfig;
 import org.junit.After;
 import org.junit.Before;

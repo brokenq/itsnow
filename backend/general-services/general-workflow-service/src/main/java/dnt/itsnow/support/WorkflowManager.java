@@ -12,7 +12,7 @@ import dnt.itsnow.repository.WorkflowRepository;
 import dnt.itsnow.service.CommonServiceItemService;
 import dnt.itsnow.service.PrivateServiceItemService;
 import dnt.itsnow.service.WorkflowService;
-import dnt.spring.Bean;
+import net.happyonroad.spring.Bean;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -9,7 +9,7 @@ import net.happyonroad.platform.service.Pageable;
 import dnt.itsnow.demo.api.UserService;
 import dnt.itsnow.demo.model.User;
 import dnt.itsnow.demo.repository.UserRepository;
-import dnt.spring.Bean;
+import net.happyonroad.spring.Bean;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -33,7 +33,7 @@ public interface ItsnowHostRepository {
     ItsnowHost findById(@Param("id")Long id);
 
     @Insert("INSERT INTO itsnow_hosts(name, address, type, capacity, status, configuration, description, created_at, updated_at) " +
-            "VALUES (#{name}, #{address}, #{type}, #{capacity}, #{status}, #{configuration,typeHandler=PropertiesHandler}, #{description}, #{createdAt}, #{updatedAt})")
+            "VALUES (#{name}, #{address}, #{type}, #{capacity}, #{status}, #{configuration,typeHandler=net.happyonroad.util.PropertiesHandler}, #{description}, #{createdAt}, #{updatedAt})")
     @Options(useGeneratedKeys = true)
     void create(ItsnowHost creating);
 
@@ -46,7 +46,7 @@ public interface ItsnowHostRepository {
             "  address       = #{address}, " +
             "  type          = #{type}, " +
             "  capacity      = #{capacity}, " +
-            "  configuration = #{configuration,typeHandler=PropertiesHandler}, " +
+            "  configuration = #{configuration,typeHandler=net.happyonroad.util.PropertiesHandler}, " +
             "  description   = #{description}, " +
             "  status        = #{status}, " +
             "  updated_at    = #{updatedAt} " +
