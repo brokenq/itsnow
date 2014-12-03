@@ -10,9 +10,9 @@
 #   2. extract download zip to /opt/itsnow/msx-0.1.9-SNAPSHOT(if exists add suffix: .1/.2)
 #   3. mkdir /op/itsnow/latest
 #   4. link  /opt/itsnow/latest to /opt/itsnow/msx-0.1.9-SNAPSHOT 
-#   5. configure the new-system with current .itsnow properties
-#   6. stop current msx instance (in /opt/itsnow/msx)
-#   7. backup/make snapshot for current 
+#   5. stop current msx instance (in /opt/itsnow/msx)
+#   6. backup/make snapshot for current
+#   7. configure the new-system with current .itsnow properties
 #   8. migrate db
 #   9. start new msx again
 
@@ -92,26 +92,27 @@ echo "Step 3,4 Creating new-$type"
 ln -s $itsnow_dir/$folder $itsnow_dir/$upgrading
 cp $current/.itsnow $upgrading
 
-echo "Step 5 configure the new-system with current .itsnow properties"
-cd $upgrading
-java -jar lib/dnt.itsnow.release-*.jar `pwd` .itsnow
 cd $itsnow_dir
 chmod +x $upgrading/bin/*.sh $upgrading/bin/itsnow_$type $upgrading/db/bin/migrate  $upgrading/script/*/*.sh
 
-echo "Step 6 stop current system"
+echo "Step 5 stop current system"
 cd $current
 bin/itsnow_$type stop
 
-echo "Step 7 backup $type"
+echo "Step 6 backup $type"
 script/platform/backup_db.sh itsnow_$type $itsnow_dir/backup $folder.sql
 cd $itsnow_dir
 last=$(last_of old)
 /bin/mv -f $current old@$last
 
-echo "Step 8 migrate db"
 mv $upgrading $current
 echo "$utype upgraded from $old_version to $version, link to $folder"
 
+echo "Step 7 configure the new-system with current .itsnow properties"
+cd $current
+java -jar lib/dnt.itsnow.release-*.jar `pwd` .itsnow
+
+echo "Step 8 migrate db"
 cd $current/db
 bin/migrate up
 if [ $? -gt 0 ]; then
