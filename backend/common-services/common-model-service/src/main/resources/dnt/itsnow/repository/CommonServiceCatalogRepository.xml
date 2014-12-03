@@ -18,7 +18,6 @@
         LEFT OUTER JOIN itsnow_msc.public_service_items i ON c.id = i.catalog_id
         ORDER BY c.level,c.parent_id
     </select>
-
     <select id="findBySn" resultMap="catalogWithItems">
         SELECT c.*,
         i.id AS item_id,
@@ -34,9 +33,25 @@
         LEFT OUTER JOIN itsnow_msc.public_service_items i ON c.id = i.catalog_id
         WHERE c.sn = #{sn}
     </select>
+    <select id="getChildList" resultMap="catalogWithItems">
+        SELECT c.*,
+        i.id AS item_id,
+        i.catalog_id AS item_catalog_id,
+        i.sn AS item_sn,
+        i.title AS item_title,
+        i.brief AS item_brief,
+        i.description AS item_description,
+        i.icon AS item_icon,
+        i.created_at AS item_created_at,
+        i.updated_at AS item_updated_at
+        FROM itsnow_msc.public_service_catalogs c
+        LEFT OUTER JOIN itsnow_msc.public_service_items i ON c.id = i.catalog_id
+        WHERE c.parent_id = #{id}
+    </select>
 
     <resultMap id="catalogWithItems" type="PublicServiceCatalog" autoMapping="true">
         <id property="id" column="id"/>
+        <collection property="children" column="id" select="getChildList"/>
         <collection property="items"
                     ofType="PublicServiceItem"
                     columnPrefix="item_"

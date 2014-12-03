@@ -3,6 +3,7 @@ package dnt.itsnow.repository;
 import dnt.itsnow.config.CommonServiceCatalogRepositoryConfig;
 import dnt.itsnow.model.Account;
 import dnt.itsnow.model.PublicServiceCatalog;
+import dnt.itsnow.model.ServiceCatalog;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ public class CommonServiceCatalogRepositoryTest {
     @Test
     public void testFindBySn() throws Exception {
         PublicServiceCatalog catalog = repository.findBySn("SC_100");
+
         validateCatalog(catalog);
         Assert.isNull(repository.findBySn("Not Exist"));
     }

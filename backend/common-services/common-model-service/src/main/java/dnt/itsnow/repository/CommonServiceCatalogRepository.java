@@ -10,6 +10,6 @@ import java.util.List;
 public interface CommonServiceCatalogRepository {
 
     List<PublicServiceCatalog> findAll();
-
     PublicServiceCatalog findBySn(String sn);
+//    List<PublicServiceCatalog> findCatalogsBySn(String sn);
 }

@@ -4,6 +4,7 @@
 package dnt.itsnow.service;
 
 import dnt.itsnow.model.PublicServiceCatalog;
+import dnt.itsnow.model.ServiceCatalog;
 
 import java.util.List;
 
@@ -18,6 +19,12 @@ public interface CommonServiceCatalogService {
      * @return 公共服务目录列表
      */
     List<PublicServiceCatalog> findAll();
+//    /**
+//     * <h2>查询所有公共服务目录</h2>
+//     *
+//     * @return 公共服务目录列表
+//     */
+//    List<PublicServiceCatalog> findCatalogsBySn(String sn);
 
     /**
      * <h2>根据SN查找公共服务目录</h2>
@@ -31,4 +38,5 @@ public interface CommonServiceCatalogService {
 
     void setFormattedServiceCatalogList(List<PublicServiceCatalog> formattedServiceCatalogList);
 
+    List<ServiceCatalog> findCatalogsBySn(String sn);
 }
