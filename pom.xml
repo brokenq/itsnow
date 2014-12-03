@@ -27,8 +27,8 @@
 
         <version.activiti.engine>5.15.1</version.activiti.engine>
 
-        <version.component-framework>1.0.1</version.component-framework>
-        <version.components>0.2.0</version.components>
+        <version.component-framework>1.0.2</version.component-framework>
+        <version.components>0.2.1</version.components>
 
         <version.commons-fileupload>1.2</version.commons-fileupload>
         <version.de.bechte.junit>4.11.3</version.de.bechte.junit>
