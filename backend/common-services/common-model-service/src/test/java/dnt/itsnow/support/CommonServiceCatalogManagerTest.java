@@ -2,6 +2,7 @@ package dnt.itsnow.support;
 
 import dnt.itsnow.config.CommonServiceCatalogManagerConfig;
 import dnt.itsnow.model.PublicServiceCatalog;
+import dnt.itsnow.model.ServiceCatalog;
 import dnt.itsnow.service.CommonServiceCatalogService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +27,12 @@ public class CommonServiceCatalogManagerTest {
     @Test
     public void testFindAll() throws Exception {
         List<PublicServiceCatalog> list = service.findAll();
+        Assert.isTrue(list!=null&&list.size()>0);
+    }
+    @Test
+    public void testfindCatalogsBySn() throws Exception {
+        List<ServiceCatalog> list = service.findCatalogsBySn("SC_100");
+        System.out.print(list);
         Assert.isTrue(list!=null&&list.size()>0);
     }
 
