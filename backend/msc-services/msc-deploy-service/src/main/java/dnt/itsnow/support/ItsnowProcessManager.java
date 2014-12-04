@@ -294,7 +294,13 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
     @Override
     public void finished(SystemInvocation invocation) {
         super.finished(invocation);
-        if( invocation.getUserFlag() == START_FLAG){
+        if (invocation.getUserFlag() == DEPLOY_FLAG) {
+            // set process status as Stopped
+            ItsnowProcess process = updateStatus(DEPLOY_INVOCATION_ID, invocation.getId(), ProcessStatus.Stopped);
+            if( process != null ) {
+                logger.info("Stopped  {}", process);
+            }
+        } else if( invocation.getUserFlag() == START_FLAG){
             // set process status as started
             ItsnowProcess process = updateStatus(START_INVOCATION_ID, invocation.getId(), ProcessStatus.Running);
             if( process != null ) {
