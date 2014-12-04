@@ -32,29 +32,28 @@ public class GeneralContractManager extends CommonContractManager implements Gen
     CommonUserService commonUserService;
 
     @Override
-    public Contract approve(Account account, String sn) throws ServiceException {
+    public Contract approve(Account account, Contract contract) throws ServiceException {
 
-        logger.info("Approving {}, contract sn {}", account, sn);
+        logger.info("Approving {}, contract {}", account, contract);
 
-        Contract contract = findByAccountAndSn(account, sn, true);
+        Contract persistenceContract = findByAccountAndSn(account, contract.getSn(), true);
 
-        logger.debug("Found {}", contract);
+        logger.debug("Found {}", persistenceContract);
 
         if (account.isMsu()) {
-            /*if (contract.getMspAccountId() == null) {
-                throw new ContractException("The contract has not yet been accept by MSP");
-            } else*/ if (contract.isApproved()) {
+            if (persistenceContract.isApproved()) {
                 throw new ContractException("The contract has been approved by msu");
             }
         } else if (account.isMsp()) {
-            if (contract.isApproved()) {
+            if (persistenceContract.isApproved()) {
                 throw new ContractException("The contract has been approved by msp");
             }
         }
-        facade.put("/admin/api/contracts/{sn}/approve", null, contract.getSn());
-        contract = findByAccountAndSn(account, sn, true);
+        facade.put("/admin/api/contracts/{sn}/approve", contract, contract.getSn());
 
-        logger.info("Approved  {} {}", account, sn);
+        contract = findByAccountAndSn(account, contract.getSn(), true);
+
+        logger.info("Approved  {} {}", account, contract.getSn());
 
         List<User> users = commonUserService.findUsersByAccount(account);
         contract.setUsers(users);

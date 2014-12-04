@@ -14,11 +14,12 @@ import javax.validation.constraints.Size;
 import java.util.Arrays;
 
 /**
- * <h1>>服务采购方(MSU)或者服务供应方(MSP)在系统数据库中的账户</h1
+ * <h1>服务采购方(MSU)或者服务供应方(MSP)在系统数据库中的账户</h1>
  */
-public class Account extends AbstractAccount {
+public class Account extends ConfigItem {
     public static final String[] RESERVED_DOMAINS = {"www", "blog", "dev", "developer", "sales", "marketing", "hr", "test"};
 
+    public static final String BASE = "base";
     public static final String MSC = "msc";
     public static final String MSU = "msu";
     public static final String MSP = "msp";
@@ -85,8 +86,14 @@ public class Account extends AbstractAccount {
         return this.status == AccountStatus.Rejected;
     }
 
+    private String type;
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public String getType(){
-        return "base";
+        return BASE;
     }
 
     @JsonIgnore

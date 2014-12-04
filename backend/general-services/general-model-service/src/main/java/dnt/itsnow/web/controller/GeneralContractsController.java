@@ -48,11 +48,10 @@ public class GeneralContractsController extends SessionSupportController {
      * @return 合同信息，不包括了Contract Detail 信息
      */
     @RequestMapping(value = "/{sn}/approve", method = RequestMethod.PUT)
-    public Contract approve(@PathVariable("sn") String sn) {
+    public Contract approve(@PathVariable("sn") String sn, @Valid @RequestBody Contract contract) {
         logger.info("Approving contract {}", sn);
-        Contract contract;
         try {
-            contract = contractService.approve(mainAccount, sn);
+            contract = contractService.approve(mainAccount, contract);
         } catch (ServiceException e) {
             throw new WebClientSideException(HttpStatus.NOT_ACCEPTABLE,
                     "the contract can't be approved, cause: " + e.getMessage());

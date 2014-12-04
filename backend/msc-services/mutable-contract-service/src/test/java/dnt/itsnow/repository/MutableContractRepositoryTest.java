@@ -2,8 +2,9 @@ package dnt.itsnow.repository;
 
 import dnt.itsnow.config.MutableContractRepositoryConfig;
 import dnt.itsnow.model.Contract;
+import dnt.itsnow.model.ContractMspAccount;
 import dnt.itsnow.model.User;
-import dnt.itsnow.platform.util.PageRequest;
+import net.happyonroad.platform.util.PageRequest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -83,6 +84,12 @@ public class MutableContractRepositoryTest {
     @Test
     public void testFindAllByMspAccountId() {
         Assert.assertTrue(repository.findAllByMspAccountId(3L, pageRequest).size() > 0);
+    }
+
+    @Test
+    public void findMspAccountById() {
+        List<ContractMspAccount> accounts = repository.findMspAccountById(2L);
+        Assert.assertTrue(accounts.size() > 0);
     }
 
 }

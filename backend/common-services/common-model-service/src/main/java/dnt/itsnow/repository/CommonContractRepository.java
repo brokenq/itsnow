@@ -5,6 +5,7 @@
 package dnt.itsnow.repository;
 
 import dnt.itsnow.model.Contract;
+import dnt.itsnow.model.ContractMspAccount;
 import net.happyonroad.platform.service.Pageable;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -21,9 +22,6 @@ public interface CommonContractRepository {
     @Select("SELECT count(0) FROM itsnow_msc.contracts WHERE msu_account_id = #{msuId}")
     long countByMsuAccountId(@Param("msuId") long msuId);
 
-    @Select("SELECT count(0) FROM itsnow_msc.contracts c left join itsnow_msc.contract_records cr on cr.contract_id = c.id WHERE cr.msp_account_id = #{mspId} OR cr.msp_account_id is NULL")
-    long countByMspAccountId(@Param("mspId") long mspId);
-
     @Select("SELECT count(0) FROM itsnow_msc.contracts")
     long count();
 
@@ -32,6 +30,9 @@ public interface CommonContractRepository {
 
     List<Contract> findAllByMsuAccountId(@Param("msuId") long msuId, @Param("pageable")Pageable pageable);
 
+    @Select("SELECT count(0) FROM itsnow_msc.contracts WHERE status IN ( 'Draft', 'Purposed' )")
+    long countByMspDraft(@Param("mspId") long mspId);
+
     /**
      * MSP模块邀约管理
      * @param mspId MSP账户ID
@@ -39,6 +40,9 @@ public interface CommonContractRepository {
      * @return 合同列表
      */
     List<Contract> findAllByMspDraft(@Param("mspId") Long mspId, @Param("pageable")Pageable pageable);
+
+
+    long countByMspAccountId(@Param("mspId") long mspId);
 
     /**
      * MSP模块我的合约
@@ -51,5 +55,10 @@ public interface CommonContractRepository {
     // 需要加载details
     Contract findBySn(String sn);
 
-    List<Long> findMspAccountById(@Param("id") Long id);
+    /**
+     * 根据合同号加载应约的MSP账户及其相应的合同状态（批准或拒绝）
+     * @param id 合同ID
+     * @return 带合同状态的MSP账户
+     */
+    List<ContractMspAccount> findMspAccountById(@Param("id") Long id);
 }

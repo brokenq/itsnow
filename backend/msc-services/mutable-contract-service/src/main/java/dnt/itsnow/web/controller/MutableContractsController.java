@@ -1,6 +1,3 @@
-/**
- * xiongjie on 14-8-1.
- */
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.Contract;
@@ -121,9 +118,15 @@ public class MutableContractsController extends SessionSupportController<Contrac
      * @return 被批准的合同
      */
     @RequestMapping(value = "{sn}/approve", method = RequestMethod.PUT)
-    public Contract approve(){
+    public Contract approve(@Valid @RequestBody Contract contract){
+
         logger.debug("msu approve contract:{}", contract.getSn());
-        return mutableContractService.approve(contract);
+
+        contract = mutableContractService.approve(contract);
+
+        logger.debug("msu approved contract:{}", contract);
+
+        return contract;
     }
 
     /**
@@ -161,11 +164,7 @@ public class MutableContractsController extends SessionSupportController<Contrac
      */
     @RequestMapping(value = "user/relation", method = RequestMethod.POST)
     public void buildRelation(@Valid @RequestBody Contract contract){
-        try {
-            mutableContractService.buildRelation(contract);
-        } catch (ServiceException e) {
-            throw new WebClientSideException(HttpStatus.SERVICE_UNAVAILABLE, "Can't build relationship contract with msp users" + e.getMessage() );
-        }
+        mutableContractService.buildRelation(contract);
     }
 
     /**
@@ -177,11 +176,7 @@ public class MutableContractsController extends SessionSupportController<Contrac
      */
     @RequestMapping(value = "user/relation", method = RequestMethod.PUT)
     public void updateRelation(@Valid @RequestBody Contract contract){
-        try {
-            mutableContractService.updateRelation(contract);
-        } catch (ServiceException e) {
-            throw new WebClientSideException(HttpStatus.SERVICE_UNAVAILABLE, "Can't update relationship contract with msp users" + e.getMessage() );
-        }
+        mutableContractService.updateRelation(contract);
     }
 
     @BeforeFilter({"show", "update", "approve", "reject", "destroy"})

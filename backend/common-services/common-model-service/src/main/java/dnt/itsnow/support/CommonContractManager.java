@@ -7,6 +7,7 @@ import dnt.itsnow.exception.AccountException;
 import dnt.itsnow.exception.ContractException;
 import dnt.itsnow.model.Account;
 import dnt.itsnow.model.Contract;
+import dnt.itsnow.model.ContractMspAccount;
 import dnt.itsnow.model.MspAccount;
 import net.happyonroad.platform.service.Page;
 import net.happyonroad.platform.service.Pageable;
@@ -42,37 +43,45 @@ public class CommonContractManager extends Bean implements CommonContractService
 
     @Override
     public Page<Contract> findAllByAccount(Account account, Boolean own, Pageable pageable) throws ServiceException {
+
         Assert.notNull(account, "the account shouldn't be null");
+
+        long total;
+        List<Contract> contracts;
+
         if (account.isMsc()) {
-            long total = repository.count();
-            List<Contract> contracts = repository.findAll(pageable);
-            for (Contract contract : contracts) {
-                this.formatContract(contract);
-            }
-            return new DefaultPage<Contract>(contracts, pageable, total);
-        }
-        if (account.isMsu()) {
-            long total = repository.countByMsuAccountId(account.getId());
-            List<Contract> contracts = repository.findAllByMsuAccountId(account.getId(), pageable);
-            for (Contract contract : contracts) {
-                this.formatContract(contract);
-            }
-            return new DefaultPage<Contract>(contracts, pageable, total);
+            total = repository.count();
+            contracts = repository.findAll(pageable);
+        } else if (account.isMsu()) {
+            total = repository.countByMsuAccountId(account.getId());
+            contracts = repository.findAllByMsuAccountId(account.getId(), pageable);
         } else if (account.isMsp()) {
-            long total = repository.countByMspAccountId(account.getId());
-            List<Contract> contracts;
             if (own) {
+                total = repository.countByMspAccountId(account.getId());
                 contracts = repository.findAllByMspAccountId(account.getId(), pageable);
             } else {
+                total = repository.countByMspDraft(account.getId());
                 contracts = repository.findAllByMspDraft(account.getId(), pageable);
             }
-            for (Contract contract : contracts) {
-                this.formatContract(contract);
-            }
-            return new DefaultPage<Contract>(contracts, pageable, total);
         } else {
             throw new AccountException("The account type is invalid!");
         }
+
+        for (Contract contract : contracts) {
+            this.formatContract(contract);
+        }
+
+        if(account.isMsp() && own){
+            for(Contract con : contracts){
+                for (ContractMspAccount mspAccount : con.getMspAccounts()){
+                    if(account.getSn().equals(mspAccount.getSn())){
+                        con.setStatus(mspAccount.getContractStatus());
+                    }
+                }
+            }
+        }
+
+        return new DefaultPage<Contract>(contracts, pageable, total);
     }
 
     @Override
@@ -101,12 +110,7 @@ public class CommonContractManager extends Bean implements CommonContractService
         contract.setMsuAccount((dnt.itsnow.model.MsuAccount) account);
 
         // MSP Accounts
-        List<Long> mspAccountIds = repository.findMspAccountById(contract.getId());
-        List<MspAccount> mspAccounts = new ArrayList<MspAccount>();
-        for(Long mspAccountId : mspAccountIds){
-            Account mspAccount = accountService.findById(mspAccountId);
-            mspAccounts.add((MspAccount)mspAccount);
-        }
+        List<ContractMspAccount> mspAccounts = repository.findMspAccountById(contract.getId());
         contract.setMspAccounts(mspAccounts);
     }
 }

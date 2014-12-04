@@ -1,11 +1,12 @@
 package dnt.itsnow.support;
 
 import dnt.itsnow.model.Contract;
+import dnt.itsnow.model.ContractMspAccount;
 import dnt.itsnow.model.ContractStatus;
 import dnt.itsnow.model.User;
-import net.happyonroad.platform.service.ServiceException;
 import dnt.itsnow.repository.MutableContractRepository;
 import dnt.itsnow.service.MutableContractService;
+import net.happyonroad.platform.service.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,6 +71,11 @@ public class MutableContractManager extends CommonContractManager implements Mut
         contract.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         contract.setStatus(ContractStatus.Approved);
         mutableContractRepository.approve(contract);
+
+        for(ContractMspAccount account : contract.getMspAccounts()){
+            mutableContractRepository.updateRecord(contract.getId(), account.getId(), account.getContractStatus());
+        }
+
         return contract;
     }
 
@@ -99,14 +105,14 @@ public class MutableContractManager extends CommonContractManager implements Mut
     }
 
     @Override
-    public void buildRelation(Contract contract) throws ServiceException {
+    public void buildRelation(Contract contract) {
         for (User user : contract.getUsers()) {
                 mutableContractRepository.buildRelation(contract.getId(), user.getId(), "1");
         }
     }
 
     @Override
-    public void updateRelation(Contract contract) throws ServiceException {
+    public void updateRelation(Contract contract) {
         mutableContractRepository.deleteRelation(contract.getId());
         buildRelation(contract);
     }

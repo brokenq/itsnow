@@ -1,6 +1,7 @@
 package dnt.itsnow.repository;
 
 import dnt.itsnow.model.Contract;
+import dnt.itsnow.model.ContractStatus;
 import org.apache.ibatis.annotations.*;
 
 /**
@@ -34,7 +35,7 @@ public interface MutableContractRepository extends CommonContractRepository{
     void update(Contract contract);
 
     /**
-     * <h2>MSP投标</h2>
+     * <h2>MSP应约</h2>
      *
      * 将合同的msp状态修改为 Proposed
      *
@@ -47,13 +48,22 @@ public interface MutableContractRepository extends CommonContractRepository{
     void bid(Contract contract);
 
     /**
-     * 记录哪些MSP投标了合同
+     * 记录哪些MSP应约了合同
      * @param mspAccountId MSP账户
      * @param id 合同ID
      */
     @Insert("INSERT INTO itsnow_msc.contract_records(contract_id, msp_account_id) " +
             "VALUES(#{id}, #{mspAccountId})")
     void bidRecord(@Param("mspAccountId")String mspAccountId, @Param("id")Long id);
+
+    /**
+     * 修改MSP应约记录
+     * @param id 合同ID
+     * @param mspAccountId 应约的MSP账户ID
+     * @param status MSU对应约账户的回复状态
+     */
+    @Update("UPDATE itsnow_msc.contract_records SET status = #{status} WHERE contract_id = #{id} AND msp_account_id = #{mspAccountId}")
+    void updateRecord(@Param("id")Long id, @Param("mspAccountId")Long mspAccountId, @Param("status")ContractStatus status);
 
     /**
      * <h2>批准合同</h2>

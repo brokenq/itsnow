@@ -35,13 +35,13 @@ public class Contract extends Record {
     // 与MSU签订合同的MSP用户列表，其中包含是否允许登录MSU信息
     private List<User> users;
     // MSP账户
-    private List<MspAccount> mspAccounts;
+    private List<ContractMspAccount> mspAccounts;
 
-    public List<MspAccount> getMspAccounts() {
+    public List<ContractMspAccount> getMspAccounts() {
         return mspAccounts;
     }
 
-    public void setMspAccounts(List<MspAccount> mspAccounts) {
+    public void setMspAccounts(List<ContractMspAccount> mspAccounts) {
         this.mspAccounts = mspAccounts;
     }
 
