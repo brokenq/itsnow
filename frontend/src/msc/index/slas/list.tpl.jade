@@ -10,8 +10,8 @@ include /lib/mixins/list
     +more_buttons
       +drop_button("actionService.perform(destroy, $event)", "trash", "删除", "1+", "", "deletable")
 
-  +page_table("slasTable","selection")
-    +row("sla", "id", "selection")(class="editable deletable")
+  +page_table("slasTable","selectionService")
+    +row("sla", "id", "selectionService")(class="editable deletable")
       td(data-title="'名称'")
         a(ui-sref="slas.view(sla)") {{sla.title}}
       td(data-title="'描述'") {{sla.description}}

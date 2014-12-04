@@ -9,7 +9,7 @@ include /lib/mixins/list
       +tool_button("actionService.perform(reject, $event)",  "trash", "拒绝",    "1+", "", "new")
       +tool_button("actionService.perform(autoCreate, $event)",  "key",  "自动分配", "1+", "", "valid")
     +more_buttons
-      +drop_button("actionService.gotoState('processes.new', $event)", "plus", "手工分配", "1", "", "valid")
+      +drop_button("actionService.perform(manuallyAssign, $event)", "plus", "手工分配", "1", "", "valid")
       +drop_button("actionService.perform(destroy, $event)", "trash", "删除", "1+", "valid", "")
 
   +page_table("accountsTable","selectionService")
