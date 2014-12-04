@@ -40,13 +40,13 @@ angular.module('Service.Catalog', [])
       $scope.options =
         page: 1, # show first page
         count: 1000 # count per page
-      # 提交按钮是否已经执行了提交操作，false为未执行，则按钮可用
+      # 提交按钮是否已经执行了提交操作，false为未执行，则按钮可
       $scope.submited = false
       $scope.SC = $resource("/api/public_service_catalogs/:sn/catalogs", {})
+      $scope.ServiceItem = $resource("/api/public_service_catalogs/:sn/items/:isn",{})
       $scope.ServiceCatalog = $resource("/api/public_service_catalogs/:sn", {})
-      $scope.AccountServiceCatalogAdd = $resource("/api/public_service_catalogs/accounts/catalogs/:sn",{sn:'@sn'})
+      $scope.AccountServiceCatalogAddRemove = $resource("/api/public_service_catalogs/accounts/catalogs/:sn",{sn:'@sn'})
       $scope.AccountServiceCatalog = $resource("/api/public_service_catalogs/accounts")
-      $scope.ServiceItem = $resource("/api/public_service_catalogs/:sn/items/:isn", {})
       $scope.AccountServiceItem = $resource("/api/public_service_catalogs/accounts/items/:isn", {isn: '@isn'})
   ])
 .controller('CatalogListCtrl',
@@ -73,36 +73,37 @@ angular.module('Service.Catalog', [])
             , 500)
           )
       $scope.tableParams = new NgTable(angular.extend($scope.options, $location.search()), args)
-
       $scope.selection = {checked: false, items: {}, parent: {}}
+      $scope.tableParams.reload()
       $scope.getCatalogBySn = (sn)->
         for catalog in $scope.catalogs
           return catalog if catalog.sn is sn
-#
-#      $scope.update = ->
-#        angular.forEach $scope.catalogs, (item)->
-#          angular.forEach item.items, (child)->
-#            if $scope.selection.items[child.sn]
-#             AccountServiceItem.save({isn: child.sn}, ->
-#                feedback.success("设置公共服务目录项" + child.sn + "成功")
-#              , (resp)->
-#                feedback.error("设置公共服务目录项" + child.sn + "失败", resp)
-#              )
-#            else
-#              AccountServiceItem.remove({isn: child.sn}, ->
-#                feedback.success("取消公共服务目录项" + child.sn + "成功")
-#              , (resp)->
-#                feedback.error("取消公共服务目录项" + child.sn + "失败", resp)
-#              )
-#        feedback.success("设置公共服务目录完成！")
+      $scope.delete = ->
+        angular.forEach $scope.catalogs, (catalog)->
+          if $scope.selection.items[catalog.sn]
+            $scope.AccountServiceCatalogAddRemove .remove({sn: catalog.sn}, ->
+              $scope.tableParams.reload()
+              feedback.success("删除公共服务目录" + catalog.title+ "成功")
+            , (resp)->
+              feedback.error("删除公共服务目录" + catalog.title+ "失败", resp)
+            )
+          angular.forEach catalog.items, (item)->
+            if $scope.selection.items[item.sn]
+              $scope.AccountServiceItem.remove({isn: item.sn}, ->
+                $scope.tableParams.reload()
+                feedback.success("删除公共服务目录项" + item.title + "成功")
+              , (resp)->
+                feedback.error("删除公共服务目录项" + item.title + "失败", resp)
+              )
+        feedback.success("删除公共服务目录完成！")
+
 
       $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.getCatalogBySn})
-      # watch for check all checkbox
       $scope.$watch 'selection.checked', (value)->
-        angular.forEach $scope.catalogs, (item)->
-          angular.forEach item.items, (child)->
-            $scope.selection.items[child.sn] = value if angular.isDefined(child.sn)
-
+        angular.forEach $scope.catalogs, (catalog)->
+          $scope.selection.items[catalog.sn] = value if angular.isDefined(catalog.sn)
+          angular.forEach catalog.items, (item)->
+            $scope.selection.items[item.sn] = value if angular.isDefined(item.sn)
   ])
 
 .controller('CatalogViewCtrl', ['$scope', '$stateParams', '$log',
@@ -158,26 +159,18 @@ angular.module('Service.Catalog', [])
       $scope.update = ->
         angular.forEach $scope.catalogs, (catalog)->
           if $scope.selection.items[catalog.sn]
-            $scope.AccountServiceCatalogAdd .save({sn: catalog.sn}, ->
-              feedback.success("设置公共服务目录" + catalog.sn+ "成功")
+            $scope.AccountServiceCatalogAddRemove .save({sn: catalog.sn}, ->
+              feedback.success("设置公共服务目录" + catalog.title+ "成功")
             , (resp)->
-              feedback.error("设置公共服务目录" + catalog.sn+ "失败", resp)
+              feedback.error("设置公共服务目录" + catalog.title+ "失败", resp)
             )
-          angular.forEach catalog.items, (item)->
-            if $scope.selection.items[item.sn]
-              $scope.AccountServiceItem.save({isn: item.sn}, ->
-                feedback.success("设置公共服务目录项" + item.sn + "成功")
-              , (resp)->
-                feedback.error("设置公共服务目录项" + item.sn + "失败", resp)
-              )
+        $state.go "catalog.list"
         feedback.success("设置公共服务目录完成！")
-      $scope.delete = ->
-        angular.forEach $scope.catalogs, (catalog)->
-          if $scope.selection.items[catalog.sn]
-            alert("设置服务目录调用方法循环删除account_servicecatalogs"+catalog.sn)
-#      watch for check all checkbox
+
+
       $scope.$watch 'selection.checked', (value)->
         angular.forEach $scope.catalogs, (catalog)->
+          $scope.selection.items[catalog.sn] = value if angular.isDefined(catalog.sn)
           angular.forEach catalog.items, (item)->
             $scope.selection.items[item.sn] = value if angular.isDefined(item.sn)
   ])
@@ -213,13 +206,14 @@ angular.module('Service.Catalog', [])
           angular.forEach catalog.items, (item)->
             if $scope.selection.items[item.sn]
               $scope.AccountServiceItem.save({isn: item.sn}, ->
-                feedback.success("设置公共服务目录项" + item.sn + "成功")
+                feedback.success("设置公共服务目录项" + item.title + "成功")
               , (resp)->
-                feedback.error("设置公共服务目录项" + item.sn + "失败", resp)
+                feedback.error("设置公共服务目录项" + item.title + "失败", resp)
               )
-
+        $state.go "catalog.list"
       $scope.$watch 'selection.checked', (value)->
         angular.forEach $scope.catalogs, (catalog)->
+          $scope.selection.items[catalog.sn] = value if angular.isDefined(catalog.sn)
           angular.forEach catalog.items, (item)->
             $scope.selection.items[item.sn] = value if angular.isDefined(item.sn)
   ])
