@@ -143,7 +143,8 @@ public class PublicServiceItemsController extends SessionSupportController<Publi
     @RequestMapping("checkSn")
     public void checkSn(@RequestParam(value = "sn") String sn){
         PublicServiceItem item = publicServiceItemService.findBySn(sn);
-        if(item != null)
+        PublicServiceCatalog catalog = publicServiceCatalogService.findBySn(sn);
+        if(item != null || catalog != null)
             throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate item sn: " +sn);
     }
 

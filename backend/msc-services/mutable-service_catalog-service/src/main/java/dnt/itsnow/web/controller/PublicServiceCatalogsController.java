@@ -4,7 +4,9 @@
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.PublicServiceCatalog;
+import dnt.itsnow.model.PublicServiceItem;
 import dnt.itsnow.service.PublicServiceCatalogService;
+import dnt.itsnow.service.PublicServiceItemService;
 import net.happyonroad.platform.web.annotation.BeforeFilter;
 import net.happyonroad.platform.web.exception.WebClientSideException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,9 @@ public class PublicServiceCatalogsController extends SessionSupportController<Pu
     PublicServiceCatalog serviceCatalog;
     @Autowired
     PublicServiceCatalogService publicServiceCatalogService;
+
+    @Autowired
+    PublicServiceItemService publicServiceItemService;
     /**
      * <h2>获得所有的服务目录</h2>
      *
@@ -136,7 +141,8 @@ public class PublicServiceCatalogsController extends SessionSupportController<Pu
     @RequestMapping("checkSn")
     public void checkSn(@RequestParam(value = "sn") String sn){
         PublicServiceCatalog catalog = publicServiceCatalogService.findBySn(sn);
-        if(catalog != null)
+        PublicServiceItem item = publicServiceItemService.findBySn(sn);
+        if(catalog != null || item != null)
             throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate catalog sn: " +sn);
     }
 
