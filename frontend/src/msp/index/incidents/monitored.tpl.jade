@@ -5,8 +5,8 @@ include /lib/mixins/list
       +tool_button("incidentsTable.reload()", "refresh", "", "*", "", "")
       +tool_button("actionService.perform(grab,$event)", "pencil", "抢单", "1", "", "editable")
 
-  +page_table("incidentsTable","selection")
-    +row("incident", "msuInstanceId", "selection")(class="editable deletable")
+  +page_table("incidentsTable","selectionService")
+    +row("incident", "msuInstanceId", "selectionService")(class="editable deletable")
       td(data-title="'故障单号'")
           a(ui-sref="incidents.viewMsu(incident)") {{incident.number}}
       td(data-title="'请求人'") {{incident.requesterName}}

@@ -22,6 +22,8 @@
 
 @import 'variables.less';
 
+@import 'select2.less';
+
 /**
  * Typography
  */
@@ -160,4 +162,10 @@ page_settings
 /*隐藏所有页面左右滚动条*/
 body{
   overflow-x: hidden;
+}
+/*移除form-control的某些样式*/
+.remove-form-control {
+  border: none ! important;
+  padding: 0 ! important;
+  width: 100% !important;
 }

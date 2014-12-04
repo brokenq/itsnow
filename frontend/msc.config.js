@@ -102,6 +102,7 @@ module.exports = {
       '../vendor/angular-dialog-service/dialogs-default-translations.js',
       '../vendor/angular-translate/angular-translate.js',
       '../vendor/angular-auto-validate/dist/jcs-auto-validate.js',
+      '../vendor/select2/select2.js',
       '../vendor/isteven-angular-multiselect/angular-multi-select.js'//,
       // Add angular mock in runtime for SLA demo temporally
       //'../vendor/angular-mocks/angular-mocks.js'
@@ -113,6 +114,7 @@ module.exports = {
       '../vendor/angular-dialog-service/dialogs.css',
       '../vendor/angular-ui-tree/dist/angular-ui-tree.min.css',
       '../vendor/ng-table/ng-table.css',
+      '../vendor/select2/select2.css',
       '../vendor/isteven-angular-multiselect/angular-multi-select.css'
 //    '../vendor/fuelux/dist/css/fuelux.css'
     ],
@@ -123,6 +125,7 @@ module.exports = {
       '<%= build_dir %>/assets/dialogs.css',
       '<%= build_dir %>/assets/angular-ui-tree.min.css',
       '<%= build_dir %>/assets/ng-table.css',
+      '<%= build_dir %>/assets/select2.css',
       '<%= build_dir %>/assets/angular-multi-select.css'
     ],
 
@@ -134,7 +137,9 @@ module.exports = {
       '../vendor/ace-bootstrap/fonts/font2.woff',
       '../vendor/ace-bootstrap/images/*.*',
       '../vendor/ace-bootstrap/avatars/*.*',
-      '../vendor/ace-bootstrap/images/gallery/*.jpg'
+      '../vendor/ace-bootstrap/images/gallery/*.jpg',
+      '../vendor/select2/*.png',
+      '../vendor/select2/*.gif'
 //    '../vendor/fuelux/dist/fonts/fuelux.*'
     ]
   }

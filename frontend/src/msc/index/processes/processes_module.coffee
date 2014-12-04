@@ -13,7 +13,7 @@ angular.module('MscIndex.Processes', [])
       controller: 'ProcessListCtrl',
       data: {pageTitle: '进程列表'}
     $stateProvider.state 'processes.new',
-      url: '/new',
+      url: '/new/{accountSn}',
       templateUrl: 'processes/new.tpl.jade'
       controller: 'ProcessNewCtrl',
       data: {pageTitle: '新增进程'}
@@ -126,26 +126,37 @@ angular.module('MscIndex.Processes', [])
 
   ])
 
-  .controller('ProcessNewCtrl', ['$scope', '$state', '$http', '$resource', 'Feedback', \
-                                 ($scope,   $state,   $http,   $resource,   feedback)->
+  .controller('ProcessNewCtrl', ['$scope', '$state', '$http', '$resource', '$stateParams', '$interval', 'Feedback', 'CommonService', \
+                                 ($scope,   $state,   $http,   $resource,   $stateParams,   $interval,   feedback,   CommonService)->
     console.log("Initialized the Process New controller")
     process = {}
     $scope.process = process
     Processes = $resource("/admin/api/processes")
 
-    $http.get("/admin/api/accounts/list_no_process").success (accounts)-> $scope.accounts = accounts
-    $http.get("/admin/api/schemas").success (schemas)-> $scope.schemas = schemas
-    $http.get("/admin/api/hosts/list_available/APP,COM").success (hosts)-> $scope.hosts = hosts
+    commonService = new CommonService()
+    $http.get("/admin/api/accounts/list_no_process").success (accounts)->
+      $scope.accounts = accounts
+      $("#account_sn").select2({data: {results: commonService.formatSelectDatasWithGroup accounts, 'name', 'sn', 'name'}}).on("change", (e)-> autoNew e.val)
+    $http.get("/admin/api/schemas").success (schemas)->
+      $scope.schemas = schemas
+      $("#process_schema").select2({data: {results: commonService.formatSelectDatas schemas, 'name', null}})
+    $http.get("/admin/api/hosts/list_available/APP,COM").success (hosts)->
+      $scope.hosts = hosts
+      $("#process_host").select2({data: {results: commonService.formatSelectDatas hosts, 'name', null}})
 
     getHostById = (id)->
       return host for host in $scope.hosts when host.id is parseInt id
-    $scope.$watch 'account.id', (account)->
-      if account?
-        $http.get("/admin/api/processes/auto_new/#{account.sn}").success (data)->
+
+    autoNew = (sn)->
+      if sn?
+        $http.get("/admin/api/processes/auto_new/#{sn}").success (data)->
           process = data
           $scope.schemas.push process.schema
-          $scope.process.schema = process.schema
-          $scope.process.host = getHostById process.host.id
+          $("#process_schema").select2({data: {results: commonService.formatSelectDatas $scope.schemas, 'name', null}})
+          $("#process_host").val(JSON.stringify(getHostById process.host.id)).trigger("change")
+          $("#process_schema").val(JSON.stringify(process.schema)).trigger("change")
+
+    $http.get("/admin/api/accounts/#{$stateParams.accountSn}").success (account)-> $scope.account = account
 
     $scope.create = ->
       $scope.submited = true
@@ -156,6 +167,7 @@ angular.module('MscIndex.Processes', [])
       , (resp)->
         feedback.error "创建 #{process.name} 进程失败", resp
         $scope.submited = false
+
   ])
 
   .controller('ProcessViewCtrl', ['$scope', '$interval', '$stateParams', '$filter', '$http', '$location', \
@@ -220,9 +232,8 @@ angular.module('MscIndex.Processes', [])
           configuration: "用户名：{0}\n密码：{1}\n".interpolate(schemaConfig['user'], schemaConfig['password']) if schemaConfig?
 
       # access url
-      $scope.ipUrl = "http://#{process.host.address}:#{processConfig['http.port']}"
-      regx = new RegExp "itsnow_|itsnow-"
-      $scope.domainUrl = "http://#{process.name.replace(regx, '')}.#{processConfig['app.domain']}"
+      $scope.ipUrl = "#{window.location.protocol}//#{process.host.address}:#{processConfig['http.port']}"
+      $scope.domainUrl = "#{window.location.protocol}//#{account.domain}#{window.location.host.replace(/^msc\./,'.')}"
 
       # toggle action buttons
       toggleButton = (status)->

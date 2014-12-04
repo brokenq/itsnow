@@ -34,9 +34,9 @@ angular.module('MscIndex.Hosts', [])
     console.log("Initialized the Hosts controller")
     $scope.options = {page: 1, count: 10}
     $scope.types = [
-      {key: "DB",   value: "数据库主机"},
-      {key: "APP",  value: "应用主机"},
-      {key: "COM",  value: "综合主机"}
+      {label: "数据库主机", value: "DB"},
+      {label: "应用主机",   value: "APP"},
+      {label: "综合主机",   value: "COM"}
     ]
 
     $scope.services = $resource("/admin/api/hosts/:id", {id: "@id"}, {update: {method: "PUT"}})
@@ -99,6 +99,10 @@ angular.module('MscIndex.Hosts', [])
     $scope.host = host
     Hosts = $scope.services
 
+    $scope.linkNameWithAddress = (resp)->
+      $scope.host.address = resp.address if resp.address? and !$scope.host.address?
+      $scope.host.name = resp.name if resp.name? and !$scope.host.name?
+
     $scope.create = ->
       $scope.submited = true
       host.configuration['msu.version'] = host.configuration.msu_version
@@ -115,14 +119,16 @@ angular.module('MscIndex.Hosts', [])
         host.configuration.msu_version = host.configuration['msu.version']
         host.configuration.msp_version = host.configuration['msp.version']
         $scope.submited = false
+
   ])
 
-  .controller('HostViewCtrl', ['$scope', '$stateParams', '$http', '$interval', '$state', '$location', \
-                               ($scope,   $stateParams,   $http,   $interval,   $state,   $location)->
+  .controller('HostViewCtrl', ['$scope', '$stateParams', '$http', '$interval', '$state', '$location', '$filter', \
+                               ($scope,   $stateParams,   $http,   $interval,   $state,   $location,   $filter)->
     host = $scope.cacheService.find $stateParams.id, true
     host.configuration.msp_version = host.configuration['msp.version'] if host.configuration['msp.version']?
     host.configuration.msu_version = host.configuration['msu.version'] if host.configuration['msu.version']?
     host.creationLog = ""
+    host.display = {status: $filter('formatHostStatus')(host.status)}
     $scope.host = host
     console.log "Initialized the Host View controller on: #{JSON.stringify host}"
 
