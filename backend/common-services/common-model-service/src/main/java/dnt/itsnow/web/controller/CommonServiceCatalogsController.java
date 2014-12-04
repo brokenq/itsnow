@@ -94,7 +94,7 @@ public class CommonServiceCatalogsController extends SessionSupportController<Pu
      */
     @RequestMapping("/accounts")
     public List<PublicServiceCatalog> indexAccountCatalogs(){
-        return commonServiceCatalogService.findByAccountId(3L);
+        return commonServiceCatalogService.findByAccountId(mainAccount.getId());
     }
 
 
