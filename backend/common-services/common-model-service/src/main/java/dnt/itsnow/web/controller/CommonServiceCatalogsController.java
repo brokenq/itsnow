@@ -5,7 +5,6 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.PublicServiceCatalog;
 import dnt.itsnow.model.PublicServiceItem;
-import dnt.itsnow.model.ServiceCatalog;
 import dnt.itsnow.service.CommonServiceCatalogService;
 import dnt.itsnow.service.CommonServiceItemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -94,7 +92,7 @@ public class CommonServiceCatalogsController extends SessionSupportController<Pu
      */
     @RequestMapping("/accounts")
     public List<PublicServiceCatalog> indexAccountCatalogs(){
-        return commonServiceCatalogService.findByAccountId(3L);
+        return commonServiceCatalogService.findByAccountId(mainAccount.getId());
     }
 
 

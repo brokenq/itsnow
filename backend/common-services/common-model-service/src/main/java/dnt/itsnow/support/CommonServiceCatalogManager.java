@@ -90,6 +90,16 @@ public class CommonServiceCatalogManager extends Bean implements CommonServiceCa
         return commonServiceCatalogRepository.findBySn(sn);
     }
 
+    @Override
+    public PublicServiceCatalog findById(Long id) {
+        List<PublicServiceCatalog> list = getCommonServiceCatalogList();
+        for(PublicServiceCatalog catalog:list){
+            if(catalog.getId() == id)
+                return catalog;
+        }
+        return null;
+    }
+
     public List<PublicServiceCatalog> getCommonServiceCatalogList() {
         if(commonServiceCatalogList==null || commonServiceCatalogList.isEmpty()) {
             commonServiceCatalogList = commonServiceCatalogRepository.findAll();
