@@ -133,6 +133,16 @@ public class CommonServiceCatalogManager extends Bean implements CommonServiceCa
         return treeCatalogs;
     }
 
+    @Override
+    public PublicServiceCatalog findByTitle(String title) {
+        List<PublicServiceCatalog> list = getCommonServiceCatalogList();
+        for(PublicServiceCatalog catalog:list){
+            if(catalog.getTitle().equals(title))
+                return catalog;
+        }
+        return null;
+    }
+
     public List<PublicServiceCatalog> getFormattedServiceCatalogList() {
         if(formattedServiceCatalogList==null || formattedServiceCatalogList.isEmpty()) {
             formattedServiceCatalogList = formatServiceCatalogs(getCommonServiceCatalogList());

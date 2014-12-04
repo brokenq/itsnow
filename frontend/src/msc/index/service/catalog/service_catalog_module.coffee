@@ -33,24 +33,18 @@
         templateUrl: 'service/catalog/view_catalog.tpl.jade'
         controller: 'CatalogViewCtrl'
         data: {pageTitle: '查看服务目录'}
-      $stateProvider.state 'catalog.item',
-        url: '/{sn}/item'
-        templateUrl: 'service/catalog/index.tpl.jade'
-        abstract:true
-        controller: 'ItemListCtrl'
-        data: {pageTitle: '服务项', default: 'catalog.item.view'}
-      $stateProvider.state 'catalog.item.new',
-        url: '/new'
+      $stateProvider.state 'catalog.item_new',
+        url: '/{sn}/item/new'
         templateUrl: 'service/catalog/new_item.tpl.jade'
         controller: 'ItemNewCtrl'
         data: {pageTitle: '新增服务项'}
-      $stateProvider.state 'catalog.item.edit',
-        url: '/{isn}/edit'
+      $stateProvider.state 'catalog.item_edit',
+        url: '/{sn}/item/{isn}/edit'
         templateUrl: 'service/catalog/edit_item.tpl.jade'
         controller: 'ItemEditCtrl'
         data: {pageTitle: '编辑服务项'}
-      $stateProvider.state 'catalog.item.view',
-        url: '/{isn}/view'
+      $stateProvider.state 'catalog.item_view',
+        url: '/{sn}/item/{isn}/view'
         templateUrl: 'service/catalog/view_item.tpl.jade'
         controller: 'ItemViewCtrl'
         data: {pageTitle: '查看服务项'}
@@ -68,6 +62,9 @@
         $scope.submited = false
         $scope.ServiceCatalog = $resource("/admin/api/public_service_catalogs/:sn", {},{update: {method: "PUT",params: {sn: '@sn'}}})
         $scope.ServiceItem = $resource("/admin/api/public_service_catalogs/:sn/items/:isn",{},{update:{method:"PUT",params: {sn: '@sn',isn:'@isn'}}})
+
+        $scope.checkCallback = (resp)->
+          $log.log "check callback"
     ])
 
     .controller('CatalogListCtrl',['$scope', '$location', '$timeout', '$state','ngTableParams', 'ActionService','CommonService','CacheService','Feedback',\
@@ -123,10 +120,10 @@
         if $scope.selection.types[obj.sn] is 'catalog'
           $state.go('catalog.edit',{sn:obj.sn})
         else
-          $state.go('catalog.item.edit',{sn:$scope.selection.parent[obj.sn],isn:obj.sn})
+          $state.go('catalog.item_edit',{sn:$scope.selection.parent[obj.sn],isn:obj.sn})
 
       $scope.view = (item)->
-        $state.go('catalog.item.view',{sn:$scope.selection.parent[item.sn],isn:item.sn})
+        $state.go('catalog.item_view',{sn:$scope.selection.parent[item.sn],isn:item.sn})
 
       # watch for check all checkbox
       $scope.$watch 'selection.checked', (value)->
@@ -179,7 +176,8 @@
     ])
 
     .controller('ItemListCtrl', ['$scope', '$stateParams', '$log', ($scope, $stateParams, $log) ->
-
+      $scope.catalog = $scope.cacheService.find $stateParams.sn,true
+      $log.log "Initialized the Item List controller "
     ])
 
     .controller('ItemEditCtrl', ['$scope', '$state', '$stateParams' ,'Feedback',
@@ -197,7 +195,7 @@
           serviceItem = new ServiceItem $scope.item
           serviceItem.$update {sn: sn,isn:isn}, ->
             feedback.success "更新服务项#{serviceItem.title}成功"
-            $state.go('catalog.item.view',{sn:sn,isn:isn})
+            $state.go('catalog.item_view',{sn:sn,isn:isn})
           ,(resp)->
             feedback.error "更新服务项#{serviceItem.title}失败",resp
 

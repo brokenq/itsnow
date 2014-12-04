@@ -50,4 +50,11 @@ public interface CommonServiceCatalogService {
      * @return 找到的该帐户的所有公共服务目录列表，找不到则返回null
      */
     List<PublicServiceCatalog> findByAccountId(Long accountId);
+
+    /**
+     * <h2>根据title查找服务目录</h2>
+     * @param title 标题
+     * @return 服务目录
+     */
+    PublicServiceCatalog findByTitle(String title);
 }
