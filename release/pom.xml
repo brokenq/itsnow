@@ -5,11 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>dnt.itsnow</groupId>
-        <artifactId>backend</artifactId>
+        <groupId>dnt</groupId>
+        <artifactId>itsnow</artifactId>
         <version>0.3.1-SNAPSHOT</version>
     </parent>
 
+    <groupId>dnt.itsnow</groupId>
     <artifactId>release</artifactId>
     <name>Itsnow Release</name>
     <description>
@@ -35,12 +36,20 @@
         </dependency>
 
         <dependency>
+            <groupId>dnt.itsnow</groupId>
+            <artifactId>common-gui-service</artifactId>
+            <version>${project.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
             <groupId>net.happyonroad</groupId>
             <artifactId>spring-component-framework</artifactId>
             <scope>runtime</scope>
         </dependency>
  
     </dependencies>
+
     <build>
         <plugins>
             <plugin>

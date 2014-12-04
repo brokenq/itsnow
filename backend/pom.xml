@@ -155,22 +155,11 @@
             <groupId>net.happyonroad</groupId>
             <artifactId>platform</artifactId>
         </dependency>
-        <dependency>
-            <groupId>dnt.itsnow</groupId>
-            <artifactId>release</artifactId>
-            <scope>runtime</scope>
-        </dependency>
 
     </dependencies>
 
     <dependencyManagement>
         <dependencies>
-            <!--Platform -->
-            <dependency>
-                <groupId>dnt.itsnow</groupId>
-                <artifactId>release</artifactId>
-                <version>${project.version}</version>
-            </dependency>
 
 
             <!--Demo-->
