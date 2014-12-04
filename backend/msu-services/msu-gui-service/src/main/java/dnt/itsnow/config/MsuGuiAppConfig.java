@@ -1,12 +1,10 @@
 package dnt.itsnow.config;
 
+import dnt.itsnow.support.MsuRepositoryAuthenticationProvider;
 import net.happyonroad.platform.config.DefaultAppConfig;
 import net.happyonroad.platform.web.security.DelegateSecurityConfigurer;
-import dnt.itsnow.support.MsuRepositoryAuthenticationProvider;
-import dnt.itsnow.support.MsuUserManager;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -23,13 +21,8 @@ public class MsuGuiAppConfig implements InitializingBean {
     @Autowired
     MsuRepositoryAuthenticationProvider authenticationProvider;
 
-    @Autowired
-    @Qualifier("msuUserService")
-    MsuUserManager userService;
-
     @Override
     public void afterPropertiesSet() throws Exception {
-        configurer.delegate(authenticationProvider)
-                  .delegate(userService);
+        configurer.delegate(authenticationProvider);
     }
 }

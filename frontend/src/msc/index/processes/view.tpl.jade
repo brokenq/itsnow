@@ -57,9 +57,7 @@ mixin tab_pane(linkId, model, log)
     +formGroup()
       .col-md-1.col-md-offset-4
         +button("启动", "start()")(id="startBtn", class="hidden")
-        +button("取消启动", "cancel('starting')")(id="cancelStartingBtn", class="hidden")
         +button("停止", "stop()")(id="stopBtn", class="hidden")
-        +button("取消停止", "cancel('stopping')")(id="cancelStoppingBtn", class="hidden")
       .col-md-1.col-md-offset-2
         +button('访问', "")(id="accessButton", class="dropdown-toggle", data-toggle="dropdown")
           span.caret

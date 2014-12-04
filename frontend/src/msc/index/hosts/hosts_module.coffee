@@ -146,6 +146,8 @@ angular.module('MscIndex.Hosts', [])
             host.creationLog += data.logs
             preScrollTop = resolveScroll preScrollTop, $creationLog # 日志滚动条效果
             createOffset = parseInt headers "offset"
+            $scope.host.display.status = $filter("formatHostStatus")(headers("status"))
+            $scope.host.status = headers("status")
             $interval.cancel(createIntervalId) if createOffset is -1 or currentUrl isnt $location.url()
       , 1000)
 

@@ -22,7 +22,7 @@ include /lib/mixins/list
       td(data-title="'进程标识'")
         a(ui-sref="processes.view(process)") {{process.name}}
       td(data-title="'企业名称'")
-        a(ng-if="process.account", ui-sref="accounts.view(process.account)") {{process.account.sn}}
+        a(ng-if="process.account", ui-sref="accounts.view(process.account)") {{process.account.name}}
       td(data-title="'主机'")
         a(ng-if="process.host", ui-sref="hosts.view(process.host)") {{process.host.name}}
       td(data-title="'工作目录'") {{process.wd}}
