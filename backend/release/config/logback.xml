@@ -28,13 +28,6 @@
     </root>
 
     <logger name="dnt.itsnow" level="INFO" />
-    <logger name="net.happyonroad.platform.web.support.ExtendedRequestMappingHandlerMapping" level="INFO" />
-    <logger name="dnt.itsnow.demo.repository" level="INFO" />
-    <logger name="net.happyonroad.spring.service.SpringServicePackage" level="INFO" />
-    <logger name="net.happyonroad.platform.web.support.ExtendedRequestMappingHandlerMapping" level="WARN" />
-    <logger name="dnt.itsnow.support.DefaultSystemInvoker" level="INFO" />
-    <logger name="dnt.itsnow.support.ItsnowResourceManager" level="INFO" />
-    <logger name="dnt.itsnow.support.ItsnowStatusMaintainer" level="INFO" />
-    <logger name="dnt.itsnow.support.SystemInvokeManager" level="INFO" />
-
+    <!--Set below level to warn to hide url mapping-->
+    <logger name="net.happyonroad.platform.web.SpringMvcConfig" level="INFO" />
 </configuration>
