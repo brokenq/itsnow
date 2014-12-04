@@ -43,6 +43,7 @@ angular.module('Service.Catalog', [])
       # 提交按钮是否已经执行了提交操作，false为未执行，则按钮可用
       $scope.submited = false
       $scope.SC = $resource("/api/public_service_catalogs/:sn/catalogs", {})
+      $scope.ServiceItem = $resource("/admin/api/public_service_catalogs/:sn/items/:isn",{})
       $scope.ServiceCatalog = $resource("/api/public_service_catalogs/:sn", {})
       $scope.AccountServiceCatalogAddRemove = $resource("/api/public_service_catalogs/accounts/catalogs/:sn",{sn:'@sn'})
       $scope.AccountServiceCatalog = $resource("/api/public_service_catalogs/accounts")
