@@ -6,11 +6,12 @@
 
     <packaging>pom</packaging>
     <parent>
-        <groupId>dnt.itsnow</groupId>
-        <artifactId>backend</artifactId>
+        <groupId>dnt</groupId>
+        <artifactId>itsnow</artifactId>
         <version>0.3.1-SNAPSHOT</version>
     </parent>
 
+    <groupId>dnt.itsnow</groupId>
     <artifactId>integration-test</artifactId>
     <name>Itsnow Integration Test</name>
     <description>

@@ -115,12 +115,6 @@
                 <module>demo-services</module>
             </modules>
         </profile>
-        <profile>
-            <id>with-itsnow-it</id>
-            <modules>
-                <module>integration-test</module>
-            </modules>
-        </profile>
     </profiles>
 
     <dependencies>

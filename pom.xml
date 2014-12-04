@@ -78,6 +78,13 @@
                 <release.dir>${release.root}/msp-${project.version}</release.dir>
             </properties>
         </profile>
+        <profile>
+            <id>with-itsnow-it</id>
+            <modules>
+                <module>integration-test</module>
+            </modules>
+        </profile>
+
     </profiles>
 
     <dependencyManagement>

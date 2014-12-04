@@ -26,6 +26,7 @@
         <app.version>${project.version}</app.version>
         <app.name>itsnow_${app.id}</app.name>
         <db.name>itsnow_${app.id}</db.name>
+        <grunt.exec>grunt</grunt.exec>
     </properties>
 
     <dependencies>
@@ -37,8 +38,9 @@
 
         <dependency>
             <groupId>dnt.itsnow</groupId>
-            <artifactId>common-gui-service</artifactId>
+            <artifactId>backend</artifactId>
             <version>${project.version}</version>
+            <type>pom</type>
             <scope>runtime</scope>
         </dependency>
 
@@ -99,6 +101,15 @@
             </properties>
         </profile>
         <profile>
+          <id>windows</id>
+          <activation>
+            <os><family>Windows</family></os>
+          </activation>
+          <properties>
+            <grunt.exec>grunt.cmd</grunt.exec>
+          </properties>
+        </profile>
+        <profile>
             <id>release</id>
             <build>
                 <plugins>
@@ -121,6 +132,7 @@
                                     <propertyFiles>${project.basedir}/config/now.properties,${project.basedir}/db/migrate/environments/development.properties</propertyFiles>
                                     <logbackFile>${project.basedir}/config/logback.xml</logbackFile>
                                     <files>${project.basedir}/config/nginx.conf</files>
+                                    <frontendNodeModules>${release.root}/../node_modules</frontendNodeModules>
                                 </configuration>
                             </execution>
 
@@ -129,6 +141,56 @@
                                 <goals><goal>clean</goal></goals>
                                 <configuration>
                                     <output>${release.dir}</output>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>${version.maven.antrun}</version>
+                        <inherited>false</inherited>
+                        <executions>
+                            <execution>
+                                <id>clean-frontend</id>
+                                <phase>clean</phase>
+                                <goals><goal>run</goal></goals>
+                                <configuration>
+                                    <target>
+                                        <echo message="Clean frontend build|deploy" />
+                                        <delete dir="${release.dir}/webapp/build/"/>
+                                        <delete dir="${release.dir}/webapp/deploy/"/>
+                                    </target>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>build-frontend</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <exec dir="${release.dir}/webapp/frontend" executable="${grunt.exec}" failonerror="true">
+                                            <arg line="build --verbose"/>
+                                        </exec>
+                                        <echo message="Frontend is built" />
+                                    </target>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>compile-frontend</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <exec dir="${project.basedir}/webapp/frontend" executable="${grunt.exec}" failonerror="true">
+                                            <arg line="compile"/>
+                                        </exec>
+                                        <delete dir="${release.dir}/webapp/build/"/>
+                                        <echo message="Frontend is compiled" />
+                                    </target>
                                 </configuration>
                             </execution>
                         </executions>
