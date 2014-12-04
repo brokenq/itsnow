@@ -149,7 +149,11 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
         process = create(process);
         // Then start it
         try {
-            invokeService.waitJobFinished(process.getProperty(DEPLOY_INVOCATION_ID));
+            int code = invokeService.waitJobFinished(process.getProperty(DEPLOY_INVOCATION_ID));
+            if (0 == code) {
+                process.setStatus(ProcessStatus.Stopped);
+                update(process);
+            }
         } catch (SystemInvokeException e) {
             throw new ItsnowProcessException("Can't deploy itsnow process for " + process, e);
         }
