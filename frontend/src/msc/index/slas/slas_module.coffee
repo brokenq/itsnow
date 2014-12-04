@@ -69,8 +69,8 @@ angular.module('MscIndex.SLAs', [])
     $scope.cacheService = new CacheService("id")
 
   ])
-  .controller('SlaListCtrl', ['$scope', '$location', 'ngTableParams', 'ActionService', 'CommonService',\
-                              ($scope,   $location,   NgTable,         ActionService,   commonService) ->
+  .controller('SlaListCtrl', ['$scope', '$location', 'ngTableParams', 'ActionService', 'SelectionService',\
+                              ($scope,   $location,   NgTable,         ActionService,   SelectionService) ->
     console.log("Initialized the SLA list controller")
     args =
       total: 0
@@ -82,8 +82,8 @@ angular.module('MscIndex.SLAs', [])
 
     $scope.selection = { 'checked': false, items: {} }
     $scope.slasTable = new NgTable(angular.extend($scope.options, $location.search()), args);
+    $scope.selectionService = new SelectionService($scope.cacheService.records, "id")
     $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.cacheService.find})
-    commonService.watchSelection($scope.selection, $scope.cacheService.records, "id")
   ])
   .controller('SlaViewCtrl', ['$scope', '$stateParams', ($scope, $stateParams) ->
     sla = $scope.cacheService.find $stateParams.id, true

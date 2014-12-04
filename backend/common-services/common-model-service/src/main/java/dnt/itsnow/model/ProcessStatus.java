@@ -7,5 +7,5 @@ package dnt.itsnow.model;
  * Itsnow Process Status
  */
 public enum ProcessStatus {
-    Stopped, Starting, Running, Abnormal, Stopping, Unknown
+    Deploying, Stopped, Starting, Running, Abnormal, Stopping, Unknown
 }

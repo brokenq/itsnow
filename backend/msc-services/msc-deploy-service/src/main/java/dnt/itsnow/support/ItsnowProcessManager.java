@@ -115,7 +115,7 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
         } catch (SystemInvokeException e) {
             throw new ItsnowProcessException("Can't deploy itsnow process for " + creating, e);
         }
-        creating.setStatus(ProcessStatus.Stopped);
+        creating.setStatus(ProcessStatus.Deploying);
         creating.creating();
         creating.setProperty(CREATE_INVOCATION_ID, invocationId);
         repository.create(creating);

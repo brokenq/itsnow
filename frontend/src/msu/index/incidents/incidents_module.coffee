@@ -94,8 +94,8 @@
     ])
 
   .controller('OpenedListCtrl',
-    ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'CommonService', 'Feedback',
-      ($scope, $location, $log, NgTable, ActionService, commonService, feedback) ->
+    ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'SelectionService', 'Feedback',
+      ($scope, $location, $log, NgTable, ActionService, SelectionService, feedback) ->
         $log.log "Initialized the Incident Opened list controller"
         Incidents = $scope.Incidents
         args =
@@ -109,14 +109,14 @@
 
         $scope.selection = { checked: false, items: {} }
         $scope.incidentsTable = new NgTable(angular.extend($scope.options, $location.search()), args);
+        $scope.selectionService = new SelectionService($scope.cacheService.records, "msuInstanceId")
         $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.cacheService.find})
-        commonService.watchSelection($scope.selection, $scope.cacheService.records, "msuInstanceId")
 
     ])
 
   .controller('ClosedListCtrl',
-    ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'CommonService', 'Feedback',
-      ($scope, $location, $log, NgTable, ActionService, commonService, feedback) ->
+    ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'SelectionService', 'Feedback',
+      ($scope, $location, $log, NgTable, ActionService, SelectionService, feedback) ->
         $log.log "Initialized the Incident Closed list controller"
         ClosedIncidents = $scope.ClosedIncidents
         args =
@@ -130,13 +130,13 @@
 
         $scope.selection = { checked: false, items: {} }
         $scope.incidentsTable = new NgTable(angular.extend($scope.options, $location.search()), args);
+        $scope.selectionService = new SelectionService($scope.cacheService.records, "msuInstanceId")
         $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.cacheService.find})
-        commonService.watchSelection($scope.selection, $scope.cacheService.records, "msuInstanceId")
     ])
 
   .controller('CreatedListCtrl',
-    ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'CommonService', 'Feedback',
-      ($scope, $location, $log, NgTable, ActionService, commonService, feedback) ->
+    ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'SelectionService', 'Feedback',
+      ($scope, $location, $log, NgTable, ActionService, SelectionService, feedback) ->
         $log.log "Initialized the Incident Created List controller"
         CreatedIncidents = $scope.CreatedIncidents
         args =
@@ -150,8 +150,8 @@
 
         $scope.selection = { checked: false, items: {} }
         $scope.incidentsTable = new NgTable(angular.extend($scope.options, $location.search()), args);
+        $scope.selectionService = new SelectionService($scope.cacheService.records, "msuInstanceId")
         $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.cacheService.find})
-        commonService.watchSelection($scope.selection, $scope.cacheService.records, "msuInstanceId")
 
     ])
 
