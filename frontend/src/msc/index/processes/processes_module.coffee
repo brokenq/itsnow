@@ -136,7 +136,7 @@ angular.module('MscIndex.Processes', [])
     commonService = new CommonService()
     $http.get("/admin/api/accounts/list_no_process").success (accounts)->
       $scope.accounts = accounts
-      $("#account_sn").select2({data: {results: commonService.formatSelectDatasWithGroup accounts, 'name', 'sn', 'name'}}).on("change", (e)-> autoNew e.val)
+      $("#account_sn").select2({data: {results: commonService.formatSelectDatas accounts, 'name', 'sn'}}).on("change", (e)-> autoNew e.val)
     $http.get("/admin/api/schemas").success (schemas)->
       $scope.schemas = schemas
       $("#process_schema").select2({data: {results: commonService.formatSelectDatas schemas, 'name', null}})
