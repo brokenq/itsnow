@@ -15,4 +15,12 @@ include /lib/mixins/list
         td(data-title="'标题'")
           a(ui-sref="catalog.view(catalog)") {{catalog.title}}
         td(data-title="'描述'") {{catalog.description}}
+      tr(ng-repeat="item in catalog.items",value="{{item.sn}}",class="editable deletable item",ng-disabled="true",)
+        td(width="30", align="left", header="'ngTableCheckboxHeader'")
+          input(type="checkbox" ng-model="selection.items[item.sn]")
+        td(data-title="'图标'")
+          img(ng-src="{{item.icon}}")
+        td(data-title="'标题'")
+          a(ui-sref="catalog.item({sn:catalog.sn,isn:item.sn})") {{item.title}}*
+        td(data-title="'描述'") {{item.description}}
 

@@ -66,7 +66,9 @@ public class AccountServiceCatalogsController extends SessionSupportController<P
     
     @BeforeFilter(order = 60, value = {"createByAccount", "destroyByAccount"})
     public void initServiceCatalog(@PathVariable("sn") String sn) {
+        logger.info("sn {}",sn);
         serviceCatalog = commonServiceCatalogService.findBySn(sn);
+        logger.info("service{}",serviceCatalog);
         if (serviceCatalog == null)
             throw new WebClientSideException(HttpStatus.BAD_REQUEST, "Can't find service catalog with sn:" + sn);
     }

@@ -56,6 +56,11 @@ public class PublicServiceCatalogManager extends CommonServiceCatalogManager imp
         long count = publicServiceCatalogRepository.countByAccountAndCatalog(accountId,catalog.getId());
         if(count == 0)
             publicServiceCatalogRepository.addByAccount(catalog.getId(),accountId);
+        if(catalog.getParentId() != null){
+            catalog = this.findById(catalog.getParentId());
+            if(catalog != null)
+                saveByAccount(catalog,accountId);
+        }
     }
 
     @Override

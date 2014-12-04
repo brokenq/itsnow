@@ -135,15 +135,6 @@ angular.module('System.User', [])
     ($http,$scope, $state, $stateParams,sessionService, $window,feedback) ->
       $scope.updatePwd = () ->
         $scope.changePasswordRequest.username=$scope.user.username
-
-        #       $http.put('/api/password/change', $scope.changePasswordRequest)
-        #       .success ->
-        #         feedback.success("修改密码成功请重新登录！");
-        #         sessionService.logout ->
-        #           $window.location.href = "/login.html"
-        #       .error ->
-        #         alert("修改密码失败，请检查初始密码！！")
-        #         feedback.error("修改密码失败，请检查初始密码！！")
         $http.put("/api/users/change/password", $scope.changePasswordRequest)
         .then ((resp) ->
             feedback.success("修改密码成功请重新登录！");

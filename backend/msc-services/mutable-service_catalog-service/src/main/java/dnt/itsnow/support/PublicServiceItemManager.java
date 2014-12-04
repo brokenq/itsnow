@@ -67,6 +67,8 @@ public class PublicServiceItemManager extends CommonServiceItemManager implement
         long count = publicServiceItemRepository.countByAccountAndItem(accountId,item.getId());
         if(count == 0)
             publicServiceItemRepository.addByAccount(item.getId(),accountId);
+        if(item.getCatalog() != null && item.getCatalog().getId() != null)
+            catalogService.saveByAccount(item.getCatalog(),accountId);
     }
 
     @Override
