@@ -3,8 +3,8 @@
  */
 package dnt.itsnow.config;
 
-import dnt.itsnow.platform.config.DefaultAppConfig;
-import dnt.itsnow.platform.web.security.DelegateSecurityConfigurer;
+import net.happyonroad.platform.config.DefaultAppConfig;
+import net.happyonroad.platform.web.security.DelegateSecurityConfigurer;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

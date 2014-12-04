@@ -2,7 +2,7 @@ package dnt.itsnow.it;
 
 import dnt.itsnow.model.ClientItsnowHost;
 import dnt.itsnow.util.ShareDatas;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;

@@ -10,7 +10,7 @@ import dnt.itsnow.model.RemoteInvocation;
 import dnt.itsnow.model.SystemInvocation;
 import dnt.itsnow.system.*;
 import dnt.itsnow.system.Process;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;

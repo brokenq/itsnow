@@ -3,7 +3,7 @@
  */
 package dnt.itsnow.exception;
 
-import dnt.itsnow.platform.service.ServiceException;
+import net.happyonroad.platform.service.ServiceException;
 
 /**
  * The account exception

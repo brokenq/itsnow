@@ -2,10 +2,8 @@ package dnt.itsnow.service;
 
 import dnt.itsnow.exception.DictionaryException;
 import dnt.itsnow.model.Dictionary;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.service.Pageable;
-
-import java.util.List;
+import net.happyonroad.platform.service.Page;
+import net.happyonroad.platform.service.Pageable;
 
 /**
  * <h1>流程字典业务层</h1>

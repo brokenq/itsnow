@@ -1,8 +1,8 @@
 package itsnow.dnt.support;
 
 import dnt.itsnow.model.*;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.util.PageRequest;
+import net.happyonroad.platform.service.Page;
+import net.happyonroad.platform.util.PageRequest;
 import dnt.itsnow.service.StaffService;
 import itsnow.dnt.config.StaffManagerConfig;
 import org.junit.Assert;
@@ -15,8 +15,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * <h1>Class Usage</h1>

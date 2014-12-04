@@ -107,8 +107,8 @@ angular.module('MscIndex.Accounts', [])
         $scope.tableParams.reload()
 
   ])
-  .controller('AccountListCtrl', ['$scope', '$location', '$resource', '$timeout', 'ngTableParams', 'ActionService', 'CommonService', 'SelectionService' ,\
-                                  ($scope,   $location,   $resource,   $timeout,   NgTable,         ActionService,   commonService,   SelectionService) ->
+  .controller('AccountListCtrl', ['$scope', '$location', '$resource', '$timeout', '$state', 'ngTableParams', 'ActionService', 'CommonService', 'SelectionService' ,\
+                                  ($scope,   $location,   $resource,   $timeout,   $state,   NgTable,         ActionService,   commonService,   SelectionService) ->
     console.log("Initialized the Account list controller")
     Accounts = $resource("/admin/api/accounts")
     args =
@@ -135,6 +135,9 @@ angular.module('MscIndex.Accounts', [])
 #    $scope.accountsTable = new NgTable(angular.extend($scope.options, $location.search()), args);
 #    $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.cacheService.find})
 #    commonService.watchSelection($scope.selection, $scope.cacheService.records, "sn")
+
+    $scope.manuallyAssign = (account)->
+      $state.go 'processes.new', { "accountSn": "#{account.sn}" }
   ])
   .controller('AccountViewCtrl', ['$scope', '$stateParams', ($scope, $stateParams) ->
     account = $scope.cacheService.find $stateParams.sn, true

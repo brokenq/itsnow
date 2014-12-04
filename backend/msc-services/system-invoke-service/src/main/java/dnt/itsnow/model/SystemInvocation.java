@@ -4,8 +4,8 @@
 package dnt.itsnow.model;
 
 import dnt.itsnow.system.Process;
-import dnt.type.TimeInterval;
-import dnt.util.StringUtils;
+import net.happyonroad.type.TimeInterval;
+import net.happyonroad.util.StringUtils;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;

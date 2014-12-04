@@ -19,10 +19,6 @@
     <dependencies>
         <dependency>
             <groupId>dnt.itsnow</groupId>
-            <artifactId>activiti_engine_service</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>dnt.itsnow</groupId>
             <artifactId>general-incident-service</artifactId>
         </dependency>
         <dependency>

@@ -2,8 +2,8 @@ package dnt.itsnow.service;
 
 import dnt.itsnow.model.Incident;
 import dnt.itsnow.model.MsuIncident;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.service.Pageable;
+import net.happyonroad.platform.service.Page;
+import net.happyonroad.platform.service.Pageable;
 
 import java.io.InputStream;
 

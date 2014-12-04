@@ -1,8 +1,8 @@
 package dnt.itsnow.support;
 
 import dnt.itsnow.model.Role;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.util.PageRequest;
+import net.happyonroad.platform.service.Page;
+import net.happyonroad.platform.util.PageRequest;
 import dnt.itsnow.service.RoleService;
 import dnt.itsnow.config.RoleManagerConfig;
 import org.junit.Assert;
@@ -13,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.sql.Timestamp;
 
 /**
  * <h1>角色管理业务测试类</h1>

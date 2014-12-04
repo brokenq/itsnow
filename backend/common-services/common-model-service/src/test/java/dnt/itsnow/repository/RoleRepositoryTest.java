@@ -2,8 +2,7 @@ package dnt.itsnow.repository;
 
 import dnt.itsnow.model.Role;
 import dnt.itsnow.model.UserAuthority;
-import dnt.itsnow.platform.util.PageRequest;
-import dnt.itsnow.repository.RoleRepository;
+import net.happyonroad.platform.util.PageRequest;
 import dnt.itsnow.config.RoleRepositoryConfig;
 import org.junit.Assert;
 import org.junit.Before;
@@ -14,7 +13,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 /**

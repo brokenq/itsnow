@@ -1,9 +1,8 @@
 package dnt.itsnow.model;
 
-import dnt.support.JsonSupport;
-import junit.framework.Assert;
+import net.happyonroad.support.JsonSupport;
+import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.validation.ConstraintViolation;

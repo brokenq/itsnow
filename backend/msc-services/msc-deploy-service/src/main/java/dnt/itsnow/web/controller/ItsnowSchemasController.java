@@ -2,9 +2,9 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.exception.ItsnowSchemaException;
 import dnt.itsnow.model.ItsnowSchema;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.web.annotation.BeforeFilter;
-import dnt.itsnow.platform.web.exception.WebClientSideException;
+import net.happyonroad.platform.service.Page;
+import net.happyonroad.platform.web.annotation.BeforeFilter;
+import net.happyonroad.platform.web.exception.WebClientSideException;
 import dnt.itsnow.service.ItsnowSchemaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

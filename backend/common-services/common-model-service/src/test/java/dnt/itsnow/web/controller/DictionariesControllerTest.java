@@ -3,12 +3,12 @@ package dnt.itsnow.web.controller;
 import dnt.itsnow.config.DictionariesControllerConfig;
 import dnt.itsnow.model.DictDetail;
 import dnt.itsnow.model.Dictionary;
-import dnt.itsnow.platform.util.DefaultPage;
-import dnt.itsnow.platform.util.PageRequest;
+import net.happyonroad.platform.util.DefaultPage;
+import net.happyonroad.platform.util.PageRequest;
 import dnt.itsnow.service.CommonUserService;
 import dnt.itsnow.service.DictionaryService;
 import dnt.itsnow.test.controller.SessionSupportedControllerTest;
-import dnt.support.JsonSupport;
+import net.happyonroad.support.JsonSupport;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,9 +26,6 @@ import static org.easymock.EasyMock.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/**
- * Created by Sin on 2014/8/26.
- */
 @ContextConfiguration(classes = DictionariesControllerConfig.class)
 public class DictionariesControllerTest extends SessionSupportedControllerTest {
 

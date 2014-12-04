@@ -4,7 +4,7 @@
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.User;
-import dnt.itsnow.platform.web.controller.ApplicationController;
+import net.happyonroad.platform.web.controller.ApplicationController;
 import dnt.itsnow.service.CommonUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

@@ -4,7 +4,7 @@
 package dnt.itsnow.it;
 
 import dnt.itsnow.model.ClientUser;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.HttpEntity;

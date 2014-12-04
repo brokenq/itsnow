@@ -2,8 +2,8 @@ package dnt.itsnow.config;
 
 import dnt.itsnow.service.RoleService;
 import dnt.itsnow.support.RoleManager;
-import dnt.messaging.MessageBus;
-import dnt.messaging.support.DefaultMessageBus;
+import net.happyonroad.messaging.MessageBus;
+import net.happyonroad.messaging.support.DefaultMessageBus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.TaskScheduler;

@@ -3,9 +3,9 @@
  */
 package dnt.itsnow.config;
 
-import dnt.itsnow.platform.repository.DatabaseConfig;
-import dnt.itsnow.platform.util.BeanFilter;
-import dnt.itsnow.test.config.RepositoryConfigWithH2;
+import net.happyonroad.platform.repository.DatabaseConfig;
+import net.happyonroad.platform.util.BeanFilter;
+import net.happyonroad.test.config.RepositoryConfigWithH2;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;

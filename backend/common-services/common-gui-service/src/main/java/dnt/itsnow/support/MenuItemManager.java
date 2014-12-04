@@ -4,7 +4,7 @@ import dnt.itsnow.exception.MenuItemException;
 import dnt.itsnow.model.MenuItem;
 import dnt.itsnow.repository.MenuItemRepository;
 import dnt.itsnow.service.MenuItemService;
-import dnt.spring.Bean;
+import net.happyonroad.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

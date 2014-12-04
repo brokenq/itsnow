@@ -1,17 +1,17 @@
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.User;
-import dnt.itsnow.platform.service.Page;
+import net.happyonroad.platform.service.Page;
 import dnt.itsnow.service.GeneralUserService;
 import dnt.itsnow.web.model.ChangePasswordRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import dnt.itsnow.platform.web.annotation.BeforeFilter;
+import net.happyonroad.platform.web.annotation.BeforeFilter;
 import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
-import dnt.itsnow.platform.web.exception.WebClientSideException;
+import net.happyonroad.platform.web.exception.WebClientSideException;
 import javax.validation.Valid;
 /**
  * <h1>MSP/MSU用户控制器</h1>

@@ -4,8 +4,8 @@
 package dnt.itsnow.service;
 
 import dnt.itsnow.model.User;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.service.Pageable;
+import net.happyonroad.platform.service.Page;
+import net.happyonroad.platform.service.Pageable;
 
 /**
  * <h1>可以进行修改的用户服务 </h1>

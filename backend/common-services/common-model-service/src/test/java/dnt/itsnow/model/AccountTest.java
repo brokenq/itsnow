@@ -4,11 +4,11 @@
 package dnt.itsnow.model;
 
 import dnt.itsnow.test.model.ValidatorSupport;
-import dnt.support.JsonSupport;
+import net.happyonroad.support.JsonSupport;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import javax.validation.ConstraintViolation;
 import java.sql.Timestamp;

@@ -1,7 +1,7 @@
 package dnt.itsnow.config;
 
 import dnt.itsnow.service.MenuItemService;
-import dnt.itsnow.test.config.ApplicationControllerConfig;
+import net.happyonroad.test.config.ApplicationControllerConfig;
 import dnt.itsnow.web.controller.MenuItemsController;
 import org.easymock.EasyMock;
 import org.springframework.context.annotation.Bean;

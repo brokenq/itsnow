@@ -5,6 +5,7 @@ package dnt.itsnow.test.controller;
 
 import dnt.itsnow.model.MspAccount;
 import dnt.itsnow.model.User;
+import net.happyonroad.test.controller.ApplicationControllerTest;
 import org.junit.Before;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

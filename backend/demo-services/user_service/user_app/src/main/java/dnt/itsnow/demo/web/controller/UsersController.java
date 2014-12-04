@@ -5,8 +5,8 @@ package dnt.itsnow.demo.web.controller;
 
 import dnt.itsnow.demo.api.UserService;
 import dnt.itsnow.demo.model.User;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.web.controller.ApplicationController;
+import net.happyonroad.platform.service.Page;
+import net.happyonroad.platform.web.controller.ApplicationController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

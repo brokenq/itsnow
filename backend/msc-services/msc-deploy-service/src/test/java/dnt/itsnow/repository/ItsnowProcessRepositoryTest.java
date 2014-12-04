@@ -5,9 +5,9 @@ package dnt.itsnow.repository;
 
 import dnt.itsnow.config.DeployRepositoryConfig;
 import dnt.itsnow.model.ItsnowProcess;
-import dnt.itsnow.platform.util.PageRequest;
+import net.happyonroad.platform.util.PageRequest;
 import dnt.itsnow.util.DeployFixture;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

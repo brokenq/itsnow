@@ -3,7 +3,7 @@
  */
 package dnt.itsnow.demo.web.controller;
 
-import dnt.itsnow.platform.web.controller.ApplicationController;
+import net.happyonroad.platform.web.controller.ApplicationController;
 import dnt.itsnow.demo.exception.*;
 import dnt.itsnow.demo.web.exception.*;
 import dnt.itsnow.demo.web.model.LoginCredential;

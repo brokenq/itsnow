@@ -8,15 +8,15 @@ import dnt.itsnow.exception.ItsnowProcessException;
 import dnt.itsnow.exception.ItsnowSchemaException;
 import dnt.itsnow.exception.SystemInvokeException;
 import dnt.itsnow.model.*;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.util.DefaultPage;
-import dnt.itsnow.platform.util.PageRequest;
+import net.happyonroad.platform.service.Page;
+import net.happyonroad.platform.util.DefaultPage;
+import net.happyonroad.platform.util.PageRequest;
 import dnt.itsnow.repository.ItsnowProcessRepository;
 import dnt.itsnow.service.ItsnowHostService;
 import dnt.itsnow.service.ItsnowProcessService;
 import dnt.itsnow.service.ItsnowSchemaService;
 import dnt.itsnow.service.SystemInvocationTranslator;
-import dnt.util.StringUtils;
+import net.happyonroad.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -357,7 +357,6 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
         process.setProperty("debug.port", host.getProperty("next.debug.port", "8201"));
         process.setProperty("jmx.port", host.getProperty("next.jmx.port", "8301"));
         process.setProperty("http.port", host.getProperty("next.http.port", "8401"));
-        process.setProperty("app.domain", translator.getAppDomain());
         return process;
     }
 

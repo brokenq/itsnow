@@ -3,8 +3,8 @@
  */
 package dnt.itsnow.config;
 
-import dnt.concurrent.StrategyExecutorService;
-import dnt.itsnow.platform.config.DefaultAppConfig;
+import net.happyonroad.concurrent.StrategyExecutorService;
+import net.happyonroad.platform.config.DefaultAppConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;

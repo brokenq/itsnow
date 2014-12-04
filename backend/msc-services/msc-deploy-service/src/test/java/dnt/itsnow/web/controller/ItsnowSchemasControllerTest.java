@@ -2,12 +2,12 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.config.DeployControllerConfig;
 import dnt.itsnow.model.ItsnowSchema;
-import dnt.itsnow.platform.util.DefaultPage;
-import dnt.itsnow.platform.util.PageRequest;
+import net.happyonroad.platform.util.DefaultPage;
+import net.happyonroad.platform.util.PageRequest;
 import dnt.itsnow.service.ItsnowSchemaService;
 import dnt.itsnow.test.controller.SessionSupportedControllerTest;
 import dnt.itsnow.util.DeployFixture;
-import dnt.support.JsonSupport;
+import net.happyonroad.support.JsonSupport;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

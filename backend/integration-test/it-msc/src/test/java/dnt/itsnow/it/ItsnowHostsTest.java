@@ -4,7 +4,7 @@ import dnt.itsnow.model.ClientHostStatus;
 import dnt.itsnow.model.ClientItsnowHost;
 import dnt.itsnow.util.DeployFixture;
 import dnt.itsnow.util.ShareDatas;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.HttpEntity;
