@@ -20,14 +20,17 @@ public class MutableContractRepositoryConfig extends RepositoryConfigWithH2 {
                 "classpath:META-INF/setup/create_accounts.sql",
                 "classpath:META-INF/setup/create_users.sql",
                 "classpath:META-INF/setup/create_contracts.sql",
+                "classpath:META-INF/setup/create_contract_details.sql",
                 "classpath:META-INF/setup/create_contract_users.sql",
+                "classpath:META-INF/setup/create_contract_records.sql",
 
                 "classpath:META-INF/setup/init.sql",
 
                 "classpath:META-INF/setup/insert_accounts.sql",
                 "classpath:META-INF/setup/insert_users.sql",
                 "classpath:META-INF/setup/insert_contracts.sql",
-                "classpath:META-INF/setup/insert_contract_users.sql"
+                "classpath:META-INF/setup/insert_contract_users.sql",
+                "classpath:META-INF/setup/insert_contract_records.sql"
         };
     }
 }

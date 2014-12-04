@@ -22,7 +22,6 @@ public class ContractTest extends ValidatorSupport{
     @Before
     public void setUp() throws Exception {
         contract = new Contract();
-        contract.setMspAccountId(2L);
         contract.setStatus(ContractStatus.Approved);
         contract.setMsuAccountId(4L);
         contract.setSn("CONTRACT-001");

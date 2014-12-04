@@ -5,7 +5,10 @@
 <mapper namespace="dnt.itsnow.repository.CommonContractRepository">
 
     <sql id="select">
-        SELECT * FROM itsnow_msc.contracts
+        SELECT c.*
+        FROM   itsnow_msc.contracts c
+        LEFT JOIN itsnow_msc.contract_records cr
+        ON c.id = cr.contract_id
     </sql>
 
     <sql id="page">
@@ -19,37 +22,38 @@
     </sql>
 
     <select id="findAll" resultType="Contract">
-        <include refid="select"/>
+        SELECT * FROM itsnow_msc.contracts
         <include refid="page"/>
     </select>
 
     <select id="findAllByMsuAccountId" resultType="Contract">
-        <include refid="select"/>
-        WHERE msu_account_id = #{msuId}
+        SELECT * FROM itsnow_msc.contracts WHERE msu_account_id = #{msuId}
         <include refid="page"/>
     </select>
 
     <!--MSP模块邀约管理-->
     <select id="findAllByMspDraft" resultType="Contract">
         <include refid="select"/>
-        <where>
-          (msp_account_id = #{mspId} OR msp_account_id is null) AND status in ('Draft','Purposed')
-        </where>
+        WHERE  ( cr.msp_account_id != #{mspId}
+        OR cr.msp_account_id IS NULL )
+        AND c.status IN ( 'Draft', 'Purposed' )
         <include refid="page"/>
     </select>
 
     <!--MSP模块我的合约-->
     <select id="findAllByMspAccountId" resultType="Contract">
         <include refid="select"/>
-        <where>
-          msp_account_id = #{mspId} AND status in ('Approved','Rejected')
-        </where>
+        WHERE cr.msp_account_id = #{mspId}
+        AND cr.status IN ('Approved','Rejected')
         <include refid="page"/>
     </select>
 
     <select id="findBySn" resultMap="contractResult">
-        <include refid="select"/>
-        WHERE sn = #{sn}
+        SELECT * FROM itsnow_msc.contracts WHERE sn = #{sn}
+    </select>
+
+    <select id="findMspAccountById" resultType="Long">
+        SELECT msp_account_id FROM itsnow_msc.contract_records WHERE contract_id = #{id}
     </select>
 
     <select id="selectDetails" resultType="ContractDetail">

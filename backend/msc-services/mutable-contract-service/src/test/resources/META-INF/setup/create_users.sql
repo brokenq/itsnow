@@ -1,4 +1,5 @@
-CREATE TABLE users (
+CREATE SCHEMA IF NOT EXISTS itsnow_msc;
+CREATE TABLE itsnow_msc.users (
   id                INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
   account_id       INT(20) UNSIGNED,
   username          VARCHAR(25)     NOT NULL UNIQUE,
@@ -12,6 +13,6 @@ CREATE TABLE users (
   password_expired BOOLEAN          NOT NULL DEFAULT FALSE,
   created_at        TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at        TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (account_id) REFERENCES accounts(id)
+  FOREIGN KEY (account_id) REFERENCES itsnow_msc.accounts(id)
 );
 

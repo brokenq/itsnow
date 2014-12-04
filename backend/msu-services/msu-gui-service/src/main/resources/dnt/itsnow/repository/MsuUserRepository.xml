@@ -7,8 +7,10 @@
     <sql id="subSelect">
         SELECT cu.msp_user_id
         FROM   itsnow_msc.contract_users cu
-            LEFT JOIN itsnow_msc.accounts a
-                ON cu.msu_account_id = a.id
+               LEFT JOIN itsnow_msc.contracts c
+                      ON cu.contract_id = c.id
+               LEFT JOIN itsnow_msc.accounts a
+                      ON c.msu_account_id = a.id
     </sql>
 
     <select id="findByMsuAndMspAccountSnAndUsername" resultMap="dnt.itsnow.repository.CommonUserRepository.userWithAccount">

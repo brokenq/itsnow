@@ -27,7 +27,7 @@ public interface MutableContractService extends CommonContractService{
      * @param contract 合同信息
      * @return 更新后的合同信息
      */
-    Contract bid(Contract contract);
+    Contract bid(String mspAccountId, Contract contract);
 
     /**
      * MSU确认合同

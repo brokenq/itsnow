@@ -11,9 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 
-/**
- * Created by jacky on 2014/9/4.
- */
 @Service
 public class MutableContractManager extends CommonContractManager implements MutableContractService {
 
@@ -54,10 +51,11 @@ public class MutableContractManager extends CommonContractManager implements Mut
      * @return 更新后的合同信息
      */
     @Override
-    public Contract bid(Contract contract) {
+    public Contract bid(String mspAccountId, Contract contract) {
         contract.setStatus(ContractStatus.Purposed);
         contract.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         mutableContractRepository.bid(contract);
+        mutableContractRepository.bidRecord(mspAccountId, contract.getId());
         return contract;
     }
 
@@ -103,15 +101,13 @@ public class MutableContractManager extends CommonContractManager implements Mut
     @Override
     public void buildRelation(Contract contract) throws ServiceException {
         for (User user : contract.getUsers()) {
-            if(mutableContractRepository.findRelation(user.getId(), contract.getMsuAccountId())<1) {
-                mutableContractRepository.buildRelation(user.getId(), contract.getMsuAccountId());
-            }
+                mutableContractRepository.buildRelation(contract.getId(), user.getId(), "1");
         }
     }
 
     @Override
     public void updateRelation(Contract contract) throws ServiceException {
-        mutableContractRepository.deleteRelation(contract.getMsuAccount().getId());
+        mutableContractRepository.deleteRelation(contract.getId());
         buildRelation(contract);
     }
 

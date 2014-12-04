@@ -16,13 +16,18 @@ angular.module('MsuIndex.Contracts', ['multi-select'])
     templateUrl: 'contracts/new.tpl.jade'
     controller: 'ContractNewCtrl',
     data: {pageTitle: '新增合同'}
+  $stateProvider.state 'contracts.edit',
+    url: '/{sn}/edit',
+    templateUrl: 'contracts/edit.tpl.jade'
+    controller: 'ContractEditCtrl',
+    data: {pageTitle: '绑定合约用户'}
   $stateProvider.state 'contracts.view',
     url: '/{sn}/view',
     templateUrl: 'contracts/view.tpl.jade'
     controller: 'ContractViewCtrl',
     data: {pageTitle: '查看合同'}
   $stateProvider.state 'contracts.accounts_view',
-    url: '/{sn}/account_view',
+    url: '/{sn}/account_view/{account_sn}',
     templateUrl: 'contracts/account_view.tpl.jade',
     controller: 'ContractAccountViewCtrl',
     data: {pageTitle: '查看帐户'}
@@ -126,13 +131,12 @@ angular.module('MsuIndex.Contracts', ['multi-select'])
 .controller('ContractAccountViewCtrl', ['$scope', '$stateParams', '$log', \
     ($scope, $stateParams, $log) ->
       $scope.contract = $scope.cacheService.find $stateParams.sn, true
-      $scope.account = $scope.contract.mspAccount
+      $scope.account = mspAccount for mspAccount in $scope.contract.mspAccounts when mspAccount.sn is $stateParams.account_sn
       $log.log "Initialized the Contract Account View controller on: " + JSON.stringify($scope.account)
   ])
 
 .controller('ContractNewCtrl', ['$scope', '$state', '$log', 'Feedback', 'ContractService', 'ContractDetailService', 'ContractServiceCatalogService',\
     ($scope, $state, $log, feedback, contractService, contractDetailService, serviceCatalogService) ->
-      $log.log "Initialized the Contract New controller"
 
       #查询服务目录
       serviceCatalogService.query (data)->
@@ -146,25 +150,65 @@ angular.module('MsuIndex.Contracts', ['multi-select'])
           serviceCatalogs.push closeGroup
         $scope.serviceCatalogs = serviceCatalogs
 
-      $scope.cancel = () ->
+      $scope.cancel = ->
         $state.go 'contracts.list'
 
-      $scope.create = () ->
+      $scope.openDetail = ->
+        $("#bootbox").show()
+
+      $scope.closeDetail = ->
+        $("#bootbox").hide()
+
+      $scope.details = []
+      $scope.createDetail = ->
+#        if !$scope.newContractDetailForm.$valid
+#          return
         for serviceCatalog in $scope.serviceCatalogs
           if serviceCatalog.items?
             for item in serviceCatalog.items
               $scope.detail.itemId = item.id if item.ticked is true
-        details = []
-        details.push $scope.detail
+        $scope.details.push angular.copy $scope.detail
+        $("#bootbox").hide()
+        $scope.detail = {}
+
+      $scope.create = ->
+        $scope.submitted=true
         contractService.save($scope.contract, (data) ->
-          for detail in details
+          for detail in $scope.details
             contractDetailService.save {sn:data.sn}, detail
           feedback.success "保存合同成功"
           $state.go 'contracts.list'
         ,(resp)->
           feedback.error("保存合同失败", resp)
         )
+
   ])
 
+.controller('ContractEditCtrl', ['$scope', '$state', '$stateParams', '$log', 'Feedback', 'ContractService',
+    ($scope, $state, $stateParams, $log, feedback, contractService) ->
+      $log.log "Initialized the Contract edit controller"
+
+      $scope.contract = $scope.cacheService.find $stateParams.sn, true
+      $scope.mspAccounts = $scope.contract.mspAccounts
+      mspAccount.ticked =true for mspAccount in $scope.mspAccounts when mspAccount.status is 'Approved'
+
+      $scope.cancel = () ->
+        $state.go 'contracts.my-list'
+
+      $scope.allowLogin = () ->
+
+        for mspAccount in $scope.mspAccounts
+          account ={}
+          account.id = mspAccount.id
+          if mspAccount.ticked is true
+            $scope.contract.mspAccounts.push account
+
+        contractService.update($scope.contract, () ->
+          feedback.success "批准MSP账户操作成功"
+          $state.go 'contracts.my-list'
+        ,(resp)->
+          feedback.error("批准MSP账户操作失败", resp)
+        )
+  ])
 
 

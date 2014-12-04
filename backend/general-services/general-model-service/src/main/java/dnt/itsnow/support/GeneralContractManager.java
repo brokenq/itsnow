@@ -42,9 +42,9 @@ public class GeneralContractManager extends CommonContractManager implements Gen
         logger.debug("Found {}", contract);
 
         if (account.isMsu()) {
-            if (contract.getMspAccountId() == null) {
+            /*if (contract.getMspAccountId() == null) {
                 throw new ContractException("The contract has not yet been accept by MSP");
-            } else if (contract.isApproved()) {
+            } else*/ if (contract.isApproved()) {
                 throw new ContractException("The contract has been approved by msu");
             }
         } else if (account.isMsp()) {
@@ -72,9 +72,9 @@ public class GeneralContractManager extends CommonContractManager implements Gen
         logger.debug("Found {}", contract);
 
         if (account.isMsu()) {
-            if (contract.getMspAccountId() == null) {
+            /*if (contract.getMspAccountId() == null) {
                 throw new ContractException("The contract has not yet been accept by MSP");
-            }
+            }*/
             //if( !contract.isApprovedByMsu() ){
             //    throw new ServiceException("The contract has been rejected by msu");
             //}
@@ -92,23 +92,22 @@ public class GeneralContractManager extends CommonContractManager implements Gen
     @Override
     public Contract bid(Account account, String sn) throws ServiceException {
 
+        logger.info("Msp bid contract:{} {}", account, sn);
+
         if (!account.isMsp()) {
             throw new ServiceException("The contract bid ,only MSP users are allowed to do this.");
         }
 
-        logger.info("Msp bid contract:{} {}", account, sn);
         Contract contract = findByAccountAndSn(account, sn, true);
 
-        if (ContractStatus.Purposed.equals(contract.getStatus())) {
+        /*if (ContractStatus.Purposed.equals(contract.getStatus())) {
             throw new ServiceException("The contract has been purposed");
-        }
+        }*/
 
         contract.setStatus(ContractStatus.Purposed);
-        contract.setMspAccountId(account.getId());
-        facade.put("/admin/api/contracts/{sn}/bid", contract, contract.getSn());
+        facade.put("/admin/api/contracts/{mspAccountId}/bid", contract, account.getId());
+
         logger.info("Msp bid contract {}", contract);
-
-
 
         return contract;
     }

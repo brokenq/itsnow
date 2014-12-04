@@ -22,6 +22,7 @@ import javax.validation.Valid;
  * # GET      /admin/api/contracts                     index           列出所有合同，支持过滤，分页，排序等
  * # GET      /admin/api/contracts/{sn}                show            查看一个合同
  * # POST     /admin/api/contracts                     create          创建合同
+ * # PUT      /admin/api/contracts/{mspAccountId}/bid  bid             应约合同
  * # PUT      /admin/api/contracts/{sn}/details/{id}   update          修改合同详情，账户信息通过HTTP BODY提交
  * # DELETE   /admin/api/contracts/{sn}/details/{id}   destroy         删除合同详情
  * # POST     /admin/api/contracts/user/relation       buildRelation   为可以依合同登录MSU系统的USP用户做准备
@@ -92,17 +93,24 @@ public class MutableContractsController extends SessionSupportController<Contrac
     }
 
     /**
-     * <h2>MSP投标</h2>
+     * <h2>MSP应约</h2>
      *
-     * PUT /admin/api/contracts/{sn}/bid
+     * PUT /admin/api/contracts/{mspAccountId}/bid
      *
+     * @param mspAccountId MSP账户
+     * @param contract 合同
      * @return 合同
      */
-    @RequestMapping(value = "{sn}/bid", method = RequestMethod.PUT)
-    public Contract bid(@Valid @RequestBody Contract contract){
-        logger.debug("msp bid contract:{}",contract.getSn());
-        this.contract.apply(contract);
-        return mutableContractService.bid(contract);
+    @RequestMapping(value = "{mspAccountId}/bid", method = RequestMethod.PUT)
+    public Contract bid(@PathVariable String mspAccountId, @Valid @RequestBody Contract contract){
+
+        logger.debug("msp account id:{} bid contract sn:{}",mspAccountId, contract.getSn());
+
+        contract = mutableContractService.bid(mspAccountId, contract);
+
+        logger.debug("msp account id:{} bid contract:{}",mspAccountId, contract);
+
+        return contract;
     }
 
     /**
@@ -176,7 +184,7 @@ public class MutableContractsController extends SessionSupportController<Contrac
         }
     }
 
-    @BeforeFilter({"show", "update", "bid", "approve", "reject", "destroy"})
+    @BeforeFilter({"show", "update", "approve", "reject", "destroy"})
     public void initContract(@PathVariable("sn")String sn){
         try {
             contract = mutableContractService.findByAccountAndSn(mainAccount, sn, true);//findByAccountId it by sn

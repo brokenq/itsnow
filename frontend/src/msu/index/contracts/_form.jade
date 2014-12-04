@@ -1,18 +1,20 @@
-//- include the form mixins
+mixin tableForm(title,brief,description)
+  tr(ng-repeat="d in details")
+    td #{title}
+    td #{brief}
+    td #{description}
+
 include /lib/mixins/form
-//- this form need includer provide variable:
-    readonly : true | false
+
 +section("基本信息")
   +group("contract", "sn", "合同号", "user", "必填")
     +input("contract", "sn")(type="text", required, ng-minlength="2", ng-maxlength="20",
       ng-pattern='/^[a-zA-Z0-9_\\-\\.]+$/', ng-check="/api/contracts/{0}/check", placeholder="合同编号")
-  +group("detail", "title", "详情名称", "user", "必填")
-    +input("detail", "title")(type="text", required, ng-minlength="2", ng-maxlength="20",
-      ng-pattern='/^[\u4e00-\u9fa5_a-zA-Z0-9\\-\\.]+$/', placeholder="详情名称")
-  +group("detail", "brief", "详情简介", "user", "简介")
-    +input("detail", "brief")(type="text", required, ng-minlength="2", ng-maxlength="20", placeholder="简介")
-  +group("detail", "service_catalog", "服务目录", "user", "详情所用的服务目录")
-    div#detail_service_catalog(multi-select, selection-mode="single", input-model="serviceCatalogs", button-label="title",
-      item-label="title", tick-property="ticked", group-property="multiSelectGroup")
-  +group("detail", "description", "描述", "edit", "合同说明")
-    +area("detail", "description")
+  hr
+  +group("contract", "detail", "合同详情", "", "")
+    table.table.table-striped.table-bordered.table-hover
+      tr
+        th(class="thNo") 合同名称
+        th(class="thNo") 合同简介
+        th(class="con") 合同描述
+      +tableForm('{{d.title}}', '{{d.brief}}', '{{d.description}}')

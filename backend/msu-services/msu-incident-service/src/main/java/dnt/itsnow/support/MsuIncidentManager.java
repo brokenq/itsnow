@@ -84,8 +84,11 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService,Resou
             //find by contract
             try {
                 Contract contract = contractService.findBySn("P001");
-                Account account = accountService.findById(contract.getMspAccountId());
-                mspSn = account.getSn();
+                List<MspAccount> list = contract.getMspAccounts();
+                if(list!=null && !list.isEmpty()){
+                    Account account = accountService.findById(list.get(0).getId());
+                    mspSn = account.getSn();
+                }
                 return mspSn + "-LISTENER";
             }catch(Exception e){
                 logger.warn(e.getMessage());

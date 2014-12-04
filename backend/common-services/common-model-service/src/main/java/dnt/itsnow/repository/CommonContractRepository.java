@@ -21,7 +21,7 @@ public interface CommonContractRepository {
     @Select("SELECT count(0) FROM itsnow_msc.contracts WHERE msu_account_id = #{msuId}")
     long countByMsuAccountId(@Param("msuId") long msuId);
 
-    @Select("SELECT count(0) FROM itsnow_msc.contracts WHERE msp_account_id = #{mspId} or msp_account_id is null")
+    @Select("SELECT count(0) FROM itsnow_msc.contracts c left join itsnow_msc.contract_records cr on cr.contract_id = c.id WHERE cr.msp_account_id = #{mspId} OR cr.msp_account_id is NULL")
     long countByMspAccountId(@Param("mspId") long mspId);
 
     @Select("SELECT count(0) FROM itsnow_msc.contracts")
@@ -50,4 +50,6 @@ public interface CommonContractRepository {
 
     // 需要加载details
     Contract findBySn(String sn);
+
+    List<Long> findMspAccountById(@Param("id") Long id);
 }

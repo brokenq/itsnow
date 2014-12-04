@@ -16,14 +16,7 @@ import java.util.Arrays;
 /**
  * <h1>>服务采购方(MSU)或者服务供应方(MSP)在系统数据库中的账户</h1
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
-@JsonSubTypes({
-        @JsonSubTypes.Type(name = "base", value = Account.class),
-        @JsonSubTypes.Type(name = "msc", value = MscAccount.class),
-        @JsonSubTypes.Type(name = "msu", value = MsuAccount.class),
-        @JsonSubTypes.Type(name = "msp", value = MspAccount.class)
-})
-public class Account extends ConfigItem {
+public class Account extends AbstractAccount {
     public static final String[] RESERVED_DOMAINS = {"www", "blog", "dev", "developer", "sales", "marketing", "hr", "test"};
 
     public static final String MSC = "msc";
@@ -92,7 +85,6 @@ public class Account extends ConfigItem {
         return this.status == AccountStatus.Rejected;
     }
 
-    @JsonIgnore
     public String getType(){
         return "base";
     }
