@@ -8,7 +8,7 @@ import dnt.itsnow.listener.SystemInvocationListener;
 import dnt.itsnow.model.SystemInvocation;
 import dnt.itsnow.service.SystemInvocationTranslator;
 import dnt.itsnow.service.SystemInvokeService;
-import dnt.spring.Bean;
+import net.happyonroad.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContextException;
 import org.springframework.transaction.annotation.Transactional;

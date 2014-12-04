@@ -4,7 +4,7 @@
 package dnt.itsnow.demo.model;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import dnt.itsnow.platform.model.Record;
+import net.happyonroad.platform.model.Record;
 
 import java.util.HashMap;
 import java.util.Map;

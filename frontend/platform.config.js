@@ -29,6 +29,7 @@ module.exports = {
 
     lib_tpl: [ '/lib/**/*.tpl.html', '/lib/**/*.tpl.jade' ],
     index_tpl: [ 'index/**/*.tpl.html', 'index/**/*.tpl.jade' ],
+    general_tpl: [],
     ms_tpl: [],
 
     less: 'less/index.less'
@@ -44,6 +45,7 @@ module.exports = {
 
     lib_tpl: [ 'lib/**/*.tpl.html', 'lib/**/*.tpl.jade' ],
     login_tpl: [ 'login/**/*.tpl.html', 'login/**/*.tpl.jade' ],
+    general_tpl: [],
     ms_tpl: [],
 
     less: 'less/login.less'

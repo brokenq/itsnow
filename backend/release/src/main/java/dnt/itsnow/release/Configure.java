@@ -4,7 +4,10 @@
 package dnt.itsnow.release;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.filefilter.IOFileFilter;
+import org.apache.commons.io.filefilter.RegexFileFilter;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,7 +41,12 @@ public class Configure {
 
         Properties variables = loadProperties(varsFile);
         String fwkVersion = getFwkVersion(appFolder);
+        String relVersion = getRelVersion(appFolder);
+        String appType = getAppType(appFolder);
         variables.setProperty("app.fwkVersion", fwkVersion);
+        variables.setProperty("app.version", relVersion);
+        variables.setProperty("app.type", appType);
+        variables.setProperty("app.base", FilenameUtils.normalize(appFolder.getAbsolutePath()));
         File mappingFile = new File(appFolder, "resources/.mapping");
         if( !mappingFile.exists() )
             throw new IllegalArgumentException("The app folder `" +appFolder.getAbsolutePath()+ "` should contains resource/.mapping!");
@@ -128,15 +136,49 @@ public class Configure {
     }
 
     private static String getFwkVersion(File appFolder){
-        Collection<File> jars = FileUtils.listFiles(new File(appFolder, "boot"), new String[]{"jar"}, false);
+        return getVersion(new File(appFolder, "boot"), "net\\.happyonroad\\.spring-component-framework-.*", "spring-component-framework-");
+    }
+
+    private static String getRelVersion(File appFolder) {
+        return getVersion(new File(appFolder, "lib"), "dnt\\.itsnow\\.release-.*", "release-");
+    }
+
+    private static String getVersion(File folder, String pattern, String start){
+        IOFileFilter fileFilter = new RegexFileFilter(pattern);
+        Collection<File> jars = FileUtils.listFiles(folder, fileFilter, null);
         if( jars.isEmpty() )
         {
-            return "0.0.1";// an minimal one for testing
-            //throw new IllegalStateException("Can't auto detect the framework version in " + mscHome.getAbsolutePath());
+            //return "0.0.1";// an minimal one for testing
+            throw new IllegalStateException("Can't auto detect the version of " + pattern);
         }
         File jar = jars.iterator().next();
-        String[] parts = jar.getName().split("-");
-        String versionAndSuffix = parts[parts.length-1];
-        return versionAndSuffix.substring(0, versionAndSuffix.length() - 4);// 0.2.1-SNAPSHOT.jar
+        int begin = jar.getName().indexOf(start) + start.length();
+        int end = jar.getName().lastIndexOf(".jar");
+        return jar.getName().substring(begin, end);
+    }
+    private static String getAppType(File appFolder) {
+        // Judge the repository contains below
+        // msc-gui-service
+        // msu-gui-service
+        // msp-gui-service
+        try {
+            getVersion(new File(appFolder, "repository"), "dnt\\.itsnow\\.msc-gui-service-.*", "msc-gui-service-");
+            return "msc";
+        }catch (IllegalStateException ex){
+            //ignore
+        }
+        try {
+            getVersion(new File(appFolder, "repository"), "dnt\\.itsnow\\.msp-gui-service-.*", "msp-gui-service-");
+            return "msp";
+        }catch (IllegalStateException ex){
+            //ignore
+        }
+        try {
+            getVersion(new File(appFolder, "repository"), "dnt\\.itsnow\\.msu-gui-service-.*", "msu-gui-service-");
+            return "msu";
+        }catch (IllegalStateException ex){
+            //ignore
+        }
+        throw new IllegalStateException("Can't judge the app type, there is no any msc|msp|msu-gui-service in repository");
     }
 }

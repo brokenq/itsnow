@@ -1,10 +1,9 @@
 package dnt.itsnow.repository;
 
 import dnt.itsnow.model.PublicServiceCatalog;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
+
+import java.util.Set;
 
 /**
  * Created by jacky on 2014/9/2.
@@ -25,4 +24,11 @@ public interface PublicServiceCatalogRepository extends CommonServiceCatalogRepo
 
     @Delete("DELETE FROM public_service_catalogs WHERE sn = #{sn}")
     void delete(String sn);
+
+    @Insert("INSERT INTO itsnow_msc.account_service_catalogs(account_id,catalog_id) " +
+            "VALUES (#{accountId},#{catalogId})")
+    void addByAccount(@Param("catalogId")Long catalogId,@Param("accountId")Long accountId);
+
+    void deleteByAccount(@Param("ids")Set<Long> ids,@Param("accountId")Long accountId);
+
 }

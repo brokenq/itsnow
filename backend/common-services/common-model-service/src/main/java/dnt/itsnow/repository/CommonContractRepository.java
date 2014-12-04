@@ -5,7 +5,7 @@
 package dnt.itsnow.repository;
 
 import dnt.itsnow.model.Contract;
-import dnt.itsnow.platform.service.Pageable;
+import net.happyonroad.platform.service.Pageable;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 

@@ -1,6 +1,6 @@
 package dnt.itsnow.exception;
 
-import dnt.itsnow.platform.service.ServiceException;
+import net.happyonroad.platform.service.ServiceException;
 
 /**
  * <h1>部门自定义异常类</h1>

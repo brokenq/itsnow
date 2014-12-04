@@ -2,8 +2,8 @@ package dnt.itsnow.service;
 
 import dnt.itsnow.exception.SiteException;
 import dnt.itsnow.model.Site;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.service.Pageable;
+import net.happyonroad.platform.service.Page;
+import net.happyonroad.platform.service.Pageable;
 
 /**
  * <h1>地点业务类</h1>

@@ -3,7 +3,7 @@
  */
 package dnt.itsnow.model;
 
-import dnt.util.StringUtils;
+import net.happyonroad.util.StringUtils;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

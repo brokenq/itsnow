@@ -2,20 +2,14 @@ package dnt.itsnow.support;
 
 import dnt.itsnow.repository.ActivitiSyncRepository;
 import dnt.itsnow.service.ActivitiSyncService;
-import dnt.messaging.MessageAdapter;
-import dnt.messaging.MessageBus;
-import dnt.spring.Bean;
-import org.springframework.beans.factory.DisposableBean;
+import net.happyonroad.messaging.MessageAdapter;
+import net.happyonroad.messaging.MessageBus;
+import net.happyonroad.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.SchedulingConfigurer;
-import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.stereotype.Service;
-
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 /**
  * Created by jacky on 2014/8/13.

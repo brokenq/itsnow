@@ -5,9 +5,9 @@ package dnt.itsnow.service;
 
 import dnt.itsnow.model.Account;
 import dnt.itsnow.model.Contract;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.service.Pageable;
-import dnt.itsnow.platform.service.ServiceException;
+import net.happyonroad.platform.service.Page;
+import net.happyonroad.platform.service.Pageable;
+import net.happyonroad.platform.service.ServiceException;
 
 /**
  *  <h1>合同服务</h1>

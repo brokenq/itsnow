@@ -4,8 +4,8 @@
 package dnt.itsnow.model;
 
 import dnt.itsnow.test.model.ValidatorSupport;
-import dnt.support.JsonSupport;
-import junit.framework.Assert;
+import net.happyonroad.support.JsonSupport;
+import org.junit.Assert;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.junit.Before;
 import org.junit.Test;

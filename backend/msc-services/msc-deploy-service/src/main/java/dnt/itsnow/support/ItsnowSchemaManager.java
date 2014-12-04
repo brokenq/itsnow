@@ -7,13 +7,13 @@ import dnt.itsnow.exception.ItsnowHostException;
 import dnt.itsnow.exception.ItsnowSchemaException;
 import dnt.itsnow.exception.SystemInvokeException;
 import dnt.itsnow.model.*;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.util.DefaultPage;
-import dnt.itsnow.platform.util.PageRequest;
+import net.happyonroad.platform.service.Page;
+import net.happyonroad.platform.util.DefaultPage;
+import net.happyonroad.platform.util.PageRequest;
 import dnt.itsnow.repository.ItsnowSchemaRepository;
 import dnt.itsnow.service.ItsnowHostService;
 import dnt.itsnow.service.ItsnowSchemaService;
-import dnt.util.StringUtils;
+import net.happyonroad.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

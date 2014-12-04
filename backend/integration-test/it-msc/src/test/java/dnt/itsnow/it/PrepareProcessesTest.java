@@ -3,7 +3,7 @@ package dnt.itsnow.it;
 import dnt.itsnow.model.ClientItsnowProcess;
 import dnt.itsnow.model.ClientProcessStatus;
 import dnt.itsnow.util.ShareDatas;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;

@@ -29,7 +29,7 @@ angular.module('dnt.action.service', [
           instance.options.buttons = $(instance.CODE.TOOLBAR_CSS).find("button[#{instance.CSS.WEIGHT}], a[#{instance.CSS.WEIGHT}]") if instance.options.buttons.length is 0
           instance.toggleButtons()
 
-      ### @function: toggleButtons | toggle the disabled attribute of buttons###
+      ### @function: toggleButtons | toggle the disabled attribute  of buttons###
       toggleButtons: ->
         selections = @getSelections()
         for button in @options.buttons
@@ -64,7 +64,9 @@ angular.module('dnt.action.service', [
         selections = @getSelections()
         try
           @beforeExec element, selections
-          return callback item for item in selections.datas if callback.length is 1
+          if callback.length is 1
+            callback item for item in selections.datas
+            return
           return callback.apply this, selections.datas
         catch error
           feedback.warn "#{error}"

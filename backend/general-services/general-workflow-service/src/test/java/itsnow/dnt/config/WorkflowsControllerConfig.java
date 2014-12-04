@@ -3,7 +3,7 @@ package itsnow.dnt.config;
 import dnt.itsnow.api.ActivitiEngineService;
 import dnt.itsnow.service.CommonUserService;
 import dnt.itsnow.service.WorkflowService;
-import dnt.itsnow.test.config.ApplicationControllerConfig;
+import net.happyonroad.test.config.ApplicationControllerConfig;
 import dnt.itsnow.web.controller.WorkflowsController;
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Qualifier;

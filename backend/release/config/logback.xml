@@ -28,10 +28,10 @@
     </root>
 
     <logger name="dnt.itsnow" level="INFO" />
-    <logger name="dnt.itsnow.platform.web.support.ExtendedRequestMappingHandlerMapping" level="INFO" />
+    <logger name="net.happyonroad.platform.web.support.ExtendedRequestMappingHandlerMapping" level="INFO" />
     <logger name="dnt.itsnow.demo.repository" level="INFO" />
     <logger name="net.happyonroad.spring.service.SpringServicePackage" level="INFO" />
-    <logger name="dnt.itsnow.platform.web.support.ExtendedRequestMappingHandlerMapping" level="WARN" />
+    <logger name="net.happyonroad.platform.web.support.ExtendedRequestMappingHandlerMapping" level="WARN" />
     <logger name="dnt.itsnow.support.DefaultSystemInvoker" level="INFO" />
     <logger name="dnt.itsnow.support.ItsnowResourceManager" level="INFO" />
     <logger name="dnt.itsnow.support.ItsnowStatusMaintainer" level="INFO" />

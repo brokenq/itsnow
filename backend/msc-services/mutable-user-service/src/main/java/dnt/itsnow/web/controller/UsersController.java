@@ -4,9 +4,9 @@
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.User;
-import dnt.itsnow.platform.service.Page;
+import net.happyonroad.platform.service.Page;
 import dnt.itsnow.service.MutableUserService;
-import dnt.itsnow.platform.web.annotation.BeforeFilter;
+import net.happyonroad.platform.web.annotation.BeforeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
@@ -14,7 +14,7 @@ import org.springframework.http.HttpStatus;
 import java.util.HashMap;
 import java.util.List;
 
-import dnt.itsnow.platform.web.exception.WebClientSideException;
+import net.happyonroad.platform.web.exception.WebClientSideException;
 
 import javax.validation.Valid;
 

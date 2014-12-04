@@ -3,13 +3,13 @@
  */
 package dnt.itsnow.support;
 
-import dnt.itsnow.platform.util.DefaultPage;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.service.Pageable;
+import net.happyonroad.platform.util.DefaultPage;
+import net.happyonroad.platform.service.Page;
+import net.happyonroad.platform.service.Pageable;
 import dnt.itsnow.api.ServiceCatalogService;
 import dnt.itsnow.model.ServiceCatalog;
 import dnt.itsnow.repository.ServiceCatalogRepository;
-import dnt.spring.Bean;
+import net.happyonroad.spring.Bean;
 import dnt.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

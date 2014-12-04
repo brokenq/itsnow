@@ -3,7 +3,7 @@
  */
 package dnt.itsnow.demo.config;
 
-import dnt.itsnow.platform.config.DefaultAppConfig;
+import net.happyonroad.platform.config.DefaultAppConfig;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;

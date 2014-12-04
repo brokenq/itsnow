@@ -1,7 +1,7 @@
 package dnt.itsnow.service;
 
 import dnt.itsnow.model.Contract;
-import dnt.itsnow.platform.service.ServiceException;
+import net.happyonroad.platform.service.ServiceException;
 
 /**
  * <h1>Contract Service</h1>

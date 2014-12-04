@@ -3,7 +3,7 @@
  */
 package dnt.itsnow.demo.model;
 
-import dnt.itsnow.platform.model.Record;
+import net.happyonroad.platform.model.Record;
 
 /**
  * the sample User

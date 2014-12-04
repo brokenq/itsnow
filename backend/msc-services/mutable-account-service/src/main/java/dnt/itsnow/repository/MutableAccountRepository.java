@@ -5,7 +5,7 @@
 package dnt.itsnow.repository;
 
 import dnt.itsnow.model.Account;
-import dnt.itsnow.platform.service.Pageable;
+import net.happyonroad.platform.service.Pageable;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

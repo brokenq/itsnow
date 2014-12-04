@@ -5,7 +5,7 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.api.ServiceCatalogService;
 import dnt.itsnow.model.ServiceCatalog;
-import dnt.itsnow.platform.web.controller.ApplicationController;
+import net.happyonroad.platform.web.controller.ApplicationController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

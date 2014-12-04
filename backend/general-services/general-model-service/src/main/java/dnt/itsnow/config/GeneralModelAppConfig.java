@@ -3,11 +3,11 @@
  */
 package dnt.itsnow.config;
 
-import dnt.itsnow.platform.config.DefaultAppConfig;
-import dnt.messaging.MessageBus;
-import dnt.redis.RedisCache;
-import dnt.redis.RedisConfig;
-import dnt.redis.RedisMessageBus;
+import net.happyonroad.platform.config.DefaultAppConfig;
+import net.happyonroad.messaging.MessageBus;
+import net.happyonroad.redis.RedisCache;
+import net.happyonroad.redis.RedisConfig;
+import net.happyonroad.redis.RedisMessageBus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 

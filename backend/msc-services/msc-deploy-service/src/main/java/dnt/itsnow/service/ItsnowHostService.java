@@ -7,8 +7,8 @@ import dnt.itsnow.exception.ItsnowHostException;
 import dnt.itsnow.model.Account;
 import dnt.itsnow.model.HostType;
 import dnt.itsnow.model.ItsnowHost;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.util.PageRequest;
+import net.happyonroad.platform.service.Page;
+import net.happyonroad.platform.util.PageRequest;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package dnt.itsnow.util;
 
 import dnt.itsnow.model.DictDetail;
-import dnt.support.JsonSupport;
+import net.happyonroad.support.JsonSupport;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
@@ -9,7 +9,6 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
 /**
  * Created by user on 2014/11/18.

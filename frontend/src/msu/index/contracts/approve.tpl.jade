@@ -1,0 +1,10 @@
+//- include the form mixins
+include /lib/mixins/form
+h2 批准MSP账户
+
++form("allowLoginForm")(ng-submit="allowLogin()")
+  include /msu/index/contracts/_account_form.jade
+
+  +action_bar
+    +action_submit("批准")
+    +action_cancel("取消")(ui-sref="contracts.list")

@@ -5,8 +5,8 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.PublicServiceCatalog;
 import dnt.itsnow.model.PublicServiceItem;
-import dnt.itsnow.platform.web.annotation.BeforeFilter;
-import dnt.itsnow.platform.web.exception.WebClientSideException;
+import net.happyonroad.platform.web.annotation.BeforeFilter;
+import net.happyonroad.platform.web.exception.WebClientSideException;
 import dnt.itsnow.service.PublicServiceCatalogService;
 import dnt.itsnow.service.PublicServiceItemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,7 +98,7 @@ public class PublicServiceItemsController extends SessionSupportController<Publi
     /**
      * <h2>删除帐户的一个服务项目</h2>
      *
-     * PUT /admin/api/public_service_catalogs/{sn}/items/{isn}/remove?accountId=''
+     * PUT /admin/api/public_service_catalogs/{sn}/items/{isn}/account/{accountId}/remove
      *
      */
     @RequestMapping(value = "{isn}/account/{accountId}/remove", method = RequestMethod.PUT)
@@ -111,7 +111,7 @@ public class PublicServiceItemsController extends SessionSupportController<Publi
     /**
      * <h2>增加帐户的一个服务项目</h2>
      *
-     * PUT /admin/api/public_service_catalogs/{sn}/items/{isn}/create?accountId=''
+     * PUT /admin/api/public_service_catalogs/{sn}/items/{isn}/account/{accountId}/create
      *
      */
     @RequestMapping(value = "{isn}/account/{accountId}/create", method = RequestMethod.PUT)

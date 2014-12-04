@@ -1,6 +1,6 @@
 package dnt.itsnow.model;
 
-import dnt.itsnow.platform.model.Record;
+import net.happyonroad.platform.model.Record;
 
 /**
  * The ServiceCatalog Object

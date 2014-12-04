@@ -126,9 +126,9 @@ angular.module('System.User', [])
       $scope.cuser.enabledStr = $filter('enableFilter')($scope.cuser.enabled)
       $http.get("/api/groups/belongs_to_user/"+username).success (groups)->
         $scope.groups =groups
-#
-#      $http.get("/api/roles/"+username).success (roles)->
-#        $scope.roles =roles
+
+      $http.get("/api/roles/user/"+username).success (roles)->
+        $scope.roles =roles
 
   ])
 .controller('UserEditPwdCtrl', ['$http','$scope', '$state', '$stateParams', 'SessionService', '$window','Feedback',

@@ -131,7 +131,7 @@
         <result property="description" column="description"/>
         <result property="createdAt" column="created_at"/>
         <result property="updatedAt" column="updated_at"/>
-        <result column="configuration" property="configuration" typeHandler="dnt.itsnow.util.PropertiesHandler"/>
+        <result column="configuration" property="configuration" typeHandler="net.happyonroad.util.PropertiesHandler"/>
         <result column="processes_count" property="processesCount"/>
         <result column="schemas_count" property="schemasCount"/>
     </resultMap>

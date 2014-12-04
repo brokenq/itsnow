@@ -11,7 +11,7 @@ import dnt.itsnow.service.MutableAccountService;
 import dnt.itsnow.test.controller.SessionSupportedControllerTest;
 import dnt.itsnow.web.model.AccountRegistration;
 import dnt.itsnow.web.model.RegistrationType;
-import dnt.support.JsonSupport;
+import net.happyonroad.support.JsonSupport;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

@@ -1,6 +1,6 @@
 package dnt.itsnow.release;
 
-import dnt.util.TempFile;
+import net.happyonroad.util.TempFile;
 import org.apache.commons.io.IOUtils;
 import org.junit.Ignore;
 import org.junit.Test;

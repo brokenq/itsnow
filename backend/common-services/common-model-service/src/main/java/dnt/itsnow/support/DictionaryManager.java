@@ -2,12 +2,12 @@ package dnt.itsnow.support;
 
 import dnt.itsnow.annotation.Dictionary;
 import dnt.itsnow.exception.DictionaryException;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.service.Pageable;
-import dnt.itsnow.platform.util.DefaultPage;
+import net.happyonroad.platform.service.Page;
+import net.happyonroad.platform.service.Pageable;
+import net.happyonroad.platform.util.DefaultPage;
 import dnt.itsnow.repository.DictionaryRepository;
 import dnt.itsnow.service.DictionaryService;
-import dnt.spring.Bean;
+import net.happyonroad.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

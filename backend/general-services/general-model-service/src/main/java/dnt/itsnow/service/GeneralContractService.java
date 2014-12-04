@@ -6,7 +6,7 @@ package dnt.itsnow.service;
 import dnt.itsnow.model.Account;
 import dnt.itsnow.model.Contract;
 import dnt.itsnow.model.ContractDetail;
-import dnt.itsnow.platform.service.ServiceException;
+import net.happyonroad.platform.service.ServiceException;
 
 /**
  * <h1>一般性合同服务</h1>

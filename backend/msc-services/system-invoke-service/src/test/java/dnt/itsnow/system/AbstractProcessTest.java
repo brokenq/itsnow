@@ -3,8 +3,8 @@
  */
 package dnt.itsnow.system;
 
-import dnt.util.NamedThreadFactory;
-import dnt.util.StringUtils;
+import net.happyonroad.util.NamedThreadFactory;
+import net.happyonroad.util.StringUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.After;

@@ -4,8 +4,8 @@
 package dnt.itsnow.support;
 
 import dnt.itsnow.model.Sequence;
-import dnt.itsnow.platform.support.AbstractAutoNumberService;
-import dnt.itsnow.platform.util.NumberRule;
+import net.happyonroad.platform.support.AbstractAutoNumberService;
+import net.happyonroad.platform.util.NumberRule;
 import dnt.itsnow.repository.SequenceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.Lifecycle;

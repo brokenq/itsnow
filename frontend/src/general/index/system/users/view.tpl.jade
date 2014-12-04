@@ -17,9 +17,9 @@ mixin formField(label, value)
 mixin tableForm1(auth)
   tr(ng-repeat="group in groups")
     td #{auth}
-//mixin tableForm2(auth)
-//  tr(ng-repeat="role in roles")
-//    td #{auth}
+mixin tableForm2(auth)
+  tr(ng-repeat="role in roles")
+    td #{auth}
 mixin tableForms(auth)
   tr
     td #{auth}
@@ -43,12 +43,12 @@ mixin tableForms(auth)
           tr
             th 组名
           +tableForm1('{{group.name}}')
-    //+formGroup()
-    //  +label('用户角色')(class="col-md-8")
-    //    table.table.table-striped.table-bordered.table-condensed
-    //      tr
-    //        th 角色名
-    //      +tableForm2('{{role.name}}')
+    +formGroup()
+      +label('用户角色')(class="col-md-8")
+        table.table.table-striped.table-bordered.table-condensed
+          tr
+            th 角色名
+          +tableForm2('{{role.name}}')
     //+formGroup()
     //  +label('所属账户')
     //    +table()

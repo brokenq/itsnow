@@ -6,12 +6,12 @@ package dnt.itsnow.support;
 import dnt.itsnow.exception.ItsnowHostException;
 import dnt.itsnow.exception.SystemInvokeException;
 import dnt.itsnow.model.*;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.util.DefaultPage;
-import dnt.itsnow.platform.util.PageRequest;
+import net.happyonroad.platform.service.Page;
+import net.happyonroad.platform.util.DefaultPage;
+import net.happyonroad.platform.util.PageRequest;
 import dnt.itsnow.repository.ItsnowHostRepository;
 import dnt.itsnow.service.ItsnowHostService;
-import dnt.util.StringUtils;
+import net.happyonroad.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -131,6 +131,7 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     public boolean checkPassword(String host, String username, String password) throws ItsnowHostException {
         logger.debug("Checking {}@{} password availability", username, host);
         SystemInvocation checkJob = translator.checkHostUser(host, username, password);
+        checkJob.setId("check-" + username + "-password-of-" + host);
         String jobId = invokeService.addJob(checkJob);
         try {
             int code = invokeService.waitJobFinished(jobId);

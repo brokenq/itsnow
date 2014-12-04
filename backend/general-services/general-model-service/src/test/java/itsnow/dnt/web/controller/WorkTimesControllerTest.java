@@ -1,12 +1,12 @@
 package itsnow.dnt.web.controller;
 
 import dnt.itsnow.model.WorkTime;
-import dnt.itsnow.platform.util.DefaultPage;
-import dnt.itsnow.platform.util.PageRequest;
+import net.happyonroad.platform.util.DefaultPage;
+import net.happyonroad.platform.util.PageRequest;
 import dnt.itsnow.service.CommonUserService;
 import dnt.itsnow.service.WorkTimeService;
 import dnt.itsnow.test.controller.SessionSupportedControllerTest;
-import dnt.support.JsonSupport;
+import net.happyonroad.support.JsonSupport;
 import itsnow.dnt.config.WorkTimesControllerConfig;
 import org.junit.After;
 import org.junit.Before;

@@ -1,3 +1,6 @@
+/**
+ * @author XiongJie, Date: 14-7-30
+ */
 package dnt.itsnow.support;
 
 import dnt.itsnow.exception.AccountException;
@@ -5,14 +8,14 @@ import dnt.itsnow.exception.ContractException;
 import dnt.itsnow.model.Account;
 import dnt.itsnow.model.Contract;
 import dnt.itsnow.model.MspAccount;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.service.Pageable;
-import dnt.itsnow.platform.service.ServiceException;
-import dnt.itsnow.platform.util.DefaultPage;
+import net.happyonroad.platform.service.Page;
+import net.happyonroad.platform.service.Pageable;
+import net.happyonroad.platform.service.ServiceException;
+import net.happyonroad.platform.util.DefaultPage;
 import dnt.itsnow.repository.CommonContractRepository;
 import dnt.itsnow.service.CommonAccountService;
 import dnt.itsnow.service.CommonContractService;
-import dnt.spring.Bean;
+import net.happyonroad.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

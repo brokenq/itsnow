@@ -5,11 +5,10 @@ package dnt.itsnow.config;
 
 import dnt.itsnow.support.DefaultSystemInvoker;
 import dnt.itsnow.support.SystemInvokeManager;
-import dnt.util.NamedThreadFactory;
+import net.happyonroad.util.NamedThreadFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 

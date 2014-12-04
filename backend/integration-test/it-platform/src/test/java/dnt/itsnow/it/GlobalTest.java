@@ -4,7 +4,7 @@
 package dnt.itsnow.it;
 
 import dnt.itsnow.model.CsrfToken;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 
