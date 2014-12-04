@@ -74,6 +74,7 @@ angular.module('Service.Catalog', [])
           )
       $scope.tableParams = new NgTable(angular.extend($scope.options, $location.search()), args)
       $scope.selection = {checked: false, items: {}, parent: {}}
+      $scope.tableParams.reload()
       $scope.getCatalogBySn = (sn)->
         for catalog in $scope.catalogs
           return catalog if catalog.sn is sn
@@ -163,10 +164,13 @@ angular.module('Service.Catalog', [])
             , (resp)->
               feedback.error("设置公共服务目录" + catalog.title+ "失败", resp)
             )
-        feedback.success("设置公共服务目录完成！")
         $state.go "catalog.list"
+        feedback.success("设置公共服务目录完成！")
+
+
       $scope.$watch 'selection.checked', (value)->
         angular.forEach $scope.catalogs, (catalog)->
+          $scope.selection.items[catalog.sn] = value if angular.isDefined(catalog.sn)
           angular.forEach catalog.items, (item)->
             $scope.selection.items[item.sn] = value if angular.isDefined(item.sn)
   ])
@@ -206,6 +210,7 @@ angular.module('Service.Catalog', [])
               , (resp)->
                 feedback.error("设置公共服务目录项" + item.title + "失败", resp)
               )
+        $state.go "catalog.list"
       $scope.$watch 'selection.checked', (value)->
         angular.forEach $scope.catalogs, (catalog)->
           $scope.selection.items[catalog.sn] = value if angular.isDefined(catalog.sn)
