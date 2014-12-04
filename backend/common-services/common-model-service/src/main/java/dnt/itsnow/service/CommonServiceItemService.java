@@ -35,6 +35,13 @@ public interface CommonServiceItemService {
     PublicServiceItem findBySn(String sn);
 
     /**
+     * <h2>根据title查找服务项</h2>
+     * @param title 标题
+     * @return 服务项
+     */
+    PublicServiceItem findByTitle(String title);
+
+    /**
      * <h2>根据帐户ID查找该帐户的公共服务项</h2>
      *
      * @param accountId 帐户编号
