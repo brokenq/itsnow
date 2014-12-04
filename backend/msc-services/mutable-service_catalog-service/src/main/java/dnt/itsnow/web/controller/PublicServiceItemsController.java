@@ -121,6 +121,32 @@ public class PublicServiceItemsController extends SessionSupportController<Publi
         logger.info("Added service item {} of Account:{}",isn,accountId);
     }
 
+    /**
+     * <h2>检查服务项title是否有效</h2>
+     * <p/>
+     * 主要检查服务项的名称是否唯一；
+     * @param title 服务项标题
+     */
+    @RequestMapping("checkTitle")
+    public void checkTitle(@RequestParam(value = "title") String title){
+        PublicServiceItem item = publicServiceItemService.findByTitle(title);
+        if(item != null)
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate item title: " +title);
+    }
+
+    /**
+     * <h2>检查服务项sn是否有效</h2>
+     * <p/>
+     * 主要检查服务项的sn是否唯一；
+     * @param sn 服务项sn
+     */
+    @RequestMapping("checkSn")
+    public void checkSn(@RequestParam(value = "sn") String sn){
+        PublicServiceItem item = publicServiceItemService.findBySn(sn);
+        if(item != null)
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate item sn: " +sn);
+    }
+
     @BeforeFilter
     public void initServiceCatalog(@PathVariable("sn") String catalogSn){
         serviceCatalog = publicServiceCatalogService.findBySn(catalogSn);

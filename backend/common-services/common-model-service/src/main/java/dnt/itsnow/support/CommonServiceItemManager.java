@@ -47,6 +47,16 @@ public class CommonServiceItemManager extends Bean implements CommonServiceItemS
     }
 
     @Override
+    public PublicServiceItem findByTitle(String title) {
+        List<PublicServiceItem> items = getCommonServiceItemList();
+        for(PublicServiceItem item:items){
+            if(item.getTitle().equals(title))
+                return item;
+        }
+        return null;
+    }
+
+    @Override
     public List<PublicServiceItem> findByAccountId(Long accountId) {
         return commonServiceItemRepository.findByAccountId(accountId);
     }
