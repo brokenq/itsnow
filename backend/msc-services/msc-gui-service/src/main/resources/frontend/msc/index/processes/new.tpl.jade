@@ -1,0 +1,12 @@
+-var readonly = false
+//- include the form mixins
+include /lib/mixins/form
+
+h2 新增 进程
+
++form("newProcessForm")(ng-submit="create()")
+  include /msc/index/processes/_form.jade
+
+  +action_bar
+    +action_submit("创建")
+    +action_cancel("取消")(ui-sref="processes.list")

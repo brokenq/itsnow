@@ -1,0 +1,68 @@
+mixin blocks(title)
+  h2 #{title}
+  hr
+  block
+mixin formGroup()
+  .form-group
+    block
+mixin formField(label, value)
+  label.control-label.col-md-2 #{label}:
+  div()&attributes(attributes)
+    input.form-control(type="text", ng-model="process.#{value}", readonly)
+mixin textarea(label, value)
+  label.control-label.col-md-2 #{label}:
+  div()&attributes(attributes)
+    textarea.form-control(id="process_#{value}", ng-model="process.#{value}", rows='4', readonly)
+mixin button(label, action)
+  button.btn.btn-primary.no-border(type='button', ng-click="#{action}")&attributes(attributes) #{label}
+    block
+mixin buttonGroup(label, href)
+  li(role="presentation")
+    a(role="menuitem", tabindex="-1", href="#{href}", target="_blank") #{label}
+mixin tab_li(id, path, label)
+  li(id="#{id}")&attributes(attributes)
+    a(data-toggle="tab", href="#{path}") #{label}
+mixin tab_pane(linkId, model, log)
+  .tab-pane.fade(id="#{linkId}")&attributes(attributes)
+    pre(id="process_#{model}", class="log") #{log}
+
+.form-horizontal
+  +blocks("进程信息")
+    +formGroup()
+      +formField("主机地址", "host.address")(class="col-md-3")
+      +formField("进程标识", "name")(class="col-md-3")
+    +formGroup()
+      +formField("工作目录", "wd")(class="col-md-8")
+    +formGroup()
+      +textarea("配置属性", "display.configuration")(class="col-md-8")
+  +blocks("数据库信息")
+    +formGroup()
+      +formField("数据库名称", "schema.name")(class="col-md-8")
+    +formGroup()
+      +textarea("数据库配置", "display.schema.configuration")(class="col-md-8")
+  +blocks("运行信息")
+    +formGroup()
+      +formField("进程ID(PID)", "pid")(class="col-md-3")
+      +formField("进程状态", "display.status")(class="col-md-3")
+    +formGroup()
+      .tabbable
+        ul.nav.nav-tabs
+          +tab_li("creation_log_li", "{{path}}#creation_log", "部署记录")
+          +tab_li("start_log_li", "{{path}}#start_log", "启动记录")
+          +tab_li("stop_log_li", "{{path}}#stop_log", "停止记录")
+        .tab-content
+          +tab_pane("creation_log", "creationLog", "{{process.creationLog}}")
+          +tab_pane("start_log", "startLog", "{{process.startLog}}")
+          +tab_pane("stop_log", "stopLog", "{{process.stopLog}}")
+    +formGroup()
+      .col-md-1.col-md-offset-4
+        +button("启动", "start()")(id="startBtn", class="hidden")
+        +button("取消启动", "cancel('starting')")(id="cancelStartingBtn", class="hidden")
+        +button("停止", "stop()")(id="stopBtn", class="hidden")
+        +button("取消停止", "cancel('stopping')")(id="cancelStoppingBtn", class="hidden")
+      .col-md-1.col-md-offset-2
+        +button('访问', "")(id="accessButton", class="dropdown-toggle", data-toggle="dropdown")
+          span.caret
+        ul.dropdown-menu(role="menu", aria-labelledby="dropdownMenu3")
+          +buttonGroup('直接访问','{{ipUrl}}')
+          +buttonGroup('通过域名访问','{{domainUrl}}')
