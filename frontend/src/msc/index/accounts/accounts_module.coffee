@@ -137,7 +137,7 @@ angular.module('MscIndex.Accounts', [])
 #    commonService.watchSelection($scope.selection, $scope.cacheService.records, "sn")
 
     $scope.manuallyAssign = (account)->
-      $state.go 'processes.new', { "accountSn": "#{account.sn}" }
+      $state.go 'processes.new_with_sn', { "accountSn": "#{account.sn}" }
   ])
   .controller('AccountViewCtrl', ['$scope', '$stateParams', ($scope, $stateParams) ->
     account = $scope.cacheService.find $stateParams.sn, true

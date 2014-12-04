@@ -175,6 +175,7 @@ public class ItsnowHostsController extends SessionSupportController<ItsnowHost>{
         List<String> body = new LinkedList<String>();
         offset = hostService.follow(currentHost, invocationId, offset, body);
         response.setHeader("offset", String.valueOf(offset));
+        response.setHeader("status", currentHost.getStatus().toString());
         Map<String, String> map = new HashMap<String, String>();
         map.put("logs", StringUtils.join(body, "\n"));
         return map;

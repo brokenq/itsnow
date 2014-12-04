@@ -108,14 +108,7 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
         deployJob.setId(DEPLOY_PROCESS_PRFIX + creating.getName());
         deployJob.setUserFlag(DEPLOY_FLAG);
         String invocationId = invokeService.addJob(deployJob);
-        try {
-            //因为部署一个新系统是一件比较快速的事情，所以设计为
-            // 任务完成才会返回，如果任务失败，则抛出异常
-            invokeService.waitJobFinished(invocationId);
-        } catch (SystemInvokeException e) {
-            throw new ItsnowProcessException("Can't deploy itsnow process for " + creating, e);
-        }
-        creating.setStatus(ProcessStatus.Stopped);
+        creating.setStatus(ProcessStatus.Deploying);
         creating.creating();
         creating.setProperty(CREATE_INVOCATION_ID, invocationId);
         repository.create(creating);
@@ -153,8 +146,13 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
         ItsnowProcess process = autoNew(account);
         updateHost(process.getHost(), process);
         // Create it first
-        create(process);
+        process = create(process);
         // Then start it
+        try {
+            invokeService.waitJobFinished(process.getProperty(DEPLOY_INVOCATION_ID));
+        } catch (SystemInvokeException e) {
+            throw new ItsnowProcessException("Can't deploy itsnow process for " + process, e);
+        }
         start(process);
         logger.info("Auto created and start the itsnow process {} for {}", process, account);
         return process;

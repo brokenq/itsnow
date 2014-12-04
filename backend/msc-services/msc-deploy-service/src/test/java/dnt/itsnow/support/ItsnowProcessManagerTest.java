@@ -85,7 +85,7 @@ public class ItsnowProcessManagerTest {
     public void testCreate() throws Exception {
         String jobId = "create-process-job-id";
         expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
-        expect(systemInvokeService.waitJobFinished(jobId)).andReturn(0) ;
+//        expect(systemInvokeService.waitJobFinished(jobId)).andReturn(0) ;
         repository.create(process);
         expectLastCall().once();
 
@@ -241,7 +241,7 @@ public class ItsnowProcessManagerTest {
 
         String jobId = "create-process-job-id";
         expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
-        expect(systemInvokeService.waitJobFinished(jobId)).andReturn(0) ;
+//        expect(systemInvokeService.waitJobFinished(jobId)).andReturn(0) ;
         repository.create(isA(ItsnowProcess.class));
         expectLastCall().once();
 

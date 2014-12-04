@@ -12,8 +12,13 @@ angular.module('MscIndex.Processes', [])
       templateUrl: 'processes/list.tpl.jade'
       controller: 'ProcessListCtrl',
       data: {pageTitle: '进程列表'}
-    $stateProvider.state 'processes.new',
+    $stateProvider.state 'processes.new_with_sn',
       url: '/new/{accountSn}',
+      templateUrl: 'processes/new.tpl.jade'
+      controller: 'ProcessNewCtrl',
+      data: {pageTitle: '新增进程'}
+    $stateProvider.state 'processes.new',
+      url: '/new',
       templateUrl: 'processes/new.tpl.jade'
       controller: 'ProcessNewCtrl',
       data: {pageTitle: '新增进程'}
@@ -156,7 +161,11 @@ angular.module('MscIndex.Processes', [])
           $("#process_host").val(JSON.stringify(getHostById process.host.id)).trigger("change")
           $("#process_schema").val(JSON.stringify(process.schema)).trigger("change")
 
-    $http.get("/admin/api/accounts/#{$stateParams.accountSn}").success (account)-> $scope.account = account
+    if $stateParams.accountSn?
+      $http.get("/admin/api/accounts/#{$stateParams.accountSn}").success (account)->
+        $scope.account = account
+        $("#account_sn").val(account.sn).trigger("change")
+        autoNew(account.sn)
 
     $scope.create = ->
       $scope.submited = true
@@ -233,7 +242,7 @@ angular.module('MscIndex.Processes', [])
 
       # access url
       $scope.ipUrl = "#{window.location.protocol}//#{process.host.address}:#{processConfig['http.port']}"
-      $scope.domainUrl = "#{window.location.protocol}//#{account.domain}#{window.location.host.replace(/^msc\./,'.')}"
+      $scope.domainUrl = "#{window.location.protocol}//#{process.account.domain}#{window.location.host.replace(/^msc\./,'.')}"
 
       # toggle action buttons
       toggleButton = (status)->
