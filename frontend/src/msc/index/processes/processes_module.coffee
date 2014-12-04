@@ -242,7 +242,7 @@ angular.module('MscIndex.Processes', [])
             show $("#stopBtn")
             switch status
               when "starting", "abnormal" then disable $("#stopBtn")
-              when "stopped" then enable $("#stopBtn")
+              when "running" then enable $("#stopBtn")
 
       currentUrl = $location.url(); # judge current url change
 
