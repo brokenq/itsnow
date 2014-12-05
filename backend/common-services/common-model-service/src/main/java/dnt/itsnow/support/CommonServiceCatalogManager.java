@@ -116,7 +116,6 @@ public class CommonServiceCatalogManager extends Bean implements CommonServiceCa
     public List<PublicServiceCatalog> findByAccountId(Long accountId) {
         List<PublicServiceItem> items = commonServiceItemRepository.findByAccountId(accountId);
         List<PublicServiceCatalog> catalogs = commonServiceCatalogRepository.findByAccountId(accountId);
-        formatServiceCatalogs(catalogs);
         List<PublicServiceCatalog> treeCatalogs = this.getTreeList(catalogs);
         for(PublicServiceItem item:items){
             for(PublicServiceCatalog catalog:treeCatalogs){
@@ -130,6 +129,7 @@ public class CommonServiceCatalogManager extends Bean implements CommonServiceCa
                 }
             }
         }
+        formatServiceCatalogs(treeCatalogs);
         return treeCatalogs;
     }
 
@@ -158,7 +158,6 @@ public class CommonServiceCatalogManager extends Bean implements CommonServiceCa
         List<ServiceCatalog> treeTable = new LinkedList<ServiceCatalog>();
 
         for (ServiceCatalog psi : serviceCatalogs) {
-            formatServiceCatalog((PublicServiceCatalog) psi);
             treeTable.add(psi);
             loop(treeTable, psi);
         }
@@ -168,7 +167,6 @@ public class CommonServiceCatalogManager extends Bean implements CommonServiceCa
     private void loop(List<ServiceCatalog> treeTable, ServiceCatalog psi) {
         if (psi.getChildren() != null && psi.getChildren().size() > 0) {
             for (ServiceCatalog child : psi.getChildren()) {
-                formatServiceCatalog((PublicServiceCatalog) child);
                 treeTable.add(child);
                 loop(treeTable, child);
             }
@@ -180,8 +178,11 @@ public class CommonServiceCatalogManager extends Bean implements CommonServiceCa
         ServiceCatalog  serviceCatalog=commonServiceCatalogRepository.findBySn(sn);
         List<ServiceCatalog> list=new ArrayList<ServiceCatalog>();
         list.add(serviceCatalog);
-        PublicServiceCatalog publicServiceCatalog=commonServiceCatalogRepository.findBySn(sn);
-        list.addAll(publicServiceCatalog.getChildren());
-        return buildTreeTable(list);
+        list.addAll(buildTreeTable(serviceCatalog.getChildren()));
+        for (ServiceCatalog psi : list) {
+            formatServiceCatalog((PublicServiceCatalog) psi);
+        }
+       return list;
+
     }
 }
