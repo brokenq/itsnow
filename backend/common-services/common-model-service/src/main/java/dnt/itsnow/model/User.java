@@ -70,7 +70,7 @@ public class User extends ConfigItem
     }
 
     @NotBlank
-    @Length(min = 4, max = 20)
+    @Length(min = 2, max = 20)
     public String getUsername() {
         return getName();
     }

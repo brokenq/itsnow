@@ -74,19 +74,11 @@ angular.module('Service.Catalog', [])
           )
       $scope.tableParams = new NgTable(angular.extend($scope.options, $location.search()), args)
       $scope.selection = {checked: false, items: {}, parent: {}}
-      $scope.tableParams.reload()
       $scope.getCatalogBySn = (sn)->
         for catalog in $scope.catalogs
           return catalog if catalog.sn is sn
       $scope.delete = ->
         angular.forEach $scope.catalogs, (catalog)->
-          if $scope.selection.items[catalog.sn]
-            $scope.AccountServiceCatalogAddRemove .remove({sn: catalog.sn}, ->
-              $scope.tableParams.reload()
-              feedback.success("删除公共服务目录" + catalog.title+ "成功")
-            , (resp)->
-              feedback.error("删除公共服务目录" + catalog.title+ "失败", resp)
-            )
           angular.forEach catalog.items, (item)->
             if $scope.selection.items[item.sn]
               $scope.AccountServiceItem.remove({isn: item.sn}, ->
@@ -95,6 +87,13 @@ angular.module('Service.Catalog', [])
               , (resp)->
                 feedback.error("删除公共服务目录项" + item.title + "失败", resp)
               )
+          if $scope.selection.items[catalog.sn]
+            $scope.AccountServiceCatalogAddRemove .remove({sn: catalog.sn}, ->
+              $scope.tableParams.reload()
+              feedback.success("删除公共服务目录" + catalog.title+ "成功")
+            , (resp)->
+              feedback.error("删除公共服务目录" + catalog.title+ "失败", resp)
+            )
         feedback.success("删除公共服务目录完成！")
 
 
@@ -158,15 +157,24 @@ angular.module('Service.Catalog', [])
       $scope.actionService = new ActionService({watch: $scope.selection.items, mapping: $scope.getCatalogBySn})
       $scope.update = ->
         angular.forEach $scope.catalogs, (catalog)->
+          angular.forEach catalog.items, (item)->
+            if $scope.selection.items[item.sn]
+              $scope.AccountServiceItem.save({isn: item.sn}, ->
+                $state.go "catalog.list"
+                feedback.success("设置公共服务目录项" + item.title + "成功")
+
+              , (resp)->
+                feedback.error("设置公共服务目录项" + item.title + "失败", resp)
+              )
           if $scope.selection.items[catalog.sn]
             $scope.AccountServiceCatalogAddRemove .save({sn: catalog.sn}, ->
+              $state.go "catalog.list"
               feedback.success("设置公共服务目录" + catalog.title+ "成功")
             , (resp)->
               feedback.error("设置公共服务目录" + catalog.title+ "失败", resp)
             )
-        $state.go "catalog.list"
-        feedback.success("设置公共服务目录完成！")
 
+        feedback.success("设置公共服务目录完成！")
 
       $scope.$watch 'selection.checked', (value)->
         angular.forEach $scope.catalogs, (catalog)->
@@ -207,13 +215,13 @@ angular.module('Service.Catalog', [])
             if $scope.selection.items[item.sn]
               $scope.AccountServiceItem.save({isn: item.sn}, ->
                 feedback.success("设置公共服务目录项" + item.title + "成功")
+                $state.go "catalog.list"
               , (resp)->
                 feedback.error("设置公共服务目录项" + item.title + "失败", resp)
               )
-        $state.go "catalog.list"
+
       $scope.$watch 'selection.checked', (value)->
         angular.forEach $scope.catalogs, (catalog)->
-          $scope.selection.items[catalog.sn] = value if angular.isDefined(catalog.sn)
           angular.forEach catalog.items, (item)->
             $scope.selection.items[item.sn] = value if angular.isDefined(item.sn)
   ])
