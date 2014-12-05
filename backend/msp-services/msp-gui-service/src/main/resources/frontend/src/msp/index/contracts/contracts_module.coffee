@@ -108,7 +108,6 @@ angular.module('MspIndex.Contracts', [])
 .controller('ContractMyListCtrl',
   ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'SelectionService', 'ContractService',\
     ($scope, $location, $log, NgTable, ActionService, SelectionService, contractService) ->
-      $log.log "Initialized the Contracts list controller"
 
       args =
         total: 0,
@@ -126,16 +125,17 @@ angular.module('MspIndex.Contracts', [])
 
 .controller('ContractViewCtrl', ['$scope', '$stateParams', '$log', '$filter', 'ContractService',
     ($scope, $stateParams, $log, $filter, contractService) ->
+
       contractService.get({sn: $stateParams.sn}).$promise
       .then (data)->
         $scope.contract = data
         $scope.contract.createdAtFMT = $filter('date')($scope.contract.createdAt, 'yyyy-MM-dd HH:mm:ss')
         $scope.contract.statusname = $filter('formatContractStatus')($scope.contract.status)
-      $log.log "Initialized the Contract View controller on: " + JSON.stringify($scope.contract)
   ])
 
 .controller('ContractAccountViewCtrl', ['$scope', '$stateParams', '$log',
     ($scope, $stateParams, $log) ->
+
       $scope.contract = $scope.cacheService.find $stateParams.sn, true
       $scope.account = $scope.contract.msuAccount
       $log.log "Initialized the Contract Account View controller on: " + JSON.stringify($scope.account)
@@ -146,12 +146,12 @@ angular.module('MspIndex.Contracts', [])
       $log.log "Initialized the Contract edit controller"
 
       $scope.contract = $scope.cacheService.find $stateParams.sn, true
-      $scope.contract.users=[]
+      $scope.contract.mspUsers=[]
 
-      #查询与本系统签订合同的MSP用户
+      #查询与MSU签订合同的MSP用户
       roleService.getUsers (data)->
         $scope.mspContractUsers = data
-        contractService.getLoginUser $scope.contract, (data)->
+        contractService.getLoginUser {sn:$scope.contract.sn}, (data)->
           for mspContractUser in $scope.mspContractUsers
             for loginUser in data
               mspContractUser.ticked =true if mspContractUser.id is loginUser.id
@@ -165,7 +165,7 @@ angular.module('MspIndex.Contracts', [])
           user ={}
           user.id = mspContractUser.id
           if mspContractUser.ticked is true
-            $scope.contract.users.push user
+            $scope.contract.mspUsers.push user
 
         contractService.update($scope.contract, () ->
           feedback.success "批准MSP用户登录操作成功"

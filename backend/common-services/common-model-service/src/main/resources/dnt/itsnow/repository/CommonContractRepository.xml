@@ -5,7 +5,10 @@
 <mapper namespace="dnt.itsnow.repository.CommonContractRepository">
 
     <sql id="select">
-        SELECT * FROM itsnow_msc.contracts
+        SELECT c.*
+        FROM   itsnow_msc.contracts c
+        LEFT JOIN itsnow_msc.contract_records cr
+        ON c.id = cr.contract_id
     </sql>
 
     <sql id="page">
@@ -19,37 +22,55 @@
     </sql>
 
     <select id="findAll" resultType="Contract">
-        <include refid="select"/>
+        SELECT * FROM itsnow_msc.contracts
         <include refid="page"/>
     </select>
 
     <select id="findAllByMsuAccountId" resultType="Contract">
-        <include refid="select"/>
-        WHERE msu_account_id = #{msuId}
+        SELECT * FROM itsnow_msc.contracts WHERE msu_account_id = #{msuId}
         <include refid="page"/>
     </select>
 
     <!--MSP模块邀约管理-->
     <select id="findAllByMspDraft" resultType="Contract">
-        <include refid="select"/>
-        <where>
-          (msp_account_id = #{mspId} OR msp_account_id is null) AND status in ('Draft','Purposed')
-        </where>
+        SELECT * FROM itsnow_msc.contracts
+        WHERE status IN ( 'Draft', 'Purposed' )
         <include refid="page"/>
     </select>
 
     <!--MSP模块我的合约-->
     <select id="findAllByMspAccountId" resultType="Contract">
         <include refid="select"/>
-        <where>
-          msp_account_id = #{mspId} AND status in ('Approved','Rejected')
-        </where>
+        WHERE cr.msp_account_id = #{mspId}
+        AND cr.status IN ('Approved','Rejected')
         <include refid="page"/>
     </select>
 
+    <select id="countByMspAccountId" resultType="Long">
+        SELECT count(0)
+        FROM   itsnow_msc.contracts c
+        LEFT JOIN itsnow_msc.contract_records cr
+        ON c.id = cr.contract_id
+        WHERE cr.msp_account_id = #{mspId}
+        AND cr.status IN ('Approved','Rejected')
+    </select>
+
     <select id="findBySn" resultMap="contractResult">
-        <include refid="select"/>
-        WHERE sn = #{sn}
+        SELECT * FROM itsnow_msc.contracts WHERE sn = #{sn}
+    </select>
+
+    <select id="findMspUserById" resultMap="mspUserResult">
+        SELECT u.*, cu.access
+        FROM itsnow_msc.contract_users cu
+        LEFT JOIN itsnow_msc.users u ON cu.msp_user_id = u.id
+        WHERE cu.contract_id = #{id}
+    </select>
+
+    <select id="findMspAccountById" resultMap="mspAccountResult">
+        SELECT a.*, cr.status AS contract_status
+        FROM itsnow_msc.contract_records cr
+        LEFT JOIN itsnow_msc.accounts a ON cr.msp_account_id = a.id
+        WHERE cr.contract_id = #{id}
     </select>
 
     <select id="selectDetails" resultType="ContractDetail">
@@ -63,6 +84,15 @@
     <resultMap id="contractResult" type="Contract" autoMapping="true">
         <id property="id" column="id"/>
         <collection property="details" ofType="ContractDetail" column="id" select="selectDetails"/>
+    </resultMap>
+
+    <resultMap id="mspAccountResult" type="ContractMspAccount" autoMapping="true">
+        <id property="id" column="msp_account_id"/>
+        <id property="contractStatus" column="contract_status"/>
+    </resultMap>
+
+    <resultMap id="mspUserResult" type="ContractMspUser" autoMapping="true">
+        <id property="id" column="msp_user_id"/>
     </resultMap>
 
 </mapper>

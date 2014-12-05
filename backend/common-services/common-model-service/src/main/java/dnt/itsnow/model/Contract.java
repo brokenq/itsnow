@@ -17,30 +17,40 @@ import java.util.List;
  */
 public class Contract extends Record {
 
-    // 合同编号
-    @NotBlank
-    private String sn;
     // 合同甲方，服务采购方
     private Long msuAccountId;
     // @JsonIgnore
     private MsuAccount msuAccount;
-    //合同乙方，服务供应方
-    private Long mspAccountId;
-    // @JsonIgnore
-    private MspAccount mspAccount;
+    // 合同编号
+    @NotBlank
+    private String sn;
+    // 合同名称
+    private String title;
+    // 合同类型（从数据字典中取）
+    private String type;
     // 合同状态
     private ContractStatus status;
     //合同明细
     private List<ContractDetail> details;
-    // 与MSU签订合同的MSP用户列表，其中包含是否允许登录MSU信息
-    private List<User> users;
+    // 应约此合同的MSP用户列表，其中包含是否允许登录MSU信息
+    private List<ContractMspUser> mspUsers;
+    // 应约此合同的MSP账户列表，其中包含账户对此合同的操作信息
+    private List<ContractMspAccount> mspAccounts;
 
-    public List<User> getUsers() {
-        return users;
+    public List<ContractMspAccount> getMspAccounts() {
+        return mspAccounts;
     }
 
-    public void setUsers(List<User> users) {
-        this.users = users;
+    public void setMspAccounts(List<ContractMspAccount> mspAccounts) {
+        this.mspAccounts = mspAccounts;
+    }
+
+    public List<ContractMspUser> getMspUsers() {
+        return mspUsers;
+    }
+
+    public void setMspUsers(List<ContractMspUser> mspUsers) {
+        this.mspUsers = mspUsers;
     }
 
     public String getSn() {
@@ -59,14 +69,6 @@ public class Contract extends Record {
         this.msuAccountId = msuAccountId;
     }
 
-    public Long getMspAccountId() {
-        return mspAccountId;
-    }
-
-    public void setMspAccountId(Long mspAccountId) {
-        this.mspAccountId = mspAccountId;
-    }
-
     public MsuAccount getMsuAccount() {
         return msuAccount;
     }
@@ -75,20 +77,28 @@ public class Contract extends Record {
         this.msuAccount = msuAccount;
     }
 
-    public MspAccount getMspAccount() {
-        return mspAccount;
-    }
-
-    public void setMspAccount(MspAccount mspAccount) {
-        this.mspAccount = mspAccount;
-    }
-
     public List<ContractDetail> getDetails() {
         return details;
     }
 
     public void setDetails(List<ContractDetail> details) {
         this.details = details;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public ContractDetail getDetail(Long id) {
@@ -115,14 +125,14 @@ public class Contract extends Record {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Contract{");
-        sb.append("sn='").append(sn).append('\'');
-        sb.append(", msuAccountId=").append(msuAccountId);
+        sb.append("msuAccountId=").append(msuAccountId);
         sb.append(", msuAccount=").append(msuAccount);
-        sb.append(", mspAccountId=").append(mspAccountId);
-        sb.append(", mspAccount=").append(mspAccount);
-        sb.append(", status=").append(status);
+        sb.append(", sn='").append(sn).append('\'');
+        sb.append(", title='").append(title).append('\'');
+        sb.append(", type='").append(type).append('\'');
         sb.append(", details=").append(details);
-        sb.append(", users=").append(users);
+        sb.append(", mspUsers=").append(mspUsers);
+        sb.append(", mspAccounts=").append(mspAccounts);
         sb.append('}');
         return sb.toString();
     }

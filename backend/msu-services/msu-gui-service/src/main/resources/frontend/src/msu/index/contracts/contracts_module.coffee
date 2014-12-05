@@ -1,31 +1,44 @@
 angular.module('MsuIndex.Contracts', ['multi-select'])
+
 .config ($stateProvider, $urlRouterProvider)->
+
   $stateProvider.state 'contracts',
     url: '/contracts',
     abstract: true,
     templateUrl: 'contracts/index.tpl.jade',
     controller: 'ContractsCtrl',
     data: {pageTitle: '合同管理', default: 'contracts.list'}
+
   $stateProvider.state 'contracts.list',
     url: '/list',
     templateUrl: 'contracts/list.tpl.jade'
     controller: 'ContractListCtrl',
     data: {pageTitle: '合同列表'}
+
   $stateProvider.state 'contracts.new',
     url: '/new',
     templateUrl: 'contracts/new.tpl.jade'
     controller: 'ContractNewCtrl',
     data: {pageTitle: '新增合同'}
+
+  $stateProvider.state 'contracts.approve',
+    url: '/{sn}/approve',
+    templateUrl: 'contracts/approve.tpl.jade'
+    controller: 'ContractApproveCtrl',
+    data: {pageTitle: '批准MSP账户'}
+
   $stateProvider.state 'contracts.view',
     url: '/{sn}/view',
     templateUrl: 'contracts/view.tpl.jade'
     controller: 'ContractViewCtrl',
     data: {pageTitle: '查看合同'}
+
   $stateProvider.state 'contracts.accounts_view',
-    url: '/{sn}/account_view',
+    url: '/{sn}/account_view/{account_sn}',
     templateUrl: 'contracts/account_view.tpl.jade',
     controller: 'ContractAccountViewCtrl',
     data: {pageTitle: '查看帐户'}
+
   $urlRouterProvider.when '/contracts', '/contracts/list'
 
 .factory('ContractService', ['$resource', ($resource) ->
@@ -49,7 +62,7 @@ angular.module('MsuIndex.Contracts', ['multi-select'])
       query: {method: 'GET', params: {keyword: '@keyword'}, isArray: true}
   ])
 
-.filter 'formatContractStatus', () ->
+.filter 'formatContractStatus', ->
   (status)->
     switch(status)
       when 'Draft' then "邀约"
@@ -58,17 +71,16 @@ angular.module('MsuIndex.Contracts', ['multi-select'])
       when 'Rejected' then "已拒绝"
       else "无"
 
-.filter 'formatTime', () ->
+.filter 'formatTime', ->
   (time) ->
     date = new Date(time)
     date.toLocaleString()
 
 .controller('ContractsCtrl', ['$scope', '$state', '$log', 'Feedback', 'CacheService', 'ContractService',\
     ($scope, $state, $log, feedback, CacheService, contractService) ->
-      # frontend controller logic
-      $log.log "Initialized the Contracts controller"
+
       $scope.options =
-        page: 1, # show first page
+        page: 1   # show first page
         count: 10 # count per page
 
       $scope.cacheService = new CacheService "sn", (value)->
@@ -81,7 +93,6 @@ angular.module('MsuIndex.Contracts', ['multi-select'])
 .controller('ContractListCtrl',
   ['$scope', '$location', '$log', 'ngTableParams', 'ActionService', 'SelectionService', 'ContractService', 'Feedback',
     ($scope, $location, $log, NgTable, ActionService, SelectionService, contractService, feedback) ->
-      $log.log "Initialized the Contract list controller"
 
       args =
         total: 0,
@@ -95,22 +106,6 @@ angular.module('MsuIndex.Contracts', ['multi-select'])
       $scope.contractsTable = new NgTable(angular.extend($scope.options, $location.search()), args)
       $scope.selectionService = new SelectionService($scope.cacheService.records, "sn")
       $scope.actionService = new ActionService({watch: $scope.selectionService.items, mapping: $scope.cacheService.find})
-
-      $scope.approve = (contract) ->
-        contractService.approve({sn:contract.sn}
-        , ()->
-          feedback.success "批准成功"
-          $scope.contractsTable.reload()
-        , (resp)->
-          feedback.error "批准失败", resp )
-
-      $scope.reject = (contract) ->
-        contractService.reject({sn:contract.sn}
-        , ()->
-          feedback.success "拒绝成功"
-          $scope.contractsTable.reload()
-        , (resp)->
-          feedback.error "拒绝失败", resp )
   ])
 
 .controller('ContractViewCtrl', ['$scope', '$stateParams', '$log', '$filter', 'ContractService',\
@@ -120,19 +115,16 @@ angular.module('MsuIndex.Contracts', ['multi-select'])
         $scope.contract = data
         $scope.contract.createdAtFMT = $filter('date')($scope.contract.createdAt, 'yyyy-MM-dd HH:mm:ss')
         $scope.contract.statusname = $filter('formatContractStatus')($scope.contract.status)
-      $log.log "Initialized the Contract View controller on: " + JSON.stringify($scope.contract)
   ])
 
 .controller('ContractAccountViewCtrl', ['$scope', '$stateParams', '$log', \
     ($scope, $stateParams, $log) ->
       $scope.contract = $scope.cacheService.find $stateParams.sn, true
-      $scope.account = $scope.contract.mspAccount
-      $log.log "Initialized the Contract Account View controller on: " + JSON.stringify($scope.account)
+      $scope.account = mspAccount for mspAccount in $scope.contract.mspAccounts when mspAccount.sn is $stateParams.account_sn
   ])
 
 .controller('ContractNewCtrl', ['$scope', '$state', '$log', 'Feedback', 'ContractService', 'ContractDetailService', 'ContractServiceCatalogService',\
     ($scope, $state, $log, feedback, contractService, contractDetailService, serviceCatalogService) ->
-      $log.log "Initialized the Contract New controller"
 
       #查询服务目录
       serviceCatalogService.query (data)->
@@ -146,18 +138,28 @@ angular.module('MsuIndex.Contracts', ['multi-select'])
           serviceCatalogs.push closeGroup
         $scope.serviceCatalogs = serviceCatalogs
 
-      $scope.cancel = () ->
-        $state.go 'contracts.list'
+      $scope.openDetail = ->
+        $("#bootbox").show()
 
-      $scope.create = () ->
+      $scope.closeDetail = ->
+        $("#bootbox").hide()
+
+      $scope.details = []
+      $scope.createDetail = ->
+        if !$scope.newContractDetailForm.$valid
+          return
         for serviceCatalog in $scope.serviceCatalogs
           if serviceCatalog.items?
             for item in serviceCatalog.items
               $scope.detail.itemId = item.id if item.ticked is true
-        details = []
-        details.push $scope.detail
+        $scope.details.push angular.copy $scope.detail
+        $("#bootbox").hide()
+        $scope.detail = {}
+
+      $scope.create = ->
+        $scope.submitted=true
         contractService.save($scope.contract, (data) ->
-          for detail in details
+          for detail in $scope.details
             contractDetailService.save {sn:data.sn}, detail
           feedback.success "保存合同成功"
           $state.go 'contracts.list'
@@ -166,5 +168,33 @@ angular.module('MsuIndex.Contracts', ['multi-select'])
         )
   ])
 
+.controller('ContractApproveCtrl', ['$scope', '$state', '$stateParams', '$log', 'Feedback', 'ContractService',
+    ($scope, $state, $stateParams, $log, feedback, contractService) ->
+
+      $scope.contract = $scope.cacheService.find $stateParams.sn, true
+
+      $scope.mspAccounts = $scope.contract.mspAccounts
+      mspAccount.ticked =true for mspAccount in $scope.mspAccounts when mspAccount.status is 'Approved'
+
+      $scope.approve = ->
+
+        $scope.contract.mspAccounts = []
+        for mspAccount in $scope.mspAccounts
+          account ={}
+          account.id = mspAccount.id
+          if mspAccount.ticked is true
+            account.contractStatus = 'Approved'
+          else
+            account.contractStatus = 'Rejected'
+          $scope.contract.mspAccounts.push account
+
+        contractService.approve({sn:$scope.contract.sn}, $scope.contract).$promise
+        .then(->
+            feedback.success "批准成功"
+            $state.go 'contracts.list'
+          ,(resp)->
+            feedback.error "批准失败", resp
+        )
+  ])
 
 

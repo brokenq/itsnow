@@ -16,6 +16,8 @@
 
         <typeAlias type="dnt.itsnow.model.Contract" alias="Contract"/>
         <typeAlias type="dnt.itsnow.model.ContractDetail" alias="ContractDetail"/>
+        <typeAlias type="dnt.itsnow.model.ContractMspAccount" alias="ContractMspAccount"/>
+        <typeAlias type="dnt.itsnow.model.ContractMspUser" alias="ContractMspUser"/>
 
         <typeAlias type="dnt.itsnow.model.SLA" alias="SLA"/>
         <typeAlias type="dnt.itsnow.model.SLO" alias="SLO"/>

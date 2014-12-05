@@ -18,7 +18,7 @@ angular.module('MscIndex.Contracts', [])
     controller: 'ContractViewCtrl'
     data: {pageTitle: '查看合同'}
   $stateProvider.state 'contracts.msp_accounts_view',
-    url: '/{sn}/msp_account_view',
+    url: '/{sn}/msp_accounts_view/{account_sn}',
     templateUrl: 'contracts/account_view.tpl.jade',
     controller: 'ContractMspAccountViewCtrl',
     data: {pageTitle: '查看服务商帐户'}
@@ -91,11 +91,9 @@ angular.module('MscIndex.Contracts', [])
   ])
 
 
-.controller('ContractMspAccountViewCtrl', ['$scope', '$stateParams', '$log',
-    ($scope, $stateParams, $log) ->
+.controller('ContractMspAccountViewCtrl', ['$scope', '$stateParams', ($scope, $stateParams) ->
       $scope.contract = $scope.cacheService.find $stateParams.sn, true
-      $scope.account = $scope.contract.mspAccount
-      $log.log "Initialized the Contract Account View controller on: " + JSON.stringify($scope.account)
+      $scope.account = mspAccount for mspAccount in $scope.contract.mspAccounts when mspAccount.sn is $stateParams.account_sn
   ])
 
 .controller('ContractMsuAccountViewCtrl', ['$scope', '$stateParams', '$log',

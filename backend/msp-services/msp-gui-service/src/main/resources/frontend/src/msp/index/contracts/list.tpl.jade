@@ -5,10 +5,10 @@ include /lib/mixins/list
     +button_group
       +tool_button("contractsTable.reload()", "refresh", "", "*", "", "")
     +button_group
-      +tool_button("actionService.perform(accept, $event)", "plus", "应约", "1+", "", "enable")
+      +tool_button("actionService.perform(accept, $event)", "plus", "应约", "1+", "", "")
 
   +page_table("contractsTable","selectionService")
-    +row("contract", "sn", "selectionService")(ng-class="{'enable':contract.status=='Draft'}")
+    +row("contract", "sn", "selectionService")
       td(data-title="'合同号'")
         a(ui-sref="contracts.view(contract)") {{contract.sn}}
       td(data-title="'企业帐户'")

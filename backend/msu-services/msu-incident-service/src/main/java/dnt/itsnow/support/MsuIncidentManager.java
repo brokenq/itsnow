@@ -80,14 +80,20 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService,Resou
     private ResourceLoader resourceLoader;
 
     public String getSendChannel() {
-        if(mspSn == null){
+        if (mspSn == null) {
             //find by contract
             try {
                 Contract contract = contractService.findBySn("P001");
-                Account account = accountService.findById(contract.getMspAccountId());
-                mspSn = account.getSn();
+                List<ContractMspAccount> list = contract.getMspAccounts();
+                if (list != null && !list.isEmpty()) {
+                    for (ContractMspAccount mspAccount : list) {
+                        if (ContractStatus.Approved.equals(mspAccount.getContractStatus())) {
+                            mspSn = mspAccount.getSn();
+                        }
+                    }
+                }
                 return mspSn + "-LISTENER";
-            }catch(Exception e){
+            } catch (Exception e) {
                 logger.warn(e.getMessage());
                 return null;
             }

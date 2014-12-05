@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestOperations;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,33 +33,36 @@ public class GeneralContractManager extends CommonContractManager implements Gen
     CommonUserService commonUserService;
 
     @Override
-    public Contract approve(Account account, String sn) throws ServiceException {
+    public Contract approve(Account account, Contract contract) throws ServiceException {
 
-        logger.info("Approving {}, contract sn {}", account, sn);
+        logger.info("Approving {}, contract {}", account, contract);
 
-        Contract contract = findByAccountAndSn(account, sn, true);
+        Contract persistenceContract = findByAccountAndSn(account, contract.getSn(), true);
 
-        logger.debug("Found {}", contract);
+        logger.debug("Found {}", persistenceContract);
 
         if (account.isMsu()) {
-            if (contract.getMspAccountId() == null) {
-                throw new ContractException("The contract has not yet been accept by MSP");
-            } else if (contract.isApproved()) {
+            if (persistenceContract.isApproved()) {
                 throw new ContractException("The contract has been approved by msu");
             }
         } else if (account.isMsp()) {
-            if (contract.isApproved()) {
+            if (persistenceContract.isApproved()) {
                 throw new ContractException("The contract has been approved by msp");
             }
         }
-        facade.put("/admin/api/contracts/{sn}/approve", null, contract.getSn());
-        contract = findByAccountAndSn(account, sn, true);
+        facade.put("/admin/api/contracts/{sn}/approve", contract, contract.getSn());
 
-        logger.info("Approved  {} {}", account, sn);
+        contract = findByAccountAndSn(account, contract.getSn(), true);
 
-        List<User> users = commonUserService.findUsersByAccount(account);
-        contract.setUsers(users);
-        buildRelation(contract);
+        logger.info("Approved  {} {}", account, contract.getSn());
+
+//        List<User> users = commonUserService.findUsersByAccount(account);
+//        List<ContractMspUser> mspUsers = new ArrayList<ContractMspUser>();
+//        for(User user : users){
+//            mspUsers.add((ContractMspUser)user);
+//        }
+//        contract.setMspUsers(mspUsers);
+//        buildRelation(contract);
 
         return contract;
     }
@@ -71,9 +75,9 @@ public class GeneralContractManager extends CommonContractManager implements Gen
         logger.debug("Found {}", contract);
 
         if (account.isMsu()) {
-            if (contract.getMspAccountId() == null) {
+            /*if (contract.getMspAccountId() == null) {
                 throw new ContractException("The contract has not yet been accept by MSP");
-            }
+            }*/
             //if( !contract.isApprovedByMsu() ){
             //    throw new ServiceException("The contract has been rejected by msu");
             //}
@@ -91,23 +95,22 @@ public class GeneralContractManager extends CommonContractManager implements Gen
     @Override
     public Contract bid(Account account, String sn) throws ServiceException {
 
+        logger.info("Msp bid contract:{} {}", account, sn);
+
         if (!account.isMsp()) {
             throw new ServiceException("The contract bid ,only MSP users are allowed to do this.");
         }
 
-        logger.info("Msp bid contract:{} {}", account, sn);
         Contract contract = findByAccountAndSn(account, sn, true);
 
-        if (ContractStatus.Purposed.equals(contract.getStatus())) {
+        /*if (ContractStatus.Purposed.equals(contract.getStatus())) {
             throw new ServiceException("The contract has been purposed");
-        }
+        }*/
 
         contract.setStatus(ContractStatus.Purposed);
-        contract.setMspAccountId(account.getId());
-        facade.put("/admin/api/contracts/{sn}/bid", contract, contract.getSn());
+        facade.put("/admin/api/contracts/{mspAccountId}/bid", contract, account.getId());
+
         logger.info("Msp bid contract {}", contract);
-
-
 
         return contract;
     }
@@ -140,18 +143,18 @@ public class GeneralContractManager extends CommonContractManager implements Gen
 
     @Override
     public Contract buildRelation(Contract contract) throws ServiceException {
-        logger.info("Building {}", contract.getUsers());
+        logger.info("Building {}", contract.getMspUsers());
         facade.postForEntity("/admin/api/contracts/user/relation",
                 contract, Contract.class);
-        logger.info("Built    {}", contract.getUsers());
+        logger.info("Built    {}", contract.getMspUsers());
         return contract;
     }
 
     @Override
     public Contract updateRelation(Contract contract) throws ServiceException {
-        logger.info("Updating {}", contract.getUsers());
+        logger.info("Updating {}", contract.getMspUsers());
         facade.put("/admin/api/contracts/user/relation", contract);
-        logger.info("Updated  {}", contract.getUsers());
+        logger.info("Updated  {}", contract.getMspUsers());
         return contract;
     }
 

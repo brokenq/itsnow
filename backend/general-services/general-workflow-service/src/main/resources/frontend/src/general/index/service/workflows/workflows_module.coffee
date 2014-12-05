@@ -199,7 +199,8 @@ angular.module('Service.Workflows', ['multi-select','angularFileUpload'])
             serviceCatalogs.push serviceCatalog
             if serviceCatalog.items?
               for item in serviceCatalog.items
-                item.ticked = true if item.sn is $scope.workflow.serviceItem.sn
+                if $scope.workflow.serviceItem isnt null
+                  item.ticked = true if item.sn is $scope.workflow.serviceItem.sn
                 serviceCatalogs.push item
           $scope.serviceCatalogs = serviceCatalogs
 
