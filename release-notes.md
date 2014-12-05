@@ -435,3 +435,37 @@ git@git.itsnow.com:insight/itsnow.git Rel-x.y.z 标签(tag)
 1. [msc-0.3.0](http://msc.itsnow.com/)
 2. [msu-0.3.0](http://msu.itsnow.com/)
 3. [msp-0.3.0](http://msp.itsnow.com/)
+
+0.3.1 发布说明
+=================
+
+1. 新增特性
+-----------
+
+1.   Frontend  Form典型组件-对象选择组件
+2.   Frontend  完善SelectionService功能
+3.   Frontend  msp服务目录前端重构
+4.   Frontend  创建主机时的密码校验
+5.   Backend   服务目录后台模块调整
+6.   Backend   抽取前后端平台
+7.   Backend   服务目录后台模块调整
+8.   Backend   合同模块后端修改
+
+2. 问题修复
+-----------
+1. 修复MSC，MSP，MSU前端bug
+2. 修复MSC，MSP，MSU后端bug
+
+3. 交付物地址
+--------------
+
+1. [msc-0.3.1]()
+2. [msp-0.3.1]()
+3. [msu-0.3.1]()
+
+4. 系统演示地址
+-----------
+
+1. [msc-0.3.1](http://msc.itsnow.com/) 登录用户：admin/secret
+2. [msu-0.3.1](http://msu.itsnow.com/) 登录用户：msu_admin/secret  ,  msu_user_one/secret(一线工程师)  ,  msu_user_two/secret(二线工程师)
+3. [msp-0.3.1](http://msp.itsnow.com/) 登录用户：msp_admin/secret  ,  msp_user_desk/secret(服务台)  ,  msp_user_one/secret(一线工程师)
