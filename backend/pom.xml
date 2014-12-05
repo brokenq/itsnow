@@ -134,7 +134,7 @@
         </dependency>
         <dependency>
             <groupId>org.jmock</groupId>
-            <artifactId>jmock-junit4</artifactId>
+            <artifactId>jmock</artifactId>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
