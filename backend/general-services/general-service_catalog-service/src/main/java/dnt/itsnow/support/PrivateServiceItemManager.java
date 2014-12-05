@@ -37,6 +37,16 @@ public class PrivateServiceItemManager extends CommonServiceItemManager implemen
     }
 
     @Override
+    public PrivateServiceItem findPrivateByTitle(String title){
+        List<PrivateServiceItem> items = findAllPrivate();
+        for(PrivateServiceItem item:items){
+            if(item.getTitle().equals(title))
+                return item;
+        }
+        return null;
+    }
+
+    @Override
     public PrivateServiceItem savePrivate(PrivateServiceItem privateServiceItem) {
         setPrivateServiceItemList(null);
         catalogService.setPrivateServiceCatalogList(null);

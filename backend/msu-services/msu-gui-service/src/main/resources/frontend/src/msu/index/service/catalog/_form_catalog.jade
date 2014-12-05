@@ -4,9 +4,9 @@ include /lib/mixins/form
     readonly : true | false
 +section("基本信息")
   +group("catalog", "sn","编号", "star", "服务目录编号，简单的英文字符+数字组合")
-    +input("catalog", "sn")(readonly=editReadonly, required)
+    +input("catalog", "sn")(readonly=editReadonly, required,ng-check="/api/private_service_catalogs/checkSn?sn={0}",callback="checkCallback")
   +group("catalog", "title",  "标题",   "font", "服务目录标题")
-    +input("catalog", "title")(readonly=readonly, required)
+    +input("catalog", "title")(readonly=readonly, required,ng-check="/api/private_service_catalogs/checkTitle?title={0}",callback="checkCallback")
   +group("parentCatalog", "sn", "父节点",   "th", "父节点")
     +input("parentCatalog","sn")(readonly=true)
   +group("catalog", "level", "层次",   "level", "当前所属层次")

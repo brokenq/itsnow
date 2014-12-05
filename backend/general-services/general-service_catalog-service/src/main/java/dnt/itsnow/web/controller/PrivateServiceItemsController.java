@@ -95,6 +95,33 @@ public class PrivateServiceItemsController extends SessionSupportController<Priv
         return serviceItem;
     }
 
+    /**
+     * <h2>检查服务项title是否有效</h2>
+     * <p/>
+     * 主要检查服务项的名称是否唯一；
+     * @param title 服务项标题
+     */
+    @RequestMapping("checkTitle")
+    public void checkTitle(@RequestParam(value = "title") String title){
+        PrivateServiceItem item = privateServiceItemService.findPrivateByTitle(title);
+        if(item != null)
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate item title: " +title);
+    }
+
+    /**
+     * <h2>检查服务项sn是否有效</h2>
+     * <p/>
+     * 主要检查服务项的sn是否唯一；
+     * @param sn 服务项sn
+     */
+    @RequestMapping("checkSn")
+    public void checkSn(@RequestParam(value = "sn") String sn){
+        PrivateServiceItem item = privateServiceItemService.findPrivateBySn(sn);
+        PrivateServiceCatalog catalog = privateServiceCatalogService.findPrivateBySn(sn);
+        if(item != null || catalog != null)
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate item sn: " +sn);
+    }
+
 
     @BeforeFilter
     public void initServiceCatalog(@PathVariable("sn") String catalogSn){

@@ -52,4 +52,10 @@ public interface PrivateServiceCatalogService extends CommonServiceCatalogServic
 
     void setFormattedPrivateServiceCatalogList(List<PrivateServiceCatalog> formattedPrivateServiceCatalogList);
 
+    /**
+     * 根据title查找服务目录
+     * @param title 服务目录title
+     * @return 服务目录
+     */
+    PrivateServiceCatalog findPrivateByTitle(String title);
 }
