@@ -53,24 +53,18 @@
         templateUrl: 'service/catalog/view_private_catalog.tpl.jade'
         controller: 'PrivateCatalogViewCtrl'
         data: {pageTitle: '查看服务目录'}
-      $stateProvider.state 'catalog.private.item',
-        url: '/{sn}/item'
-        templateUrl: 'service/catalog/index.tpl.jade'
-        abstract:true
-        controller: 'ItemCtrl'
-        data: {pageTitle: '服务项', default: 'catalog.private.item.view'}
-      $stateProvider.state 'catalog.private.item.new',
-        url: '/new'
+      $stateProvider.state 'catalog.private.item_new',
+        url: '/{sn}/item/new'
         templateUrl: 'service/catalog/new_item.tpl.jade'
         controller: 'PrivateItemNewCtrl'
         data: {pageTitle: '新增服务项'}
-      $stateProvider.state 'catalog.private.item.edit',
-        url: '/{isn}/edit'
+      $stateProvider.state 'catalog.private.item_edit',
+        url: '/{sn}/item/{isn}/edit'
         templateUrl: 'service/catalog/edit_item.tpl.jade'
         controller: 'PrivateItemEditCtrl'
         data: {pageTitle: '编辑服务项'}
-      $stateProvider.state 'catalog.private.item.view',
-        url: '/{isn}/view'
+      $stateProvider.state 'catalog.private.item_view',
+        url: '/{sn}/item/{isn}/view'
         templateUrl: 'service/catalog/view_private_item.tpl.jade'
         controller: 'PrivateItemViewCtrl'
         data: {pageTitle: '查看服务项'}
@@ -102,6 +96,9 @@
         $scope.PrivateServiceItem = $resource("/api/private_service_catalogs/:sn/items/:isn",{},{update:{method:"PUT",params: {sn: '@sn',isn:'@isn'}}})
         # 提交按钮是否已经执行了提交操作，false为未执行，则按钮可用
         $scope.cacheService = new CacheService("sn")
+
+        $scope.checkCallback = (resp)->
+          $log.log "check callback"
     ])
 
     .controller('ItemCtrl',['$scope', '$state', '$log',
@@ -245,16 +242,16 @@
           $state.go('catalog.private.new',{'sn':catalog.sn})
 
         $scope.create_item = (catalog)->
-          $state.go('catalog.private.item.new',{'sn':catalog.sn})
+          $state.go('catalog.private.item_new',{'sn':catalog.sn})
 
         $scope.edit = (value)->
           if($scope.selection.types[value.sn] is 'catalog')
             $state.go('catalog.private.edit',{'sn':value.sn,'action':'edit'})
           else
-            $state.go('catalog.private.item.edit',{'sn':$scope.selection.parent[value.sn],'isn':value.sn})
+            $state.go('catalog.private.item_edit',{'sn':$scope.selection.parent[value.sn],'isn':value.sn})
 
         $scope.view = (item)->
-          $state.go('catalog.item.view',{'sn':$scope.selection.parent[item.sn],'isn':item.sn})
+          $state.go('catalog.item_view',{'sn':$scope.selection.parent[item.sn],'isn':item.sn})
 
         # watch for check all checkbox
         $scope.$watch 'selection.checked', (value)->
@@ -353,7 +350,7 @@
           serviceItem = new PrivateServiceItem $scope.item
           serviceItem.$update({sn:sn,isn:isn}, ->
             feedback.success("更新服务项"+serviceItem.title+"成功");
-            $state.go('catalog.private.item.view',{sn:sn,isn:isn})
+            $state.go('catalog.private.item_view',{sn:sn,isn:isn})
           ,(resp)->
             feedback.error("更新服务项"+serviceItem.title+"失败",resp)
           )
