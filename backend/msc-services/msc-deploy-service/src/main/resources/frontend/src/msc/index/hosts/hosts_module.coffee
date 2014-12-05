@@ -125,6 +125,7 @@ angular.module('MscIndex.Hosts', [])
   .controller('HostViewCtrl', ['$scope', '$stateParams', '$http', '$interval', '$state', '$location', '$filter', \
                                ($scope,   $stateParams,   $http,   $interval,   $state,   $location,   $filter)->
     host = $scope.cacheService.find $stateParams.id, true
+    host.configuration = {} if !host.configuration?
     host.configuration.msp_version = host.configuration['msp.version'] if host.configuration['msp.version']?
     host.configuration.msu_version = host.configuration['msu.version'] if host.configuration['msu.version']?
     host.creationLog = ""
@@ -168,6 +169,7 @@ angular.module('MscIndex.Hosts', [])
   .controller('HostEditCtrl', ['$scope',  '$state',  '$stateParams', 'Feedback', \
                                ($scope,    $state,    $stateParams,   feedback)->
     host = $scope.cacheService.find $stateParams.id, true
+    host.configuration = {} if !host.configuration?
     console.log "Initialized the Host Edit controller on: #{JSON.stringify host}"
     host.configuration.msu_version = host.configuration["msu.version"]
     host.configuration.msp_version = host.configuration["msp.version"]
