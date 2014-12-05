@@ -115,7 +115,7 @@ angular.module('MscIndex.Accounts', [])
   ])
 
   .controller('AccountListCtrl', ['$scope', '$location', '$resource','$state', '$timeout', 'ngTableParams', 'ActionService', 'CommonService', 'SelectionService' ,'Feedback',\
-                                  ($scope,   $location,   $resource,  $state    $timeout,   NgTable,         ActionService,   commonService,   SelectionService,   feedback) ->
+                                  ($scope,   $location,   $resource,  $state ,   $timeout,   NgTable,         ActionService,   commonService,   SelectionService,   feedback) ->
     console.log("Initialized the Account list controller")
     Accounts = $resource("/admin/api/accounts")
     args =
