@@ -9,7 +9,7 @@ import dnt.itsnow.demo.web.exception.*;
 import dnt.itsnow.demo.web.model.LoginCredential;
 import dnt.itsnow.demo.model.Session;
 import dnt.itsnow.demo.api.SessionService;
-import dnt.util.StringUtils;
+import net.happyonroad.util.StringUtils;
 import org.apache.http.auth.BasicUserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;

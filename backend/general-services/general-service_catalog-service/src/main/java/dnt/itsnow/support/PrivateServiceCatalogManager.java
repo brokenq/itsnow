@@ -40,6 +40,16 @@ public class PrivateServiceCatalogManager extends CommonServiceCatalogManager im
     }
 
     @Override
+    public PrivateServiceCatalog findPrivateByTitle(String title){
+        List<PrivateServiceCatalog> catalogs = getPrivateServiceCatalogList();
+        for(PrivateServiceCatalog catalog:catalogs){
+            if(catalog.getTitle().equals(title))
+                return catalog;
+        }
+        return null;
+    }
+
+    @Override
     public PrivateServiceCatalog savePrivate(PrivateServiceCatalog privateServiceCatalog) {
         setPrivateServiceCatalogList(null);
         setFormattedPrivateServiceCatalogList(null);

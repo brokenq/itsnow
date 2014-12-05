@@ -22,13 +22,10 @@
     </description>
 
     <properties>
-        <version.scala>2.8.2</version.scala>
-        <version.scalate>1.5.3-scala_2.8.2</version.scalate>
-
         <version.activiti.engine>5.15.1</version.activiti.engine>
 
-        <version.component-framework>1.0.3</version.component-framework>
-        <version.components>1.0.0</version.components>
+        <version.component-framework>1.0.4</version.component-framework>
+        <version.components>1.0.1</version.components>
 
         <release.root>/opt/releases/itsnow</release.root>
         <release.dir>${release.root}/itsnow-${project.version}</release.dir>
@@ -43,7 +40,7 @@
 
     <modules>
         <module>backend</module>
-        <module>frontend</module>
+        <module>release</module>
     </modules>
 
     <build>
@@ -81,6 +78,13 @@
                 <release.dir>${release.root}/msp-${project.version}</release.dir>
             </properties>
         </profile>
+        <profile>
+            <id>with-itsnow-it</id>
+            <modules>
+                <module>integration-test</module>
+            </modules>
+        </profile>
+
     </profiles>
 
     <dependencyManagement>

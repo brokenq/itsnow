@@ -10,7 +10,7 @@ import dnt.itsnow.demo.api.SessionService;
 import dnt.itsnow.demo.model.User;
 import dnt.itsnow.demo.repository.SessionRepository;
 import net.happyonroad.spring.Bean;
-import dnt.util.StringUtils;
+import net.happyonroad.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
