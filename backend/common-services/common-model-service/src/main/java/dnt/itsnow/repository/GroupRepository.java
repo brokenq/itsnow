@@ -3,7 +3,7 @@ package dnt.itsnow.repository;
         import dnt.itsnow.model.Group;
         import dnt.itsnow.model.GroupAuthority;
         import dnt.itsnow.model.GroupUser;
-        import dnt.itsnow.platform.service.Pageable;
+        import net.happyonroad.platform.service.Pageable;
         import org.apache.ibatis.annotations.*;
 
         import java.util.List;

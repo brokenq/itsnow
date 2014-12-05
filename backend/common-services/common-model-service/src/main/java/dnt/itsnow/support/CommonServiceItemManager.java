@@ -4,7 +4,7 @@ import dnt.itsnow.model.PublicServiceItem;
 import dnt.itsnow.model.ServiceCatalog;
 import dnt.itsnow.repository.CommonServiceItemRepository;
 import dnt.itsnow.service.CommonServiceItemService;
-import dnt.spring.Bean;
+import net.happyonroad.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +44,16 @@ public class CommonServiceItemManager extends Bean implements CommonServiceItemS
     @Override
     public PublicServiceItem findBySn(String sn) {
         return commonServiceItemRepository.findBySn(sn);
+    }
+
+    @Override
+    public PublicServiceItem findByTitle(String title) {
+        List<PublicServiceItem> items = getCommonServiceItemList();
+        for(PublicServiceItem item:items){
+            if(item.getTitle().equals(title))
+                return item;
+        }
+        return null;
     }
 
     @Override

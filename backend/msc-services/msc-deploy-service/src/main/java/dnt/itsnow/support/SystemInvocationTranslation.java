@@ -6,8 +6,8 @@ package dnt.itsnow.support;
 import dnt.itsnow.model.*;
 import dnt.itsnow.service.SystemInvocationTranslator;
 import dnt.itsnow.system.Process;
-import dnt.spring.Bean;
-import dnt.util.StringUtils;
+import net.happyonroad.spring.Bean;
+import net.happyonroad.util.StringUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
 

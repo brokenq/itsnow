@@ -1,15 +1,19 @@
 package dnt.itsnow.support;
 
 import dnt.itsnow.model.PublicServiceCatalog;
+import dnt.itsnow.model.PublicServiceItem;
+import dnt.itsnow.model.ServiceCatalog;
 import dnt.itsnow.model.ServiceItem;
 import dnt.itsnow.repository.CommonServiceCatalogRepository;
+import dnt.itsnow.repository.CommonServiceItemRepository;
 import dnt.itsnow.service.CommonServiceCatalogService;
-import dnt.spring.Bean;
+import net.happyonroad.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -21,6 +25,9 @@ public class CommonServiceCatalogManager extends Bean implements CommonServiceCa
 
     @Autowired
     CommonServiceCatalogRepository commonServiceCatalogRepository;
+
+    @Autowired
+    CommonServiceItemRepository commonServiceItemRepository;
 
     private  List<PublicServiceCatalog> commonServiceCatalogList;
 
@@ -64,22 +71,33 @@ public class CommonServiceCatalogManager extends Bean implements CommonServiceCa
     private void formatServiceCatalog(PublicServiceCatalog catalog){
         int level = catalog.getLevel()-1;
         String str = "";
-        for(ServiceItem item:catalog.getItems()){
-            str = "";
-            for(int i=0;i<=level;i++)
-                str = str +"--";
-            item.setTitle(str+item.getTitle());
+        if(catalog.getItems() != null){
+            for(ServiceItem item:catalog.getItems()){
+                str = "";
+                for(int i=0;i<=level;i++)
+                    str = str +"--";
+                item.setTitle(str+item.getTitle());
+            }
         }
         str = "";
         for(int i=0;i<level;i++)
             str = str +"--";
         catalog.setTitle(str+catalog.getTitle());
-
     }
 
     @Override
     public PublicServiceCatalog findBySn(String sn) {
         return commonServiceCatalogRepository.findBySn(sn);
+    }
+
+    @Override
+    public PublicServiceCatalog findById(Long id) {
+        List<PublicServiceCatalog> list = getCommonServiceCatalogList();
+        for(PublicServiceCatalog catalog:list){
+            if(catalog.getId() == id)
+                return catalog;
+        }
+        return null;
     }
 
     public List<PublicServiceCatalog> getCommonServiceCatalogList() {
@@ -94,6 +112,37 @@ public class CommonServiceCatalogManager extends Bean implements CommonServiceCa
         this.formattedServiceCatalogList = formattedServiceCatalogList;
     }
 
+    @Override
+    public List<PublicServiceCatalog> findByAccountId(Long accountId) {
+        List<PublicServiceItem> items = commonServiceItemRepository.findByAccountId(accountId);
+        List<PublicServiceCatalog> catalogs = commonServiceCatalogRepository.findByAccountId(accountId);
+        List<PublicServiceCatalog> treeCatalogs = this.getTreeList(catalogs);
+        for(PublicServiceItem item:items){
+            for(PublicServiceCatalog catalog:treeCatalogs){
+                if(item.getCatalog().getId() == catalog.getId()) {
+                    if(catalog.getItems() == null){
+                        List<PublicServiceItem> is = new ArrayList<PublicServiceItem>();
+                        catalog.setItems(is);
+                    }
+                    catalog.getItems().add(item);
+                    break;
+                }
+            }
+        }
+        formatServiceCatalogs(treeCatalogs);
+        return treeCatalogs;
+    }
+
+    @Override
+    public PublicServiceCatalog findByTitle(String title) {
+        List<PublicServiceCatalog> list = getCommonServiceCatalogList();
+        for(PublicServiceCatalog catalog:list){
+            if(catalog.getTitle().equals(title))
+                return catalog;
+        }
+        return null;
+    }
+
     public List<PublicServiceCatalog> getFormattedServiceCatalogList() {
         if(formattedServiceCatalogList==null || formattedServiceCatalogList.isEmpty()) {
             formattedServiceCatalogList = formatServiceCatalogs(getCommonServiceCatalogList());
@@ -104,5 +153,36 @@ public class CommonServiceCatalogManager extends Bean implements CommonServiceCa
     @Override
     public void setCommonServiceCatalogList(List<PublicServiceCatalog> commonServiceCatalogList) {
         this.commonServiceCatalogList = commonServiceCatalogList;
+    }
+    private List<ServiceCatalog> buildTreeTable(List<ServiceCatalog> serviceCatalogs) {
+        List<ServiceCatalog> treeTable = new LinkedList<ServiceCatalog>();
+
+        for (ServiceCatalog psi : serviceCatalogs) {
+            treeTable.add(psi);
+            loop(treeTable, psi);
+        }
+        return treeTable;
+    }
+
+    private void loop(List<ServiceCatalog> treeTable, ServiceCatalog psi) {
+        if (psi.getChildren() != null && psi.getChildren().size() > 0) {
+            for (ServiceCatalog child : psi.getChildren()) {
+                treeTable.add(child);
+                loop(treeTable, child);
+            }
+            psi.setChildren(null);
+        }
+    }
+    @Override
+    public List<ServiceCatalog> findCatalogsBySn(String sn) {
+        ServiceCatalog  serviceCatalog=commonServiceCatalogRepository.findBySn(sn);
+        List<ServiceCatalog> list=new ArrayList<ServiceCatalog>();
+        list.add(serviceCatalog);
+        list.addAll(buildTreeTable(serviceCatalog.getChildren()));
+        for (ServiceCatalog psi : list) {
+            formatServiceCatalog((PublicServiceCatalog) psi);
+        }
+       return list;
+
     }
 }

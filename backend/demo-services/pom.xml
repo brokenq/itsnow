@@ -6,9 +6,8 @@
 
     <parent>
         <groupId>dnt.itsnow</groupId>
-        <artifactId>repository</artifactId>
-        <version>0.3.0</version>
-        <relativePath>../repository/pom.xml</relativePath>
+        <artifactId>backend</artifactId>
+        <version>0.3.1-SNAPSHOT</version>
     </parent>
     <packaging>pom</packaging>
 
@@ -25,21 +24,8 @@
             <artifactId>spring-component-framework</artifactId>
         </dependency>
         <dependency>
-            <groupId>dnt.components</groupId>
+            <groupId>net.happyonroad</groupId>
             <artifactId>config</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>dnt.components</groupId>
-            <artifactId>infrastructure</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>dnt.itsnow</groupId>
-            <artifactId>platform</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>dnt.itsnow</groupId>
-            <artifactId>release</artifactId>
-            <scope>runtime</scope>
         </dependency>
     </dependencies>
 

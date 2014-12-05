@@ -1,8 +1,8 @@
 package dnt.itsnow.repository;
 
 import dnt.itsnow.model.Workflow;
-import dnt.itsnow.platform.service.Pageable;
-import dnt.itsnow.platform.util.PageRequest;
+import net.happyonroad.platform.service.Pageable;
+import net.happyonroad.platform.util.PageRequest;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

@@ -5,8 +5,8 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.PrivateServiceCatalog;
 import dnt.itsnow.model.PrivateServiceItem;
-import dnt.itsnow.platform.web.annotation.BeforeFilter;
-import dnt.itsnow.platform.web.exception.WebClientSideException;
+import net.happyonroad.platform.web.annotation.BeforeFilter;
+import net.happyonroad.platform.web.exception.WebClientSideException;
 import dnt.itsnow.service.PrivateServiceCatalogService;
 import dnt.itsnow.service.PrivateServiceItemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +53,9 @@ public class PrivateServiceItemsController extends SessionSupportController<Priv
      */
     @RequestMapping("{isn}")
     public PrivateServiceItem show(@PathVariable("isn") String isn){
-        return privateServiceItemService.findPrivateBySn(isn);
+        serviceCatalog.setItems(null);
+        serviceItem.setCatalog(serviceCatalog);
+        return serviceItem;
     }
 
     /**
@@ -93,6 +95,33 @@ public class PrivateServiceItemsController extends SessionSupportController<Priv
     public PrivateServiceItem destroy(@PathVariable("isn") String isn){
         privateServiceItemService.deletePrivate(isn);
         return serviceItem;
+    }
+
+    /**
+     * <h2>检查服务项title是否有效</h2>
+     * <p/>
+     * 主要检查服务项的名称是否唯一；
+     * @param title 服务项标题
+     */
+    @RequestMapping("checkTitle")
+    public void checkTitle(@RequestParam(value = "title") String title){
+        PrivateServiceItem item = privateServiceItemService.findPrivateByTitle(title);
+        if(item != null)
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate item title: " +title);
+    }
+
+    /**
+     * <h2>检查服务项sn是否有效</h2>
+     * <p/>
+     * 主要检查服务项的sn是否唯一；
+     * @param sn 服务项sn
+     */
+    @RequestMapping("checkSn")
+    public void checkSn(@RequestParam(value = "sn") String sn){
+        PrivateServiceItem item = privateServiceItemService.findPrivateBySn(sn);
+        PrivateServiceCatalog catalog = privateServiceCatalogService.findPrivateBySn(sn);
+        if(item != null || catalog != null)
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate item sn: " +sn);
     }
 
 

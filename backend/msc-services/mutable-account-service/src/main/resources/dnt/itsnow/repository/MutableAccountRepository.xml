@@ -92,7 +92,7 @@
         </discriminator>
     </resultMap>
     <resultMap id="basicProcessResult" type="ItsnowProcess" autoMapping="true">
-        <result column="configuration" property="configuration" typeHandler="dnt.itsnow.util.PropertiesHandler"/>
+        <result column="configuration" property="configuration" typeHandler="net.happyonroad.util.PropertiesHandler"/>
         <result column="account_id" property="accountId"/>
         <result column="host_id" property="hostId"/>
         <result column="schema_id" property="schemaId"/>

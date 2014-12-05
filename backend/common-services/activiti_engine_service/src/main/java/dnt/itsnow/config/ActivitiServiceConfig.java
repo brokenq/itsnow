@@ -4,7 +4,7 @@
 package dnt.itsnow.config;
 
 import dnt.itsnow.api.ActivitiEngineService;
-import dnt.itsnow.platform.config.DefaultServiceConfig;
+import net.happyonroad.platform.config.DefaultServiceConfig;
 import org.activiti.engine.ProcessEngine;
 
 /**

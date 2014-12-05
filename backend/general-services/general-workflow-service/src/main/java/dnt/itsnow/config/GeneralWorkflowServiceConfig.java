@@ -4,7 +4,7 @@
 package dnt.itsnow.config;
 
 import dnt.itsnow.api.ActivitiEngineService;
-import dnt.itsnow.platform.service.AutoNumberService;
+import net.happyonroad.platform.service.AutoNumberService;
 import dnt.itsnow.service.CommonServiceItemService;
 import dnt.itsnow.service.PrivateServiceCatalogService;
 import dnt.itsnow.service.PrivateServiceItemService;

@@ -7,7 +7,7 @@
     <parent>
         <groupId>dnt</groupId>
         <artifactId>itsnow</artifactId>
-        <version>0.3.0</version>
+        <version>0.3.1-SNAPSHOT</version>
     </parent>
 
     <groupId>dnt.itsnow</groupId>
@@ -27,13 +27,64 @@
     </properties>
 
     <modules>
-        <module>platform</module>
-        <module>release</module>
-        <module>repository</module>
         <module>common-services</module>
     </modules>
 
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Default-Config>S,A,D,W</Default-Config>
+<!--意味着 S = Service, A = App, D = DB, W = Web 均采用缺省值-->
+<!--
+                            <Service-Config>DefaultServiceConfig</Service-Config>
+                            <App-Config>DefaultAppConfig</App-Config>
+                            <DB-Repository>dnt.itsnow.repository</DB-Repository>
+                            <Web-Repository>dnt.itsnow.web.controller</Web-Repository>
+-->
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
     <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>net.happyonroad</groupId>
+                        <artifactId>spring-component-builder</artifactId>
+                        <version>${version.component-framework}</version>
+                        <executions>
+                            <execution>
+                                <id>extend-app</id>
+                                <goals><goal>extend</goal></goals>
+                                <configuration>
+                                    <targetRelease>${release.dir}</targetRelease>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>un_extend-app</id>
+                                <goals><goal>un_extend</goal></goals>
+                                <configuration>
+                                    <targetRelease>${release.dir}</targetRelease>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
         <profile>
             <id>with-itsnow-general</id>
             <modules>
@@ -64,12 +115,6 @@
                 <module>demo-services</module>
             </modules>
         </profile>
-        <profile>
-            <id>with-itsnow-it</id>
-            <modules>
-                <module>integration-test</module>
-            </modules>
-        </profile>
     </profiles>
 
     <dependencies>
@@ -89,29 +134,26 @@
         </dependency>
         <dependency>
             <groupId>org.jmock</groupId>
-            <artifactId>jmock-junit4</artifactId>
+            <artifactId>jmock</artifactId>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>net.happyonroad</groupId>
+            <artifactId>infrastructure</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.happyonroad</groupId>
+            <artifactId>platform</artifactId>
+        </dependency>
+
     </dependencies>
 
     <dependencyManagement>
         <dependencies>
-            <!--Platform -->
-            <dependency>
-                <groupId>dnt.itsnow</groupId>
-                <artifactId>release</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>dnt.itsnow</groupId>
-                <artifactId>platform</artifactId>
-                <version>${project.version}</version>
-            </dependency>
 
 
             <!--Demo-->
@@ -165,23 +207,6 @@
                 <version>${project.version}</version>
             </dependency>
 
-
-            <!--message-bus,redis,cache-service -->
-            <dependency>
-                <groupId>dnt.components</groupId>
-                <artifactId>message_bus</artifactId>
-                <version>${version.components}</version>
-            </dependency>
-            <dependency>
-                <groupId>dnt.components</groupId>
-                <artifactId>cache_service</artifactId>
-                <version>${version.components}</version>
-            </dependency>
-            <dependency>
-                <groupId>dnt.components</groupId>
-                <artifactId>redis</artifactId>
-                <version>${version.components}</version>
-            </dependency>
 
             <!--由于msc,msu,msp的服务都是独立部署在各自对应的单元中，
             一般不会被另外的单元直接通过API依赖，所以他们的依赖被定义在相应的模块内部-->

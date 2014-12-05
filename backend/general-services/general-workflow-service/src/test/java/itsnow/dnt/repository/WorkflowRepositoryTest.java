@@ -1,7 +1,7 @@
 package itsnow.dnt.repository;
 
 import dnt.itsnow.model.*;
-import dnt.itsnow.platform.util.PageRequest;
+import net.happyonroad.platform.util.PageRequest;
 import dnt.itsnow.repository.WorkflowRepository;
 import itsnow.dnt.config.WorkflowRepositoryConfig;
 import org.junit.Assert;
@@ -12,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.sql.Timestamp;
 
 /**
  * <h1>测试WorkflowRepository的Mybatis的Mapping配置是否正确</h1>

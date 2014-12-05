@@ -1,4 +1,2 @@
-INSERT INTO contract_users (msp_user_id, msu_account_id) VALUES
-  (3, 2),
-  (6, 2),
-  (7, 2);
+INSERT INTO itsnow_msc.contract_users (contract_id, msp_user_id, access) VALUES
+  (2, 3, '1');

@@ -5,7 +5,7 @@ package dnt.itsnow.support;
 
 import dnt.itsnow.util.Configuration;
 import dnt.itsnow.util.ItsnowCsrfToken;
-import dnt.spring.Bean;
+import net.happyonroad.spring.Bean;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;

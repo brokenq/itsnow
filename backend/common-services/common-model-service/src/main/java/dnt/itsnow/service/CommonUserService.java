@@ -56,6 +56,11 @@ public interface CommonUserService extends UserDetailsService {
 
     Account findAccountById(Long accountId);
 
+    /**
+     *
+     * @param mainAccount
+     * @return
+     */
     List<User> findUsersByAccount(Account mainAccount);
 
     /**
@@ -78,4 +83,5 @@ public interface CommonUserService extends UserDetailsService {
      * @return MSP用户
      */
     List<User> findAllByLogOnContract(Long accountId);
+
 }

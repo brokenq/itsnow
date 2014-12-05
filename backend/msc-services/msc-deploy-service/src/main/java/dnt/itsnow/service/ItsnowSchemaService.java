@@ -8,8 +8,8 @@ import dnt.itsnow.exception.ItsnowSchemaException;
 import dnt.itsnow.model.Account;
 import dnt.itsnow.model.ItsnowHost;
 import dnt.itsnow.model.ItsnowSchema;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.util.PageRequest;
+import net.happyonroad.platform.service.Page;
+import net.happyonroad.platform.util.PageRequest;
 
 /**
  * <h1>Itsnow Schema Service</h1>

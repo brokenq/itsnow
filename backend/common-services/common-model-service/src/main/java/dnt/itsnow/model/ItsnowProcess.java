@@ -4,7 +4,7 @@
 package dnt.itsnow.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import dnt.util.StringUtils;
+import net.happyonroad.util.StringUtils;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;

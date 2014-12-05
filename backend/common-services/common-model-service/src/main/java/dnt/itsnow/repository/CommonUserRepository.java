@@ -49,4 +49,5 @@ public interface CommonUserRepository {
      * @return MSP用户
      */
     List<User> findAllByLogOnContract(@Param("accountId")Long accountId);
+
 }

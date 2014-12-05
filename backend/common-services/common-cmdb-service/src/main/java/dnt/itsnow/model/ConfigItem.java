@@ -3,7 +3,7 @@
  */
 package dnt.itsnow.model;
 
-import dnt.itsnow.platform.model.Record;
+import net.happyonroad.platform.model.Record;
 
 /**
  * <h1>The Configuration Item</h1>

@@ -6,7 +6,7 @@ package dnt.itsnow.repository;
 import dnt.itsnow.config.DictionaryRepositoryConfig;
 import dnt.itsnow.model.DictDetail;
 import dnt.itsnow.model.Dictionary;
-import dnt.itsnow.platform.util.PageRequest;
+import net.happyonroad.platform.util.PageRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +16,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

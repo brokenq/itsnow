@@ -3,7 +3,7 @@
  */
 package dnt.itsnow.model;
 
-import dnt.util.StringUtils;
+import net.happyonroad.util.StringUtils;
 
 /**
  * <h1>对远程主机的调用</h1>

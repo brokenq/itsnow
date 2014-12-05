@@ -3,7 +3,7 @@
  */
 package dnt.itsnow.model;
 
-import dnt.itsnow.platform.model.Record;
+import net.happyonroad.platform.model.Record;
 
 /**
  * <h1>合同的详情</h1>

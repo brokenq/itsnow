@@ -2,8 +2,8 @@ package dnt.itsnow.service;
 
 import dnt.itsnow.exception.WorkTimeException;
 import dnt.itsnow.model.WorkTime;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.service.Pageable;
+import net.happyonroad.platform.service.Page;
+import net.happyonroad.platform.service.Pageable;
 
 /**
  * <h1>工作时间Service</h1>

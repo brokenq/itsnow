@@ -1,0 +1,42 @@
+h2 新增 合同
+//- include the form mixins
+include /lib/mixins/form
+
+
+mixin action_edit(label)
+  +action_button(label,"button","edit","info")&attributes(attributes)
+
+//ng-form.form-horizontal(name="newContractForm", novalidate="novalidate", ng-model-options="{ updateOn: 'mousedown blur' }", role="form", ng-submit="create()")
++form("newContractForm")(ng-submit="create()", ng-submitted="submitted")
+  include /msu/index/contracts/_form.jade
+
+  +action_bar
+    +action_submit("创建")
+    +action_edit("新增详情")(ng-click="openDetail()")
+    +action_cancel("取消")(ui-sref="contracts.list")
+
+.bootbox.modal.fade.in#bootbox(tabindex='-1', role='dialog', aria-hidden='false', style='display: none;')
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.bootbox-close-button.close(type='button', ng-click="closeDetail()") ×
+        h4.modal-title 新增合同详情
+      .modal-body
+        .bootbox-body
+          //+form("newContractDetailForm")(ng-submit="createDetail()")
+          ng-form.bootbox-form(name="newContractDetailForm", novalidate="novalidate", ng-model-options="{ updateOn: 'mousedown blur' }", role="form")
+            +group("detail", "title", "详情名称", "user", "必填")
+              +input("detail", "title")(type="text", required, ng-minlength="2", ng-maxlength="20",
+              ng-pattern='/^[\u4e00-\u9fa5_a-zA-Z0-9\\-\\.]+$/', placeholder="详情名称")
+            +group("detail", "brief", "详情简介", "user", "简介")
+              +input("detail", "brief")(type="text", required, ng-minlength="2", ng-maxlength="20", placeholder="简介")
+            +group("detail", "service_catalog", "服务目录", "user", "详情所用的服务目录")
+              div#detail_service_catalog(multi-select, selection-mode="single", input-model="serviceCatalogs", button-label="title",
+              item-label="title", tick-property="ticked", group-property="multiSelectGroup")
+            +group("detail", "description", "描述", "edit", "合同说明")
+              +area("detail", "description")
+      .modal-footer
+        button.btn.btn-default(data-bb-handler='cancel', type='button', ng-click="closeDetail()") 取消
+        button.btn.btn-primary(data-bb-handler='confirm', type='button', ng-click="createDetail()") 确认
+        //+action_submit("确认")
+        //+action_cancel("取消")(ng-click="closeDetail()")

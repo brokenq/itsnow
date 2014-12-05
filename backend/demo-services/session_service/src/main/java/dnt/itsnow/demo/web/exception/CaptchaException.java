@@ -3,7 +3,7 @@
  */
 package dnt.itsnow.demo.web.exception;
 
-import dnt.itsnow.platform.web.exception.WebClientSideException;
+import net.happyonroad.platform.web.exception.WebClientSideException;
 import org.springframework.http.HttpStatus;
 
 /**

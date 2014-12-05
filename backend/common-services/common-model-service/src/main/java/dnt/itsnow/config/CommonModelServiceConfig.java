@@ -3,9 +3,9 @@
  */
 package dnt.itsnow.config;
 
-import dnt.itsnow.platform.config.DefaultServiceConfig;
-import dnt.itsnow.platform.service.AutoNumberService;
-import dnt.itsnow.platform.web.security.DelegateSecurityConfigurer;
+import net.happyonroad.platform.config.DefaultServiceConfig;
+import net.happyonroad.platform.service.AutoNumberService;
+import net.happyonroad.platform.web.security.DelegateSecurityConfigurer;
 import dnt.itsnow.service.*;
 
 /**

@@ -4,9 +4,9 @@
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.Contract;
-import dnt.itsnow.platform.service.ServiceException;
-import dnt.itsnow.platform.web.exception.WebClientSideException;
-import dnt.itsnow.platform.web.exception.WebServerSideException;
+import net.happyonroad.platform.service.ServiceException;
+import net.happyonroad.platform.web.exception.WebClientSideException;
+import net.happyonroad.platform.web.exception.WebServerSideException;
 import dnt.itsnow.service.GeneralContractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -48,11 +48,10 @@ public class GeneralContractsController extends SessionSupportController {
      * @return 合同信息，不包括了Contract Detail 信息
      */
     @RequestMapping(value = "/{sn}/approve", method = RequestMethod.PUT)
-    public Contract approve(@PathVariable("sn") String sn) {
+    public Contract approve(@PathVariable("sn") String sn, @Valid @RequestBody Contract contract) {
         logger.info("Approving contract {}", sn);
-        Contract contract;
         try {
-            contract = contractService.approve(mainAccount, sn);
+            contract = contractService.approve(mainAccount, contract);
         } catch (ServiceException e) {
             throw new WebClientSideException(HttpStatus.NOT_ACCEPTABLE,
                     "the contract can't be approved, cause: " + e.getMessage());
@@ -163,10 +162,33 @@ public class GeneralContractsController extends SessionSupportController {
      * POST /api/contracts/user/relation
      *
      */
+    @RequestMapping(value="user/relation",method = RequestMethod.POST)
+    public void buildRelation(@Valid @RequestBody Contract contract) {
+
+        logger.info("Updating contract with msp users relationship", contract.getMspUsers());
+
+        try {
+            contractService.buildRelation(contract);
+        } catch (ServiceException e) {
+            throw new WebClientSideException(HttpStatus.NOT_ACCEPTABLE,
+                    "the contract can't be found, " + e.getMessage());
+        } catch (RestClientException e) {
+            throw new WebServerSideException(HttpStatus.BAD_GATEWAY, e.getMessage());
+        }
+
+        logger.info("Updated contract with msp users relationship", contract.getMspUsers());
+    }
+
+    /**
+     * <h2>MSP进行其用户与MSU合同进行关联</h2>
+     * <p/>
+     * PUT /api/contracts/user/relation
+     *
+     */
     @RequestMapping(value="user/relation",method = RequestMethod.PUT)
     public void updateRelation(@Valid @RequestBody Contract contract) {
 
-        logger.info("Updating contract with msp users relationship", contract.getUsers());
+        logger.info("Updating contract with msp users relationship", contract.getMspUsers());
 
         try {
             contractService.updateRelation(contract);
@@ -177,7 +199,7 @@ public class GeneralContractsController extends SessionSupportController {
             throw new WebServerSideException(HttpStatus.BAD_GATEWAY, e.getMessage());
         }
 
-        logger.info("Updated contract with msp users relationship", contract.getUsers());
+        logger.info("Updated contract with msp users relationship", contract.getMspUsers());
     }
 
 }

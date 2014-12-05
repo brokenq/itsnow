@@ -2,8 +2,8 @@ package dnt.itsnow.support;
 
 import dnt.itsnow.config.GroupManagerConfig;
 import dnt.itsnow.model.Group;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.util.PageRequest;
+import net.happyonroad.platform.service.Page;
+import net.happyonroad.platform.util.PageRequest;
 import dnt.itsnow.service.GroupService;
 import org.junit.Assert;
 import org.junit.Before;

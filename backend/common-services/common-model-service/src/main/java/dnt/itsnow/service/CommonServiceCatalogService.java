@@ -4,6 +4,7 @@
 package dnt.itsnow.service;
 
 import dnt.itsnow.model.PublicServiceCatalog;
+import dnt.itsnow.model.ServiceCatalog;
 
 import java.util.List;
 
@@ -27,8 +28,33 @@ public interface CommonServiceCatalogService {
      */
     PublicServiceCatalog findBySn(String sn);
 
+    /**
+     * <h2>根据编号查找公共服务目录</h2>
+     *
+     * @param id 编号
+     * @return 找到的公共服务目录，找不到则返回null
+     */
+    PublicServiceCatalog findById(Long id);
+
+
     void setCommonServiceCatalogList(List<PublicServiceCatalog> commonServiceCatalogList);
 
     void setFormattedServiceCatalogList(List<PublicServiceCatalog> formattedServiceCatalogList);
 
+    List<ServiceCatalog> findCatalogsBySn(String sn);
+
+    /**
+     * <h2>根据帐户ID查找该帐户的公共服务目录</h2>
+     *
+     * @param accountId 帐户编号
+     * @return 找到的该帐户的所有公共服务目录列表，找不到则返回null
+     */
+    List<PublicServiceCatalog> findByAccountId(Long accountId);
+
+    /**
+     * <h2>根据title查找服务目录</h2>
+     * @param title 标题
+     * @return 服务目录
+     */
+    PublicServiceCatalog findByTitle(String title);
 }

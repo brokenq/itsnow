@@ -16,6 +16,8 @@
 
         <typeAlias type="dnt.itsnow.model.Contract" alias="Contract"/>
         <typeAlias type="dnt.itsnow.model.ContractDetail" alias="ContractDetail"/>
+        <typeAlias type="dnt.itsnow.model.ContractMspAccount" alias="ContractMspAccount"/>
+        <typeAlias type="dnt.itsnow.model.ContractMspUser" alias="ContractMspUser"/>
 
         <typeAlias type="dnt.itsnow.model.SLA" alias="SLA"/>
         <typeAlias type="dnt.itsnow.model.SLO" alias="SLO"/>
@@ -30,7 +32,7 @@
     </typeAliases>
 
     <typeHandlers>
-        <typeHandler handler="dnt.itsnow.util.PropertiesHandler" javaType="java.util.Properties" jdbcType="VARCHAR"/>
+        <typeHandler handler="net.happyonroad.util.PropertiesHandler" javaType="java.util.Properties"/>
         <typeHandler handler="dnt.itsnow.util.DictDetailHandler" javaType="dnt.itsnow.model.DictDetail" jdbcType="VARCHAR"/>
     </typeHandlers>
 </configuration>

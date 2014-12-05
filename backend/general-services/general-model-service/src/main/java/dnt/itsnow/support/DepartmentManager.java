@@ -8,7 +8,7 @@ import dnt.itsnow.repository.DepartmentRepository;
 import dnt.itsnow.repository.SiteDeptRepository;
 import dnt.itsnow.repository.SiteRepository;
 import dnt.itsnow.service.DepartmentService;
-import dnt.spring.Bean;
+import net.happyonroad.spring.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

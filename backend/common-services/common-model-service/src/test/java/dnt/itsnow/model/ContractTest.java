@@ -4,8 +4,8 @@
 package dnt.itsnow.model;
 
 import dnt.itsnow.test.model.ValidatorSupport;
-import dnt.support.JsonSupport;
-import junit.framework.Assert;
+import net.happyonroad.support.JsonSupport;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,7 +22,6 @@ public class ContractTest extends ValidatorSupport{
     @Before
     public void setUp() throws Exception {
         contract = new Contract();
-        contract.setMspAccountId(2L);
         contract.setStatus(ContractStatus.Approved);
         contract.setMsuAccountId(4L);
         contract.setSn("CONTRACT-001");

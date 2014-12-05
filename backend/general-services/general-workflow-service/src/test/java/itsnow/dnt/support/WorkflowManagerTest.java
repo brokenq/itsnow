@@ -1,8 +1,8 @@
 package itsnow.dnt.support;
 
 import dnt.itsnow.model.*;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.util.PageRequest;
+import net.happyonroad.platform.service.Page;
+import net.happyonroad.platform.util.PageRequest;
 import dnt.itsnow.service.WorkflowService;
 import itsnow.dnt.config.WorkflowManagerConfig;
 import org.junit.Assert;

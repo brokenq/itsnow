@@ -4,7 +4,7 @@
 package dnt.itsnow.system;
 
 import dnt.itsnow.model.RemoteInvocation;
-import dnt.util.StringUtils;
+import net.happyonroad.util.StringUtils;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;

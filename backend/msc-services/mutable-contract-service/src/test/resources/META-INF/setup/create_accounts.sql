@@ -1,4 +1,5 @@
-CREATE TABLE IF NOT EXISTS accounts (
+CREATE SCHEMA IF NOT EXISTS itsnow_msc;
+CREATE TABLE IF NOT EXISTS itsnow_msc.accounts (
   id          INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
   user_id     INT(10) UNSIGNED,
   sn          VARCHAR(20)      NOT NULL,

@@ -4,9 +4,11 @@
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.PublicServiceCatalog;
-import dnt.itsnow.platform.web.annotation.BeforeFilter;
-import dnt.itsnow.platform.web.exception.WebClientSideException;
+import dnt.itsnow.model.PublicServiceItem;
 import dnt.itsnow.service.PublicServiceCatalogService;
+import dnt.itsnow.service.PublicServiceItemService;
+import net.happyonroad.platform.web.annotation.BeforeFilter;
+import net.happyonroad.platform.web.exception.WebClientSideException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +26,9 @@ public class PublicServiceCatalogsController extends SessionSupportController<Pu
     PublicServiceCatalog serviceCatalog;
     @Autowired
     PublicServiceCatalogService publicServiceCatalogService;
+
+    @Autowired
+    PublicServiceItemService publicServiceItemService;
     /**
      * <h2>获得所有的服务目录</h2>
      *
@@ -88,8 +93,61 @@ public class PublicServiceCatalogsController extends SessionSupportController<Pu
         return serviceCatalog;
     }
 
+    /**
+     * <h2>删除帐户的一个服务目录</h2>
+     *
+     * PUT /admin/api/public_service_catalogs/{sn}/account/{account}/remove
+     *
+     */
+    @RequestMapping(value = "{sn}/account/{accountId}/remove", method = RequestMethod.PUT)
+    public void destroyByAccount(@PathVariable("sn") String sn,@PathVariable("accountId") Long accountId){
+        logger.info("Remove service catalog {} of Account:{}",sn,accountId);
+        publicServiceCatalogService.deleteByAccount(serviceCatalog,accountId);
+        logger.info("Removed service catalog {} of Account:{}",sn,accountId);
+    }
 
-    @BeforeFilter({"show", "update", "destroy"})
+    /**
+     * <h2>增加帐户的一个服务目录</h2>
+     *
+     * PUT /admin/api/public_service_catalogs/{sn}/account/{accountId}/create
+     *
+     */
+    @RequestMapping(value = "{sn}/account/{accountId}/create", method = RequestMethod.PUT)
+    public void addByAccount(@PathVariable("sn") String sn,@PathVariable("accountId") Long accountId){
+        logger.info("Add service catalog {} of Account:{}",sn,accountId);
+        publicServiceCatalogService.saveByAccount(serviceCatalog,accountId);
+        logger.info("Added service catalog {} of Account:{}",sn,accountId);
+    }
+
+    /**
+     * <h2>检查服务目录title是否有效</h2>
+     * <p/>
+     * 主要检查服务目录的名称是否唯一；
+     * @param title 服务目录标题
+     */
+    @RequestMapping("checkTitle")
+    public void checkTitle(@RequestParam(value = "title") String title){
+        PublicServiceCatalog catalog = publicServiceCatalogService.findByTitle(title);
+        if(catalog != null)
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate catalog title: " +title);
+    }
+
+    /**
+     * <h2>检查服务目录title是否有效</h2>
+     * <p/>
+     * 主要检查服务目录的名称是否唯一；
+     * @param sn 服务目录sn
+     */
+    @RequestMapping("checkSn")
+    public void checkSn(@RequestParam(value = "sn") String sn){
+        PublicServiceCatalog catalog = publicServiceCatalogService.findBySn(sn);
+        PublicServiceItem item = publicServiceItemService.findBySn(sn);
+        if(catalog != null || item != null)
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate catalog sn: " +sn);
+    }
+
+
+    @BeforeFilter({"show", "update", "destroy","addByAccount","destroyByAccount"})
     public void initServiceCatalog(@PathVariable("sn") String sn){
         serviceCatalog = publicServiceCatalogService.findBySn(sn);
         if(serviceCatalog == null)

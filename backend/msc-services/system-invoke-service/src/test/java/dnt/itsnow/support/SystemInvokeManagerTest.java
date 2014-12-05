@@ -11,7 +11,7 @@ import dnt.itsnow.model.RemoteInvocation;
 import dnt.itsnow.model.SystemInvocation;
 import dnt.itsnow.system.*;
 import dnt.itsnow.system.Process;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;

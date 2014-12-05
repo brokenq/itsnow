@@ -5,8 +5,8 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.PublicServiceCatalog;
 import dnt.itsnow.model.PublicServiceItem;
-import dnt.itsnow.platform.web.annotation.BeforeFilter;
-import dnt.itsnow.platform.web.exception.WebClientSideException;
+import net.happyonroad.platform.web.annotation.BeforeFilter;
+import net.happyonroad.platform.web.exception.WebClientSideException;
 import dnt.itsnow.service.PublicServiceCatalogService;
 import dnt.itsnow.service.PublicServiceItemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,7 +98,7 @@ public class PublicServiceItemsController extends SessionSupportController<Publi
     /**
      * <h2>删除帐户的一个服务项目</h2>
      *
-     * PUT /admin/api/public_service_catalogs/{sn}/items/{isn}/remove?accountId=''
+     * PUT /admin/api/public_service_catalogs/{sn}/items/{isn}/account/{accountId}/remove
      *
      */
     @RequestMapping(value = "{isn}/account/{accountId}/remove", method = RequestMethod.PUT)
@@ -111,7 +111,7 @@ public class PublicServiceItemsController extends SessionSupportController<Publi
     /**
      * <h2>增加帐户的一个服务项目</h2>
      *
-     * PUT /admin/api/public_service_catalogs/{sn}/items/{isn}/create?accountId=''
+     * PUT /admin/api/public_service_catalogs/{sn}/items/{isn}/account/{accountId}/create
      *
      */
     @RequestMapping(value = "{isn}/account/{accountId}/create", method = RequestMethod.PUT)
@@ -119,6 +119,33 @@ public class PublicServiceItemsController extends SessionSupportController<Publi
         logger.info("Add service item {} of Account:{}",isn,accountId);
         publicServiceItemService.saveByAccount(serviceItem,accountId);
         logger.info("Added service item {} of Account:{}",isn,accountId);
+    }
+
+    /**
+     * <h2>检查服务项title是否有效</h2>
+     * <p/>
+     * 主要检查服务项的名称是否唯一；
+     * @param title 服务项标题
+     */
+    @RequestMapping("checkTitle")
+    public void checkTitle(@RequestParam(value = "title") String title){
+        PublicServiceItem item = publicServiceItemService.findByTitle(title);
+        if(item != null)
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate item title: " +title);
+    }
+
+    /**
+     * <h2>检查服务项sn是否有效</h2>
+     * <p/>
+     * 主要检查服务项的sn是否唯一；
+     * @param sn 服务项sn
+     */
+    @RequestMapping("checkSn")
+    public void checkSn(@RequestParam(value = "sn") String sn){
+        PublicServiceItem item = publicServiceItemService.findBySn(sn);
+        PublicServiceCatalog catalog = publicServiceCatalogService.findBySn(sn);
+        if(item != null || catalog != null)
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate item sn: " +sn);
     }
 
     @BeforeFilter

@@ -6,9 +6,8 @@
     <packaging>pom</packaging>
     <parent>
         <groupId>dnt.itsnow</groupId>
-        <artifactId>repository</artifactId>
-        <version>0.3.0</version>
-        <relativePath>../repository/pom.xml</relativePath>
+        <artifactId>backend</artifactId>
+        <version>0.3.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>msc-services</artifactId>

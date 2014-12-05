@@ -4,8 +4,7 @@
 package dnt.itsnow.support;
 
 import dnt.itsnow.config.AutoNumberInDBConfig;
-import dnt.itsnow.config.CommonAccountManagerConfig;
-import dnt.itsnow.platform.util.NumberRule;
+import net.happyonroad.platform.util.NumberRule;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;

@@ -118,7 +118,7 @@ Itsnow的项目，在平台之外，包括如下大的模块：
 ```java
 package dnt.itsnow.model;
 
-import dnt.itsnow.platform.model.Record;
+import Record;
 import org.hibernate.validator.constraints.NotBlank;
 import java.util.List;
 
@@ -228,7 +228,7 @@ public class Contract extends ConfigItem {
 ```
 
   1. 原则上业务模型均放置于 `dnt.itsnow.model` 包中
-  2. 主业务模型类一般继承于 `dnt.itsnow.platform.model.Record` (其数据表不是中间表)
+  2. 主业务模型类一般继承于 `Record` (其数据表不是中间表)
   3. 如果主业务模型是配置项，那么应该继承 `dnt.itsnow.model.ConfigItem` 类(未来扩展)
   4. 模型类，成员变量命名参考前言约束
   5. 模型成员上可以基于Java Validation API进行校验标记
@@ -362,7 +362,7 @@ Mapping约定：
 package dnt.itsnow.repository;
 
 import dnt.itsnow.model.Contract;
-import dnt.itsnow.platform.service.Pageable;
+import Pageable;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
@@ -455,7 +455,7 @@ public interface ContractRepository {
 3. 典型的接口方法为: `find`, `findAll`, `findPage`, `search`, `create`, `update`, `destroy`, `save`等
 4. 与Repository的命名规则一样，如果Service的前缀与模型名称一致，则在以上方法后面不需要加上模型名称；
 5. 业务方法上如果要抛出异常，则应该抛出业务异常 `ServiceException`或其子类
-6. 业务异常可以不定义，如果需要定义，则一般被命名为 $Model + Exception，如 `ContractException`，存放于`dnt.itsnow.exception`包中，并继承 `dnt.itsnow.platform.exception.ServiceException`
+6. 业务异常可以不定义，如果需要定义，则一般被命名为 $Model + Exception，如 `ContractException`，存放于`dnt.itsnow.exception`包中，并继承 `net.happyonroad.platform.exception.ServiceException`
 7. 为若干个紧密相关的业务模型仅需要定义一个以主模型为中心的业务服务，如，存在 `Contract`, `ContractDetail`两个密切相关的业务模型，但只需要定义一个 `ContractService`，不需要再额外定义一个 `ContractDetailService`
 8. 在以上例子中，如果存在对ContractDetail的操作，应该增加 `Detail`后缀，如: `updateDetail(ContractDetail detail)` (可以理解为：Contract一词被ContractService中的Contract抵消)
 9. 如果存在分页请求，服务接口上应该返回 Page<$Model>，方法命名为 `findAll` 或者 `findPage`，最后一个参数为`Pageable`对象
@@ -469,9 +469,9 @@ package dnt.itsnow.service;
 
 import dnt.itsnow.model.Account;
 import dnt.itsnow.model.Contract;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.service.Pageable;
-import dnt.itsnow.platform.service.ServiceException;
+import Page;
+import Pageable;
+import ServiceException;
 
 /**
  *  <h1>合同服务</h1>
@@ -595,8 +595,8 @@ public class MutableAccountManager extends CommonAccountManager implements Mutab
 2. 控制器类一般都用 `@org.springframework.web.bind.annotation.RestController` 标记，并被自动扫描
 3. 控制器一般应该被`@RequestMapping("/api/$models")`
 4. 控制器类采用`@Autowired`对相应Servce的进行引用；
-5. 控制器类一般从 继承`dnt.itsnow.platform.web.controller.ApplicationController`
-6. 如果控制器类需要用到当前登录用户信息或者说只有登录用户才可以访问，则应该从 `dnt.itsnow.platform.web.controller.SessionSupportController`继承，这些控制器方法可以访问父类提供的成员变量 `currentUser`, `mainAccount` 获取到当前用户以及用户的主账户信息。
+5. 控制器类一般从 继承`ApplicationController`
+6. 如果控制器类需要用到当前登录用户信息或者说只有登录用户才可以访问，则应该从 `net.happyonroad.platform.web.controller.SessionSupportController`继承，这些控制器方法可以访问父类提供的成员变量 `currentUser`, `mainAccount` 获取到当前用户以及用户的主账户信息。
 7. 控制器类的注释一般为如下格式（包括控制器说明，所有的对外SPI说明）
 
 ```java

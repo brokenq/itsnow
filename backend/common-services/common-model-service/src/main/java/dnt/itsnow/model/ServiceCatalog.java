@@ -3,7 +3,7 @@
  */
 package dnt.itsnow.model;
 
-import dnt.itsnow.platform.model.Record;
+import net.happyonroad.platform.model.Record;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -27,7 +27,6 @@ public class ServiceCatalog extends Record{
     @NotNull
     private Integer level;
 
-    //private List<ServiceItem> items;
 
     public List<ServiceCatalog> getChildren() {
         return children;

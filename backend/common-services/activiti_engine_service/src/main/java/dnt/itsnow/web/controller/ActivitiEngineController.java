@@ -1,8 +1,8 @@
 package dnt.itsnow.web.controller;
 
-import dnt.itsnow.platform.web.controller.ApplicationController;
+import net.happyonroad.platform.web.controller.ApplicationController;
 import dnt.itsnow.api.ActivitiEngineService;
-import dnt.util.StringUtils;
+import net.happyonroad.util.StringUtils;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;

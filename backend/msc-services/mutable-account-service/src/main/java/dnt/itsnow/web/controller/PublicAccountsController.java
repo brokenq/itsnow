@@ -5,8 +5,8 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.exception.AccountException;
 import dnt.itsnow.model.Account;
-import dnt.itsnow.platform.web.controller.ApplicationController;
-import dnt.itsnow.platform.web.exception.WebClientSideException;
+import net.happyonroad.platform.web.controller.ApplicationController;
+import net.happyonroad.platform.web.exception.WebClientSideException;
 import dnt.itsnow.service.MutableAccountService;
 import dnt.itsnow.web.model.AccountRegistration;
 import org.springframework.beans.factory.annotation.Autowired;

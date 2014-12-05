@@ -2,7 +2,7 @@ package dnt.itsnow.repository;
 
 import dnt.itsnow.config.GroupRepositoryConfig;
 import dnt.itsnow.model.Group;
-import dnt.itsnow.platform.util.PageRequest;
+import net.happyonroad.platform.util.PageRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

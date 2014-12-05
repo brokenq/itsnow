@@ -3,7 +3,7 @@
  */
 package dnt.itsnow.support;
 
-import dnt.concurrent.OnceTrigger;
+import net.happyonroad.concurrent.OnceTrigger;
 import dnt.itsnow.exception.SystemInvokeException;
 import dnt.itsnow.listener.InvocationEventBroadcaster;
 import dnt.itsnow.listener.ListenerNotifier;
@@ -11,7 +11,7 @@ import dnt.itsnow.listener.SystemInvocationListener;
 import dnt.itsnow.model.SystemInvocation;
 import dnt.itsnow.service.SystemInvokeService;
 import dnt.itsnow.service.SystemInvoker;
-import dnt.spring.Bean;
+import net.happyonroad.spring.Bean;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

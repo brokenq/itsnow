@@ -10,6 +10,7 @@ import dnt.itsnow.service.ItsnowHostService;
 import dnt.itsnow.service.ItsnowProcessService;
 import dnt.itsnow.service.ItsnowSchemaService;
 import dnt.itsnow.service.SystemInvokeService;
+import dnt.itsnow.system.*;
 import dnt.itsnow.util.DeployFixture;
 import org.apache.commons.io.FileUtils;
 import org.easymock.IAnswer;
@@ -85,7 +86,7 @@ public class ItsnowProcessManagerTest {
     public void testCreate() throws Exception {
         String jobId = "create-process-job-id";
         expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
-        expect(systemInvokeService.waitJobFinished(jobId)).andReturn(0) ;
+//        expect(systemInvokeService.waitJobFinished(jobId)).andReturn(0) ;
         repository.create(process);
         expectLastCall().once();
 
@@ -241,8 +242,11 @@ public class ItsnowProcessManagerTest {
 
         String jobId = "create-process-job-id";
         expect(systemInvokeService.addJob(isA(SystemInvocation.class))).andReturn(jobId);
-        expect(systemInvokeService.waitJobFinished(jobId)).andReturn(0) ;
         repository.create(isA(ItsnowProcess.class));
+        expectLastCall().once();
+
+        expect(systemInvokeService.waitJobFinished(jobId)).andReturn(0);
+        repository.update(isA(ItsnowProcess.class));
         expectLastCall().once();
 
         jobId = "start-process-job-id";

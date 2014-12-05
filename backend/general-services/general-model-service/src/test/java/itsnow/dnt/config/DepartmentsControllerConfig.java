@@ -2,7 +2,7 @@ package itsnow.dnt.config;
 
 import dnt.itsnow.service.CommonUserService;
 import dnt.itsnow.service.DepartmentService;
-import dnt.itsnow.test.config.ApplicationControllerConfig;
+import net.happyonroad.test.config.ApplicationControllerConfig;
 import dnt.itsnow.web.controller.DepartmentsController;
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Qualifier;

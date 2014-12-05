@@ -6,7 +6,7 @@ package dnt.itsnow.service;
 import dnt.itsnow.model.Account;
 import dnt.itsnow.model.Contract;
 import dnt.itsnow.model.ContractDetail;
-import dnt.itsnow.platform.service.ServiceException;
+import net.happyonroad.platform.service.ServiceException;
 
 /**
  * <h1>一般性合同服务</h1>
@@ -45,10 +45,10 @@ public interface GeneralContractService extends CommonContractService {
      * 本方法是调用远程msc的SPI实现的
      *
      * @param account 企业/提供商的账户
-     * @param sn      合同编号
+     * @param contract      合同
      * @return 合同对象
      */
-    Contract approve(Account account, String sn) throws ServiceException;
+    Contract approve(Account account, Contract contract) throws ServiceException;
 
     /**
      * <h2>拒绝特定账户下的特定合同</h2>

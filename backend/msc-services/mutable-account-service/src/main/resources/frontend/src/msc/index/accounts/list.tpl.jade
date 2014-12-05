@@ -1,0 +1,25 @@
+include /lib/mixins/list
+
+.datalist
+  +toolbar
+    +button_group
+      +tool_button("accountsTable.reload()", "refresh", "", "*", "", "")
+    +button_group
+      +tool_button("actionService.perform(approve, $event)", "ok",    "批准",    "1+", "", "new")
+      +tool_button("actionService.perform(reject, $event)",  "trash", "拒绝",    "1+", "", "new")
+      +tool_button("actionService.perform(autoCreate, $event)",  "key",  "自动分配", "1+", "", "valid")
+    +more_buttons
+      +drop_button("actionService.gotoState('processes.new', $event)", "plus", "手工分配", "1", "", "valid")(class="btn btn-primary link-btn-text-left")
+      +drop_button("actionService.perform(destroy, $event)", "trash", "删除", "1+", "valid", "")(class="btn btn-primary link-btn-text-left")
+
+  +page_table("accountsTable","selectionService")
+    +row("account", "sn", "selectionService")(ng-class="account.status.toLowerCase()")
+      td(data-title="'名称'")
+        a(ui-sref="accounts.view(account)") {{account.name}}
+        a.pull-right(ng-if="account.process", ui-sref="process_view({name: '{{account.process.name}}'})")
+          i.icon-cogs(class="{{account.process.status | processStatusCss}}")
+      td(data-title="'子域名'", ng-bind-html="account | formatSubDomain")
+      td(data-title="'联系人'")
+        a(ui-sref="users.view(account.user)") {{account.user.name}}
+      td(data-title="'联系人电话'") {{account.user.phone}}
+      td(data-title="'状态'") {{ account.status | formatAccountStatus}}

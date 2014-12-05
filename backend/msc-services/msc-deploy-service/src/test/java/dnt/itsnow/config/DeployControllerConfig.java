@@ -4,7 +4,7 @@
 package dnt.itsnow.config;
 
 import dnt.itsnow.service.*;
-import dnt.itsnow.test.config.ApplicationControllerConfig;
+import net.happyonroad.test.config.ApplicationControllerConfig;
 import dnt.itsnow.web.controller.ItsnowHostsController;
 import dnt.itsnow.web.controller.ItsnowProcessesController;
 import dnt.itsnow.web.controller.ItsnowSchemasController;

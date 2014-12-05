@@ -1,6 +1,7 @@
 package dnt.itsnow.repository;
 
 import dnt.itsnow.model.Contract;
+import dnt.itsnow.model.ContractStatus;
 import org.apache.ibatis.annotations.*;
 
 /**
@@ -13,8 +14,8 @@ public interface MutableContractRepository extends CommonContractRepository{
      *
      * @param contract 新建的合同
      */
-    @Insert("INSERT INTO itsnow_msc.contracts(sn, msu_account_id, msp_account_id, status, created_at, updated_at) " +
-            "VALUES(#{sn}, #{msuAccountId}, #{mspAccountId}, #{status}, #{createdAt}, #{updatedAt})")
+    @Insert("INSERT INTO itsnow_msc.contracts(msu_account_id, sn, title, type, status, created_at, updated_at) " +
+            "VALUES(#{msuAccountId}, #{sn}, #{title}, #{type}, #{status}, #{createdAt}, #{updatedAt})")
     @Options(useGeneratedKeys = true,keyColumn = "id")
     void create(Contract contract);
 
@@ -26,16 +27,15 @@ public interface MutableContractRepository extends CommonContractRepository{
      * @param contract 更新的合同
      */
     @Update("UPDATE itsnow_msc.contracts " +
-            "SET msu_account_id = #{msuAccountId}," +
-            " msp_account_id = #{mspAccountId}," +
+            "SET title = #{title}," +
+            " type = #{type},"+
             " status = #{status},"+
-            " sn = #{sn},"+
             " updated_at = #{updatedAt}"+
             " WHERE id = #{id}")
     void update(Contract contract);
 
     /**
-     * <h2>MSP投标</h2>
+     * <h2>MSP应约</h2>
      *
      * 将合同的msp状态修改为 Proposed
      *
@@ -43,10 +43,27 @@ public interface MutableContractRepository extends CommonContractRepository{
      */
     @Update("UPDATE itsnow_msc.contracts" +
             " SET status = #{status}," +
-            " msp_account_id = #{mspAccountId},"+
             " updated_at = #{updatedAt}"+
             " WHERE id = #{id}")
     void bid(Contract contract);
+
+    /**
+     * 记录哪些MSP应约了合同
+     * @param mspAccountId MSP账户
+     * @param id 合同ID
+     */
+    @Insert("INSERT INTO itsnow_msc.contract_records(contract_id, msp_account_id) " +
+            "VALUES(#{id}, #{mspAccountId})")
+    void bidRecord(@Param("mspAccountId")String mspAccountId, @Param("id")Long id);
+
+    /**
+     * 修改MSP应约记录
+     * @param id 合同ID
+     * @param mspAccountId 应约的MSP账户ID
+     * @param status MSU对应约账户的回复状态
+     */
+    @Update("UPDATE itsnow_msc.contract_records SET status = #{status} WHERE contract_id = #{id} AND msp_account_id = #{mspAccountId}")
+    void updateRecord(@Param("id")Long id, @Param("mspAccountId")Long mspAccountId, @Param("status")ContractStatus status);
 
     /**
      * <h2>批准合同</h2>
@@ -83,26 +100,18 @@ public interface MutableContractRepository extends CommonContractRepository{
     void deleteBySn(@Param("sn") String sn);
 
     /**
-     * 查询是否有特定的MSP用户已经可以登录特定的MSU系统
-     * @param accountId MSU账户
+     * 建立MSP用户可以登录MSU系统的关系
+     * @param contractId 合同ID
      * @param userId MSP用户
-     * @return int
+     * @param access MSU用户是否允许MSP用户登录标记
      */
-    @Select("SELECT count(*) FROM contract_users WHERE msu_account_id = #{accountId} AND msp_user_id = #{userId}")
-    int findRelation(@Param("userId")Long userId, @Param("accountId")Long accountId);
+    @Insert("INSERT INTO itsnow_msc.contract_users(contract_id, msp_user_id, access) VALUES (#{contractId}, #{userId}, #{access})")
+    void buildRelation(@Param("contractId")Long contractId, @Param("userId")Long userId, @Param("access")String access);
 
     /**
      * 建立MSP用户可以登录MSU系统的关系
-     * @param accountId MSU账户
-     * @param userId MSP用户
+     * @param contractId 合同ID
      */
-    @Insert("INSERT INTO contract_users(msp_user_id, msu_account_id) VALUES (#{userId}, #{accountId})")
-    void buildRelation(@Param("userId")Long userId, @Param("accountId")Long accountId);
-
-    /**
-     * 建立MSP用户可以登录MSU系统的关系
-     * @param accountId MSU账户
-     */
-    @Delete("DELETE FROM contract_users WHERE msu_account_id = #{accountId}")
-    void deleteRelation(@Param("accountId")Long accountId);
+    @Delete("DELETE FROM itsnow_msc.contract_users WHERE contract_id = #{contractId}")
+    void deleteRelation(@Param("contractId")Long contractId);
 }

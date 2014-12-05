@@ -6,9 +6,8 @@
     <packaging>pom</packaging>
     <parent>
         <groupId>dnt.itsnow</groupId>
-        <artifactId>repository</artifactId>
-        <version>0.3.0</version>
-        <relativePath>../repository/pom.xml</relativePath>
+        <artifactId>backend</artifactId>
+        <version>0.3.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>msp-services</artifactId>
@@ -23,10 +22,6 @@
     </modules>
 
     <dependencies>
-        <dependency>
-            <groupId>dnt.itsnow</groupId>
-            <artifactId>platform</artifactId>
-        </dependency>
         <dependency>
             <groupId>dnt.itsnow</groupId>
             <artifactId>activiti_engine_service</artifactId>

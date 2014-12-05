@@ -3,13 +3,13 @@ package dnt.itsnow.support;
 import dnt.itsnow.api.ActivitiEngineService;
 import dnt.itsnow.model.Dictionary;
 import dnt.itsnow.model.*;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.service.Pageable;
-import dnt.itsnow.platform.util.DefaultPage;
+import net.happyonroad.platform.service.Page;
+import net.happyonroad.platform.service.Pageable;
+import net.happyonroad.platform.util.DefaultPage;
 import dnt.itsnow.repository.MsuIncidentRepository;
 import dnt.itsnow.service.*;
-import dnt.messaging.MessageBus;
-import dnt.spring.Bean;
+import net.happyonroad.messaging.MessageBus;
+import net.happyonroad.spring.Bean;
 import org.activiti.engine.delegate.event.ActivitiEventType;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
@@ -80,14 +80,20 @@ public class MsuIncidentManager extends Bean implements MsuIncidentService,Resou
     private ResourceLoader resourceLoader;
 
     public String getSendChannel() {
-        if(mspSn == null){
+        if (mspSn == null) {
             //find by contract
             try {
                 Contract contract = contractService.findBySn("P001");
-                Account account = accountService.findById(contract.getMspAccountId());
-                mspSn = account.getSn();
+                List<ContractMspAccount> list = contract.getMspAccounts();
+                if (list != null && !list.isEmpty()) {
+                    for (ContractMspAccount mspAccount : list) {
+                        if (ContractStatus.Approved.equals(mspAccount.getContractStatus())) {
+                            mspSn = mspAccount.getSn();
+                        }
+                    }
+                }
                 return mspSn + "-LISTENER";
-            }catch(Exception e){
+            } catch (Exception e) {
                 logger.warn(e.getMessage());
                 return null;
             }

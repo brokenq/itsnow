@@ -3,7 +3,7 @@
  */
 package dnt.itsnow.config;
 
-import dnt.concurrent.StrategyExecutorService;
+import net.happyonroad.concurrent.StrategyExecutorService;
 import dnt.itsnow.repository.ItsnowHostRepository;
 import dnt.itsnow.repository.ItsnowProcessRepository;
 import dnt.itsnow.repository.ItsnowSchemaRepository;

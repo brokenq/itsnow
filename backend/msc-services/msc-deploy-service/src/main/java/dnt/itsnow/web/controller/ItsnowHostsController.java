@@ -5,12 +5,12 @@ package dnt.itsnow.web.controller;
 
 import dnt.itsnow.exception.ItsnowHostException;
 import dnt.itsnow.model.ItsnowHost;
-import dnt.itsnow.platform.service.Page;
-import dnt.itsnow.platform.web.annotation.BeforeFilter;
-import dnt.itsnow.platform.web.exception.WebClientSideException;
-import dnt.itsnow.platform.web.exception.WebServerSideException;
+import net.happyonroad.platform.service.Page;
+import net.happyonroad.platform.web.annotation.BeforeFilter;
+import net.happyonroad.platform.web.exception.WebClientSideException;
+import net.happyonroad.platform.web.exception.WebServerSideException;
 import dnt.itsnow.service.ItsnowHostService;
-import dnt.util.StringUtils;
+import net.happyonroad.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -175,6 +175,7 @@ public class ItsnowHostsController extends SessionSupportController<ItsnowHost>{
         List<String> body = new LinkedList<String>();
         offset = hostService.follow(currentHost, invocationId, offset, body);
         response.setHeader("offset", String.valueOf(offset));
+        response.setHeader("status", currentHost.getStatus().toString());
         Map<String, String> map = new HashMap<String, String>();
         map.put("logs", StringUtils.join(body, "\n"));
         return map;
