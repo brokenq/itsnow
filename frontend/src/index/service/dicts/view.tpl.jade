@@ -32,4 +32,5 @@ mixin formField(label, value)
         +dictName("名称")(ng-model="dict.details[0].key",readonly)
         +dictValue("值")(ng-model="dict.details[0].value",readonly)
       script(src='/lib/mixins/dictView.js')
-
++action_bar
+  +action_submit("返回")(ui-sref="schemas.list")

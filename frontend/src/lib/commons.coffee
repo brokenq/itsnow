@@ -113,8 +113,9 @@ angular.module('Lib.Commons', ['ngTable'])
         @checked = false
         @items = {}
         @watch()
+        @watchAll()
 
-      watch: ->
+      watchAll: ->
         instance = this
         $rootScope.$watch( ->
           return  instance.checked
@@ -123,6 +124,8 @@ angular.module('Lib.Commons', ['ngTable'])
             instance.items[data[instance.key]] = value if data[instance.key]?
         )
 
+      watch: ->
+        instance = this
         $rootScope.$watchCollection( ->        # watch for check single checkbox
           return instance.items
         , ->
@@ -138,6 +141,13 @@ angular.module('Lib.Commons', ['ngTable'])
         , true
         )
 
-      #getItems : ->
-        #return @items
+      update:(callback,obj)->
+        instance = this
+        if obj?
+          delete instance.items[obj[instance.key]] if obj[instance.key]?
+        else
+          instance.watchAll()
+        callback()
+
+
   ])
