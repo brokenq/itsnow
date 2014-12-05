@@ -50,4 +50,10 @@ public interface PrivateServiceItemService extends CommonServiceItemService {
      */
     void deletePrivate(String sn);
 
+    /**
+     * 根据title查找服务项
+     * @param title 服务项title
+     * @return 服务项
+     */
+    PrivateServiceItem findPrivateByTitle(String title);
 }
