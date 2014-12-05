@@ -10,7 +10,6 @@ import dnt.itsnow.service.MutableAccountService;
 import dnt.itsnow.service.MutableUserService;
 import dnt.itsnow.support.MutableAccountManager;
 import org.jmock.Mockery;
-import org.jmock.integration.junit4.JUnit4Mockery;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -30,8 +29,8 @@ import org.springframework.context.annotation.Configuration;
 public class MutableAccountManagerConfig1 {
 
     @Bean
-    public Mockery junit4Mockery(){
-        return  new JUnit4Mockery();
+    public Mockery mockery(){
+        return  new Mockery();
     }
 
     // 被测试对象
@@ -42,7 +41,7 @@ public class MutableAccountManagerConfig1 {
 
     @Bean
     public MutableUserService mutableUserService(){
-        return junit4Mockery().mock(MutableUserService.class);
+        return mockery().mock(MutableUserService.class);
     }
 
     @Bean
@@ -52,6 +51,6 @@ public class MutableAccountManagerConfig1 {
 
     @Bean
     public MutableAccountRepository mutableAccountRepository(){
-        return junit4Mockery().mock(MutableAccountRepository.class);
+        return mockery().mock(MutableAccountRepository.class);
     }
 }
