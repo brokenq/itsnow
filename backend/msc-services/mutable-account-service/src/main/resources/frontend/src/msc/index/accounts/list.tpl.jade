@@ -10,7 +10,7 @@ include /lib/mixins/list
       +tool_button("actionService.perform(autoCreate, $event)",  "key",  "自动分配", "1+", "", "valid")
     +more_buttons
       +drop_button("actionService.gotoState('processes.new', $event)", "plus", "手工分配", "1", "", "valid")(class="btn btn-primary link-btn-text-left")
-      +drop_button("actionService.perform(destroy, $event)", "trash", "删除", "1+", "valid", "")(class="btn link-btn-text-left")
+      +drop_button("actionService.perform(destroy, $event)", "trash", "删除", "1+", "valid", "")(class="btn btn-primary link-btn-text-left")
 
   +page_table("accountsTable","selectionService")
     +row("account", "sn", "selectionService")(ng-class="account.status.toLowerCase()")
