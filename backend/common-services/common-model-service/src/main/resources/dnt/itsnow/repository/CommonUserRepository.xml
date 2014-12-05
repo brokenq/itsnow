@@ -22,8 +22,10 @@
     <sql id="subSelect">
         SELECT cu.msp_user_id
         FROM   itsnow_msc.contract_users cu
-            LEFT JOIN itsnow_msc.accounts a
-                ON cu.msu_account_id = a.id
+               LEFT JOIN itsnow_msc.contracts c
+                      ON cu.contract_id = c.id
+               LEFT JOIN itsnow_msc.accounts a
+                      ON c.msu_account_id = a.id
     </sql>
 
     <select id="findByFieldAndValue" resultMap="userWithAccount">
@@ -62,9 +64,12 @@
     <select id="findAllByLogOnContract" resultType="User">
         SELECT u.*
         FROM   itsnow_msc.contract_users cu
-            LEFT JOIN itsnow_msc.users u
-                ON cu.msp_user_id = u.id
-        WHERE  cu.msu_account_id = #{accountId}
+               LEFT JOIN itsnow_msc.contracts c
+                      ON cu.contract_id = c.id
+               LEFT JOIN itsnow_msc.users u
+                      ON cu.msp_user_id = u.id
+        WHERE  c.msu_account_id = #{accountId}
+               AND cu.access = '1'
     </select>
 
     <resultMap id="userResult" type="User" autoMapping="true">

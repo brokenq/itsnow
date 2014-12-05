@@ -1,19 +1,17 @@
 package dnt.itsnow.support;
 
 import dnt.itsnow.model.Contract;
+import dnt.itsnow.model.ContractMspAccount;
 import dnt.itsnow.model.ContractStatus;
 import dnt.itsnow.model.User;
-import net.happyonroad.platform.service.ServiceException;
 import dnt.itsnow.repository.MutableContractRepository;
 import dnt.itsnow.service.MutableContractService;
+import net.happyonroad.platform.service.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 
-/**
- * Created by jacky on 2014/9/4.
- */
 @Service
 public class MutableContractManager extends CommonContractManager implements MutableContractService {
 
@@ -54,10 +52,11 @@ public class MutableContractManager extends CommonContractManager implements Mut
      * @return 更新后的合同信息
      */
     @Override
-    public Contract bid(Contract contract) {
+    public Contract bid(String mspAccountId, Contract contract) {
         contract.setStatus(ContractStatus.Purposed);
-        contract.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        contract.updating();
         mutableContractRepository.bid(contract);
+        mutableContractRepository.bidRecord(mspAccountId, contract.getId());
         return contract;
     }
 
@@ -69,9 +68,14 @@ public class MutableContractManager extends CommonContractManager implements Mut
      */
     @Override
     public Contract approve(Contract contract) {
-        contract.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        contract.updating();
         contract.setStatus(ContractStatus.Approved);
         mutableContractRepository.approve(contract);
+
+        for(ContractMspAccount account : contract.getMspAccounts()){
+            mutableContractRepository.updateRecord(contract.getId(), account.getId(), account.getContractStatus());
+        }
+
         return contract;
     }
 
@@ -83,7 +87,7 @@ public class MutableContractManager extends CommonContractManager implements Mut
      */
     @Override
     public Contract reject(Contract contract) {
-        contract.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        contract.updating();
         contract.setStatus(ContractStatus.Rejected);
         mutableContractRepository.reject(contract);
         return contract;
@@ -101,17 +105,15 @@ public class MutableContractManager extends CommonContractManager implements Mut
     }
 
     @Override
-    public void buildRelation(Contract contract) throws ServiceException {
-        for (User user : contract.getUsers()) {
-            if(mutableContractRepository.findRelation(user.getId(), contract.getMsuAccountId())<1) {
-                mutableContractRepository.buildRelation(user.getId(), contract.getMsuAccountId());
-            }
+    public void buildRelation(Contract contract) {
+        for (User user : contract.getMspUsers()) {
+                mutableContractRepository.buildRelation(contract.getId(), user.getId(), "1");
         }
     }
 
     @Override
-    public void updateRelation(Contract contract) throws ServiceException {
-        mutableContractRepository.deleteRelation(contract.getMsuAccount().getId());
+    public void updateRelation(Contract contract) {
+        mutableContractRepository.deleteRelation(contract.getId());
         buildRelation(contract);
     }
 

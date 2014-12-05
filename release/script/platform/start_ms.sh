@@ -16,7 +16,7 @@ if [ ! $1 ]; then
 fi
 instance=$1
 id=$(echo $instance | sed s/itsnow.\\?//)
-launcher=$(echo "bin/itsnow_$id" | tr "[A-Z]" "[a-z]")top
+launcher=$(echo "bin/itsnow_$id" | tr "[A-Z]" "[a-z]")
 
 if [ $2 ]; then
   folder=$2

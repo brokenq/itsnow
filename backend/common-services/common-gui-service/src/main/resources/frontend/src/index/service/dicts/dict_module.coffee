@@ -99,12 +99,12 @@ angular.module('Service.Dict', [])
       $scope.dictsTable = new NgTable(angular.extend($scope.options, $location.search()), args)
       $scope.selectionService = new SelectionService($scope.cacheService.records, "code")
       $scope.actionService = new ActionService({watch: $scope.selectionService.items, mapping: $scope.cacheService.find})
-
+      $scope.reload = ->
+        $scope.dictsTable.reload()
       $scope.destroy = (dict) ->
         dictService.remove {code: dict.code}, () ->
           feedback.success "删除字典#{dict.code}成功"
-          delete $scope.selectionService.items[dict.code]
-          $scope.dictsTable.reload()
+          $scope.selectionService.update($scope.reload,dict)
         , (resp) ->
           feedback.error("删除字典#{dict.code}失败", resp)
 

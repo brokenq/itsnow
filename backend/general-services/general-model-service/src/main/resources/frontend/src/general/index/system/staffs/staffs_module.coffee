@@ -77,7 +77,8 @@ angular.module('System.Staffs', ['multi-select'])
       # 去除不必要的对象属性，用于HTTP提交
       $scope.formatData = (staff, site, department, staff_user) ->
         aStaff = staff
-        aStaff.status = staff.status.id
+        if angular.isDefined(staff.status)
+          aStaff.status = staff.status.id
         aStaff.site = site
         aStaff.department = department
         staff.user = staff_user

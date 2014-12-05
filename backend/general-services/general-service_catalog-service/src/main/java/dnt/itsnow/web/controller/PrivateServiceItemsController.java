@@ -53,7 +53,9 @@ public class PrivateServiceItemsController extends SessionSupportController<Priv
      */
     @RequestMapping("{isn}")
     public PrivateServiceItem show(@PathVariable("isn") String isn){
-        return privateServiceItemService.findPrivateBySn(isn);
+        serviceCatalog.setItems(null);
+        serviceItem.setCatalog(serviceCatalog);
+        return serviceItem;
     }
 
     /**

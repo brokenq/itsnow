@@ -10,7 +10,7 @@ import dnt.itsnow.api.ServiceCatalogService;
 import dnt.itsnow.model.ServiceCatalog;
 import dnt.itsnow.repository.ServiceCatalogRepository;
 import net.happyonroad.spring.Bean;
-import dnt.util.StringUtils;
+import net.happyonroad.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
