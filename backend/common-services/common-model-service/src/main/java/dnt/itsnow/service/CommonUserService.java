@@ -56,6 +56,11 @@ public interface CommonUserService extends UserDetailsService {
 
     Account findAccountById(Long accountId);
 
+    /**
+     *
+     * @param mainAccount
+     * @return
+     */
     List<User> findUsersByAccount(Account mainAccount);
 
     /**

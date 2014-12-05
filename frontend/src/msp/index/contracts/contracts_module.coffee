@@ -146,7 +146,7 @@ angular.module('MspIndex.Contracts', [])
       $log.log "Initialized the Contract edit controller"
 
       $scope.contract = $scope.cacheService.find $stateParams.sn, true
-      $scope.contract.users=[]
+      $scope.contract.mspUsers=[]
 
       #查询与本系统签订合同的MSP用户
       roleService.getUsers (data)->
@@ -165,7 +165,7 @@ angular.module('MspIndex.Contracts', [])
           user ={}
           user.id = mspContractUser.id
           if mspContractUser.ticked is true
-            $scope.contract.users.push user
+            $scope.contract.mspUsers.push user
 
         contractService.update($scope.contract, () ->
           feedback.success "批准MSP用户登录操作成功"

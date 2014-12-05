@@ -146,8 +146,8 @@ angular.module('MsuIndex.Contracts', ['multi-select'])
 
       $scope.details = []
       $scope.createDetail = ->
-#        if !$scope.newContractDetailForm.$valid
-#          return
+        if !$scope.newContractDetailForm.$valid
+          return
         for serviceCatalog in $scope.serviceCatalogs
           if serviceCatalog.items?
             for item in serviceCatalog.items

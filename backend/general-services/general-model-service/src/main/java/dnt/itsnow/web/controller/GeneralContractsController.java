@@ -162,10 +162,33 @@ public class GeneralContractsController extends SessionSupportController {
      * POST /api/contracts/user/relation
      *
      */
+    @RequestMapping(value="user/relation",method = RequestMethod.POST)
+    public void buildRelation(@Valid @RequestBody Contract contract) {
+
+        logger.info("Updating contract with msp users relationship", contract.getMspUsers());
+
+        try {
+            contractService.buildRelation(contract);
+        } catch (ServiceException e) {
+            throw new WebClientSideException(HttpStatus.NOT_ACCEPTABLE,
+                    "the contract can't be found, " + e.getMessage());
+        } catch (RestClientException e) {
+            throw new WebServerSideException(HttpStatus.BAD_GATEWAY, e.getMessage());
+        }
+
+        logger.info("Updated contract with msp users relationship", contract.getMspUsers());
+    }
+
+    /**
+     * <h2>MSP进行其用户与MSU合同进行关联</h2>
+     * <p/>
+     * PUT /api/contracts/user/relation
+     *
+     */
     @RequestMapping(value="user/relation",method = RequestMethod.PUT)
     public void updateRelation(@Valid @RequestBody Contract contract) {
 
-        logger.info("Updating contract with msp users relationship", contract.getUsers());
+        logger.info("Updating contract with msp users relationship", contract.getMspUsers());
 
         try {
             contractService.updateRelation(contract);
@@ -176,7 +199,7 @@ public class GeneralContractsController extends SessionSupportController {
             throw new WebServerSideException(HttpStatus.BAD_GATEWAY, e.getMessage());
         }
 
-        logger.info("Updated contract with msp users relationship", contract.getUsers());
+        logger.info("Updated contract with msp users relationship", contract.getMspUsers());
     }
 
 }

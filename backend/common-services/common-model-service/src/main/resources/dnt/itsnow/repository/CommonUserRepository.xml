@@ -61,18 +61,6 @@
         WHERE  a.id = #{id} OR u.id in (<include refid="subSelect"/> WHERE a.id = #{id})
     </select>
 
-<!--        SELECT u.*
-        FROM   itsnow_msc.contract_users cu
-            LEFT JOIN itsnow_msc.users u
-                ON cu.msp_user_id = u.id
-        WHERE  cu.msu_account_id = #{accountId}
-
-        SELECT cu.msp_user_id
-        FROM   itsnow_msc.contract_users cu
-               LEFT JOIN itsnow_msc.contracts c
-                      ON cu.contract_id = c.id
-               LEFT JOIN itsnow_msc.accounts a
-                      ON c.msu_account_id = a.id-->
     <select id="findAllByLogOnContract" resultType="User">
         SELECT u.*
         FROM   itsnow_msc.contract_users cu

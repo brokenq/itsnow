@@ -106,7 +106,7 @@ public class MutableContractManager extends CommonContractManager implements Mut
 
     @Override
     public void buildRelation(Contract contract) {
-        for (User user : contract.getUsers()) {
+        for (User user : contract.getMspUsers()) {
                 mutableContractRepository.buildRelation(contract.getId(), user.getId(), "1");
         }
     }

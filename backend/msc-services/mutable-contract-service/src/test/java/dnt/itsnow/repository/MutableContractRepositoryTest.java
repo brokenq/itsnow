@@ -3,6 +3,7 @@ package dnt.itsnow.repository;
 import dnt.itsnow.config.MutableContractRepositoryConfig;
 import dnt.itsnow.model.Contract;
 import dnt.itsnow.model.ContractMspAccount;
+import dnt.itsnow.model.ContractMspUser;
 import dnt.itsnow.model.User;
 import net.happyonroad.platform.util.PageRequest;
 import org.junit.Assert;
@@ -35,12 +36,12 @@ public class MutableContractRepositoryTest {
         contract = new Contract();
         contract.setId(1L);
 
-        User user = new User();
+        ContractMspUser user = new ContractMspUser();
         user.setId(1L);
-        List<User> users = new ArrayList<User>();
+        List<ContractMspUser> users = new ArrayList<ContractMspUser>();
         users.add(user);
 
-        contract.setUsers(users);
+        contract.setMspUsers(users);
 
         pageRequest = new PageRequest(0, 1);
     }

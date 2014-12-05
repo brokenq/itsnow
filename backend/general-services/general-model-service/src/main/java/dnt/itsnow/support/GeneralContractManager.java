@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestOperations;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,9 +56,13 @@ public class GeneralContractManager extends CommonContractManager implements Gen
 
         logger.info("Approved  {} {}", account, contract.getSn());
 
-        List<User> users = commonUserService.findUsersByAccount(account);
-        contract.setUsers(users);
-        buildRelation(contract);
+//        List<User> users = commonUserService.findUsersByAccount(account);
+//        List<ContractMspUser> mspUsers = new ArrayList<ContractMspUser>();
+//        for(User user : users){
+//            mspUsers.add((ContractMspUser)user);
+//        }
+//        contract.setMspUsers(mspUsers);
+//        buildRelation(contract);
 
         return contract;
     }
@@ -138,18 +143,18 @@ public class GeneralContractManager extends CommonContractManager implements Gen
 
     @Override
     public Contract buildRelation(Contract contract) throws ServiceException {
-        logger.info("Building {}", contract.getUsers());
+        logger.info("Building {}", contract.getMspUsers());
         facade.postForEntity("/admin/api/contracts/user/relation",
                 contract, Contract.class);
-        logger.info("Built    {}", contract.getUsers());
+        logger.info("Built    {}", contract.getMspUsers());
         return contract;
     }
 
     @Override
     public Contract updateRelation(Contract contract) throws ServiceException {
-        logger.info("Updating {}", contract.getUsers());
+        logger.info("Updating {}", contract.getMspUsers());
         facade.put("/admin/api/contracts/user/relation", contract);
-        logger.info("Updated  {}", contract.getUsers());
+        logger.info("Updated  {}", contract.getMspUsers());
         return contract;
     }
 

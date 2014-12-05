@@ -32,9 +32,9 @@ public class Contract extends Record {
     private ContractStatus status;
     //合同明细
     private List<ContractDetail> details;
-    // 与MSU签订合同的MSP用户列表，其中包含是否允许登录MSU信息
-    private List<User> users;
-    // MSP账户
+    // 应约此合同的MSP用户列表，其中包含是否允许登录MSU信息
+    private List<ContractMspUser> mspUsers;
+    // 应约此合同的MSP账户列表，其中包含账户对此合同的操作信息
     private List<ContractMspAccount> mspAccounts;
 
     public List<ContractMspAccount> getMspAccounts() {
@@ -45,12 +45,12 @@ public class Contract extends Record {
         this.mspAccounts = mspAccounts;
     }
 
-    public List<User> getUsers() {
-        return users;
+    public List<ContractMspUser> getMspUsers() {
+        return mspUsers;
     }
 
-    public void setUsers(List<User> users) {
-        this.users = users;
+    public void setMspUsers(List<ContractMspUser> mspUsers) {
+        this.mspUsers = mspUsers;
     }
 
     public String getSn() {
@@ -130,9 +130,8 @@ public class Contract extends Record {
         sb.append(", sn='").append(sn).append('\'');
         sb.append(", title='").append(title).append('\'');
         sb.append(", type='").append(type).append('\'');
-        sb.append(", status=").append(status);
         sb.append(", details=").append(details);
-        sb.append(", users=").append(users);
+        sb.append(", mspUsers=").append(mspUsers);
         sb.append(", mspAccounts=").append(mspAccounts);
         sb.append('}');
         return sb.toString();
