@@ -1,0 +1,20 @@
+include /lib/mixins/list
+.container
+  +toolbar
+    +button_group
+      +tool_button("usersTable.reload()", "refresh", "", "*", "", "")
+    +button_group
+      +tool_button("actionService.gotoState('users.new', $event)", "plus", "新增", "*", "", "")
+      +tool_button("actionService.gotoState('users.edit', $event)", "pencil", "修改", "1", "", "editable")
+    +more_buttons
+      +drop_button("actionService.perform(destroy, $event)", "trash", "删除", "1+", "", "deletable")
+  +page_table("usersTable","selectionService")
+    +row("user", "username", "selectionService")(class="editable deletable")
+      td(data-title="'用户名'")
+        a(ui-sref="users.view({username: '{{user.username}}'})") {{user | formatUser}}
+      td(data-title="'所属帐户'")
+        a(ui-sref="accounts.view(user.account)") {{user.account.name}}
+      td(data-title="'电子邮箱'")
+        a(href="mailto:{{user.email}}") {{user.email}}
+      td(data-title="'电话号码'", align="right") {{user.phone}}
+      td(data-title="'是否启用'") {{user.enabled | enableFilter}}
