@@ -148,7 +148,7 @@ angular.module('MspIndex.Contracts', [])
       $scope.contract = $scope.cacheService.find $stateParams.sn, true
       $scope.contract.mspUsers=[]
 
-      #查询与本系统签订合同的MSP用户
+      #查询与MSU签订合同的MSP用户
       roleService.getUsers (data)->
         $scope.mspContractUsers = data
         contractService.getLoginUser {sn:$scope.contract.sn}, (data)->

@@ -2,6 +2,9 @@ h2 新增 合同
 //- include the form mixins
 include /lib/mixins/form
 
+mixin action_edit(label)
+  +action_button(label,"button","edit","info")&attributes(attributes)
+
 //ng-form.form-horizontal(name="newContractForm", novalidate="novalidate", ng-model-options="{ updateOn: 'mousedown blur' }", role="form", ng-submit="create()")
 +form("newContractForm")(ng-submit="create()", ng-submitted="submitted")
   include /msu/index/contracts/_form.jade

@@ -59,6 +59,13 @@
         SELECT * FROM itsnow_msc.contracts WHERE sn = #{sn}
     </select>
 
+    <select id="findMspUserById" resultMap="mspUserResult">
+        SELECT u.*, cu.access
+        FROM itsnow_msc.contract_users cu
+        LEFT JOIN itsnow_msc.users u ON cu.msp_user_id = u.id
+        WHERE cu.contract_id = #{id}
+    </select>
+
     <select id="findMspAccountById" resultMap="mspAccountResult">
         SELECT a.*, cr.status AS contract_status
         FROM itsnow_msc.contract_records cr
@@ -82,6 +89,10 @@
     <resultMap id="mspAccountResult" type="ContractMspAccount" autoMapping="true">
         <id property="id" column="msp_account_id"/>
         <id property="contractStatus" column="contract_status"/>
+    </resultMap>
+
+    <resultMap id="mspUserResult" type="ContractMspUser" autoMapping="true">
+        <id property="id" column="msp_user_id"/>
     </resultMap>
 
 </mapper>

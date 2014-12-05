@@ -5,10 +5,7 @@ package dnt.itsnow.support;
 
 import dnt.itsnow.exception.AccountException;
 import dnt.itsnow.exception.ContractException;
-import dnt.itsnow.model.Account;
-import dnt.itsnow.model.Contract;
-import dnt.itsnow.model.ContractMspAccount;
-import dnt.itsnow.model.MspAccount;
+import dnt.itsnow.model.*;
 import net.happyonroad.platform.service.Page;
 import net.happyonroad.platform.service.Pageable;
 import net.happyonroad.platform.service.ServiceException;
@@ -75,7 +72,10 @@ public class CommonContractManager extends Bean implements CommonContractService
             for(Contract con : contracts){
                 for (ContractMspAccount mspAccount : con.getMspAccounts()){
                     if(account.getSn().equals(mspAccount.getSn())){
+                        // 对于此MSP用户，看这个合同的状态应该是批准或拒绝，而不是合同真正的状态
                         con.setStatus(mspAccount.getContractStatus());
+                        // 相应的，这个是对于MSP用户来说，这个合同的应约时间，而不是这个合同真正的创建时间
+                        con.setCreatedAt(mspAccount.getCreatedAt());
                     }
                 }
             }
@@ -97,7 +97,10 @@ public class CommonContractManager extends Bean implements CommonContractService
 
     @Override
     public Contract findBySn(String sn) throws ServiceException {
-        return repository.findBySn(sn);
+        Contract contract = repository.findBySn(sn);
+        List<ContractMspUser> mspUsers = repository.findMspUserById(contract.getId());
+        contract.setMspUsers(mspUsers);
+        return contract;
     }
 
     private void formatContract(Contract contract) {
