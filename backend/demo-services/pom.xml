@@ -6,9 +6,8 @@
 
     <parent>
         <groupId>dnt.itsnow</groupId>
-        <artifactId>repository</artifactId>
+        <artifactId>backend</artifactId>
         <version>0.3.1-SNAPSHOT</version>
-        <relativePath>../repository/pom.xml</relativePath>
     </parent>
     <packaging>pom</packaging>
 

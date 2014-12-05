@@ -1,0 +1,25 @@
+include /lib/mixins/list
+
+.datalist
+  +toolbar
+    +button_group
+      +tool_button("staffsTable.reload()", "refresh", "", "*", "", "")
+    +button_group
+      +tool_button("actionService.gotoState('staffs.new', $event)", "plus", "新增", "*", "", "")
+      +tool_button("actionService.gotoState('staffs.edit', $event)", "pencil", "修改", "1", "", "editable")
+    +more_buttons
+      +drop_button("actionService.perform(destroy, $event)", "trash", "删除", "1+", "", "deletable")
+
+  +page_table("staffsTable","selectionService")
+    +row("staff", "no", "selectionService")(class="editable deletable")
+      td(data-title="'工号'") {{staff.no}}
+      td(data-title="'名称'")
+        a(ui-sref="staffs.view(staff)") {{staff.name}}
+      td(data-title="'登录名'") {{staff.user.name || '无'}}
+      td(data-title="'职务'") {{staff.title}}
+      td(data-title="'部门'")
+        a(ui-sref="departments.view(staff.department)") {{staff.department.name}}
+      td(data-title="'地点'")
+        a(ui-sref="sites.view(staff.site)") {{staff.site.name}}
+      td(data-title="'状态'") {{staff.status | staffStatusFilter}}
+      td(data-title="'描述'") {{staff.description}}

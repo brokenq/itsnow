@@ -1,0 +1,37 @@
+mixin blocks(title)
+  h2 #{title}
+  hr
+  block
+mixin formGroup()
+  .form-group
+    .col-md-12
+      block
+mixin label(label)
+  label.control-label.col-md-2 #{label}:
+mixin formField(label, value)
+  label.control-label.col-md-2 #{label}:
+  div()&attributes(attributes)
+    input.form-control(type="text", value=value, readonly)
+
+.form-horizontal
+  +blocks("员工详情")
+    +formGroup()
+      +formField("员工工号", "{{staff.no}}")(class="col-md-3")
+      +formField("所属状态", "{{staff.status | staffStatusFilter}}")(class="col-md-3")
+    +formGroup()
+      +formField("员工姓名", "{{staff.name}}")(class="col-md-3")
+      +formField("电子邮件", "{{staff.email}}")(class="col-md-3")
+    +formGroup()
+      +formField("固定电话", "{{staff.fixedPhone}}")(class="col-md-3")
+      +formField("手机号码", "{{staff.mobilePhone}}")(class="col-md-3")
+    +formGroup()
+      +formField("所属部门", "{{staff.department.name}}")(class="col-md-3")
+      +formField("所在地点", "{{staff.site.name}}")(class="col-md-3")
+    +formGroup()
+      +formField("员工职务", "{{staff.title}}")(class="col-md-3")
+      //+formField("员工类型", "{{staff.type}}")(class="col-md-3")
+    +formGroup()
+      label.control-label.col-md-2 员工描述:
+      .col-md-8
+        textarea.form-control(rows='4',ng-model="staff.description",readonly)
+ 

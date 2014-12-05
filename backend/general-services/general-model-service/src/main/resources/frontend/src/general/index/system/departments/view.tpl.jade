@@ -1,0 +1,45 @@
+mixin blocks(title)
+  h2 #{title}
+  hr
+  block
+mixin formGroup()
+  .form-group
+    .col-md-12
+      block
+mixin formField(label, value)
+  label.control-label.col-md-2 #{label}:
+  .col-md-3
+    input.form-control(type="text", ng-model="#{value}", readonly)
+mixin label(title)
+  label.control-label.col-md-2 #{title}:
+  .col-md-8
+    block
+mixin tableForm(number,name,mobilePhone,email,status)
+  tr(ng-repeat="staff in department.staffs")
+    td #{number}
+    td #{name}
+    td #{mobilePhone}
+    td #{email}
+    td #{status}
+mixin button(href,num)
+  li
+    a(href="#{href}") #{num}
+
+.form-horizontal
+  +blocks("部门详情")
+    +formGroup()
+      +formField("名称", "department.name")
+      +formField("地点", "department.sitesname")
+    +formGroup()
+      +label('描述')
+        textarea.form-control(rows='4',ng-model="department.description",readonly)
+    +formGroup()
+      +label('员工列表')
+        table.table.table-striped.table-bordered.table-condensed
+          tr
+            th 工号
+            th 姓名
+            th 手机
+            th 邮箱
+            th 状态
+          +tableForm('{{staff.no}}', '{{staff.name}}', '{{staff.mobilePhone}}', '{{staff.email}}', '{{staff.status | staffStatusFilter}}')

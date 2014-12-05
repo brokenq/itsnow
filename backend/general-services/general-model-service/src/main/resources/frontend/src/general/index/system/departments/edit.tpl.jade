@@ -1,0 +1,10 @@
+//- include the form mixins
+include /lib/mixins/form
+h2 编辑 部门
+
++form("editDepartmentForm")(ng-submit="update()")
+  include /general/index/system/departments/_form.jade
+
+  +action_bar
+    +action_submit("更新")
+    +action_cancel("取消")(ui-sref="departments.list")

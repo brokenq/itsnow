@@ -1,0 +1,21 @@
+-var readonly = true
+//- include the form mixins
+include /lib/mixins/form
+mixin input2(object, field, model)
+  input.form-control(id="#{object}_#{field.replace('.','_')}", name="#{object}.#{field}", value=model, readonly)&attributes(attributes)
+
+h2 查看 故障单
+
++form("viewIncidentForm")
+  include /msu/index/incidents/_form.jade
+
+  +section("处理时间")
+    +group("incident", "responseTime", "响应时间", "star", "")
+      +input2("incident", "responseTime",'{{incident.responseTime | date:"yyyy-MM-dd HH:mm:ss"}}')
+    +group("incident", "resolveTime", "解决时间", "star", "")
+      +input2("incident", "resolveTime",'{{incident.resolveTime | date:"yyyy-MM-dd HH:mm:ss"}}')
+    +group("incident", "closeTime", "关闭时间", "star", "")
+      +input2("incident", "closeTime",'{{incident.closeTime | date:"yyyy-MM-dd HH:mm:ss"}}')
+
+  +action_bar
+    +action_submit("返回")(ui-sref="incidents.opened")
