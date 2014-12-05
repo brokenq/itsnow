@@ -9,13 +9,8 @@ include /lib/mixins/list
       +tool_button("actionService.perform(reject, $event)",  "trash", "拒绝",    "1+", "", "new")
       +tool_button("actionService.perform(autoCreate, $event)",  "key",  "自动分配", "1+", "", "valid")
     +more_buttons
-<<<<<<< HEAD:frontend/src/msc/index/accounts/list.tpl.jade
       +drop_button("actionService.gotoState('processes.new', $event)", "plus", "手工分配", "1", "", "valid")(class="btn btn-primary link-btn-text-left")
       +drop_button("actionService.perform(destroy, $event)", "trash", "删除", "1+", "valid", "")(class="btn link-btn-text-left")
-=======
-      +drop_button("actionService.perform(manuallyAssign, $event)", "plus", "手工分配", "1", "", "valid")
-      +drop_button("actionService.perform(destroy, $event)", "trash", "删除", "1+", "valid", "")
->>>>>>> bef42420fdb6e0b8c4144d75dd33be5991b50bc9:backend/msc-services/mutable-account-service/src/main/resources/frontend/src/msc/index/accounts/list.tpl.jade
 
   +page_table("accountsTable","selectionService")
     +row("account", "sn", "selectionService")(ng-class="account.status.toLowerCase()")
