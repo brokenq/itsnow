@@ -1,9 +1,0 @@
--var readonly = false
-
-h2 新增 组
-include /lib/mixins/form
-+form("newGroupForm")(ng-submit="create()")
-  include /general/index/system/groups/_form.jade
-  +action_bar
-    +action_submit("创建")
-    +action_cancel("取消")(ui-sref="groups.list")
