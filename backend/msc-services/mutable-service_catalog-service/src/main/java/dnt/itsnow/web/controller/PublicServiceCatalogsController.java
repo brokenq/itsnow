@@ -4,9 +4,11 @@
 package dnt.itsnow.web.controller;
 
 import dnt.itsnow.model.PublicServiceCatalog;
+import dnt.itsnow.model.PublicServiceItem;
+import dnt.itsnow.service.PublicServiceCatalogService;
+import dnt.itsnow.service.PublicServiceItemService;
 import net.happyonroad.platform.web.annotation.BeforeFilter;
 import net.happyonroad.platform.web.exception.WebClientSideException;
-import dnt.itsnow.service.PublicServiceCatalogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +26,9 @@ public class PublicServiceCatalogsController extends SessionSupportController<Pu
     PublicServiceCatalog serviceCatalog;
     @Autowired
     PublicServiceCatalogService publicServiceCatalogService;
+
+    @Autowired
+    PublicServiceItemService publicServiceItemService;
     /**
      * <h2>获得所有的服务目录</h2>
      *
@@ -112,6 +117,33 @@ public class PublicServiceCatalogsController extends SessionSupportController<Pu
         logger.info("Add service catalog {} of Account:{}",sn,accountId);
         publicServiceCatalogService.saveByAccount(serviceCatalog,accountId);
         logger.info("Added service catalog {} of Account:{}",sn,accountId);
+    }
+
+    /**
+     * <h2>检查服务目录title是否有效</h2>
+     * <p/>
+     * 主要检查服务目录的名称是否唯一；
+     * @param title 服务目录标题
+     */
+    @RequestMapping("checkTitle")
+    public void checkTitle(@RequestParam(value = "title") String title){
+        PublicServiceCatalog catalog = publicServiceCatalogService.findByTitle(title);
+        if(catalog != null)
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate catalog title: " +title);
+    }
+
+    /**
+     * <h2>检查服务目录title是否有效</h2>
+     * <p/>
+     * 主要检查服务目录的名称是否唯一；
+     * @param sn 服务目录sn
+     */
+    @RequestMapping("checkSn")
+    public void checkSn(@RequestParam(value = "sn") String sn){
+        PublicServiceCatalog catalog = publicServiceCatalogService.findBySn(sn);
+        PublicServiceItem item = publicServiceItemService.findBySn(sn);
+        if(catalog != null || item != null)
+            throw new WebClientSideException(HttpStatus.CONFLICT, "Duplicate catalog sn: " +sn);
     }
 
 

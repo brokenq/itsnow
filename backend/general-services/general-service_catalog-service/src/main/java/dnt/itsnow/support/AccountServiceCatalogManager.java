@@ -28,6 +28,7 @@ public class AccountServiceCatalogManager extends Bean implements AccountService
         //var.put("accountId",account.getId()+"");
         //facade.put("/admin/api/public_service_catalogs/{sn}/items/{isn}/create",item.getCatalog().getSn(),item.getSn(),var);
         String url = "/admin/api/public_service_catalogs/"+catalog.getSn()+"/account/"+account.getId()+"/create";
+        logger.info("url is: {}",url);
         //facade.put("/admin/api/public_service_catalogs/{sn}/items/{isn}/remove?accountId={id}",null,item.getCatalog().getSn(),item.getSn(),account.getId());
         facade.put(url,null);
 

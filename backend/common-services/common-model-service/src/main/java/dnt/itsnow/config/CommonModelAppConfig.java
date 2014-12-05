@@ -7,11 +7,9 @@ import net.happyonroad.platform.config.DefaultAppConfig;
 import net.happyonroad.platform.web.security.DelegateSecurityConfigurer;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 /**
@@ -26,14 +24,10 @@ public class CommonModelAppConfig implements InitializingBean {
     PersistentTokenRepository  tokenRepository;
     @Autowired
     AuthenticationProvider     authenticationProvider;
-    @Autowired
-    @Qualifier("groupedUserService")
-    UserDetailsService userService;
 
     @Override
     public void afterPropertiesSet() throws Exception {
         configurer.delegate(tokenRepository)
-                  .delegate(authenticationProvider)
-                  .delegate(userService);
+                  .delegate(authenticationProvider);
     }
 }

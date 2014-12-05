@@ -108,14 +108,7 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
         deployJob.setId(DEPLOY_PROCESS_PRFIX + creating.getName());
         deployJob.setUserFlag(DEPLOY_FLAG);
         String invocationId = invokeService.addJob(deployJob);
-        try {
-            //因为部署一个新系统是一件比较快速的事情，所以设计为
-            // 任务完成才会返回，如果任务失败，则抛出异常
-            invokeService.waitJobFinished(invocationId);
-        } catch (SystemInvokeException e) {
-            throw new ItsnowProcessException("Can't deploy itsnow process for " + creating, e);
-        }
-        creating.setStatus(ProcessStatus.Stopped);
+        creating.setStatus(ProcessStatus.Deploying);
         creating.creating();
         creating.setProperty(CREATE_INVOCATION_ID, invocationId);
         repository.create(creating);
@@ -153,8 +146,17 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
         ItsnowProcess process = autoNew(account);
         updateHost(process.getHost(), process);
         // Create it first
-        create(process);
+        process = create(process);
         // Then start it
+        try {
+            int code = invokeService.waitJobFinished(process.getProperty(DEPLOY_INVOCATION_ID));
+            if (0 == code) {
+                process.setStatus(ProcessStatus.Stopped);
+                update(process);
+            }
+        } catch (SystemInvokeException e) {
+            throw new ItsnowProcessException("Can't deploy itsnow process for " + process, e);
+        }
         start(process);
         logger.info("Auto created and start the itsnow process {} for {}", process, account);
         return process;
@@ -292,7 +294,13 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
     @Override
     public void finished(SystemInvocation invocation) {
         super.finished(invocation);
-        if( invocation.getUserFlag() == START_FLAG){
+        if (invocation.getUserFlag() == DEPLOY_FLAG) {
+            // set process status as Stopped
+            ItsnowProcess process = updateStatus(DEPLOY_INVOCATION_ID, invocation.getId(), ProcessStatus.Stopped);
+            if( process != null ) {
+                logger.info("Stopped  {}", process);
+            }
+        } else if( invocation.getUserFlag() == START_FLAG){
             // set process status as started
             ItsnowProcess process = updateStatus(START_INVOCATION_ID, invocation.getId(), ProcessStatus.Running);
             if( process != null ) {
@@ -357,7 +365,6 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
         process.setProperty("debug.port", host.getProperty("next.debug.port", "8201"));
         process.setProperty("jmx.port", host.getProperty("next.jmx.port", "8301"));
         process.setProperty("http.port", host.getProperty("next.http.port", "8401"));
-        process.setProperty("app.domain", translator.getAppDomain());
         return process;
     }
 
