@@ -2,22 +2,16 @@ h2 新增 合同
 //- include the form mixins
 include /lib/mixins/form
 
-<<<<<<< HEAD
-+form("newContractForm")(ng-submit="create()")
-=======
+
 mixin action_edit(label)
   +action_button(label,"button","edit","info")&attributes(attributes)
 
 //ng-form.form-horizontal(name="newContractForm", novalidate="novalidate", ng-model-options="{ updateOn: 'mousedown blur' }", role="form", ng-submit="create()")
 +form("newContractForm")(ng-submit="create()", ng-submitted="submitted")
->>>>>>> f935134c94995e41f23eb27fcc2c7b6aadb447fc
   include /msu/index/contracts/_form.jade
 
   +action_bar
     +action_submit("创建")
-<<<<<<< HEAD
-    +action_cancel("取消")(ui-sref="contracts.list")
-=======
     +action_edit("新增详情")(ng-click="openDetail()")
     +action_cancel("取消")(ui-sref="contracts.list")
 
@@ -46,4 +40,3 @@ mixin action_edit(label)
         button.btn.btn-primary(data-bb-handler='confirm', type='button', ng-click="createDetail()") 确认
         //+action_submit("确认")
         //+action_cancel("取消")(ng-click="closeDetail()")
->>>>>>> f935134c94995e41f23eb27fcc2c7b6aadb447fc
