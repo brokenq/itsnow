@@ -24,21 +24,8 @@
             <artifactId>spring-component-framework</artifactId>
         </dependency>
         <dependency>
-            <groupId>dnt.components</groupId>
+            <groupId>net.happyonroad</groupId>
             <artifactId>config</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>dnt.components</groupId>
-            <artifactId>infrastructure</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>dnt.itsnow</groupId>
-            <artifactId>platform</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>dnt.itsnow</groupId>
-            <artifactId>release</artifactId>
-            <scope>runtime</scope>
         </dependency>
     </dependencies>
 
