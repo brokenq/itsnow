@@ -156,7 +156,9 @@ public class CommonServiceCatalogManager extends Bean implements CommonServiceCa
     }
     private List<ServiceCatalog> buildTreeTable(List<ServiceCatalog> serviceCatalogs) {
         List<ServiceCatalog> treeTable = new LinkedList<ServiceCatalog>();
+
         for (ServiceCatalog psi : serviceCatalogs) {
+            formatServiceCatalog((PublicServiceCatalog) psi);
             treeTable.add(psi);
             loop(treeTable, psi);
         }
@@ -166,6 +168,7 @@ public class CommonServiceCatalogManager extends Bean implements CommonServiceCa
     private void loop(List<ServiceCatalog> treeTable, ServiceCatalog psi) {
         if (psi.getChildren() != null && psi.getChildren().size() > 0) {
             for (ServiceCatalog child : psi.getChildren()) {
+                formatServiceCatalog((PublicServiceCatalog) child);
                 treeTable.add(child);
                 loop(treeTable, child);
             }
@@ -174,7 +177,11 @@ public class CommonServiceCatalogManager extends Bean implements CommonServiceCa
     }
     @Override
     public List<ServiceCatalog> findCatalogsBySn(String sn) {
+        ServiceCatalog  serviceCatalog=commonServiceCatalogRepository.findBySn(sn);
+        List<ServiceCatalog> list=new ArrayList<ServiceCatalog>();
+        list.add(serviceCatalog);
         PublicServiceCatalog publicServiceCatalog=commonServiceCatalogRepository.findBySn(sn);
-        return buildTreeTable(publicServiceCatalog.getChildren());
+        list.addAll(publicServiceCatalog.getChildren());
+        return buildTreeTable(list);
     }
 }

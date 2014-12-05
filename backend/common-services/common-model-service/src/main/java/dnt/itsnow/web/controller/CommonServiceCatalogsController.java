@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -76,10 +78,7 @@ public class CommonServiceCatalogsController extends SessionSupportController<Pu
     @RequestMapping("{sn}/catalogs")
     public PublicServiceCatalog getCatalogsBySn(@PathVariable("sn") String sn){
         PublicServiceCatalog publicServiceCatalog=new PublicServiceCatalog();
-        ServiceCatalog  serviceCatalog=commonServiceCatalogService.findBySn(sn);
-        List<ServiceCatalog> list=commonServiceCatalogService.findCatalogsBySn(sn);
-        list.add(serviceCatalog);
-        publicServiceCatalog.setChildren(list);
+        publicServiceCatalog.setChildren(commonServiceCatalogService.findCatalogsBySn(sn));
         return publicServiceCatalog;
 
     }
