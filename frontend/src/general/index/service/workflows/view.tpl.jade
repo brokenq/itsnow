@@ -1,0 +1,68 @@
+mixin blocks(title)
+  h2 #{title}
+  hr
+  block
+mixin formGroup()
+  .form-group
+    .col-md-12
+      block
+mixin label(title)
+  label.control-label.col-md-2 #{title}:
+  .col-md-8
+    block
+mixin formField(label, value)
+  label.control-label.col-md-2 #{label}:
+  div(class!=attributes["class"])
+    input.form-control(type="text", ng-model="#{value}", readonly)
+
+
+.form-horizontal
+  +blocks("工作流详情")
+    +formGroup()
+      +formField("名称", "workflow.name")(class="col-md-3")
+      +formField("类型", "workflow.typename")(class="col-md-3")
+    +formGroup()
+      +formField("部署版本", "workflow.actReProcdef.version")(class="col-md-3")
+      +formField("部署时间", "workflow.actReDeployment.deployTimeFMT")(class="col-md-3")
+    +formGroup()
+      +formField("服务目录", "workflow.serviceItem.title")(class="col-md-3")
+    +formGroup()
+      +label('工作流描述')
+        textarea.form-control(rows='4',ng-model="workflow.description",readonly)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      //.col-md-4.col-md-offset-4
+      //  ul.pagination
+      //    +button("#", "《")
+      //    +button("#","2")
+      //    +button("#","3")
+      //    +button("#","4")
+      //    +button("#","5")
+      //    +button("#","》")
