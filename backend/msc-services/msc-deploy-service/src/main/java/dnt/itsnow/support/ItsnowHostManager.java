@@ -263,8 +263,10 @@ public class ItsnowHostManager extends ItsnowResourceManager implements ItsnowHo
     @Override
     public long follow(ItsnowHost host, String jobId, long offset, List<String> result) {
         logger.trace("Follow {}'s job: {}", host, jobId);
+        long fileLength = invokeService.getFileLength(jobId);
         if(jobId.equals(host.getProperty(CREATE_INVOCATION_ID))){
-            return host.getStatus() == HostStatus.Running ? -1 : invokeService.read(jobId, offset, result);
+            if (offset >= fileLength && host.getStatus() == HostStatus.Running) return -1;
+            return invokeService.read(jobId, offset, result);
         }else if (jobId.equals(host.getProperty(DELETE_INVOCATION_ID))){
             return invokeService.read(jobId, offset, result);
         }

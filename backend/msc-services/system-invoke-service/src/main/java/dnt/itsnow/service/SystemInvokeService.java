@@ -73,4 +73,12 @@ public interface SystemInvokeService {
      */
     void removeListener(SystemInvocationListener listener);
 
+    /**
+     * <h2>获取特定任务的日志文件字节长度   </h2>
+     *
+     * @param invocationId    任务描述符
+     * @return 日志文件的字节长度
+     */
+    long getFileLength(String invocationId);
+
 }

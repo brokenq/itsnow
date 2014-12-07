@@ -241,11 +241,15 @@ public class ItsnowProcessManager extends ItsnowResourceManager implements Itsno
     public long follow(ItsnowProcess process, String jobId, long offset, List<String> result) {
         logger.trace("Follow {}'s job: {}", process, jobId);
 
+        long fileLength= invokeService.getFileLength(jobId);
         if(jobId.equals(process.getProperty(DEPLOY_INVOCATION_ID))) {
+            if (offset >= fileLength && process.getStatus() != ProcessStatus.Deploying) return -1;
             return invokeService.read(jobId, offset, result);
         }else if(jobId.equals(process.getProperty(START_INVOCATION_ID))){
+            if (offset >= fileLength && process.getStatus() == ProcessStatus.Running) return -1;
             return invokeService.read(jobId, offset, result);
         }else if (jobId.equals(process.getProperty(STOP_INVOCATION_ID))){
+            if (offset >= fileLength && process.getStatus() == ProcessStatus.Stopped) return -1;
             return invokeService.read(jobId, offset, result);
         }
         return -1;

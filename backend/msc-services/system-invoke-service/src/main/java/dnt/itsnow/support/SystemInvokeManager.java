@@ -53,6 +53,13 @@ public class SystemInvokeManager extends Bean implements SystemInvokeService, In
     }
 
     @Override
+    public long getFileLength(String invocationId) {
+        File logFile = getFile(invocationId);
+        if (logFile.exists()) return logFile.length();
+        return 0;
+    }
+
+    @Override
     public String addJob(final SystemInvocation invocation) {
         String originId = invocation.getId();
         if( originId == null ) {
@@ -125,7 +132,7 @@ public class SystemInvokeManager extends Bean implements SystemInvokeService, In
 
     @Override
     public long read(String invocationId, long offset, final List<String> result) {
-        File logFile = new File(System.getProperty("app.home"), "tmp/" + invocationId + ".log");
+        File logFile = getFile(invocationId);
         if( !logFile.exists() ) return offset;
         FileInputStream stream = null;
         List<String> lines = null;
@@ -144,6 +151,10 @@ public class SystemInvokeManager extends Bean implements SystemInvokeService, In
             newOffset += line.getBytes().length + 1;
         }
         return newOffset;
+    }
+
+    private File getFile(String invocationId) {
+        return new File(System.getProperty("app.home"), "tmp/" + invocationId + ".log");
     }
 
     ////////////////////////////////////////////////////////////////////
