@@ -27,7 +27,7 @@
         <version.component-framework>1.0.4</version.component-framework>
         <version.components>1.0.1</version.components>
 
-        <release.root>/opt/releases/itsnow</release.root>
+        <release.root>/Users/brokenq/opt/releases/itsnow</release.root>
         <release.dir>${release.root}/itsnow-${project.version}</release.dir>
     </properties>
 

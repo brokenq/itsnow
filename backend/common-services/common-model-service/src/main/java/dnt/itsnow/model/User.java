@@ -25,7 +25,7 @@ import java.util.*;
  */
 @RepeatPassword
 public class User extends ConfigItem
-        implements UserDetails, CredentialsContainer, PasswordContainer {
+        implements UserDetails, CredentialsContainer, PasswordContainer, Cloneable {
 
     //~ Instance fields ================================================================================================
     @Email
@@ -272,5 +272,9 @@ public class User extends ConfigItem
             sb.append("Not granted any authorities");
         }
         return sb.toString();
+    }
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

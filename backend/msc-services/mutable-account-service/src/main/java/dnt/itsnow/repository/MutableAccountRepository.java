@@ -98,7 +98,7 @@ public interface MutableAccountRepository extends CommonAccountRepository {
     /**
      * <h2>查找所有 没有分配进程的账户</h2>
      */
-    @Select("SELECT a.* FROM accounts a LEFT JOIN itsnow_processes p ON a.id = p.account_id WHERE p.id IS NULL")
+    @Select("SELECT a.* FROM itsnow_msc.accounts a LEFT JOIN itsnow_processes p ON a.id = p.account_id WHERE p.id IS NULL")
     List<Account> findAllForNoProcess();
 
     /**

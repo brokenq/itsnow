@@ -16,7 +16,7 @@ import java.util.Arrays;
 /**
  * <h1>服务采购方(MSU)或者服务供应方(MSP)在系统数据库中的账户</h1>
  */
-public class Account extends ConfigItem {
+public class Account extends ConfigItem implements Cloneable {
     public static final String[] RESERVED_DOMAINS = {"www", "blog", "dev", "developer", "sales", "marketing", "hr", "test"};
 
     public static final String BASE = "base";
@@ -170,5 +170,10 @@ public class Account extends ConfigItem {
 
     static {
         Arrays.sort(RESERVED_DOMAINS);
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

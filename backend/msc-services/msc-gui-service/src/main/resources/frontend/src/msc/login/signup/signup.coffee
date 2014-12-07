@@ -93,10 +93,7 @@ angular.module( 'MscLogin.Signup', [])
             # 并且，需要把服务器端的各种错误原因(account.domain: 如输入的子域名为保留的子域名)
             # 对应到 $scope.registration中
             # 以便更新 相应form的group/field的css/tips
-            if response.message? and response.message is "Unexpected end of input"
-              feedback.success("您已经完成注册", "谢谢!")
-              window.location = "/"
-            else feedback.error(response.data, "注册失败")
+            feedback.error(response.data, "注册失败")
           )
         else
           feedback.primary('必须接受使用协议')

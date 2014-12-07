@@ -14,6 +14,7 @@ import net.happyonroad.platform.service.Pageable;
 import dnt.itsnow.repository.MutableAccountRepository;
 import dnt.itsnow.service.MutableAccountService;
 import dnt.itsnow.service.MutableUserService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -118,7 +119,17 @@ public class MutableAccountManager extends CommonAccountManager implements Mutab
         // TODO 这句代码可能抛出 FK Violation exception(org.springframework.dao.DuplicateKeyException)
         // 需要将其转化为合适的Validation异常
         Account created = this.create(account);
-        user.setAccount(created);
+
+        Account createdCopy;
+        try {
+            createdCopy = (Account) created.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AccountException("Fail to register account: " + account.getName());
+        }
+
+        // 如果user.setAccount(created), 那么user.account 的引用地址与created的引用地址相同，
+        // 会导致在执行this.user=user时，给created和user.account的user属性赋值，从而导致无限嵌套，所以给user的account属性设置另一个对象的引用
+        user.setAccount(createdCopy);
         User admin = userService.create(user);
         created.setUser(admin);
         return this.update(created);
